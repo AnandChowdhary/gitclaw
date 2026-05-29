@@ -26,12 +26,26 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runChannelIngestCommand(ctx, args[1:])
 	case "proactive":
 		return runProactiveCommand(ctx, args[1:])
+	case "doctor":
+		return runDoctorCommand(args[1:])
 	case "version":
 		fmt.Println("gitclaw dev")
 		return nil
 	default:
 		return fmt.Errorf("unknown command %q", args[0])
 	}
+}
+
+func runDoctorCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown doctor argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	PrintDoctorReport(cfg)
+	return nil
 }
 
 func runBackup(ctx context.Context, args []string) error {

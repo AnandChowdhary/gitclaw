@@ -22,6 +22,7 @@ var configSlashCommands = []string{
 	"/channels",
 	"/config",
 	"/context",
+	"/doctor",
 	"/models",
 	"/policy",
 	"/proactive",

@@ -248,6 +248,14 @@ profiles make `config.yaml` one of the isolated per-agent artifacts alongside
 matching primitive is a checked-in `.gitclaw/config.yml` loaded read-only with
 unknown fields rejected and environment overrides applied last.
 
+2026-05-29 doctor follow-up: OpenClaw's doctor command combines config
+normalization, health checks, skills status, model auth health, state
+integrity, channel warnings, and security warnings; its config docs also
+recommend `config validate` before runtime use. GitClaw should take the cold
+read-only subset first: `@gitclaw /doctor` reports config validation, workflow
+presence, context file metadata, skill counts, memory note counts, and proactive
+prompt counts without auto-repair or body dumps.
+
 2026-05-29 channel visibility follow-up: Slack's Events API expects either a
 server HTTP endpoint or Socket Mode, Socket Mode uses a stateful WebSocket
 instead of a static public URL, Telegram's `getUpdates` provides long polling
@@ -811,6 +819,7 @@ Recommended non-goals for the first spec:
 - OpenClaw tools overview: https://docs.openclaw.ai/tools
 - OpenClaw config CLI docs: https://docs.openclaw.ai/cli/config
 - OpenClaw configure docs: https://docs.openclaw.ai/cli/configure
+- OpenClaw doctor docs: https://docs.openclaw.ai/doctor
 - OpenClaw migration guide: https://docs.openclaw.ai/install/migrating
 - OpenClaw sandbox vs tool policy vs elevated: https://docs.openclaw.ai/gateway/sandbox-vs-tool-policy-vs-elevated
 - OpenClaw exec approvals: https://docs.openclaw.ai/tools/exec-approvals

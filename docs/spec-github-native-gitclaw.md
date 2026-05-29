@@ -952,6 +952,33 @@ GitHub-native equivalent of OpenClaw/Hermes config/profile status: enough to
 understand the active control plane without exposing secrets or allowing the
 agent to rewrite configuration.
 
+### Doctor Command
+
+GitClaw supports a deterministic doctor/health audit command:
+
+```text
+@gitclaw /doctor
+```
+
+The command runs after preflight and context loading, but before model
+inference. It posts a `gitclaw:assistant-turn` comment with
+`model="gitclaw/doctor"` and summarizes:
+
+- whether `.gitclaw/config.yml` exists and validates,
+- model provider and endpoint host metadata,
+- workflow presence,
+- context file presence for soul, identity, user, tools, memory, and heartbeat,
+- dated memory note count,
+- local skill count,
+- proactive prompt count,
+- managed label count,
+- pass/warn checks for the core control plane.
+
+It never dumps file bodies, issue bodies, comments, prompts, or secrets. This
+is the GitHub-native equivalent of `openclaw config validate` plus the cold,
+read-only parts of `openclaw doctor`: useful health diagnostics inside the
+canonical issue log without introducing an auto-repair mode.
+
 ## Prompt Budgeting
 
 GitClaw uses character/byte budgets before the model call rather than relying
@@ -1845,6 +1872,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven config-report E2E harness verifies `@gitclaw /config` reports
   effective labels, prompt budgets, commands, and workflow metadata without a
   model call.
+- A `gh`-driven doctor-report E2E harness verifies `@gitclaw /doctor` reports
+  config validation, workflow presence, context files, skills, memory notes,
+  and proactive prompts without a model call.
 - A `gh`-driven backup-index E2E harness verifies the dedicated backup branch
   contains issue JSON plus a repo-scoped `index.json` and `README.md`.
 - A `gh`-driven backup-report E2E harness verifies `@gitclaw /backup`
@@ -1913,6 +1943,7 @@ examples/workflows/gitclaw.yml
 - OpenClaw models CLI docs: https://docs.openclaw.ai/cli/models
 - OpenClaw config CLI docs: https://docs.openclaw.ai/cli/config
 - OpenClaw configure docs: https://docs.openclaw.ai/cli/configure
+- OpenClaw doctor docs: https://docs.openclaw.ai/doctor
 - Hermes cron docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/cron.md
 - Hermes profiles docs: https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 - Slack Socket Mode: https://api.slack.com/apis/connections/socket

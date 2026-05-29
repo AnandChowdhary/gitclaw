@@ -393,7 +393,7 @@ model:
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Config Report", "Generated without a model call", "model=\"gitclaw/config\"", "config_source: `defaults+repo`", "config_file_path: `.gitclaw/config.yml`", "config_file_present: `true`", "trigger_label: `gitclaw`", "trigger_prefix: `@gitclaw`", "run_mode: `read-only`", "max_prompt_bytes: `60000`", "max_output_tokens: `4000`", "workflows_present: `2`", "slash_commands: `11`", "OWNER", "COLLABORATOR", "gitclaw:disabled", "/channels", "/models", "/config", ".github/workflows/gitclaw.yml", ".github/workflows/gitclaw-heartbeat.yml", "sha256_12="} {
+	for _, want := range []string{"GitClaw Config Report", "Generated without a model call", "model=\"gitclaw/config\"", "config_source: `defaults+repo`", "config_file_path: `.gitclaw/config.yml`", "config_file_present: `true`", "trigger_label: `gitclaw`", "trigger_prefix: `@gitclaw`", "run_mode: `read-only`", "max_prompt_bytes: `60000`", "max_output_tokens: `4000`", "workflows_present: `2`", "slash_commands: `12`", "OWNER", "COLLABORATOR", "gitclaw:disabled", "/channels", "/doctor", "/models", "/config", ".github/workflows/gitclaw.yml", ".github/workflows/gitclaw-heartbeat.yml", "sha256_12="} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("config report missing %q:\n%s", want, body)
 		}
@@ -711,6 +711,73 @@ func TestHandlePolicyCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 	if !hasLabel(github.IssueLabels[94], "gitclaw:write-requested") || !hasLabel(github.IssueLabels[94], "gitclaw:done") || hasLabel(github.IssueLabels[94], "gitclaw:running") || hasLabel(github.IssueLabels[94], "gitclaw:error") {
 		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[94])
+	}
+}
+
+func TestHandleDoctorCommandPostsReportWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/config.yml", `model:
+  model: openai/gpt-5-mini
+`)
+	writeTestFile(t, root, ".github/workflows/gitclaw.yml", "name: GitClaw\n")
+	writeTestFile(t, root, ".github/workflows/gitclaw-heartbeat.yml", "name: GitClaw Heartbeat\n")
+	writeTestFile(t, root, ".github/workflows/gitclaw-proactive.yml", "name: GitClaw Proactive\non:\n  workflow_dispatch:\n  schedule:\n")
+	writeTestFile(t, root, ".github/workflows/gitclaw-channel-ingest.yml", "name: GitClaw Channel Ingest\n")
+	writeTestFile(t, root, ".gitclaw/SOUL.md", "SOUL_DOCTOR_SECRET")
+	writeTestFile(t, root, ".gitclaw/IDENTITY.md", "IDENTITY_DOCTOR_SECRET")
+	writeTestFile(t, root, ".gitclaw/USER.md", "USER_DOCTOR_SECRET")
+	writeTestFile(t, root, ".gitclaw/TOOLS.md", "TOOLS_DOCTOR_SECRET")
+	writeTestFile(t, root, ".gitclaw/MEMORY.md", "MEMORY_DOCTOR_SECRET")
+	writeTestFile(t, root, ".gitclaw/HEARTBEAT.md", "HEARTBEAT_DOCTOR_SECRET")
+	writeTestFile(t, root, ".gitclaw/memory/2026-05-29.md", "MEMORY_NOTE_DOCTOR_SECRET")
+	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", "SKILL_DOCTOR_SECRET")
+	writeTestFile(t, root, ".gitclaw/proactive/repo-hygiene.md", "PROACTIVE_DOCTOR_SECRET")
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 102,
+			"title": "@gitclaw /doctor",
+			"body": "Hidden doctor body token: DOCTOR_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	cfg, err = LoadConfigFromWorkdir(cfg)
+	if err != nil {
+		t.Fatalf("LoadConfigFromWorkdir returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{102: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic doctor command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Doctor Report", "Generated without a model call", "model=\"gitclaw/doctor\"", "health_status: `ok`", "config_source: `defaults+repo`", "config_valid: `true`", "config_file_present: `true`", "workflows_present: `4`", "context_files_present: `6`", "memory_notes: `1`", "skill_files: `1`", "proactive_prompt_files: `1`", "`config_validation`: `ok`", "`main_workflow`: `ok`", "`local_skills`: `ok`", ".gitclaw/SOUL.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", "sha256_12="} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("doctor report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"DOCTOR_BODY_SECRET", "SOUL_DOCTOR_SECRET", "IDENTITY_DOCTOR_SECRET", "SKILL_DOCTOR_SECRET", "PROACTIVE_DOCTOR_SECRET"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("doctor report leaked body token %q:\n%s", leaked, body)
+		}
+	}
+	if !hasLabel(github.IssueLabels[102], "gitclaw:done") || hasLabel(github.IssueLabels[102], "gitclaw:running") || hasLabel(github.IssueLabels[102], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[102])
 	}
 }
 
