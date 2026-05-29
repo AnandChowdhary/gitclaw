@@ -246,6 +246,58 @@ func TestHandleBackupCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 }
 
+func TestHandleProactiveCommandPostsReportWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".github/workflows/gitclaw-proactive.yml", `name: GitClaw Proactive
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 8 * * 1"
+`)
+	writeTestFile(t, root, ".gitclaw/proactive/repo-hygiene.md", "Proactive prompt token: PROACTIVE_PROMPT_SECRET.")
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 97,
+			"title": "@gitclaw /proactive",
+			"body": "Hidden proactive token: PROACTIVE_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{97: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic proactive command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Proactive Report", "Generated without a model call", "model=\"gitclaw/proactive\"", "workflow_present: `true`", "workflow_dispatch_trigger: `true`", "schedule_trigger: `true`", "prompt_files: `1`", ".github/workflows/gitclaw-proactive.yml", ".gitclaw/proactive/repo-hygiene.md", "gitclaw proactive enqueue"} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("proactive report missing %q:\n%s", want, body)
+		}
+	}
+	if strings.Contains(body, "PROACTIVE_BODY_SECRET") || strings.Contains(body, "PROACTIVE_PROMPT_SECRET") {
+		t.Fatalf("proactive report leaked body token:\n%s", body)
+	}
+	if !hasLabel(github.IssueLabels[97], "gitclaw:done") || hasLabel(github.IssueLabels[97], "gitclaw:running") || hasLabel(github.IssueLabels[97], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[97])
+	}
+}
+
 func TestHandleSkillsCommandPostsReportWithoutLLM(t *testing.T) {
 	root := t.TempDir()
 	if err := os.MkdirAll(filepath.Join(root, ".gitclaw", "SKILLS", "repo-reader"), 0o755); err != nil {

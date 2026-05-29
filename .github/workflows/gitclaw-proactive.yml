@@ -5,7 +5,8 @@ on:
     inputs:
       name:
         description: Proactive job name
-        required: true
+        required: false
+        default: repo-hygiene
       slot:
         description: Idempotency slot, defaults to current UTC date
         required: false
@@ -15,9 +16,12 @@ on:
       prompt_file:
         description: Optional prompt file path in the repository
         required: false
+        default: .gitclaw/proactive/repo-hygiene.md
+  schedule:
+    - cron: "23 8 * * 1"
 
 concurrency:
-  group: gitclaw-proactive-${{ inputs.name }}
+  group: gitclaw-proactive-${{ github.event.inputs.name || 'repo-hygiene' }}
   cancel-in-progress: false
 
 jobs:
@@ -38,14 +42,18 @@ jobs:
           go-version: stable
 
       - id: enqueue
-        run: go run ./cmd/gitclaw proactive enqueue
+        run: |
+          set -euo pipefail
+          export GITCLAW_PROACTIVE_NAME="${GITCLAW_PROACTIVE_NAME:-repo-hygiene}"
+          export GITCLAW_PROACTIVE_PROMPT_FILE="${GITCLAW_PROACTIVE_PROMPT_FILE:-.gitclaw/proactive/repo-hygiene.md}"
+          go run ./cmd/gitclaw proactive enqueue
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
-          GITCLAW_PROACTIVE_NAME: ${{ inputs.name }}
-          GITCLAW_PROACTIVE_SLOT: ${{ inputs.slot }}
-          GITCLAW_PROACTIVE_PROMPT: ${{ inputs.prompt }}
-          GITCLAW_PROACTIVE_PROMPT_FILE: ${{ inputs.prompt_file }}
+          GITCLAW_PROACTIVE_NAME: ${{ github.event.inputs.name }}
+          GITCLAW_PROACTIVE_SLOT: ${{ github.event.inputs.slot }}
+          GITCLAW_PROACTIVE_PROMPT: ${{ github.event.inputs.prompt }}
+          GITCLAW_PROACTIVE_PROMPT_FILE: ${{ github.event.inputs.prompt_file }}
 
       - run: |
           set -euo pipefail

@@ -321,8 +321,11 @@ gitclaw proactive enqueue \
 ```
 
 It is exposed through `.github/workflows/gitclaw-proactive.yml` for manual
-dispatch and E2E. The future safe v1 interface is a generator command or
-reviewed PR that creates a scheduled workflow plus a prompt file, for example:
+dispatch, a weekly default scheduled run, and E2E. The checked-in default uses
+`.gitclaw/proactive/repo-hygiene.md` so a repository has a working proactive
+job without a daemon. The future safe v1 interface is a generator command or
+reviewed PR that creates additional scheduled workflows plus prompt files, for
+example:
 
 ```text
 gitclaw proactive init \
@@ -384,6 +387,28 @@ Proactive issue bodies should include a hidden marker:
 ```md
 <!-- gitclaw:proactive-run name="email-triage" slot="2026-05-29" -->
 ```
+
+### Proactive Inspection Command
+
+GitClaw supports a deterministic proactive audit command:
+
+```text
+@gitclaw /proactive
+```
+
+The command runs after normal preflight and context loading, but before model
+inference. It posts a `gitclaw:assistant-turn` comment with
+`model="gitclaw/proactive"` and summarizes:
+
+- proactive and trigger labels,
+- the generic proactive workflow path,
+- whether `workflow_dispatch` and `schedule` triggers are present,
+- configured `.gitclaw/proactive/*.md` prompt files by path, size, and hash,
+- whether the current issue is itself a proactive-run thread,
+- the enqueue/idempotency contract.
+
+It never dumps prompt, issue, or comment bodies. The command is for safe
+operator visibility before adding or editing scheduled jobs.
 
 Idempotency rules:
 
@@ -1697,6 +1722,8 @@ examples/workflows/gitclaw.yml
   workflow end to end.
 - A `gh`-driven proactive E2E harness verifies the generic proactive enqueue
   workflow end to end.
+- A `gh`-driven proactive-report E2E harness verifies `@gitclaw /proactive`
+  reports workflow triggers and prompt metadata without a model call.
 - A `gh`-driven backup-index E2E harness verifies the dedicated backup branch
   contains issue JSON plus a repo-scoped `index.json` and `README.md`.
 - A `gh`-driven backup-report E2E harness verifies `@gitclaw /backup`
@@ -1761,7 +1788,7 @@ examples/workflows/gitclaw.yml
 - GitHub Models `models:read` changelog: https://github.blog/changelog/2025-05-15-modelsread-now-required-for-github-models-access/
 - OpenClaw heartbeat docs: https://openclawlab.com/en/docs/agent/heartbeat/
 - OpenClaw automation docs: https://docs.openclaw.ai/automation/index
-- OpenClaw scheduled tasks docs: https://docs.openclaw.ai/cron-jobs
+- OpenClaw scheduled tasks docs: https://docs.openclaw.ai/automation/cron-jobs
 - Hermes cron docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/cron.md
 - Slack Socket Mode: https://api.slack.com/apis/connections/socket
 - Slack Events API: https://docs.slack.dev/apis/events-api/

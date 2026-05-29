@@ -213,6 +213,14 @@ issue body, labels the issue, and wakes the normal handler with a deterministic
 dispatch ID. This keeps OpenClaw-style scheduled usefulness while preserving
 GitHub as the audit and replay surface.
 
+2026-05-29 proactive audit follow-up: OpenClaw cron distinguishes durable job
+definitions from runtime state and records cron executions as background tasks,
+while Hermes cron emphasizes fresh scheduled sessions, attached skills, and
+explicit delivery. GitClaw's GitHub-native analogue should expose the same
+operator visibility through issue-visible metadata: `@gitclaw /proactive`
+reports the proactive workflow, schedule trigger, prompt files, labels, and
+enqueue contract without dumping the prompt bodies.
+
 ### Multi-Agent Routing
 
 OpenClaw's multi-agent model treats each agent as a full isolated persona scope:
@@ -761,6 +769,7 @@ Recommended non-goals for the first spec:
 - OpenClaw transcript CLI docs: https://docs.openclaw.ai/cli/transcripts
 - OpenClaw sessions CLI docs: https://docs.openclaw.ai/cli/sessions
 - OpenClaw automation docs: https://docs.openclaw.ai/automation
+- OpenClaw scheduled tasks docs: https://docs.openclaw.ai/automation/cron-jobs
 - OpenClaw heartbeat docs: https://openclawlab.com/en/docs/agent/heartbeat/
 - OpenClaw memory docs: https://docs.openclaw.ai/concepts/memory
 - OpenClaw tools overview: https://docs.openclaw.ai/tools
