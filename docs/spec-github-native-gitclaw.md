@@ -561,8 +561,8 @@ GitHub issue/comment event
   `channel-ingest`, `proactive enqueue`, `proactive init`,
   `memory validate`, `skills validate`, `skills list`, `skills info`,
   `skills search`,
-  `soul validate`, `soul search`, `tools validate`, `tools search`, `doctor`,
-  `commands`, `version`.
+  `soul validate`, `soul search`, `tools validate`, `tools list`,
+  `tools search`, `doctor`, `commands`, `version`.
 
 `internal/github`
 
@@ -967,6 +967,7 @@ Validation is visible in the `/tools` report and locally through:
 
 ```bash
 gitclaw tools validate
+gitclaw tools list
 gitclaw tools search <query> --max-results 10
 ```
 
@@ -980,6 +981,7 @@ OpenClaw's tool policy visibility and Hermes' toolset inventory:
 
 ```text
 @gitclaw /tools
+@gitclaw /tools list
 @gitclaw /tools search read_file
 ```
 
@@ -1000,6 +1002,8 @@ It never dumps full tool output bodies. Tool output bodies remain prompt inputs
 only; the issue-visible report exposes enough metadata to debug whether
 `gitclaw.list_files`, `gitclaw.search_files`, `gitclaw.read_file`,
 `gitclaw.skill_index`, or `gitclaw.policy` ran for the turn.
+`@gitclaw /tools list` is an explicit inventory alias for the same report,
+matching the local `gitclaw tools list` helper.
 
 When called as `@gitclaw /tools search <query>`, the command searches declared
 tool-contract metadata and active tool-output metadata. It reports the query
@@ -2168,6 +2172,7 @@ assert the expected comments/labels, and close the issue in cleanup.
 22. **Tools inspection**
 
    - create a real issue with `@gitclaw /tools`,
+   - create a second real issue with `@gitclaw /tools list`,
    - ask for a concrete file read and search fixture phrase,
    - assert the reply is marked `model="gitclaw/tools"`,
    - assert the report lists available tool contracts and active output
@@ -2566,6 +2571,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven tools-report E2E harness verifies `@gitclaw /tools` produces a
   deterministic tool contract and active-output audit with validation metadata,
   without a model call or output-body leakage.
+- A `gh`-driven tools-list E2E harness verifies `@gitclaw /tools list`
+  is an explicit inventory alias with the same body-free tool contract,
+  active-output, guidance, and validation metadata.
 - A `gh`-driven policy-report E2E harness verifies `@gitclaw /policy` produces
   a deterministic preflight/label/write-policy audit without a model call or
   issue-body leakage.

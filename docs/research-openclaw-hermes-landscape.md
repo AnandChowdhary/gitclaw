@@ -521,6 +521,12 @@ surface inspectable with `@gitclaw /tools`: list deterministic tool contracts,
 show which tool outputs were produced for the current turn, and publish
 input/size/hash metadata without dumping output bodies.
 
+2026-05-30 tools-list follow-up: make the tool inventory surface explicit in
+both channels. `@gitclaw /tools` already lists deterministic contracts and
+active output metadata, but `@gitclaw /tools list` and `gitclaw tools list`
+should be documented aliases so operators can inspect the tool registry without
+confusing it with validation or search.
+
 2026-05-29 tool-validation follow-up: OpenClaw's exec approval docs treat tool
 execution as a stacked policy/allowlist/approval decision, and Hermes separates
 toolsets such as terminal, file, web, cron, memory, and messaging by platform

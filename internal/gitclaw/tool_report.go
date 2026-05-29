@@ -58,12 +58,24 @@ func RenderToolsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if query := requestedToolSearchQuery(ev, cfg); query != "" {
 		return RenderToolSearchReport(ev, repoContext, query, defaultToolSearchMaxResults)
 	}
+	return renderToolsListReport(ev, repoContext, true)
+}
+
+func RenderToolsCLIReport(repoContext RepoContext) string {
+	return renderToolsListReport(Event{}, repoContext, false)
+}
+
+func renderToolsListReport(ev Event, repoContext RepoContext, includeIssue bool) string {
 	validation := ValidateTools(repoContext)
 	var b strings.Builder
 	b.WriteString("## GitClaw Tools Report\n\n")
 	b.WriteString("Generated without a model call.\n\n")
-	fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
-	fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
 	fmt.Fprintf(&b, "- available_tools: `%d`\n", len(toolReportContracts))
 	fmt.Fprintf(&b, "- active_tool_outputs: `%d`\n", len(repoContext.ToolOutputs))
 	writeToolsValidationSummary(&b, validation)

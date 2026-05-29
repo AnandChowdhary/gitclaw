@@ -211,16 +211,34 @@ func runCommandsCommand(args []string) error {
 
 func runToolsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw tools validate|search <query>")
+		return fmt.Errorf("usage: gitclaw tools validate|list|search <query>")
 	}
 	switch args[0] {
 	case "validate":
 		return runToolsValidateCommand(args[1:])
+	case "list":
+		return runToolsListCommand(args[1:])
 	case "search":
 		return runToolsSearchCommand(args[1:])
 	default:
 		return fmt.Errorf("unknown tools command %q", args[0])
 	}
+}
+
+func runToolsListCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown tools list argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderToolsCLIReport(repoContext))
+	return nil
 }
 
 func runToolsSearchCommand(args []string) error {
