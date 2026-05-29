@@ -17,6 +17,7 @@ type Config struct {
 	DoneLabel                 string
 	ErrorLabel                string
 	HeartbeatLabel            string
+	WriteRequestedLabel       string
 	AllowedAssociations       map[string]bool
 	Model                     string
 	Workdir                   string
@@ -27,13 +28,14 @@ type Config struct {
 
 func DefaultConfig() Config {
 	return Config{
-		TriggerLabel:   "gitclaw",
-		TriggerPrefix:  "@gitclaw",
-		DisabledLabel:  "gitclaw:disabled",
-		RunningLabel:   "gitclaw:running",
-		DoneLabel:      "gitclaw:done",
-		ErrorLabel:     "gitclaw:error",
-		HeartbeatLabel: "gitclaw:heartbeat",
+		TriggerLabel:        "gitclaw",
+		TriggerPrefix:       "@gitclaw",
+		DisabledLabel:       "gitclaw:disabled",
+		RunningLabel:        "gitclaw:running",
+		DoneLabel:           "gitclaw:done",
+		ErrorLabel:          "gitclaw:error",
+		HeartbeatLabel:      "gitclaw:heartbeat",
+		WriteRequestedLabel: "gitclaw:write-requested",
 		AllowedAssociations: map[string]bool{
 			"OWNER":        true,
 			"MEMBER":       true,

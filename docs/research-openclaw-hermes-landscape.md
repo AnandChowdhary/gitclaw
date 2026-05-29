@@ -325,6 +325,12 @@ The approval model is detailed and worth borrowing, especially:
 - separate headless cron policy,
 - an always-on no-override blocklist.
 
+2026-05-29 write-gate follow-up: GitClaw should not wait until write mode
+exists to model approval boundaries. Detect write intent in read-only mode,
+apply a durable `gitclaw:write-requested` label, and inject policy context that
+keeps the assistant in proposal mode. This makes future approval/write
+transitions explicit instead of inferring them from free-form comments later.
+
 ### Migration Surface
 
 Hermes can migrate from OpenClaw and import:

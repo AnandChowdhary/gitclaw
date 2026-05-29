@@ -66,7 +66,7 @@ func TestNewLLMFromEnvSupportsOpenAICompatibleOverride(t *testing.T) {
 }
 
 func TestSystemPromptNamesToolOutputsAndExactTokens(t *testing.T) {
-	for _, want := range []string{"tool_output", "exact verification tokens", "copy those tokens verbatim"} {
+	for _, want := range []string{"tool_output", "gitclaw.policy", "hard constraints", "exact verification tokens", "copy those tokens verbatim"} {
 		if !strings.Contains(systemPrompt, want) {
 			t.Fatalf("system prompt missing %q: %s", want, systemPrompt)
 		}

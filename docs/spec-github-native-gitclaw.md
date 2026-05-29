@@ -498,11 +498,12 @@ Managed labels:
   posted.
 - `gitclaw:error`: latest turn failed; added when the run fails after it starts.
 - `gitclaw:disabled`: ignore future comments.
+- `gitclaw:write-requested`: user is asking for code changes; added
+  deterministically before model inference when write intent is detected.
 
 Planned labels:
 
 - `gitclaw:needs-human`: blocked on approval or authorization.
-- `gitclaw:write-requested`: user is asking for code changes.
 - `gitclaw:approved`: maintainer approved a write-capable turn.
 
 Labels are state hints, not the source of truth. The issue thread and run
@@ -589,6 +590,9 @@ yet; GitClaw should first be predictable and auditable.
 ### v2: PR-Producing Assistant
 
 Write mode requires an explicit approval label or maintainer command.
+Until write mode exists, GitClaw detects write intent, applies
+`gitclaw:write-requested`, and injects a `gitclaw.policy` context block telling
+the model to stay in read-only proposal mode.
 
 Capabilities:
 
@@ -1080,6 +1084,8 @@ MVP is not complete until:
   assistant still sees the preserved tail request under the bounded prompt,
 - the prompt-artifact harness downloads a real Actions artifact and verifies
   redaction plus untrusted-input warnings,
+- the write-request harness creates a real write-intent issue and verifies the
+  `gitclaw:write-requested` label plus a read-only response,
 - bot loop prevention is verified live,
 - the issue is cleaned up or labeled with an E2E retention label.
 
@@ -1181,6 +1187,8 @@ examples/workflows/gitclaw.yml
   produces a bounded, correct assistant reply.
 - A `gh`-driven prompt-artifact E2E harness verifies opt-in redacted prompt
   artifacts against a real Actions artifact download.
+- A `gh`-driven write-request E2E harness verifies deterministic write-intent
+  labeling and the read-only policy response.
 
 ## Open Questions
 

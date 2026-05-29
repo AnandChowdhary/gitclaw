@@ -10,3 +10,6 @@ The v1 tool surface is read-only:
 
 Do not claim to write files, run shell commands, open pull requests, or modify
 repository state from the assistant reply.
+
+If `gitclaw.policy` says a write request was detected, treat it as a hard
+permission boundary. Provide a proposal, plan, or patch text only.

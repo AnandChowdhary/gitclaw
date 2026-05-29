@@ -137,6 +137,36 @@ func TestHandlePassesRepoContextToLLM(t *testing.T) {
 	}
 }
 
+func TestHandleLabelsWriteRequestsAndAddsPolicyContext(t *testing.T) {
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 99,
+			"title": "@gitclaw implement this",
+			"body": "Please implement a new CLI command and open a PR.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{99: nil}}
+	llm := &FakeLLM{Response: "I cannot modify files, but here is a proposed plan."}
+	if err := Handle(context.Background(), ev, DefaultConfig(), github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if !hasLabel(github.IssueLabels[99], "gitclaw:write-requested") {
+		t.Fatalf("write request label missing: %#v", github.IssueLabels[99])
+	}
+	if !hasToolOutput(llm.LastRequest.Context.ToolOutputs, "gitclaw.policy", "write-request", "Current GitClaw mode is read-only") {
+		t.Fatalf("LLM request missing write policy output: %#v", llm.LastRequest.Context.ToolOutputs)
+	}
+}
+
 func TestHandleSetsErrorStatusWhenLLMFails(t *testing.T) {
 	ev, err := ParseEvent("issues", []byte(`{
 		"action": "opened",

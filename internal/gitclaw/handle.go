@@ -28,9 +28,16 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 	status.SetRunning()
 
 	transcript := BuildTranscript(ev, comments)
+	writeRequested := DetectWriteRequest(transcript)
+	if writeRequested {
+		status.SetWriteRequested()
+	}
 	repoContext, err := LoadRepoContext(cfg.Workdir, transcript)
 	if err != nil {
 		return failStartedTurn(ctx, cfg, github, ev, status, "context", fmt.Errorf("load repo context: %w", err))
+	}
+	if writeRequested {
+		repoContext.ToolOutputs = append(repoContext.ToolOutputs, WriteRequestPolicyOutput())
 	}
 	response, err := llm.Complete(ctx, LLMRequest{
 		Event:      ev,
@@ -113,6 +120,10 @@ func (u issueStatusUpdater) SetDone() {
 func (u issueStatusUpdater) SetError() {
 	u.remove(u.cfg.RunningLabel, u.cfg.DoneLabel)
 	u.add(u.cfg.ErrorLabel)
+}
+
+func (u issueStatusUpdater) SetWriteRequested() {
+	u.add(u.cfg.WriteRequestedLabel)
 }
 
 func (u issueStatusUpdater) add(labels ...string) {
