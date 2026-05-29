@@ -33,9 +33,9 @@ jobs:
       code: ${{ steps.preflight.outputs.code }}
       reason: ${{ steps.preflight.outputs.reason }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           go-version: stable
 
@@ -55,11 +55,11 @@ jobs:
       issues: write
       models: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           go-version: stable
 
@@ -84,7 +84,7 @@ jobs:
           GITCLAW_LLM_RETRY_MAX_DELAY_SECONDS: "90"
 
       - if: always() && contains(github.event.issue.labels.*.name, 'gitclaw:e2e-prompt-artifact')
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: gitclaw-issue-${{ github.event.issue.number }}-run-${{ github.run_id }}-prompt
           path: ${{ runner.temp }}/gitclaw-prompt-artifacts/prompt.md
@@ -102,11 +102,11 @@ jobs:
     env:
       BACKUP_BRANCH: gitclaw-backups
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           go-version: stable
 

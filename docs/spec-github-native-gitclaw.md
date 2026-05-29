@@ -203,11 +203,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           go-version: stable
 
@@ -257,8 +257,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
         with:
           go-version: stable
       - run: go run ./cmd/gitclaw heartbeat --repo "$GITHUB_REPOSITORY"
@@ -365,8 +365,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
         with:
           go-version: stable
       - id: enqueue
@@ -478,6 +478,10 @@ Security and operational notes:
   `models: read` for conversation-only v0.
 - Preflight/authorization should run before model inference and should not
   require `models: read`.
+- Workflow snippets and checked-in workflows should use Node 24-compatible
+  first-party Actions majors: `actions/checkout@v5`, `actions/setup-go@v6`,
+  and `actions/upload-artifact@v6`. This keeps the GitHub-native runtime ahead
+  of GitHub's 2026 Node.js 20 runner deprecation warnings.
 - Do not dump raw prompts into logs by default; if prompt artifacts are enabled,
   redact secrets and mark issue text as untrusted input.
 - GitHub Models has free but rate-limited usage and optional paid usage, so
@@ -1307,7 +1311,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 330
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: gitclaw channel-gateway --channel "${{ inputs.channel }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

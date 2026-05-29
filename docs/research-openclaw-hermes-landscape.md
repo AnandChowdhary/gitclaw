@@ -253,6 +253,13 @@ configuration, and safe failure comments. `@gitclaw /models` is the GitHub-nativ
 audit surface for provider family, model, token source name, timeout, and retry
 budget without exposing tokens or raw provider bodies.
 
+2026-05-29 workflow-runtime follow-up: GitClaw's serverless runtime is GitHub
+Actions itself, so action runtime deprecations are part of product reliability.
+Checked-in workflows and spec snippets should track Node 24-compatible
+first-party action majors (`actions/checkout@v5`, `actions/setup-go@v6`, and
+`actions/upload-artifact@v6`) to avoid noisy or broken assistant turns as
+GitHub phases out Node.js 20 action execution.
+
 2026-05-29 config visibility follow-up: OpenClaw's `models status` separates
 read-only provider/auth visibility from live probes that may spend tokens, and
 Hermes profiles isolate config, API keys, memory, sessions, skills, cron jobs,
