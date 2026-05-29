@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T17:52:09Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 44,
+    "title": "GitClaw channels report e2e 20260529T175012Z",
+    "body": "\u003c!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"channels-report-e2e-20260529T175012Z\" --\u003e\nGitClaw channels-report E2E thread.\n\nHidden issue token: GITCLAW_CHANNELS_REPORT_ISSUE_20260529T175012Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw:channel"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channels report e2e 20260529T175012Z\n\n\u003c!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"channels-report-e2e-20260529T175012Z\" --\u003e\nGitClaw channels-report E2E thread.\n\nHidden issue token: GITCLAW_CHANNELS_REPORT_ISSUE_20260529T175012Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "Hidden mirrored message token: GITCLAW_CHANNELS_REPORT_MESSAGE_20260529T175012Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4578154755,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels\n\nPlease audit channel bridge config.\nHidden command token: GITCLAW_CHANNELS_REPORT_COMMAND_20260529T175012Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4578154896,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#44`\n- channel_label: `gitclaw:channel`\n- trigger_label: `gitclaw`\n- workflow_path: `.github/workflows/gitclaw-channel-ingest.yml`\n- workflow_present: `true`\n- workflow_dispatch_trigger: `true`\n- permissions_actions_write: `true`\n- permissions_issues_write: `true`\n- workflow_inputs: `5`\n- channel_thread_issue: `true`\n- channel_message_comments_now: `1`\n- supported_providers: `telegram, slack, generic`\n- wake_strategy: `workflow_dispatch`\n- issue_title_sha256_12: `c7b8fed6a6b0`\n\nChannel ingress mirrors external messages into canonical GitHub issues, then wakes the normal handler with `workflow_dispatch`. Channel message bodies, issue bodies, and tokens are not included in this report.\n\n### Workflow\n- `.github/workflows/gitclaw-channel-ingest.yml` bytes=`2068` lines=`67` workflow_dispatch=`true` actions_write=`true` issues_write=`true` inputs=`5` sha256_12=`3f9d36543965`\n\n### Providers\n- `telegram`\n- `slack`\n- `generic`\n\n### Ingest Contract\n- `gitclaw channel-ingest --channel \u003cprovider\u003e --thread-id \u003cthread\u003e --message-id \u003cmessage\u003e --body \u003ctext\u003e`\n- one canonical issue per `channel + thread_id`\n- one mirrored comment per `channel + message_id`\n- dispatch id: `\u003cchannel\u003e-\u003cmessage_id\u003e`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4578164254,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4578154755,
+      "body": "\u003c!-- gitclaw:channel-message channel=\"telegram\" thread_id=\"channels-report-e2e-20260529T175012Z\" message_id=\"message-20260529T175012Z\" author=\"telegram:e2e\" --\u003e\nHidden mirrored message token: GITCLAW_CHANNELS_REPORT_MESSAGE_20260529T175012Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-05-29T17:50:15Z",
+      "updated_at": "2026-05-29T17:50:15Z"
+    },
+    {
+      "id": 4578154896,
+      "body": "@gitclaw /channels\n\nPlease audit channel bridge config.\nHidden command token: GITCLAW_CHANNELS_REPORT_COMMAND_20260529T175012Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-05-29T17:50:16Z",
+      "updated_at": "2026-05-29T17:50:16Z"
+    },
+    {
+      "id": 4578164254,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26653102355\" event_id=\"comment-4578154896\" model=\"gitclaw/channels\" idempotency_key=\"b2296822bd9b44d6a4c4beebaf419358\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26653102355\" --\u003e\n## GitClaw Channel Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#44`\n- channel_label: `gitclaw:channel`\n- trigger_label: `gitclaw`\n- workflow_path: `.github/workflows/gitclaw-channel-ingest.yml`\n- workflow_present: `true`\n- workflow_dispatch_trigger: `true`\n- permissions_actions_write: `true`\n- permissions_issues_write: `true`\n- workflow_inputs: `5`\n- channel_thread_issue: `true`\n- channel_message_comments_now: `1`\n- supported_providers: `telegram, slack, generic`\n- wake_strategy: `workflow_dispatch`\n- issue_title_sha256_12: `c7b8fed6a6b0`\n\nChannel ingress mirrors external messages into canonical GitHub issues, then wakes the normal handler with `workflow_dispatch`. Channel message bodies, issue bodies, and tokens are not included in this report.\n\n### Workflow\n- `.github/workflows/gitclaw-channel-ingest.yml` bytes=`2068` lines=`67` workflow_dispatch=`true` actions_write=`true` issues_write=`true` inputs=`5` sha256_12=`3f9d36543965`\n\n### Providers\n- `telegram`\n- `slack`\n- `generic`\n\n### Ingest Contract\n- `gitclaw channel-ingest --channel \u003cprovider\u003e --thread-id \u003cthread\u003e --message-id \u003cmessage\u003e --body \u003ctext\u003e`\n- one canonical issue per `channel + thread_id`\n- one mirrored comment per `channel + message_id`\n- dispatch id: `\u003cchannel\u003e-\u003cmessage_id\u003e`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T17:51:38Z",
+      "updated_at": "2026-05-29T17:51:38Z"
+    }
+  ]
+}
