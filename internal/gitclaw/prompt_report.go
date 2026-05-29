@@ -21,6 +21,14 @@ func IsPromptReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderPromptReport(ev Event, cfg Config, transcript []TranscriptMessage, repoContext RepoContext) string {
+	return renderPromptReport(ev, cfg, transcript, repoContext, true)
+}
+
+func RenderPromptCLIReport(cfg Config, repoContext RepoContext) string {
+	return renderPromptReport(Event{}, cfg, nil, repoContext, false)
+}
+
+func renderPromptReport(ev Event, cfg Config, transcript []TranscriptMessage, repoContext RepoContext, includeIssue bool) string {
 	profile := buildPromptReportProfile(LLMRequest{
 		Event:      ev,
 		Transcript: transcript,
@@ -30,8 +38,12 @@ func RenderPromptReport(ev Event, cfg Config, transcript []TranscriptMessage, re
 	var b strings.Builder
 	b.WriteString("## GitClaw Prompt Report\n\n")
 	b.WriteString("Generated without a model call.\n\n")
-	fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
-	fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
 	fmt.Fprintf(&b, "- provider: `%s`\n", cfg.ModelProvider)
 	fmt.Fprintf(&b, "- model: `%s`\n", cfg.Model)
 	fmt.Fprintf(&b, "- system_prompt_bytes: `%d`\n", len(systemPrompt))
@@ -51,7 +63,10 @@ func RenderPromptReport(ev Event, cfg Config, transcript []TranscriptMessage, re
 	fmt.Fprintf(&b, "- prompt_artifact_enabled: `%t`\n", strings.TrimSpace(os.Getenv("GITCLAW_PROMPT_ARTIFACT_PATH")) != "")
 	fmt.Fprintf(&b, "- prompt_artifact_redaction_patterns: `%d`\n", len(promptArtifactRedactions))
 	fmt.Fprintf(&b, "- prompt_body_included: `%t`\n", false)
-	fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n\n", shortDocumentHash(ev.Issue.Title))
+	if includeIssue {
+		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
+	}
+	b.WriteByte('\n')
 	b.WriteString("Prompt text, issue/comment bodies, context file bodies, skill bodies, and tool output bodies are not included. Hashes and size metadata make the prompt construction auditable without turning a diagnostic issue into a prompt dump.\n\n")
 
 	b.WriteString("### Prompt Inputs\n")

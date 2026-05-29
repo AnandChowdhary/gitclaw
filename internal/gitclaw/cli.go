@@ -45,6 +45,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runPolicyCommand(args[1:])
 	case "context":
 		return runContextCommand(args[1:])
+	case "prompt", "budget", "prompt-budget":
+		return runPromptCommand(args[1:])
 	case "doctor":
 		return runDoctorCommand(args[1:])
 	case "commands":
@@ -320,6 +322,22 @@ func runContextCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderContextCLIReport(cfg, repoContext))
+	return nil
+}
+
+func runPromptCommand(args []string) error {
+	if len(args) > 1 || (len(args) == 1 && args[0] != "list") {
+		return fmt.Errorf("usage: gitclaw prompt [list]")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderPromptCLIReport(cfg, repoContext))
 	return nil
 }
 

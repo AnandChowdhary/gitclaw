@@ -608,6 +608,13 @@ body-free context file metadata, selected always-on skills, deterministic tool
 output input/size/hash metadata, and prompt budget settings, with no file,
 skill, prompt, or tool-output bodies.
 
+2026-05-30 prompt-list follow-up: prompt-budget visibility should also be
+available before opening an issue. Add `gitclaw prompt list` as the local
+mirror of `/prompt`: provider/model, prompt size/hash, configured budgets,
+transcript counts, context files, selected always-on skills, and deterministic
+tool-output input/size/hash metadata, with no prompt, file, skill, issue, or
+tool-output bodies.
+
 ### Skills
 
 Hermes skills are on-demand knowledge documents, also compatible with AgentSkills. The default local source of truth is `~/.hermes/skills/`, with optional external directories.

@@ -1075,6 +1075,7 @@ OpenClaw's context diagnostics and Hermes' bounded memory/context posture:
 
 ```text
 @gitclaw /prompt
+@gitclaw /prompt list
 ```
 
 `@gitclaw /budget` and `@gitclaw /prompt-budget` are accepted aliases, but the
@@ -1097,6 +1098,18 @@ It never dumps the prompt text, issue/comment bodies, context file bodies,
 skill bodies, or tool output bodies into the issue. This gives maintainers a
 low-cost way to debug prompt bloat, missing context, and truncation behavior
 without leaking the exact prompt into a public or long-lived GitHub comment.
+
+Local operators can inspect the same prompt-budget and prompt-input surface
+without opening an issue:
+
+```bash
+gitclaw prompt list
+```
+
+The local report omits repository and issue metadata, reports zero transcript
+messages, and still summarizes provider/model, prompt hash/size, prompt
+budgets, context file metadata, selected always-on skills, and deterministic
+tool-output metadata without dumping prompt text or any loaded bodies.
 
 ## Labels
 
@@ -2197,6 +2210,7 @@ assert the expected comments/labels, and close the issue in cleanup.
 16. **Prompt inspection**
 
    - create a real issue with `@gitclaw /prompt`,
+   - create a real issue with `@gitclaw /prompt list` as the explicit alias,
    - ask for a concrete file read, selected skill, and search fixture phrase,
    - assert the reply is marked `model="gitclaw/prompt"`,
    - assert the report lists prompt budget settings, final prompt size/hash,
@@ -2667,6 +2681,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven prompt-report E2E harness verifies `@gitclaw /prompt`
   produces a deterministic prompt budget, hash, truncation, context, and tool
   metadata report without a model call or prompt/body leakage.
+- A `gh`-driven prompt-list E2E harness verifies `@gitclaw /prompt list` is an
+  explicit report alias, while local `gitclaw prompt list` exposes the same
+  body-free prompt-budget, prompt-input, context, skill, and tool metadata
+  without issue-only fields.
 - A `gh`-driven memory-report E2E harness verifies `@gitclaw /memory`
   produces a deterministic memory inventory without a model call or body
   leakage.

@@ -495,6 +495,39 @@ CONTEXT_LIST_SKILL_BODY
 	}
 }
 
+func TestPromptListCommandReportsPromptBudgetWithoutBodies(t *testing.T) {
+	dir := t.TempDir()
+	writeTestFile(t, dir, ".gitclaw/SOUL.md", "PROMPT_LIST_SOUL_BODY")
+	writeTestFile(t, dir, ".gitclaw/MEMORY.md", "PROMPT_LIST_MEMORY_BODY")
+	writeTestFile(t, dir, ".gitclaw/TOOLS.md", "PROMPT_LIST_TOOLS_BODY")
+	writeTestFile(t, dir, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Use read-only repository context.
+always: true
+---
+
+PROMPT_LIST_SKILL_BODY
+`)
+	writeTestFile(t, dir, "go.mod", "module example.com/prompt-list\nPROMPT_LIST_REPO_TOKEN\n")
+	t.Setenv("GITCLAW_WORKDIR", dir)
+	t.Setenv("GITCLAW_PROMPT_ARTIFACT_PATH", "")
+	output := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"prompt", "list"}); err != nil {
+			t.Fatalf("prompt list returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"GitClaw Prompt Report", "scope: `local-cli`", "Generated without a model call", "provider: `github-models`", "model: `openai/gpt-5-mini`", "system_prompt_sha256_12:", "prompt_bytes:", "prompt_lines:", "prompt_sha256_12:", "max_prompt_bytes: `60000`", "max_output_tokens: `4000`", "max_transcript_messages: `40`", "max_transcript_message_bytes: `8000`", "transcript_messages: `0`", "bounded_transcript_messages: `0`", "omitted_older_messages: `0`", "truncated_transcript_bodies: `0`", "prompt_contains_truncation_marker: `false`", "prompt_artifact_enabled: `false`", "prompt_body_included: `false`", "### Prompt Inputs", "context_files:", "selected_skills: `1`", "available_skills: `1`", "tool_outputs:", "### Context Files", ".gitclaw/SOUL.md", ".gitclaw/MEMORY.md", ".gitclaw/TOOLS.md", "### Selected Skills", ".gitclaw/SKILLS/repo-reader/SKILL.md", "### Tool Outputs", "gitclaw.list_files", "gitclaw.skill_index", "sha256_12="} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("prompt list output missing %q:\n%s", want, output)
+		}
+	}
+	for _, notWant := range []string{"repository:", "issue:", "issue_title_sha256_12", "PROMPT_LIST_SOUL_BODY", "PROMPT_LIST_MEMORY_BODY", "PROMPT_LIST_TOOLS_BODY", "PROMPT_LIST_SKILL_BODY", "PROMPT_LIST_REPO_TOKEN", "module example.com/prompt-list"} {
+		if strings.Contains(output, notWant) {
+			t.Fatalf("prompt list output unexpectedly included %q:\n%s", notWant, output)
+		}
+	}
+}
+
 func TestCommandsCommandReportsCatalog(t *testing.T) {
 	t.Setenv("GITCLAW_WORKDIR", t.TempDir())
 	output := captureStdout(t, func() {
@@ -502,7 +535,7 @@ func TestCommandsCommandReportsCatalog(t *testing.T) {
 			t.Fatalf("commands returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `7`", "local_cli_helpers: `30`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`gitclaw commands` command=`/help`", "`gitclaw channels list` command=`/channels`", "`gitclaw config list` command=`/config`", "`gitclaw context list` command=`/context`", "`gitclaw models list` command=`/models`", "`gitclaw policy list` command=`/policy`", "`gitclaw backup list` command=`/backup`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
+	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `7`", "local_cli_helpers: `31`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`gitclaw commands` command=`/help`", "`gitclaw channels list` command=`/channels`", "`gitclaw config list` command=`/config`", "`gitclaw context list` command=`/context`", "`gitclaw prompt list` command=`/prompt`", "`gitclaw models list` command=`/models`", "`gitclaw policy list` command=`/policy`", "`gitclaw backup list` command=`/backup`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("commands output missing %q:\n%s", want, output)
 		}

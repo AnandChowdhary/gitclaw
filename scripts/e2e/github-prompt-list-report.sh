@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "commands-report-e2e: $*" >&2
+  echo "prompt-list-report-e2e: $*" >&2
 }
 
 die() {
@@ -33,12 +33,20 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_COMMANDS_REPORT_E2E_${timestamp}"
-title="@gitclaw /help e2e ${timestamp}"
-body="Live commands-report E2E.
+token="GITCLAW_PROMPT_LIST_REPORT_E2E_${timestamp}"
+noise=""
+for _ in $(seq 1 1800); do
+  noise+="prompt-list-noise "
+done
+title="@gitclaw /prompt list e2e ${timestamp}"
+body="Live prompt-list-report E2E.
 
-Hidden commands report body token: ${token}
-This should produce a deterministic command catalog report without a model call."
+Inspect \`go.mod\`, use the repo-reader skill, and search for \"bounded repository search fixture phrase\".
+Hidden prompt list report body token: ${token}
+
+${noise}
+
+This should produce a deterministic GitClaw prompt report without calling a model."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -52,7 +60,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "commands-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "prompt-list-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -73,11 +81,11 @@ wait_for_run() {
       --json databaseId,status,conclusion,url,createdAt,displayTitle \
       --jq '. as $runs | $runs | map(select(.displayTitle == "'"${title}"'")) | sort_by(.createdAt) | reverse | .[0] // empty')"
     if [[ -n "$run_json" && "$run_json" != "null" ]]; then
-      local run_status conclusion url
-      run_status="$(jq -r '.status' <<<"$run_json")"
+      local status conclusion url
+      status="$(jq -r '.status' <<<"$run_json")"
       conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
       url="$(jq -r '.url' <<<"$run_json")"
-      if [[ "$run_status" == "completed" ]]; then
+      if [[ "$status" == "completed" ]]; then
         [[ "$conclusion" == "success" ]] || die "issues run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
@@ -109,6 +117,13 @@ error_count() {
     --jq '[.comments[] | select(.body | contains("<!-- gitclaw:error"))] | length'
 }
 
+issue_label_names() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json labels \
+    --jq '.labels[].name'
+}
+
 wait_for_assistant_count() {
   local want="$1"
   for _ in {1..90}; do
@@ -127,55 +142,65 @@ wait_for_assistant_count() {
   return 1
 }
 
+wait_for_done_status() {
+  for _ in {1..60}; do
+    local labels
+    labels="$(issue_label_names)"
+    if grep -Fxq "gitclaw:done" <<<"$labels" &&
+      ! grep -Fxq "gitclaw:running" <<<"$labels" &&
+      ! grep -Fxq "gitclaw:error" <<<"$labels"; then
+      return 0
+    fi
+    sleep 5
+  done
+  return 1
+}
+
 run_json="$(wait_for_run "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one commands report comment"
+wait_for_assistant_count 1 || die "expected one prompt list report comment"
 comments="$(assistant_comments)"
 
 for expected in \
-  'model="gitclaw/commands"' \
-  "GitClaw Commands Report" \
+  'model="gitclaw/prompt"' \
+  "GitClaw Prompt Report" \
   "Generated without a model call" \
-  'trigger_prefix: `@gitclaw`' \
-  'commands: `15`' \
-  'aliases: `7`' \
-  'local_cli_helpers: `31`' \
-  'run_mode: `read-only`' \
-  "### Slash Commands" \
-  '/help' \
-  '/commands' \
-  '/backup' \
-  '/tools' \
-  '/doctor' \
-  '/skills' \
-  '/soul' \
-  'gitclaw channels list' \
-  'gitclaw config list' \
-  'gitclaw context list' \
-  'gitclaw prompt list' \
-  'gitclaw models list' \
-  'gitclaw policy list' \
-  'gitclaw backup list' \
-  'gitclaw backup stats' \
-  'gitclaw backup search <query>' \
-  'gitclaw backup retention-plan' \
-  'gitclaw commands' \
-  'gitclaw memory validate' \
-  'gitclaw memory list' \
-  'gitclaw memory search <query>' \
-  'gitclaw soul list' \
-  'gitclaw soul search <query>' \
-  'gitclaw skills list' \
-  'gitclaw skills info <name>' \
-  'gitclaw skills search <query>' \
-  'gitclaw tools validate' \
-  'gitclaw tools list' \
-  'gitclaw tools search <query>'; do
-  grep -Fq "$expected" <<<"$comments" || die "commands report missing ${expected}"
+  'provider: `github-models`' \
+  'model: `openai/gpt-5-mini`' \
+  "system_prompt_sha256_12:" \
+  "prompt_bytes:" \
+  "prompt_sha256_12:" \
+  'max_prompt_bytes: `60000`' \
+  'max_output_tokens: `4000`' \
+  'max_transcript_messages: `40`' \
+  'max_transcript_message_bytes: `8000`' \
+  'truncated_transcript_bodies: `1`' \
+  'prompt_contains_truncation_marker: `true`' \
+  'prompt_body_included: `false`' \
+  "### Prompt Inputs" \
+  "### Context Files" \
+  "### Selected Skills" \
+  "### Tool Outputs" \
+  ".gitclaw/SOUL.md" \
+  ".gitclaw/SKILLS/repo-reader/SKILL.md" \
+  "gitclaw.list_files" \
+  "gitclaw.skill_index" \
+  "gitclaw.search_files" \
+  "gitclaw.read_file" \
+  'input=`go.mod`' \
+  "sha256_12="; do
+  grep -Fq "$expected" <<<"$comments" || die "prompt list report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "commands report leaked issue body token"
-fi
+for leaked in \
+  "$token" \
+  "GITCLAW_SEARCH_CONTEXT_V1" \
+  "module github.com/AnandChowdhary/gitclaw" \
+  "prompt-list-noise"; do
+  if grep -Fq "$leaked" <<<"$comments"; then
+    die "prompt list report leaked ${leaked}"
+  fi
+done
 
+wait_for_done_status || die "expected gitclaw:done without running/error"
 url="$(jq -r '.url' <<<"$run_json")"
 log "passed for issue #${issue_number}: ${url}"
