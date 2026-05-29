@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T13:48:44Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "workflow_dispatch",
+  "issue": {
+    "number": 16,
+    "title": "GitClaw channel message e2e 20260529T134633Z",
+    "body": "Live channel bridge E2E.\n\nThis issue starts untriggered. A mirrored channel message comment contains the actual request.\n",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw",
+      "gitclaw:e2e",
+      "gitclaw:done"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel message e2e 20260529T134633Z\n\nLive channel bridge E2E.\n\nThis issue starts untriggered. A mirrored channel message comment contains the actual request.\n",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "Mirrored Telegram message.\n\nWhen dispatched, reply with exact token `GITCLAW_CHANNEL_MESSAGE_E2E_20260529T134633Z`.\nAlso include the exact word `telegram`.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4575914554,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_MESSAGE_E2E_20260529T134633Z telegram",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4575930432,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4575914554,
+      "body": "\u003c!-- gitclaw:channel-message channel=\"telegram\" message_id=\"telegram-update-20260529T134633Z\" author=\"telegram:e2e\" --\u003e\nMirrored Telegram message.\n\nWhen dispatched, reply with exact token `GITCLAW_CHANNEL_MESSAGE_E2E_20260529T134633Z`.\nAlso include the exact word `telegram`.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-05-29T13:46:35Z",
+      "updated_at": "2026-05-29T13:46:35Z"
+    },
+    {
+      "id": 4575930432,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26640951561\" event_id=\"dispatch-telegram-update-20260529T134633Z\" model=\"openai/gpt-5-mini\" idempotency_key=\"515dd00102475998a6cc33b1b76b4a41\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26640951561\" --\u003e\nGITCLAW_CHANNEL_MESSAGE_E2E_20260529T134633Z telegram",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T13:48:11Z",
+      "updated_at": "2026-05-29T13:48:11Z"
+    }
+  ]
+}
