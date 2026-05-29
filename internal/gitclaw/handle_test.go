@@ -298,6 +298,56 @@ on:
 	}
 }
 
+func TestHandleModelsCommandPostsReportWithoutLLM(t *testing.T) {
+	t.Setenv("GITHUB_TOKEN", "github-token")
+	t.Setenv("GH_TOKEN", "")
+	t.Setenv("GITCLAW_LLM_API_KEY", "")
+	t.Setenv("GITCLAW_LLM_BASE_URL", "")
+	t.Setenv("GITCLAW_LLM_MAX_ATTEMPTS", "6")
+	t.Setenv("GITCLAW_LLM_TIMEOUT_SECONDS", "75")
+	t.Setenv("GITCLAW_LLM_RETRY_BASE_DELAY_SECONDS", "10")
+	t.Setenv("GITCLAW_LLM_RETRY_MAX_DELAY_SECONDS", "90")
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 98,
+			"title": "@gitclaw /models",
+			"body": "Hidden model token: MODEL_REPORT_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{98: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, DefaultConfig(), github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic models command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Model Report", "Generated without a model call", "model=\"gitclaw/models\"", "provider: `github-models`", "model: `openai/gpt-5-mini`", "endpoint_host: `models.github.ai`", "token_source: `GITHUB_TOKEN`", "request_timeout_seconds: `75`", "retry_max_attempts: `6`", "retry_base_delay_seconds: `10`", "retry_max_delay_seconds: `90`", "retryable_statuses: `429, 408, 5xx`"} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("model report missing %q:\n%s", want, body)
+		}
+	}
+	if strings.Contains(body, "MODEL_REPORT_SECRET") || strings.Contains(body, "github-token") {
+		t.Fatalf("model report leaked sensitive value:\n%s", body)
+	}
+	if !hasLabel(github.IssueLabels[98], "gitclaw:done") || hasLabel(github.IssueLabels[98], "gitclaw:running") || hasLabel(github.IssueLabels[98], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[98])
+	}
+}
+
 func TestHandleSkillsCommandPostsReportWithoutLLM(t *testing.T) {
 	root := t.TempDir()
 	if err := os.MkdirAll(filepath.Join(root, ".gitclaw", "SKILLS", "repo-reader"), 0o755); err != nil {

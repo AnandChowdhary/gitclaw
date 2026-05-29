@@ -221,6 +221,16 @@ operator visibility through issue-visible metadata: `@gitclaw /proactive`
 reports the proactive workflow, schedule trigger, prompt files, labels, and
 enqueue contract without dumping the prompt bodies.
 
+2026-05-29 model resilience follow-up: OpenClaw cron records model/provider
+failures as job errors instead of treating empty replies as success, and Hermes
+cron documents fresh sessions plus provider recovery/fallback behavior for
+scheduled runs. GitHub Models is free but rate-limited unless users opt into
+paid usage, and GitHub Actions scheduled runs can be delayed or dropped under
+load. GitClaw therefore needs bounded model retries, issue-visible provider
+configuration, and safe failure comments. `@gitclaw /models` is the GitHub-native
+audit surface for provider family, model, token source name, timeout, and retry
+budget without exposing tokens or raw provider bodies.
+
 ### Multi-Agent Routing
 
 OpenClaw's multi-agent model treats each agent as a full isolated persona scope:

@@ -486,6 +486,38 @@ Security and operational notes:
   are also time-bounded so a stuck inference call cannot consume the whole
   Actions job timeout, and provider `Retry-After` values are capped so dense
   E2E runs do not park a workflow for an unbounded cooldown window.
+- Retry delays use bounded exponential backoff. The default source build uses
+  five attempts, a 60 second request timeout, a 5 second base delay, and a
+  60 second maximum delay. The checked-in Actions workflow is more patient for
+  live model-backed runs: six attempts, a 75 second request timeout, a
+  10 second base delay, and a 90 second maximum delay.
+
+### Model Inspection Command
+
+GitClaw supports a deterministic model/provider audit command:
+
+```text
+@gitclaw /models
+```
+
+The command runs after normal preflight and context loading, but before model
+inference. It posts a `gitclaw:assistant-turn` comment with
+`model="gitclaw/models"` and summarizes:
+
+- provider family,
+- selected model,
+- endpoint host without URL credentials,
+- token source name without token value,
+- request timeout,
+- retry attempts,
+- retry base and maximum delay,
+- retryable status categories,
+- prompt-artifact enablement.
+
+It never dumps issue/comment bodies, API keys, full prompts, or raw provider
+error bodies. This gives operators a safe way to inspect GitHub Models and
+OpenAI-compatible provider wiring from the issue thread before burning model
+quota on a real assistant turn.
 
 ## Runtime Architecture
 
@@ -1724,6 +1756,8 @@ examples/workflows/gitclaw.yml
   workflow end to end.
 - A `gh`-driven proactive-report E2E harness verifies `@gitclaw /proactive`
   reports workflow triggers and prompt metadata without a model call.
+- A `gh`-driven model-report E2E harness verifies `@gitclaw /models` reports
+  GitHub Models provider and retry settings without a model call.
 - A `gh`-driven backup-index E2E harness verifies the dedicated backup branch
   contains issue JSON plus a repo-scoped `index.json` and `README.md`.
 - A `gh`-driven backup-report E2E harness verifies `@gitclaw /backup`

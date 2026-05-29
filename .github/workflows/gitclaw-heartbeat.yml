@@ -58,3 +58,7 @@ jobs:
           GITCLAW_HEARTBEAT_LABEL: ${{ github.event.inputs.label }}
           GITCLAW_HEARTBEAT_SLOT: ${{ github.event.inputs.slot }}
           GITCLAW_HEARTBEAT_LIMIT: ${{ github.event.inputs.limit }}
+          GITCLAW_LLM_MAX_ATTEMPTS: "6"
+          GITCLAW_LLM_TIMEOUT_SECONDS: "75"
+          GITCLAW_LLM_RETRY_BASE_DELAY_SECONDS: "10"
+          GITCLAW_LLM_RETRY_MAX_DELAY_SECONDS: "90"

@@ -25,6 +25,9 @@ func TestNewLLMFromEnvDefaultsToGitHubModelsWithActionsToken(t *testing.T) {
 	t.Setenv("GITHUB_TOKEN", "github-token")
 	t.Setenv("GITCLAW_LLM_BASE_URL", "")
 	t.Setenv("GITCLAW_MODEL", "")
+	t.Setenv("GITCLAW_LLM_MAX_ATTEMPTS", "")
+	t.Setenv("GITCLAW_LLM_RETRY_MAX_DELAY_SECONDS", "")
+	t.Setenv("GITCLAW_LLM_TIMEOUT_SECONDS", "")
 
 	llm, err := NewLLMFromEnv(DefaultConfig())
 	if err != nil {
@@ -45,6 +48,12 @@ func TestNewLLMFromEnvDefaultsToGitHubModelsWithActionsToken(t *testing.T) {
 	}
 	if client.Client.Timeout != time.Minute {
 		t.Fatalf("client timeout = %s, want 1m0s", client.Client.Timeout)
+	}
+	if llmMaxAttempts() != 5 {
+		t.Fatalf("llmMaxAttempts() = %d, want 5", llmMaxAttempts())
+	}
+	if llmRetryMaxDelay() != time.Minute {
+		t.Fatalf("llmRetryMaxDelay() = %s, want 1m0s", llmRetryMaxDelay())
 	}
 }
 
@@ -121,8 +130,25 @@ func TestLLMTimeoutFromEnvIsBounded(t *testing.T) {
 func TestLLMRetryDelayCapsRetryAfter(t *testing.T) {
 	t.Setenv("GITCLAW_LLM_RETRY_MAX_DELAY_SECONDS", "2")
 	res := &http.Response{Header: http.Header{"Retry-After": []string{"120"}}}
-	if got := llmRetryDelay(res); got != 2*time.Second {
+	if got := llmRetryDelay(res, 1); got != 2*time.Second {
 		t.Fatalf("llmRetryDelay() = %s, want 2s", got)
+	}
+}
+
+func TestLLMRetryDelayUsesBoundedExponentialBackoff(t *testing.T) {
+	t.Setenv("GITCLAW_LLM_RETRY_BASE_DELAY_SECONDS", "3")
+	t.Setenv("GITCLAW_LLM_RETRY_MAX_DELAY_SECONDS", "10")
+	for _, tc := range []struct {
+		attempt int
+		want    time.Duration
+	}{
+		{attempt: 1, want: 3 * time.Second},
+		{attempt: 2, want: 6 * time.Second},
+		{attempt: 3, want: 10 * time.Second},
+	} {
+		if got := llmRetryDelay(nil, tc.attempt); got != tc.want {
+			t.Fatalf("attempt %d delay = %s, want %s", tc.attempt, got, tc.want)
+		}
 	}
 }
 

@@ -78,6 +78,10 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           GITCLAW_E2E_INVALID_MODEL: ${{ contains(github.event.issue.labels.*.name, 'gitclaw:e2e-invalid-model') }}
           GITCLAW_PROMPT_ARTIFACT_ENABLED: ${{ contains(github.event.issue.labels.*.name, 'gitclaw:e2e-prompt-artifact') }}
+          GITCLAW_LLM_MAX_ATTEMPTS: "6"
+          GITCLAW_LLM_TIMEOUT_SECONDS: "75"
+          GITCLAW_LLM_RETRY_BASE_DELAY_SECONDS: "10"
+          GITCLAW_LLM_RETRY_MAX_DELAY_SECONDS: "90"
 
       - if: always() && contains(github.event.issue.labels.*.name, 'gitclaw:e2e-prompt-artifact')
         uses: actions/upload-artifact@v4

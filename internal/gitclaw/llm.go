@@ -50,7 +50,7 @@ func NewLLMFromEnv(cfg Config) (LLMClient, error) {
 	}
 	baseURL := os.Getenv("GITCLAW_LLM_BASE_URL")
 	if baseURL == "" {
-		baseURL = "https://models.github.ai/inference/chat/completions"
+		baseURL = defaultGitHubModelsBaseURL
 	}
 	apiKey := llmAPIKey(baseURL)
 	if apiKey == "" {
@@ -107,7 +107,7 @@ func (c *OpenAICompatibleLLM) Complete(ctx context.Context, req LLMRequest) (str
 	var lastErr error
 	maxAttempts := llmMaxAttempts()
 	for attempt := 1; attempt <= maxAttempts; attempt++ {
-		response, retry, err := c.completeAttempt(ctx, body)
+		response, retry, err := c.completeAttempt(ctx, body, attempt)
 		if err == nil {
 			return response, nil
 		}
@@ -127,7 +127,7 @@ type llmRetry struct {
 	Delay time.Duration
 }
 
-func (c *OpenAICompatibleLLM) completeAttempt(ctx context.Context, body []byte) (string, llmRetry, error) {
+func (c *OpenAICompatibleLLM) completeAttempt(ctx context.Context, body []byte, attempt int) (string, llmRetry, error) {
 	httpReq, err := http.NewRequestWithContext(ctx, http.MethodPost, c.BaseURL, bytes.NewReader(body))
 	if err != nil {
 		return "", llmRetry{}, err
@@ -141,14 +141,14 @@ func (c *OpenAICompatibleLLM) completeAttempt(ctx context.Context, body []byte) 
 		if ctx.Err() != nil {
 			return "", llmRetry{}, err
 		}
-		return "", llmRetry{Retry: true, Delay: llmRetryDelay(nil)}, err
+		return "", llmRetry{Retry: true, Delay: llmRetryDelay(nil, attempt)}, err
 	}
 	defer res.Body.Close()
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
 		data, _ := io.ReadAll(io.LimitReader(res.Body, 4096))
 		err := fmt.Errorf("LLM request failed: status=%d body=%s", res.StatusCode, strings.TrimSpace(string(data)))
 		if retryableLLMStatus(res.StatusCode) {
-			return "", llmRetry{Retry: true, Delay: llmRetryDelay(res)}, err
+			return "", llmRetry{Retry: true, Delay: llmRetryDelay(res, attempt)}, err
 		}
 		return "", llmRetry{}, err
 	}
@@ -171,14 +171,14 @@ func (c *OpenAICompatibleLLM) completeAttempt(ctx context.Context, body []byte) 
 func llmMaxAttempts() int {
 	raw := strings.TrimSpace(os.Getenv("GITCLAW_LLM_MAX_ATTEMPTS"))
 	if raw == "" {
-		return 4
+		return 5
 	}
 	value, err := strconv.Atoi(raw)
 	if err != nil || value < 1 {
 		return 1
 	}
-	if value > 8 {
-		return 8
+	if value > 10 {
+		return 10
 	}
 	return value
 }
@@ -201,14 +201,29 @@ func llmTimeout() time.Duration {
 func llmRetryMaxDelay() time.Duration {
 	raw := strings.TrimSpace(os.Getenv("GITCLAW_LLM_RETRY_MAX_DELAY_SECONDS"))
 	if raw == "" {
-		return 30 * time.Second
+		return 60 * time.Second
 	}
 	value, err := strconv.Atoi(raw)
 	if err != nil || value < 0 {
-		return 30 * time.Second
+		return 60 * time.Second
 	}
 	if value > 300 {
 		value = 300
+	}
+	return time.Duration(value) * time.Second
+}
+
+func llmRetryBaseDelay() time.Duration {
+	raw := strings.TrimSpace(os.Getenv("GITCLAW_LLM_RETRY_BASE_DELAY_SECONDS"))
+	if raw == "" {
+		return 5 * time.Second
+	}
+	value, err := strconv.Atoi(raw)
+	if err != nil || value < 0 {
+		return 5 * time.Second
+	}
+	if value > 60 {
+		value = 60
 	}
 	return time.Duration(value) * time.Second
 }
@@ -217,7 +232,7 @@ func retryableLLMStatus(status int) bool {
 	return status == http.StatusTooManyRequests || status == http.StatusRequestTimeout || status >= 500
 }
 
-func llmRetryDelay(res *http.Response) time.Duration {
+func llmRetryDelay(res *http.Response, attempt int) time.Duration {
 	maxDelay := llmRetryMaxDelay()
 	clamp := func(delay time.Duration) time.Duration {
 		if delay < 0 {
@@ -238,7 +253,17 @@ func llmRetryDelay(res *http.Response) time.Duration {
 			}
 		}
 	}
-	return clamp(5 * time.Second)
+	if attempt < 1 {
+		attempt = 1
+	}
+	delay := llmRetryBaseDelay()
+	for i := 1; i < attempt; i++ {
+		delay *= 2
+		if delay >= maxDelay {
+			return maxDelay
+		}
+	}
+	return clamp(delay)
 }
 
 func sleepContext(ctx context.Context, delay time.Duration) error {
