@@ -390,6 +390,12 @@ should use the same principle before adding semantic compaction: cap the final
 prompt, cap transcript message count, preserve the original issue plus the
 recent tail, and include explicit truncation markers so failures are auditable.
 
+2026-05-29 prompt-inspection follow-up: the GitHub-native version should make
+that budget visible with `@gitclaw /prompt`: report final prompt size, prompt
+hash, transcript omission/truncation counts, context contributors, and active
+tool output metadata without dumping the prompt body. That gives OpenClaw-style
+context debugging while preserving GitHub issue privacy boundaries.
+
 2026-05-29 context-inspection follow-up: OpenClaw's `/context` diagnostics
 make context contributors visible before debugging model behavior. GitClaw's
 serverless equivalent should be a deterministic issue command, `@gitclaw

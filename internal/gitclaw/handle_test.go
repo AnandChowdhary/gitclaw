@@ -393,7 +393,7 @@ model:
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Config Report", "Generated without a model call", "model=\"gitclaw/config\"", "config_source: `defaults+repo`", "config_file_path: `.gitclaw/config.yml`", "config_file_present: `true`", "trigger_label: `gitclaw`", "trigger_prefix: `@gitclaw`", "run_mode: `read-only`", "max_prompt_bytes: `60000`", "max_output_tokens: `4000`", "workflows_present: `2`", "slash_commands: `13`", "OWNER", "COLLABORATOR", "gitclaw:disabled", "/channels", "/doctor", "/memory", "/models", "/config", ".github/workflows/gitclaw.yml", ".github/workflows/gitclaw-heartbeat.yml", "sha256_12="} {
+	for _, want := range []string{"GitClaw Config Report", "Generated without a model call", "model=\"gitclaw/config\"", "config_source: `defaults+repo`", "config_file_path: `.gitclaw/config.yml`", "config_file_present: `true`", "trigger_label: `gitclaw`", "trigger_prefix: `@gitclaw`", "run_mode: `read-only`", "max_prompt_bytes: `60000`", "max_output_tokens: `4000`", "workflows_present: `2`", "slash_commands: `14`", "OWNER", "COLLABORATOR", "gitclaw:disabled", "/channels", "/doctor", "/memory", "/models", "/prompt", "/config", ".github/workflows/gitclaw.yml", ".github/workflows/gitclaw-heartbeat.yml", "sha256_12="} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("config report missing %q:\n%s", want, body)
 		}
@@ -666,6 +666,72 @@ func TestHandleMemoryCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 	if !hasLabel(github.IssueLabels[103], "gitclaw:done") || hasLabel(github.IssueLabels[103], "gitclaw:running") || hasLabel(github.IssueLabels[103], "gitclaw:error") {
 		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[103])
+	}
+}
+
+func TestHandlePromptCommandPostsReportWithoutLLM(t *testing.T) {
+	t.Setenv("GITCLAW_PROMPT_ARTIFACT_PATH", filepath.Join(t.TempDir(), "prompt.md"))
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SOUL.md", "SOUL_PROMPT_SECRET: stay repo native.")
+	writeTestFile(t, root, ".gitclaw/TOOLS.md", "TOOL_PROMPT_SECRET: read-only tools.")
+	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Read repository files.
+---
+
+PROMPT_SKILL_SECRET
+`)
+	writeTestFile(t, root, "go.mod", "module github.com/AnandChowdhary/gitclaw\n")
+	writeTestFile(t, root, "docs/search-fixture.md", "bounded repository search fixture phrase => GITCLAW_PROMPT_SEARCH_SECRET\n")
+
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 104,
+			"title": "@gitclaw /prompt",
+			"body": "Inspect go.mod with the repo-reader skill, search for \"bounded repository search fixture phrase\", and hide PROMPT_BODY_SECRET. `+strings.Repeat("noise ", 80)+`",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{104: {
+		{ID: 1, Body: "older prompt comment " + strings.Repeat("x", 120), AuthorAssociation: "MEMBER", User: User{Login: "alice", Type: "User"}},
+		{ID: 2, Body: "middle prompt comment " + strings.Repeat("y", 120), AuthorAssociation: "MEMBER", User: User{Login: "alice", Type: "User"}},
+		{ID: 3, Body: "latest prompt comment " + strings.Repeat("z", 120), AuthorAssociation: "MEMBER", User: User{Login: "alice", Type: "User"}},
+	}}}
+	llm := &FakeLLM{Response: "should not be called"}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	cfg.MaxTranscriptMessages = 2
+	cfg.MaxTranscriptMessageBytes = 80
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic prompt command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Prompt Report", "Generated without a model call", "model=\"gitclaw/prompt\"", "provider: `github-models`", "model: `openai/gpt-5-mini`", "system_prompt_sha256_12:", "prompt_bytes:", "prompt_sha256_12:", "max_prompt_bytes: `60000`", "max_transcript_messages: `2`", "max_transcript_message_bytes: `80`", "transcript_messages: `4`", "bounded_transcript_messages: `2`", "omitted_older_messages: `2`", "truncated_transcript_bodies: `2`", "prompt_contains_truncation_marker: `true`", "prompt_artifact_enabled: `true`", "prompt_artifact_redaction_patterns:", "prompt_body_included: `false`", "context_files:", "selected_skills: `1`", "available_skills: `1`", "tool_outputs:", ".gitclaw/SOUL.md", ".gitclaw/TOOLS.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", "gitclaw.list_files", "gitclaw.skill_index", "gitclaw.search_files", "gitclaw.read_file", "input=`go.mod`", "sha256_12="} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("prompt report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"PROMPT_BODY_SECRET", "SOUL_PROMPT_SECRET", "TOOL_PROMPT_SECRET", "PROMPT_SKILL_SECRET", "GITCLAW_PROMPT_SEARCH_SECRET", "module github.com/AnandChowdhary/gitclaw", "latest prompt comment"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("prompt report leaked body token %q:\n%s", leaked, body)
+		}
+	}
+	if !hasLabel(github.IssueLabels[104], "gitclaw:done") || hasLabel(github.IssueLabels[104], "gitclaw:running") || hasLabel(github.IssueLabels[104], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[104])
 	}
 }
 

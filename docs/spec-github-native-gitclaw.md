@@ -843,6 +843,36 @@ It never dumps full file bodies, skill bodies, prompts, or tool output contents
 into the issue. This makes context visibility cheap enough for routine E2E
 debugging and avoids burning GitHub Models quota for a diagnostic turn.
 
+## Prompt Inspection Command
+
+GitClaw supports a deterministic prompt-budget audit command inspired by
+OpenClaw's context diagnostics and Hermes' bounded memory/context posture:
+
+```text
+@gitclaw /prompt
+```
+
+`@gitclaw /budget` and `@gitclaw /prompt-budget` are accepted aliases, but the
+canonical advertised command is `/prompt`.
+
+The command runs after normal preflight authorization and context assembly, but
+before model inference. It posts a `gitclaw:assistant-turn` comment with
+`model="gitclaw/prompt"` and summarizes:
+
+- provider/model and system-prompt hash metadata,
+- final prompt byte count, line count, and short hash,
+- configured prompt, output-token, transcript-message, and per-message body
+  limits,
+- transcript messages included/omitted and body truncation counts,
+- whether prompt truncation markers are present,
+- prompt artifact enablement and redaction-pattern count,
+- context file, selected skill, and tool-output metadata.
+
+It never dumps the prompt text, issue/comment bodies, context file bodies,
+skill bodies, or tool output bodies into the issue. This gives maintainers a
+low-cost way to debug prompt bloat, missing context, and truncation behavior
+without leaking the exact prompt into a public or long-lived GitHub comment.
+
 ## Labels
 
 Managed labels:
@@ -1692,7 +1722,19 @@ assert the expected comments/labels, and close the issue in cleanup.
      tool output names,
    - assert the run succeeds without requiring a model provider response.
 
-16. **Memory inspection**
+16. **Prompt inspection**
+
+   - create a real issue with `@gitclaw /prompt`,
+   - ask for a concrete file read, selected skill, and search fixture phrase,
+   - assert the reply is marked `model="gitclaw/prompt"`,
+   - assert the report lists prompt budget settings, final prompt size/hash,
+     transcript inclusion/truncation counts, selected context files, selected
+     skills, and active tool output metadata,
+   - assert the report does not dump prompt text, issue body tokens, context
+     bodies, skill bodies, or tool output bodies,
+   - assert the run succeeds without requiring a model provider response.
+
+17. **Memory inspection**
 
    - create a real issue with `@gitclaw /memory`,
    - assert the reply is marked `model="gitclaw/memory"`,
@@ -1701,7 +1743,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump memory file bodies or issue body tokens,
    - assert the run succeeds without requiring a model provider response.
 
-17. **Skills inspection**
+18. **Skills inspection**
 
    - create a real issue with `@gitclaw /skills`,
    - assert the reply is marked `model="gitclaw/skills"`,
@@ -1711,7 +1753,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump full skill bodies or verification tokens,
    - assert the run succeeds without requiring a model provider response.
 
-18. **Soul inspection**
+19. **Soul inspection**
 
    - create a real issue with `@gitclaw /soul`,
    - assert the reply is marked `model="gitclaw/soul"`,
@@ -1720,7 +1762,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump full soul or memory bodies,
    - assert the run succeeds without requiring a model provider response.
 
-19. **Tools inspection**
+20. **Tools inspection**
 
    - create a real issue with `@gitclaw /tools`,
    - ask for a concrete file read and search fixture phrase,
@@ -1730,7 +1772,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump full file or search output bodies,
    - assert the run succeeds without requiring a model provider response.
 
-20. **Policy inspection**
+21. **Policy inspection**
 
    - create a real issue with `@gitclaw /policy` that also asks for write-mode
      work,
@@ -1742,7 +1784,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert `gitclaw:write-requested` and `gitclaw:done` are present without
      `gitclaw:running` or `gitclaw:error`.
 
-21. **Session inspection**
+22. **Session inspection**
 
    - create a real issue that gets one deterministic assistant turn,
    - post a follow-up comment with `@gitclaw /session`,
@@ -1752,7 +1794,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump issue or comment body tokens,
    - assert the run succeeds without requiring a model provider response.
 
-22. **Backup index**
+23. **Backup index**
 
    - create a real deterministic GitClaw issue turn,
    - wait for the successful backup job,
@@ -1761,7 +1803,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      number, title, and backup path,
    - assert the index contains metadata counts but not raw transcript bodies.
 
-23. **Backup inspection**
+24. **Backup inspection**
 
    - create a real issue with `@gitclaw /backup`,
    - assert the reply is marked `model="gitclaw/backup"`,
@@ -1772,7 +1814,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      entry for that same issue,
    - assert the report does not dump issue or comment body tokens.
 
-24. **Backup verification**
+25. **Backup verification**
 
    - create a real issue with `@gitclaw /backup`,
    - wait for the successful backup job,
@@ -1838,6 +1880,9 @@ MVP is not complete until:
   issue-secret token,
 - the prompt-budget harness creates a large real issue and verifies the
   assistant still sees the preserved tail request under the bounded prompt,
+- the prompt-report harness creates a large real issue and verifies
+  `/prompt` reports prompt size/hash, truncation state, context contributors,
+  and tool output metadata without dumping prompt or body contents,
 - the prompt-artifact harness downloads a real Actions artifact and verifies
   redaction plus untrusted-input warnings,
 - the write-request harness creates a real write-intent issue and verifies the
@@ -1969,6 +2014,9 @@ examples/workflows/gitclaw.yml
   backup job succeeds.
 - A `gh`-driven context-report E2E harness verifies `@gitclaw /context`
   produces a deterministic context summary without a model call.
+- A `gh`-driven prompt-report E2E harness verifies `@gitclaw /prompt`
+  produces a deterministic prompt budget, hash, truncation, context, and tool
+  metadata report without a model call or prompt/body leakage.
 - A `gh`-driven memory-report E2E harness verifies `@gitclaw /memory`
   produces a deterministic memory inventory without a model call or body
   leakage.

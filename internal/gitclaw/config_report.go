@@ -26,6 +26,7 @@ var configSlashCommands = []string{
 	"/memory",
 	"/models",
 	"/policy",
+	"/prompt",
 	"/proactive",
 	"/session",
 	"/skills",
