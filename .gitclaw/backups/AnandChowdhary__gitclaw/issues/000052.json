@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T18:44:52Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 52,
+    "title": "@gitclaw /skills e2e 20260529T184347Z",
+    "body": "Live skills-report E2E.\n\nPlease list the local GitClaw skill inventory and select the repo-reader skill.\nThis should produce a deterministic skills report without calling a model.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /skills e2e 20260529T184347Z\n\nLive skills-report E2E.\n\nPlease list the local GitClaw skill inventory and select the repo-reader skill.\nThis should produce a deterministic skills report without calling a model.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Skills Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#52`\n- available_skills: `1`\n- selected_skills: `1`\n- skills_with_frontmatter: `1`\n- skills_with_description: `1`\n- skills_with_requirements: `0`\n- skills_missing_requirements: `0`\n\nGitClaw uses progressive disclosure: this report lists available skill metadata, while full `SKILL.md` bodies are loaded only when selected or marked always-on.\n\nSkill bodies are not included; hashes and requirement counts make local skills reviewable like code before they influence a model turn.\n\n### Available Skills\n- name=`repo-reader` path=`.gitclaw/SKILLS/repo-reader/SKILL.md` always=`false` frontmatter=`true` description=`true` bytes=`448` lines=`13` sha256_12=`a4afc96b87e1` requires_env=`0` requires_bins=`0` missing_env=`0` missing_bins=`0` description=`Use GitClaw's read-only repository context and tool outputs to answer file-aw...`\n\n### Selected For This Turn\n- `.gitclaw/SKILLS/repo-reader/SKILL.md` bytes=`448` lines=`13` sha256_12=`a4afc96b87e1`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4578706313,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4578706313,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26655660531\" event_id=\"issue-52\" model=\"gitclaw/skills\" idempotency_key=\"ab993248700671d2016e497c8bf610c5\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26655660531\" --\u003e\n## GitClaw Skills Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#52`\n- available_skills: `1`\n- selected_skills: `1`\n- skills_with_frontmatter: `1`\n- skills_with_description: `1`\n- skills_with_requirements: `0`\n- skills_missing_requirements: `0`\n\nGitClaw uses progressive disclosure: this report lists available skill metadata, while full `SKILL.md` bodies are loaded only when selected or marked always-on.\n\nSkill bodies are not included; hashes and requirement counts make local skills reviewable like code before they influence a model turn.\n\n### Available Skills\n- name=`repo-reader` path=`.gitclaw/SKILLS/repo-reader/SKILL.md` always=`false` frontmatter=`true` description=`true` bytes=`448` lines=`13` sha256_12=`a4afc96b87e1` requires_env=`0` requires_bins=`0` missing_env=`0` missing_bins=`0` description=`Use GitClaw's read-only repository context and tool outputs to answer file-aw...`\n\n### Selected For This Turn\n- `.gitclaw/SKILLS/repo-reader/SKILL.md` bytes=`448` lines=`13` sha256_12=`a4afc96b87e1`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T18:44:28Z",
+      "updated_at": "2026-05-29T18:44:28Z"
+    }
+  ]
+}
