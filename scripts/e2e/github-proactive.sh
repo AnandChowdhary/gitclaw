@@ -13,6 +13,12 @@ die() {
 repo="${GITCLAW_E2E_REPO:-}"
 proactive_workflow="${GITCLAW_E2E_PROACTIVE_WORKFLOW:-.github/workflows/gitclaw-proactive.yml}"
 main_workflow="${GITCLAW_E2E_WORKFLOW:-.github/workflows/gitclaw.yml}"
+lock_dir="${TMPDIR:-/tmp}/gitclaw-proactive-e2e.lock"
+
+if ! mkdir "$lock_dir" 2>/dev/null; then
+  die "another proactive E2E appears to be running: ${lock_dir}"
+fi
+trap 'rm -rf "$lock_dir"' EXIT
 
 if [[ -z "$repo" ]]; then
   repo="$(gh repo view --json nameWithOwner --jq .nameWithOwner)"
@@ -116,6 +122,7 @@ cleanup() {
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label gitclaw:e2e >/dev/null 2>&1 || true
     gh issue close "$issue_number" --repo "$repo" --comment "proactive e2e cleanup" >/dev/null 2>&1 || true
   fi
+  rm -rf "$lock_dir"
 }
 trap cleanup EXIT
 
