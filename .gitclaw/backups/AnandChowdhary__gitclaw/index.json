@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T15:26:17Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "count": 22,
+  "issues": [
+    {
+      "number": 3,
+      "title": "@gitclaw e2e 20260529T115625Z",
+      "path": "issues/000003.json",
+      "backup_generated_at": "2026-05-29T11:59:40Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 3,
+      "transcript_messages": 4
+    },
+    {
+      "number": 4,
+      "title": "@gitclaw e2e 20260529T120409Z",
+      "path": "issues/000004.json",
+      "backup_generated_at": "2026-05-29T12:07:28Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 3,
+      "transcript_messages": 4
+    },
+    {
+      "number": 5,
+      "title": "@gitclaw e2e 20260529T121341Z",
+      "path": "issues/000005.json",
+      "backup_generated_at": "2026-05-29T12:16:57Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 3,
+      "transcript_messages": 4
+    },
+    {
+      "number": 6,
+      "title": "@gitclaw heartbeat e2e 20260529T123003Z",
+      "path": "issues/000006.json",
+      "backup_generated_at": "2026-05-29T12:31:39Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw",
+        "gitclaw:heartbeat"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
+    },
+    {
+      "number": 8,
+      "title": "@gitclaw e2e 20260529T124156Z",
+      "path": "issues/000008.json",
+      "backup_generated_at": "2026-05-29T12:43:49Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
+    },
+    {
+      "number": 9,
+      "title": "@gitclaw e2e 20260529T124521Z",
+      "path": "issues/000009.json",
+      "backup_generated_at": "2026-05-29T12:48:57Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 3,
+      "transcript_messages": 4
+    },
+    {
+      "number": 10,
+      "title": "@gitclaw e2e 20260529T125426Z",
+      "path": "issues/000010.json",
+      "backup_generated_at": "2026-05-29T12:58:11Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw",
+        "gitclaw:done"
+      ],
+      "comment_count": 3,
+      "transcript_messages": 4
+    },
+    {
+      "number": 12,
+      "title": "@gitclaw prompt budget e2e 20260529T131026Z",
+      "path": "issues/000012.json",
+      "backup_generated_at": "2026-05-29T13:12:00Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
+    },
+    {
+      "number": 13,
+      "title": "@gitclaw prompt artifact e2e 20260529T131920Z",
+      "path": "issues/000013.json",
+      "backup_generated_at": "2026-05-29T13:20:57Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw",
+        "gitclaw:e2e-prompt-artifact"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
+    },
+    {
+      "number": 14,
+      "title": "@gitclaw write request e2e 20260529T132713Z",
+      "path": "issues/000014.json",
+      "backup_generated_at": "2026-05-29T13:29:03Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
+    },
+    {
+      "number": 15,
+      "title": "GitClaw workflow_dispatch e2e 20260529T133927Z",
+      "path": "issues/000015.json",
+      "backup_generated_at": "2026-05-29T13:43:24Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:e2e",
+        "gitclaw:done"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
+    },
+    {
+      "number": 16,
+      "title": "GitClaw channel message e2e 20260529T134633Z",
+      "path": "issues/000016.json",
+      "backup_generated_at": "2026-05-29T13:48:44Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:e2e",
+        "gitclaw:done"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
+    },
+    {
+      "number": 17,
+      "title": "GitClaw telegram thread channel-ingest-e2e-20260529T135738Z",
+      "path": "issues/000017.json",
+      "backup_generated_at": "2026-05-29T13:59:59Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:done",
+        "gitclaw:channel"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
+    },
+    {
+      "number": 18,
+      "title": "GitClaw telegram thread channel-ingest-e2e-20260529T140055Z",
+      "path": "issues/000018.json",
+      "backup_generated_at": "2026-05-29T14:03:17Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:done",
+        "gitclaw:channel"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
+    },
+    {
+      "number": 19,
+      "title": "GitClaw proactive proactive-e2e-20260529t141114z slot-20260529T141114Z",
+      "path": "issues/000019.json",
+      "backup_generated_at": "2026-05-29T14:13:38Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:done",
+        "gitclaw:proactive"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
+    },
+    {
+      "number": 20,
+      "title": "GitClaw proactive proactive-e2e-20260529t141156z slot-20260529T141156Z",
+      "path": "issues/000020.json",
+      "backup_generated_at": "2026-05-29T14:14:17Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:done",
+        "gitclaw:proactive"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
+    },
+    {
+      "number": 21,
+      "title": "GitClaw proactive proactive-e2e-20260529t141658z slot-20260529T141658Z",
+      "path": "issues/000021.json",
+      "backup_generated_at": "2026-05-29T14:19:13Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:done",
+        "gitclaw:proactive"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
+    },
+    {
+      "number": 22,
+      "title": "GitClaw proactive proactive-e2e-20260529t141722z slot-20260529T141722Z",
+      "path": "issues/000022.json",
+      "backup_generated_at": "2026-05-29T14:19:45Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:done",
+        "gitclaw:proactive"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
+    },
+    {
+      "number": 23,
+      "title": "GitClaw proactive proactive-e2e-20260529t142053z slot-20260529T142053Z",
+      "path": "issues/000023.json",
+      "backup_generated_at": "2026-05-29T14:23:23Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:done",
+        "gitclaw:proactive"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
+    },
+    {
+      "number": 31,
+      "title": "@gitclaw /context e2e 20260529T151024Z",
+      "path": "issues/000031.json",
+      "backup_generated_at": "2026-05-29T15:12:03Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
+    },
+    {
+      "number": 32,
+      "title": "@gitclaw /skills e2e 20260529T151647Z",
+      "path": "issues/000032.json",
+      "backup_generated_at": "2026-05-29T15:18:25Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
+    },
+    {
+      "number": 33,
+      "title": "@gitclaw /context backup index e2e 20260529T152432Z",
+      "path": "issues/000033.json",
+      "backup_generated_at": "2026-05-29T15:26:15Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
+    }
+  ]
+}
