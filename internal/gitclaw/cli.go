@@ -34,6 +34,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runToolsCommand(args[1:])
 	case "doctor":
 		return runDoctorCommand(args[1:])
+	case "commands":
+		return runCommandsCommand(args[1:])
 	case "version":
 		fmt.Println("gitclaw dev")
 		return nil
@@ -67,6 +69,18 @@ func runSoulValidateCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSoulValidationReport(repoContext))
+	return nil
+}
+
+func runCommandsCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown commands argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderCommandCLIReport(cfg))
 	return nil
 }
 

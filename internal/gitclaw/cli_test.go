@@ -118,6 +118,23 @@ func TestToolsValidateCommandReportsCurrentRepoShape(t *testing.T) {
 	}
 }
 
+func TestCommandsCommandReportsCatalog(t *testing.T) {
+	t.Setenv("GITCLAW_WORKDIR", t.TempDir())
+	output := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"commands"}); err != nil {
+			t.Fatalf("commands returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `7`", "local_cli_helpers: `12`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`gitclaw commands` command=`/help`", "`gitclaw backup stats` command=`/backup`"} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("commands output missing %q:\n%s", want, output)
+		}
+	}
+	if strings.Contains(output, "issue: `#0`") {
+		t.Fatalf("commands output should not include synthetic issue metadata:\n%s", output)
+	}
+}
+
 func TestBackupStatsCommandReportsFetchedBackupTree(t *testing.T) {
 	dir := t.TempDir()
 	writeBackupFixture(t, dir, IssueBackup{

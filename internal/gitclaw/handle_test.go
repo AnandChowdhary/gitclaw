@@ -393,7 +393,7 @@ model:
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Config Report", "Generated without a model call", "model=\"gitclaw/config\"", "config_source: `defaults+repo`", "config_file_path: `.gitclaw/config.yml`", "config_file_present: `true`", "trigger_label: `gitclaw`", "trigger_prefix: `@gitclaw`", "run_mode: `read-only`", "max_prompt_bytes: `60000`", "max_output_tokens: `4000`", "workflows_present: `2`", "slash_commands: `14`", "OWNER", "COLLABORATOR", "gitclaw:disabled", "/channels", "/doctor", "/memory", "/models", "/prompt", "/config", ".github/workflows/gitclaw.yml", ".github/workflows/gitclaw-heartbeat.yml", "sha256_12="} {
+	for _, want := range []string{"GitClaw Config Report", "Generated without a model call", "model=\"gitclaw/config\"", "config_source: `defaults+repo`", "config_file_path: `.gitclaw/config.yml`", "config_file_present: `true`", "trigger_label: `gitclaw`", "trigger_prefix: `@gitclaw`", "run_mode: `read-only`", "max_prompt_bytes: `60000`", "max_output_tokens: `4000`", "workflows_present: `2`", "slash_commands: `15`", "OWNER", "COLLABORATOR", "gitclaw:disabled", "/channels", "/doctor", "/help", "/memory", "/models", "/prompt", "/config", ".github/workflows/gitclaw.yml", ".github/workflows/gitclaw-heartbeat.yml", "sha256_12="} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("config report missing %q:\n%s", want, body)
 		}
@@ -832,6 +832,50 @@ func TestHandlePolicyCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 	if !hasLabel(github.IssueLabels[94], "gitclaw:write-requested") || !hasLabel(github.IssueLabels[94], "gitclaw:done") || hasLabel(github.IssueLabels[94], "gitclaw:running") || hasLabel(github.IssueLabels[94], "gitclaw:error") {
 		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[94])
+	}
+}
+
+func TestHandleCommandsCommandPostsReportWithoutLLM(t *testing.T) {
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 108,
+			"title": "@gitclaw /help",
+			"body": "Hidden command body token: COMMAND_HANDLER_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	cfg := DefaultConfig()
+	cfg.Workdir = t.TempDir()
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{108: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic commands command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Commands Report", "Generated without a model call", "model=\"gitclaw/commands\"", "commands: `15`", "aliases: `7`", "local_cli_helpers: `12`", "/commands", "/backup", "/tools", "`gitclaw commands` command=`/help`", "`gitclaw tools validate` command=`/tools`"} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("commands report missing %q:\n%s", want, body)
+		}
+	}
+	if strings.Contains(body, "COMMAND_HANDLER_SECRET") {
+		t.Fatalf("commands report leaked issue body token:\n%s", body)
+	}
+	if !hasLabel(github.IssueLabels[108], "gitclaw:done") || hasLabel(github.IssueLabels[108], "gitclaw:running") || hasLabel(github.IssueLabels[108], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[108])
 	}
 }
 

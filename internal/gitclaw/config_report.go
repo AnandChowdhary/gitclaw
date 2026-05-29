@@ -17,22 +17,7 @@ var configWorkflowPaths = []string{
 	".github/workflows/gitclaw-channel-ingest.yml",
 }
 
-var configSlashCommands = []string{
-	"/backup",
-	"/channels",
-	"/config",
-	"/context",
-	"/doctor",
-	"/memory",
-	"/models",
-	"/policy",
-	"/prompt",
-	"/proactive",
-	"/session",
-	"/skills",
-	"/soul",
-	"/tools",
-}
+var configSlashCommands = commandCatalogNames()
 
 type configSurfaceFile struct {
 	Path    string

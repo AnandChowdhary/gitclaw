@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "config-report-e2e: $*" >&2
+  echo "commands-report-e2e: $*" >&2
 }
 
 die() {
@@ -33,12 +33,12 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_CONFIG_REPORT_E2E_${timestamp}"
-title="@gitclaw /config e2e ${timestamp}"
-body="Live config-report E2E.
+token="GITCLAW_COMMANDS_REPORT_E2E_${timestamp}"
+title="@gitclaw /help e2e ${timestamp}"
+body="Live commands-report E2E.
 
-Hidden config report body token: ${token}
-This should produce a deterministic config report without a model call."
+Hidden commands report body token: ${token}
+This should produce a deterministic command catalog report without a model call."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -52,7 +52,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "config-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "commands-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -73,11 +73,11 @@ wait_for_run() {
       --json databaseId,status,conclusion,url,createdAt,displayTitle \
       --jq '. as $runs | $runs | map(select(.displayTitle == "'"${title}"'")) | sort_by(.createdAt) | reverse | .[0] // empty')"
     if [[ -n "$run_json" && "$run_json" != "null" ]]; then
-      local status conclusion url
-      status="$(jq -r '.status' <<<"$run_json")"
+      local run_status conclusion url
+      run_status="$(jq -r '.status' <<<"$run_json")"
       conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
       url="$(jq -r '.url' <<<"$run_json")"
-      if [[ "$status" == "completed" ]]; then
+      if [[ "$run_status" == "completed" ]]; then
         [[ "$conclusion" == "success" ]] || die "issues run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
@@ -128,46 +128,34 @@ wait_for_assistant_count() {
 }
 
 run_json="$(wait_for_run "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one config report comment"
+wait_for_assistant_count 1 || die "expected one commands report comment"
 comments="$(assistant_comments)"
 
 for expected in \
-  'model="gitclaw/config"' \
-  "GitClaw Config Report" \
+  'model="gitclaw/commands"' \
+  "GitClaw Commands Report" \
   "Generated without a model call" \
-  'config_source: `defaults+repo+environment`' \
-  'config_file_path: `.gitclaw/config.yml`' \
-  'config_file_present: `true`' \
-  'trigger_label: `gitclaw`' \
   'trigger_prefix: `@gitclaw`' \
-  'disabled_label: `gitclaw:disabled`' \
-  'model: `openai/gpt-5-mini`' \
+  'commands: `15`' \
+  'aliases: `7`' \
+  'local_cli_helpers: `12`' \
   'run_mode: `read-only`' \
-  'max_prompt_bytes: `60000`' \
-  'max_output_tokens: `4000`' \
-  'max_transcript_messages: `40`' \
-  'max_transcript_message_bytes: `8000`' \
-  'workflows_present: `4`' \
-  'slash_commands: `15`' \
-  'OWNER' \
-  'MEMBER' \
-  'COLLABORATOR' \
-  '/channels' \
-  '/config' \
-  '/doctor' \
+  "### Slash Commands" \
   '/help' \
-  '/memory' \
-  '/models' \
-  '/prompt' \
-  '.github/workflows/gitclaw.yml' \
-  '.github/workflows/gitclaw-heartbeat.yml' \
-  '.github/workflows/gitclaw-proactive.yml' \
-  '.github/workflows/gitclaw-channel-ingest.yml'; do
-  grep -Fq "$expected" <<<"$comments" || die "config report missing ${expected}"
+  '/commands' \
+  '/backup' \
+  '/tools' \
+  '/doctor' \
+  '/skills' \
+  '/soul' \
+  'gitclaw backup stats' \
+  'gitclaw commands' \
+  'gitclaw tools validate'; do
+  grep -Fq "$expected" <<<"$comments" || die "commands report missing ${expected}"
 done
 
 if grep -Fq "$token" <<<"$comments"; then
-  die "config report leaked issue body token"
+  die "commands report leaked issue body token"
 fi
 
 url="$(jq -r '.url' <<<"$run_json")"

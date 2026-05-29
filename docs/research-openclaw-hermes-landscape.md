@@ -307,6 +307,13 @@ labels, trusted associations, prompt budgets, command surface, and workflow file
 hashes without dumping config or workflow bodies and without allowing the agent
 to mutate its own configuration.
 
+2026-05-29 command-catalog follow-up: OpenClaw and Hermes both lean on command
+help as a discoverability and operations primitive. GitClaw's issue-native
+version should expose `@gitclaw /help` and `@gitclaw /commands` as a
+body-free, deterministic command catalog with aliases, model marker names,
+categories, summaries, and local CLI helpers, so maintainers can inspect the
+available control-plane surface before invoking a more specific report.
+
 2026-05-29 repo config follow-up: OpenClaw's `config` CLI exposes schema,
 validation, dry-run patching, and guarded writes, while `configure` preserves
 existing model defaults unless the operator explicitly changes them. Hermes

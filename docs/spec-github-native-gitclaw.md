@@ -100,6 +100,8 @@ Default for public repositories should be per-repo assistant mode with a require
 Deterministic slash commands are recognized when the issue title, comment
 body, or a line in the issue body starts with the trigger prefix plus command,
 such as `@gitclaw /proactive`. Inline mentions inside prose are ignored.
+`@gitclaw /help` and `@gitclaw /commands` expose the current deterministic
+command catalog without making a model call.
 
 ## GitHub Actions Event Model
 
@@ -555,7 +557,8 @@ GitHub issue/comment event
 - CLI entry point.
 - Subcommands: `preflight`, `handle`, `backup`, `heartbeat`,
   `channel-ingest`, `proactive enqueue`, `proactive init`,
-  `skills validate`, `soul validate`, `tools validate`, `doctor`, `version`.
+  `skills validate`, `soul validate`, `tools validate`, `doctor`, `commands`,
+  `version`.
 
 `internal/github`
 
@@ -1101,13 +1104,44 @@ inference. It posts a `gitclaw:assistant-turn` comment with
 - managed status/feature labels,
 - trusted author associations,
 - selected model and prompt budget settings,
-- known deterministic slash commands,
+- known deterministic slash commands, including the command catalog command,
 - key workflow files by path, size, and hash.
 
 It never dumps config, workflow, issue, or comment bodies. This is the
 GitHub-native equivalent of OpenClaw/Hermes config/profile status: enough to
 understand the active control plane without exposing secrets or allowing the
 agent to rewrite configuration.
+
+### Command Catalog Command
+
+GitClaw supports a deterministic command catalog command:
+
+```text
+@gitclaw /help
+@gitclaw /commands
+```
+
+The command runs after normal preflight and before model inference. It posts a
+`gitclaw:assistant-turn` comment with `model="gitclaw/commands"` and
+summarizes:
+
+- canonical deterministic slash commands,
+- command aliases,
+- deterministic model marker names used for body-free reports,
+- broad command categories,
+- short descriptions,
+- related local CLI helpers.
+
+It never dumps issue/comment bodies, prompts, config bodies, workflow bodies,
+or backup payloads. This is the GitHub-native equivalent of the
+OpenClaw/Hermes help surface: a stable issue-visible capability index that
+operators can ask for before using more specific commands.
+
+Local operators can print the same catalog with:
+
+```bash
+gitclaw commands
+```
 
 ### Doctor Command
 
@@ -2257,6 +2291,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven config-report E2E harness verifies `@gitclaw /config` reports
   effective labels, prompt budgets, commands, and workflow metadata without a
   model call.
+- A `gh`-driven commands-report E2E harness verifies `@gitclaw /help` reports
+  deterministic commands, aliases, and local CLI helpers without a model call
+  or issue-body leakage.
 - A `gh`-driven doctor-report E2E harness verifies `@gitclaw /doctor` reports
   config validation, workflow presence, context files, skills, memory notes,
   proactive prompts, and skill/soul/tool validation rollups without a model

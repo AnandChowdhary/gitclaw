@@ -123,6 +123,20 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		status.SetDone()
 		return nil
 	}
+	if IsCommandReportRequest(ev, cfg) {
+		body := RenderAssistantComment(Marker{
+			RunID:          envFirst("GITHUB_RUN_ID", "local"),
+			EventID:        eventID(ev),
+			Model:          "gitclaw/commands",
+			IdempotencyKey: key,
+			RunURL:         actionRunURL(ev),
+		}, RenderCommandReport(ev, cfg))
+		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post command report comment: %w", err))
+		}
+		status.SetDone()
+		return nil
+	}
 	if IsDoctorReportRequest(ev, cfg) {
 		body := RenderAssistantComment(Marker{
 			RunID:          envFirst("GITHUB_RUN_ID", "local"),
