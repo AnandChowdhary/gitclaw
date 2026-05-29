@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestPreflightCommandWritesOutputsWithoutLLMSecret(t *testing.T) {
@@ -114,6 +115,34 @@ func TestToolsValidateCommandReportsCurrentRepoShape(t *testing.T) {
 	}
 	if strings.Contains(output, "TOOLS_BODY_TOKEN") || strings.Contains(output, "module github.com/AnandChowdhary/gitclaw") {
 		t.Fatalf("tools validate leaked body/output token:\n%s", output)
+	}
+}
+
+func TestBackupStatsCommandReportsFetchedBackupTree(t *testing.T) {
+	dir := t.TempDir()
+	writeBackupFixture(t, dir, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T12:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue:       IssueBackupIssue{Number: 7, Title: "@gitclaw cli stats", Body: "CLI_STATS_BODY_TOKEN"},
+		Transcript:  []TranscriptMessage{{Role: "user", Body: "CLI_STATS_TRANSCRIPT_TOKEN"}},
+	})
+	if _, err := WriteBackupIndex(dir, "owner/repo", time.Date(2026, 5, 29, 13, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+	output := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"backup", "stats", "--root", dir, "--repo", "owner/repo"}); err != nil {
+			t.Fatalf("backup stats returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"GitClaw Backup Stats Report", "backup_stats_status: `ok`", "backup_verify_status: `ok`", "issue_count: `1`", "transcript_messages: `1`", "latest_issue: `#7`", "raw_bodies_included: `false`"} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("backup stats output missing %q:\n%s", want, output)
+		}
+	}
+	if strings.Contains(output, "CLI_STATS_BODY_TOKEN") || strings.Contains(output, "CLI_STATS_TRANSCRIPT_TOKEN") || strings.Contains(output, "@gitclaw cli stats") {
+		t.Fatalf("backup stats leaked body/title token:\n%s", output)
 	}
 }
 

@@ -1626,6 +1626,30 @@ It never prints raw issue, comment, or transcript bodies. The manifest is a
 compact provenance view for audits, mirrors, and restore reviews before anyone
 uses the explicit raw `export-jsonl` path.
 
+## Backup Stats Command
+
+GitClaw supports a local backup stats command inspired by OpenClaw's
+manifest/verify posture and Hermes' `sessions stats` view:
+
+```bash
+gitclaw backup stats --root .gitclaw/backups --repo <owner/repo>
+```
+
+The command reads a fetched `gitclaw-backups` tree, verifies it, and prints a
+deterministic `GitClaw Backup Stats Report` with:
+
+- backup stats and verify status,
+- schema version and index generation time,
+- issue, comment, transcript, user-message, assistant-message, assistant-turn,
+  and error-comment counts,
+- total payload bytes,
+- event type counts,
+- latest backup issue path, timestamp, event name, and title hash.
+
+It never prints raw issue titles, issue bodies, comments, or transcript bodies.
+The stats report is meant for routine backup-health monitoring where opening
+every raw JSON file would be noisy.
+
 ## Backup JSONL Export Command
 
 GitClaw supports a local JSONL export command inspired by Hermes'
@@ -2248,6 +2272,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven backup-manifest E2E harness verifies the fetched
   `gitclaw-backups` branch can produce a file-level manifest with control-file
   and issue-payload hashes for one real issue, without dumping raw bodies.
+- A `gh`-driven backup-stats E2E harness verifies the fetched
+  `gitclaw-backups` branch can produce a repo-wide backup stats report with
+  verification status, aggregate counts, latest backup metadata, and event
+  counts, without dumping raw bodies or titles.
 - A `gh`-driven backup-export-jsonl E2E harness verifies the fetched
   `gitclaw-backups` branch can be exported into raw JSONL transcript records
   for one real issue.

@@ -145,6 +145,39 @@ type BackupManifestPayload struct {
 	TranscriptMessages int
 }
 
+type BackupStats struct {
+	Root                 string
+	Repo                 string
+	RepoDir              string
+	IndexPath            string
+	ReadmePath           string
+	SchemaVersion        int
+	IndexGeneratedAt     string
+	BackupStatsStatus    string
+	BackupVerifyStatus   string
+	VerificationFailures int
+	IssueCount           int
+	CommentCount         int
+	TranscriptMessages   int
+	UserMessages         int
+	AssistantMessages    int
+	AssistantTurns       int
+	ErrorComments        int
+	TotalPayloadBytes    int
+	EventCounts          []BackupStatsEvent
+	LatestIssueNumber    int
+	LatestIssuePath      string
+	LatestGeneratedAt    string
+	LatestEventName      string
+	LatestIssueTitleSHA  string
+	RawBodiesIncluded    bool
+}
+
+type BackupStatsEvent struct {
+	Name  string
+	Count int
+}
+
 func (r BackupVerifyResult) OK() bool {
 	return len(r.VerificationFailures) == 0
 }
@@ -410,6 +443,87 @@ func BuildBackupManifest(root, repo string, issueNumber int) (BackupManifest, er
 	return manifest, nil
 }
 
+func BuildBackupStats(root, repo string) (BackupStats, error) {
+	if err := validateRepoName(repo); err != nil {
+		return BackupStats{}, err
+	}
+	repoDir, index, err := readBackupIndex(root, repo)
+	if err != nil {
+		return BackupStats{}, err
+	}
+	if root == "" {
+		root = filepath.Join(".gitclaw", "backups")
+	}
+	verify, err := VerifyBackupTree(root, repo)
+	if err != nil {
+		return BackupStats{}, err
+	}
+	stats := BackupStats{
+		Root:                 filepath.ToSlash(root),
+		Repo:                 repo,
+		RepoDir:              filepath.ToSlash(repoDir),
+		IndexPath:            filepath.ToSlash(filepath.Join(repoDir, "index.json")),
+		ReadmePath:           filepath.ToSlash(filepath.Join(repoDir, "README.md")),
+		SchemaVersion:        index.Version,
+		IndexGeneratedAt:     index.GeneratedAt,
+		BackupStatsStatus:    "ok",
+		BackupVerifyStatus:   "ok",
+		VerificationFailures: len(verify.VerificationFailures),
+		IssueCount:           len(index.Issues),
+		RawBodiesIncluded:    false,
+	}
+	if !verify.OK() {
+		stats.BackupStatsStatus = "warn"
+		stats.BackupVerifyStatus = "warn"
+	}
+	eventCounts := map[string]int{}
+	var latest time.Time
+	for _, issue := range index.Issues {
+		backup, payload, err := manifestPayload(repoDir, repo, issue)
+		if err != nil {
+			return BackupStats{}, err
+		}
+		stats.TotalPayloadBytes += payload.Bytes
+		stats.CommentCount += len(backup.Comments)
+		stats.TranscriptMessages += len(backup.Transcript)
+		eventName := strings.TrimSpace(backup.EventName)
+		if eventName == "" {
+			eventName = "unknown"
+		}
+		eventCounts[eventName]++
+		for _, comment := range backup.Comments {
+			if HasGitClawMarker(comment.Body) {
+				stats.AssistantTurns++
+			}
+			if HasGitClawErrorMarker(comment.Body) {
+				stats.ErrorComments++
+			}
+		}
+		for _, msg := range backup.Transcript {
+			switch msg.Role {
+			case "assistant":
+				stats.AssistantMessages++
+			default:
+				stats.UserMessages++
+			}
+		}
+		generatedAt, err := time.Parse(time.RFC3339, backup.GeneratedAt)
+		if err == nil && (stats.LatestIssueNumber == 0 || generatedAt.After(latest)) {
+			latest = generatedAt
+			stats.LatestIssueNumber = backup.Issue.Number
+			stats.LatestIssuePath = issue.Path
+			stats.LatestGeneratedAt = backup.GeneratedAt
+			stats.LatestEventName = eventName
+			stats.LatestIssueTitleSHA = shortDocumentHash(backup.Issue.Title)
+		}
+	}
+	for name, count := range eventCounts {
+		stats.EventCounts = append(stats.EventCounts, BackupStatsEvent{Name: name, Count: count})
+	}
+	sort.Slice(stats.EventCounts, func(i, j int) bool { return stats.EventCounts[i].Name < stats.EventCounts[j].Name })
+	return stats, nil
+}
+
 func RenderBackupRestorePlan(plan BackupRestorePlan) string {
 	var b strings.Builder
 	b.WriteString("## GitClaw Backup Restore Plan\n\n")
@@ -502,6 +616,52 @@ func RenderBackupManifest(manifest BackupManifest) string {
 				payload.Comments,
 				payload.TranscriptMessages,
 			)
+		}
+	}
+	return strings.TrimSpace(b.String())
+}
+
+func RenderBackupStats(stats BackupStats) string {
+	var b strings.Builder
+	b.WriteString("## GitClaw Backup Stats Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	fmt.Fprintf(&b, "- repository: `%s`\n", stats.Repo)
+	fmt.Fprintf(&b, "- backup_stats_status: `%s`\n", stats.BackupStatsStatus)
+	fmt.Fprintf(&b, "- backup_verify_status: `%s`\n", stats.BackupVerifyStatus)
+	fmt.Fprintf(&b, "- verification_failures: `%d`\n", stats.VerificationFailures)
+	fmt.Fprintf(&b, "- backup_root: `%s`\n", stats.Root)
+	fmt.Fprintf(&b, "- repo_backup_dir: `%s`\n", stats.RepoDir)
+	fmt.Fprintf(&b, "- index_path: `%s`\n", stats.IndexPath)
+	fmt.Fprintf(&b, "- readme_path: `%s`\n", stats.ReadmePath)
+	fmt.Fprintf(&b, "- backup_schema_version: `%d`\n", stats.SchemaVersion)
+	fmt.Fprintf(&b, "- index_generated_at: `%s`\n", stats.IndexGeneratedAt)
+	fmt.Fprintf(&b, "- issue_count: `%d`\n", stats.IssueCount)
+	fmt.Fprintf(&b, "- comment_count: `%d`\n", stats.CommentCount)
+	fmt.Fprintf(&b, "- transcript_messages: `%d`\n", stats.TranscriptMessages)
+	fmt.Fprintf(&b, "- user_messages: `%d`\n", stats.UserMessages)
+	fmt.Fprintf(&b, "- assistant_messages: `%d`\n", stats.AssistantMessages)
+	fmt.Fprintf(&b, "- assistant_turn_comments: `%d`\n", stats.AssistantTurns)
+	fmt.Fprintf(&b, "- error_comments: `%d`\n", stats.ErrorComments)
+	fmt.Fprintf(&b, "- event_types: `%d`\n", len(stats.EventCounts))
+	fmt.Fprintf(&b, "- total_payload_bytes: `%d`\n", stats.TotalPayloadBytes)
+	if stats.LatestIssueNumber > 0 {
+		fmt.Fprintf(&b, "- latest_issue: `#%d`\n", stats.LatestIssueNumber)
+		fmt.Fprintf(&b, "- latest_issue_path: `%s`\n", stats.LatestIssuePath)
+		fmt.Fprintf(&b, "- latest_backup_generated_at: `%s`\n", stats.LatestGeneratedAt)
+		fmt.Fprintf(&b, "- latest_event_name: `%s`\n", stats.LatestEventName)
+		fmt.Fprintf(&b, "- latest_issue_title_sha256_12: `%s`\n", stats.LatestIssueTitleSHA)
+	} else {
+		b.WriteString("- latest_issue: `none`\n")
+	}
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n\n", stats.RawBodiesIncluded)
+	b.WriteString("This report summarizes a fetched backup branch index and payload metadata. It does not print raw issue, comment, or transcript bodies.\n\n")
+
+	b.WriteString("### Event Types\n")
+	if len(stats.EventCounts) == 0 {
+		b.WriteString("- none\n")
+	} else {
+		for _, event := range stats.EventCounts {
+			fmt.Fprintf(&b, "- `%s`: `%d`\n", event.Name, event.Count)
 		}
 	}
 	return strings.TrimSpace(b.String())

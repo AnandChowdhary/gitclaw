@@ -295,6 +295,58 @@ func TestBuildBackupManifestRendersHashesWithoutBodies(t *testing.T) {
 	}
 }
 
+func TestBuildBackupStatsSummarizesBackupsWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T12:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue: IssueBackupIssue{
+			Number: 7,
+			Title:  "@gitclaw stats one",
+			Body:   "STATS_ISSUE_BODY_SECRET",
+			Labels: []string{"gitclaw"},
+		},
+		Transcript: []TranscriptMessage{
+			{Role: "user", Body: "STATS_TRANSCRIPT_SECRET", Actor: "alice", Trusted: true},
+			{Role: "assistant", Body: "STATS_ASSISTANT_SECRET", Actor: "github-actions[bot]", CommentID: 12, Trusted: true},
+		},
+		Comments: []IssueBackupComment{{ID: 12, Body: "<!-- gitclaw:assistant-turn -->\nSTATS_COMMENT_SECRET"}},
+	})
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T13:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issue_comment",
+		Issue:       IssueBackupIssue{Number: 8, Title: "@gitclaw stats two", Body: "OTHER_STATS_SECRET"},
+		Transcript:  []TranscriptMessage{{Role: "user", Body: "second user"}},
+		Comments:    []IssueBackupComment{{ID: 13, Body: "<!-- gitclaw:error -->\nerror body"}},
+	})
+	if _, err := WriteBackupIndex(root, "owner/repo", time.Date(2026, 5, 29, 14, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+
+	stats, err := BuildBackupStats(root, "owner/repo")
+	if err != nil {
+		t.Fatalf("BuildBackupStats returned error: %v", err)
+	}
+	if stats.BackupStatsStatus != "ok" || stats.IssueCount != 2 || stats.CommentCount != 2 || stats.TranscriptMessages != 3 || stats.UserMessages != 2 || stats.AssistantMessages != 1 || stats.AssistantTurns != 1 || stats.ErrorComments != 1 || stats.LatestIssueNumber != 8 {
+		t.Fatalf("unexpected backup stats: %#v", stats)
+	}
+	report := RenderBackupStats(stats)
+	for _, want := range []string{"GitClaw Backup Stats Report", "repository: `owner/repo`", "backup_stats_status: `ok`", "backup_verify_status: `ok`", "verification_failures: `0`", "backup_schema_version: `1`", "issue_count: `2`", "comment_count: `2`", "transcript_messages: `3`", "user_messages: `2`", "assistant_messages: `1`", "assistant_turn_comments: `1`", "error_comments: `1`", "event_types: `2`", "latest_issue: `#8`", "latest_issue_path: `issues/000008.json`", "latest_issue_title_sha256_12:", "raw_bodies_included: `false`", "`issues`: `1`", "`issue_comment`: `1`"} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("stats report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"STATS_ISSUE_BODY_SECRET", "STATS_TRANSCRIPT_SECRET", "STATS_ASSISTANT_SECRET", "STATS_COMMENT_SECRET", "OTHER_STATS_SECRET", "@gitclaw stats one", "@gitclaw stats two"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("stats report leaked body/title token %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestVerifyBackupTreeAcceptsCanonicalBackupIndex(t *testing.T) {
 	root := t.TempDir()
 	writeBackupFixture(t, root, IssueBackup{

@@ -155,6 +155,14 @@ JSON files, then emit one JSON object per reconstructed transcript message.
 Because this is raw recovery output, keep it as an explicit local CLI command,
 not an issue-visible report.
 
+2026-05-29 backup-stats follow-up: Hermes also exposes `sessions stats` for a
+quick count of sessions, messages, and source platforms, while OpenClaw's
+backup docs rely on a manifest plus verification result. GitClaw should expose
+the git-native equivalent as `gitclaw backup stats`: verify the fetched backup
+tree, summarize issue/comment/transcript/message counts, latest backup
+metadata, payload bytes, and event types, and avoid printing raw titles or
+bodies.
+
 2026-05-29 backup-restore-plan follow-up: OpenClaw's migration/backup posture
 emphasizes preview before state-changing recovery. GitClaw should copy that
 separation: a local `backup restore-plan` command reads the backup branch and
