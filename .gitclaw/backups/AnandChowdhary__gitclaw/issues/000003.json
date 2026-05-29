@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-29T11:57:58Z",
+  "generated_at": "2026-05-29T11:59:40Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 3,
     "title": "@gitclaw e2e 20260529T115625Z",
@@ -31,6 +31,24 @@
       "CommentID": 4574681795,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "Follow-up E2E conversation check.\n\nReply with the exact new token `GITCLAW_E2E_20260529T115625Z_B`.\nAlso mention the earlier token `GITCLAW_E2E_20260529T115625Z_A` from this issue thread.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4574685992,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_E2E_20260529T115625Z_B\nEarlier token: GITCLAW_E2E_20260529T115625Z_A",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4574692945,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -41,6 +59,22 @@
       "author_association": "NONE",
       "created_at": "2026-05-29T11:57:29Z",
       "updated_at": "2026-05-29T11:57:29Z"
+    },
+    {
+      "id": 4574685992,
+      "body": "Follow-up E2E conversation check.\n\nReply with the exact new token `GITCLAW_E2E_20260529T115625Z_B`.\nAlso mention the earlier token `GITCLAW_E2E_20260529T115625Z_A` from this issue thread.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-05-29T11:58:09Z",
+      "updated_at": "2026-05-29T11:58:09Z"
+    },
+    {
+      "id": 4574692945,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26635943085\" event_id=\"comment-4574685992\" model=\"openai/gpt-5-mini\" idempotency_key=\"2577a26e1053e1a1c65decd009bd2c31\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26635943085\" --\u003e\nGITCLAW_E2E_20260529T115625Z_B\nEarlier token: GITCLAW_E2E_20260529T115625Z_A",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T11:59:08Z",
+      "updated_at": "2026-05-29T11:59:08Z"
     }
   ]
 }
