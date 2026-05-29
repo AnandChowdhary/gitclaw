@@ -17,7 +17,18 @@ func IdempotencyKey(ev Event) string {
 	if ev.Comment != nil {
 		trigger = fmt.Sprintf("comment:%d", ev.Comment.ID)
 	}
-	seed := fmt.Sprintf("%s|%s|%s|%s", ev.Repo, ev.EventName, trigger, ev.SHA)
+	if ev.Kind == EventWorkflowDispatch {
+		if ev.DispatchID != "" {
+			trigger = fmt.Sprintf("dispatch:%s", ev.DispatchID)
+		} else {
+			trigger = fmt.Sprintf("dispatch:issue:%d", ev.Issue.Number)
+		}
+	}
+	sha := ev.SHA
+	if ev.Kind == EventWorkflowDispatch && ev.DispatchID != "" {
+		sha = ""
+	}
+	seed := fmt.Sprintf("%s|%s|%s|%s", ev.Repo, ev.EventName, trigger, sha)
 	sum := sha256.Sum256([]byte(seed))
 	return hex.EncodeToString(sum[:16])
 }

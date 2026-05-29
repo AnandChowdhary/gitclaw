@@ -25,6 +25,44 @@ func NewRESTGitHubClient(token string) *RESTGitHubClient {
 	}
 }
 
+func (c *RESTGitHubClient) GetIssue(ctx context.Context, repo string, issueNumber int) (Issue, error) {
+	if c.Token == "" {
+		return Issue{}, fmt.Errorf("missing GitHub token")
+	}
+	endpoint := fmt.Sprintf("%s/repos/%s/issues/%d", strings.TrimRight(c.APIBaseURL, "/"), repo, issueNumber)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
+	if err != nil {
+		return Issue{}, err
+	}
+	c.setHeaders(req)
+	res, err := c.httpClient().Do(req)
+	if err != nil {
+		return Issue{}, err
+	}
+	defer res.Body.Close()
+	if res.StatusCode < 200 || res.StatusCode >= 300 {
+		body, _ := io.ReadAll(io.LimitReader(res.Body, 4096))
+		return Issue{}, fmt.Errorf("GitHub get issue failed: status=%d body=%s", res.StatusCode, strings.TrimSpace(string(body)))
+	}
+	var raw struct {
+		Number            int    `json:"number"`
+		Title             string `json:"title"`
+		Body              string `json:"body"`
+		AuthorAssociation string `json:"author_association"`
+		User              User   `json:"user"`
+		Labels            []struct {
+			Name string `json:"name"`
+		} `json:"labels"`
+		PullRequest *struct {
+			URL string `json:"url"`
+		} `json:"pull_request"`
+	}
+	if err := json.NewDecoder(res.Body).Decode(&raw); err != nil {
+		return Issue{}, err
+	}
+	return issueFromREST(raw.Number, raw.Title, raw.Body, raw.AuthorAssociation, raw.User, raw.Labels, raw.PullRequest != nil), nil
+}
+
 func (c *RESTGitHubClient) ListIssueComments(ctx context.Context, repo string, issueNumber int) ([]Comment, error) {
 	if c.Token == "" {
 		return nil, fmt.Errorf("missing GitHub token")
@@ -115,19 +153,7 @@ func (c *RESTGitHubClient) ListOpenIssues(ctx context.Context, repo string, labe
 	}
 	issues := make([]Issue, 0, len(raw))
 	for _, item := range raw {
-		labels := make([]string, 0, len(item.Labels))
-		for _, label := range item.Labels {
-			labels = append(labels, label.Name)
-		}
-		issues = append(issues, Issue{
-			Number:            item.Number,
-			Title:             item.Title,
-			Body:              item.Body,
-			AuthorAssociation: item.AuthorAssociation,
-			User:              item.User,
-			Labels:            labels,
-			IsPullRequest:     item.PullRequest != nil,
-		})
+		issues = append(issues, issueFromREST(item.Number, item.Title, item.Body, item.AuthorAssociation, item.User, item.Labels, item.PullRequest != nil))
 	}
 	return issues, nil
 }
@@ -235,6 +261,24 @@ func (c *RESTGitHubClient) httpClient() *http.Client {
 		return c.Client
 	}
 	return http.DefaultClient
+}
+
+func issueFromREST(number int, title, body, association string, user User, rawLabels []struct {
+	Name string `json:"name"`
+}, isPullRequest bool) Issue {
+	labels := make([]string, 0, len(rawLabels))
+	for _, label := range rawLabels {
+		labels = append(labels, label.Name)
+	}
+	return Issue{
+		Number:            number,
+		Title:             title,
+		Body:              body,
+		AuthorAssociation: association,
+		User:              user,
+		Labels:            labels,
+		IsPullRequest:     isPullRequest,
+	}
 }
 
 func validateRepoName(repo string) error {

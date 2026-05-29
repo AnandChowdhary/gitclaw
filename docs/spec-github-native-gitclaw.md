@@ -100,7 +100,9 @@ Default for public repositories should be per-repo assistant mode with a require
 
 ## GitHub Actions Event Model
 
-Use both events:
+Use issue/comment events for normal GitHub chat and `workflow_dispatch` for
+explicit issue wakeups from manual runs, E2E harnesses, heartbeat/channel
+pollers, or another workflow:
 
 ```yaml
 on:
@@ -108,6 +110,14 @@ on:
     types: [opened]
   issue_comment:
     types: [created]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        required: true
+      dispatch_id:
+        required: false
+      reason:
+        required: false
 ```
 
 Use a separate workflow for heartbeat:
@@ -123,7 +133,14 @@ Important details:
 
 - `issues.opened` starts a new session.
 - `issue_comment.created` continues a session.
-- `workflow_dispatch` starts a manual or e2e heartbeat pass.
+- `workflow_dispatch` on the main workflow wakes a specific issue by number.
+  It must fetch the live issue before preflight because the dispatch payload
+  carries inputs, not the full issue object.
+- `dispatch_id` is the stable idempotency identity for externally mirrored
+  work. Channel bridges should use source IDs such as Telegram `update_id` or
+  Slack event IDs.
+- `workflow_dispatch` on the heartbeat workflow starts a manual or e2e
+  heartbeat pass.
 - `schedule` starts a best-effort periodic heartbeat pass.
 - `issue_comment` fires for both issues and pull requests, so we must ignore PR comments for the issue-chat workflow using `!github.event.issue.pull_request`.
 - GitHub requires the workflow file to exist on the default branch for these events to run.
@@ -132,7 +149,8 @@ Important details:
 - Actions jobs should use explicit `permissions`; never rely on repository defaults.
 - Model-running jobs need `models: read` in addition to `issues: write` and
   `contents: read` when using GitHub Models.
-- Comments posted with the repository `GITHUB_TOKEN` should not recursively trigger another workflow run, which prevents agent reply loops. If we later use a GitHub App token or PAT, we must add explicit bot-comment filtering.
+- Comments posted with the repository `GITHUB_TOKEN` should not recursively trigger another workflow run, which prevents agent reply loops. Channel pollers that create issue comments with `GITHUB_TOKEN` must call the main workflow through `workflow_dispatch` or run the handler directly in the same job; they should not rely on the created comment to fire `issue_comment`.
+- If we later use a GitHub App token or PAT, we must add explicit bot-comment filtering.
 
 ## Reference Workflow
 
@@ -144,6 +162,14 @@ on:
     types: [opened]
   issue_comment:
     types: [created]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        required: true
+      dispatch_id:
+        required: false
+      reason:
+        required: false
 
 permissions:
   contents: read
@@ -151,7 +177,7 @@ permissions:
   models: read
 
 concurrency:
-  group: gitclaw-${{ github.event.issue.number }}
+  group: gitclaw-${{ github.event.issue.number || inputs.issue_number }}
   cancel-in-progress: false
 
 jobs:
@@ -670,6 +696,19 @@ Tradeoffs:
 - scheduled Actions are best-effort and should not be treated as exact timers,
 - needs durable offset storage.
 
+After a poller mirrors a channel message into a GitHub issue or comment, it
+must wake GitClaw explicitly. The preferred no-server path is to dispatch the
+main workflow with:
+
+- `issue_number`: canonical GitHub issue,
+- `dispatch_id`: source message/event ID used for idempotency,
+- `reason`: channel and bridge name for audit.
+
+The poller may also run `gitclaw handle` directly in the same job with a
+synthetic dispatch event. It should not wait for the mirrored GitHub comment to
+trigger `issue_comment`, because events created with the repository
+`GITHUB_TOKEN` generally do not recursively create new workflow runs.
+
 Recommended use: optional low-latency-insensitive Telegram bridge, not the main
 Slack strategy.
 
@@ -700,6 +739,7 @@ channel-gateway run starts
   -> load durable offsets/dedupe state
   -> connect to Telegram long poll and/or Slack Socket Mode
   -> mirror inbound messages to GitHub issues/comments
+  -> wake the canonical issue via workflow_dispatch using channel event ID
   -> mirror outbound GitClaw comments back to channel
   -> before timeout, workflow_dispatch next channel-gateway run
   -> release or transfer lease
@@ -1025,7 +1065,20 @@ assert the expected comments/labels, and close the issue in cleanup.
    - dispatch the same slot again,
    - assert no duplicate heartbeat comment is created.
 
-10. **Tool/context usage**
+10. **Workflow dispatch wakeup**
+
+   - create an issue without the normal trigger label or `@gitclaw` title
+     prefix,
+   - add the `gitclaw` label after creation so `issues.opened` does not handle
+     it,
+   - dispatch the main `gitclaw.yml` workflow with `issue_number` and a stable
+     `dispatch_id`,
+   - assert one assistant comment with a `dispatch-...` event marker and exact
+     nonce token,
+   - dispatch the same `dispatch_id` again,
+   - assert no duplicate assistant comment is created.
+
+11. **Tool/context usage**
 
    - ask the assistant to read a concrete repository file such as `go.mod`,
    - assert the reply includes an exact expected token or module path,
@@ -1075,6 +1128,8 @@ MVP is not complete until:
   `gitclaw.search_files` context from the search fixture,
 - the heartbeat harness dispatches a real workflow, receives one heartbeat
   comment, and proves same-slot idempotency,
+- the workflow-dispatch harness dispatches the main handler against a real
+  issue and proves same-dispatch-id idempotency,
 - the live harness verifies status labels end at `gitclaw:done` without
   `gitclaw:running` or `gitclaw:error`,
 - the failure harness forces a real invalid-model run and verifies a bounded
@@ -1170,8 +1225,9 @@ examples/workflows/gitclaw.yml
 - The assistant sees prior GitClaw replies and user comments in order.
 - Bot replies do not recursively trigger new agent runs when using `GITHUB_TOKEN`.
 - PR comments are ignored by the issue-chat workflow.
-- Workflow permissions are least-privilege: preflight uses `contents: read`;
-  handle uses `contents: read`, `issues: write`, and `models: read`.
+- Workflow permissions are least-privilege: preflight uses `contents: read` and
+  `issues: read` so dispatch events can resolve the target issue; handle uses
+  `contents: read`, `issues: write`, and `models: read`.
 - External/untrusted users do not invoke the LLM by default.
 - The run has a timeout.
 - Per-issue runs are serialized.
@@ -1181,6 +1237,8 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven heartbeat E2E harness verifies a real scheduled-workflow path
   via `workflow_dispatch`, including issue transcript context,
   `.gitclaw/HEARTBEAT.md`, exact token content, and same-slot idempotency.
+- A `gh`-driven workflow-dispatch E2E harness verifies the main handler can be
+  woken for a specific issue and deduped by dispatch ID.
 - A `gh`-driven failure E2E harness verifies the safe failure path against a
   real Actions/model failure.
 - A `gh`-driven prompt-budget E2E harness verifies a large real issue still

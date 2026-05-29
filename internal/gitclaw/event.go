@@ -3,6 +3,8 @@ package gitclaw
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
+	"strings"
 )
 
 func ParseEvent(eventName string, payload []byte) (Event, error) {
@@ -34,7 +36,8 @@ func ParseEvent(eventName string, payload []byte) (Event, error) {
 			CreatedAt         string `json:"created_at"`
 			UpdatedAt         string `json:"updated_at"`
 		} `json:"comment"`
-		Sender User `json:"sender"`
+		Inputs map[string]string `json:"inputs"`
+		Sender User              `json:"sender"`
 	}
 	if err := json.Unmarshal(payload, &raw); err != nil {
 		return Event{}, fmt.Errorf("parse event JSON: %w", err)
@@ -84,6 +87,16 @@ func ParseEvent(eventName string, payload []byte) (Event, error) {
 			CreatedAt:         raw.Comment.CreatedAt,
 			UpdatedAt:         raw.Comment.UpdatedAt,
 		}
+	case "workflow_dispatch":
+		issueNumber, err := dispatchIssueNumber(raw.Inputs)
+		if err != nil {
+			return Event{}, err
+		}
+		ev.Kind = EventWorkflowDispatch
+		ev.Action = "requested"
+		ev.Issue.Number = issueNumber
+		ev.DispatchID = strings.TrimSpace(raw.Inputs["dispatch_id"])
+		ev.DispatchReason = strings.TrimSpace(raw.Inputs["reason"])
 	default:
 		return Event{}, fmt.Errorf("unsupported event name %q", eventName)
 	}
@@ -95,4 +108,16 @@ func ParseEvent(eventName string, payload []byte) (Event, error) {
 		return Event{}, fmt.Errorf("event missing issue.number")
 	}
 	return ev, nil
+}
+
+func dispatchIssueNumber(inputs map[string]string) (int, error) {
+	raw := strings.TrimSpace(inputs["issue_number"])
+	if raw == "" {
+		return 0, fmt.Errorf("workflow_dispatch missing inputs.issue_number")
+	}
+	issueNumber, err := strconv.Atoi(raw)
+	if err != nil || issueNumber <= 0 {
+		return 0, fmt.Errorf("invalid workflow_dispatch inputs.issue_number %q", raw)
+	}
+	return issueNumber, nil
 }

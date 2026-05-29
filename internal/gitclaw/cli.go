@@ -14,7 +14,7 @@ func RunCLI(ctx context.Context, args []string) error {
 	}
 	switch args[0] {
 	case "preflight":
-		return runPreflight(args[1:])
+		return runPreflight(ctx, args[1:])
 	case "handle":
 		return runHandle(ctx, args[1:])
 	case "backup":
@@ -36,14 +36,16 @@ func runBackup(ctx context.Context, args []string) error {
 	if err != nil {
 		return err
 	}
-	token := os.Getenv("GH_TOKEN")
-	if token == "" {
-		token = os.Getenv("GITHUB_TOKEN")
-	}
+	token := githubTokenFromEnv()
 	if token == "" {
 		return fmt.Errorf("missing GH_TOKEN or GITHUB_TOKEN")
 	}
-	path, err := BackupIssue(ctx, ev, NewRESTGitHubClient(token), outDir, time.Now())
+	github := NewRESTGitHubClient(token)
+	ev, err = ResolveDispatchIssue(ctx, ev, github)
+	if err != nil {
+		return err
+	}
+	path, err := BackupIssue(ctx, ev, github, outDir, time.Now())
 	if err != nil {
 		return err
 	}
@@ -106,10 +108,7 @@ func runHeartbeatCommand(ctx context.Context, args []string) error {
 			return fmt.Errorf("unknown heartbeat argument %q", args[i])
 		}
 	}
-	token := os.Getenv("GH_TOKEN")
-	if token == "" {
-		token = os.Getenv("GITHUB_TOKEN")
-	}
+	token := githubTokenFromEnv()
 	if token == "" {
 		return fmt.Errorf("missing GH_TOKEN or GITHUB_TOKEN")
 	}
@@ -125,10 +124,20 @@ func runHeartbeatCommand(ctx context.Context, args []string) error {
 	return nil
 }
 
-func runPreflight(args []string) error {
+func runPreflight(ctx context.Context, args []string) error {
 	ev, cfg, err := loadEventAndConfig(args)
 	if err != nil {
 		return err
+	}
+	if ev.Kind == EventWorkflowDispatch {
+		token := githubTokenFromEnv()
+		if token == "" {
+			return fmt.Errorf("workflow_dispatch preflight requires GH_TOKEN or GITHUB_TOKEN")
+		}
+		ev, err = ResolveDispatchIssue(ctx, ev, NewRESTGitHubClient(token))
+		if err != nil {
+			return err
+		}
 	}
 	decision := Preflight(ev, cfg)
 	if outputPath := os.Getenv("GITHUB_OUTPUT"); outputPath != "" {
@@ -150,27 +159,28 @@ func runHandle(ctx context.Context, args []string) error {
 	if err != nil {
 		return err
 	}
-	decision := Preflight(ev, cfg)
-	if !decision.Allowed {
-		return fmt.Errorf("%s: %s", decision.Code, decision.Reason)
-	}
-
-	token := os.Getenv("GH_TOKEN")
-	if token == "" {
-		token = os.Getenv("GITHUB_TOKEN")
-	}
+	token := githubTokenFromEnv()
 	if token == "" {
 		return fmt.Errorf("missing GH_TOKEN or GITHUB_TOKEN")
 	}
 	if err := validateRepoName(ev.Repo); err != nil {
 		return err
 	}
+	github := NewRESTGitHubClient(token)
+	ev, err = ResolveDispatchIssue(ctx, ev, github)
+	if err != nil {
+		return err
+	}
+	decision := Preflight(ev, cfg)
+	if !decision.Allowed {
+		return fmt.Errorf("%s: %s", decision.Code, decision.Reason)
+	}
 
 	llm, err := NewLLMFromEnv(cfg)
 	if err != nil {
 		return err
 	}
-	return Handle(ctx, ev, cfg, NewRESTGitHubClient(token), llm)
+	return Handle(ctx, ev, cfg, github, llm)
 }
 
 func loadEventAndConfig(args []string) (Event, Config, error) {
@@ -237,4 +247,11 @@ func removeFlagWithValue(args []string, name string) []string {
 		out = append(out, args[i])
 	}
 	return out
+}
+
+func githubTokenFromEnv() string {
+	if token := os.Getenv("GH_TOKEN"); token != "" {
+		return token
+	}
+	return os.Getenv("GITHUB_TOKEN")
 }

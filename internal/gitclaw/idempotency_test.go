@@ -28,6 +28,31 @@ func TestIdempotencyKeyUsesStableTriggerIdentity(t *testing.T) {
 	}
 }
 
+func TestIdempotencyKeyUsesWorkflowDispatchID(t *testing.T) {
+	ev := Event{
+		Kind:       EventWorkflowDispatch,
+		EventName:  "workflow_dispatch",
+		Repo:       "owner/repo",
+		Issue:      Issue{Number: 12},
+		DispatchID: "slack-event-123",
+		SHA:        "abc123",
+	}
+	key1 := IdempotencyKey(ev)
+	ev.SHA = "def456"
+	if key1 != IdempotencyKey(ev) {
+		t.Fatalf("workflow_dispatch ID should remain idempotent across repo SHA changes")
+	}
+	ev.SHA = "abc123"
+	ev.DispatchID = "slack-event-456"
+	key2 := IdempotencyKey(ev)
+	if key1 == "" || key2 == "" {
+		t.Fatalf("dispatch idempotency keys should not be empty")
+	}
+	if key1 == key2 {
+		t.Fatalf("different dispatch IDs should produce different keys")
+	}
+}
+
 func TestRenderAssistantCommentIncludesMarker(t *testing.T) {
 	marker := Marker{
 		RunID:          "123",

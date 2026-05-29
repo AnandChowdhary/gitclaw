@@ -12,11 +12,17 @@ func Preflight(ev Event, cfg Config) PreflightDecision {
 	if ev.Kind == EventIssueComment && ev.Issue.IsPullRequest {
 		return reject("pr_comment_ignored", "pull request comments are ignored")
 	}
-	if ev.Sender.IsBot() || (ev.Comment != nil && ev.Comment.User.IsBot()) {
+	if ev.Kind == EventWorkflowDispatch && ev.Issue.IsPullRequest {
+		return reject("pr_dispatch_ignored", "pull request dispatches are ignored")
+	}
+	if ev.Kind != EventWorkflowDispatch && (ev.Sender.IsBot() || (ev.Comment != nil && ev.Comment.User.IsBot())) {
 		return reject("bot_comment_ignored", "bot comments are ignored")
 	}
 	if !triggered(ev, cfg) {
 		return reject("not_triggered", "issue is not labeled or prefixed for GitClaw")
+	}
+	if ev.Kind == EventWorkflowDispatch {
+		return PreflightDecision{Allowed: true, Code: "allowed", Reason: "allowed"}
 	}
 	if !trustedAssociation(actorAssociation(ev), cfg) {
 		return reject("actor_not_trusted", "actor association is not trusted")

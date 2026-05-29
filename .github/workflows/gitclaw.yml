@@ -5,9 +5,20 @@ on:
     types: [opened]
   issue_comment:
     types: [created]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: Issue number to run GitClaw against
+        required: true
+      dispatch_id:
+        description: Stable idempotency key for this external wakeup
+        required: false
+      reason:
+        description: Human-readable dispatch source
+        required: false
 
 concurrency:
-  group: gitclaw-${{ github.event.issue.number }}
+  group: gitclaw-${{ github.event.issue.number || inputs.issue_number }}
   cancel-in-progress: false
 
 jobs:
@@ -16,6 +27,7 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: read
+      issues: read
     outputs:
       allowed: ${{ steps.preflight.outputs.allowed }}
       code: ${{ steps.preflight.outputs.code }}
@@ -29,6 +41,9 @@ jobs:
 
       - id: preflight
         run: go run ./cmd/gitclaw preflight --event "$GITHUB_EVENT_PATH"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
 
   handle:
     needs: preflight
@@ -134,7 +149,8 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "Back up GitClaw issue #${{ github.event.issue.number }}"
+          git commit -m "Back up GitClaw issue #${ISSUE_NUMBER}"
           git push origin "HEAD:${BACKUP_BRANCH}"
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number || inputs.issue_number }}

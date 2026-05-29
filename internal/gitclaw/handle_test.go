@@ -215,6 +215,15 @@ type FakeGitHub struct {
 	IssueLabels     map[int][]string
 }
 
+func (f *FakeGitHub) GetIssue(ctx context.Context, repo string, issueNumber int) (Issue, error) {
+	for _, issue := range f.Issues {
+		if issue.Number == issueNumber {
+			return issue, nil
+		}
+	}
+	return Issue{}, errors.New("issue not found")
+}
+
 func (f *FakeGitHub) ListOpenIssues(ctx context.Context, repo string, labels []string, limit int) ([]Issue, error) {
 	var issues []Issue
 	for _, issue := range f.Issues {

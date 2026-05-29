@@ -5,8 +5,9 @@ import (
 )
 
 const (
-	EventIssueOpened  = "issue_opened"
-	EventIssueComment = "issue_comment"
+	EventIssueOpened      = "issue_opened"
+	EventIssueComment     = "issue_comment"
+	EventWorkflowDispatch = "workflow_dispatch"
 )
 
 type Config struct {
@@ -50,14 +51,16 @@ func DefaultConfig() Config {
 }
 
 type Event struct {
-	Kind      string
-	EventName string
-	Action    string
-	Repo      string
-	SHA       string
-	Issue     Issue
-	Comment   *Comment
-	Sender    User
+	Kind           string
+	EventName      string
+	Action         string
+	Repo           string
+	SHA            string
+	Issue          Issue
+	Comment        *Comment
+	Sender         User
+	DispatchID     string
+	DispatchReason string
 }
 
 type Issue struct {
@@ -132,6 +135,7 @@ type PostedComment struct {
 }
 
 type GitHubClient interface {
+	GetIssue(ctx context.Context, repo string, issueNumber int) (Issue, error)
 	ListIssueComments(ctx context.Context, repo string, issueNumber int) ([]Comment, error)
 	PostIssueComment(ctx context.Context, repo string, issueNumber int, body string) (PostedComment, error)
 	AddIssueLabels(ctx context.Context, repo string, issueNumber int, labels []string) error

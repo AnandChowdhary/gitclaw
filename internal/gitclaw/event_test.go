@@ -124,3 +124,45 @@ func TestPreflightRejectsBotLoop(t *testing.T) {
 		t.Fatalf("code = %q, want bot_comment_ignored", decision.Code)
 	}
 }
+
+func TestParseWorkflowDispatchEvent(t *testing.T) {
+	ev, err := ParseEvent("workflow_dispatch", []byte(`{
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"inputs": {
+			"issue_number": "42",
+			"dispatch_id": "telegram-update-123",
+			"reason": "channel-poller"
+		},
+		"sender": {"login": "github-actions[bot]", "type": "Bot"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	if ev.Kind != EventWorkflowDispatch {
+		t.Fatalf("kind = %v, want %v", ev.Kind, EventWorkflowDispatch)
+	}
+	if ev.Issue.Number != 42 || ev.DispatchID != "telegram-update-123" || ev.DispatchReason != "channel-poller" {
+		t.Fatalf("unexpected workflow_dispatch event: %#v", ev)
+	}
+}
+
+func TestPreflightAllowsResolvedWorkflowDispatchFromActionsBot(t *testing.T) {
+	ev := Event{
+		Kind:      EventWorkflowDispatch,
+		EventName: "workflow_dispatch",
+		Repo:      "owner/repo",
+		Issue: Issue{
+			Number:            42,
+			Title:             "Mirrored channel message",
+			Body:              "Please answer when dispatched.",
+			AuthorAssociation: "CONTRIBUTOR",
+			User:              User{Login: "github-actions[bot]", Type: "Bot"},
+			Labels:            []string{"gitclaw"},
+		},
+		Sender: User{Login: "github-actions[bot]", Type: "Bot"},
+	}
+	decision := Preflight(ev, DefaultConfig())
+	if !decision.Allowed {
+		t.Fatalf("workflow_dispatch should trust the Actions dispatch boundary: %+v", decision)
+	}
+}

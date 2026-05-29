@@ -154,6 +154,12 @@ func eventID(ev Event) string {
 	if ev.Comment != nil {
 		return fmt.Sprintf("comment-%d", ev.Comment.ID)
 	}
+	if ev.Kind == EventWorkflowDispatch {
+		if ev.DispatchID != "" {
+			return fmt.Sprintf("dispatch-%s", ev.DispatchID)
+		}
+		return fmt.Sprintf("dispatch-issue-%d", ev.Issue.Number)
+	}
 	return fmt.Sprintf("issue-%d", ev.Issue.Number)
 }
 

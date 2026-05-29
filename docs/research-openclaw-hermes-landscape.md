@@ -163,6 +163,14 @@ when there is a visible update. The critical safety difference is that each
 heartbeat is a fresh Actions run with a hidden idempotency slot, not a
 long-lived main session that can silently mutate memory.
 
+2026-05-29 workflow-dispatch follow-up: GitClaw needs a second fresh-run
+boundary in addition to heartbeat. A channel poller that mirrors Telegram or
+Slack messages using `GITHUB_TOKEN` cannot depend on those generated comments to
+fire another `issue_comment` workflow, so the main issue handler needs an
+explicit `workflow_dispatch` wakeup path. The useful OpenClaw/Hermes analogue is
+not a socket loop; it is an auditable issue-number dispatch with a stable
+external event ID used as the idempotency key.
+
 ### Multi-Agent Routing
 
 OpenClaw's multi-agent model treats each agent as a full isolated persona scope:
@@ -289,6 +297,12 @@ idempotency explicit. GitClaw should not try to emulate Hermes' full cron
 manager. It should use GitHub's built-in `schedule` trigger for best-effort
 periodic checks, `workflow_dispatch` for manual and E2E runs, and visible issue
 comments as the delivery/audit surface.
+
+2026-05-29 channel wakeup follow-up: Hermes' gateway can keep a live channel
+session open, but GitClaw's no-server version should make channel wakeups
+explicit. Channel bridges should write durable issue/comment state first, then
+dispatch the canonical issue with the channel message ID as `dispatch_id`. That
+keeps replay and dedupe in GitHub instead of introducing a hidden queue.
 
 Hermes' session docs also expose a practical backup primitive:
 `hermes sessions export backup.jsonl` writes conversation metadata and messages
