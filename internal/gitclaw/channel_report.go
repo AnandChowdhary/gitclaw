@@ -37,13 +37,25 @@ func IsChannelReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderChannelReport(ev Event, cfg Config, comments []Comment) string {
+	return renderChannelReport(ev, cfg, comments, true)
+}
+
+func RenderChannelCLIReport(cfg Config) string {
+	return renderChannelReport(Event{}, cfg, nil, false)
+}
+
+func renderChannelReport(ev Event, cfg Config, comments []Comment, includeIssue bool) string {
 	surface := inspectChannelSurface(cfg.Workdir)
 	channelMessages := countChannelMessages(comments)
 	var b strings.Builder
 	b.WriteString("## GitClaw Channel Report\n\n")
 	b.WriteString("Generated without a model call.\n\n")
-	fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
-	fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
 	fmt.Fprintf(&b, "- channel_label: `%s`\n", cfg.ChannelLabel)
 	fmt.Fprintf(&b, "- trigger_label: `%s`\n", cfg.TriggerLabel)
 	fmt.Fprintf(&b, "- workflow_path: `%s`\n", channelIngestWorkflowPath)
@@ -52,11 +64,16 @@ func RenderChannelReport(ev Event, cfg Config, comments []Comment) string {
 	fmt.Fprintf(&b, "- permissions_actions_write: `%t`\n", surface.Workflow.ActionsWrite)
 	fmt.Fprintf(&b, "- permissions_issues_write: `%t`\n", surface.Workflow.IssuesWrite)
 	fmt.Fprintf(&b, "- workflow_inputs: `%d`\n", surface.Workflow.Inputs)
-	fmt.Fprintf(&b, "- channel_thread_issue: `%t`\n", HasChannelThreadMarker(ev.Issue.Body))
-	fmt.Fprintf(&b, "- channel_message_comments_now: `%d`\n", channelMessages)
+	if includeIssue {
+		fmt.Fprintf(&b, "- channel_thread_issue: `%t`\n", HasChannelThreadMarker(ev.Issue.Body))
+		fmt.Fprintf(&b, "- channel_message_comments_now: `%d`\n", channelMessages)
+	}
 	fmt.Fprintf(&b, "- supported_providers: `%s`\n", strings.Join(channelReportProviders, ", "))
 	fmt.Fprintf(&b, "- wake_strategy: `%s`\n", "workflow_dispatch")
-	fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n\n", shortDocumentHash(ev.Issue.Title))
+	if includeIssue {
+		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
+	}
+	b.WriteByte('\n')
 	b.WriteString("Channel ingress mirrors external messages into canonical GitHub issues, then wakes the normal handler with `workflow_dispatch`. Channel message bodies, issue bodies, and tokens are not included in this report.\n\n")
 
 	b.WriteString("### Workflow\n")

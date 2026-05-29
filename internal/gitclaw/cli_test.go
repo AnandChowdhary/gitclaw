@@ -352,6 +352,48 @@ func TestToolsSearchCommandReportsHashedMatches(t *testing.T) {
 	}
 }
 
+func TestChannelsListCommandReportsWorkflowDispatchBridge(t *testing.T) {
+	dir := t.TempDir()
+	writeTestFile(t, dir, ".github/workflows/gitclaw-channel-ingest.yml", `name: GitClaw Channel Ingest
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        required: true
+      thread_id:
+        required: true
+      message_id:
+        required: true
+      author:
+        required: false
+      body:
+        required: true
+permissions:
+  actions: write
+  issues: write
+jobs:
+  ingest:
+    steps:
+      - run: echo CHANNEL_WORKFLOW_BODY_TOKEN
+`)
+	t.Setenv("GITCLAW_WORKDIR", dir)
+	output := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"channels", "list"}); err != nil {
+			t.Fatalf("channels list returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"GitClaw Channel Report", "scope: `local-cli`", "channel_label: `gitclaw:channel`", "trigger_label: `gitclaw`", "workflow_path: `.github/workflows/gitclaw-channel-ingest.yml`", "workflow_present: `true`", "workflow_dispatch_trigger: `true`", "permissions_actions_write: `true`", "permissions_issues_write: `true`", "workflow_inputs: `5`", "supported_providers: `telegram, slack, generic`", "wake_strategy: `workflow_dispatch`", "telegram", "slack", "generic", "gitclaw channel-ingest", "dispatch id: `<channel>-<message_id>`"} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("channels list output missing %q:\n%s", want, output)
+		}
+	}
+	for _, notWant := range []string{"repository:", "issue:", "channel_thread_issue:", "channel_message_comments_now:", "CHANNEL_WORKFLOW_BODY_TOKEN"} {
+		if strings.Contains(output, notWant) {
+			t.Fatalf("channels list output unexpectedly included %q:\n%s", notWant, output)
+		}
+	}
+}
+
 func TestCommandsCommandReportsCatalog(t *testing.T) {
 	t.Setenv("GITCLAW_WORKDIR", t.TempDir())
 	output := captureStdout(t, func() {
@@ -359,7 +401,7 @@ func TestCommandsCommandReportsCatalog(t *testing.T) {
 			t.Fatalf("commands returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `7`", "local_cli_helpers: `25`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`gitclaw commands` command=`/help`", "`gitclaw backup list` command=`/backup`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
+	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `7`", "local_cli_helpers: `26`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`gitclaw commands` command=`/help`", "`gitclaw channels list` command=`/channels`", "`gitclaw backup list` command=`/backup`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("commands output missing %q:\n%s", want, output)
 		}

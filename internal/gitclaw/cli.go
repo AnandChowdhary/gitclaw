@@ -25,6 +25,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runHeartbeatCommand(ctx, args[1:])
 	case "channel-ingest":
 		return runChannelIngestCommand(ctx, args[1:])
+	case "channels", "channel":
+		return runChannelsCommand(args[1:])
 	case "proactive":
 		return runProactiveCommand(ctx, args[1:])
 	case "skills":
@@ -242,6 +244,18 @@ func runCommandsCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderCommandCLIReport(cfg))
+	return nil
+}
+
+func runChannelsCommand(args []string) error {
+	if len(args) > 1 || (len(args) == 1 && args[0] != "list") {
+		return fmt.Errorf("usage: gitclaw channels [list]")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderChannelCLIReport(cfg))
 	return nil
 }
 

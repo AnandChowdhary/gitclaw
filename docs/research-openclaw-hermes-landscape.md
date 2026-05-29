@@ -437,6 +437,13 @@ constraints inside the issue thread: `@gitclaw /channels` reports the generic
 channel-ingest workflow, provider keys, dispatch contract, and marker counts
 without dumping mirrored channel messages.
 
+2026-05-30 channel-list follow-up: the bridge contract also needs an operator
+CLI surface before provider-specific Telegram or Slack code lands. Add
+`gitclaw channels list` as a local mirror of the body-free `/channels` report:
+workflow-dispatch trigger, workflow permissions, normalized inputs, supported
+provider keys, labels, and dispatch-id contract, with issue-only marker counts
+omitted in CLI mode.
+
 ### Multi-Agent Routing
 
 OpenClaw's multi-agent model treats each agent as a full isolated persona scope:
