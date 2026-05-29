@@ -2,8 +2,15 @@ package gitclaw
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 )
+
+type SkillSearchResult struct {
+	Skill       SkillSummary
+	MatchFields []string
+	Score       int
+}
 
 func IsSkillsReportRequest(ev Event, cfg Config) bool {
 	return activeSlashCommand(ev, cfg) == "/skills"
@@ -63,6 +70,9 @@ func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if skillName := requestedSkillInfoName(ev, cfg); skillName != "" {
 		return renderSkillInfoReport(ev, repoContext, skillName, true)
 	}
+	if query := requestedSkillSearchQuery(ev, cfg); query != "" {
+		return renderSkillSearchReport(ev, repoContext, query, true)
+	}
 
 	var b strings.Builder
 	b.WriteString("## GitClaw Skills Report\n\n")
@@ -107,6 +117,10 @@ func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
 
 func RenderSkillInfoCLIReport(repoContext RepoContext, name string) string {
 	return renderSkillInfoReport(Event{}, repoContext, name, false)
+}
+
+func RenderSkillSearchCLIReport(repoContext RepoContext, query string) string {
+	return renderSkillSearchReport(Event{}, repoContext, query, false)
 }
 
 func renderSkillInfoReport(ev Event, repoContext RepoContext, name string, includeIssue bool) string {
@@ -161,6 +175,52 @@ func renderSkillInfoReport(ev Event, repoContext RepoContext, name string, inclu
 	return strings.TrimSpace(b.String())
 }
 
+func renderSkillSearchReport(ev Event, repoContext RepoContext, query string, includeIssue bool) string {
+	query = cleanSkillSearchQuery(query)
+	results := searchSkillSummaries(repoContext.SkillSummaries, query)
+	status := "ok"
+	if query == "" {
+		status = "no_query"
+	} else if len(results) == 0 {
+		status = "no_matches"
+	}
+
+	var b strings.Builder
+	b.WriteString("## GitClaw Skills Search Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
+	fmt.Fprintf(&b, "- skill_search_status: `%s`\n", status)
+	fmt.Fprintf(&b, "- query_sha256_12: `%s`\n", shortDocumentHash(query))
+	fmt.Fprintf(&b, "- query_terms: `%d`\n", len(skillSearchTerms(query)))
+	fmt.Fprintf(&b, "- available_skills: `%d`\n", availableSkillCount(repoContext))
+	fmt.Fprintf(&b, "- matched_skills: `%d`\n", len(results))
+	fmt.Fprintf(&b, "- run_mode: `%s`\n", "read-only")
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n\n", false)
+	b.WriteString("This report searches only skill metadata: name, folder, path, and frontmatter description. Full `SKILL.md` bodies, issue bodies, comments, prompts, and raw search queries are not included.\n\n")
+
+	b.WriteString("### Matches\n")
+	if len(results) == 0 {
+		b.WriteString("- none\n")
+	} else {
+		for _, result := range results {
+			writeSkillSearchResult(&b, result, skillSelectedForTurn(repoContext, result.Skill))
+		}
+	}
+
+	if len(results) == 0 && len(repoContext.SkillSummaries) > 0 {
+		b.WriteString("\n### Available Skills\n")
+		for _, skill := range repoContext.SkillSummaries {
+			fmt.Fprintf(&b, "- `%s` path=`%s`\n", inlineCode(skill.Name), skill.Path)
+		}
+	}
+	return strings.TrimSpace(b.String())
+}
+
 func requestedSkillInfoName(ev Event, cfg Config) string {
 	fields := activeSlashCommandFields(ev, cfg)
 	if len(fields) < 3 || fields[0] != "/skills" || !strings.EqualFold(fields[1], "info") {
@@ -169,8 +229,20 @@ func requestedSkillInfoName(ev Event, cfg Config) string {
 	return cleanSkillLookupName(fields[2])
 }
 
+func requestedSkillSearchQuery(ev Event, cfg Config) string {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 3 || fields[0] != "/skills" || !strings.EqualFold(fields[1], "search") {
+		return ""
+	}
+	return cleanSkillSearchQuery(strings.Join(fields[2:], " "))
+}
+
 func cleanSkillLookupName(name string) string {
 	return strings.Trim(strings.TrimSpace(name), " \t\r\n.,:;!?`\"'")
+}
+
+func cleanSkillSearchQuery(query string) string {
+	return strings.Trim(strings.TrimSpace(query), " \t\r\n.,:;!?`\"'")
 }
 
 func matchingSkillSummaries(skills []SkillSummary, name string) []SkillSummary {
@@ -185,6 +257,97 @@ func matchingSkillSummaries(skills []SkillSummary, name string) []SkillSummary {
 		}
 	}
 	return matches
+}
+
+func searchSkillSummaries(skills []SkillSummary, query string) []SkillSearchResult {
+	query = strings.ToLower(cleanSkillSearchQuery(query))
+	if query == "" {
+		return nil
+	}
+	terms := skillSearchTerms(query)
+	var results []SkillSearchResult
+	for _, skill := range skills {
+		score, fields := skillSearchScore(skill, query, terms)
+		if score == 0 {
+			continue
+		}
+		results = append(results, SkillSearchResult{
+			Skill:       skill,
+			MatchFields: fields,
+			Score:       score,
+		})
+	}
+	sort.Slice(results, func(i, j int) bool {
+		if results[i].Score != results[j].Score {
+			return results[i].Score > results[j].Score
+		}
+		return results[i].Skill.Path < results[j].Skill.Path
+	})
+	return results
+}
+
+func skillSearchScore(skill SkillSummary, query string, terms []string) (int, []string) {
+	fields := map[string]string{
+		"name":        skill.Name,
+		"folder":      skillFolderName(skill.Path),
+		"path":        skill.Path,
+		"description": skill.Description,
+	}
+	weights := map[string]int{
+		"name":        80,
+		"folder":      70,
+		"path":        30,
+		"description": 20,
+	}
+	score := 0
+	matchedFields := map[string]bool{}
+	for field, value := range fields {
+		value = strings.ToLower(strings.TrimSpace(value))
+		if value == "" {
+			continue
+		}
+		if value == query {
+			score += weights[field] * 2
+			matchedFields[field] = true
+			continue
+		}
+		if strings.Contains(value, query) {
+			score += weights[field]
+			matchedFields[field] = true
+		}
+		for _, term := range terms {
+			if strings.Contains(value, term) {
+				score += weights[field] / 2
+				matchedFields[field] = true
+			}
+		}
+	}
+	if score == 0 {
+		return 0, nil
+	}
+	var out []string
+	for field := range matchedFields {
+		out = append(out, field)
+	}
+	sort.Strings(out)
+	return score, out
+}
+
+func skillSearchTerms(query string) []string {
+	fields := strings.FieldsFunc(strings.ToLower(cleanSkillSearchQuery(query)), func(r rune) bool {
+		return !(r >= 'a' && r <= 'z' || r >= '0' && r <= '9' || r == '-')
+	})
+	var terms []string
+	for _, field := range fields {
+		field = strings.TrimSpace(field)
+		if len(field) < 2 || isStopWord(field) {
+			continue
+		}
+		if !containsStringFold(terms, field) {
+			terms = append(terms, field)
+		}
+	}
+	return terms
 }
 
 func skillSelectedForTurn(repoContext RepoContext, skill SkillSummary) bool {
@@ -229,6 +392,27 @@ func writeSkillInfoList(b *strings.Builder, label string, values []string) {
 		return
 	}
 	fmt.Fprintf(b, "  - %s=`%s`\n", label, inlineList(values))
+}
+
+func writeSkillSearchResult(b *strings.Builder, result SkillSearchResult, selected bool) {
+	skill := result.Skill
+	fmt.Fprintf(b, "- skill_name=`%s` path=`%s` folder=`%s` match_fields=`%s` selected_for_this_turn=`%t` always=`%t` frontmatter=`%t` description=`%t` bytes=`%d` lines=`%d` sha256_12=`%s` requires_env=`%d` requires_bins=`%d` missing_env=`%d` missing_bins=`%d`\n",
+		inlineCode(skill.Name),
+		skill.Path,
+		skillFolderName(skill.Path),
+		inlineList(result.MatchFields),
+		selected,
+		skill.Always,
+		skill.FrontmatterPresent,
+		strings.TrimSpace(skill.Description) != "",
+		skill.Bytes,
+		skill.Lines,
+		skill.SHA,
+		len(skill.RequiredEnv),
+		len(skill.RequiredBins),
+		len(skill.MissingEnv),
+		len(skill.MissingBins),
+	)
 }
 
 func writeSkillInfoValidationFindings(b *strings.Builder, validation SkillValidationReport, matches []SkillSummary) {

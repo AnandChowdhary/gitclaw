@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -156,16 +157,35 @@ func runDoctorCommand(args []string) error {
 
 func runSkillsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw skills validate|info <name>")
+		return fmt.Errorf("usage: gitclaw skills validate|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "validate":
 		return runSkillsValidateCommand(args[1:])
 	case "info":
 		return runSkillsInfoCommand(args[1:])
+	case "search":
+		return runSkillsSearchCommand(args[1:])
 	default:
 		return fmt.Errorf("unknown skills command %q", args[0])
 	}
+}
+
+func runSkillsSearchCommand(args []string) error {
+	query := strings.TrimSpace(strings.Join(args, " "))
+	if query == "" {
+		return fmt.Errorf("usage: gitclaw skills search <query>")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContext(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "skills search " + query}})
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSkillSearchCLIReport(repoContext, query))
+	return nil
 }
 
 func runSkillsInfoCommand(args []string) error {

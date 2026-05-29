@@ -76,6 +76,77 @@ SECRET_SKILL_INFO_BODY_TOKEN
 	}
 }
 
+func TestRenderSkillSearchReportSearchesMetadataWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Use read-only repository context and deterministic tool outputs.
+---
+
+# Repo Reader
+SECRET_SKILL_SEARCH_BODY_TOKEN
+`)
+	writeTestFile(t, root, ".gitclaw/SKILLS/deploy-helper/SKILL.md", `---
+name: deploy-helper
+description: Prepare release deployment notes.
+---
+
+# Deploy Helper
+OTHER_SKILL_SEARCH_BODY_TOKEN
+`)
+	ctx, err := LoadRepoContext(root, []TranscriptMessage{{Role: "user", Body: "Search for repository context skills."}})
+	if err != nil {
+		t.Fatalf("LoadRepoContext returned error: %v", err)
+	}
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 113,
+			"title": "@gitclaw /skills search repository context SEARCH_QUERY_SECRET",
+			"body": "Hidden skill search body token: SKILL_SEARCH_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	report := RenderSkillsReport(ev, DefaultConfig(), ctx)
+	for _, want := range []string{
+		"GitClaw Skills Search Report",
+		"Generated without a model call",
+		"skill_search_status: `ok`",
+		"query_sha256_12:",
+		"query_terms:",
+		"available_skills: `2`",
+		"matched_skills: `1`",
+		"run_mode: `read-only`",
+		"raw_bodies_included: `false`",
+		"searches only skill metadata",
+		"### Matches",
+		"skill_name=`repo-reader`",
+		"path=`.gitclaw/SKILLS/repo-reader/SKILL.md`",
+		"match_fields=`description`",
+		"selected_for_this_turn=`true`",
+		"sha256_12=",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("skill search report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"SECRET_SKILL_SEARCH_BODY_TOKEN", "OTHER_SKILL_SEARCH_BODY_TOKEN", "SKILL_SEARCH_BODY_SECRET", "SEARCH_QUERY_SECRET"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("skill search report leaked %q:\n%s", leaked, report)
+		}
+	}
+	if strings.Contains(report, "deploy-helper") {
+		t.Fatalf("skill search should not include nonmatching skill:\n%s", report)
+	}
+}
+
 func TestRequestedSkillInfoNameRequiresInfoSubcommand(t *testing.T) {
 	ev, err := ParseEvent("issues", []byte(`{
 		"action": "opened",

@@ -28,7 +28,7 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"Generated without a model call",
 		"commands: `15`",
 		"aliases: `7`",
-		"local_cli_helpers: `15`",
+		"local_cli_helpers: `16`",
 		"run_mode: `read-only`",
 		"### Slash Commands",
 		"### Local CLI Helpers",
@@ -40,6 +40,7 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"`gitclaw backup retention-plan` command=`/backup`",
 		"`gitclaw memory validate` command=`/memory`",
 		"`gitclaw skills info <name>` command=`/skills`",
+		"`gitclaw skills search <query>` command=`/skills`",
 		"`gitclaw tools validate` command=`/tools`",
 	} {
 		if !strings.Contains(report, want) {

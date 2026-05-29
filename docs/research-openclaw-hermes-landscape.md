@@ -330,6 +330,14 @@ GitClaw should map that to `@gitclaw /skills info <name>` and
 selection state, and validation findings without dumping full `SKILL.md`
 bodies into issues or logs.
 
+2026-05-29 skill-search follow-up: OpenClaw's `skills search [query...]`
+searches the ClawHub skill feed, while Hermes' skill surface keeps a compact
+searchable/listable skill atlas separate from full `skill_view` body loading.
+GitClaw should keep search local and git-native: `@gitclaw /skills search
+<query>` and `gitclaw skills search <query>` search only skill metadata
+already present in the repo, report match fields and hashes, and represent the
+raw query by hash/term count because issue text may contain secrets.
+
 2026-05-29 memory-validation follow-up: OpenClaw's memory CLI exposes
 status/index/search/promotion surfaces and treats deep writes to `MEMORY.md` as
 special, while Hermes' memory guidance separates durable facts from procedural
