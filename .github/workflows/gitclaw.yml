@@ -53,3 +53,68 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
           GITCLAW_MODEL: openai/gpt-5-mini
+
+  backup:
+    needs: [preflight, handle]
+    if: needs.preflight.outputs.allowed == 'true' && needs.handle.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      issues: read
+    env:
+      BACKUP_BRANCH: gitclaw-backups
+      BACKUP_ROOT: ${{ runner.temp }}/gitclaw-backups
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+
+      - id: export
+        run: |
+          set -euo pipefail
+          path="$(go run ./cmd/gitclaw backup --event "$GITHUB_EVENT_PATH" --out "$BACKUP_ROOT")"
+          echo "path=$path" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - run: |
+          set -euo pipefail
+          backup_file="${{ steps.export.outputs.path }}"
+          backup_rel="${backup_file#${BACKUP_ROOT}/}"
+          dest=".gitclaw/backups/${backup_rel}"
+          worktree="${RUNNER_TEMP}/gitclaw-backup-worktree"
+
+          mkdir -p "$worktree"
+          cd "$worktree"
+          git init
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+          if git ls-remote --exit-code --heads origin "$BACKUP_BRANCH" >/dev/null 2>&1; then
+            git fetch --depth=1 origin "$BACKUP_BRANCH"
+            git checkout -B "$BACKUP_BRANCH" "origin/$BACKUP_BRANCH"
+          else
+            git checkout --orphan "$BACKUP_BRANCH"
+            find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          fi
+
+          mkdir -p "$(dirname "$dest")"
+          cp "$backup_file" "$dest"
+          git add "$dest"
+
+          if git diff --cached --quiet; then
+            echo "No backup changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Back up GitClaw issue #${{ github.event.issue.number }}"
+          git push origin "HEAD:${BACKUP_BRANCH}"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}

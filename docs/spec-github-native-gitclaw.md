@@ -700,8 +700,17 @@ The backup includes:
 This is intentionally a normal file, not a hidden database. Repositories can
 commit backups to the default branch, push them to a dedicated backup branch,
 or mirror them privately. The MVP command writes the backup file but does not
-auto-commit it from the assistant workflow; automatic backup commits require a
-separate permission decision because they need `contents: write`.
+auto-commit from the model-running job. Automatic backup commits run in a
+separate workflow job after a successful assistant turn, with explicit
+`contents: write` and `issues: read` permissions, and push only the canonical
+backup file to a dedicated `gitclaw-backups` branch.
+
+The backup branch is intentionally separate from `main`:
+
+- assistant conversation code keeps least-privilege `contents: read`;
+- backup writes do not churn the product branch;
+- raw issue transcript snapshots can have different retention/privacy rules;
+- recovery remains a normal `git fetch origin gitclaw-backups` operation.
 
 ## Testing Strategy
 

@@ -100,6 +100,15 @@ OpenClaw's default memory model is file-centric:
 
 This keeps state auditable and portable, but it also means prompt-injected memory is part of the security boundary. Anything that can write durable memory can affect future behavior.
 
+2026-05-29 backup/state follow-up: OpenClaw's memory docs are explicit that
+there is no hidden agent memory; the model remembers only what is saved to disk.
+The workspace docs recommend treating the agent workspace as private memory and
+putting files such as `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `USER.md`,
+`HEARTBEAT.md`, and `memory/` in git for recoverability, while keeping
+credentials, auth profiles, and raw session state out of that repo. For
+GitClaw, that maps cleanly to git-backed, reviewable `.gitclaw/` state and a
+separate backup branch for raw issue transcript snapshots.
+
 ### Skills And Plugins
 
 OpenClaw uses AgentSkills-compatible skill folders with a `SKILL.md`. Skills can come from:
@@ -233,6 +242,12 @@ Hermes cron jobs are first-class agent tasks, not just shell tasks. They can:
 - use project `workdir`,
 - run in profile-specific contexts,
 - run in no-agent/script-only mode.
+
+Hermes' session docs also expose a practical backup primitive:
+`hermes sessions export backup.jsonl` writes conversation metadata and messages
+as durable JSONL. GitClaw should preserve the same principle, but use GitHub
+issues as the canonical session source and write one canonical JSON file per
+issue into git instead of introducing a local SQLite/session database.
 
 Hermes also has:
 

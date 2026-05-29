@@ -17,8 +17,14 @@ need date
 
 workflow_name="${GITCLAW_E2E_WORKFLOW:-GitClaw}"
 retention_label="${GITCLAW_E2E_RETENTION_LABEL:-gitclaw:e2e}"
+backup_branch="${GITCLAW_E2E_BACKUP_BRANCH:-gitclaw-backups}"
+expect_backup="${GITCLAW_E2E_EXPECT_BACKUP:-0}"
 run_deadline_seconds="${GITCLAW_E2E_RUN_DEADLINE_SECONDS:-300}"
 comment_deadline_seconds="${GITCLAW_E2E_COMMENT_DEADLINE_SECONDS:-180}"
+
+if [[ "$expect_backup" == "1" ]]; then
+  need python3
+fi
 
 gh auth status >/dev/null
 gh repo view "$GITCLAW_E2E_REPO" >/dev/null
@@ -108,6 +114,64 @@ gitclaw_comment_bodies() {
     --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | join("\n---GITCLAW-COMMENT---\n")'
 }
 
+backup_path_for_issue() {
+  local repo_key
+  local issue_padded
+  repo_key="${GITCLAW_E2E_REPO//\//__}"
+  issue_padded="$(printf "%06d" "$issue_number")"
+  printf ".gitclaw/backups/%s/issues/%s.json" "$repo_key" "$issue_padded"
+}
+
+read_backup_json() {
+  local path
+  path="$(backup_path_for_issue)"
+  gh api "repos/${GITCLAW_E2E_REPO}/contents/${path}?ref=${backup_branch}" \
+    --jq '.content' \
+    | python3 -c 'import base64, sys; print(base64.b64decode(sys.stdin.read()).decode(), end="")'
+}
+
+assert_backup_json() {
+  local file="$1"
+  python3 - "$file" "$token_a" "$token_b" "$module_path" <<'PY'
+import json
+import sys
+
+path, token_a, token_b, module_path = sys.argv[1:5]
+with open(path, "r", encoding="utf-8") as f:
+    data = json.load(f)
+body = json.dumps(data, sort_keys=True)
+errors = []
+if data.get("version") != 1:
+    errors.append("version is not 1")
+if data.get("issue", {}).get("number") is None:
+    errors.append("missing issue number")
+if len(data.get("comments", [])) < 3:
+    errors.append("expected at least three raw comments")
+if len(data.get("transcript", [])) < 4:
+    errors.append("expected at least four transcript messages")
+for value in (token_a, token_b, module_path):
+    if value not in body:
+        errors.append(f"missing {value}")
+if errors:
+    raise SystemExit("; ".join(errors))
+PY
+}
+
+wait_for_backup() {
+  local deadline=$((SECONDS + comment_deadline_seconds))
+  local tmp
+  tmp="$(mktemp)"
+  while (( SECONDS < deadline )); do
+    if read_backup_json >"$tmp" 2>/dev/null && assert_backup_json "$tmp"; then
+      rm -f "$tmp"
+      return 0
+    fi
+    sleep 5
+  done
+  rm -f "$tmp"
+  return 1
+}
+
 wait_for_comment_count() {
   local want="$1"
   local deadline=$((SECONDS + comment_deadline_seconds))
@@ -147,6 +211,11 @@ all_bodies="$(gitclaw_comment_bodies)"
 grep -Fq "$token_b" <<<"$all_bodies" || die "second assistant comment did not include expected follow-up token ${token_b}"
 grep -Fq "$token_a" <<<"$all_bodies" || die "assistant comments do not preserve prior conversation token ${token_a}"
 echo "e2e: follow-up response verified"
+
+if [[ "$expect_backup" == "1" ]]; then
+  wait_for_backup || die "expected backup JSON on ${backup_branch} with conversation and tool evidence"
+  echo "e2e: git-backed backup verified"
+fi
 
 sleep 15
 final_count="$(count_gitclaw_comments)"
