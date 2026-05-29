@@ -1916,9 +1916,9 @@ assert the expected comments/labels, and close the issue in cleanup.
      body token,
    - lint the generated workflow when `actionlint` is available,
    - dispatch the real generic proactive workflow with the generated job name
-     and prompt body,
-   - assert it creates a real proactive issue and receives one assistant turn
-     with the exact token.
+     and a `/proactive` prompt body,
+   - assert it creates a real proactive issue and receives one deterministic
+     proactive report without leaking the hidden prompt token.
 
 ### Example Live Commands
 
@@ -1970,8 +1970,8 @@ MVP is not complete until:
 - the proactive enqueue harness verifies manual/scheduled job primitives can
   create their own work issues idempotently,
 - the proactive-init harness verifies the generator writes ordinary repo files
-  without leaking prompt bodies and backs that up with a real proactive issue
-  conversation,
+  without leaking prompt bodies and backs that up with a real deterministic
+  proactive issue conversation,
 - the backup JSONL export harness verifies a real backed-up issue can be
   exported as one JSONL transcript record per reconstructed message,
 - the backup restore-plan harness verifies a real backed-up issue can produce

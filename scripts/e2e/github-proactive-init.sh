@@ -58,8 +58,10 @@ dispatch_id="proactive-${name}-${slot}"
 token="GITCLAW_PROACTIVE_INIT_E2E_${timestamp}"
 prompt_body="Proactive init E2E instruction.
 
-Reply with exact token \`${token}\`.
-Also include the exact word \`proactive\`."
+@gitclaw /proactive
+
+Hidden prompt token: ${token}
+The deterministic proactive report must not leak this token."
 prompt_path=".gitclaw/proactive/${name}.md"
 workflow_path=".github/workflows/gitclaw-proactive-${name}.yml"
 
@@ -219,8 +221,12 @@ issue_json="$(gh issue view "$issue_number" --repo "$repo" --json body,labels,co
 grep -Fq "gitclaw:proactive-run" <<<"$(jq -r '.body' <<<"$issue_json")" || die "issue body missing proactive marker"
 grep -Fq "$token" <<<"$(jq -r '.body' <<<"$issue_json")" || die "issue body missing prompt token"
 comments="$(assistant_comments)"
-grep -Fq "$token" <<<"$comments" || die "assistant comment missing token ${token}"
-grep -Fiq "proactive" <<<"$comments" || die "assistant comment missing word proactive"
+grep -Fq 'model="gitclaw/proactive"' <<<"$comments" || die "assistant marker missing proactive report model"
+grep -Fq "GitClaw Proactive Report" <<<"$comments" || die "assistant comment missing proactive report"
+grep -Fq 'proactive_run_issue: `true`' <<<"$comments" || die "assistant comment did not detect proactive issue"
+if grep -Fq "$token" <<<"$comments"; then
+  die "assistant proactive report leaked prompt token ${token}"
+fi
 grep -Fq "dispatch-${dispatch_id}" <<<"$comments" || die "assistant marker missing dispatch event id"
 labels="$(jq -r '.labels[].name' <<<"$issue_json")"
 grep -Fxq "gitclaw:proactive" <<<"$labels" || die "issue missing gitclaw:proactive label"
