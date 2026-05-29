@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T13:59:59Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "workflow_dispatch",
+  "issue": {
+    "number": 17,
+    "title": "GitClaw telegram thread channel-ingest-e2e-20260529T135738Z",
+    "body": "\u003c!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"channel-ingest-e2e-20260529T135738Z\" --\u003e\nGitClaw channel bridge thread.\n\n- channel: telegram\n- thread_id: channel-ingest-e2e-20260529T135738Z\n\nMessages from this external channel are mirrored into this issue as comments\nwith gitclaw:channel-message provenance markers.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw",
+      "gitclaw:done",
+      "gitclaw:channel"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw telegram thread channel-ingest-e2e-20260529T135738Z\n\n\u003c!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"channel-ingest-e2e-20260529T135738Z\" --\u003e\nGitClaw channel bridge thread.\n\n- channel: telegram\n- thread_id: channel-ingest-e2e-20260529T135738Z\n\nMessages from this external channel are mirrored into this issue as comments\nwith gitclaw:channel-message provenance markers.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "Mirrored Telegram ingest message.\n\nWhen this channel ingest is dispatched, reply with exact token `GITCLAW_CHANNEL_INGEST_E2E_20260529T135738Z`.\nAlso include the exact word `ingest`.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4576011483,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_INGEST_E2E_20260529T135738Z ingest",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4576023235,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4576011483,
+      "body": "\u003c!-- gitclaw:channel-message channel=\"telegram\" thread_id=\"channel-ingest-e2e-20260529T135738Z\" message_id=\"message-20260529T135738Z\" author=\"telegram:e2e\" --\u003e\nMirrored Telegram ingest message.\n\nWhen this channel ingest is dispatched, reply with exact token `GITCLAW_CHANNEL_INGEST_E2E_20260529T135738Z`.\nAlso include the exact word `ingest`.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T13:58:11Z",
+      "updated_at": "2026-05-29T13:58:11Z"
+    },
+    {
+      "id": 4576023235,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26641535437\" event_id=\"dispatch-telegram-message-20260529T135738Z\" model=\"openai/gpt-5-mini\" idempotency_key=\"b88cad02d927c069ebb2ee9ac081b018\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26641535437\" --\u003e\nGITCLAW_CHANNEL_INGEST_E2E_20260529T135738Z ingest",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T13:59:25Z",
+      "updated_at": "2026-05-29T13:59:25Z"
+    }
+  ]
+}
