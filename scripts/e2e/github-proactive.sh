@@ -12,7 +12,6 @@ die() {
 
 repo="${GITCLAW_E2E_REPO:-}"
 proactive_workflow="${GITCLAW_E2E_PROACTIVE_WORKFLOW:-.github/workflows/gitclaw-proactive.yml}"
-main_workflow="${GITCLAW_E2E_WORKFLOW:-.github/workflows/gitclaw.yml}"
 lock_dir="${TMPDIR:-/tmp}/gitclaw-proactive-e2e.lock"
 
 if ! mkdir "$lock_dir" 2>/dev/null; then
@@ -117,6 +116,19 @@ assistant_count() {
     --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length'
 }
 
+wait_for_assistant_count() {
+  local want="$1"
+  for _ in {1..120}; do
+    local got
+    got="$(assistant_count)"
+    if [[ "$got" == "$want" ]]; then
+      return 0
+    fi
+    sleep 5
+  done
+  return 1
+}
+
 cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label gitclaw:e2e >/dev/null 2>&1 || true
@@ -134,13 +146,13 @@ dispatch_proactive() {
     -f slot="$slot" \
     -f prompt="$prompt"
   wait_for_run "$proactive_workflow" "$started_at" >/dev/null || die "timed out waiting for proactive workflow"
-  wait_for_run "$main_workflow" "$started_at" >/dev/null || die "timed out waiting for dispatched main workflow"
 }
 
 first_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 dispatch_proactive "$first_started_at"
 issue_number="$(wait_for_issue_number)" || die "timed out finding proactive issue for ${name}/${slot}"
 log "proactive workflow created issue #${issue_number}"
+wait_for_assistant_count 1 || die "timed out waiting for first proactive assistant response"
 
 issue_json="$(gh issue view "$issue_number" --repo "$repo" --json body,labels,comments)"
 grep -Fq "gitclaw:proactive-run" <<<"$(jq -r '.body' <<<"$issue_json")" || die "issue body missing proactive marker"
@@ -155,14 +167,17 @@ grep -Fxq "gitclaw:done" <<<"$labels" || die "issue missing gitclaw:done label"
 
 second_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 dispatch_proactive "$second_started_at"
-issue_count="$(find_issue_numbers | wc -l | tr -d ' ')"
-if [[ "$issue_count" != "1" ]]; then
-  die "same proactive slot created ${issue_count} issues"
-fi
-final_count="$(assistant_count)"
-if [[ "$final_count" != "1" ]]; then
-  die "same proactive slot created ${final_count} assistant comments"
-fi
+for _ in {1..6}; do
+  issue_count="$(find_issue_numbers | wc -l | tr -d ' ')"
+  if [[ "$issue_count" != "1" ]]; then
+    die "same proactive slot created ${issue_count} issues"
+  fi
+  final_count="$(assistant_count)"
+  if [[ "$final_count" != "1" ]]; then
+    die "same proactive slot created ${final_count} assistant comments"
+  fi
+  sleep 5
+done
 
 log "idempotency verified"
 log "passed for issue #${issue_number}"
