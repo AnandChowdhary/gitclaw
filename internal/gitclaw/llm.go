@@ -10,7 +10,9 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
+	"time"
 )
 
 type StaticLLM struct {
@@ -102,9 +104,33 @@ func (c *OpenAICompatibleLLM) Complete(ctx context.Context, req LLMRequest) (str
 	if err != nil {
 		return "", err
 	}
+	var lastErr error
+	maxAttempts := llmMaxAttempts()
+	for attempt := 1; attempt <= maxAttempts; attempt++ {
+		response, retry, err := c.completeAttempt(ctx, body)
+		if err == nil {
+			return response, nil
+		}
+		lastErr = err
+		if !retry.Retry || attempt == maxAttempts {
+			return "", err
+		}
+		if err := sleepContext(ctx, retry.Delay); err != nil {
+			return "", err
+		}
+	}
+	return "", lastErr
+}
+
+type llmRetry struct {
+	Retry bool
+	Delay time.Duration
+}
+
+func (c *OpenAICompatibleLLM) completeAttempt(ctx context.Context, body []byte) (string, llmRetry, error) {
 	httpReq, err := http.NewRequestWithContext(ctx, http.MethodPost, c.BaseURL, bytes.NewReader(body))
 	if err != nil {
-		return "", err
+		return "", llmRetry{}, err
 	}
 	httpReq.Header.Set("Authorization", "Bearer "+c.APIKey)
 	httpReq.Header.Set("Content-Type", "application/json")
@@ -112,12 +138,19 @@ func (c *OpenAICompatibleLLM) Complete(ctx context.Context, req LLMRequest) (str
 	httpReq.Header.Set("X-GitHub-Api-Version", "2022-11-28")
 	res, err := c.httpClient().Do(httpReq)
 	if err != nil {
-		return "", err
+		if ctx.Err() != nil {
+			return "", llmRetry{}, err
+		}
+		return "", llmRetry{Retry: true, Delay: llmRetryDelay(nil)}, err
 	}
 	defer res.Body.Close()
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
 		data, _ := io.ReadAll(io.LimitReader(res.Body, 4096))
-		return "", fmt.Errorf("LLM request failed: status=%d body=%s", res.StatusCode, strings.TrimSpace(string(data)))
+		err := fmt.Errorf("LLM request failed: status=%d body=%s", res.StatusCode, strings.TrimSpace(string(data)))
+		if retryableLLMStatus(res.StatusCode) {
+			return "", llmRetry{Retry: true, Delay: llmRetryDelay(res)}, err
+		}
+		return "", llmRetry{}, err
 	}
 	var raw struct {
 		Choices []struct {
@@ -127,12 +160,66 @@ func (c *OpenAICompatibleLLM) Complete(ctx context.Context, req LLMRequest) (str
 		} `json:"choices"`
 	}
 	if err := json.NewDecoder(res.Body).Decode(&raw); err != nil {
-		return "", err
+		return "", llmRetry{}, err
 	}
 	if len(raw.Choices) == 0 || strings.TrimSpace(raw.Choices[0].Message.Content) == "" {
-		return "", fmt.Errorf("LLM returned no content")
+		return "", llmRetry{}, fmt.Errorf("LLM returned no content")
 	}
-	return strings.TrimSpace(raw.Choices[0].Message.Content), nil
+	return strings.TrimSpace(raw.Choices[0].Message.Content), llmRetry{}, nil
+}
+
+func llmMaxAttempts() int {
+	raw := strings.TrimSpace(os.Getenv("GITCLAW_LLM_MAX_ATTEMPTS"))
+	if raw == "" {
+		return 4
+	}
+	value, err := strconv.Atoi(raw)
+	if err != nil || value < 1 {
+		return 1
+	}
+	if value > 8 {
+		return 8
+	}
+	return value
+}
+
+func retryableLLMStatus(status int) bool {
+	return status == http.StatusTooManyRequests || status == http.StatusRequestTimeout || status >= 500
+}
+
+func llmRetryDelay(res *http.Response) time.Duration {
+	if res != nil {
+		if value := strings.TrimSpace(res.Header.Get("Retry-After")); value != "" {
+			if seconds, err := strconv.Atoi(value); err == nil {
+				if seconds < 0 {
+					return 0
+				}
+				return time.Duration(seconds) * time.Second
+			}
+			if at, err := http.ParseTime(value); err == nil {
+				delay := time.Until(at)
+				if delay < 0 {
+					return 0
+				}
+				return delay
+			}
+		}
+	}
+	return 5 * time.Second
+}
+
+func sleepContext(ctx context.Context, delay time.Duration) error {
+	if delay <= 0 {
+		return nil
+	}
+	timer := time.NewTimer(delay)
+	defer timer.Stop()
+	select {
+	case <-timer.C:
+		return nil
+	case <-ctx.Done():
+		return ctx.Err()
+	}
 }
 
 func writePromptArtifactFromEnv(req LLMRequest, model, prompt string) error {

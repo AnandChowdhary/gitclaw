@@ -456,8 +456,8 @@ Security and operational notes:
 - Do not dump raw prompts into logs by default; if prompt artifacts are enabled,
   redact secrets and mark issue text as untrusted input.
 - GitHub Models has free but rate-limited usage and optional paid usage, so
-  the E2E harness should tolerate rate-limit failures as an explicit
-  environment failure rather than treating them as product logic failures.
+  the model client retries transient `429`, timeout, and `5xx` responses before
+  surfacing a safe issue-level provider failure.
 
 ## Runtime Architecture
 

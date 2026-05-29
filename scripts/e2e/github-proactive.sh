@@ -12,7 +12,9 @@ die() {
 
 repo="${GITCLAW_E2E_REPO:-}"
 proactive_workflow="${GITCLAW_E2E_PROACTIVE_WORKFLOW:-.github/workflows/gitclaw-proactive.yml}"
+main_workflow="${GITCLAW_E2E_WORKFLOW:-.github/workflows/gitclaw.yml}"
 lock_dir="/tmp/gitclaw-proactive-e2e.lock"
+cleanup_success=0
 
 if ! mkdir "$lock_dir" 2>/dev/null; then
   die "another proactive E2E appears to be running: ${lock_dir}"
@@ -120,8 +122,8 @@ wait_for_assistant_count() {
   local want="$1"
   for _ in {1..120}; do
     local got
-    got="$(assistant_count)"
-    if [[ "$got" == "$want" ]]; then
+    got="$(assistant_count 2>/dev/null || true)"
+    if [[ "$got" =~ ^[0-9]+$ && "$got" == "$want" ]]; then
       return 0
     fi
     sleep 5
@@ -131,8 +133,13 @@ wait_for_assistant_count() {
 
 cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
-    gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label gitclaw:e2e >/dev/null 2>&1 || true
-    gh issue close "$issue_number" --repo "$repo" --comment "proactive e2e cleanup" >/dev/null 2>&1 || true
+    gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:e2e >/dev/null 2>&1 || true
+    if [[ "$cleanup_success" == "1" ]]; then
+      gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "proactive e2e cleanup" >/dev/null 2>&1 || true
+    else
+      log "leaving issue #${issue_number} open for inspection after unsuccessful run"
+    fi
   fi
   rm -rf "$lock_dir"
 }
@@ -167,6 +174,7 @@ grep -Fxq "gitclaw:done" <<<"$labels" || die "issue missing gitclaw:done label"
 
 second_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 dispatch_proactive "$second_started_at"
+wait_for_run "$main_workflow" "$second_started_at" >/dev/null || die "timed out waiting for duplicate dispatch workflow"
 for _ in {1..6}; do
   issue_count="$(find_issue_numbers | wc -l | tr -d ' ')"
   if [[ "$issue_count" != "1" ]]; then
@@ -181,3 +189,4 @@ done
 
 log "idempotency verified"
 log "passed for issue #${issue_number}"
+cleanup_success=1

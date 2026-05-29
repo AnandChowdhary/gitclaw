@@ -1,6 +1,9 @@
 package gitclaw
 
 import (
+	"context"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"strings"
@@ -62,6 +65,41 @@ func TestNewLLMFromEnvSupportsOpenAICompatibleOverride(t *testing.T) {
 	}
 	if client.Model != "example/model" {
 		t.Fatalf("Model = %q, want explicit model", client.Model)
+	}
+}
+
+func TestOpenAICompatibleLLMRetriesRateLimit(t *testing.T) {
+	t.Setenv("GITCLAW_LLM_MAX_ATTEMPTS", "2")
+	calls := 0
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		calls++
+		if calls == 1 {
+			w.Header().Set("Retry-After", "0")
+			http.Error(w, "Too many requests", http.StatusTooManyRequests)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"choices":[{"message":{"content":"retried ok"}}]}`))
+	}))
+	defer server.Close()
+
+	llm := &OpenAICompatibleLLM{
+		APIKey:  "token",
+		BaseURL: server.URL,
+		Model:   "test-model",
+		Client:  server.Client(),
+	}
+	got, err := llm.Complete(context.Background(), LLMRequest{
+		Event: Event{Repo: "owner/repo", Issue: Issue{Number: 1, Title: "retry"}},
+	})
+	if err != nil {
+		t.Fatalf("Complete returned error: %v", err)
+	}
+	if got != "retried ok" {
+		t.Fatalf("Complete = %q, want retried ok", got)
+	}
+	if calls != 2 {
+		t.Fatalf("server calls = %d, want 2", calls)
 	}
 }
 
