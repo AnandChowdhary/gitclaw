@@ -359,13 +359,62 @@ func TestCommandsCommandReportsCatalog(t *testing.T) {
 			t.Fatalf("commands returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `7`", "local_cli_helpers: `24`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`gitclaw commands` command=`/help`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
+	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `7`", "local_cli_helpers: `25`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`gitclaw commands` command=`/help`", "`gitclaw backup list` command=`/backup`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("commands output missing %q:\n%s", want, output)
 		}
 	}
 	if strings.Contains(output, "issue: `#0`") {
 		t.Fatalf("commands output should not include synthetic issue metadata:\n%s", output)
+	}
+}
+
+func TestBackupListCommandReportsFetchedBackupTree(t *testing.T) {
+	dir := t.TempDir()
+	writeBackupFixture(t, dir, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T12:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue: IssueBackupIssue{
+			Number: 7,
+			Title:  "@gitclaw cli backup list old CLI_BACKUP_LIST_OLD_TITLE",
+			Body:   "CLI_BACKUP_LIST_OLD_BODY",
+			Labels: []string{"gitclaw"},
+		},
+		Transcript: []TranscriptMessage{{Role: "user", Body: "CLI_BACKUP_LIST_OLD_TRANSCRIPT"}},
+	})
+	writeBackupFixture(t, dir, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T13:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issue_comment",
+		Issue: IssueBackupIssue{
+			Number: 8,
+			Title:  "@gitclaw cli backup list new CLI_BACKUP_LIST_NEW_TITLE",
+			Body:   "CLI_BACKUP_LIST_NEW_BODY",
+			Labels: []string{"gitclaw", "gitclaw:e2e"},
+		},
+		Transcript: []TranscriptMessage{{Role: "user", Body: "CLI_BACKUP_LIST_NEW_TRANSCRIPT"}, {Role: "assistant", Body: "CLI_BACKUP_LIST_ASSISTANT"}},
+		Comments:   []IssueBackupComment{{ID: 12, Body: "CLI_BACKUP_LIST_COMMENT"}},
+	})
+	if _, err := WriteBackupIndex(dir, "owner/repo", time.Date(2026, 5, 29, 14, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+	output := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"backup", "list", "--root", dir, "--repo", "owner/repo", "--limit", "1"}); err != nil {
+			t.Fatalf("backup list returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"GitClaw Backup List Report", "backup_list_status: `ok`", "backup_verify_status: `ok`", "issue_count: `2`", "limit: `1`", "backups_returned: `1`", "raw_bodies_included: `false`", "issue=#8 path=`issues/000008.json`", "labels=`2`", "comments=`1`", "transcript_messages=`2`", "title_sha256_12="} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("backup list output missing %q:\n%s", want, output)
+		}
+	}
+	for _, leaked := range []string{"CLI_BACKUP_LIST_OLD_TITLE", "CLI_BACKUP_LIST_OLD_BODY", "CLI_BACKUP_LIST_OLD_TRANSCRIPT", "CLI_BACKUP_LIST_NEW_TITLE", "CLI_BACKUP_LIST_NEW_BODY", "CLI_BACKUP_LIST_NEW_TRANSCRIPT", "CLI_BACKUP_LIST_ASSISTANT", "CLI_BACKUP_LIST_COMMENT", "@gitclaw cli backup list"} {
+		if strings.Contains(output, leaked) {
+			t.Fatalf("backup list leaked body/title token %q:\n%s", leaked, output)
+		}
 	}
 }
 

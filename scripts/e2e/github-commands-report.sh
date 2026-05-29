@@ -138,7 +138,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `15`' \
   'aliases: `7`' \
-  'local_cli_helpers: `24`' \
+  'local_cli_helpers: `25`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/help' \
@@ -148,6 +148,7 @@ for expected in \
   '/doctor' \
   '/skills' \
   '/soul' \
+  'gitclaw backup list' \
   'gitclaw backup stats' \
   'gitclaw backup search <query>' \
   'gitclaw backup retention-plan' \

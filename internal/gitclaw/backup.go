@@ -178,6 +178,35 @@ type BackupStatsEvent struct {
 	Count int
 }
 
+type BackupList struct {
+	Root                 string
+	Repo                 string
+	RepoDir              string
+	IndexPath            string
+	ReadmePath           string
+	SchemaVersion        int
+	IndexGeneratedAt     string
+	BackupListStatus     string
+	BackupVerifyStatus   string
+	VerificationFailures int
+	IssueCount           int
+	Limit                int
+	BackupsReturned      int
+	RawBodiesIncluded    bool
+	Issues               []BackupListIssue
+}
+
+type BackupListIssue struct {
+	IssueNumber        int
+	Path               string
+	BackupGeneratedAt  string
+	EventName          string
+	Labels             int
+	Comments           int
+	TranscriptMessages int
+	IssueTitleSHA      string
+}
+
 type BackupRetentionPlan struct {
 	Root                  string
 	Repo                  string
@@ -558,6 +587,84 @@ func BuildBackupStats(root, repo string) (BackupStats, error) {
 	return stats, nil
 }
 
+func BuildBackupList(root, repo string, limit int) (BackupList, error) {
+	if limit <= 0 {
+		return BackupList{}, fmt.Errorf("limit must be positive")
+	}
+	if err := validateRepoName(repo); err != nil {
+		return BackupList{}, err
+	}
+	repoDir, index, err := readBackupIndex(root, repo)
+	if err != nil {
+		return BackupList{}, err
+	}
+	if root == "" {
+		root = filepath.Join(".gitclaw", "backups")
+	}
+	verify, err := VerifyBackupTree(root, repo)
+	if err != nil {
+		return BackupList{}, err
+	}
+	list := BackupList{
+		Root:                 filepath.ToSlash(root),
+		Repo:                 repo,
+		RepoDir:              filepath.ToSlash(repoDir),
+		IndexPath:            filepath.ToSlash(filepath.Join(repoDir, "index.json")),
+		ReadmePath:           filepath.ToSlash(filepath.Join(repoDir, "README.md")),
+		SchemaVersion:        index.Version,
+		IndexGeneratedAt:     index.GeneratedAt,
+		BackupListStatus:     "ok",
+		BackupVerifyStatus:   "ok",
+		VerificationFailures: len(verify.VerificationFailures),
+		IssueCount:           len(index.Issues),
+		Limit:                limit,
+		RawBodiesIncluded:    false,
+	}
+	if !verify.OK() {
+		list.BackupListStatus = "warn"
+		list.BackupVerifyStatus = "warn"
+	}
+
+	type backupListCandidate struct {
+		issue       BackupListIssue
+		generatedAt time.Time
+	}
+	candidates := make([]backupListCandidate, 0, len(index.Issues))
+	for _, issue := range index.Issues {
+		generatedAt, err := time.Parse(time.RFC3339, issue.BackupGeneratedAt)
+		if err != nil {
+			return BackupList{}, fmt.Errorf("parse backup timestamp for issue #%d: %w", issue.Number, err)
+		}
+		candidates = append(candidates, backupListCandidate{
+			generatedAt: generatedAt,
+			issue: BackupListIssue{
+				IssueNumber:        issue.Number,
+				Path:               filepath.ToSlash(issue.Path),
+				BackupGeneratedAt:  issue.BackupGeneratedAt,
+				EventName:          issue.EventName,
+				Labels:             len(issue.Labels),
+				Comments:           issue.CommentCount,
+				TranscriptMessages: issue.TranscriptMessages,
+				IssueTitleSHA:      shortDocumentHash(issue.Title),
+			},
+		})
+	}
+	sort.Slice(candidates, func(i, j int) bool {
+		if !candidates[i].generatedAt.Equal(candidates[j].generatedAt) {
+			return candidates[i].generatedAt.After(candidates[j].generatedAt)
+		}
+		return candidates[i].issue.IssueNumber > candidates[j].issue.IssueNumber
+	})
+	for i, candidate := range candidates {
+		if i >= limit {
+			break
+		}
+		list.Issues = append(list.Issues, candidate.issue)
+	}
+	list.BackupsReturned = len(list.Issues)
+	return list, nil
+}
+
 func BuildBackupRetentionPlan(root, repo string, keepLatest int) (BackupRetentionPlan, error) {
 	if keepLatest <= 0 {
 		return BackupRetentionPlan{}, fmt.Errorf("keep latest must be positive")
@@ -830,6 +937,56 @@ func RenderBackupStats(stats BackupStats) string {
 		}
 	}
 	return strings.TrimSpace(b.String())
+}
+
+func RenderBackupList(list BackupList) string {
+	var b strings.Builder
+	b.WriteString("## GitClaw Backup List Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	fmt.Fprintf(&b, "- repository: `%s`\n", list.Repo)
+	fmt.Fprintf(&b, "- backup_list_status: `%s`\n", list.BackupListStatus)
+	fmt.Fprintf(&b, "- backup_verify_status: `%s`\n", list.BackupVerifyStatus)
+	fmt.Fprintf(&b, "- verification_failures: `%d`\n", list.VerificationFailures)
+	fmt.Fprintf(&b, "- backup_root: `%s`\n", list.Root)
+	fmt.Fprintf(&b, "- repo_backup_dir: `%s`\n", list.RepoDir)
+	fmt.Fprintf(&b, "- index_path: `%s`\n", list.IndexPath)
+	fmt.Fprintf(&b, "- readme_path: `%s`\n", list.ReadmePath)
+	fmt.Fprintf(&b, "- backup_schema_version: `%d`\n", list.SchemaVersion)
+	fmt.Fprintf(&b, "- index_generated_at: `%s`\n", list.IndexGeneratedAt)
+	fmt.Fprintf(&b, "- issue_count: `%d`\n", list.IssueCount)
+	fmt.Fprintf(&b, "- limit: `%d`\n", list.Limit)
+	fmt.Fprintf(&b, "- backups_returned: `%d`\n", list.BackupsReturned)
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n\n", list.RawBodiesIncluded)
+	b.WriteString("This report lists indexed backup conversation metadata from a fetched backup tree. It does not print raw issue titles, issue bodies, comments, or transcript bodies.\n\n")
+
+	b.WriteString("### Indexed Backups\n")
+	writeBackupListIssues(&b, list.Issues)
+	return strings.TrimSpace(b.String())
+}
+
+func writeBackupListIssues(b *strings.Builder, issues []BackupListIssue) {
+	if len(issues) == 0 {
+		b.WriteString("- none\n")
+		return
+	}
+	for _, issue := range issues {
+		eventName := strings.TrimSpace(issue.EventName)
+		if eventName == "" {
+			eventName = "unknown"
+		}
+		fmt.Fprintf(
+			b,
+			"- issue=#%d path=`%s` generated_at=`%s` event=`%s` labels=`%d` comments=`%d` transcript_messages=`%d` title_sha256_12=`%s`\n",
+			issue.IssueNumber,
+			issue.Path,
+			issue.BackupGeneratedAt,
+			eventName,
+			issue.Labels,
+			issue.Comments,
+			issue.TranscriptMessages,
+			issue.IssueTitleSHA,
+		)
+	}
 }
 
 func writeRetentionIssueList(b *strings.Builder, issues []BackupRetentionIssue) {

@@ -347,6 +347,63 @@ func TestBuildBackupStatsSummarizesBackupsWithoutBodies(t *testing.T) {
 	}
 }
 
+func TestBuildBackupListListsNewestBackupsWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T12:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue: IssueBackupIssue{
+			Number: 7,
+			Title:  "@gitclaw list oldest LIST_OLDEST_TITLE_TOKEN",
+			Body:   "LIST_OLDEST_BODY_TOKEN",
+			Labels: []string{"gitclaw"},
+		},
+		Transcript: []TranscriptMessage{{Role: "user", Body: "LIST_OLDEST_TRANSCRIPT_TOKEN"}},
+		Comments:   []IssueBackupComment{{ID: 11, Body: "LIST_OLDEST_COMMENT_TOKEN"}},
+	})
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T13:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issue_comment",
+		Issue: IssueBackupIssue{
+			Number: 8,
+			Title:  "@gitclaw list newest LIST_NEWEST_TITLE_TOKEN",
+			Body:   "LIST_NEWEST_BODY_TOKEN",
+			Labels: []string{"gitclaw", "gitclaw:e2e"},
+		},
+		Transcript: []TranscriptMessage{{Role: "user", Body: "LIST_NEWEST_TRANSCRIPT_TOKEN"}, {Role: "assistant", Body: "LIST_NEWEST_ASSISTANT_TOKEN"}},
+		Comments:   []IssueBackupComment{{ID: 12, Body: "LIST_NEWEST_COMMENT_TOKEN"}},
+	})
+	if _, err := WriteBackupIndex(root, "owner/repo", time.Date(2026, 5, 29, 14, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+
+	list, err := BuildBackupList(root, "owner/repo", 1)
+	if err != nil {
+		t.Fatalf("BuildBackupList returned error: %v", err)
+	}
+	if list.BackupListStatus != "ok" || list.BackupVerifyStatus != "ok" || list.IssueCount != 2 || list.Limit != 1 || list.BackupsReturned != 1 {
+		t.Fatalf("unexpected backup list metadata: %#v", list)
+	}
+	if list.Issues[0].IssueNumber != 8 || list.Issues[0].Labels != 2 || list.Issues[0].TranscriptMessages != 2 {
+		t.Fatalf("unexpected backup list issue: %#v", list.Issues[0])
+	}
+	report := RenderBackupList(list)
+	for _, want := range []string{"GitClaw Backup List Report", "backup_list_status: `ok`", "backup_verify_status: `ok`", "verification_failures: `0`", "backup_schema_version: `1`", "issue_count: `2`", "limit: `1`", "backups_returned: `1`", "raw_bodies_included: `false`", "### Indexed Backups", "issue=#8 path=`issues/000008.json`", "event=`issue_comment`", "labels=`2`", "comments=`1`", "transcript_messages=`2`", "title_sha256_12="} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("backup list report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"LIST_OLDEST_TITLE_TOKEN", "LIST_OLDEST_BODY_TOKEN", "LIST_OLDEST_TRANSCRIPT_TOKEN", "LIST_OLDEST_COMMENT_TOKEN", "LIST_NEWEST_TITLE_TOKEN", "LIST_NEWEST_BODY_TOKEN", "LIST_NEWEST_TRANSCRIPT_TOKEN", "LIST_NEWEST_ASSISTANT_TOKEN", "LIST_NEWEST_COMMENT_TOKEN", "@gitclaw list oldest", "@gitclaw list newest"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("backup list leaked body/title token %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestBuildBackupSearchFindsBackedUpConversationWithoutBodies(t *testing.T) {
 	root := t.TempDir()
 	writeBackupFixture(t, root, IssueBackup{

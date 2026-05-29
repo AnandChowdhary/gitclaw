@@ -163,6 +163,13 @@ tree, summarize issue/comment/transcript/message counts, latest backup
 metadata, payload bytes, and event types, and avoid printing raw titles or
 bodies.
 
+2026-05-30 backup-list follow-up: Hermes' session list and OpenClaw's backup
+inspection surfaces both point to a compact index-first view before export or
+restore. GitClaw should add `gitclaw backup list`: verify the fetched
+`gitclaw-backups` branch, sort indexed backups by timestamp, and print issue
+numbers, payload paths, timestamps, event names, label/comment/transcript
+counts, and title hashes only. This keeps routine backup navigation body-free.
+
 2026-05-29 backup-restore-plan follow-up: OpenClaw's migration/backup posture
 emphasizes preview before state-changing recovery. GitClaw should copy that
 separation: a local `backup restore-plan` command reads the backup branch and

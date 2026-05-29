@@ -453,6 +453,9 @@ func runBackup(ctx context.Context, args []string) error {
 	if len(args) > 0 && args[0] == "manifest" {
 		return runBackupManifest(args[1:])
 	}
+	if len(args) > 0 && args[0] == "list" {
+		return runBackupList(args[1:])
+	}
 	if len(args) > 0 && args[0] == "stats" {
 		return runBackupStats(args[1:])
 	}
@@ -656,6 +659,52 @@ func runBackupManifest(args []string) error {
 		return err
 	}
 	fmt.Println(RenderBackupManifest(manifest))
+	return nil
+}
+
+func runBackupList(args []string) error {
+	root := filepath.Join(".gitclaw", "backups")
+	repo := os.Getenv("GITHUB_REPOSITORY")
+	limit := 20
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--root":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--root requires a value")
+			}
+			root = args[i+1]
+			i++
+		case "--repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--repo requires a value")
+			}
+			repo = args[i+1]
+			i++
+		case "--limit":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--limit requires a value")
+			}
+			parsed, err := strconv.Atoi(args[i+1])
+			if err != nil || parsed <= 0 {
+				return fmt.Errorf("invalid --limit: %q", args[i+1])
+			}
+			limit = parsed
+			i++
+		default:
+			return fmt.Errorf("unknown backup list argument %q", args[i])
+		}
+	}
+	if repo == "" {
+		return fmt.Errorf("missing --repo or GITHUB_REPOSITORY")
+	}
+	list, err := BuildBackupList(root, repo, limit)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderBackupList(list))
+	if list.BackupListStatus != "ok" {
+		return fmt.Errorf("backup list reported %s", list.BackupListStatus)
+	}
 	return nil
 }
 

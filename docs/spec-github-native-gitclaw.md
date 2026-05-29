@@ -1793,6 +1793,30 @@ It never prints raw issue titles, issue bodies, comments, or transcript bodies.
 The stats report is meant for routine backup-health monitoring where opening
 every raw JSON file would be noisy.
 
+## Backup List Command
+
+GitClaw supports a local backup list command inspired by Hermes' `sessions
+list` inventory and OpenClaw's verified backup inspection posture:
+
+```bash
+gitclaw backup list --root .gitclaw/backups --repo <owner/repo> --limit 20
+```
+
+The command reads a fetched `gitclaw-backups` tree, verifies it, sorts indexed
+backups by backup timestamp descending, and prints a deterministic
+`GitClaw Backup List Report` with:
+
+- backup list and verify status,
+- schema version and index generation time,
+- total indexed issue count, requested limit, and returned backup count,
+- per-backup issue number, payload path, timestamp, event name, label count,
+  comment count, transcript message count, and issue-title hash.
+
+It never prints raw issue titles, issue bodies, comments, or transcript bodies.
+The list report is the body-safe navigation layer before a more specific
+`backup manifest`, `backup search`, `backup restore-plan`, or raw
+`backup export-jsonl` command.
+
 ## Backup Search Command
 
 GitClaw supports a local backup search command inspired by OpenClaw's
@@ -2257,7 +2281,20 @@ assert the expected comments/labels, and close the issue in cleanup.
      count, and transcript count,
    - assert it does not dump the issue body token or raw transcript bodies.
 
-29. **Backup JSONL export**
+29. **Backup list**
+
+   - create a real issue with `@gitclaw /backup`,
+   - wait for the successful backup job,
+   - fetch the real `gitclaw-backups` branch,
+   - run `gitclaw backup list --root <fetched>/.gitclaw/backups --repo
+     <owner/repo> --limit 5`,
+   - assert the report is marked `backup_list_status: ok` and
+     `backup_verify_status: ok`,
+   - assert it lists the just-created issue number, canonical path, timestamp,
+     event name, label/comment/transcript counts, and title hash,
+   - assert it does not dump the issue body token or raw title.
+
+30. **Backup JSONL export**
 
    - create a real issue with `@gitclaw /backup`,
    - wait for the successful backup job,
@@ -2269,7 +2306,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      contains the assistant backup report body, proving the command is an
      explicit raw recovery/export path rather than an issue-visible report.
 
-30. **Backup restore plan**
+31. **Backup restore plan**
 
    - create a real issue with `@gitclaw /backup`,
    - wait for the successful backup job,
@@ -2281,7 +2318,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      counts, assistant-turn/error counts, and body hashes,
    - assert it does not dump the issue body token or raw transcript bodies.
 
-31. **Backup retention plan**
+32. **Backup retention plan**
 
    - create a real issue with `@gitclaw /backup`,
    - wait for the successful backup job,
@@ -2295,7 +2332,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the just-created issue is included without dumping the issue body
      token or raw title.
 
-32. **Backup search**
+33. **Backup search**
 
    - create a real issue with `@gitclaw /backup`,
    - include a unique hidden token in the issue body,
@@ -2539,6 +2576,10 @@ examples/workflows/gitclaw.yml
   `gitclaw-backups` branch can produce a repo-wide backup stats report with
   verification status, aggregate counts, latest backup metadata, and event
   counts, without dumping raw bodies or titles.
+- A `gh`-driven backup-list E2E harness verifies the fetched
+  `gitclaw-backups` branch can produce a timestamp-sorted indexed backup list
+  with paths, counts, event names, and title hashes, without dumping raw bodies
+  or titles.
 - A `gh`-driven backup-export-jsonl E2E harness verifies the fetched
   `gitclaw-backups` branch can be exported into raw JSONL transcript records
   for one real issue.
