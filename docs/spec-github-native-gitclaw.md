@@ -1096,6 +1096,31 @@ This workflow is useful for E2E, manual bridge experiments, and tiny external
 dispatchers. Provider-specific pollers can later call the same CLI path after
 they read Telegram/Slack events.
 
+### Channel Inspection Command
+
+GitClaw supports a deterministic channel/control-plane audit command:
+
+```text
+@gitclaw /channels
+```
+
+The command runs after normal preflight and context loading, but before model
+inference. It posts a `gitclaw:assistant-turn` comment with
+`model="gitclaw/channels"` and summarizes:
+
+- the canonical channel label,
+- the generic channel-ingest workflow path and metadata,
+- whether `workflow_dispatch` is configured,
+- whether the ingest workflow has `actions: write` and `issues: write`,
+- normalized workflow input count,
+- whether the current issue is a channel thread,
+- how many existing comments carry `gitclaw:channel-message`,
+- supported provider keys and the dispatch-id contract.
+
+It never dumps channel message, issue, command, or workflow bodies. This keeps
+Slack/Telegram bridge debugging GitHub-native and auditable without making the
+channel bridge itself a privileged hidden conversation store.
+
 ### Tier 2: Long-Running Actions Gateway
 
 Run a `channel-gateway.yml` workflow via `workflow_dispatch`. The job opens a
@@ -1778,6 +1803,9 @@ examples/workflows/gitclaw.yml
   comment is included in the dispatched conversation transcript.
 - A `gh`-driven channel-ingest E2E harness verifies the generic channel ingress
   workflow end to end.
+- A `gh`-driven channels-report E2E harness verifies `@gitclaw /channels`
+  reports workflow dispatch, channel labels, provider keys, and mirrored
+  message marker counts without a model call.
 - A `gh`-driven proactive E2E harness verifies the generic proactive enqueue
   workflow end to end.
 - A `gh`-driven proactive-report E2E harness verifies `@gitclaw /proactive`

@@ -240,6 +240,15 @@ labels, trusted associations, prompt budgets, command surface, and workflow file
 hashes without dumping config or workflow bodies and without allowing the agent
 to mutate its own configuration.
 
+2026-05-29 channel visibility follow-up: Slack's Events API expects either a
+server HTTP endpoint or Socket Mode, Socket Mode uses a stateful WebSocket
+instead of a static public URL, Telegram's `getUpdates` provides long polling
+with offsets, and GitHub's workflow dispatch endpoint requires an
+Actions-write-capable authenticated caller. GitClaw should expose these bridge
+constraints inside the issue thread: `@gitclaw /channels` reports the generic
+channel-ingest workflow, provider keys, dispatch contract, and marker counts
+without dumping mirrored channel messages.
+
 ### Multi-Agent Routing
 
 OpenClaw's multi-agent model treats each agent as a full isolated persona scope:

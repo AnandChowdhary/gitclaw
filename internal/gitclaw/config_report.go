@@ -19,6 +19,7 @@ var configWorkflowPaths = []string{
 
 var configSlashCommands = []string{
 	"/backup",
+	"/channels",
 	"/config",
 	"/context",
 	"/models",

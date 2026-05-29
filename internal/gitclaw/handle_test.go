@@ -383,7 +383,7 @@ func TestHandleConfigCommandPostsReportWithoutLLM(t *testing.T) {
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Config Report", "Generated without a model call", "model=\"gitclaw/config\"", "config_source: `defaults+environment`", "config_file_path: `.gitclaw/config.yml`", "config_file_present: `true`", "trigger_label: `gitclaw`", "trigger_prefix: `@gitclaw`", "run_mode: `read-only`", "max_prompt_bytes: `60000`", "workflows_present: `2`", "slash_commands: `10`", "OWNER", "COLLABORATOR", "gitclaw:disabled", "/models", "/config", ".github/workflows/gitclaw.yml", ".github/workflows/gitclaw-heartbeat.yml", "sha256_12="} {
+	for _, want := range []string{"GitClaw Config Report", "Generated without a model call", "model=\"gitclaw/config\"", "config_source: `defaults+environment`", "config_file_path: `.gitclaw/config.yml`", "config_file_present: `true`", "trigger_label: `gitclaw`", "trigger_prefix: `@gitclaw`", "run_mode: `read-only`", "max_prompt_bytes: `60000`", "workflows_present: `2`", "slash_commands: `11`", "OWNER", "COLLABORATOR", "gitclaw:disabled", "/channels", "/models", "/config", ".github/workflows/gitclaw.yml", ".github/workflows/gitclaw-heartbeat.yml", "sha256_12="} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("config report missing %q:\n%s", want, body)
 		}
@@ -393,6 +393,86 @@ func TestHandleConfigCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 	if !hasLabel(github.IssueLabels[100], "gitclaw:done") || hasLabel(github.IssueLabels[100], "gitclaw:running") || hasLabel(github.IssueLabels[100], "gitclaw:error") {
 		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[100])
+	}
+}
+
+func TestHandleChannelsCommandPostsReportWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".github/workflows/gitclaw-channel-ingest.yml", `name: GitClaw Channel Ingest
+
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        required: true
+      thread_id:
+        required: true
+      message_id:
+        required: true
+      author:
+        required: false
+      body:
+        required: true
+
+jobs:
+  ingest:
+    permissions:
+      actions: write
+      issues: write
+    steps:
+      - run: echo WORKFLOW_CHANNEL_SECRET
+`)
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 101,
+			"title": "@gitclaw /channels",
+			"body": "<!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"chat-123\" -->\nHidden channel body token: CHANNEL_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{
+		101: {{
+			ID: 55,
+			Body: RenderChannelMessageComment(ChannelIngestOptions{
+				Channel:   "telegram",
+				ThreadID:  "chat-123",
+				MessageID: "message-456",
+				Author:    "telegram:alice",
+				Body:      "Hidden mirrored token: CHANNEL_MESSAGE_SECRET.",
+			}),
+		}},
+	}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic channels command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Channel Report", "Generated without a model call", "model=\"gitclaw/channels\"", "channel_label: `gitclaw:channel`", "trigger_label: `gitclaw`", "workflow_present: `true`", "workflow_dispatch_trigger: `true`", "permissions_actions_write: `true`", "permissions_issues_write: `true`", "workflow_inputs: `5`", "channel_thread_issue: `true`", "channel_message_comments_now: `1`", "supported_providers: `telegram, slack, generic`", "wake_strategy: `workflow_dispatch`", ".github/workflows/gitclaw-channel-ingest.yml", "telegram", "slack", "generic", "gitclaw channel-ingest", "dispatch id: `<channel>-<message_id>`", "sha256_12="} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("channel report missing %q:\n%s", want, body)
+		}
+	}
+	if strings.Contains(body, "CHANNEL_BODY_SECRET") || strings.Contains(body, "CHANNEL_MESSAGE_SECRET") || strings.Contains(body, "WORKFLOW_CHANNEL_SECRET") {
+		t.Fatalf("channel report leaked sensitive value:\n%s", body)
+	}
+	if !hasLabel(github.IssueLabels[101], "gitclaw:done") || hasLabel(github.IssueLabels[101], "gitclaw:running") || hasLabel(github.IssueLabels[101], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[101])
 	}
 }
 
