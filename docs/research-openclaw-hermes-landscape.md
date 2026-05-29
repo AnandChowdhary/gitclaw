@@ -602,6 +602,12 @@ serverless equivalent should be a deterministic issue command, `@gitclaw
 tool output names/sizes without dumping full prompt contents or calling a
 model.
 
+2026-05-30 context-list follow-up: context visibility should also exist before
+an issue turn. Add `gitclaw context list` as the local mirror of `/context`:
+body-free context file metadata, selected always-on skills, deterministic tool
+output input/size/hash metadata, and prompt budget settings, with no file,
+skill, prompt, or tool-output bodies.
+
 ### Skills
 
 Hermes skills are on-demand knowledge documents, also compatible with AgentSkills. The default local source of truth is `~/.hermes/skills/`, with optional external directories.

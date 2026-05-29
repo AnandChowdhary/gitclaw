@@ -1041,6 +1041,7 @@ OpenClaw's `/context` diagnostics:
 
 ```text
 @gitclaw /context
+@gitclaw /context list
 ```
 
 The command runs after normal preflight authorization and context assembly, but
@@ -1049,12 +1050,23 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 
 - selected context files,
 - selected full skill documents,
-- read-only tool outputs and their input/size,
+- read-only tool outputs and their input/size/hash,
 - transcript and prompt-budget settings.
 
 It never dumps full file bodies, skill bodies, prompts, or tool output contents
 into the issue. This makes context visibility cheap enough for routine E2E
 debugging and avoids burning GitHub Models quota for a diagnostic turn.
+
+Local operators can inspect the same repository context surface without opening
+an issue:
+
+```bash
+gitclaw context list
+```
+
+The local report omits repository and issue metadata, reports zero transcript
+messages, and lists body-free context files, selected always-on skills, and
+deterministic tool-output metadata with short hashes.
 
 ## Prompt Inspection Command
 
@@ -2649,6 +2661,9 @@ examples/workflows/gitclaw.yml
   bodies.
 - A `gh`-driven context-report E2E harness verifies `@gitclaw /context`
   produces a deterministic context summary without a model call.
+- A `gh`-driven context-list E2E harness verifies `@gitclaw /context list` is
+  an explicit report alias, while local `gitclaw context list` exposes the same
+  body-free repository context metadata without issue-only fields.
 - A `gh`-driven prompt-report E2E harness verifies `@gitclaw /prompt`
   produces a deterministic prompt budget, hash, truncation, context, and tool
   metadata report without a model call or prompt/body leakage.
