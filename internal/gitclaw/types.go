@@ -18,6 +18,7 @@ type Config struct {
 	DoneLabel                 string
 	ErrorLabel                string
 	HeartbeatLabel            string
+	ChannelLabel              string
 	WriteRequestedLabel       string
 	AllowedAssociations       map[string]bool
 	Model                     string
@@ -36,6 +37,7 @@ func DefaultConfig() Config {
 		DoneLabel:           "gitclaw:done",
 		ErrorLabel:          "gitclaw:error",
 		HeartbeatLabel:      "gitclaw:heartbeat",
+		ChannelLabel:        "gitclaw:channel",
 		WriteRequestedLabel: "gitclaw:write-requested",
 		AllowedAssociations: map[string]bool{
 			"OWNER":        true,
@@ -140,6 +142,14 @@ type GitHubClient interface {
 	PostIssueComment(ctx context.Context, repo string, issueNumber int, body string) (PostedComment, error)
 	AddIssueLabels(ctx context.Context, repo string, issueNumber int, labels []string) error
 	RemoveIssueLabel(ctx context.Context, repo string, issueNumber int, label string) error
+}
+
+type ChannelIngestGitHubClient interface {
+	CreateIssue(ctx context.Context, repo, title, body string, labels []string) (Issue, error)
+	ListOpenIssues(ctx context.Context, repo string, labels []string, limit int) ([]Issue, error)
+	ListIssueComments(ctx context.Context, repo string, issueNumber int) ([]Comment, error)
+	PostIssueComment(ctx context.Context, repo string, issueNumber int, body string) (PostedComment, error)
+	AddIssueLabels(ctx context.Context, repo string, issueNumber int, labels []string) error
 }
 
 type HeartbeatGitHubClient interface {

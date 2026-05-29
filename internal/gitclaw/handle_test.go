@@ -215,6 +215,22 @@ type FakeGitHub struct {
 	IssueLabels     map[int][]string
 }
 
+func (f *FakeGitHub) CreateIssue(ctx context.Context, repo, title, body string, labels []string) (Issue, error) {
+	number := 100 + len(f.Issues)
+	issue := Issue{
+		Number:            number,
+		Title:             title,
+		Body:              body,
+		AuthorAssociation: "MEMBER",
+		User:              User{Login: "github-actions[bot]", Type: "Bot"},
+		Labels:            append([]string(nil), labels...),
+	}
+	f.Issues = append(f.Issues, issue)
+	f.ensureIssueLabels()
+	f.IssueLabels[number] = append([]string(nil), labels...)
+	return issue, nil
+}
+
 func (f *FakeGitHub) GetIssue(ctx context.Context, repo string, issueNumber int) (Issue, error) {
 	for _, issue := range f.Issues {
 		if issue.Number == issueNumber {
@@ -243,6 +259,9 @@ func (f *FakeGitHub) ListIssueComments(ctx context.Context, repo string, issueNu
 }
 
 func (f *FakeGitHub) PostIssueComment(ctx context.Context, repo string, issueNumber int, body string) (PostedComment, error) {
+	if f.CommentsByIssue == nil {
+		f.CommentsByIssue = map[int][]Comment{}
+	}
 	posted := PostedComment{ID: int64(9000 + len(f.Posted)), Body: body}
 	f.Posted = append(f.Posted, posted)
 	f.CommentsByIssue[issueNumber] = append(f.CommentsByIssue[issueNumber], Comment{

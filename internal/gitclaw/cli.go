@@ -21,6 +21,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runBackup(ctx, args[1:])
 	case "heartbeat":
 		return runHeartbeatCommand(ctx, args[1:])
+	case "channel-ingest":
+		return runChannelIngestCommand(ctx, args[1:])
 	case "version":
 		fmt.Println("gitclaw dev")
 		return nil
@@ -121,6 +123,73 @@ func runHeartbeatCommand(ctx context.Context, args []string) error {
 		return err
 	}
 	fmt.Printf("heartbeat scanned=%d posted=%d skipped=%d\n", result.Scanned, result.Posted, result.Skipped)
+	return nil
+}
+
+func runChannelIngestCommand(ctx context.Context, args []string) error {
+	cfg := DefaultConfig()
+	opts := ChannelIngestOptions{
+		Repo:      os.Getenv("GITHUB_REPOSITORY"),
+		Channel:   os.Getenv("GITCLAW_CHANNEL"),
+		ThreadID:  os.Getenv("GITCLAW_CHANNEL_THREAD_ID"),
+		MessageID: os.Getenv("GITCLAW_CHANNEL_MESSAGE_ID"),
+		Author:    os.Getenv("GITCLAW_CHANNEL_AUTHOR"),
+		Body:      os.Getenv("GITCLAW_CHANNEL_BODY"),
+	}
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--repo requires a value")
+			}
+			opts.Repo = args[i+1]
+			i++
+		case "--channel":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--channel requires a value")
+			}
+			opts.Channel = args[i+1]
+			i++
+		case "--thread-id":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--thread-id requires a value")
+			}
+			opts.ThreadID = args[i+1]
+			i++
+		case "--message-id":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--message-id requires a value")
+			}
+			opts.MessageID = args[i+1]
+			i++
+		case "--author":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--author requires a value")
+			}
+			opts.Author = args[i+1]
+			i++
+		case "--body":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--body requires a value")
+			}
+			opts.Body = args[i+1]
+			i++
+		default:
+			return fmt.Errorf("unknown channel-ingest argument %q", args[i])
+		}
+	}
+	token := githubTokenFromEnv()
+	if token == "" {
+		return fmt.Errorf("missing GH_TOKEN or GITHUB_TOKEN")
+	}
+	result, err := RunChannelIngest(ctx, cfg, NewRESTGitHubClient(token), opts)
+	if err != nil {
+		return err
+	}
+	if err := writeChannelIngestOutputs(result); err != nil {
+		return err
+	}
+	fmt.Printf("channel_ingest issue=%d comment=%d created=%t duplicate=%t url=%s\n", result.IssueNumber, result.CommentID, result.Created, result.Duplicate, result.IssueURL)
 	return nil
 }
 

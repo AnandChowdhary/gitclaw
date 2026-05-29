@@ -285,6 +285,111 @@ Default idempotency slot: current UTC hour. Manual dispatch and E2E can pass an
 explicit slot. Re-running the same slot must not create a second heartbeat
 comment.
 
+## Proactive Usefulness
+
+GitClaw should eventually support proactive work without introducing an
+always-on daemon. The primitive is a scheduled GitHub Actions workflow that
+creates or updates a GitHub issue, then wakes the normal issue handler with
+`workflow_dispatch`.
+
+This is distinct from heartbeat:
+
+- heartbeat checks existing opted-in issues and usually says nothing,
+- proactive jobs create their own issue thread when there is work to do,
+- each proactive job has an explicit schedule, prompt, permissions, and
+  idempotency key,
+- every proactive action is visible as an issue, comment, workflow run, label,
+  and optional backup.
+
+Examples:
+
+- weekday email triage summary,
+- reminders that open an issue at a due time,
+- dependency or CI health checks,
+- weekly repository hygiene reports,
+- "watch this API/product/page" checks,
+- personal inbox or notification digest.
+
+Proactive jobs should be easy to create, but not silently self-installed by the
+agent. The safe v1 interface is a generator command or reviewed PR that creates
+a workflow plus a prompt file, for example:
+
+```text
+gitclaw proactive init \
+  --name email-triage \
+  --cron "17 8 * * 1-5" \
+  --prompt .gitclaw/proactive/email-triage.md
+```
+
+Generated files should be ordinary repo files:
+
+```text
+.github/workflows/gitclaw-proactive-email-triage.yml
+.gitclaw/proactive/email-triage.md
+```
+
+Reference proactive workflow shape:
+
+```yaml
+name: GitClaw Proactive Email Triage
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 8 * * 1-5"
+
+permissions:
+  actions: write
+  contents: read
+  issues: write
+
+concurrency:
+  group: gitclaw-proactive-email-triage
+  cancel-in-progress: false
+
+jobs:
+  enqueue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+      - id: enqueue
+        run: >
+          go run ./cmd/gitclaw proactive enqueue
+          --name email-triage
+          --slot "$(date -u +%Y-%m-%d)"
+          --prompt-file .gitclaw/proactive/email-triage.md
+      - run: >
+          gh workflow run .github/workflows/gitclaw.yml
+          -f issue_number="${{ steps.enqueue.outputs.issue_number }}"
+          -f dispatch_id="proactive-email-triage-${{ steps.enqueue.outputs.slot }}"
+          -f reason="proactive:email-triage"
+```
+
+Proactive issue bodies should include a hidden marker:
+
+```md
+<!-- gitclaw:proactive-run name="email-triage" slot="2026-05-29" -->
+```
+
+Idempotency rules:
+
+- one issue per `name + slot` unless the job declares rolling-thread mode,
+- rerunning the same slot updates or reuses the existing issue,
+- the main handler `dispatch_id` is derived from `name + slot`,
+- proactive jobs must not loop by reacting to their own assistant comments.
+
+Security rules:
+
+- external integrations such as email require explicit secrets and scopes,
+- proactive workflow files are reviewed code, not model-authored side effects,
+- job prompts live in `.gitclaw/proactive/` and are treated as repo context,
+- generated workflows must use least-privilege permissions,
+- write-capable proactive jobs still go through the normal write gates.
+
 ## Model Provider Default: GitHub Models
 
 Research update: GitHub Models should be the default inference provider for
@@ -725,6 +830,34 @@ trigger `issue_comment`, because events created with the repository
 Recommended use: optional low-latency-insensitive Telegram bridge, not the main
 Slack strategy.
 
+### Tier 1.5: Manual Channel Ingest Workflow
+
+Before implementing provider-specific polling, GitClaw should expose a generic
+`gitclaw-channel-ingest.yml` workflow. It accepts normalized channel metadata
+and a message body, mirrors the message into the canonical GitHub issue, then
+dispatches the main GitClaw workflow.
+
+Inputs:
+
+- `channel`: `telegram`, `slack`, or another provider key,
+- `thread_id`: external chat/thread/conversation id,
+- `message_id`: stable provider message/update/event id,
+- `author`: provider-specific author id,
+- `body`: text to mirror.
+
+Behavior:
+
+- find an open issue with a matching hidden `gitclaw:channel-thread` marker,
+- create one if it does not exist,
+- post the inbound message as a `gitclaw:channel-message` comment,
+- apply `gitclaw` and `gitclaw:channel` labels,
+- dispatch `.github/workflows/gitclaw.yml` with `issue_number` and
+  `dispatch_id=<channel>-<message_id>`.
+
+This workflow is useful for E2E, manual bridge experiments, and tiny external
+dispatchers. Provider-specific pollers can later call the same CLI path after
+they read Telegram/Slack events.
+
 ### Tier 2: Long-Running Actions Gateway
 
 Run a `channel-gateway.yml` workflow via `workflow_dispatch`. The job opens a
@@ -1102,7 +1235,27 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the assistant sees the mirrored message body and returns its exact
      nonce token.
 
-12. **Tool/context usage**
+12. **Channel ingest workflow**
+
+   - dispatch `gitclaw-channel-ingest.yml` with channel, thread, message id,
+     author, and body,
+   - assert it creates or reuses a canonical issue with
+     `gitclaw:channel-thread`,
+   - assert it posts a `gitclaw:channel-message` comment,
+   - assert it dispatches the main workflow,
+   - assert the assistant replies with the exact nonce from the ingested body.
+
+13. **Proactive enqueue workflow**
+
+   - create a generated proactive workflow fixture or dispatch a generic
+     proactive enqueue command,
+   - assert it creates or reuses a `gitclaw:proactive-run` issue for a stable
+     slot,
+   - assert it dispatches the main workflow with a proactive dispatch id,
+   - assert rerunning the same slot does not create duplicate issues or
+     duplicate assistant turns.
+
+14. **Tool/context usage**
 
    - ask the assistant to read a concrete repository file such as `go.mod`,
    - assert the reply includes an exact expected token or module path,
@@ -1156,6 +1309,10 @@ MVP is not complete until:
   issue and proves same-dispatch-id idempotency,
 - the channel-message harness verifies a hidden `gitclaw:channel-message`
   comment is reconstructed as user input during a dispatched run,
+- the channel-ingest harness verifies the generic bridge workflow mirrors a
+  message into an issue and dispatches the main handler,
+- once implemented, the proactive enqueue harness verifies scheduled/manual
+  jobs can create their own work issues idempotently,
 - the live harness verifies status labels end at `gitclaw:done` without
   `gitclaw:running` or `gitclaw:error`,
 - the failure harness forces a real invalid-model run and verifies a bounded
@@ -1267,6 +1424,8 @@ examples/workflows/gitclaw.yml
   woken for a specific issue and deduped by dispatch ID.
 - A `gh`-driven channel-message E2E harness verifies a mirrored channel
   comment is included in the dispatched conversation transcript.
+- A `gh`-driven channel-ingest E2E harness verifies the generic channel ingress
+  workflow end to end.
 - A `gh`-driven failure E2E harness verifies the safe failure path against a
   real Actions/model failure.
 - A `gh`-driven prompt-budget E2E harness verifies a large real issue still
@@ -1289,6 +1448,10 @@ examples/workflows/gitclaw.yml
    should the template recommend a disposable sandbox repo?
 7. Which channel bridge should ship first: Telegram polling, Slack Socket Mode in Actions, or an external dispatcher?
 8. Where should durable channel offsets and dedupe state live: bridge state issue, state branch, or repository variables?
+9. What proactive jobs should ship as first-class templates: reminders, email
+   triage, dependency health, CI failure follow-up, or repository hygiene?
+10. Should proactive job generation be a local CLI command only, or can GitClaw
+   propose a PR containing the generated workflow and prompt files?
 
 ## Sources
 

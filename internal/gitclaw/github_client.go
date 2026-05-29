@@ -25,6 +25,55 @@ func NewRESTGitHubClient(token string) *RESTGitHubClient {
 	}
 }
 
+func (c *RESTGitHubClient) CreateIssue(ctx context.Context, repo, title, body string, labels []string) (Issue, error) {
+	if c.Token == "" {
+		return Issue{}, fmt.Errorf("missing GitHub token")
+	}
+	payload := map[string]any{
+		"title": title,
+		"body":  body,
+	}
+	if len(labels) > 0 {
+		payload["labels"] = labels
+	}
+	data, err := json.Marshal(payload)
+	if err != nil {
+		return Issue{}, err
+	}
+	endpoint := fmt.Sprintf("%s/repos/%s/issues", strings.TrimRight(c.APIBaseURL, "/"), repo)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, endpoint, bytes.NewReader(data))
+	if err != nil {
+		return Issue{}, err
+	}
+	c.setHeaders(req)
+	res, err := c.httpClient().Do(req)
+	if err != nil {
+		return Issue{}, err
+	}
+	defer res.Body.Close()
+	if res.StatusCode < 200 || res.StatusCode >= 300 {
+		body, _ := io.ReadAll(io.LimitReader(res.Body, 4096))
+		return Issue{}, fmt.Errorf("GitHub create issue failed: status=%d body=%s", res.StatusCode, strings.TrimSpace(string(body)))
+	}
+	var raw struct {
+		Number            int    `json:"number"`
+		Title             string `json:"title"`
+		Body              string `json:"body"`
+		AuthorAssociation string `json:"author_association"`
+		User              User   `json:"user"`
+		Labels            []struct {
+			Name string `json:"name"`
+		} `json:"labels"`
+		PullRequest *struct {
+			URL string `json:"url"`
+		} `json:"pull_request"`
+	}
+	if err := json.NewDecoder(res.Body).Decode(&raw); err != nil {
+		return Issue{}, err
+	}
+	return issueFromREST(raw.Number, raw.Title, raw.Body, raw.AuthorAssociation, raw.User, raw.Labels, raw.PullRequest != nil), nil
+}
+
 func (c *RESTGitHubClient) GetIssue(ctx context.Context, repo string, issueNumber int) (Issue, error) {
 	if c.Token == "" {
 		return Issue{}, fmt.Errorf("missing GitHub token")

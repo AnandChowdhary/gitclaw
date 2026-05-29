@@ -166,3 +166,27 @@ func TestPreflightAllowsResolvedWorkflowDispatchFromActionsBot(t *testing.T) {
 		t.Fatalf("workflow_dispatch should trust the Actions dispatch boundary: %+v", decision)
 	}
 }
+
+func TestPreflightAllowsChannelThreadDispatchWithoutTriggerLabel(t *testing.T) {
+	ev := Event{
+		Kind:      EventWorkflowDispatch,
+		EventName: "workflow_dispatch",
+		Repo:      "owner/repo",
+		Issue: Issue{
+			Number: 12,
+			Title:  "GitClaw telegram thread chat-123",
+			Body: RenderChannelThreadBody(ChannelIngestOptions{
+				Channel:  "telegram",
+				ThreadID: "chat-123",
+			}),
+			AuthorAssociation: "NONE",
+			User:              User{Login: "github-actions[bot]", Type: "Bot"},
+			Labels:            []string{"gitclaw:channel"},
+		},
+		Sender: User{Login: "github-actions[bot]", Type: "Bot"},
+	}
+	decision := Preflight(ev, DefaultConfig())
+	if !decision.Allowed {
+		t.Fatalf("channel thread dispatch should be allowed without trigger label: %+v", decision)
+	}
+}

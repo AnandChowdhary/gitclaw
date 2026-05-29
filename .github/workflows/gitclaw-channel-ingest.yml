@@ -1,0 +1,67 @@
+name: GitClaw Channel Ingest
+
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: External channel name, such as telegram or slack
+        required: true
+      thread_id:
+        description: External channel thread or chat id
+        required: true
+      message_id:
+        description: Stable external message id
+        required: true
+      author:
+        description: External author identifier
+        required: false
+      body:
+        description: Message body to mirror into GitHub
+        required: true
+
+concurrency:
+  group: gitclaw-channel-ingest-${{ inputs.channel }}-${{ inputs.thread_id }}
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      actions: write
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+
+      - id: ingest
+        run: go run ./cmd/gitclaw channel-ingest
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
+          GITCLAW_CHANNEL: ${{ inputs.channel }}
+          GITCLAW_CHANNEL_THREAD_ID: ${{ inputs.thread_id }}
+          GITCLAW_CHANNEL_MESSAGE_ID: ${{ inputs.message_id }}
+          GITCLAW_CHANNEL_AUTHOR: ${{ inputs.author }}
+          GITCLAW_CHANNEL_BODY: ${{ inputs.body }}
+
+      - run: |
+          set -euo pipefail
+          dispatch_id="${GITCLAW_CHANNEL}-${GITCLAW_CHANNEL_MESSAGE_ID}"
+          gh workflow run .github/workflows/gitclaw.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            -f issue_number="${GITCLAW_ISSUE_NUMBER}" \
+            -f dispatch_id="$dispatch_id" \
+            -f reason="channel-ingest:${GITCLAW_CHANNEL}"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
+          GITCLAW_CHANNEL: ${{ inputs.channel }}
+          GITCLAW_CHANNEL_MESSAGE_ID: ${{ inputs.message_id }}
+          GITCLAW_ISSUE_NUMBER: ${{ steps.ingest.outputs.issue_number }}

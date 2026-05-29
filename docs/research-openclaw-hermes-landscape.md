@@ -171,6 +171,13 @@ explicit `workflow_dispatch` wakeup path. The useful OpenClaw/Hermes analogue is
 not a socket loop; it is an auditable issue-number dispatch with a stable
 external event ID used as the idempotency key.
 
+2026-05-29 proactive usefulness follow-up: OpenClaw's automation categories and
+Hermes' cron/goals both point to a useful GitClaw feature that is not just
+heartbeat. Proactive jobs should be normal scheduled GitHub Actions workflows
+that create or reuse GitHub issues, then dispatch the main issue handler. This
+preserves the no-daemon architecture while allowing email triage, reminders,
+watchers, and reports to initiate their own visible issue threads.
+
 ### Multi-Agent Routing
 
 OpenClaw's multi-agent model treats each agent as a full isolated persona scope:
@@ -310,6 +317,12 @@ equivalent is a hidden `gitclaw:channel-message` comment marker carrying
 channel and source message IDs. The marker lets Actions-authored bridge
 comments survive transcript reconstruction as user messages while still marking
 the message body as untrusted input.
+
+2026-05-29 generic channel ingest follow-up: before provider-specific Telegram
+or Slack pollers, GitClaw should expose a generic channel-ingest workflow. It
+accepts normalized channel/thread/message fields, writes the canonical issue
+state, and dispatches the normal handler. This mirrors the gateway boundary in
+OpenClaw while staying serverless and testable with GitHub Actions alone.
 
 Hermes' session docs also expose a practical backup primitive:
 `hermes sessions export backup.jsonl` writes conversation metadata and messages

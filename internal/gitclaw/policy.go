@@ -18,6 +18,9 @@ func Preflight(ev Event, cfg Config) PreflightDecision {
 	if ev.Kind != EventWorkflowDispatch && (ev.Sender.IsBot() || (ev.Comment != nil && ev.Comment.User.IsBot())) {
 		return reject("bot_comment_ignored", "bot comments are ignored")
 	}
+	if ev.Kind == EventWorkflowDispatch && HasChannelThreadMarker(ev.Issue.Body) {
+		return PreflightDecision{Allowed: true, Code: "allowed", Reason: "allowed"}
+	}
 	if !triggered(ev, cfg) {
 		return reject("not_triggered", "issue is not labeled or prefixed for GitClaw")
 	}
