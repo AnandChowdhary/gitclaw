@@ -160,8 +160,17 @@ func TestHandleSetsErrorStatusWhenLLMFails(t *testing.T) {
 	if err == nil {
 		t.Fatalf("Handle should return LLM error")
 	}
-	if len(github.Posted) != 0 {
-		t.Fatalf("posted comments despite LLM failure: %#v", github.Posted)
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want one safe error comment: %#v", len(github.Posted), github.Posted)
+	}
+	if !HasGitClawErrorMarker(github.Posted[0].Body) {
+		t.Fatalf("error comment missing marker: %s", github.Posted[0].Body)
+	}
+	if !strings.Contains(github.Posted[0].Body, "model provider request failed") {
+		t.Fatalf("error comment missing safe diagnostic: %s", github.Posted[0].Body)
+	}
+	if containsUnsafeDiagnosticContent(github.Posted[0].Body, "provider unavailable", "Please fail") {
+		t.Fatalf("error comment leaked unsafe content: %s", github.Posted[0].Body)
 	}
 	labels := github.IssueLabels[77]
 	if !hasLabel(labels, "gitclaw:error") || hasLabel(labels, "gitclaw:running") || hasLabel(labels, "gitclaw:done") {
@@ -257,4 +266,15 @@ func issueHasAllLabels(issue Issue, labels []string) bool {
 		}
 	}
 	return true
+}
+
+func containsUnsafeDiagnosticContent(body string, values ...string) bool {
+	body = strings.ToLower(body)
+	for _, value := range values {
+		value = strings.ToLower(strings.TrimSpace(value))
+		if value != "" && strings.Contains(body, value) {
+			return true
+		}
+	}
+	return false
 }

@@ -48,11 +48,17 @@ jobs:
         with:
           go-version: stable
 
-      - run: go run ./cmd/gitclaw handle --event "$GITHUB_EVENT_PATH"
+      - run: |
+          set -euo pipefail
+          model="openai/gpt-5-mini"
+          if [[ "${GITCLAW_E2E_INVALID_MODEL}" == "true" ]]; then
+            model="openai/not-a-real-model-for-gitclaw-e2e"
+          fi
+          GITCLAW_MODEL="$model" go run ./cmd/gitclaw handle --event "$GITHUB_EVENT_PATH"
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
-          GITCLAW_MODEL: openai/gpt-5-mini
+          GITCLAW_E2E_INVALID_MODEL: ${{ contains(github.event.issue.labels.*.name, 'gitclaw:e2e-invalid-model') }}
 
   backup:
     needs: [preflight, handle]

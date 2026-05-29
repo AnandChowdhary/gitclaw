@@ -515,6 +515,13 @@ GitClaw adaptation should stay GitHub-native by using lightweight issue labels
 for current status (`gitclaw:running`, `gitclaw:done`, `gitclaw:error`) while
 keeping hidden comment markers and Actions run URLs as the provenance record.
 
+2026-05-29 failure-path follow-up: the same audit posture applies to failed
+turns. GitClaw should leave a small, machine-readable `gitclaw:error` comment
+that points to the Actions run and says which phase failed, but it should not
+copy prompt text, user-provided secrets, or raw model-provider response bodies
+back into the issue. The full trace belongs in Actions logs; the issue should
+only carry a bounded diagnostic.
+
 Main attack pattern: an untrusted input enters through one surface, persists into memory/skills/cron/filesystem, then fires later through a different surface when the attacker is no longer present.
 
 Design requirements for `gitclaw`:

@@ -972,8 +972,11 @@ assert the expected comments/labels, and close the issue in cleanup.
 
    - intentionally remove `models: read`, disable GitHub Models access, or
      configure an invalid model in a sandbox branch/job,
-   - assert a safe failure comment or label is produced without leaking tokens,
-     prompt content, or provider response bodies beyond a bounded diagnostic.
+   - assert a safe `gitclaw:error` comment and `gitclaw:error` label are
+     produced,
+   - assert no `gitclaw:assistant-turn` completion comment is produced,
+   - assert the failure comment does not leak issue tokens, prompt content, or
+     provider response bodies beyond a bounded diagnostic.
 
 9. **Heartbeat conversation**
 
@@ -1039,6 +1042,9 @@ MVP is not complete until:
   comment, and proves same-slot idempotency,
 - the live harness verifies status labels end at `gitclaw:done` without
   `gitclaw:running` or `gitclaw:error`,
+- the failure harness forces a real invalid-model run and verifies a bounded
+  `gitclaw:error` comment plus final `gitclaw:error` label without leaking an
+  issue-secret token,
 - bot loop prevention is verified live,
 - the issue is cleaned up or labeled with an E2E retention label.
 
@@ -1134,6 +1140,8 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven heartbeat E2E harness verifies a real scheduled-workflow path
   via `workflow_dispatch`, including issue transcript context,
   `.gitclaw/HEARTBEAT.md`, exact token content, and same-slot idempotency.
+- A `gh`-driven failure E2E harness verifies the safe failure path against a
+  real Actions/model failure.
 
 ## Open Questions
 

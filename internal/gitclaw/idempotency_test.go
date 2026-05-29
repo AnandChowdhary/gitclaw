@@ -44,3 +44,18 @@ func TestRenderAssistantCommentIncludesMarker(t *testing.T) {
 		t.Fatalf("rendered comment does not contain idempotency key: %s", body)
 	}
 }
+
+func TestRenderErrorCommentIncludesMarkerWithoutIdempotencyKey(t *testing.T) {
+	body := RenderErrorComment(ErrorMarker{
+		RunID:   "123",
+		EventID: "issue-1",
+		Phase:   "model",
+		RunURL:  "https://github.com/owner/repo/actions/runs/123",
+	}, "model provider request failed")
+	if !HasGitClawErrorMarker(body) {
+		t.Fatalf("rendered error comment missing marker: %s", body)
+	}
+	if ContainsIdempotencyKey(body, "abc") || HasGitClawMarker(body) {
+		t.Fatalf("error comment should not look like a completed assistant turn: %s", body)
+	}
+}

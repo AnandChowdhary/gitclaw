@@ -39,6 +39,9 @@ func BuildTranscript(ev Event, comments []Comment) []TranscriptMessage {
 			})
 			continue
 		}
+		if HasGitClawErrorMarker(comment.Body) {
+			continue
+		}
 		if comment.User.IsBot() {
 			continue
 		}

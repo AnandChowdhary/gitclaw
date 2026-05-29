@@ -26,17 +26,11 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 
 	status := newIssueStatusUpdater(ctx, cfg, github, ev.Repo, ev.Issue.Number)
 	status.SetRunning()
-	completed := false
-	defer func() {
-		if !completed {
-			status.SetError()
-		}
-	}()
 
 	transcript := BuildTranscript(ev, comments)
 	repoContext, err := LoadRepoContext(cfg.Workdir, transcript)
 	if err != nil {
-		return fmt.Errorf("load repo context: %w", err)
+		return failStartedTurn(ctx, cfg, github, ev, status, "context", fmt.Errorf("load repo context: %w", err))
 	}
 	response, err := llm.Complete(ctx, LLMRequest{
 		Event:      ev,
@@ -45,7 +39,7 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		Config:     cfg,
 	})
 	if err != nil {
-		return fmt.Errorf("complete LLM response: %w", err)
+		return failStartedTurn(ctx, cfg, github, ev, status, "model", fmt.Errorf("complete LLM response: %w", err))
 	}
 
 	body := RenderAssistantComment(Marker{
@@ -56,11 +50,36 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		RunURL:         actionRunURL(ev),
 	}, response)
 	if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
-		return fmt.Errorf("post issue comment: %w", err)
+		return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post issue comment: %w", err))
 	}
-	completed = true
 	status.SetDone()
 	return nil
+}
+
+func failStartedTurn(ctx context.Context, cfg Config, github GitHubClient, ev Event, status issueStatusUpdater, phase string, cause error) error {
+	status.SetError()
+	diagnostic := safeFailureDiagnostic(phase, cause)
+	_, _ = github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, RenderErrorComment(ErrorMarker{
+		RunID:   envFirst("GITHUB_RUN_ID", "local"),
+		EventID: eventID(ev),
+		Phase:   phase,
+		RunURL:  actionRunURL(ev),
+	}, diagnostic))
+	return cause
+}
+
+func safeFailureDiagnostic(phase string, cause error) string {
+	switch phase {
+	case "context":
+		return "repository context could not be loaded"
+	case "model":
+		return "model provider request failed"
+	case "comment":
+		return "assistant comment could not be posted"
+	default:
+		_ = cause
+		return "assistant turn failed"
+	}
 }
 
 type issueStatusUpdater struct {

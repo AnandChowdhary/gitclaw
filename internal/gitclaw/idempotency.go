@@ -10,6 +10,7 @@ import (
 
 var markerPattern = regexp.MustCompile(`<!--\s*gitclaw:assistant-turn\s+([^>]*)-->`)
 var heartbeatMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:heartbeat\s+([^>]*)-->`)
+var errorMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:error\s+([^>]*)-->`)
 
 func IdempotencyKey(ev Event) string {
 	trigger := fmt.Sprintf("issue:%d", ev.Issue.Number)
@@ -45,8 +46,29 @@ func RenderHeartbeatComment(marker HeartbeatMarker, text string) string {
 	return fmt.Sprintf("<!-- gitclaw:heartbeat %s -->\n%s", strings.Join(parts, " "), strings.TrimSpace(text))
 }
 
+func RenderErrorComment(marker ErrorMarker, diagnostic string) string {
+	parts := []string{
+		fmt.Sprintf(`run_id="%s"`, escapeMarkerValue(marker.RunID)),
+		fmt.Sprintf(`event_id="%s"`, escapeMarkerValue(marker.EventID)),
+		fmt.Sprintf(`phase="%s"`, escapeMarkerValue(marker.Phase)),
+	}
+	if marker.RunURL != "" {
+		parts = append(parts, fmt.Sprintf(`run_url="%s"`, escapeMarkerValue(marker.RunURL)))
+	}
+	return fmt.Sprintf(`<!-- gitclaw:error %s -->
+GitClaw could not complete this turn.
+
+Diagnostic: %s
+
+See the linked Actions run for details.`, strings.Join(parts, " "), strings.TrimSpace(diagnostic))
+}
+
 func HasGitClawMarker(body string) bool {
 	return markerPattern.MatchString(body)
+}
+
+func HasGitClawErrorMarker(body string) bool {
+	return errorMarkerPattern.MatchString(body)
 }
 
 func HasHeartbeatMarker(body string) bool {

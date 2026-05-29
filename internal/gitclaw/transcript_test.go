@@ -30,6 +30,11 @@ func TestBuildTranscriptOrdersUserAndAssistantMessages(t *testing.T) {
 			Body: "unrelated bot noise",
 			User: User{Login: "dependabot[bot]", Type: "Bot"},
 		},
+		{
+			ID:   13,
+			Body: RenderErrorComment(ErrorMarker{RunID: "run-1", EventID: "issue-1", Phase: "model"}, "model provider request failed"),
+			User: User{Login: "github-actions[bot]", Type: "Bot"},
+		},
 	}
 	transcript := BuildTranscript(ev, comments)
 	if len(transcript) != 3 {

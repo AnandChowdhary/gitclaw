@@ -110,6 +110,13 @@ type HeartbeatMarker struct {
 	RunURL string
 }
 
+type ErrorMarker struct {
+	RunID   string
+	EventID string
+	Phase   string
+	RunURL  string
+}
+
 type PostedComment struct {
 	ID   int64
 	Body string
