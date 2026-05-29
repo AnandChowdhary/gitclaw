@@ -5,6 +5,8 @@ description: Use GitClaw's read-only repository context and tool outputs to answ
 
 # Repo Reader
 
+Skill context verification token: `GITCLAW_SKILL_CONTEXT_V1`.
+
 When a user asks about a repository file, prefer the provided
 `gitclaw.read_file` output over guessing. If the requested file is not present
 in tool output, say that the file was not included in the bounded read-only

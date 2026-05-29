@@ -281,6 +281,8 @@ GitHub issue/comment event
 - Applies token budgets.
 - Loads repo-native soul, tools notes, curated memory, and local skills from
   git-tracked files.
+- Builds a skill index from `SKILL.md` frontmatter and loads full skill bodies
+  only when selected or marked always-on.
 - Runs bounded read-only repository tools before the model turn.
 
 `internal/agent`
@@ -356,7 +358,8 @@ MVP loads:
 - `.gitclaw/MEMORY.md`, if present and human-reviewed
 - latest bounded `.gitclaw/memory/*.md` notes, if present and human-reviewed
 - `.gitclaw/HEARTBEAT.md`, if present, as context only
-- `.gitclaw/SKILLS/*/SKILL.md`, if present
+- `.gitclaw/SKILLS/*/SKILL.md`, if selected by the issue thread or marked
+  always-on
 - issue thread transcript
 - small repository summary from a read-only file listing
 - bounded `gitclaw.read_file` output for files explicitly mentioned in the
@@ -365,6 +368,32 @@ MVP loads:
 Do not let the agent write these files in MVP. Skills, soul, tools notes, and
 memory are git-backed source files: edits happen through normal human-reviewed
 commits, not hidden agent mutation.
+
+## Skill Loading
+
+GitClaw skills use the AgentSkills/OpenClaw shape: a skill is a directory with
+a `SKILL.md` file and optional YAML frontmatter.
+
+Supported MVP frontmatter:
+
+```yaml
+---
+name: repo-reader
+description: Use read-only repository files.
+metadata:
+  openclaw:
+    always: false
+---
+```
+
+GitClaw inserts a compact `gitclaw.skill_index` tool output listing all
+discovered local skills. Full skill instructions are loaded only when:
+
+- the user mentions the skill name, folder, path, or relevant description terms;
+- the skill declares `always: true` or `metadata.openclaw.always: true`.
+
+Remote skill installation, skill execution scripts, dependency installation,
+and agent-authored skill edits remain out of scope.
 
 ## Read-Only Tool Context
 

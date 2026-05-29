@@ -89,6 +89,15 @@ prompt-injection surface. GitClaw should therefore start with repo-local,
 read-only `.gitclaw/SKILLS/*/SKILL.md` files and should not install remote
 skills or let the agent edit skills automatically.
 
+2026-05-29 skill-loading follow-up: OpenClaw's skill format uses optional YAML
+frontmatter with fields such as `name`, `description`, and runtime metadata,
+including an `always` flag. Hermes' skill docs emphasize progressive
+disclosure: surface a searchable/indexed skill list first, inspect or load full
+instructions only when needed, and run security scans before installing
+third-party skills. GitClaw's repo-native cut should therefore expose a skill
+index in prompt context and load full local skill bodies only when the issue
+thread selects them or the skill is marked always-on.
+
 ### Memory
 
 OpenClaw's default memory model is file-centric:

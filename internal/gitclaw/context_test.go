@@ -16,13 +16,19 @@ func TestLoadRepoContextLoadsSoulSkillsAndMentionedFiles(t *testing.T) {
 	writeTestFile(t, root, ".gitclaw/MEMORY.md", "Durable memory token: GITCLAW_MEMORY_CONTEXT_V1.")
 	writeTestFile(t, root, ".gitclaw/memory/2026-05-28.md", "Yesterday: backed up issue #1.")
 	writeTestFile(t, root, ".gitclaw/memory/2026-05-29.md", "Today: verify memory context loading.")
-	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", "# Repo Reader\nUse read-only files.")
+	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Use read-only repository files.
+---
+
+# Repo Reader
+Use read-only files.`)
 	writeTestFile(t, root, "go.mod", "module github.com/AnandChowdhary/gitclaw\n")
 	writeTestFile(t, root, "README.md", "hello")
 
 	ctx, err := LoadRepoContext(root, []TranscriptMessage{{
 		Role: "user",
-		Body: "Please inspect `go.mod` and tell me the module path.",
+		Body: "Please use the repo-reader skill, inspect `go.mod`, and tell me the module path.",
 	}})
 	if err != nil {
 		t.Fatalf("LoadRepoContext returned error: %v", err)
@@ -49,11 +55,83 @@ func TestLoadRepoContextLoadsSoulSkillsAndMentionedFiles(t *testing.T) {
 	if !hasContextDoc(ctx.Skills, ".gitclaw/SKILLS/repo-reader/SKILL.md", "Repo Reader") {
 		t.Fatalf("skill was not loaded: %#v", ctx.Skills)
 	}
+	if !hasToolOutput(ctx.ToolOutputs, "gitclaw.skill_index", ".gitclaw/SKILLS", "repo-reader") {
+		t.Fatalf("skill index missing repo-reader: %#v", ctx.ToolOutputs)
+	}
 	if !hasToolOutput(ctx.ToolOutputs, "gitclaw.list_files", ".", "go.mod") {
 		t.Fatalf("list_files tool output missing go.mod: %#v", ctx.ToolOutputs)
 	}
 	if !hasToolOutput(ctx.ToolOutputs, "gitclaw.read_file", "go.mod", "module github.com/AnandChowdhary/gitclaw") {
 		t.Fatalf("read_file tool output missing go.mod contents: %#v", ctx.ToolOutputs)
+	}
+}
+
+func TestLoadSkillContextSelectsRequestedAndAlwaysSkills(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Read repository files and explain Go modules.
+---
+
+# Repo Reader
+Skill token: GITCLAW_SKILL_CONTEXT_V1.`)
+	writeTestFile(t, root, ".gitclaw/SKILLS/always-on/SKILL.md", `---
+name: always-on
+description: Always loaded baseline behavior.
+metadata:
+  openclaw:
+    always: true
+---
+
+# Always On
+Always included.`)
+	writeTestFile(t, root, ".gitclaw/SKILLS/unrelated/SKILL.md", `---
+name: unrelated
+description: Handle unrelated calendar work.
+---
+
+# Unrelated
+Should not be selected.`)
+
+	summaries, skills := loadSkillContext(root, []TranscriptMessage{{Role: "user", Body: "Use the repo-reader skill for go.mod."}})
+	if len(summaries) != 3 {
+		t.Fatalf("len(summaries) = %d, want 3: %#v", len(summaries), summaries)
+	}
+	if !hasContextDoc(skills, ".gitclaw/SKILLS/repo-reader/SKILL.md", "GITCLAW_SKILL_CONTEXT_V1") {
+		t.Fatalf("requested repo-reader skill was not selected: %#v", skills)
+	}
+	if !hasContextDoc(skills, ".gitclaw/SKILLS/always-on/SKILL.md", "Always included") {
+		t.Fatalf("always-on skill was not selected: %#v", skills)
+	}
+	if hasContextDoc(skills, ".gitclaw/SKILLS/unrelated/SKILL.md", "Should not be selected") {
+		t.Fatalf("unrelated skill should not be selected: %#v", skills)
+	}
+	index := renderSkillIndex(summaries)
+	for _, want := range []string{"repo-reader", "always-on", "unrelated"} {
+		if !strings.Contains(index, want) {
+			t.Fatalf("skill index missing %q: %s", want, index)
+		}
+	}
+}
+
+func TestParseSkillDocumentFrontmatter(t *testing.T) {
+	skill := parseSkillDocument(".gitclaw/SKILLS/example/SKILL.md", `---
+name: frontmatter-name
+description: Frontmatter description.
+metadata:
+  openclaw:
+    always: true
+---
+
+# Example`)
+	if skill.Name != "frontmatter-name" {
+		t.Fatalf("name = %q", skill.Name)
+	}
+	if skill.Description != "Frontmatter description." {
+		t.Fatalf("description = %q", skill.Description)
+	}
+	if !skill.Always {
+		t.Fatalf("always metadata was not parsed")
 	}
 }
 

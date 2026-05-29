@@ -129,6 +129,13 @@ type ContextDocument struct {
 	Body string
 }
 
+type SkillSummary struct {
+	Name        string
+	Description string
+	Path        string
+	Always      bool
+}
+
 type ToolOutput struct {
 	Name   string
 	Input  string
