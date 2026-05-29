@@ -122,7 +122,7 @@ error_count() {
   gh issue view "$issue_number" \
     --repo "$repo" \
     --json comments \
-    --jq '[.comments[] | select(.body | contains("gitclaw:error"))] | length'
+    --jq '[.comments[] | select(.body | contains("<!-- gitclaw:error"))] | length'
 }
 
 wait_for_assistant_count() {

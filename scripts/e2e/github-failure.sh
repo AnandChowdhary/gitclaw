@@ -102,7 +102,7 @@ error_comments() {
   gh issue view "$issue_number" \
     --repo "$GITCLAW_E2E_REPO" \
     --json comments \
-    --jq '[.comments[] | select(.body | contains("gitclaw:error")) | .body] | join("\n---GITCLAW-ERROR---\n")'
+    --jq '[.comments[] | select(.body | contains("<!-- gitclaw:error")) | .body] | join("\n---GITCLAW-ERROR---\n")'
 }
 
 assistant_comment_count() {
