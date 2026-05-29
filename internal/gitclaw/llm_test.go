@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestDefaultConfigUsesGitHubModelsSmallDefault(t *testing.T) {
@@ -41,6 +42,9 @@ func TestNewLLMFromEnvDefaultsToGitHubModelsWithActionsToken(t *testing.T) {
 	}
 	if client.Model != "openai/gpt-5-mini" {
 		t.Fatalf("Model = %q, want openai/gpt-5-mini", client.Model)
+	}
+	if client.Client.Timeout != time.Minute {
+		t.Fatalf("client timeout = %s, want 1m0s", client.Client.Timeout)
 	}
 }
 

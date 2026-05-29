@@ -457,7 +457,9 @@ Security and operational notes:
   redact secrets and mark issue text as untrusted input.
 - GitHub Models has free but rate-limited usage and optional paid usage, so
   the model client retries transient `429`, timeout, and `5xx` responses before
-  surfacing a safe issue-level provider failure.
+  surfacing a safe issue-level provider failure. Individual model HTTP requests
+  are also time-bounded so a stuck inference call cannot consume the whole
+  Actions job timeout.
 
 ## Runtime Architecture
 

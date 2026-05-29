@@ -64,7 +64,7 @@ func NewLLMFromEnv(cfg Config) (LLMClient, error) {
 		APIKey:  apiKey,
 		BaseURL: baseURL,
 		Model:   model,
-		Client:  http.DefaultClient,
+		Client:  &http.Client{Timeout: llmTimeout()},
 	}, nil
 }
 
@@ -183,29 +183,62 @@ func llmMaxAttempts() int {
 	return value
 }
 
+func llmTimeout() time.Duration {
+	raw := strings.TrimSpace(os.Getenv("GITCLAW_LLM_TIMEOUT_SECONDS"))
+	if raw == "" {
+		return 60 * time.Second
+	}
+	value, err := strconv.Atoi(raw)
+	if err != nil || value < 1 {
+		return 60 * time.Second
+	}
+	if value > 600 {
+		return 600 * time.Second
+	}
+	return time.Duration(value) * time.Second
+}
+
+func llmRetryMaxDelay() time.Duration {
+	raw := strings.TrimSpace(os.Getenv("GITCLAW_LLM_RETRY_MAX_DELAY_SECONDS"))
+	if raw == "" {
+		return 30 * time.Second
+	}
+	value, err := strconv.Atoi(raw)
+	if err != nil || value < 0 {
+		return 30 * time.Second
+	}
+	if value > 300 {
+		value = 300
+	}
+	return time.Duration(value) * time.Second
+}
+
 func retryableLLMStatus(status int) bool {
 	return status == http.StatusTooManyRequests || status == http.StatusRequestTimeout || status >= 500
 }
 
 func llmRetryDelay(res *http.Response) time.Duration {
+	maxDelay := llmRetryMaxDelay()
+	clamp := func(delay time.Duration) time.Duration {
+		if delay < 0 {
+			return 0
+		}
+		if delay > maxDelay {
+			return maxDelay
+		}
+		return delay
+	}
 	if res != nil {
 		if value := strings.TrimSpace(res.Header.Get("Retry-After")); value != "" {
 			if seconds, err := strconv.Atoi(value); err == nil {
-				if seconds < 0 {
-					return 0
-				}
-				return time.Duration(seconds) * time.Second
+				return clamp(time.Duration(seconds) * time.Second)
 			}
 			if at, err := http.ParseTime(value); err == nil {
-				delay := time.Until(at)
-				if delay < 0 {
-					return 0
-				}
-				return delay
+				return clamp(time.Until(at))
 			}
 		}
 	}
-	return 5 * time.Second
+	return clamp(5 * time.Second)
 }
 
 func sleepContext(ctx context.Context, delay time.Duration) error {
