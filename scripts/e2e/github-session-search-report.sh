@@ -178,11 +178,12 @@ for expected in \
   'query_terms:' \
   'max_results: `10`' \
   'transcript_messages: `3`' \
-  'matched_messages: `2`' \
-  'matched_lines: `2`' \
-  'results_returned: `2`' \
+  'matched_messages: `3`' \
+  'matched_lines: `3`' \
+  'results_returned: `3`' \
   'raw_bodies_included: `false`' \
   "message=\`01\`" \
+  "message=\`02\`" \
   "message=\`03\`" \
   "source=\`issue\`" \
   "source=\`comment:" \
