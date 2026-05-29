@@ -41,12 +41,24 @@ func RenderSoulReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if query := requestedSoulSearchQuery(ev, cfg); query != "" {
 		return RenderSoulSearchReport(ev, repoContext, query, defaultSoulSearchMaxResults)
 	}
+	return renderSoulListReport(ev, repoContext, true)
+}
+
+func RenderSoulCLIReport(repoContext RepoContext) string {
+	return renderSoulListReport(Event{}, repoContext, false)
+}
+
+func renderSoulListReport(ev Event, repoContext RepoContext, includeIssue bool) string {
 	validation := ValidateSoulContext(repoContext)
 	var b strings.Builder
 	b.WriteString("## GitClaw Soul Report\n\n")
 	b.WriteString("Generated without a model call.\n\n")
-	fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
-	fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
 	fmt.Fprintf(&b, "- identity_policy_files: `%d`\n", soulIdentityDocumentCount(repoContext.Documents))
 	fmt.Fprintf(&b, "- memory_notes: `%d`\n\n", soulMemoryDocumentCount(repoContext.Documents))
 	writeSoulValidationSummary(&b, validation)

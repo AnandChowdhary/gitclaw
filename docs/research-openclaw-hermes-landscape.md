@@ -222,6 +222,12 @@ without exposing the contents in issue comments. The narrow command is
 `@gitclaw /soul`: list loaded identity, policy, and memory files with byte
 counts, line counts, and short hashes, but never dump file bodies.
 
+2026-05-30 soul-list follow-up: make the high-authority inventory surface
+explicit in both channels. `@gitclaw /soul` already lists the loaded portable
+context set, but `@gitclaw /soul list` and `gitclaw soul list` should be
+documented aliases so operators can inspect context provenance without
+confusing inventory with validation or search.
+
 2026-05-29 soul-validation follow-up: the same high-authority files should have
 a local safety gate, not just an inventory. GitClaw should treat
 `.gitclaw/SOUL.md`, `.gitclaw/IDENTITY.md`, `.gitclaw/USER.md`,

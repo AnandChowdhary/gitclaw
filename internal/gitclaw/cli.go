@@ -124,16 +124,34 @@ func runMemoryValidateCommand(args []string) error {
 
 func runSoulCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw soul validate|search <query>")
+		return fmt.Errorf("usage: gitclaw soul validate|list|search <query>")
 	}
 	switch args[0] {
 	case "validate":
 		return runSoulValidateCommand(args[1:])
+	case "list":
+		return runSoulListCommand(args[1:])
 	case "search":
 		return runSoulSearchCommand(args[1:])
 	default:
 		return fmt.Errorf("unknown soul command %q", args[0])
 	}
+}
+
+func runSoulListCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown soul list argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSoulCLIReport(repoContext))
+	return nil
 }
 
 func runSoulSearchCommand(args []string) error {

@@ -561,7 +561,7 @@ GitHub issue/comment event
   `channel-ingest`, `proactive enqueue`, `proactive init`,
   `memory validate`, `skills validate`, `skills list`, `skills info`,
   `skills search`,
-  `soul validate`, `soul search`, `tools validate`, `tools list`,
+  `soul validate`, `soul list`, `soul search`, `tools validate`, `tools list`,
   `tools search`, `doctor`, `commands`, `version`.
 
 `internal/github`
@@ -897,6 +897,7 @@ Validation is visible in the `/soul` report and locally through:
 
 ```bash
 gitclaw soul validate
+gitclaw soul list
 gitclaw soul search <query> --max-results 10
 ```
 
@@ -910,6 +911,7 @@ by OpenClaw and Hermes' portable workspace files:
 
 ```text
 @gitclaw /soul
+@gitclaw /soul list
 @gitclaw /soul search durable state layer
 ```
 
@@ -927,6 +929,8 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 
 It never dumps full file bodies. The hashes make the issue-visible report
 verifiable without exposing private user, memory, or policy text.
+`@gitclaw /soul list` is an explicit inventory alias for the same report,
+matching the local `gitclaw soul list` helper.
 
 When called as `@gitclaw /soul search <query>`, the command searches only the
 loaded high-authority context files with a local lexical matcher. It reports
@@ -2161,6 +2165,7 @@ assert the expected comments/labels, and close the issue in cleanup.
 21. **Soul inspection**
 
    - create a real issue with `@gitclaw /soul`,
+   - create a second real issue with `@gitclaw /soul list`,
    - assert the reply is marked `model="gitclaw/soul"`,
    - assert the report lists loaded identity, policy, user, and memory paths
      with byte counts, line counts, and hashes,
@@ -2568,6 +2573,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven soul-report E2E harness verifies `@gitclaw /soul` produces a
   deterministic high-authority context file audit with validation metadata,
   without a model call or body leakage.
+- A `gh`-driven soul-list E2E harness verifies `@gitclaw /soul list` is an
+  explicit inventory alias with the same body-free context file, memory-note,
+  hash, and validation metadata.
 - A `gh`-driven tools-report E2E harness verifies `@gitclaw /tools` produces a
   deterministic tool contract and active-output audit with validation metadata,
   without a model call or output-body leakage.
