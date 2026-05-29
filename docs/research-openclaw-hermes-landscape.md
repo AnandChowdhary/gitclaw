@@ -928,6 +928,12 @@ serverless: `@gitclaw /policy` reports preflight authorization, trusted actor
 state, managed labels, expected workflow permissions, write-intent gating, and
 policy-output metadata without exposing issue bodies.
 
+2026-05-30 policy-list follow-up: policy shape should also be inspectable
+before an issue event exists. Add `gitclaw policy list` as the local static
+policy mirror: trusted associations, managed labels, expected workflow
+permissions, model/run mode, and any policy-output metadata, while omitting
+event labels, actor state, preflight results, and write-intent state.
+
 Main attack pattern: an untrusted input enters through one surface, persists into memory/skills/cron/filesystem, then fires later through a different surface when the attacker is no longer present.
 
 Design requirements for `gitclaw`:

@@ -1118,6 +1118,7 @@ posture:
 
 ```text
 @gitclaw /policy
+@gitclaw /policy list
 ```
 
 The command runs after normal preflight authorization and context assembly, but
@@ -1134,6 +1135,18 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 
 It never dumps issue/comment bodies or the `gitclaw.policy` body. The report is
 for checking the enforcement shape and provenance without exposing prompt text.
+
+Local operators can inspect static policy shape without opening an issue:
+
+```bash
+gitclaw policy list
+```
+
+The local report omits event-only fields such as repository, issue number,
+preflight result, actor association, trigger state, event labels, and
+write-request detection. It still reports trusted associations, managed labels,
+expected workflow permissions, model/run mode, and active policy-output
+metadata if present.
 
 ## Authorization And Abuse Controls
 
@@ -2678,6 +2691,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven policy-report E2E harness verifies `@gitclaw /policy` produces
   a deterministic preflight/label/write-policy audit without a model call or
   issue-body leakage.
+- A `gh`-driven policy-list E2E harness verifies `@gitclaw /policy list` is an
+  explicit report alias, while local `gitclaw policy list` exposes static
+  policy metadata without issue-only fields.
 - A `gh`-driven session-report E2E harness verifies `@gitclaw /session`
   reconstructs a real multi-turn GitHub issue session without a model call or
   transcript-body leakage.

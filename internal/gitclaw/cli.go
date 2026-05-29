@@ -41,6 +41,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runModelsCommand(args[1:])
 	case "config", "configuration":
 		return runConfigCommand(args[1:])
+	case "policy":
+		return runPolicyCommand(args[1:])
 	case "doctor":
 		return runDoctorCommand(args[1:])
 	case "commands":
@@ -284,6 +286,22 @@ func runConfigCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderConfigCLIReport(cfg))
+	return nil
+}
+
+func runPolicyCommand(args []string) error {
+	if len(args) > 1 || (len(args) == 1 && args[0] != "list") {
+		return fmt.Errorf("usage: gitclaw policy [list]")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderPolicyCLIReport(cfg, repoContext))
 	return nil
 }
 

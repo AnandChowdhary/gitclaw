@@ -22,22 +22,34 @@ func IsPolicyReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderPolicyReport(ev Event, cfg Config, decision PreflightDecision, transcript []TranscriptMessage, repoContext RepoContext, writeRequested bool) string {
+	return renderPolicyReport(ev, cfg, decision, transcript, repoContext, writeRequested, true)
+}
+
+func RenderPolicyCLIReport(cfg Config, repoContext RepoContext) string {
+	return renderPolicyReport(Event{}, cfg, PreflightDecision{}, nil, repoContext, false, false)
+}
+
+func renderPolicyReport(ev Event, cfg Config, decision PreflightDecision, transcript []TranscriptMessage, repoContext RepoContext, writeRequested bool, includeIssue bool) string {
 	var b strings.Builder
 	b.WriteString("## GitClaw Policy Report\n\n")
 	b.WriteString("Generated without a model call.\n\n")
-	fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
-	fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
-	fmt.Fprintf(&b, "- event_kind: `%s`\n", ev.Kind)
-	fmt.Fprintf(&b, "- event_name: `%s`\n", ev.EventName)
-	fmt.Fprintf(&b, "- preflight_allowed: `%t`\n", decision.Allowed)
-	fmt.Fprintf(&b, "- preflight_code: `%s`\n", decision.Code)
-	fmt.Fprintf(&b, "- actor_association: `%s`\n", actorAssociation(ev))
-	fmt.Fprintf(&b, "- actor_trusted: `%t`\n", trustedAssociation(actorAssociation(ev), cfg))
-	fmt.Fprintf(&b, "- triggered: `%t`\n", triggered(ev, cfg))
-	fmt.Fprintf(&b, "- disabled_label_present: `%t`\n", hasLabel(ev.Issue.Labels, cfg.DisabledLabel))
-	fmt.Fprintf(&b, "- pull_request: `%t`\n", ev.Issue.IsPullRequest)
-	fmt.Fprintf(&b, "- write_request_detected: `%t`\n", writeRequested)
-	fmt.Fprintf(&b, "- transcript_messages: `%d`\n", len(transcript))
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+		fmt.Fprintf(&b, "- event_kind: `%s`\n", ev.Kind)
+		fmt.Fprintf(&b, "- event_name: `%s`\n", ev.EventName)
+		fmt.Fprintf(&b, "- preflight_allowed: `%t`\n", decision.Allowed)
+		fmt.Fprintf(&b, "- preflight_code: `%s`\n", decision.Code)
+		fmt.Fprintf(&b, "- actor_association: `%s`\n", actorAssociation(ev))
+		fmt.Fprintf(&b, "- actor_trusted: `%t`\n", trustedAssociation(actorAssociation(ev), cfg))
+		fmt.Fprintf(&b, "- triggered: `%t`\n", triggered(ev, cfg))
+		fmt.Fprintf(&b, "- disabled_label_present: `%t`\n", hasLabel(ev.Issue.Labels, cfg.DisabledLabel))
+		fmt.Fprintf(&b, "- pull_request: `%t`\n", ev.Issue.IsPullRequest)
+		fmt.Fprintf(&b, "- write_request_detected: `%t`\n", writeRequested)
+		fmt.Fprintf(&b, "- transcript_messages: `%d`\n", len(transcript))
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
 	fmt.Fprintf(&b, "- run_mode: `%s`\n", "read-only")
 	fmt.Fprintf(&b, "- model: `%s`\n\n", cfg.Model)
 	b.WriteString("Issue and comment bodies are not included in this report.\n\n")
@@ -52,8 +64,10 @@ func RenderPolicyReport(ev Event, cfg Config, decision PreflightDecision, transc
 		fmt.Fprintf(&b, "- `%s`\n", label)
 	}
 
-	b.WriteString("\n### Event Labels\n")
-	writeStringList(&b, sortedStrings(ev.Issue.Labels))
+	if includeIssue {
+		b.WriteString("\n### Event Labels\n")
+		writeStringList(&b, sortedStrings(ev.Issue.Labels))
+	}
 
 	b.WriteString("\n### Expected Workflow Permissions\n")
 	for _, contract := range policyWorkflowPermissions {

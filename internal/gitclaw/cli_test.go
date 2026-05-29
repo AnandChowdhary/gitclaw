@@ -443,6 +443,27 @@ model:
 	}
 }
 
+func TestPolicyListCommandReportsStaticPolicyWithoutIssueFields(t *testing.T) {
+	dir := t.TempDir()
+	writeTestFile(t, dir, "go.mod", "module example.com/policy-list\nPOLICY_LIST_REPO_TOKEN\n")
+	t.Setenv("GITCLAW_WORKDIR", dir)
+	output := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"policy", "list"}); err != nil {
+			t.Fatalf("policy list returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"GitClaw Policy Report", "scope: `local-cli`", "Generated without a model call", "run_mode: `read-only`", "model: `openai/gpt-5-mini`", "### Trusted Associations", "OWNER", "MEMBER", "COLLABORATOR", "### Managed Labels", "gitclaw:disabled", "gitclaw:write-requested", "gitclaw:heartbeat", "gitclaw:channel", "gitclaw:proactive", "### Expected Workflow Permissions", "`preflight`: `contents:read`, `issues:read`", "`handle`: `contents:read`, `issues:write`, `models:read`", "`backup`: `contents:write`, `issues:read`", "### Active Policy Outputs", "- none"} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("policy list output missing %q:\n%s", want, output)
+		}
+	}
+	for _, notWant := range []string{"repository:", "issue:", "event_kind:", "preflight_allowed:", "actor_association:", "write_request_detected:", "Event Labels", "POLICY_LIST_REPO_TOKEN"} {
+		if strings.Contains(output, notWant) {
+			t.Fatalf("policy list output unexpectedly included %q:\n%s", notWant, output)
+		}
+	}
+}
+
 func TestCommandsCommandReportsCatalog(t *testing.T) {
 	t.Setenv("GITCLAW_WORKDIR", t.TempDir())
 	output := captureStdout(t, func() {
@@ -450,7 +471,7 @@ func TestCommandsCommandReportsCatalog(t *testing.T) {
 			t.Fatalf("commands returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `7`", "local_cli_helpers: `28`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`gitclaw commands` command=`/help`", "`gitclaw channels list` command=`/channels`", "`gitclaw config list` command=`/config`", "`gitclaw models list` command=`/models`", "`gitclaw backup list` command=`/backup`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
+	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `7`", "local_cli_helpers: `29`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`gitclaw commands` command=`/help`", "`gitclaw channels list` command=`/channels`", "`gitclaw config list` command=`/config`", "`gitclaw models list` command=`/models`", "`gitclaw policy list` command=`/policy`", "`gitclaw backup list` command=`/backup`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("commands output missing %q:\n%s", want, output)
 		}
