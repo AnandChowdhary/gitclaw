@@ -25,7 +25,7 @@ gh auth status >/dev/null
 gh repo view "$GITCLAW_E2E_REPO" >/dev/null
 gh workflow view "$workflow_name" --repo "$GITCLAW_E2E_REPO" >/dev/null 2>&1 || die "repo is missing workflow: $workflow_name"
 
-for label in gitclaw "$heartbeat_label"; do
+for label in "$heartbeat_label"; do
   if ! gh label list --repo "$GITCLAW_E2E_REPO" --limit 1000 --json name --jq '.[].name' | grep -Fxq "$label"; then
     die "repo is missing required label: $label"
   fi
@@ -35,7 +35,7 @@ timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
 slot="e2e-${timestamp}"
 token="GITCLAW_HEARTBEAT_E2E_${timestamp}"
 heartbeat_context_token="GITCLAW_HEARTBEAT_CONTEXT_V1"
-title="@gitclaw heartbeat e2e ${timestamp}"
+title="GitClaw heartbeat e2e ${timestamp}"
 body="Live heartbeat E2E.
 
 When the heartbeat workflow runs, reply with exact token \`${token}\`.
@@ -46,7 +46,6 @@ issue_url="$(gh issue create \
   --repo "$GITCLAW_E2E_REPO" \
   --title "$title" \
   --body "$body" \
-  --label gitclaw \
   --label "$heartbeat_label")"
 issue_number="${issue_url##*/}"
 

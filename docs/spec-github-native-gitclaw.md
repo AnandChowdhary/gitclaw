@@ -967,7 +967,8 @@ assert the expected comments/labels, and close the issue in cleanup.
 
 9. **Heartbeat conversation**
 
-   - create an issue labeled `gitclaw` and `gitclaw:heartbeat`,
+   - create an issue labeled `gitclaw:heartbeat` without the normal
+     issue-chat trigger label or `@gitclaw` title prefix,
    - include an exact nonce token in the issue body,
    - dispatch `gitclaw-heartbeat.yml` with an explicit slot,
    - assert one heartbeat comment with the hidden `gitclaw:heartbeat` marker,
