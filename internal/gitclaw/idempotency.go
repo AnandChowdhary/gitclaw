@@ -11,6 +11,7 @@ import (
 var markerPattern = regexp.MustCompile(`<!--\s*gitclaw:assistant-turn\s+([^>]*)-->`)
 var heartbeatMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:heartbeat\s+([^>]*)-->`)
 var errorMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:error\s+([^>]*)-->`)
+var channelMessageMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-message\s+([^>]*)-->`)
 
 func IdempotencyKey(ev Event) string {
 	trigger := fmt.Sprintf("issue:%d", ev.Issue.Number)
@@ -82,6 +83,10 @@ func HasGitClawErrorMarker(body string) bool {
 	return errorMarkerPattern.MatchString(body)
 }
 
+func HasChannelMessageMarker(body string) bool {
+	return channelMessageMarkerPattern.MatchString(body)
+}
+
 func HasHeartbeatMarker(body string) bool {
 	return heartbeatMarkerPattern.MatchString(body)
 }
@@ -98,6 +103,10 @@ func ContainsIdempotencyKey(body, key string) bool {
 
 func StripMarker(body string) string {
 	return strings.TrimSpace(markerPattern.ReplaceAllString(body, ""))
+}
+
+func StripChannelMessageMarker(body string) string {
+	return strings.TrimSpace(channelMessageMarkerPattern.ReplaceAllString(body, ""))
 }
 
 func escapeMarkerValue(value string) string {

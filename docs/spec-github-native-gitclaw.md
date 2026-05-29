@@ -657,6 +657,19 @@ The GitHub issue remains the canonical session, audit log, authorization unit,
 and replay source. Channel messages become issue comments with provenance, not
 a separate hidden conversation store.
 
+Mirrored channel comments use a hidden provenance marker before the user-visible
+message body:
+
+```md
+<!-- gitclaw:channel-message channel="telegram" message_id="123" author="telegram:42" -->
+User's mirrored message text.
+```
+
+GitClaw reconstructs these comments as user transcript messages even when they
+were posted by `github-actions[bot]`, but the message body remains untrusted
+input in the prompt. The `message_id` should also be reused as the
+`workflow_dispatch` `dispatch_id`.
+
 ## Channel Bridge Strategy
 
 The hard constraint: Slack and Telegram cannot directly call
@@ -1078,7 +1091,18 @@ assert the expected comments/labels, and close the issue in cleanup.
    - dispatch the same `dispatch_id` again,
    - assert no duplicate assistant comment is created.
 
-11. **Tool/context usage**
+11. **Channel message reconstruction**
+
+   - create an untriggered issue,
+   - post a comment whose body starts with
+     `<!-- gitclaw:channel-message ... -->`,
+   - add the `gitclaw` label after the mirrored comment is written,
+   - dispatch the main workflow with `dispatch_id` equal to the channel message
+     ID,
+   - assert the assistant sees the mirrored message body and returns its exact
+     nonce token.
+
+12. **Tool/context usage**
 
    - ask the assistant to read a concrete repository file such as `go.mod`,
    - assert the reply includes an exact expected token or module path,
@@ -1130,6 +1154,8 @@ MVP is not complete until:
   comment, and proves same-slot idempotency,
 - the workflow-dispatch harness dispatches the main handler against a real
   issue and proves same-dispatch-id idempotency,
+- the channel-message harness verifies a hidden `gitclaw:channel-message`
+  comment is reconstructed as user input during a dispatched run,
 - the live harness verifies status labels end at `gitclaw:done` without
   `gitclaw:running` or `gitclaw:error`,
 - the failure harness forces a real invalid-model run and verifies a bounded
@@ -1239,6 +1265,8 @@ examples/workflows/gitclaw.yml
   `.gitclaw/HEARTBEAT.md`, exact token content, and same-slot idempotency.
 - A `gh`-driven workflow-dispatch E2E harness verifies the main handler can be
   woken for a specific issue and deduped by dispatch ID.
+- A `gh`-driven channel-message E2E harness verifies a mirrored channel
+  comment is included in the dispatched conversation transcript.
 - A `gh`-driven failure E2E harness verifies the safe failure path against a
   real Actions/model failure.
 - A `gh`-driven prompt-budget E2E harness verifies a large real issue still

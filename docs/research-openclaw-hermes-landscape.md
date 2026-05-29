@@ -304,6 +304,13 @@ explicit. Channel bridges should write durable issue/comment state first, then
 dispatch the canonical issue with the channel message ID as `dispatch_id`. That
 keeps replay and dedupe in GitHub instead of introducing a hidden queue.
 
+2026-05-29 channel transcript follow-up: OpenClaw's gateway owns provider
+identity and provenance before passing messages to the agent. GitClaw's
+equivalent is a hidden `gitclaw:channel-message` comment marker carrying
+channel and source message IDs. The marker lets Actions-authored bridge
+comments survive transcript reconstruction as user messages while still marking
+the message body as untrusted input.
+
 Hermes' session docs also expose a practical backup primitive:
 `hermes sessions export backup.jsonl` writes conversation metadata and messages
 as durable JSONL. GitClaw should preserve the same principle, but use GitHub

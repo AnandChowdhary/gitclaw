@@ -42,6 +42,18 @@ func BuildTranscript(ev Event, comments []Comment) []TranscriptMessage {
 		if HasGitClawErrorMarker(comment.Body) {
 			continue
 		}
+		if HasChannelMessageMarker(comment.Body) {
+			transcript = append(transcript, TranscriptMessage{
+				Role:              "user",
+				Body:              StripChannelMessageMarker(comment.Body),
+				Actor:             comment.User.Login,
+				AuthorAssociation: comment.AuthorAssociation,
+				CommentID:         comment.ID,
+				Edited:            comment.UpdatedAt != "" && comment.UpdatedAt != comment.CreatedAt,
+				Trusted:           false,
+			})
+			continue
+		}
 		if comment.User.IsBot() {
 			continue
 		}
