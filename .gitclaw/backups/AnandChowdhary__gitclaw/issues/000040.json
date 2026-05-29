@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T17:12:45Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 40,
+    "title": "@gitclaw /proactive e2e 20260529T171108Z",
+    "body": "Live proactive-report E2E.\n\nHidden proactive report body token: GITCLAW_PROACTIVE_REPORT_E2E_20260529T171108Z\nThis should produce a deterministic proactive report without a model call.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /proactive e2e 20260529T171108Z\n\nLive proactive-report E2E.\n\nHidden proactive report body token: GITCLAW_PROACTIVE_REPORT_E2E_20260529T171108Z\nThis should produce a deterministic proactive report without a model call.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Proactive Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#40`\n- proactive_label: `gitclaw:proactive`\n- trigger_label: `gitclaw`\n- workflow_path: `.github/workflows/gitclaw-proactive.yml`\n- workflow_present: `true`\n- workflow_dispatch_trigger: `true`\n- schedule_trigger: `true`\n- prompt_files: `1`\n- proactive_run_issue: `false`\n- issue_title_sha256_12: `6e6d57de0ea9`\n\nProactive jobs create or reuse visible GitHub issues, then wake the normal issue handler with `workflow_dispatch`. Prompt bodies and issue bodies are not included in this report.\n\n### Workflow\n- `.github/workflows/gitclaw-proactive.yml` bytes=`2373` lines=`71` workflow_dispatch=`true` schedule=`true` sha256_12=`0f868c2d4ff5`\n\n### Prompt Files\n- `.gitclaw/proactive/repo-hygiene.md` bytes=`591` lines=`11` sha256_12=`704e85ada3f3`\n\n### Enqueue Contract\n- `gitclaw proactive enqueue --name \u003cname\u003e --slot \u003cslot\u003e --prompt-file .gitclaw/proactive/\u003cname\u003e.md`\n- one issue per `name + slot`\n- dispatch id: `proactive-\u003cname\u003e-\u003cslot\u003e`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4577855171,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4577855171,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26651257696\" event_id=\"issue-40\" model=\"gitclaw/proactive\" idempotency_key=\"2d51d0a6d516410ca9c72e1c67e2d148\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26651257696\" --\u003e\n## GitClaw Proactive Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#40`\n- proactive_label: `gitclaw:proactive`\n- trigger_label: `gitclaw`\n- workflow_path: `.github/workflows/gitclaw-proactive.yml`\n- workflow_present: `true`\n- workflow_dispatch_trigger: `true`\n- schedule_trigger: `true`\n- prompt_files: `1`\n- proactive_run_issue: `false`\n- issue_title_sha256_12: `6e6d57de0ea9`\n\nProactive jobs create or reuse visible GitHub issues, then wake the normal issue handler with `workflow_dispatch`. Prompt bodies and issue bodies are not included in this report.\n\n### Workflow\n- `.github/workflows/gitclaw-proactive.yml` bytes=`2373` lines=`71` workflow_dispatch=`true` schedule=`true` sha256_12=`0f868c2d4ff5`\n\n### Prompt Files\n- `.gitclaw/proactive/repo-hygiene.md` bytes=`591` lines=`11` sha256_12=`704e85ada3f3`\n\n### Enqueue Contract\n- `gitclaw proactive enqueue --name \u003cname\u003e --slot \u003cslot\u003e --prompt-file .gitclaw/proactive/\u003cname\u003e.md`\n- one issue per `name + slot`\n- dispatch id: `proactive-\u003cname\u003e-\u003cslot\u003e`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T17:12:12Z",
+      "updated_at": "2026-05-29T17:12:12Z"
+    }
+  ]
+}
