@@ -39,6 +39,20 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 	if writeRequested {
 		repoContext.ToolOutputs = append(repoContext.ToolOutputs, WriteRequestPolicyOutput())
 	}
+	if IsContextReportRequest(ev, cfg) {
+		body := RenderAssistantComment(Marker{
+			RunID:          envFirst("GITHUB_RUN_ID", "local"),
+			EventID:        eventID(ev),
+			Model:          "gitclaw/context",
+			IdempotencyKey: key,
+			RunURL:         actionRunURL(ev),
+		}, RenderContextReport(ev, cfg, transcript, repoContext))
+		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post context report comment: %w", err))
+		}
+		status.SetDone()
+		return nil
+	}
 	response, err := llm.Complete(ctx, LLMRequest{
 		Event:      ev,
 		Transcript: transcript,

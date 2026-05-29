@@ -137,6 +137,66 @@ func TestHandlePassesRepoContextToLLM(t *testing.T) {
 	}
 }
 
+func TestHandleContextCommandPostsReportWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	if err := os.WriteFile(filepath.Join(root, "go.mod"), []byte("module github.com/AnandChowdhary/gitclaw\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.MkdirAll(filepath.Join(root, ".gitclaw", "SKILLS", "repo-reader"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(root, ".gitclaw", "SOUL.md"), []byte("Be repo-native."), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(root, ".gitclaw", "SKILLS", "repo-reader", "SKILL.md"), []byte(`---
+name: repo-reader
+description: Read repository files.
+---
+
+Skill token.
+`), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 90,
+			"title": "@gitclaw /context",
+			"body": "Please inspect go.mod with the repo-reader skill.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{90: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic context command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Context Report", "Generated without a model call", ".gitclaw/SOUL.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", "gitclaw.list_files", "gitclaw.read_file", "model=\"gitclaw/context\""} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("context report missing %q:\n%s", want, body)
+		}
+	}
+	if !hasLabel(github.IssueLabels[90], "gitclaw:done") || hasLabel(github.IssueLabels[90], "gitclaw:running") || hasLabel(github.IssueLabels[90], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[90])
+	}
+}
+
 func TestHandleLabelsWriteRequestsAndAddsPolicyContext(t *testing.T) {
 	ev, err := ParseEvent("issues", []byte(`{
 		"action": "opened",

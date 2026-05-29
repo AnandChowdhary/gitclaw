@@ -482,7 +482,8 @@ GitHub issue/comment event
 `cmd/gitclaw`
 
 - CLI entry point.
-- Subcommands: `preflight`, `handle`, `backup`, `version`.
+- Subcommands: `preflight`, `handle`, `backup`, `heartbeat`,
+  `channel-ingest`, `proactive enqueue`, `version`.
 
 `internal/github`
 
@@ -507,6 +508,9 @@ GitHub issue/comment event
 - Builds a skill index from `SKILL.md` frontmatter and loads full skill bodies
   only when selected or marked always-on.
 - Runs bounded read-only repository tools before the model turn.
+- Supports deterministic `@gitclaw /context` reports so maintainers can inspect
+  which context files, skills, and tool outputs were assembled without making a
+  model call.
 
 `internal/agent`
 
@@ -631,6 +635,28 @@ GitClaw v1 adds a small deterministic tool layer before the model call:
 
 Tool outputs are inserted into the prompt as auditable context blocks. They are
 not autonomous shell execution, and they do not mutate the repository.
+
+## Context Inspection Command
+
+GitClaw supports a deterministic context inspection command inspired by
+OpenClaw's `/context` diagnostics:
+
+```text
+@gitclaw /context
+```
+
+The command runs after normal preflight authorization and context assembly, but
+before model inference. It posts a `gitclaw:assistant-turn` comment with
+`model="gitclaw/context"` and summarizes:
+
+- selected context files,
+- selected full skill documents,
+- read-only tool outputs and their input/size,
+- transcript and prompt-budget settings.
+
+It never dumps full file bodies, skill bodies, prompts, or tool output contents
+into the issue. This makes context visibility cheap enough for routine E2E
+debugging and avoids burning GitHub Models quota for a diagnostic turn.
 
 ## Labels
 
@@ -1277,6 +1303,14 @@ assert the expected comments/labels, and close the issue in cleanup.
    - ask for a selected local skill token,
    - assert the targeted skill is loaded and irrelevant skills stay unloaded.
 
+15. **Context inspection**
+
+   - create a real issue with `@gitclaw /context`,
+   - assert the reply is marked `model="gitclaw/context"`,
+   - assert the report lists repo context files, selected skills, and read-only
+     tool output names,
+   - assert the run succeeds without requiring a model provider response.
+
 ### Example Live Commands
 
 The script can use commands in this shape:
@@ -1441,6 +1475,8 @@ examples/workflows/gitclaw.yml
   workflow end to end.
 - A `gh`-driven proactive E2E harness verifies the generic proactive enqueue
   workflow end to end.
+- A `gh`-driven context-report E2E harness verifies `@gitclaw /context`
+  produces a deterministic context summary without a model call.
 - A `gh`-driven failure E2E harness verifies the safe failure path against a
   real Actions/model failure.
 - A `gh`-driven prompt-budget E2E harness verifies a large real issue still

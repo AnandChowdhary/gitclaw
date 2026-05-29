@@ -287,6 +287,13 @@ should use the same principle before adding semantic compaction: cap the final
 prompt, cap transcript message count, preserve the original issue plus the
 recent tail, and include explicit truncation markers so failures are auditable.
 
+2026-05-29 context-inspection follow-up: OpenClaw's `/context` diagnostics
+make context contributors visible before debugging model behavior. GitClaw's
+serverless equivalent should be a deterministic issue command, `@gitclaw
+/context`, that posts selected context files, selected skills, and read-only
+tool output names/sizes without dumping full prompt contents or calling a
+model.
+
 ### Skills
 
 Hermes skills are on-demand knowledge documents, also compatible with AgentSkills. The default local source of truth is `~/.hermes/skills/`, with optional external directories.
