@@ -69,3 +69,39 @@ func TestValidateSoulContextAcceptsCurrentSoulShape(t *testing.T) {
 		}
 	}
 }
+
+func TestRenderSoulSearchReportFindsContextWithoutBodies(t *testing.T) {
+	repoContext := RepoContext{Documents: []ContextDocument{
+		{Path: ".gitclaw/SOUL.md", Body: "Repo-native operating guidance SOUL_SEARCH_BODY_TOKEN."},
+		{Path: ".gitclaw/IDENTITY.md", Body: "Identity details."},
+		{Path: ".gitclaw/USER.md", Body: "User operating preference USER_SEARCH_BODY_TOKEN."},
+	}}
+	body := RenderSoulSearchReport(Event{}, repoContext, "operating SOUL_SEARCH_QUERY_TOKEN", 2)
+	for _, want := range []string{
+		"GitClaw Soul Search Report",
+		"scope: `local-cli`",
+		"soul_search_status: `ok`",
+		"query_sha256_12:",
+		"query_terms:",
+		"max_results: `2`",
+		"files_scanned: `3`",
+		"matched_files: `2`",
+		"matched_lines: `2`",
+		"results_returned: `2`",
+		"raw_bodies_included: `false`",
+		"path=`.gitclaw/SOUL.md`",
+		"category=`soul`",
+		"path=`.gitclaw/USER.md`",
+		"category=`user`",
+		"line_sha256_12=",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("soul search report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SOUL_SEARCH_BODY_TOKEN", "USER_SEARCH_BODY_TOKEN", "SOUL_SEARCH_QUERY_TOKEN", "operating SOUL_SEARCH_QUERY_TOKEN"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("soul search report leaked body/query token %q:\n%s", leaked, body)
+		}
+	}
+}

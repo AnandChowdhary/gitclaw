@@ -214,6 +214,14 @@ required minimal context set, warn on noncanonical dated memory filenames, and
 expose the result in both `/soul` and `gitclaw soul validate` without dumping
 file bodies.
 
+2026-05-29 soul-search follow-up: OpenClaw's default workspace instructions
+require reading `SOUL.md`, `USER.md`, today's/yesterday's memory notes, and
+`MEMORY.md` before responding, while Hermes frames `SOUL.md` as stable
+character/behavior guidance rather than memory. GitClaw should make that
+high-authority context searchable without making it public: `@gitclaw /soul
+search <query>` and `gitclaw soul search <query>` should report only query
+hashes, paths, categories, line numbers, scores, and file/line hashes.
+
 ### Skills And Plugins
 
 OpenClaw uses AgentSkills-compatible skill folders with a `SKILL.md`. Skills can come from:
@@ -958,6 +966,7 @@ Recommended non-goals for the first spec:
 ## Sources
 
 - OpenClaw official docs: https://docs.openclaw.ai/llms.txt
+- OpenClaw default AGENTS.md template: https://docs.openclaw.ai/reference/AGENTS.default
 - OpenClaw about page: https://openclawlab.com/en/about/
 - OpenClaw GitHub: https://github.com/openclaw/openclaw
 - OpenClaw agent runtime docs: https://docs.openclaw.ai/concepts/agent
@@ -989,6 +998,7 @@ Recommended non-goals for the first spec:
 - Hermes profiles docs: https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 - Hermes migrate from OpenClaw docs: https://hermes-agent.nousresearch.com/docs/guides/migrate-from-openclaw
 - Hermes memory docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/memory.md
+- Hermes three-layer memory explainer: https://hermes-agent.ai/blog/hermes-agent-memory-system
 - Hermes skills docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/skills.md
 - Hermes tools docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/tools/
 - Hermes tools reference: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/reference/tools-reference.md

@@ -559,7 +559,8 @@ GitHub issue/comment event
   `heartbeat`,
   `channel-ingest`, `proactive enqueue`, `proactive init`,
   `memory validate`, `skills validate`, `skills info`, `skills search`,
-  `soul validate`, `tools validate`, `doctor`, `commands`, `version`.
+  `soul validate`, `soul search`, `tools validate`, `doctor`, `commands`,
+  `version`.
 
 `internal/github`
 
@@ -879,6 +880,7 @@ Validation is visible in the `/soul` report and locally through:
 
 ```bash
 gitclaw soul validate
+gitclaw soul search <query> --max-results 10
 ```
 
 The validation output includes only paths, counts, and short finding details.
@@ -891,6 +893,7 @@ by OpenClaw and Hermes' portable workspace files:
 
 ```text
 @gitclaw /soul
+@gitclaw /soul search durable state layer
 ```
 
 The command runs after normal preflight authorization and context assembly, but
@@ -907,6 +910,15 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 
 It never dumps full file bodies. The hashes make the issue-visible report
 verifiable without exposing private user, memory, or policy text.
+
+When called as `@gitclaw /soul search <query>`, the command searches only the
+loaded high-authority context files with a local lexical matcher. It reports
+the query hash and term count, scanned and matched file counts, result limits,
+paths, categories, line numbers, scores, and file/line hashes. It never emits
+raw soul, user, memory, tools, heartbeat, issue, comment, prompt, or raw query
+bodies. This is the body-safe equivalent of inspecting OpenClaw/Hermes
+workspace context when debugging why the assistant should have remembered a
+stable identity, policy, or operating convention.
 
 ## Read-Only Tool Context
 

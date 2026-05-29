@@ -124,14 +124,61 @@ func runMemoryValidateCommand(args []string) error {
 
 func runSoulCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw soul validate")
+		return fmt.Errorf("usage: gitclaw soul validate|search <query>")
 	}
 	switch args[0] {
 	case "validate":
 		return runSoulValidateCommand(args[1:])
+	case "search":
+		return runSoulSearchCommand(args[1:])
 	default:
 		return fmt.Errorf("unknown soul command %q", args[0])
 	}
+}
+
+func runSoulSearchCommand(args []string) error {
+	maxResults := defaultSoulSearchMaxResults
+	queryFlag := ""
+	var queryParts []string
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--query":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--query requires a value")
+			}
+			queryFlag = args[i+1]
+			i++
+		case "--max-results":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--max-results requires a value")
+			}
+			parsed, err := strconv.Atoi(args[i+1])
+			if err != nil || parsed <= 0 {
+				return fmt.Errorf("invalid --max-results: %q", args[i+1])
+			}
+			maxResults = parsed
+			i++
+		default:
+			queryParts = append(queryParts, args[i])
+		}
+	}
+	query := strings.TrimSpace(strings.Join(queryParts, " "))
+	if strings.TrimSpace(queryFlag) != "" {
+		query = strings.TrimSpace(queryFlag)
+	}
+	if query == "" {
+		return fmt.Errorf("usage: gitclaw soul search <query>")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContext(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "soul search " + query}})
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSoulSearchReport(Event{}, repoContext, query, maxResults))
+	return nil
 }
 
 func runSoulValidateCommand(args []string) error {

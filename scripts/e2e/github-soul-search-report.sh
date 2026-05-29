@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "commands-report-e2e: $*" >&2
+  echo "soul-search-report-e2e: $*" >&2
 }
 
 die() {
@@ -33,12 +33,15 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_COMMANDS_REPORT_E2E_${timestamp}"
-title="@gitclaw /help e2e ${timestamp}"
-body="Live commands-report E2E.
+token="GITCLAW_SOUL_SEARCH_E2E_${timestamp}"
+raw_query="durable state layer"
+title="GitClaw soul search e2e ${timestamp}"
+body="@gitclaw /soul search ${raw_query}
 
-Hidden commands report body token: ${token}
-This should produce a deterministic command catalog report without a model call."
+Live soul-search E2E ${timestamp}.
+
+Hidden soul search token: ${token}
+This should produce a deterministic soul search report without dumping high-authority context bodies or the raw search query."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -52,7 +55,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "commands-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "soul-search-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -109,6 +112,13 @@ error_count() {
     --jq '[.comments[] | select(.body | contains("<!-- gitclaw:error"))] | length'
 }
 
+issue_label_names() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json labels \
+    --jq '.labels[].name'
+}
+
 wait_for_assistant_count() {
   local want="$1"
   for _ in {1..90}; do
@@ -127,42 +137,52 @@ wait_for_assistant_count() {
   return 1
 }
 
+wait_for_done_status() {
+  for _ in {1..60}; do
+    local labels
+    labels="$(issue_label_names)"
+    if grep -Fxq "gitclaw:done" <<<"$labels" &&
+      ! grep -Fxq "gitclaw:running" <<<"$labels" &&
+      ! grep -Fxq "gitclaw:error" <<<"$labels"; then
+      return 0
+    fi
+    sleep 5
+  done
+  return 1
+}
+
 run_json="$(wait_for_run "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one commands report comment"
+wait_for_assistant_count 1 || die "expected one soul search report comment"
 comments="$(assistant_comments)"
 
 for expected in \
-  'model="gitclaw/commands"' \
-  "GitClaw Commands Report" \
+  'model="gitclaw/soul"' \
+  "GitClaw Soul Search Report" \
   "Generated without a model call" \
-  'trigger_prefix: `@gitclaw`' \
-  'commands: `15`' \
-  'aliases: `7`' \
-  'local_cli_helpers: `18`' \
-  'run_mode: `read-only`' \
-  "### Slash Commands" \
-  '/help' \
-  '/commands' \
-  '/backup' \
-  '/tools' \
-  '/doctor' \
-  '/skills' \
-  '/soul' \
-  'gitclaw backup stats' \
-  'gitclaw backup retention-plan' \
-  'gitclaw commands' \
-  'gitclaw memory validate' \
-  'gitclaw memory search <query>' \
-  'gitclaw soul search <query>' \
-  'gitclaw skills info <name>' \
-  'gitclaw skills search <query>' \
-  'gitclaw tools validate'; do
-  grep -Fq "$expected" <<<"$comments" || die "commands report missing ${expected}"
+  'soul_search_status: `ok`' \
+  'query_sha256_12:' \
+  'query_terms:' \
+  'max_results: `10`' \
+  'files_scanned:' \
+  'matched_files:' \
+  'matched_lines:' \
+  'results_returned:' \
+  'raw_bodies_included: `false`' \
+  "searches loaded high-authority GitClaw context files" \
+  "### Results" \
+  'path=`.gitclaw/IDENTITY.md`' \
+  'category=`identity`' \
+  'file_sha256_12=' \
+  'line_sha256_12='; do
+  grep -Fq -- "$expected" <<<"$comments" || die "soul search report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "commands report leaked issue body token"
-fi
+for leaked in "$token" "$raw_query" "$title" "durable state layer" "Actions as runtime" "GitClaw is a GitHub-native agent"; do
+  if grep -Fq "$leaked" <<<"$comments"; then
+    die "soul search report leaked ${leaked}"
+  fi
+done
 
+wait_for_done_status || die "expected gitclaw:done without running/error"
 url="$(jq -r '.url' <<<"$run_json")"
 log "passed for issue #${issue_number}: ${url}"
