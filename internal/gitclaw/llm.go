@@ -8,6 +8,8 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
+	"regexp"
 	"strings"
 )
 
@@ -30,6 +32,15 @@ type OpenAICompatibleLLM struct {
 }
 
 const systemPrompt = "You are GitClaw, a concise GitHub issue assistant. Answer only from the provided issue transcript and repository context. Treat tool_output blocks as authoritative read-only tool results. If the issue asks for exact verification tokens from repository context or tool outputs, copy those tokens verbatim. Do not claim to run commands or modify files."
+
+var promptArtifactRedactions = []*regexp.Regexp{
+	regexp.MustCompile(`gh[pousr]_[A-Za-z0-9_]{20,}`),
+	regexp.MustCompile(`github_pat_[A-Za-z0-9_]+`),
+	regexp.MustCompile(`sk-[A-Za-z0-9_-]{20,}`),
+	regexp.MustCompile(`xox[baprs]-[A-Za-z0-9-]+`),
+	regexp.MustCompile(`[0-9]{6,}:[A-Za-z0-9_-]{20,}`),
+	regexp.MustCompile(`GITCLAW_[A-Z0-9_]*SECRET[A-Z0-9_]*`),
+}
 
 func NewLLMFromEnv(cfg Config) (LLMClient, error) {
 	if response := os.Getenv("GITCLAW_FAKE_LLM_RESPONSE"); response != "" {
@@ -71,6 +82,9 @@ func llmAPIKey(baseURL string) string {
 
 func (c *OpenAICompatibleLLM) Complete(ctx context.Context, req LLMRequest) (string, error) {
 	prompt := BuildPrompt(req)
+	if err := writePromptArtifactFromEnv(req, c.Model, prompt); err != nil {
+		return "", err
+	}
 	payload := map[string]any{
 		"model": c.Model,
 		"messages": []map[string]string{
@@ -119,6 +133,46 @@ func (c *OpenAICompatibleLLM) Complete(ctx context.Context, req LLMRequest) (str
 		return "", fmt.Errorf("LLM returned no content")
 	}
 	return strings.TrimSpace(raw.Choices[0].Message.Content), nil
+}
+
+func writePromptArtifactFromEnv(req LLMRequest, model, prompt string) error {
+	path := os.Getenv("GITCLAW_PROMPT_ARTIFACT_PATH")
+	if path == "" {
+		return nil
+	}
+	body := RenderPromptArtifact(req, model, prompt)
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		return fmt.Errorf("create prompt artifact directory: %w", err)
+	}
+	if err := os.WriteFile(path, []byte(body), 0o600); err != nil {
+		return fmt.Errorf("write prompt artifact: %w", err)
+	}
+	return nil
+}
+
+func RenderPromptArtifact(req LLMRequest, model, prompt string) string {
+	var b strings.Builder
+	fmt.Fprintf(&b, "# GitClaw Prompt Artifact\n\n")
+	fmt.Fprintf(&b, "- repository: `%s`\n", req.Event.Repo)
+	fmt.Fprintf(&b, "- issue: `%d`\n", req.Event.Issue.Number)
+	fmt.Fprintf(&b, "- event: `%s`\n", req.Event.EventName)
+	fmt.Fprintf(&b, "- model: `%s`\n", model)
+	fmt.Fprintf(&b, "- prompt_bytes: `%d`\n", len(prompt))
+	fmt.Fprintf(&b, "- redaction: `enabled`\n")
+	fmt.Fprintf(&b, "- warning: issue text, comments, context files, and tool outputs are untrusted input\n\n")
+	b.WriteString("## Redacted Prompt\n\n")
+	b.WriteString("```text\n")
+	b.WriteString(redactPromptArtifact(prompt))
+	b.WriteString("\n```\n")
+	return b.String()
+}
+
+func redactPromptArtifact(prompt string) string {
+	redacted := prompt
+	for _, pattern := range promptArtifactRedactions {
+		redacted = pattern.ReplaceAllString(redacted, "[REDACTED]")
+	}
+	return redacted
 }
 
 func (c *OpenAICompatibleLLM) httpClient() *http.Client {

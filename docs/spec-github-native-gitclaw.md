@@ -823,7 +823,20 @@ gitclaw-issue-<number>-run-<run_id>-summary.json
 gitclaw-issue-<number>-run-<run_id>-patch.diff
 ```
 
-Prompt artifacts should redact secrets and be disabled by default for private-sensitive repos.
+Prompt artifacts are disabled by default. They can be enabled for a run by
+setting `GITCLAW_PROMPT_ARTIFACT_PATH`; the GitHub workflow wires this for the
+test-only `gitclaw:e2e-prompt-artifact` label and uploads:
+
+```text
+gitclaw-issue-<number>-run-<run_id>-prompt
+```
+
+Prompt artifacts must:
+
+- redact known token/secret shapes before upload,
+- mark issue text, comments, context files, and tool outputs as untrusted input,
+- include basic run metadata and prompt byte count,
+- never be printed into workflow logs.
 
 ## Git-Backed Backups
 
@@ -1065,6 +1078,8 @@ MVP is not complete until:
   issue-secret token,
 - the prompt-budget harness creates a large real issue and verifies the
   assistant still sees the preserved tail request under the bounded prompt,
+- the prompt-artifact harness downloads a real Actions artifact and verifies
+  redaction plus untrusted-input warnings,
 - bot loop prevention is verified live,
 - the issue is cleaned up or labeled with an E2E retention label.
 
@@ -1164,6 +1179,8 @@ examples/workflows/gitclaw.yml
   real Actions/model failure.
 - A `gh`-driven prompt-budget E2E harness verifies a large real issue still
   produces a bounded, correct assistant reply.
+- A `gh`-driven prompt-artifact E2E harness verifies opt-in redacted prompt
+  artifacts against a real Actions artifact download.
 
 ## Open Questions
 

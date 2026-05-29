@@ -54,11 +54,23 @@ jobs:
           if [[ "${GITCLAW_E2E_INVALID_MODEL}" == "true" ]]; then
             model="openai/not-a-real-model-for-gitclaw-e2e"
           fi
+          if [[ "${GITCLAW_PROMPT_ARTIFACT_ENABLED}" == "true" ]]; then
+            export GITCLAW_PROMPT_ARTIFACT_PATH="${RUNNER_TEMP}/gitclaw-prompt-artifacts/prompt.md"
+          fi
           GITCLAW_MODEL="$model" go run ./cmd/gitclaw handle --event "$GITHUB_EVENT_PATH"
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
           GITCLAW_E2E_INVALID_MODEL: ${{ contains(github.event.issue.labels.*.name, 'gitclaw:e2e-invalid-model') }}
+          GITCLAW_PROMPT_ARTIFACT_ENABLED: ${{ contains(github.event.issue.labels.*.name, 'gitclaw:e2e-prompt-artifact') }}
+
+      - if: always() && contains(github.event.issue.labels.*.name, 'gitclaw:e2e-prompt-artifact')
+        uses: actions/upload-artifact@v4
+        with:
+          name: gitclaw-issue-${{ github.event.issue.number }}-run-${{ github.run_id }}-prompt
+          path: ${{ runner.temp }}/gitclaw-prompt-artifacts/prompt.md
+          if-no-files-found: error
+          retention-days: 7
 
   backup:
     needs: [preflight, handle]

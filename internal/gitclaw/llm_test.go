@@ -1,6 +1,8 @@
 package gitclaw
 
 import (
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -129,5 +131,45 @@ func TestBuildPromptEnforcesMaxPromptBytes(t *testing.T) {
 		if !strings.Contains(prompt, want) {
 			t.Fatalf("bounded prompt missing %q:\n%s", want, prompt)
 		}
+	}
+}
+
+func TestRenderPromptArtifactRedactsSecrets(t *testing.T) {
+	secret := "GITCLAW_ARTIFACT_SECRET_20260529"
+	prompt := "User asked with " + secret + " and token ghp_abcdefghijklmnopqrstuvwxyz123456"
+	artifact := RenderPromptArtifact(LLMRequest{
+		Event: Event{
+			Repo:      "owner/repo",
+			EventName: "issues",
+			Issue:     Issue{Number: 12},
+		},
+	}, "openai/gpt-5-mini", prompt)
+	for _, notWant := range []string{secret, "ghp_abcdefghijklmnopqrstuvwxyz123456"} {
+		if strings.Contains(artifact, notWant) {
+			t.Fatalf("artifact leaked %q:\n%s", notWant, artifact)
+		}
+	}
+	for _, want := range []string{"redaction: `enabled`", "untrusted input", "[REDACTED]"} {
+		if !strings.Contains(artifact, want) {
+			t.Fatalf("artifact missing %q:\n%s", want, artifact)
+		}
+	}
+}
+
+func TestWritePromptArtifactFromEnv(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "prompt.md")
+	t.Setenv("GITCLAW_PROMPT_ARTIFACT_PATH", path)
+	err := writePromptArtifactFromEnv(LLMRequest{
+		Event: Event{Repo: "owner/repo", EventName: "issues", Issue: Issue{Number: 2}},
+	}, "model", "prompt")
+	if err != nil {
+		t.Fatalf("writePromptArtifactFromEnv returned error: %v", err)
+	}
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read artifact: %v", err)
+	}
+	if !strings.Contains(string(data), "GitClaw Prompt Artifact") {
+		t.Fatalf("unexpected artifact body:\n%s", data)
 	}
 }

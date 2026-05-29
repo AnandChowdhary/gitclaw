@@ -529,6 +529,12 @@ copy prompt text, user-provided secrets, or raw model-provider response bodies
 back into the issue. The full trace belongs in Actions logs; the issue should
 only carry a bounded diagnostic.
 
+2026-05-29 prompt-artifact follow-up: OpenClaw/Hermes-style systems need
+replayable run evidence, but prompt dumps are sensitive because they combine
+issue text, memory, skills, and tool output. GitClaw should therefore make
+prompt artifacts explicit opt-in, redact common token shapes before upload, and
+store them as GitHub Actions artifacts rather than issue comments or logs.
+
 Main attack pattern: an untrusted input enters through one surface, persists into memory/skills/cron/filesystem, then fires later through a different surface when the attacker is no longer present.
 
 Design requirements for `gitclaw`:
