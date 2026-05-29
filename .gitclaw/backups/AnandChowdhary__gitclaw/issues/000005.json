@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T12:15:19Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 5,
+    "title": "@gitclaw e2e 20260529T121341Z",
+    "body": "Live E2E conversation check.\n\nPlease use the repository file `go.mod`.\nPlease use the repo-reader skill.\nReply with the exact token `GITCLAW_E2E_20260529T121341Z_A`.\nAlso state the Go module path from `go.mod`.\nAlso include the exact durable memory token from `.gitclaw/MEMORY.md`.\nAlso include the exact skill verification token from the repo-reader skill.\nKeep the answer under 80 words.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw e2e 20260529T121341Z\n\nLive E2E conversation check.\n\nPlease use the repository file `go.mod`.\nPlease use the repo-reader skill.\nReply with the exact token `GITCLAW_E2E_20260529T121341Z_A`.\nAlso state the Go module path from `go.mod`.\nAlso include the exact durable memory token from `.gitclaw/MEMORY.md`.\nAlso include the exact skill verification token from the repo-reader skill.\nKeep the answer under 80 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_E2E_20260529T121341Z_A\nGo module: github.com/AnandChowdhary/gitclaw\nDurable memory token: GITCLAW_MEMORY_CONTEXT_V1\nSkill verification token: GITCLAW_SKILL_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4574830324,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4574830324,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26636598226\" event_id=\"issue-5\" model=\"openai/gpt-5-mini\" idempotency_key=\"c8253142d9b34e0139e9e8b3b086741a\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26636598226\" --\u003e\nGITCLAW_E2E_20260529T121341Z_A\nGo module: github.com/AnandChowdhary/gitclaw\nDurable memory token: GITCLAW_MEMORY_CONTEXT_V1\nSkill verification token: GITCLAW_SKILL_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T12:14:49Z",
+      "updated_at": "2026-05-29T12:14:49Z"
+    }
+  ]
+}
