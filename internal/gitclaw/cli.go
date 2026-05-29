@@ -49,14 +49,61 @@ func RunCLI(ctx context.Context, args []string) error {
 
 func runMemoryCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw memory validate")
+		return fmt.Errorf("usage: gitclaw memory validate|search <query>")
 	}
 	switch args[0] {
 	case "validate":
 		return runMemoryValidateCommand(args[1:])
+	case "search":
+		return runMemorySearchCommand(args[1:])
 	default:
 		return fmt.Errorf("unknown memory command %q", args[0])
 	}
+}
+
+func runMemorySearchCommand(args []string) error {
+	maxResults := defaultMemorySearchMaxResults
+	queryFlag := ""
+	var queryParts []string
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--query":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--query requires a value")
+			}
+			queryFlag = args[i+1]
+			i++
+		case "--max-results":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--max-results requires a value")
+			}
+			parsed, err := strconv.Atoi(args[i+1])
+			if err != nil || parsed <= 0 {
+				return fmt.Errorf("invalid --max-results: %q", args[i+1])
+			}
+			maxResults = parsed
+			i++
+		default:
+			queryParts = append(queryParts, args[i])
+		}
+	}
+	query := strings.TrimSpace(strings.Join(queryParts, " "))
+	if strings.TrimSpace(queryFlag) != "" {
+		query = strings.TrimSpace(queryFlag)
+	}
+	if query == "" {
+		return fmt.Errorf("usage: gitclaw memory search <query>")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContext(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "memory search " + query}})
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderMemorySearchReport(Event{}, cfg, repoContext, query, maxResults))
+	return nil
 }
 
 func runMemoryValidateCommand(args []string) error {

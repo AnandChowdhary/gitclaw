@@ -9,6 +9,7 @@ import (
 )
 
 const longTermMemoryPath = ".gitclaw/MEMORY.md"
+const defaultMemorySearchMaxResults = 10
 
 var datedMemoryNotePattern = regexp.MustCompile(`^\.gitclaw/memory/\d{4}-\d{2}-\d{2}\.md$`)
 
@@ -19,6 +20,29 @@ type memorySurface struct {
 	LoadedNotePaths []string
 }
 
+type MemorySearchReport struct {
+	QueryHash         string
+	QueryTerms        int
+	SearchStatus      string
+	MaxResults        int
+	FilesScanned      int
+	MatchedFiles      int
+	MatchedLines      int
+	ResultsReturned   int
+	RawBodiesIncluded bool
+	Results           []MemorySearchResult
+}
+
+type MemorySearchResult struct {
+	Path              string
+	Line              int
+	Score             int
+	MatchedTerms      int
+	LoadedForThisTurn bool
+	FileSHA           string
+	LineSHA           string
+}
+
 func IsMemoryReportRequest(ev Event, cfg Config) bool {
 	command := activeSlashCommand(ev, cfg)
 	return command == "/memory" || command == "/memories"
@@ -27,6 +51,9 @@ func IsMemoryReportRequest(ev Event, cfg Config) bool {
 func RenderMemoryReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isMemoryValidateRequest(ev, cfg) {
 		return RenderMemoryValidationReport(ev, cfg, repoContext)
+	}
+	if query := requestedMemorySearchQuery(ev, cfg); query != "" {
+		return RenderMemorySearchReport(ev, cfg, repoContext, query, defaultMemorySearchMaxResults)
 	}
 	surface := inspectMemorySurface(cfg.Workdir, repoContext)
 	validation := ValidateMemory(cfg.Workdir, repoContext)
@@ -68,9 +95,207 @@ func RenderMemoryReport(ev Event, cfg Config, repoContext RepoContext) string {
 	return strings.TrimSpace(b.String())
 }
 
+func RenderMemorySearchReport(ev Event, cfg Config, repoContext RepoContext, query string, maxResults int) string {
+	report := BuildMemorySearchReport(cfg.Workdir, repoContext, query, maxResults)
+	var b strings.Builder
+	b.WriteString("## GitClaw Memory Search Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	if ev.Repo != "" {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+	}
+	if ev.Issue.Number != 0 {
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
+	fmt.Fprintf(&b, "- memory_search_status: `%s`\n", report.SearchStatus)
+	fmt.Fprintf(&b, "- query_sha256_12: `%s`\n", report.QueryHash)
+	fmt.Fprintf(&b, "- query_terms: `%d`\n", report.QueryTerms)
+	fmt.Fprintf(&b, "- max_results: `%d`\n", report.MaxResults)
+	fmt.Fprintf(&b, "- files_scanned: `%d`\n", report.FilesScanned)
+	fmt.Fprintf(&b, "- matched_files: `%d`\n", report.MatchedFiles)
+	fmt.Fprintf(&b, "- matched_lines: `%d`\n", report.MatchedLines)
+	fmt.Fprintf(&b, "- results_returned: `%d`\n", report.ResultsReturned)
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n\n", report.RawBodiesIncluded)
+	b.WriteString("This report searches git-backed memory files with a local lexical matcher. It reports paths, line numbers, scores, and hashes only; raw memory bodies, issue bodies, comments, prompts, and raw search queries are not included.\n\n")
+
+	b.WriteString("### Results\n")
+	if len(report.Results) == 0 {
+		b.WriteString("- none\n")
+	} else {
+		for _, result := range report.Results {
+			fmt.Fprintf(&b, "- path=`%s` line=`%d` score=`%d` matched_terms=`%d` loaded_for_this_turn=`%t` file_sha256_12=`%s` line_sha256_12=`%s`\n",
+				result.Path,
+				result.Line,
+				result.Score,
+				result.MatchedTerms,
+				result.LoadedForThisTurn,
+				result.FileSHA,
+				result.LineSHA,
+			)
+		}
+	}
+	return strings.TrimSpace(b.String())
+}
+
 func isMemoryValidateRequest(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && (fields[0] == "/memory" || fields[0] == "/memories") && strings.EqualFold(fields[1], "validate")
+}
+
+func requestedMemorySearchQuery(ev Event, cfg Config) string {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 3 || (fields[0] != "/memory" && fields[0] != "/memories") || !strings.EqualFold(fields[1], "search") {
+		return ""
+	}
+	return cleanMemorySearchQuery(strings.Join(fields[2:], " "))
+}
+
+func BuildMemorySearchReport(root string, repoContext RepoContext, query string, maxResults int) MemorySearchReport {
+	query = cleanMemorySearchQuery(query)
+	if maxResults <= 0 {
+		maxResults = defaultMemorySearchMaxResults
+	}
+	report := MemorySearchReport{
+		QueryHash:         shortDocumentHash(query),
+		QueryTerms:        len(memorySearchTerms(query)),
+		SearchStatus:      "ok",
+		MaxResults:        maxResults,
+		RawBodiesIncluded: false,
+	}
+	if query == "" {
+		report.SearchStatus = "no_query"
+		return report
+	}
+	terms := memorySearchTerms(query)
+	if len(terms) == 0 {
+		report.SearchStatus = "no_query"
+		return report
+	}
+	surface := inspectMemorySurface(root, repoContext)
+	files := memorySearchFiles(surface)
+	report.FilesScanned = len(files)
+	loaded := loadedMemoryPathSet(surface)
+	var results []MemorySearchResult
+	matchedFiles := map[string]bool{}
+	for _, file := range files {
+		if !file.Present {
+			continue
+		}
+		body, err := readRepoTextFile(rootOrDot(root), file.Path, maxContextDocumentBytes)
+		if err != nil {
+			continue
+		}
+		lines := strings.Split(body, "\n")
+		for i, line := range lines {
+			score, matchedTerms := memoryLineSearchScore(file.Path, line, query, terms)
+			if score == 0 {
+				continue
+			}
+			matchedFiles[file.Path] = true
+			results = append(results, MemorySearchResult{
+				Path:              file.Path,
+				Line:              i + 1,
+				Score:             score,
+				MatchedTerms:      matchedTerms,
+				LoadedForThisTurn: loaded[file.Path],
+				FileSHA:           file.SHA,
+				LineSHA:           shortDocumentHash(line),
+			})
+		}
+	}
+	sort.Slice(results, func(i, j int) bool {
+		if results[i].Score != results[j].Score {
+			return results[i].Score > results[j].Score
+		}
+		if results[i].Path != results[j].Path {
+			return results[i].Path < results[j].Path
+		}
+		return results[i].Line < results[j].Line
+	})
+	report.MatchedFiles = len(matchedFiles)
+	report.MatchedLines = len(results)
+	if len(results) > maxResults {
+		results = results[:maxResults]
+	}
+	report.Results = results
+	report.ResultsReturned = len(results)
+	if report.MatchedLines == 0 {
+		report.SearchStatus = "no_matches"
+	}
+	return report
+}
+
+func memorySearchFiles(surface memorySurface) []configSurfaceFile {
+	files := make([]configSurfaceFile, 0, 1+len(surface.DatedNotes))
+	if surface.LongTerm.Present {
+		files = append(files, surface.LongTerm)
+	}
+	files = append(files, surface.DatedNotes...)
+	sort.Slice(files, func(i, j int) bool { return files[i].Path < files[j].Path })
+	return files
+}
+
+func loadedMemoryPathSet(surface memorySurface) map[string]bool {
+	loaded := map[string]bool{}
+	if surface.LoadedLongTerm {
+		loaded[longTermMemoryPath] = true
+	}
+	for _, path := range surface.LoadedNotePaths {
+		loaded[path] = true
+	}
+	return loaded
+}
+
+func memoryLineSearchScore(path, line, query string, terms []string) (int, int) {
+	lowerLine := strings.ToLower(line)
+	lowerPath := strings.ToLower(path)
+	lowerQuery := strings.ToLower(query)
+	score := 0
+	if strings.Contains(lowerLine, lowerQuery) {
+		score += 40
+	}
+	matchedTerms := 0
+	for _, term := range terms {
+		lineMatches := strings.Count(lowerLine, term)
+		pathMatches := strings.Count(lowerPath, term)
+		if lineMatches > 0 || pathMatches > 0 {
+			matchedTerms++
+			score += 10 + lineMatches*3 + pathMatches
+		}
+	}
+	if path == longTermMemoryPath && score > 0 {
+		score += 2
+	}
+	return score, matchedTerms
+}
+
+func memorySearchTerms(query string) []string {
+	fields := strings.FieldsFunc(strings.ToLower(cleanMemorySearchQuery(query)), func(r rune) bool {
+		return !(r >= 'a' && r <= 'z' || r >= '0' && r <= '9' || r == '-' || r == '_')
+	})
+	var terms []string
+	for _, field := range fields {
+		field = strings.Trim(field, "-_")
+		if len(field) < 2 || isStopWord(field) {
+			continue
+		}
+		if !containsStringFold(terms, field) {
+			terms = append(terms, field)
+		}
+	}
+	return terms
+}
+
+func cleanMemorySearchQuery(query string) string {
+	return strings.Trim(strings.TrimSpace(query), " \t\r\n.,:;!?`\"'")
+}
+
+func rootOrDot(root string) string {
+	if root == "" {
+		return "."
+	}
+	return root
 }
 
 func inspectMemorySurface(root string, repoContext RepoContext) memorySurface {

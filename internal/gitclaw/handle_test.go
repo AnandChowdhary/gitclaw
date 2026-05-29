@@ -772,6 +772,55 @@ func TestHandleMemoryValidateCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 }
 
+func TestHandleMemorySearchCommandPostsReportWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/MEMORY.md", "Deployment preference MEMORY_SEARCH_HANDLER_SECRET")
+	writeTestFile(t, root, ".gitclaw/memory/2026-05-29.md", "Deployment note DATED_MEMORY_SEARCH_HANDLER_SECRET")
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 115,
+			"title": "@gitclaw /memory search deployment MEMORY_SEARCH_HANDLER_QUERY_SECRET",
+			"body": "Hidden memory search body token: MEMORY_SEARCH_HANDLER_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{115: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic memory search command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Memory Search Report", "Generated without a model call", "model=\"gitclaw/memory\"", "memory_search_status: `ok`", "query_sha256_12:", "max_results: `10`", "files_scanned: `2`", "matched_files: `2`", "matched_lines: `2`", "results_returned: `2`", "raw_bodies_included: `false`", "path=`.gitclaw/MEMORY.md`", "path=`.gitclaw/memory/2026-05-29.md`", "line_sha256_12="} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("memory search report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"MEMORY_SEARCH_HANDLER_SECRET", "DATED_MEMORY_SEARCH_HANDLER_SECRET", "MEMORY_SEARCH_HANDLER_QUERY_SECRET", "MEMORY_SEARCH_HANDLER_BODY_SECRET"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("memory search report leaked body token %q:\n%s", leaked, body)
+		}
+	}
+	if !hasLabel(github.IssueLabels[115], "gitclaw:done") || hasLabel(github.IssueLabels[115], "gitclaw:running") || hasLabel(github.IssueLabels[115], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[115])
+	}
+}
+
 func TestHandlePromptCommandPostsReportWithoutLLM(t *testing.T) {
 	t.Setenv("GITCLAW_PROMPT_ARTIFACT_PATH", filepath.Join(t.TempDir(), "prompt.md"))
 	root := t.TempDir()
@@ -967,7 +1016,7 @@ func TestHandleCommandsCommandPostsReportWithoutLLM(t *testing.T) {
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Commands Report", "Generated without a model call", "model=\"gitclaw/commands\"", "commands: `15`", "aliases: `7`", "local_cli_helpers: `16`", "/commands", "/backup", "/tools", "`gitclaw commands` command=`/help`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools validate` command=`/tools`"} {
+	for _, want := range []string{"GitClaw Commands Report", "Generated without a model call", "model=\"gitclaw/commands\"", "commands: `15`", "aliases: `7`", "local_cli_helpers: `17`", "/commands", "/backup", "/tools", "`gitclaw commands` command=`/help`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools validate` command=`/tools`"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("commands report missing %q:\n%s", want, body)
 		}

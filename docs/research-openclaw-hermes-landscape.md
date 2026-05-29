@@ -347,6 +347,14 @@ git-native equivalent should keep memory read-only in assistant turns but add
 long-term memory presence, canonical dated-note paths, empty files, context
 size limits, and obvious secret-like token patterns.
 
+2026-05-29 memory-search follow-up: OpenClaw's memory search accepts positional
+or `--query` input plus `--max-results`, and its memory-search concept combines
+semantic/vector recall with BM25-style lexical fallback. Hermes likewise treats
+session search as the recall layer beyond compact `MEMORY.md`/`USER.md`.
+GitClaw's no-server cut should start with local lexical search over
+git-backed memory files: report paths, line numbers, scores, and hashes, but
+never echo raw queries or memory body snippets into issue comments.
+
 2026-05-29 repo config follow-up: OpenClaw's `config` CLI exposes schema,
 validation, dry-run patching, and guarded writes, while `configure` preserves
 existing model defaults unless the operator explicitly changes them. Hermes
