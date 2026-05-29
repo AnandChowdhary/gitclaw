@@ -565,6 +565,7 @@ Borrow the useful parts of OpenClaw and Hermes, but make them repo-native:
 AGENTS.md                    # existing coding-agent instructions, if present
 .gitclaw/GITCLAW.md          # GitClaw-specific repo instructions
 .gitclaw/POLICY.md           # repo-local permission and behavior policy
+.gitclaw/SOUL.md             # persona, boundaries, and tone
 .gitclaw/IDENTITY.md         # agent identity and product framing
 .gitclaw/USER.md             # maintainer preferences, human-reviewed only
 .gitclaw/HEARTBEAT.md        # scheduled heartbeat checklist
@@ -643,6 +644,28 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 
 It does not dump full skill bodies. Full `SKILL.md` content remains a prompt
 input only when selected by the normal progressive-disclosure rules.
+
+## Soul Inspection Command
+
+GitClaw supports a deterministic high-authority context audit command inspired
+by OpenClaw and Hermes' portable workspace files:
+
+```text
+@gitclaw /soul
+```
+
+The command runs after normal preflight authorization and context assembly, but
+before model inference. It posts a `gitclaw:assistant-turn` comment with
+`model="gitclaw/soul"` and summarizes:
+
+- loaded identity and policy files such as `AGENTS.md`, `.gitclaw/SOUL.md`,
+  `.gitclaw/IDENTITY.md`, `.gitclaw/USER.md`, `.gitclaw/TOOLS.md`,
+  `.gitclaw/MEMORY.md`, and `.gitclaw/HEARTBEAT.md`,
+- loaded dated memory notes from `.gitclaw/memory/*.md`,
+- byte counts, line counts, and short hashes for each file.
+
+It never dumps full file bodies. The hashes make the issue-visible report
+verifiable without exposing private user, memory, or policy text.
 
 ## Read-Only Tool Context
 
@@ -1353,7 +1376,16 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump full skill bodies or verification tokens,
    - assert the run succeeds without requiring a model provider response.
 
-17. **Backup index**
+17. **Soul inspection**
+
+   - create a real issue with `@gitclaw /soul`,
+   - assert the reply is marked `model="gitclaw/soul"`,
+   - assert the report lists loaded identity, policy, user, and memory paths
+     with byte counts, line counts, and hashes,
+   - assert the report does not dump full soul or memory bodies,
+   - assert the run succeeds without requiring a model provider response.
+
+18. **Backup index**
 
    - create a real deterministic GitClaw issue turn,
    - wait for the successful backup job,
@@ -1532,6 +1564,9 @@ examples/workflows/gitclaw.yml
   produces a deterministic context summary without a model call.
 - A `gh`-driven skills-report E2E harness verifies `@gitclaw /skills`
   produces a deterministic local skill inventory without a model call.
+- A `gh`-driven soul-report E2E harness verifies `@gitclaw /soul` produces a
+  deterministic high-authority context file audit without a model call or body
+  leakage.
 - A `gh`-driven failure E2E harness verifies the safe failure path against a
   real Actions/model failure.
 - A `gh`-driven prompt-budget E2E harness verifies a large real issue still

@@ -267,6 +267,66 @@ Always token.
 	}
 }
 
+func TestHandleSoulCommandPostsReportWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	if err := os.MkdirAll(filepath.Join(root, ".gitclaw", "memory"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	files := map[string]string{
+		".gitclaw/SOUL.md":              "SOUL_SECRET_TOKEN: stay repo native.",
+		".gitclaw/IDENTITY.md":          "Identity: GitClaw.",
+		".gitclaw/USER.md":              "USER_PRIVATE_TOKEN: maintainer facts.",
+		".gitclaw/MEMORY.md":            "Memory: durable facts.",
+		".gitclaw/memory/2026-05-29.md": "Daily note token.",
+	}
+	for path, body := range files {
+		if err := os.WriteFile(filepath.Join(root, filepath.FromSlash(path)), []byte(body), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 92,
+			"title": "@gitclaw /soul",
+			"body": "Show loaded soul and memory files.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{92: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic soul command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Soul Report", "Generated without a model call", "model=\"gitclaw/soul\"", ".gitclaw/SOUL.md", ".gitclaw/IDENTITY.md", ".gitclaw/USER.md", ".gitclaw/MEMORY.md", ".gitclaw/memory/2026-05-29.md", "sha256_12="} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("soul report missing %q:\n%s", want, body)
+		}
+	}
+	if strings.Contains(body, "SOUL_SECRET_TOKEN") || strings.Contains(body, "USER_PRIVATE_TOKEN") {
+		t.Fatalf("soul report should not dump full context bodies:\n%s", body)
+	}
+	if !hasLabel(github.IssueLabels[92], "gitclaw:done") || hasLabel(github.IssueLabels[92], "gitclaw:running") || hasLabel(github.IssueLabels[92], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[92])
+	}
+}
+
 func TestHandleLabelsWriteRequestsAndAddsPolicyContext(t *testing.T) {
 	ev, err := ParseEvent("issues", []byte(`{
 		"action": "opened",

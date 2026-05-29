@@ -131,6 +131,13 @@ latest bounded `.gitclaw/memory/*.md` notes as context, but require normal git
 commits for any memory edits. That preserves OpenClaw's portability while
 avoiding Hermes-style self-improvement authority in early versions.
 
+2026-05-29 soul-inspection follow-up: because OpenClaw and Hermes treat
+`SOUL.md`, `IDENTITY.md`, `USER.md`, `MEMORY.md`, and dated memory notes as
+high-authority portable context, GitClaw should make that load set auditable
+without exposing the contents in issue comments. The narrow command is
+`@gitclaw /soul`: list loaded identity, policy, and memory files with byte
+counts, line counts, and short hashes, but never dump file bodies.
+
 ### Skills And Plugins
 
 OpenClaw uses AgentSkills-compatible skill folders with a `SKILL.md`. Skills can come from:
