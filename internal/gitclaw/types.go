@@ -10,16 +10,19 @@ const (
 )
 
 type Config struct {
-	TriggerLabel        string
-	TriggerPrefix       string
-	DisabledLabel       string
-	RunningLabel        string
-	DoneLabel           string
-	ErrorLabel          string
-	HeartbeatLabel      string
-	AllowedAssociations map[string]bool
-	Model               string
-	Workdir             string
+	TriggerLabel              string
+	TriggerPrefix             string
+	DisabledLabel             string
+	RunningLabel              string
+	DoneLabel                 string
+	ErrorLabel                string
+	HeartbeatLabel            string
+	AllowedAssociations       map[string]bool
+	Model                     string
+	Workdir                   string
+	MaxPromptBytes            int
+	MaxTranscriptMessages     int
+	MaxTranscriptMessageBytes int
 }
 
 func DefaultConfig() Config {
@@ -36,8 +39,11 @@ func DefaultConfig() Config {
 			"MEMBER":       true,
 			"COLLABORATOR": true,
 		},
-		Model:   "openai/gpt-5-mini",
-		Workdir: ".",
+		Model:                     "openai/gpt-5-mini",
+		Workdir:                   ".",
+		MaxPromptBytes:            60000,
+		MaxTranscriptMessages:     40,
+		MaxTranscriptMessageBytes: 8000,
 	}
 }
 

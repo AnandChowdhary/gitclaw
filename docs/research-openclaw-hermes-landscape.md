@@ -258,6 +258,13 @@ thread, scan only bounded text files from the checkout, and insert matched
 lines as `gitclaw.search_files` context. That gives the model grounded recall
 without granting shell access or a general command runner.
 
+2026-05-29 prompt-budget follow-up: OpenClaw's context docs expose per-file and
+total prompt caps plus visible truncation markers, while Hermes' memory/context
+docs treat character limits as a core defense against context bloat. GitClaw
+should use the same principle before adding semantic compaction: cap the final
+prompt, cap transcript message count, preserve the original issue plus the
+recent tail, and include explicit truncation markers so failures are auditable.
+
 ### Skills
 
 Hermes skills are on-demand knowledge documents, also compatible with AgentSkills. The default local source of truth is `~/.hermes/skills/`, with optional external directories.

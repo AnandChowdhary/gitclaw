@@ -70,3 +70,64 @@ func TestSystemPromptNamesToolOutputsAndExactTokens(t *testing.T) {
 		}
 	}
 }
+
+func TestBuildPromptBoundsTranscriptMessagesAndBodies(t *testing.T) {
+	messages := []TranscriptMessage{{
+		Role: "user",
+		Body: "original issue should remain",
+	}}
+	for i := 1; i <= 5; i++ {
+		body := strings.Repeat("noise ", 60)
+		if i == 5 {
+			body += "TAIL_TOKEN_SHOULD_SURVIVE"
+		}
+		messages = append(messages, TranscriptMessage{
+			Role:      "user",
+			Body:      body,
+			CommentID: int64(i),
+		})
+	}
+	prompt := BuildPrompt(LLMRequest{
+		Event: Event{Repo: "owner/repo", Issue: Issue{Number: 1, Title: "@gitclaw budget"}},
+		Config: Config{
+			MaxPromptBytes:            4000,
+			MaxTranscriptMessages:     3,
+			MaxTranscriptMessageBytes: 140,
+		},
+		Transcript: messages,
+	})
+	for _, want := range []string{"original issue should remain", "omitted_older_messages=3", "gitclaw:truncated", "TAIL_TOKEN_SHOULD_SURVIVE"} {
+		if !strings.Contains(prompt, want) {
+			t.Fatalf("prompt missing %q:\n%s", want, prompt)
+		}
+	}
+	if strings.Contains(prompt, "comment_id=2") {
+		t.Fatalf("older middle transcript message was not omitted:\n%s", prompt)
+	}
+}
+
+func TestBuildPromptEnforcesMaxPromptBytes(t *testing.T) {
+	prompt := BuildPrompt(LLMRequest{
+		Event: Event{Repo: "owner/repo", Issue: Issue{Number: 2, Title: "@gitclaw budget"}},
+		Config: Config{
+			MaxPromptBytes:            700,
+			MaxTranscriptMessages:     5,
+			MaxTranscriptMessageBytes: 1000,
+		},
+		Context: RepoContext{
+			Documents: []ContextDocument{{Path: "huge.md", Body: strings.Repeat("context ", 300)}},
+		},
+		Transcript: []TranscriptMessage{{
+			Role: "user",
+			Body: strings.Repeat("body ", 100) + "FINAL_TAIL_TOKEN",
+		}},
+	})
+	if len(prompt) > 700 {
+		t.Fatalf("prompt len = %d, want <= 700", len(prompt))
+	}
+	for _, want := range []string{"gitclaw:truncated", "FINAL_TAIL_TOKEN"} {
+		if !strings.Contains(prompt, want) {
+			t.Fatalf("bounded prompt missing %q:\n%s", want, prompt)
+		}
+	}
+}

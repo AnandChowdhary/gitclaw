@@ -520,7 +520,7 @@ MVP policy:
 - Run the LLM only for trusted authors by default: `OWNER`, `MEMBER`, or `COLLABORATOR`.
 - For untrusted users, either ignore or post a cheap non-LLM comment asking a maintainer to add `gitclaw:approved`.
 - Allow repo config to add explicit GitHub usernames or teams.
-- Enforce a max prompt size and max comments per run.
+- Enforce a max prompt size and max transcript messages per run.
 - Ignore GitClaw's own comments.
 - Never execute shell commands based on issue text in MVP.
 - Never expose secrets to model-visible logs.
@@ -551,6 +551,24 @@ model:
 actions:
   mode: read_only
 ```
+
+## Prompt Budgeting
+
+GitClaw uses character/byte budgets before the model call rather than relying
+on the provider to reject oversized prompts:
+
+- default max prompt size: 60,000 bytes,
+- default max transcript messages: 40,
+- default max body per transcript message: 8,000 bytes,
+- the original issue message is preserved,
+- the most recent transcript tail is preserved,
+- oversized bodies are middle-truncated with a `gitclaw:truncated` marker,
+- omitted middle transcript turns are recorded with
+  `gitclaw.prompt_budget omitted_older_messages=<n>`.
+
+This mirrors the OpenClaw/Hermes lesson that context windows need explicit
+budgeting and visible truncation. It is intentionally not semantic compaction
+yet; GitClaw should first be predictable and auditable.
 
 ## Tooling Scope
 
@@ -1045,6 +1063,8 @@ MVP is not complete until:
 - the failure harness forces a real invalid-model run and verifies a bounded
   `gitclaw:error` comment plus final `gitclaw:error` label without leaking an
   issue-secret token,
+- the prompt-budget harness creates a large real issue and verifies the
+  assistant still sees the preserved tail request under the bounded prompt,
 - bot loop prevention is verified live,
 - the issue is cleaned up or labeled with an E2E retention label.
 
@@ -1142,6 +1162,8 @@ examples/workflows/gitclaw.yml
   `.gitclaw/HEARTBEAT.md`, exact token content, and same-slot idempotency.
 - A `gh`-driven failure E2E harness verifies the safe failure path against a
   real Actions/model failure.
+- A `gh`-driven prompt-budget E2E harness verifies a large real issue still
+  produces a bounded, correct assistant reply.
 
 ## Open Questions
 

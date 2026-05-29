@@ -129,6 +129,7 @@ func (c *OpenAICompatibleLLM) httpClient() *http.Client {
 }
 
 func BuildPrompt(req LLMRequest) string {
+	cfg := promptBudgetConfig(req.Config)
 	var b strings.Builder
 	fmt.Fprintf(&b, "Repository: %s\nIssue: #%d %s\n\n", req.Event.Repo, req.Event.Issue.Number, req.Event.Issue.Title)
 	if len(req.Context.Documents) > 0 || len(req.Context.Skills) > 0 || len(req.Context.ToolOutputs) > 0 {
@@ -145,12 +146,58 @@ func BuildPrompt(req LLMRequest) string {
 		b.WriteByte('\n')
 	}
 	b.WriteString("Transcript:\n")
-	for _, msg := range req.Transcript {
+	transcript, omitted := boundedTranscript(req.Transcript, cfg.MaxTranscriptMessages)
+	if omitted > 0 {
+		fmt.Fprintf(&b, "\n[gitclaw.prompt_budget omitted_older_messages=%d]\n", omitted)
+	}
+	for _, msg := range transcript {
 		trust := "untrusted"
 		if msg.Trusted {
 			trust = "trusted"
 		}
-		fmt.Fprintf(&b, "\n[%s %s actor=%s association=%s comment_id=%d edited=%v]\n%s\n", msg.Role, trust, msg.Actor, msg.AuthorAssociation, msg.CommentID, msg.Edited, msg.Body)
+		fmt.Fprintf(&b, "\n[%s %s actor=%s association=%s comment_id=%d edited=%v]\n%s\n", msg.Role, trust, msg.Actor, msg.AuthorAssociation, msg.CommentID, msg.Edited, truncatePromptText(msg.Body, cfg.MaxTranscriptMessageBytes))
 	}
-	return strings.TrimSpace(b.String())
+	return strings.TrimSpace(truncatePromptText(b.String(), cfg.MaxPromptBytes))
+}
+
+func promptBudgetConfig(cfg Config) Config {
+	defaults := DefaultConfig()
+	if cfg.MaxPromptBytes <= 0 {
+		cfg.MaxPromptBytes = defaults.MaxPromptBytes
+	}
+	if cfg.MaxTranscriptMessages <= 0 {
+		cfg.MaxTranscriptMessages = defaults.MaxTranscriptMessages
+	}
+	if cfg.MaxTranscriptMessageBytes <= 0 {
+		cfg.MaxTranscriptMessageBytes = defaults.MaxTranscriptMessageBytes
+	}
+	return cfg
+}
+
+func boundedTranscript(messages []TranscriptMessage, limit int) ([]TranscriptMessage, int) {
+	if limit <= 0 || len(messages) <= limit {
+		return append([]TranscriptMessage(nil), messages...), 0
+	}
+	if limit == 1 {
+		return append([]TranscriptMessage(nil), messages[len(messages)-1]), len(messages) - 1
+	}
+	bounded := make([]TranscriptMessage, 0, limit)
+	bounded = append(bounded, messages[0])
+	tailCount := limit - 1
+	bounded = append(bounded, messages[len(messages)-tailCount:]...)
+	return bounded, len(messages) - len(bounded)
+}
+
+func truncatePromptText(value string, maxBytes int) string {
+	if maxBytes <= 0 || len(value) <= maxBytes {
+		return value
+	}
+	marker := fmt.Sprintf("\n...[gitclaw:truncated omitted_bytes=%d]...\n", len(value)-maxBytes)
+	if maxBytes <= len(marker)+20 {
+		return value[:maxBytes]
+	}
+	keep := maxBytes - len(marker)
+	head := keep / 2
+	tail := keep - head
+	return value[:head] + marker + value[len(value)-tail:]
 }
