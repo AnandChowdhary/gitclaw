@@ -124,6 +124,14 @@ portable artifact. GitClaw should make its backup branch similarly inspectable:
 raw issue transcripts stay in per-issue JSON files, and a repo-scoped
 `index.json`/`README.md` summarizes coverage without exposing every raw message.
 
+2026-05-29 backup-report follow-up: OpenClaw's migration and migrate CLI docs
+emphasize preview, secret redaction, and verified backups before applying
+state changes, while Hermes' OpenClaw migration keeps pre-migration restore
+points. GitClaw's serverless analogue should make backup destinations visible
+from the issue itself: `@gitclaw /backup` reports the expected backup branch,
+per-issue JSON path, and repo index paths, then the post-turn backup job writes
+the canonical raw transcript copy.
+
 2026-05-29 session-inspection follow-up: OpenClaw exposes transcript and
 session CLIs around JSONL transcript directories, while Hermes automatically
 saves conversations as sessions and can export them to JSONL. GitClaw should
@@ -756,14 +764,17 @@ Recommended non-goals for the first spec:
 - OpenClaw heartbeat docs: https://openclawlab.com/en/docs/agent/heartbeat/
 - OpenClaw memory docs: https://docs.openclaw.ai/concepts/memory
 - OpenClaw tools overview: https://docs.openclaw.ai/tools
+- OpenClaw migration guide: https://docs.openclaw.ai/install/migrating
 - OpenClaw sandbox vs tool policy vs elevated: https://docs.openclaw.ai/gateway/sandbox-vs-tool-policy-vs-elevated
 - OpenClaw exec approvals: https://docs.openclaw.ai/tools/exec-approvals
 - OpenClaw sandboxing docs: https://docs.openclaw.ai/gateway/sandboxing
 - OpenClaw migrating from Hermes: https://docs.openclaw.ai/install/migrating-hermes
+- OpenClaw migrate CLI docs: https://docs.openclaw.ai/cli/migrate
 - Hermes docs index: https://hermes-agent.nousresearch.com/docs/llms.txt
 - Hermes GitHub and README: https://github.com/NousResearch/hermes-agent
 - Hermes architecture docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/developer-guide/architecture.md
 - Hermes sessions docs: https://hermes-agent.nousresearch.com/docs/user-guide/sessions
+- Hermes migrate from OpenClaw docs: https://hermes-agent.nousresearch.com/docs/guides/migrate-from-openclaw
 - Hermes memory docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/memory.md
 - Hermes skills docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/skills.md
 - Hermes tools docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/tools/

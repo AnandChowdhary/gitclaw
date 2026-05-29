@@ -1228,6 +1228,30 @@ The backup branch is intentionally separate from `main`:
 - raw issue transcript snapshots can have different retention/privacy rules;
 - recovery remains a normal `git fetch origin gitclaw-backups` operation.
 
+## Backup Inspection Command
+
+GitClaw supports a deterministic backup audit command inspired by OpenClaw's
+verified migration backups and Hermes' session export/backup flows:
+
+```text
+@gitclaw /backup
+```
+
+The command runs after normal preflight authorization and transcript
+reconstruction, but before model inference. It posts a `gitclaw:assistant-turn`
+comment with `model="gitclaw/backup"` and summarizes:
+
+- dedicated backup branch name,
+- expected issue backup JSON path,
+- repo-scoped `index.json` and `README.md` paths,
+- backup schema version,
+- current raw comment, transcript, and assistant-turn counts,
+- a short hash of the issue title for path/report correlation.
+
+It never dumps issue/comment bodies. The report is navigational metadata; the
+raw transcript copy remains the canonical backup JSON written by the post-turn
+backup job.
+
 ## Testing Strategy
 
 End-to-end testing is a core product requirement. Unit tests and event fixtures
@@ -1498,6 +1522,17 @@ assert the expected comments/labels, and close the issue in cleanup.
      number, title, and backup path,
    - assert the index contains metadata counts but not raw transcript bodies.
 
+22. **Backup inspection**
+
+   - create a real issue with `@gitclaw /backup`,
+   - assert the reply is marked `model="gitclaw/backup"`,
+   - assert the report lists the expected backup branch, issue backup path,
+     index path, README path, and schema version,
+   - wait for the successful backup job,
+   - assert the backup branch contains the issue JSON backup and repo index
+     entry for that same issue,
+   - assert the report does not dump issue or comment body tokens.
+
 ### Example Live Commands
 
 The script can use commands in this shape:
@@ -1664,6 +1699,9 @@ examples/workflows/gitclaw.yml
   workflow end to end.
 - A `gh`-driven backup-index E2E harness verifies the dedicated backup branch
   contains issue JSON plus a repo-scoped `index.json` and `README.md`.
+- A `gh`-driven backup-report E2E harness verifies `@gitclaw /backup`
+  publishes deterministic backup paths without a model call and that the
+  backup branch receives the corresponding issue JSON and index entry.
 - A `gh`-driven context-report E2E harness verifies `@gitclaw /context`
   produces a deterministic context summary without a model call.
 - A `gh`-driven skills-report E2E harness verifies `@gitclaw /skills`

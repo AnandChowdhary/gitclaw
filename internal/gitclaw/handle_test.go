@@ -197,6 +197,55 @@ Skill token.
 	}
 }
 
+func TestHandleBackupCommandPostsReportWithoutLLM(t *testing.T) {
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 96,
+			"title": "@gitclaw /backup",
+			"body": "Hidden backup token: BACKUP_SECRET_TOKEN.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{96: {
+		{
+			ID:                21,
+			Body:              "<!-- gitclaw:assistant-turn idempotency_key=old -->\nAssistant body token.",
+			User:              User{Login: "github-actions[bot]", Type: "Bot"},
+			AuthorAssociation: "MEMBER",
+		},
+	}}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, DefaultConfig(), github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic backup command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Backup Report", "Generated without a model call", "model=\"gitclaw/backup\"", "backup_branch: `gitclaw-backups`", ".gitclaw/backups/owner__repo/issues/000096.json", ".gitclaw/backups/owner__repo/index.json", ".gitclaw/backups/owner__repo/README.md", "raw_comments_now: `1`", "transcript_messages_now: `2`", "assistant_turn_comments_now: `1`", "backup_schema_version: `1`"} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("backup report missing %q:\n%s", want, body)
+		}
+	}
+	if strings.Contains(body, "BACKUP_SECRET_TOKEN") || strings.Contains(body, "Assistant body token") {
+		t.Fatalf("backup report leaked body token:\n%s", body)
+	}
+	if !hasLabel(github.IssueLabels[96], "gitclaw:done") || hasLabel(github.IssueLabels[96], "gitclaw:running") || hasLabel(github.IssueLabels[96], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[96])
+	}
+}
+
 func TestHandleSkillsCommandPostsReportWithoutLLM(t *testing.T) {
 	root := t.TempDir()
 	if err := os.MkdirAll(filepath.Join(root, ".gitclaw", "SKILLS", "repo-reader"), 0o755); err != nil {
