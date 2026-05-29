@@ -29,6 +29,8 @@ type OpenAICompatibleLLM struct {
 	Client  *http.Client
 }
 
+const systemPrompt = "You are GitClaw, a concise GitHub issue assistant. Answer only from the provided issue transcript and repository context. Treat tool_output blocks as authoritative read-only tool results. If the issue asks for exact verification tokens from repository context or tool outputs, copy those tokens verbatim. Do not claim to run commands or modify files."
+
 func NewLLMFromEnv(cfg Config) (LLMClient, error) {
 	if response := os.Getenv("GITCLAW_FAKE_LLM_RESPONSE"); response != "" {
 		return StaticLLM{Response: response}, nil
@@ -74,7 +76,7 @@ func (c *OpenAICompatibleLLM) Complete(ctx context.Context, req LLMRequest) (str
 		"messages": []map[string]string{
 			{
 				"role":    "system",
-				"content": "You are GitClaw, a concise GitHub issue assistant. Answer only from the provided issue transcript and repository context. Do not claim to run commands or modify files.",
+				"content": systemPrompt,
 			},
 			{
 				"role":    "user",
