@@ -555,7 +555,8 @@ GitHub issue/comment event
 `cmd/gitclaw`
 
 - CLI entry point.
-- Subcommands: `preflight`, `handle`, `backup`, `heartbeat`,
+- Subcommands: `preflight`, `handle`, `backup`, `backup retention-plan`,
+  `heartbeat`,
   `channel-ingest`, `proactive enqueue`, `proactive init`,
   `memory validate`, `skills validate`, `skills info`, `soul validate`,
   `tools validate`, `doctor`, `commands`, `version`.
@@ -1721,6 +1722,35 @@ It never prints raw issue titles, issue bodies, comments, or transcript bodies.
 The stats report is meant for routine backup-health monitoring where opening
 every raw JSON file would be noisy.
 
+## Backup Retention Plan Command
+
+GitClaw supports a local non-mutating retention plan command inspired by
+OpenClaw's verified backup/preview posture and Hermes' practical session
+cleanup pressure:
+
+```bash
+gitclaw backup retention-plan --root .gitclaw/backups --repo <owner/repo> --keep-latest 50
+```
+
+The command reads a fetched `gitclaw-backups` tree, verifies it, sorts indexed
+issue backups by backup timestamp descending, keeps the latest N, and lists the
+older backups as prune candidates. It prints a deterministic
+`GitClaw Backup Retention Plan` with:
+
+- retention and verify status,
+- backup root, repo backup directory, index path, README path, schema version,
+  and index generation time,
+- keep-latest value, total issue count, kept count, and prune-candidate count,
+- newest and oldest kept backup boundaries,
+- kept backup and prune-candidate paths, timestamps, event names, counts, and
+  title hashes.
+
+This is a dry-run report. It does not delete files, delete branches, edit
+issues, post comments, or call GitHub APIs. It never prints raw issue titles,
+issue bodies, comments, or transcript bodies. A future mutating prune command
+must be separately approved and should compare its target set against this
+plan before deleting anything from the backup branch.
+
 ## Backup JSONL Export Command
 
 GitClaw supports a local JSONL export command inspired by Hermes'
@@ -2127,7 +2157,21 @@ assert the expected comments/labels, and close the issue in cleanup.
      counts, assistant-turn/error counts, and body hashes,
    - assert it does not dump the issue body token or raw transcript bodies.
 
-29. **Proactive init generator**
+29. **Backup retention plan**
+
+   - create a real issue with `@gitclaw /backup`,
+   - wait for the successful backup job,
+   - fetch the real `gitclaw-backups` branch,
+   - run `gitclaw backup retention-plan --root <fetched>/.gitclaw/backups
+     --repo <owner/repo> --keep-latest 1`,
+   - assert the report is marked `retention_mode: dry-run`,
+   - assert it lists verify status, total issue count, kept count,
+     prune-candidate count, kept backups, prune candidates, paths, timestamps,
+     and title hashes,
+   - assert the just-created issue is included without dumping the issue body
+     token or raw title.
+
+30. **Proactive init generator**
 
    - run `gitclaw proactive init` against a temporary repo root,
    - assert it writes the expected prompt file and scheduled workflow,
@@ -2197,6 +2241,9 @@ MVP is not complete until:
   exported as one JSONL transcript record per reconstructed message,
 - the backup restore-plan harness verifies a real backed-up issue can produce
   a non-mutating restore plan with counts and hashes but no raw body leakage,
+- the backup retention-plan harness verifies a fetched backup branch can
+  produce a dry-run keep-latest plan with kept/prune-candidate paths and hashes
+  but no raw title/body leakage,
 - the live harness verifies status labels end at `gitclaw:done` without
   `gitclaw:running` or `gitclaw:error`,
 - the failure harness forces a real invalid-model run and verifies a bounded
@@ -2356,6 +2403,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven backup-restore-plan E2E harness verifies the fetched
   `gitclaw-backups` branch can produce a dry-run restore plan for one real
   issue without dumping raw bodies.
+- A `gh`-driven backup-retention-plan E2E harness verifies the fetched
+  `gitclaw-backups` branch can produce a dry-run keep-latest retention plan
+  with kept/prune-candidate metadata and hashes, without dumping raw titles or
+  bodies.
 - A `gh`-driven context-report E2E harness verifies `@gitclaw /context`
   produces a deterministic context summary without a model call.
 - A `gh`-driven prompt-report E2E harness verifies `@gitclaw /prompt`

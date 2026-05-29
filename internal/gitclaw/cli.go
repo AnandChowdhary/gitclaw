@@ -223,6 +223,9 @@ func runBackup(ctx context.Context, args []string) error {
 	if len(args) > 0 && args[0] == "stats" {
 		return runBackupStats(args[1:])
 	}
+	if len(args) > 0 && args[0] == "retention-plan" {
+		return runBackupRetentionPlan(args[1:])
+	}
 	outDir := filepathArg(args, "--out")
 	filteredArgs := removeFlagWithValue(args, "--out")
 	ev, _, err := loadEventAndConfig(filteredArgs)
@@ -451,6 +454,52 @@ func runBackupStats(args []string) error {
 	fmt.Println(RenderBackupStats(stats))
 	if stats.BackupStatsStatus != "ok" {
 		return fmt.Errorf("backup stats reported %s", stats.BackupStatsStatus)
+	}
+	return nil
+}
+
+func runBackupRetentionPlan(args []string) error {
+	root := filepath.Join(".gitclaw", "backups")
+	repo := os.Getenv("GITHUB_REPOSITORY")
+	keepLatest := 50
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--root":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--root requires a value")
+			}
+			root = args[i+1]
+			i++
+		case "--repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--repo requires a value")
+			}
+			repo = args[i+1]
+			i++
+		case "--keep-latest":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--keep-latest requires a value")
+			}
+			parsed, err := strconv.Atoi(args[i+1])
+			if err != nil || parsed <= 0 {
+				return fmt.Errorf("invalid --keep-latest: %q", args[i+1])
+			}
+			keepLatest = parsed
+			i++
+		default:
+			return fmt.Errorf("unknown backup retention-plan argument %q", args[i])
+		}
+	}
+	if repo == "" {
+		return fmt.Errorf("missing --repo or GITHUB_REPOSITORY")
+	}
+	plan, err := BuildBackupRetentionPlan(root, repo, keepLatest)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderBackupRetentionPlan(plan))
+	if plan.RetentionPlanStatus != "ok" {
+		return fmt.Errorf("backup retention plan reported %s", plan.RetentionPlanStatus)
 	}
 	return nil
 }

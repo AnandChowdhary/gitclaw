@@ -15,7 +15,7 @@ type commandCatalogEntry struct {
 }
 
 var commandCatalog = []commandCatalogEntry{
-	{Command: "/backup", Aliases: []string{"/backups"}, Model: "gitclaw/backup", Category: "backup", Summary: "Show expected backup branch paths for the current issue.", LocalCLI: []string{"gitclaw backup verify", "gitclaw backup manifest", "gitclaw backup stats", "gitclaw backup export-jsonl", "gitclaw backup restore-plan"}},
+	{Command: "/backup", Aliases: []string{"/backups"}, Model: "gitclaw/backup", Category: "backup", Summary: "Show expected backup branch paths for the current issue.", LocalCLI: []string{"gitclaw backup verify", "gitclaw backup manifest", "gitclaw backup stats", "gitclaw backup export-jsonl", "gitclaw backup restore-plan", "gitclaw backup retention-plan"}},
 	{Command: "/channels", Aliases: []string{"/channel"}, Model: "gitclaw/channels", Category: "channels", Summary: "Audit channel bridge settings and workflow-dispatch ingress."},
 	{Command: "/config", Aliases: []string{"/configuration"}, Model: "gitclaw/config", Category: "control-plane", Summary: "Show effective config, labels, prompt budgets, commands, and workflows."},
 	{Command: "/context", Model: "gitclaw/context", Category: "context", Summary: "Show loaded context documents and deterministic tool output metadata."},

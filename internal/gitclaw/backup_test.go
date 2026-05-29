@@ -347,6 +347,77 @@ func TestBuildBackupStatsSummarizesBackupsWithoutBodies(t *testing.T) {
 	}
 }
 
+func TestBuildBackupRetentionPlanKeepsNewestWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T12:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue: IssueBackupIssue{
+			Number: 7,
+			Title:  "@gitclaw retention oldest",
+			Body:   "RETENTION_OLDEST_BODY_SECRET",
+			Labels: []string{"gitclaw"},
+		},
+		Transcript: []TranscriptMessage{{Role: "user", Body: "RETENTION_OLDEST_TRANSCRIPT_SECRET"}},
+		Comments:   []IssueBackupComment{{ID: 11, Body: "RETENTION_OLDEST_COMMENT_SECRET"}},
+	})
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T13:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issue_comment",
+		Issue: IssueBackupIssue{
+			Number: 8,
+			Title:  "@gitclaw retention middle",
+			Body:   "RETENTION_MIDDLE_BODY_SECRET",
+		},
+		Transcript: []TranscriptMessage{{Role: "user", Body: "RETENTION_MIDDLE_TRANSCRIPT_SECRET"}, {Role: "assistant", Body: "RETENTION_MIDDLE_ASSISTANT_SECRET"}},
+		Comments:   []IssueBackupComment{{ID: 12, Body: "RETENTION_MIDDLE_COMMENT_SECRET"}},
+	})
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T14:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue: IssueBackupIssue{
+			Number: 9,
+			Title:  "@gitclaw retention newest",
+			Body:   "RETENTION_NEWEST_BODY_SECRET",
+		},
+		Transcript: []TranscriptMessage{{Role: "user", Body: "RETENTION_NEWEST_TRANSCRIPT_SECRET"}},
+	})
+	if _, err := WriteBackupIndex(root, "owner/repo", time.Date(2026, 5, 29, 15, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+
+	plan, err := BuildBackupRetentionPlan(root, "owner/repo", 2)
+	if err != nil {
+		t.Fatalf("BuildBackupRetentionPlan returned error: %v", err)
+	}
+	if plan.RetentionPlanStatus != "ok" || plan.BackupVerifyStatus != "ok" || plan.KeepLatest != 2 || plan.IssueCount != 3 || plan.KeepCount != 2 || plan.PruneCandidateCount != 1 {
+		t.Fatalf("unexpected retention plan metadata: %#v", plan)
+	}
+	if plan.Kept[0].IssueNumber != 9 || plan.Kept[1].IssueNumber != 8 || plan.PruneCandidates[0].IssueNumber != 7 {
+		t.Fatalf("unexpected retention ordering: kept=%#v prune=%#v", plan.Kept, plan.PruneCandidates)
+	}
+	if plan.NewestKeptIssueNumber != 9 || plan.OldestKeptIssueNumber != 8 {
+		t.Fatalf("unexpected kept boundary metadata: %#v", plan)
+	}
+	report := RenderBackupRetentionPlan(plan)
+	for _, want := range []string{"GitClaw Backup Retention Plan", "retention_mode: `dry-run`", "backup_retention_status: `ok`", "backup_verify_status: `ok`", "verification_failures: `0`", "keep_latest: `2`", "issue_count: `3`", "keep_count: `2`", "prune_candidate_count: `1`", "newest_kept_issue: `#9`", "oldest_kept_issue: `#8`", "raw_bodies_included: `false`", "### Kept Backups", "issue=#9 path=`issues/000009.json`", "issue=#8 path=`issues/000008.json`", "### Prune Candidates", "issue=#7 path=`issues/000007.json`", "title_sha256_12="} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("retention plan report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"RETENTION_OLDEST_BODY_SECRET", "RETENTION_OLDEST_TRANSCRIPT_SECRET", "RETENTION_OLDEST_COMMENT_SECRET", "RETENTION_MIDDLE_BODY_SECRET", "RETENTION_MIDDLE_TRANSCRIPT_SECRET", "RETENTION_MIDDLE_ASSISTANT_SECRET", "RETENTION_MIDDLE_COMMENT_SECRET", "RETENTION_NEWEST_BODY_SECRET", "RETENTION_NEWEST_TRANSCRIPT_SECRET", "@gitclaw retention oldest", "@gitclaw retention middle", "@gitclaw retention newest"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("retention plan leaked body/title token %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestVerifyBackupTreeAcceptsCanonicalBackupIndex(t *testing.T) {
 	root := t.TempDir()
 	writeBackupFixture(t, root, IssueBackup{

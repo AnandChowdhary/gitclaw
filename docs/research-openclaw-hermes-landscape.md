@@ -170,6 +170,14 @@ prints a dry-run restore plan with counts and hashes, but makes no GitHub API
 calls and does not dump raw issue/comment bodies. A future mutating restore can
 require explicit approval and compare the restored issue against this plan.
 
+2026-05-29 backup-retention follow-up: OpenClaw's backup/restore commands keep
+state changes behind explicit previews, while Hermes' session lifecycle docs
+make cleanup/archival pressure visible through exported session artifacts.
+GitClaw's git-native equivalent should start with a non-mutating
+`backup retention-plan`: verify the fetched `gitclaw-backups` branch, sort
+backups by timestamp, keep the latest N, list older payloads as prune
+candidates, and expose only paths, counts, timestamps, and title hashes.
+
 2026-05-29 session-inspection follow-up: OpenClaw exposes transcript and
 session CLIs around JSONL transcript directories, while Hermes automatically
 saves conversations as sessions and can export them to JSONL. GitClaw should

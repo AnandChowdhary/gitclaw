@@ -178,6 +178,40 @@ type BackupStatsEvent struct {
 	Count int
 }
 
+type BackupRetentionPlan struct {
+	Root                  string
+	Repo                  string
+	RepoDir               string
+	IndexPath             string
+	ReadmePath            string
+	SchemaVersion         int
+	IndexGeneratedAt      string
+	KeepLatest            int
+	IssueCount            int
+	KeepCount             int
+	PruneCandidateCount   int
+	RetentionPlanStatus   string
+	BackupVerifyStatus    string
+	VerificationFailures  int
+	OldestKeptIssueNumber int
+	OldestKeptGeneratedAt string
+	NewestKeptIssueNumber int
+	NewestKeptGeneratedAt string
+	RawBodiesIncluded     bool
+	Kept                  []BackupRetentionIssue
+	PruneCandidates       []BackupRetentionIssue
+}
+
+type BackupRetentionIssue struct {
+	IssueNumber        int
+	Path               string
+	BackupGeneratedAt  string
+	EventName          string
+	Comments           int
+	TranscriptMessages int
+	IssueTitleSHA      string
+}
+
 func (r BackupVerifyResult) OK() bool {
 	return len(r.VerificationFailures) == 0
 }
@@ -524,6 +558,97 @@ func BuildBackupStats(root, repo string) (BackupStats, error) {
 	return stats, nil
 }
 
+func BuildBackupRetentionPlan(root, repo string, keepLatest int) (BackupRetentionPlan, error) {
+	if keepLatest <= 0 {
+		return BackupRetentionPlan{}, fmt.Errorf("keep latest must be positive")
+	}
+	if err := validateRepoName(repo); err != nil {
+		return BackupRetentionPlan{}, err
+	}
+	repoDir, index, err := readBackupIndex(root, repo)
+	if err != nil {
+		return BackupRetentionPlan{}, err
+	}
+	if root == "" {
+		root = filepath.Join(".gitclaw", "backups")
+	}
+	verify, err := VerifyBackupTree(root, repo)
+	if err != nil {
+		return BackupRetentionPlan{}, err
+	}
+	plan := BackupRetentionPlan{
+		Root:                 filepath.ToSlash(root),
+		Repo:                 repo,
+		RepoDir:              filepath.ToSlash(repoDir),
+		IndexPath:            filepath.ToSlash(filepath.Join(repoDir, "index.json")),
+		ReadmePath:           filepath.ToSlash(filepath.Join(repoDir, "README.md")),
+		SchemaVersion:        index.Version,
+		IndexGeneratedAt:     index.GeneratedAt,
+		KeepLatest:           keepLatest,
+		IssueCount:           len(index.Issues),
+		RetentionPlanStatus:  "ok",
+		BackupVerifyStatus:   "ok",
+		VerificationFailures: len(verify.VerificationFailures),
+		RawBodiesIncluded:    false,
+	}
+	if !verify.OK() {
+		plan.RetentionPlanStatus = "warn"
+		plan.BackupVerifyStatus = "warn"
+	}
+
+	type retentionCandidate struct {
+		issue       BackupRetentionIssue
+		generatedAt time.Time
+	}
+	candidates := make([]retentionCandidate, 0, len(index.Issues))
+	for _, issue := range index.Issues {
+		backup, err := readIndexedBackup(repoDir, repo, issue)
+		if err != nil {
+			return BackupRetentionPlan{}, err
+		}
+		generatedAt, err := time.Parse(time.RFC3339, backup.GeneratedAt)
+		if err != nil {
+			return BackupRetentionPlan{}, fmt.Errorf("parse backup timestamp for issue #%d: %w", backup.Issue.Number, err)
+		}
+		candidates = append(candidates, retentionCandidate{
+			generatedAt: generatedAt,
+			issue: BackupRetentionIssue{
+				IssueNumber:        backup.Issue.Number,
+				Path:               filepath.ToSlash(issue.Path),
+				BackupGeneratedAt:  backup.GeneratedAt,
+				EventName:          backup.EventName,
+				Comments:           len(backup.Comments),
+				TranscriptMessages: len(backup.Transcript),
+				IssueTitleSHA:      shortDocumentHash(backup.Issue.Title),
+			},
+		})
+	}
+	sort.Slice(candidates, func(i, j int) bool {
+		if !candidates[i].generatedAt.Equal(candidates[j].generatedAt) {
+			return candidates[i].generatedAt.After(candidates[j].generatedAt)
+		}
+		return candidates[i].issue.IssueNumber > candidates[j].issue.IssueNumber
+	})
+	for i, candidate := range candidates {
+		if i < keepLatest {
+			plan.Kept = append(plan.Kept, candidate.issue)
+		} else {
+			plan.PruneCandidates = append(plan.PruneCandidates, candidate.issue)
+		}
+	}
+	plan.KeepCount = len(plan.Kept)
+	plan.PruneCandidateCount = len(plan.PruneCandidates)
+	if len(plan.Kept) > 0 {
+		newest := plan.Kept[0]
+		oldest := plan.Kept[len(plan.Kept)-1]
+		plan.NewestKeptIssueNumber = newest.IssueNumber
+		plan.NewestKeptGeneratedAt = newest.BackupGeneratedAt
+		plan.OldestKeptIssueNumber = oldest.IssueNumber
+		plan.OldestKeptGeneratedAt = oldest.BackupGeneratedAt
+	}
+	return plan, nil
+}
+
 func RenderBackupRestorePlan(plan BackupRestorePlan) string {
 	var b strings.Builder
 	b.WriteString("## GitClaw Backup Restore Plan\n\n")
@@ -566,6 +691,46 @@ func RenderBackupRestorePlan(plan BackupRestorePlan) string {
 	writeHashList(&b, "comment", plan.CommentBodySHAs)
 	b.WriteString("\n### Transcript Body Hashes\n")
 	writeHashList(&b, "message", plan.TranscriptMessageSHAs)
+	return strings.TrimSpace(b.String())
+}
+
+func RenderBackupRetentionPlan(plan BackupRetentionPlan) string {
+	var b strings.Builder
+	b.WriteString("## GitClaw Backup Retention Plan\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	fmt.Fprintf(&b, "- repository: `%s`\n", plan.Repo)
+	fmt.Fprintf(&b, "- retention_mode: `%s`\n", "dry-run")
+	fmt.Fprintf(&b, "- backup_retention_status: `%s`\n", plan.RetentionPlanStatus)
+	fmt.Fprintf(&b, "- backup_verify_status: `%s`\n", plan.BackupVerifyStatus)
+	fmt.Fprintf(&b, "- verification_failures: `%d`\n", plan.VerificationFailures)
+	fmt.Fprintf(&b, "- backup_root: `%s`\n", plan.Root)
+	fmt.Fprintf(&b, "- repo_backup_dir: `%s`\n", plan.RepoDir)
+	fmt.Fprintf(&b, "- index_path: `%s`\n", plan.IndexPath)
+	fmt.Fprintf(&b, "- readme_path: `%s`\n", plan.ReadmePath)
+	fmt.Fprintf(&b, "- backup_schema_version: `%d`\n", plan.SchemaVersion)
+	fmt.Fprintf(&b, "- index_generated_at: `%s`\n", plan.IndexGeneratedAt)
+	fmt.Fprintf(&b, "- keep_latest: `%d`\n", plan.KeepLatest)
+	fmt.Fprintf(&b, "- issue_count: `%d`\n", plan.IssueCount)
+	fmt.Fprintf(&b, "- keep_count: `%d`\n", plan.KeepCount)
+	fmt.Fprintf(&b, "- prune_candidate_count: `%d`\n", plan.PruneCandidateCount)
+	if plan.NewestKeptIssueNumber > 0 {
+		fmt.Fprintf(&b, "- newest_kept_issue: `#%d`\n", plan.NewestKeptIssueNumber)
+		fmt.Fprintf(&b, "- newest_kept_generated_at: `%s`\n", plan.NewestKeptGeneratedAt)
+		fmt.Fprintf(&b, "- oldest_kept_issue: `#%d`\n", plan.OldestKeptIssueNumber)
+		fmt.Fprintf(&b, "- oldest_kept_generated_at: `%s`\n", plan.OldestKeptGeneratedAt)
+	} else {
+		b.WriteString("- newest_kept_issue: `none`\n")
+		b.WriteString("- oldest_kept_issue: `none`\n")
+	}
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n\n", plan.RawBodiesIncluded)
+
+	b.WriteString("This is a non-mutating retention plan. It reads the local backup tree only; it does not delete files, delete branches, edit issues, post comments, or call GitHub APIs.\n\n")
+	b.WriteString("Issue and comment bodies are not included. Titles are represented by short hashes so retention can be audited without exposing transcript contents.\n\n")
+
+	b.WriteString("### Kept Backups\n")
+	writeRetentionIssueList(&b, plan.Kept)
+	b.WriteString("\n### Prune Candidates\n")
+	writeRetentionIssueList(&b, plan.PruneCandidates)
 	return strings.TrimSpace(b.String())
 }
 
@@ -665,6 +830,30 @@ func RenderBackupStats(stats BackupStats) string {
 		}
 	}
 	return strings.TrimSpace(b.String())
+}
+
+func writeRetentionIssueList(b *strings.Builder, issues []BackupRetentionIssue) {
+	if len(issues) == 0 {
+		b.WriteString("- none\n")
+		return
+	}
+	for _, issue := range issues {
+		eventName := strings.TrimSpace(issue.EventName)
+		if eventName == "" {
+			eventName = "unknown"
+		}
+		fmt.Fprintf(
+			b,
+			"- issue=#%d path=`%s` generated_at=`%s` event=`%s` comments=`%d` transcript_messages=`%d` title_sha256_12=`%s`\n",
+			issue.IssueNumber,
+			issue.Path,
+			issue.BackupGeneratedAt,
+			eventName,
+			issue.Comments,
+			issue.TranscriptMessages,
+			issue.IssueTitleSHA,
+		)
+	}
 }
 
 func readBackupIndex(root, repo string) (string, BackupIndex, error) {

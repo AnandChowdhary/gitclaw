@@ -172,7 +172,7 @@ func TestCommandsCommandReportsCatalog(t *testing.T) {
 			t.Fatalf("commands returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `7`", "local_cli_helpers: `14`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`gitclaw commands` command=`/help`", "`gitclaw backup stats` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw skills info <name>` command=`/skills`"} {
+	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `7`", "local_cli_helpers: `15`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`gitclaw commands` command=`/help`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw skills info <name>` command=`/skills`"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("commands output missing %q:\n%s", want, output)
 		}
@@ -207,6 +207,45 @@ func TestBackupStatsCommandReportsFetchedBackupTree(t *testing.T) {
 	}
 	if strings.Contains(output, "CLI_STATS_BODY_TOKEN") || strings.Contains(output, "CLI_STATS_TRANSCRIPT_TOKEN") || strings.Contains(output, "@gitclaw cli stats") {
 		t.Fatalf("backup stats leaked body/title token:\n%s", output)
+	}
+}
+
+func TestBackupRetentionPlanCommandReportsDryRun(t *testing.T) {
+	dir := t.TempDir()
+	writeBackupFixture(t, dir, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T12:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue:       IssueBackupIssue{Number: 7, Title: "@gitclaw cli retention old", Body: "CLI_RETENTION_OLD_BODY_TOKEN"},
+		Transcript:  []TranscriptMessage{{Role: "user", Body: "CLI_RETENTION_OLD_TRANSCRIPT_TOKEN"}},
+		Comments:    []IssueBackupComment{{ID: 11, Body: "CLI_RETENTION_OLD_COMMENT_TOKEN"}},
+	})
+	writeBackupFixture(t, dir, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T13:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issue_comment",
+		Issue:       IssueBackupIssue{Number: 8, Title: "@gitclaw cli retention new", Body: "CLI_RETENTION_NEW_BODY_TOKEN"},
+		Transcript:  []TranscriptMessage{{Role: "user", Body: "CLI_RETENTION_NEW_TRANSCRIPT_TOKEN"}},
+	})
+	if _, err := WriteBackupIndex(dir, "owner/repo", time.Date(2026, 5, 29, 14, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+	output := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"backup", "retention-plan", "--root", dir, "--repo", "owner/repo", "--keep-latest", "1"}); err != nil {
+			t.Fatalf("backup retention-plan returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"GitClaw Backup Retention Plan", "retention_mode: `dry-run`", "backup_retention_status: `ok`", "backup_verify_status: `ok`", "keep_latest: `1`", "issue_count: `2`", "keep_count: `1`", "prune_candidate_count: `1`", "newest_kept_issue: `#8`", "oldest_kept_issue: `#8`", "raw_bodies_included: `false`", "### Kept Backups", "issue=#8 path=`issues/000008.json`", "### Prune Candidates", "issue=#7 path=`issues/000007.json`", "title_sha256_12="} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("backup retention-plan output missing %q:\n%s", want, output)
+		}
+	}
+	for _, leaked := range []string{"CLI_RETENTION_OLD_BODY_TOKEN", "CLI_RETENTION_OLD_TRANSCRIPT_TOKEN", "CLI_RETENTION_OLD_COMMENT_TOKEN", "CLI_RETENTION_NEW_BODY_TOKEN", "CLI_RETENTION_NEW_TRANSCRIPT_TOKEN", "@gitclaw cli retention old", "@gitclaw cli retention new"} {
+		if strings.Contains(output, leaked) {
+			t.Fatalf("backup retention-plan leaked body/title token %q:\n%s", leaked, output)
+		}
 	}
 }
 
