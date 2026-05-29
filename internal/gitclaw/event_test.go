@@ -1,0 +1,126 @@
+package gitclaw
+
+import "testing"
+
+func TestParseIssueOpenedTrustedTrigger(t *testing.T) {
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 42,
+			"title": "@gitclaw explain auth",
+			"body": "How does auth work?",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": []
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	if ev.Kind != EventIssueOpened {
+		t.Fatalf("kind = %v, want %v", ev.Kind, EventIssueOpened)
+	}
+	decision := Preflight(ev, DefaultConfig())
+	if !decision.Allowed {
+		t.Fatalf("trusted prefixed issue should be allowed: %+v", decision)
+	}
+}
+
+func TestPreflightRejectsPRComment(t *testing.T) {
+	ev, err := ParseEvent("issue_comment", []byte(`{
+		"action": "created",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 9,
+			"title": "@gitclaw review",
+			"body": "",
+			"author_association": "MEMBER",
+			"pull_request": {"url": "https://api.github.com/repos/owner/repo/pulls/9"},
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"comment": {
+			"id": 1001,
+			"body": "@gitclaw follow up",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"}
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	decision := Preflight(ev, DefaultConfig())
+	if decision.Allowed {
+		t.Fatalf("PR comment should be rejected")
+	}
+	if decision.Code != "pr_comment_ignored" {
+		t.Fatalf("code = %q, want pr_comment_ignored", decision.Code)
+	}
+}
+
+func TestPreflightRejectsUntrustedCommentBeforeLLM(t *testing.T) {
+	ev, err := ParseEvent("issue_comment", []byte(`{
+		"action": "created",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 7,
+			"title": "@gitclaw explain auth",
+			"body": "",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"comment": {
+			"id": 2002,
+			"body": "please run",
+			"author_association": "CONTRIBUTOR",
+			"user": {"login": "mallory", "type": "User"}
+		},
+		"sender": {"login": "mallory", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	decision := Preflight(ev, DefaultConfig())
+	if decision.Allowed {
+		t.Fatalf("untrusted commenter should be rejected")
+	}
+	if decision.Code != "actor_not_trusted" {
+		t.Fatalf("code = %q, want actor_not_trusted", decision.Code)
+	}
+}
+
+func TestPreflightRejectsBotLoop(t *testing.T) {
+	ev, err := ParseEvent("issue_comment", []byte(`{
+		"action": "created",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 7,
+			"title": "@gitclaw explain auth",
+			"body": "",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"comment": {
+			"id": 3003,
+			"body": "<!-- gitclaw:assistant-turn idempotency_key=abc -->done",
+			"author_association": "MEMBER",
+			"user": {"login": "github-actions[bot]", "type": "Bot"}
+		},
+		"sender": {"login": "github-actions[bot]", "type": "Bot"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	decision := Preflight(ev, DefaultConfig())
+	if decision.Allowed {
+		t.Fatalf("bot comment should be rejected")
+	}
+	if decision.Code != "bot_comment_ignored" {
+		t.Fatalf("code = %q, want bot_comment_ignored", decision.Code)
+	}
+}

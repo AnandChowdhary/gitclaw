@@ -1,0 +1,46 @@
+package gitclaw
+
+import "testing"
+
+func TestIdempotencyKeyUsesStableTriggerIdentity(t *testing.T) {
+	ev := Event{
+		EventName: "issue_comment",
+		Repo:      "owner/repo",
+		Issue: Issue{
+			Number: 12,
+			Title:  "@gitclaw hi",
+		},
+		Comment: &Comment{ID: 345},
+		SHA:     "abc123",
+	}
+	key1 := IdempotencyKey(ev)
+	key2 := IdempotencyKey(ev)
+	if key1 == "" {
+		t.Fatalf("idempotency key is empty")
+	}
+	if key1 != key2 {
+		t.Fatalf("idempotency key not stable: %q != %q", key1, key2)
+	}
+
+	ev.SHA = "def456"
+	if key1 == IdempotencyKey(ev) {
+		t.Fatalf("changing the repo SHA should change the idempotency key")
+	}
+}
+
+func TestRenderAssistantCommentIncludesMarker(t *testing.T) {
+	marker := Marker{
+		RunID:          "123",
+		EventID:        "456",
+		Model:          "fake",
+		IdempotencyKey: "abc",
+		RunURL:         "https://github.com/owner/repo/actions/runs/123",
+	}
+	body := RenderAssistantComment(marker, "Hello.")
+	if !HasGitClawMarker(body) {
+		t.Fatalf("rendered comment does not contain GitClaw marker: %s", body)
+	}
+	if !ContainsIdempotencyKey(body, "abc") {
+		t.Fatalf("rendered comment does not contain idempotency key: %s", body)
+	}
+}

@@ -1,0 +1,120 @@
+package gitclaw
+
+import (
+	"context"
+	"strings"
+	"testing"
+)
+
+func TestHandleDryRunPostsExactlyOneIdempotentComment(t *testing.T) {
+	eventJSON := []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 42,
+			"title": "@gitclaw explain auth",
+			"body": "How does auth work?",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": []
+		},
+		"sender": {"login": "alice", "type": "User"},
+		"after": "abc123"
+	}`)
+	ev, err := ParseEvent("issues", eventJSON)
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{
+		CommentsByIssue: map[int][]Comment{42: nil},
+	}
+	llm := &FakeLLM{Response: "Auth is handled by the repo code."}
+	err = Handle(context.Background(), ev, DefaultConfig(), github, llm)
+	if err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	if !strings.Contains(github.Posted[0].Body, "Auth is handled") {
+		t.Fatalf("posted body missing LLM response: %s", github.Posted[0].Body)
+	}
+
+	err = Handle(context.Background(), ev, DefaultConfig(), github, llm)
+	if err != nil {
+		t.Fatalf("second Handle returned error: %v", err)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("idempotent retry posted %d comments, want still 1", len(github.Posted))
+	}
+	if llm.Calls != 1 {
+		t.Fatalf("LLM called %d times, want 1 due existing idempotency marker", llm.Calls)
+	}
+}
+
+func TestHandleSkipsUntrustedBeforeLLM(t *testing.T) {
+	ev, err := ParseEvent("issue_comment", []byte(`{
+		"action": "created",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 2,
+			"title": "@gitclaw explain",
+			"body": "",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"comment": {
+			"id": 55,
+			"body": "run this",
+			"author_association": "CONTRIBUTOR",
+			"user": {"login": "mallory", "type": "User"}
+		},
+		"sender": {"login": "mallory", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{2: nil}}
+	llm := &FakeLLM{Response: "should not be used"}
+	err = Handle(context.Background(), ev, DefaultConfig(), github, llm)
+	if err == nil {
+		t.Fatalf("Handle should return preflight rejection")
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called for untrusted actor")
+	}
+	if len(github.Posted) != 0 {
+		t.Fatalf("posted comments for untrusted actor: %#v", github.Posted)
+	}
+}
+
+type FakeGitHub struct {
+	CommentsByIssue map[int][]Comment
+	Posted          []PostedComment
+}
+
+func (f *FakeGitHub) ListIssueComments(ctx context.Context, repo string, issueNumber int) ([]Comment, error) {
+	return append([]Comment(nil), f.CommentsByIssue[issueNumber]...), nil
+}
+
+func (f *FakeGitHub) PostIssueComment(ctx context.Context, repo string, issueNumber int, body string) (PostedComment, error) {
+	posted := PostedComment{ID: int64(9000 + len(f.Posted)), Body: body}
+	f.Posted = append(f.Posted, posted)
+	f.CommentsByIssue[issueNumber] = append(f.CommentsByIssue[issueNumber], Comment{
+		ID:   posted.ID,
+		Body: body,
+		User: User{Login: "github-actions[bot]", Type: "Bot"},
+	})
+	return posted, nil
+}
+
+type FakeLLM struct {
+	Response string
+	Calls    int
+}
+
+func (f *FakeLLM) Complete(ctx context.Context, req LLMRequest) (string, error) {
+	f.Calls++
+	return f.Response, nil
+}
