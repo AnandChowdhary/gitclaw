@@ -21,7 +21,7 @@ var commandCatalog = []commandCatalogEntry{
 	{Command: "/context", Model: "gitclaw/context", Category: "context", Summary: "Show loaded context documents and deterministic tool output metadata."},
 	{Command: "/doctor", Aliases: []string{"/health"}, Model: "gitclaw/doctor", Category: "health", Summary: "Run a body-free health check with skill, soul, and tool validation rollups.", LocalCLI: []string{"gitclaw doctor"}},
 	{Command: "/help", Aliases: []string{"/commands"}, Model: "gitclaw/commands", Category: "control-plane", Summary: "List deterministic GitClaw slash commands, aliases, and local CLI helpers.", LocalCLI: []string{"gitclaw commands"}},
-	{Command: "/memory", Aliases: []string{"/memories"}, Model: "gitclaw/memory", Category: "memory", Summary: "Audit long-term memory, dated memory note metadata, search, and memory hygiene findings.", LocalCLI: []string{"gitclaw memory validate", "gitclaw memory search <query>"}},
+	{Command: "/memory", Aliases: []string{"/memories"}, Model: "gitclaw/memory", Category: "memory", Summary: "Audit long-term memory, dated memory note metadata, search, and memory hygiene findings.", LocalCLI: []string{"gitclaw memory validate", "gitclaw memory list", "gitclaw memory search <query>"}},
 	{Command: "/models", Aliases: []string{"/model"}, Model: "gitclaw/models", Category: "model", Summary: "Show model provider, endpoint, token source, and retry policy."},
 	{Command: "/policy", Model: "gitclaw/policy", Category: "policy", Summary: "Show preflight, actor trust, write-intent, labels, and workflow permissions."},
 	{Command: "/prompt", Model: "gitclaw/prompt", Category: "prompt", Summary: "Show prompt budget, truncation, context, skill, and tool-output metadata."},

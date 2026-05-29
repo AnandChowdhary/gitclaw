@@ -55,14 +55,26 @@ func RenderMemoryReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if query := requestedMemorySearchQuery(ev, cfg); query != "" {
 		return RenderMemorySearchReport(ev, cfg, repoContext, query, defaultMemorySearchMaxResults)
 	}
+	return renderMemoryListReport(ev, cfg, repoContext, true)
+}
+
+func RenderMemoryCLIReport(cfg Config, repoContext RepoContext) string {
+	return renderMemoryListReport(Event{}, cfg, repoContext, false)
+}
+
+func renderMemoryListReport(ev Event, cfg Config, repoContext RepoContext, includeIssue bool) string {
 	surface := inspectMemorySurface(cfg.Workdir, repoContext)
 	validation := ValidateMemory(cfg.Workdir, repoContext)
 	latest := latestMemoryNotePath(surface.DatedNotes)
 	var b strings.Builder
 	b.WriteString("## GitClaw Memory Report\n\n")
 	b.WriteString("Generated without a model call.\n\n")
-	fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
-	fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
 	fmt.Fprintf(&b, "- memory_mode: `%s`\n", "read-only")
 	fmt.Fprintf(&b, "- long_term_memory_present: `%t`\n", surface.LongTerm.Present)
 	fmt.Fprintf(&b, "- long_term_memory_loaded: `%t`\n", surface.LoadedLongTerm)

@@ -559,8 +559,8 @@ GitHub issue/comment event
   `backup retention-plan`,
   `heartbeat`,
   `channel-ingest`, `proactive enqueue`, `proactive init`,
-  `memory validate`, `skills validate`, `skills list`, `skills info`,
-  `skills search`,
+  `memory validate`, `memory list`, `memory search`, `skills validate`,
+  `skills list`, `skills info`, `skills search`,
   `soul validate`, `soul list`, `soul search`, `tools validate`, `tools list`,
   `tools search`, `doctor`, `commands`, `version`.
 
@@ -720,6 +720,7 @@ larger session recall:
 
 ```text
 @gitclaw /memory
+@gitclaw /memory list
 @gitclaw /memory validate
 @gitclaw /memory search backup branch
 ```
@@ -741,6 +742,8 @@ summarizes:
 
 It never dumps memory file bodies, issue bodies, or comments. Memory remains
 read-only during assistant turns; edits require normal reviewed git changes.
+`@gitclaw /memory list` is an explicit inventory alias for the same report,
+matching the local `gitclaw memory list` helper.
 
 When called as `@gitclaw /memory search <query>`, the command searches
 git-backed memory files with a local lexical matcher. It reports query hash,
@@ -753,6 +756,7 @@ memory-hygiene report. Local operators can run the same validation with:
 
 ```bash
 gitclaw memory validate
+gitclaw memory list
 gitclaw memory search <query> --max-results 10
 gitclaw memory search --query <query> --max-results 10
 ```
@@ -2121,6 +2125,7 @@ assert the expected comments/labels, and close the issue in cleanup.
 17. **Memory inspection**
 
    - create a real issue with `@gitclaw /memory`,
+   - create a second real issue with `@gitclaw /memory list`,
    - assert the reply is marked `model="gitclaw/memory"`,
    - assert the report lists `.gitclaw/MEMORY.md`, dated memory note counts,
      loaded/omitted note counts, and memory file hashes,
@@ -2552,6 +2557,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven memory-report E2E harness verifies `@gitclaw /memory`
   produces a deterministic memory inventory without a model call or body
   leakage.
+- A `gh`-driven memory-list E2E harness verifies `@gitclaw /memory list`
+  is an explicit inventory alias with the same body-free memory-file,
+  loaded-note, hash, and validation metadata.
 - A `gh`-driven memory-search E2E harness verifies
   `@gitclaw /memory search backup branch` searches git-backed memory files
   without a model call, raw query leakage, or memory-body leakage.

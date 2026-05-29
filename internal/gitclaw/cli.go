@@ -49,16 +49,34 @@ func RunCLI(ctx context.Context, args []string) error {
 
 func runMemoryCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw memory validate|search <query>")
+		return fmt.Errorf("usage: gitclaw memory validate|list|search <query>")
 	}
 	switch args[0] {
 	case "validate":
 		return runMemoryValidateCommand(args[1:])
+	case "list":
+		return runMemoryListCommand(args[1:])
 	case "search":
 		return runMemorySearchCommand(args[1:])
 	default:
 		return fmt.Errorf("unknown memory command %q", args[0])
 	}
+}
+
+func runMemoryListCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown memory list argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderMemoryCLIReport(cfg, repoContext))
+	return nil
 }
 
 func runMemorySearchCommand(args []string) error {

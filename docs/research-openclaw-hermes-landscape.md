@@ -384,6 +384,12 @@ git-native equivalent should keep memory read-only in assistant turns but add
 long-term memory presence, canonical dated-note paths, empty files, context
 size limits, and obvious secret-like token patterns.
 
+2026-05-30 memory-list follow-up: the memory inventory path should be explicit,
+not just the fallback behavior of `/memory`. Add `@gitclaw /memory list` and
+`gitclaw memory list` as documented aliases for the body-free memory surface:
+long-term memory, dated note counts, loaded/omitted notes, latest note,
+hashes, and validation rollups.
+
 2026-05-29 memory-search follow-up: OpenClaw's memory search accepts positional
 or `--query` input plus `--max-results`, and its memory-search concept combines
 semantic/vector recall with BM25-style lexical fallback. Hermes likewise treats

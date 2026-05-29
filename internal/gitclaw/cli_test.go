@@ -246,6 +246,28 @@ func TestMemoryValidateCommandReportsCurrentRepoShape(t *testing.T) {
 	}
 }
 
+func TestMemoryListCommandReportsInventoryWithoutBodies(t *testing.T) {
+	dir := t.TempDir()
+	writeTestFile(t, dir, ".gitclaw/MEMORY.md", "MEMORY_LIST_BODY_TOKEN")
+	writeTestFile(t, dir, ".gitclaw/memory/2026-05-29.md", "DATED_MEMORY_LIST_BODY_TOKEN")
+	t.Setenv("GITCLAW_WORKDIR", dir)
+	output := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"memory", "list"}); err != nil {
+			t.Fatalf("memory list returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"GitClaw Memory Report", "scope: `local-cli`", "memory_mode: `read-only`", "long_term_memory_present: `true`", "long_term_memory_loaded: `true`", "dated_memory_notes: `1`", "canonical_dated_memory_notes: `1`", "noncanonical_dated_memory_notes: `0`", "loaded_memory_notes: `1`", "latest_memory_note: `.gitclaw/memory/2026-05-29.md`", "memory_validation_status: `ok`", "memory_files_at_limit: `0`", "### Long-Term Memory", ".gitclaw/MEMORY.md", "### Dated Memory Notes", ".gitclaw/memory/2026-05-29.md", "sha256_12=", "### Validation", "- none"} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("memory list output missing %q:\n%s", want, output)
+		}
+	}
+	for _, leaked := range []string{"MEMORY_LIST_BODY_TOKEN", "DATED_MEMORY_LIST_BODY_TOKEN"} {
+		if strings.Contains(output, leaked) {
+			t.Fatalf("memory list leaked body token %q:\n%s", leaked, output)
+		}
+	}
+}
+
 func TestMemorySearchCommandReportsHashedMatches(t *testing.T) {
 	dir := t.TempDir()
 	writeTestFile(t, dir, ".gitclaw/MEMORY.md", "Repository deployment preference CLI_MEMORY_SEARCH_BODY_TOKEN.\n")
@@ -337,7 +359,7 @@ func TestCommandsCommandReportsCatalog(t *testing.T) {
 			t.Fatalf("commands returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `7`", "local_cli_helpers: `23`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`gitclaw commands` command=`/help`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
+	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `7`", "local_cli_helpers: `24`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`gitclaw commands` command=`/help`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("commands output missing %q:\n%s", want, output)
 		}
