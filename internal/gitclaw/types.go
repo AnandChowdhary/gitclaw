@@ -19,6 +19,7 @@ type Config struct {
 	ErrorLabel                string
 	HeartbeatLabel            string
 	ChannelLabel              string
+	ProactiveLabel            string
 	WriteRequestedLabel       string
 	AllowedAssociations       map[string]bool
 	Model                     string
@@ -38,6 +39,7 @@ func DefaultConfig() Config {
 		ErrorLabel:          "gitclaw:error",
 		HeartbeatLabel:      "gitclaw:heartbeat",
 		ChannelLabel:        "gitclaw:channel",
+		ProactiveLabel:      "gitclaw:proactive",
 		WriteRequestedLabel: "gitclaw:write-requested",
 		AllowedAssociations: map[string]bool{
 			"OWNER":        true,
@@ -149,6 +151,12 @@ type ChannelIngestGitHubClient interface {
 	ListOpenIssues(ctx context.Context, repo string, labels []string, limit int) ([]Issue, error)
 	ListIssueComments(ctx context.Context, repo string, issueNumber int) ([]Comment, error)
 	PostIssueComment(ctx context.Context, repo string, issueNumber int, body string) (PostedComment, error)
+	AddIssueLabels(ctx context.Context, repo string, issueNumber int, labels []string) error
+}
+
+type ProactiveGitHubClient interface {
+	CreateIssue(ctx context.Context, repo, title, body string, labels []string) (Issue, error)
+	ListOpenIssues(ctx context.Context, repo string, labels []string, limit int) ([]Issue, error)
 	AddIssueLabels(ctx context.Context, repo string, issueNumber int, labels []string) error
 }
 

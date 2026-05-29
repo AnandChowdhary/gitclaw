@@ -1,0 +1,63 @@
+name: GitClaw Proactive
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: Proactive job name
+        required: true
+      slot:
+        description: Idempotency slot, defaults to current UTC date
+        required: false
+      prompt:
+        description: Proactive instruction body
+        required: false
+      prompt_file:
+        description: Optional prompt file path in the repository
+        required: false
+
+concurrency:
+  group: gitclaw-proactive-${{ inputs.name }}
+  cancel-in-progress: false
+
+jobs:
+  enqueue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      actions: write
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+
+      - id: enqueue
+        run: go run ./cmd/gitclaw proactive enqueue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
+          GITCLAW_PROACTIVE_NAME: ${{ inputs.name }}
+          GITCLAW_PROACTIVE_SLOT: ${{ inputs.slot }}
+          GITCLAW_PROACTIVE_PROMPT: ${{ inputs.prompt }}
+          GITCLAW_PROACTIVE_PROMPT_FILE: ${{ inputs.prompt_file }}
+
+      - run: |
+          set -euo pipefail
+          dispatch_id="proactive-${GITCLAW_PROACTIVE_NAME}-${GITCLAW_PROACTIVE_SLOT}"
+          gh workflow run .github/workflows/gitclaw.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            -f issue_number="${GITCLAW_ISSUE_NUMBER}" \
+            -f dispatch_id="$dispatch_id" \
+            -f reason="proactive:${GITCLAW_PROACTIVE_NAME}"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
+          GITCLAW_PROACTIVE_NAME: ${{ steps.enqueue.outputs.name }}
+          GITCLAW_PROACTIVE_SLOT: ${{ steps.enqueue.outputs.slot }}
+          GITCLAW_ISSUE_NUMBER: ${{ steps.enqueue.outputs.issue_number }}

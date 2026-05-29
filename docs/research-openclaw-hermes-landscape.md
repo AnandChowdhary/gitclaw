@@ -178,6 +178,13 @@ that create or reuse GitHub issues, then dispatch the main issue handler. This
 preserves the no-daemon architecture while allowing email triage, reminders,
 watchers, and reports to initiate their own visible issue threads.
 
+2026-05-29 proactive implementation follow-up: the minimal GitClaw cut is a
+generic `proactive enqueue` command and dispatchable workflow. It creates one
+issue per job name and slot, stores a `gitclaw:proactive-run` marker in the
+issue body, labels the issue, and wakes the normal handler with a deterministic
+dispatch ID. This keeps OpenClaw-style scheduled usefulness while preserving
+GitHub as the audit and replay surface.
+
 ### Multi-Agent Routing
 
 OpenClaw's multi-agent model treats each agent as a full isolated persona scope:

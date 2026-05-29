@@ -21,6 +21,9 @@ func Preflight(ev Event, cfg Config) PreflightDecision {
 	if ev.Kind == EventWorkflowDispatch && HasChannelThreadMarker(ev.Issue.Body) {
 		return PreflightDecision{Allowed: true, Code: "allowed", Reason: "allowed"}
 	}
+	if ev.Kind == EventWorkflowDispatch && HasProactiveRunMarker(ev.Issue.Body) {
+		return PreflightDecision{Allowed: true, Code: "allowed", Reason: "allowed"}
+	}
 	if !triggered(ev, cfg) {
 		return reject("not_triggered", "issue is not labeled or prefixed for GitClaw")
 	}

@@ -13,6 +13,7 @@ var heartbeatMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:heartbeat\s+([^>
 var errorMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:error\s+([^>]*)-->`)
 var channelMessageMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-message\s+([^>]*)-->`)
 var channelThreadMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-thread\s+([^>]*)-->`)
+var proactiveRunMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:proactive-run\s+([^>]*)-->`)
 
 func IdempotencyKey(ev Event) string {
 	trigger := fmt.Sprintf("issue:%d", ev.Issue.Number)
@@ -90,6 +91,10 @@ func HasChannelMessageMarker(body string) bool {
 
 func HasChannelThreadMarker(body string) bool {
 	return channelThreadMarkerPattern.MatchString(body)
+}
+
+func HasProactiveRunMarker(body string) bool {
+	return proactiveRunMarkerPattern.MatchString(body)
 }
 
 func HasHeartbeatMarker(body string) bool {

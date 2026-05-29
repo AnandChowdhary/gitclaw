@@ -287,10 +287,10 @@ comment.
 
 ## Proactive Usefulness
 
-GitClaw should eventually support proactive work without introducing an
-always-on daemon. The primitive is a scheduled GitHub Actions workflow that
-creates or updates a GitHub issue, then wakes the normal issue handler with
-`workflow_dispatch`.
+GitClaw supports a first proactive primitive without introducing an always-on
+daemon. The primitive is a GitHub Actions workflow that creates or reuses a
+GitHub issue, then wakes the normal issue handler with `workflow_dispatch`.
+Template workflows can add `schedule` triggers for cron-like behavior.
 
 This is distinct from heartbeat:
 
@@ -311,8 +311,18 @@ Examples:
 - personal inbox or notification digest.
 
 Proactive jobs should be easy to create, but not silently self-installed by the
-agent. The safe v1 interface is a generator command or reviewed PR that creates
-a workflow plus a prompt file, for example:
+agent. The current primitive is:
+
+```text
+gitclaw proactive enqueue \
+  --name email-triage \
+  --slot 2026-05-29 \
+  --prompt-file .gitclaw/proactive/email-triage.md
+```
+
+It is exposed through `.github/workflows/gitclaw-proactive.yml` for manual
+dispatch and E2E. The future safe v1 interface is a generator command or
+reviewed PR that creates a scheduled workflow plus a prompt file, for example:
 
 ```text
 gitclaw proactive init \
@@ -377,7 +387,7 @@ Proactive issue bodies should include a hidden marker:
 
 Idempotency rules:
 
-- one issue per `name + slot` unless the job declares rolling-thread mode,
+- one issue per `name + slot` unless a future job declares rolling-thread mode,
 - rerunning the same slot updates or reuses the existing issue,
 - the main handler `dispatch_id` is derived from `name + slot`,
 - proactive jobs must not loop by reacting to their own assistant comments.
@@ -1311,8 +1321,8 @@ MVP is not complete until:
   comment is reconstructed as user input during a dispatched run,
 - the channel-ingest harness verifies the generic bridge workflow mirrors a
   message into an issue and dispatches the main handler,
-- once implemented, the proactive enqueue harness verifies scheduled/manual
-  jobs can create their own work issues idempotently,
+- the proactive enqueue harness verifies manual/scheduled job primitives can
+  create their own work issues idempotently,
 - the live harness verifies status labels end at `gitclaw:done` without
   `gitclaw:running` or `gitclaw:error`,
 - the failure harness forces a real invalid-model run and verifies a bounded
@@ -1426,6 +1436,8 @@ examples/workflows/gitclaw.yml
   comment is included in the dispatched conversation transcript.
 - A `gh`-driven channel-ingest E2E harness verifies the generic channel ingress
   workflow end to end.
+- A `gh`-driven proactive E2E harness verifies the generic proactive enqueue
+  workflow end to end.
 - A `gh`-driven failure E2E harness verifies the safe failure path against a
   real Actions/model failure.
 - A `gh`-driven prompt-budget E2E harness verifies a large real issue still
@@ -1468,6 +1480,8 @@ examples/workflows/gitclaw.yml
 - GitHub Models billing and rate-limit notes: https://docs.github.com/en/billing/concepts/product-billing/github-models
 - GitHub Models `models:read` changelog: https://github.blog/changelog/2025-05-15-modelsread-now-required-for-github-models-access/
 - OpenClaw heartbeat docs: https://openclawlab.com/en/docs/agent/heartbeat/
+- OpenClaw automation docs: https://docs.openclaw.ai/automation/index
+- OpenClaw scheduled tasks docs: https://docs.openclaw.ai/cron-jobs
 - Hermes cron docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/cron.md
 - Slack Socket Mode: https://api.slack.com/apis/connections/socket
 - Slack Events API: https://docs.slack.dev/apis/events-api/

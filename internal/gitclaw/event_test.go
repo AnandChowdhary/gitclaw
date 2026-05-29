@@ -190,3 +190,28 @@ func TestPreflightAllowsChannelThreadDispatchWithoutTriggerLabel(t *testing.T) {
 		t.Fatalf("channel thread dispatch should be allowed without trigger label: %+v", decision)
 	}
 }
+
+func TestPreflightAllowsProactiveDispatchWithoutTriggerLabel(t *testing.T) {
+	ev := Event{
+		Kind:      EventWorkflowDispatch,
+		EventName: "workflow_dispatch",
+		Repo:      "owner/repo",
+		Issue: Issue{
+			Number: 13,
+			Title:  "GitClaw proactive email-triage 2026-05-29",
+			Body: RenderProactiveRunBody(ProactiveEnqueueOptions{
+				Name:   "email-triage",
+				Slot:   "2026-05-29",
+				Prompt: "Summarize inbox.",
+			}),
+			AuthorAssociation: "NONE",
+			User:              User{Login: "github-actions[bot]", Type: "Bot"},
+			Labels:            []string{"gitclaw:proactive"},
+		},
+		Sender: User{Login: "github-actions[bot]", Type: "Bot"},
+	}
+	decision := Preflight(ev, DefaultConfig())
+	if !decision.Allowed {
+		t.Fatalf("proactive dispatch should be allowed without trigger label: %+v", decision)
+	}
+}

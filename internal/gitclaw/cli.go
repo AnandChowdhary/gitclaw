@@ -23,6 +23,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runHeartbeatCommand(ctx, args[1:])
 	case "channel-ingest":
 		return runChannelIngestCommand(ctx, args[1:])
+	case "proactive":
+		return runProactiveCommand(ctx, args[1:])
 	case "version":
 		fmt.Println("gitclaw dev")
 		return nil
@@ -190,6 +192,78 @@ func runChannelIngestCommand(ctx context.Context, args []string) error {
 		return err
 	}
 	fmt.Printf("channel_ingest issue=%d comment=%d created=%t duplicate=%t url=%s\n", result.IssueNumber, result.CommentID, result.Created, result.Duplicate, result.IssueURL)
+	return nil
+}
+
+func runProactiveCommand(ctx context.Context, args []string) error {
+	if len(args) == 0 {
+		return fmt.Errorf("usage: gitclaw proactive enqueue")
+	}
+	switch args[0] {
+	case "enqueue":
+		return runProactiveEnqueueCommand(ctx, args[1:])
+	default:
+		return fmt.Errorf("unknown proactive command %q", args[0])
+	}
+}
+
+func runProactiveEnqueueCommand(ctx context.Context, args []string) error {
+	cfg := DefaultConfig()
+	opts := ProactiveEnqueueOptions{
+		Repo:       os.Getenv("GITHUB_REPOSITORY"),
+		Name:       os.Getenv("GITCLAW_PROACTIVE_NAME"),
+		Slot:       os.Getenv("GITCLAW_PROACTIVE_SLOT"),
+		Prompt:     os.Getenv("GITCLAW_PROACTIVE_PROMPT"),
+		PromptFile: os.Getenv("GITCLAW_PROACTIVE_PROMPT_FILE"),
+	}
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--repo requires a value")
+			}
+			opts.Repo = args[i+1]
+			i++
+		case "--name":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--name requires a value")
+			}
+			opts.Name = args[i+1]
+			i++
+		case "--slot":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--slot requires a value")
+			}
+			opts.Slot = args[i+1]
+			i++
+		case "--prompt":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--prompt requires a value")
+			}
+			opts.Prompt = args[i+1]
+			i++
+		case "--prompt-file":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--prompt-file requires a value")
+			}
+			opts.PromptFile = args[i+1]
+			i++
+		default:
+			return fmt.Errorf("unknown proactive enqueue argument %q", args[i])
+		}
+	}
+	token := githubTokenFromEnv()
+	if token == "" {
+		return fmt.Errorf("missing GH_TOKEN or GITHUB_TOKEN")
+	}
+	result, err := RunProactiveEnqueue(ctx, cfg, NewRESTGitHubClient(token), opts, time.Now())
+	if err != nil {
+		return err
+	}
+	if err := writeProactiveOutputs(result); err != nil {
+		return err
+	}
+	fmt.Printf("proactive_enqueue issue=%d name=%s slot=%s created=%t url=%s\n", result.IssueNumber, result.Name, result.Slot, result.Created, result.IssueURL)
 	return nil
 }
 
