@@ -15,12 +15,24 @@ func IsModelReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderModelReport(ev Event, cfg Config) string {
+	return renderModelReport(ev, cfg, true)
+}
+
+func RenderModelCLIReport(cfg Config) string {
+	return renderModelReport(Event{}, cfg, false)
+}
+
+func renderModelReport(ev Event, cfg Config, includeIssue bool) string {
 	baseURL := llmBaseURL(cfg)
 	var b strings.Builder
 	b.WriteString("## GitClaw Model Report\n\n")
 	b.WriteString("Generated without a model call.\n\n")
-	fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
-	fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
 	fmt.Fprintf(&b, "- provider: `%s`\n", llmProviderForReport(cfg, baseURL))
 	fmt.Fprintf(&b, "- model: `%s`\n", cfg.Model)
 	fmt.Fprintf(&b, "- endpoint_host: `%s`\n", llmEndpointHost(baseURL))
@@ -31,7 +43,10 @@ func RenderModelReport(ev Event, cfg Config) string {
 	fmt.Fprintf(&b, "- retry_max_delay_seconds: `%d`\n", int(llmRetryMaxDelay().Seconds()))
 	fmt.Fprintf(&b, "- retryable_statuses: `%s`\n", "429, 408, 5xx")
 	fmt.Fprintf(&b, "- prompt_artifact_enabled: `%t`\n", strings.TrimSpace(os.Getenv("GITCLAW_PROMPT_ARTIFACT_PATH")) != "")
-	fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n\n", shortDocumentHash(ev.Issue.Title))
+	if includeIssue {
+		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
+	}
+	b.WriteByte('\n')
 
 	b.WriteString("The model client retries transient provider failures with bounded exponential backoff and honors bounded `Retry-After` values when providers return them.\n\n")
 	b.WriteString("Issue bodies, comment bodies, API keys, and raw provider error bodies are not included in this report.\n\n")

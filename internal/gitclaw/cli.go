@@ -37,6 +37,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runSoulCommand(args[1:])
 	case "tools":
 		return runToolsCommand(args[1:])
+	case "models", "model":
+		return runModelsCommand(args[1:])
 	case "doctor":
 		return runDoctorCommand(args[1:])
 	case "commands":
@@ -256,6 +258,18 @@ func runChannelsCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderChannelCLIReport(cfg))
+	return nil
+}
+
+func runModelsCommand(args []string) error {
+	if len(args) > 1 || (len(args) == 1 && args[0] != "list") {
+		return fmt.Errorf("usage: gitclaw models [list]")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderModelCLIReport(cfg))
 	return nil
 }
 

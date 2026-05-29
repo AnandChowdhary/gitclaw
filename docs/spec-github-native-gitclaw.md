@@ -514,6 +514,7 @@ GitClaw supports a deterministic model/provider audit command:
 
 ```text
 @gitclaw /models
+@gitclaw /models list
 ```
 
 The command runs after normal preflight and context loading, but before model
@@ -534,6 +535,16 @@ It never dumps issue/comment bodies, API keys, full prompts, or raw provider
 error bodies. This gives operators a safe way to inspect GitHub Models and
 OpenAI-compatible provider wiring from the issue thread before burning model
 quota on a real assistant turn.
+
+Local operators can inspect the same model wiring without opening an issue:
+
+```bash
+gitclaw models list
+```
+
+The local report omits repository, issue number, and issue-title hash while
+retaining provider family, model ID, endpoint host, token-source name, timeout,
+retry settings, prompt-artifact status, and environment knob names.
 
 ## Runtime Architecture
 
@@ -2566,6 +2577,9 @@ examples/workflows/gitclaw.yml
   reports workflow triggers and prompt metadata without a model call.
 - A `gh`-driven model-report E2E harness verifies `@gitclaw /models` reports
   GitHub Models provider and retry settings without a model call.
+- A `gh`-driven models-list E2E harness verifies `@gitclaw /models list` is
+  an explicit report alias, while local `gitclaw models list` exposes the same
+  provider wiring without issue-only fields.
 - A `gh`-driven config-report E2E harness verifies `@gitclaw /config` reports
   effective labels, prompt budgets, commands, and workflow metadata without a
   model call.
