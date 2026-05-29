@@ -158,7 +158,7 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 			Model:          "gitclaw/session",
 			IdempotencyKey: key,
 			RunURL:         actionRunURL(ev),
-		}, RenderSessionReport(ev, comments, transcript))
+		}, RenderSessionReport(ev, cfg, comments, transcript))
 		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
 			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post session report comment: %w", err))
 		}

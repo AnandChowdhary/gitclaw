@@ -641,6 +641,7 @@ transcript/session CLIs and Hermes' saved/searchable sessions:
 
 ```text
 @gitclaw /session
+@gitclaw /session search deployment window
 ```
 
 The command runs after normal preflight authorization and transcript
@@ -657,6 +658,16 @@ comment with `model="gitclaw/session"` and summarizes:
 It never dumps issue/comment bodies. The hashes make session reconstruction
 debuggable without turning the issue-visible report into another raw transcript
 copy.
+
+When called as `@gitclaw /session search <query>`, the command searches the
+current reconstructed GitHub issue transcript with a local lexical matcher. It
+reports the query hash and term count, transcript and match counts, result
+limits, message indexes, roles, sources, actor/trust metadata, line numbers,
+scores, message hashes, and line hashes. It never emits raw issue bodies,
+comment bodies, assistant replies, prompts, or raw search queries. This is the
+GitHub-native version of OpenClaw/Hermes session search: enough recall and
+debugging signal to find the relevant turn while preserving the issue thread as
+the canonical session store.
 
 ## Context Contract
 

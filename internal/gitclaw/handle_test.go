@@ -1269,6 +1269,73 @@ func TestHandleSessionCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 }
 
+func TestHandleSessionSearchCommandPostsReportWithoutLLM(t *testing.T) {
+	ev, err := ParseEvent("issue_comment", []byte(`{
+		"action": "created",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 118,
+			"title": "GitClaw session search handler test",
+			"body": "Initial deployment phrase token: SESSION_SEARCH_HANDLER_ISSUE_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"comment": {
+			"id": 24,
+			"body": "@gitclaw /session search deployment SESSION_SEARCH_HANDLER_QUERY_SECRET\nHidden comment token: SESSION_SEARCH_HANDLER_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"created_at": "2026-05-30T12:00:00Z",
+			"updated_at": "2026-05-30T12:00:00Z"
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{118: {
+		{
+			ID:                23,
+			Body:              "<!-- gitclaw:assistant-turn idempotency_key=old -->\nAssistant deployment body token: SESSION_SEARCH_HANDLER_ASSISTANT_SECRET.",
+			User:              User{Login: "github-actions[bot]", Type: "Bot"},
+			AuthorAssociation: "NONE",
+		},
+		{
+			ID:                24,
+			Body:              "@gitclaw /session search deployment SESSION_SEARCH_HANDLER_QUERY_SECRET\nHidden comment token: SESSION_SEARCH_HANDLER_BODY_SECRET.",
+			User:              User{Login: "alice", Type: "User"},
+			AuthorAssociation: "MEMBER",
+			CreatedAt:         "2026-05-30T12:00:00Z",
+			UpdatedAt:         "2026-05-30T12:00:00Z",
+		},
+	}}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, DefaultConfig(), github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic session search command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Session Search Report", "Generated without a model call", "model=\"gitclaw/session\"", "session_search_status: `ok`", "query_sha256_12:", "max_results: `10`", "transcript_messages: `3`", "matched_messages: `3`", "matched_lines: `3`", "results_returned: `3`", "raw_bodies_included: `false`", "message=`01`", "source=`issue`", "source=`comment:23`", "source=`comment:24`", "message_sha256_12=", "line_sha256_12="} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("session search report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SESSION_SEARCH_HANDLER_ISSUE_SECRET", "SESSION_SEARCH_HANDLER_ASSISTANT_SECRET", "SESSION_SEARCH_HANDLER_QUERY_SECRET", "SESSION_SEARCH_HANDLER_BODY_SECRET"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("session search report leaked body/query token %q:\n%s", leaked, body)
+		}
+	}
+	if !hasLabel(github.IssueLabels[118], "gitclaw:done") || hasLabel(github.IssueLabels[118], "gitclaw:running") || hasLabel(github.IssueLabels[118], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[118])
+	}
+}
+
 func TestHandleLabelsWriteRequestsAndAddsPolicyContext(t *testing.T) {
 	ev, err := ParseEvent("issues", []byte(`{
 		"action": "opened",

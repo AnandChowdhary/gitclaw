@@ -2,6 +2,7 @@ package gitclaw
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -12,11 +13,46 @@ type sessionMarkerCounts struct {
 	ChannelMessages int
 }
 
+const defaultSessionSearchMaxResults = 10
+
+type SessionSearchReport struct {
+	QueryHash          string
+	QueryTerms         int
+	SearchStatus       string
+	MaxResults         int
+	TranscriptMessages int
+	MatchedMessages    int
+	MatchedLines       int
+	ResultsReturned    int
+	RawBodiesIncluded  bool
+	Results            []SessionSearchResult
+}
+
+type SessionSearchResult struct {
+	MessageIndex      int
+	Role              string
+	Source            string
+	Actor             string
+	AuthorAssociation string
+	Trusted           bool
+	Edited            bool
+	Line              int
+	Score             int
+	MatchedTerms      int
+	MessageBytes      int
+	MessageLines      int
+	MessageSHA        string
+	LineSHA           string
+}
+
 func IsSessionReportRequest(ev Event, cfg Config) bool {
 	return activeSlashCommand(ev, cfg) == "/session"
 }
 
-func RenderSessionReport(ev Event, comments []Comment, transcript []TranscriptMessage) string {
+func RenderSessionReport(ev Event, cfg Config, comments []Comment, transcript []TranscriptMessage) string {
+	if query := requestedSessionSearchQuery(ev, cfg); query != "" {
+		return RenderSessionSearchReport(ev, transcript, query, defaultSessionSearchMaxResults)
+	}
 	counts := countSessionMarkers(comments)
 	var b strings.Builder
 	b.WriteString("## GitClaw Session Report\n\n")
@@ -44,6 +80,144 @@ func RenderSessionReport(ev Event, comments []Comment, transcript []TranscriptMe
 	return strings.TrimSpace(b.String())
 }
 
+func RenderSessionSearchReport(ev Event, transcript []TranscriptMessage, query string, maxResults int) string {
+	report := BuildSessionSearchReport(transcript, query, maxResults)
+	var b strings.Builder
+	b.WriteString("## GitClaw Session Search Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	if ev.Repo != "" {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+	}
+	if ev.Issue.Number != 0 {
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
+	fmt.Fprintf(&b, "- session_search_status: `%s`\n", report.SearchStatus)
+	fmt.Fprintf(&b, "- query_sha256_12: `%s`\n", report.QueryHash)
+	fmt.Fprintf(&b, "- query_terms: `%d`\n", report.QueryTerms)
+	fmt.Fprintf(&b, "- max_results: `%d`\n", report.MaxResults)
+	fmt.Fprintf(&b, "- transcript_messages: `%d`\n", report.TranscriptMessages)
+	fmt.Fprintf(&b, "- matched_messages: `%d`\n", report.MatchedMessages)
+	fmt.Fprintf(&b, "- matched_lines: `%d`\n", report.MatchedLines)
+	fmt.Fprintf(&b, "- results_returned: `%d`\n", report.ResultsReturned)
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n\n", report.RawBodiesIncluded)
+	b.WriteString("This report searches the reconstructed GitHub issue transcript with a local lexical matcher. It reports message indexes, sources, trust metadata, line numbers, scores, and hashes only; raw issue bodies, comment bodies, assistant replies, prompts, and raw search queries are not included.\n\n")
+
+	b.WriteString("### Results\n")
+	if len(report.Results) == 0 {
+		b.WriteString("- none\n")
+	} else {
+		for _, result := range report.Results {
+			fmt.Fprintf(&b, "- message=`%02d` role=`%s` source=`%s` actor=`%s` association=`%s` trusted=`%t` edited=`%t` line=`%d` score=`%d` matched_terms=`%d` message_bytes=`%d` message_lines=`%d` message_sha256_12=`%s` line_sha256_12=`%s`\n",
+				result.MessageIndex,
+				result.Role,
+				result.Source,
+				inlineCode(result.Actor),
+				inlineCode(result.AuthorAssociation),
+				result.Trusted,
+				result.Edited,
+				result.Line,
+				result.Score,
+				result.MatchedTerms,
+				result.MessageBytes,
+				result.MessageLines,
+				result.MessageSHA,
+				result.LineSHA,
+			)
+		}
+	}
+	return strings.TrimSpace(b.String())
+}
+
+func requestedSessionSearchQuery(ev Event, cfg Config) string {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 3 || fields[0] != "/session" || !strings.EqualFold(fields[1], "search") {
+		return ""
+	}
+	return cleanMemorySearchQuery(strings.Join(fields[2:], " "))
+}
+
+func BuildSessionSearchReport(transcript []TranscriptMessage, query string, maxResults int) SessionSearchReport {
+	query = cleanMemorySearchQuery(query)
+	if maxResults <= 0 {
+		maxResults = defaultSessionSearchMaxResults
+	}
+	report := SessionSearchReport{
+		QueryHash:          shortDocumentHash(query),
+		QueryTerms:         len(memorySearchTerms(query)),
+		SearchStatus:       "ok",
+		MaxResults:         maxResults,
+		TranscriptMessages: len(transcript),
+		RawBodiesIncluded:  false,
+	}
+	if query == "" {
+		report.SearchStatus = "no_query"
+		return report
+	}
+	terms := memorySearchTerms(query)
+	if len(terms) == 0 {
+		report.SearchStatus = "no_query"
+		return report
+	}
+	matchedMessages := map[int]bool{}
+	var results []SessionSearchResult
+	for index, msg := range transcript {
+		lines := strings.Split(msg.Body, "\n")
+		for lineIndex, line := range lines {
+			score, matchedTerms := memoryLineSearchScore(sessionMessageSource(msg), line, query, terms)
+			if score == 0 {
+				continue
+			}
+			messageIndex := index + 1
+			matchedMessages[messageIndex] = true
+			results = append(results, SessionSearchResult{
+				MessageIndex:      messageIndex,
+				Role:              msg.Role,
+				Source:            sessionMessageSource(msg),
+				Actor:             msg.Actor,
+				AuthorAssociation: msg.AuthorAssociation,
+				Trusted:           msg.Trusted,
+				Edited:            msg.Edited,
+				Line:              lineIndex + 1,
+				Score:             score,
+				MatchedTerms:      matchedTerms,
+				MessageBytes:      len(msg.Body),
+				MessageLines:      lineCount(msg.Body),
+				MessageSHA:        shortDocumentHash(msg.Body),
+				LineSHA:           shortDocumentHash(line),
+			})
+		}
+	}
+	sort.Slice(results, func(i, j int) bool {
+		if results[i].Score != results[j].Score {
+			return results[i].Score > results[j].Score
+		}
+		if results[i].MessageIndex != results[j].MessageIndex {
+			return results[i].MessageIndex < results[j].MessageIndex
+		}
+		return results[i].Line < results[j].Line
+	})
+	report.MatchedMessages = len(matchedMessages)
+	report.MatchedLines = len(results)
+	if len(results) > maxResults {
+		results = results[:maxResults]
+	}
+	report.Results = results
+	report.ResultsReturned = len(results)
+	if report.MatchedLines == 0 {
+		report.SearchStatus = "no_matches"
+	}
+	return report
+}
+
+func sessionMessageSource(msg TranscriptMessage) string {
+	if msg.CommentID != 0 {
+		return fmt.Sprintf("comment:%d", msg.CommentID)
+	}
+	return "issue"
+}
+
 func countSessionMarkers(comments []Comment) sessionMarkerCounts {
 	var counts sessionMarkerCounts
 	for _, comment := range comments {
@@ -69,16 +243,12 @@ func writeTranscriptMessageList(b *strings.Builder, transcript []TranscriptMessa
 		return
 	}
 	for i, msg := range transcript {
-		source := "issue"
-		if msg.CommentID != 0 {
-			source = fmt.Sprintf("comment:%d", msg.CommentID)
-		}
 		fmt.Fprintf(
 			b,
 			"- `%02d` role=`%s` source=`%s` actor=`%s` association=`%s` trusted=`%t` edited=`%t` bytes=`%d` lines=`%d` sha256_12=`%s`\n",
 			i+1,
 			msg.Role,
-			source,
+			sessionMessageSource(msg),
 			inlineCode(msg.Actor),
 			inlineCode(msg.AuthorAssociation),
 			msg.Trusted,

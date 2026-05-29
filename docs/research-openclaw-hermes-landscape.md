@@ -185,6 +185,14 @@ keep the GitHub issue as the canonical session but add `@gitclaw /session` as
 the safe inspection layer: count reconstructed messages, markers, trust states,
 and hashes without copying raw conversation bodies into a new comment.
 
+2026-05-30 session-search follow-up: OpenClaw's transcript/session tooling is
+built around finding prior session artifacts, and Hermes documents
+cross-session search backed by FTS5. GitClaw should not add a hidden session
+database yet; the issue thread is the session store. The matching primitive is
+`@gitclaw /session search <query>`: search the reconstructed issue transcript,
+then return only message indexes, roles, sources, trust metadata, scores, and
+message/line hashes without raw transcript snippets or raw query text.
+
 2026-05-29 memory follow-up: the right GitClaw cut is read-only memory
 injection, not self-writing memory. Load compact files such as
 `.gitclaw/MEMORY.md`, `.gitclaw/USER.md`, `.gitclaw/IDENTITY.md`, and the
