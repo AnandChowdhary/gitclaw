@@ -24,6 +24,7 @@ func IsToolsReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderToolsReport(ev Event, repoContext RepoContext) string {
+	validation := ValidateTools(repoContext)
 	var b strings.Builder
 	b.WriteString("## GitClaw Tools Report\n\n")
 	b.WriteString("Generated without a model call.\n\n")
@@ -31,7 +32,8 @@ func RenderToolsReport(ev Event, repoContext RepoContext) string {
 	fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
 	fmt.Fprintf(&b, "- available_tools: `%d`\n", len(toolReportContracts))
 	fmt.Fprintf(&b, "- active_tool_outputs: `%d`\n", len(repoContext.ToolOutputs))
-	fmt.Fprintf(&b, "- tool_guidance_files: `%d`\n\n", toolGuidanceDocumentCount(repoContext.Documents))
+	writeToolsValidationSummary(&b, validation)
+	b.WriteString("\n")
 	b.WriteString("GitClaw v1 tools are deterministic pre-model context builders. They do not execute shell commands, mutate files, open pull requests, or modify repository state.\n\n")
 	b.WriteString("Tool output bodies are not included; hashes let maintainers verify exactly which prompt-visible outputs were produced.\n\n")
 
@@ -45,6 +47,9 @@ func RenderToolsReport(ev Event, repoContext RepoContext) string {
 
 	b.WriteString("\n### Active Tool Outputs\n")
 	writeToolOutputList(&b, repoContext.ToolOutputs)
+
+	b.WriteString("\n### Validation\n")
+	writeToolsValidationFindings(&b, validation)
 
 	return strings.TrimSpace(b.String())
 }

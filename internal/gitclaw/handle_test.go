@@ -773,7 +773,7 @@ func TestHandleToolsCommandPostsReportWithoutLLM(t *testing.T) {
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Tools Report", "Generated without a model call", "model=\"gitclaw/tools\"", "available_tools: `5`", "active_tool_outputs: `3`", ".gitclaw/TOOLS.md", "gitclaw.list_files", "gitclaw.search_files", "gitclaw.read_file", "input=`go.mod`", "sha256_12="} {
+	for _, want := range []string{"GitClaw Tools Report", "Generated without a model call", "model=\"gitclaw/tools\"", "available_tools: `5`", "active_tool_outputs: `3`", "tool_validation_status: `ok`", "tool_validation_errors: `0`", "tool_validation_warnings: `0`", "tool_contracts: `5`", "tool_active_outputs: `3`", "tool_guidance_files: `1`", "tool_unknown_outputs: `0`", "tool_unsafe_contracts: `0`", "tool_over_limit_outputs: `0`", "tool_missing_guidance: `0`", "tool_duplicate_contracts: `0`", "### Validation", "- none", ".gitclaw/TOOLS.md", "gitclaw.list_files", "gitclaw.search_files", "gitclaw.read_file", "input=`go.mod`", "sha256_12="} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("tools report missing %q:\n%s", want, body)
 		}

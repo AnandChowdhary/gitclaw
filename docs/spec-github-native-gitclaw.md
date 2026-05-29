@@ -555,7 +555,7 @@ GitHub issue/comment event
 - CLI entry point.
 - Subcommands: `preflight`, `handle`, `backup`, `heartbeat`,
   `channel-ingest`, `proactive enqueue`, `proactive init`,
-  `skills validate`, `soul validate`, `doctor`, `version`.
+  `skills validate`, `soul validate`, `tools validate`, `doctor`, `version`.
 
 `internal/github`
 
@@ -862,6 +862,28 @@ GitClaw v1 adds a small deterministic tool layer before the model call:
 Tool outputs are inserted into the prompt as auditable context blocks. They are
 not autonomous shell execution, and they do not mutate the repository.
 
+## Tool Validation
+
+GitClaw validates the deterministic tool surface against the OpenClaw/Hermes
+safety split between callable tools, procedural skills, plugins, and toolsets:
+
+- every declared GitClaw tool contract must use the `gitclaw.` namespace,
+- every declared contract must be `read-only` or `metadata-only`,
+- duplicate contracts are errors,
+- `.gitclaw/TOOLS.md` should be loaded as the repo-local tool guidance file,
+- every active tool output must have a declared contract,
+- active outputs must stay within their configured caps for file listing,
+  search matches, bounded file reads, skill index metadata, and policy output.
+
+Validation is visible in the `/tools` report and locally through:
+
+```bash
+gitclaw tools validate
+```
+
+The validation output includes only names, counts, and short finding details.
+It never dumps full tool outputs, file bodies, or search result bodies.
+
 ## Tools Inspection Command
 
 GitClaw supports a deterministic tool-surface audit command inspired by
@@ -878,7 +900,11 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 - available deterministic GitClaw tool contracts and their trigger conditions,
 - `.gitclaw/TOOLS.md` metadata, if present,
 - active tool outputs generated for the current issue/comment,
-- each active output's input, byte count, line count, and short hash.
+- each active output's input, byte count, line count, and short hash,
+- tool validation status, error/warning counts, contract counts, active-output
+  counts, unknown-output counts, unsafe-contract counts, over-limit output
+  counts, missing-guidance count, duplicate-contract count, and body-free
+  findings.
 
 It never dumps full tool output bodies. Tool output bodies remain prompt inputs
 only; the issue-visible report exposes enough metadata to debug whether
@@ -1910,6 +1936,9 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the reply is marked `model="gitclaw/tools"`,
    - assert the report lists available tool contracts and active output
      metadata for list/search/read,
+   - assert tool validation status, contract counts, active-output counts,
+     unknown-output counts, unsafe-contract counts, and over-limit output
+     counts, missing-guidance count, and duplicate-contract count are present,
    - assert the report does not dump full file or search output bodies,
    - assert the run succeeds without requiring a model provider response.
 
@@ -2237,8 +2266,8 @@ examples/workflows/gitclaw.yml
   deterministic high-authority context file audit with validation metadata,
   without a model call or body leakage.
 - A `gh`-driven tools-report E2E harness verifies `@gitclaw /tools` produces a
-  deterministic tool contract and active-output audit without a model call or
-  output-body leakage.
+  deterministic tool contract and active-output audit with validation metadata,
+  without a model call or output-body leakage.
 - A `gh`-driven policy-report E2E harness verifies `@gitclaw /policy` produces
   a deterministic preflight/label/write-policy audit without a model call or
   issue-body leakage.

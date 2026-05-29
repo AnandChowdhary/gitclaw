@@ -97,6 +97,26 @@ func TestSoulValidateCommandReportsCurrentRepoShape(t *testing.T) {
 	}
 }
 
+func TestToolsValidateCommandReportsCurrentRepoShape(t *testing.T) {
+	dir := t.TempDir()
+	writeTestFile(t, dir, ".gitclaw/TOOLS.md", "TOOLS_BODY_TOKEN")
+	writeTestFile(t, dir, "go.mod", "module github.com/AnandChowdhary/gitclaw\n")
+	t.Setenv("GITCLAW_WORKDIR", dir)
+	output := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"tools", "validate"}); err != nil {
+			t.Fatalf("tools validate returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"GitClaw Tools Validate Report", "tool_validation_status: `ok`", "tool_validation_errors: `0`", "tool_validation_warnings: `0`", "tool_contracts: `5`", "tool_active_outputs: `1`", "tool_guidance_files: `1`", "tool_missing_guidance: `0`", "tool_duplicate_contracts: `0`", "- none"} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("tools validate output missing %q:\n%s", want, output)
+		}
+	}
+	if strings.Contains(output, "TOOLS_BODY_TOKEN") || strings.Contains(output, "module github.com/AnandChowdhary/gitclaw") {
+		t.Fatalf("tools validate leaked body/output token:\n%s", output)
+	}
+}
+
 func captureStdout(t *testing.T, fn func()) string {
 	t.Helper()
 	original := os.Stdout

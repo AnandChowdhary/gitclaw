@@ -156,6 +156,19 @@ for expected in \
   "Generated without a model call" \
   'available_tools: `5`' \
   'active_tool_outputs: `4`' \
+  'tool_validation_status: `ok`' \
+  'tool_validation_errors: `0`' \
+  'tool_validation_warnings: `0`' \
+  'tool_contracts: `5`' \
+  'tool_active_outputs: `4`' \
+  'tool_guidance_files: `1`' \
+  'tool_unknown_outputs: `0`' \
+  'tool_unsafe_contracts: `0`' \
+  'tool_over_limit_outputs: `0`' \
+  'tool_missing_guidance: `0`' \
+  'tool_duplicate_contracts: `0`' \
+  "### Validation" \
+  "- none" \
   ".gitclaw/TOOLS.md" \
   "gitclaw.list_files" \
   "gitclaw.skill_index" \
@@ -163,7 +176,7 @@ for expected in \
   "gitclaw.read_file" \
   'input=`go.mod`' \
   "sha256_12="; do
-  grep -Fq "$expected" <<<"$comments" || die "tools report missing ${expected}"
+  grep -Fq -- "$expected" <<<"$comments" || die "tools report missing ${expected}"
 done
 
 if grep -Fq "module github.com/AnandChowdhary/gitclaw" <<<"$comments"; then

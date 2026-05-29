@@ -427,6 +427,14 @@ surface inspectable with `@gitclaw /tools`: list deterministic tool contracts,
 show which tool outputs were produced for the current turn, and publish
 input/size/hash metadata without dumping output bodies.
 
+2026-05-29 tool-validation follow-up: OpenClaw's exec approval docs treat tool
+execution as a stacked policy/allowlist/approval decision, and Hermes separates
+toolsets such as terminal, file, web, cron, memory, and messaging by platform
+availability. GitClaw should keep v1 narrower: validate that declared contracts
+are only `read-only` or `metadata-only`, active outputs are declared and
+bounded, `.gitclaw/TOOLS.md` is loaded, and `/tools` plus
+`gitclaw tools validate` expose the result without dumping output bodies.
+
 2026-05-29 prompt-budget follow-up: OpenClaw's context docs expose per-file and
 total prompt caps plus visible truncation markers, while Hermes' memory/context
 docs treat character limits as a core defense against context bloat. GitClaw

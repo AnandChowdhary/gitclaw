@@ -30,6 +30,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runSkillsCommand(args[1:])
 	case "soul":
 		return runSoulCommand(args[1:])
+	case "tools":
+		return runToolsCommand(args[1:])
 	case "doctor":
 		return runDoctorCommand(args[1:])
 	case "version":
@@ -65,6 +67,34 @@ func runSoulValidateCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSoulValidationReport(repoContext))
+	return nil
+}
+
+func runToolsCommand(args []string) error {
+	if len(args) == 0 {
+		return fmt.Errorf("usage: gitclaw tools validate")
+	}
+	switch args[0] {
+	case "validate":
+		return runToolsValidateCommand(args[1:])
+	default:
+		return fmt.Errorf("unknown tools command %q", args[0])
+	}
+}
+
+func runToolsValidateCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown tools validate argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderToolsValidationReport(repoContext))
 	return nil
 }
 
