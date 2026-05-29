@@ -140,7 +140,12 @@ jobs:
 
           mkdir -p "$(dirname "$dest")"
           cp "$backup_file" "$dest"
-          git add "$dest"
+
+          cd "$GITHUB_WORKSPACE"
+          go run ./cmd/gitclaw backup index --root "$worktree/.gitclaw/backups" --repo "$GITHUB_REPOSITORY"
+
+          cd "$worktree"
+          git add ".gitclaw/backups"
 
           if git diff --cached --quiet; then
             echo "No backup changes to commit."

@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"os"
+	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 )
@@ -69,5 +71,82 @@ func TestIssueBackupPathIsRepoScoped(t *testing.T) {
 	want := ".gitclaw/backups/owner__repo/issues/000007.json"
 	if got != want {
 		t.Fatalf("path = %q, want %q", got, want)
+	}
+}
+
+func TestWriteBackupIndexSummarizesIssueBackups(t *testing.T) {
+	root := t.TempDir()
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T12:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue: IssueBackupIssue{
+			Number: 7,
+			Title:  "@gitclaw first | title",
+			Labels: []string{"gitclaw"},
+		},
+		Transcript: []TranscriptMessage{{Role: "user", Body: "hi"}},
+		Comments:   []IssueBackupComment{{ID: 1, Body: "comment"}},
+	})
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T13:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issue_comment",
+		Issue: IssueBackupIssue{
+			Number: 12,
+			Title:  "@gitclaw second",
+		},
+		Transcript: []TranscriptMessage{{Role: "user"}, {Role: "assistant"}},
+		Comments:   []IssueBackupComment{{ID: 1}, {ID: 2}},
+	})
+
+	indexPath, err := WriteBackupIndex(root, "owner/repo", time.Date(2026, 5, 29, 14, 0, 0, 0, time.UTC))
+	if err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+	data, err := os.ReadFile(indexPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var index BackupIndex
+	if err := json.Unmarshal(data, &index); err != nil {
+		t.Fatalf("index is not JSON: %v\n%s", err, data)
+	}
+	if index.Version != 1 || index.Repo != "owner/repo" || index.Count != 2 {
+		t.Fatalf("unexpected index metadata: %#v", index)
+	}
+	if index.Issues[0].Number != 7 || index.Issues[0].Path != "issues/000007.json" || index.Issues[0].CommentCount != 1 {
+		t.Fatalf("unexpected first index issue: %#v", index.Issues[0])
+	}
+	if index.Issues[1].Number != 12 || index.Issues[1].TranscriptMessages != 2 {
+		t.Fatalf("unexpected second index issue: %#v", index.Issues[1])
+	}
+	readme, err := os.ReadFile(filepath.Join(root, "owner__repo", "README.md"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	readmeBody := string(readme)
+	for _, want := range []string{"# GitClaw Backups", "#7", "@gitclaw first \\| title", "issues/000012.json"} {
+		if !strings.Contains(readmeBody, want) {
+			t.Fatalf("README missing %q:\n%s", want, readmeBody)
+		}
+	}
+}
+
+func writeBackupFixture(t *testing.T, root string, backup IssueBackup) {
+	t.Helper()
+	path := issueBackupPath(root, backup.Repo, backup.Issue.Number)
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	data, err := json.MarshalIndent(backup, "", "  ")
+	if err != nil {
+		t.Fatal(err)
+	}
+	data = append(data, '\n')
+	if err := os.WriteFile(path, data, 0o600); err != nil {
+		t.Fatal(err)
 	}
 }

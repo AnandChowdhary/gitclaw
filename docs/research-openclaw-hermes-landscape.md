@@ -118,6 +118,12 @@ credentials, auth profiles, and raw session state out of that repo. For
 GitClaw, that maps cleanly to git-backed, reviewable `.gitclaw/` state and a
 separate backup branch for raw issue transcript snapshots.
 
+2026-05-29 backup-index follow-up: OpenClaw migration applies only after a
+reviewed plan and verified backup, while Hermes exposes session export as a
+portable artifact. GitClaw should make its backup branch similarly inspectable:
+raw issue transcripts stay in per-issue JSON files, and a repo-scoped
+`index.json`/`README.md` summarizes coverage without exposing every raw message.
+
 2026-05-29 memory follow-up: the right GitClaw cut is read-only memory
 injection, not self-writing memory. Load compact files such as
 `.gitclaw/MEMORY.md`, `.gitclaw/USER.md`, `.gitclaw/IDENTITY.md`, and the

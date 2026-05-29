@@ -1111,7 +1111,20 @@ or mirror them privately. The MVP command writes the backup file but does not
 auto-commit from the model-running job. Automatic backup commits run in a
 separate workflow job after a successful assistant turn, with explicit
 `contents: write` and `issues: read` permissions, and push only the canonical
-backup file to a dedicated `gitclaw-backups` branch.
+backup file plus a repo-scoped backup index to a dedicated `gitclaw-backups`
+branch.
+
+Each backup branch update also refreshes:
+
+```text
+.gitclaw/backups/<owner>__<repo>/index.json
+.gitclaw/backups/<owner>__<repo>/README.md
+```
+
+The index contains only navigational metadata: issue number, title, backup
+path, backup timestamp, event name, labels, comment count, and transcript
+message count. It intentionally avoids raw issue bodies and comments so humans
+and E2E harnesses can verify backup coverage without opening every transcript.
 
 The backup branch is intentionally separate from `main`:
 
@@ -1340,6 +1353,15 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump full skill bodies or verification tokens,
    - assert the run succeeds without requiring a model provider response.
 
+17. **Backup index**
+
+   - create a real deterministic GitClaw issue turn,
+   - wait for the successful backup job,
+   - assert the backup branch contains the issue JSON backup,
+   - assert the repo-scoped `index.json` and `README.md` reference the issue
+     number, title, and backup path,
+   - assert the index contains metadata counts but not raw transcript bodies.
+
 ### Example Live Commands
 
 The script can use commands in this shape:
@@ -1504,6 +1526,8 @@ examples/workflows/gitclaw.yml
   workflow end to end.
 - A `gh`-driven proactive E2E harness verifies the generic proactive enqueue
   workflow end to end.
+- A `gh`-driven backup-index E2E harness verifies the dedicated backup branch
+  contains issue JSON plus a repo-scoped `index.json` and `README.md`.
 - A `gh`-driven context-report E2E harness verifies `@gitclaw /context`
   produces a deterministic context summary without a model call.
 - A `gh`-driven skills-report E2E harness verifies `@gitclaw /skills`
