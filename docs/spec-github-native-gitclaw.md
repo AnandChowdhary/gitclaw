@@ -557,8 +557,8 @@ GitHub issue/comment event
 - CLI entry point.
 - Subcommands: `preflight`, `handle`, `backup`, `heartbeat`,
   `channel-ingest`, `proactive enqueue`, `proactive init`,
-  `skills validate`, `skills info`, `soul validate`, `tools validate`,
-  `doctor`, `commands`, `version`.
+  `memory validate`, `skills validate`, `skills info`, `soul validate`,
+  `tools validate`, `doctor`, `commands`, `version`.
 
 `internal/github`
 
@@ -705,6 +705,7 @@ larger session recall:
 
 ```text
 @gitclaw /memory
+@gitclaw /memory validate
 ```
 
 The command runs after normal context assembly, but before model inference. It
@@ -719,10 +720,29 @@ summarizes:
 - max loaded memory note budget,
 - omitted note count,
 - latest canonical dated note path,
-- byte, line, and short hash metadata for memory files.
+- byte, line, and short hash metadata for memory files,
+- memory validation status, error/warning counts, and body-free findings.
 
 It never dumps memory file bodies, issue bodies, or comments. Memory remains
 read-only during assistant turns; edits require normal reviewed git changes.
+
+When called as `@gitclaw /memory validate`, the command renders only the
+memory-hygiene report. Local operators can run the same validation with:
+
+```bash
+gitclaw memory validate
+```
+
+The validator checks for:
+
+- missing or empty `.gitclaw/MEMORY.md`,
+- noncanonical `.gitclaw/memory/*.md` filenames,
+- empty memory notes,
+- memory files at the context byte limit,
+- obvious secret-like token patterns.
+
+The output includes paths, counts, hashes, and short finding details only. It
+does not print memory bodies or matched secret values.
 
 ## Skill Loading
 
@@ -2344,6 +2364,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven memory-report E2E harness verifies `@gitclaw /memory`
   produces a deterministic memory inventory without a model call or body
   leakage.
+- A `gh`-driven memory-validate E2E harness verifies
+  `@gitclaw /memory validate` reports memory hygiene without a model call or
+  memory-body leakage.
 - A `gh`-driven skills-report E2E harness verifies `@gitclaw /skills`
   produces a deterministic local skill inventory with provenance and
   requirement and validation metadata, without a model call.

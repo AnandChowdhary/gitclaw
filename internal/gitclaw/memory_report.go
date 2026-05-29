@@ -25,7 +25,11 @@ func IsMemoryReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderMemoryReport(ev Event, cfg Config, repoContext RepoContext) string {
+	if isMemoryValidateRequest(ev, cfg) {
+		return RenderMemoryValidationReport(ev, cfg, repoContext)
+	}
 	surface := inspectMemorySurface(cfg.Workdir, repoContext)
+	validation := ValidateMemory(cfg.Workdir, repoContext)
 	latest := latestMemoryNotePath(surface.DatedNotes)
 	var b strings.Builder
 	b.WriteString("## GitClaw Memory Report\n\n")
@@ -42,7 +46,9 @@ func RenderMemoryReport(ev Event, cfg Config, repoContext RepoContext) string {
 	fmt.Fprintf(&b, "- max_loaded_memory_notes: `%d`\n", maxMemoryDocuments)
 	fmt.Fprintf(&b, "- omitted_memory_notes: `%d`\n", omittedMemoryNotes(surface))
 	fmt.Fprintf(&b, "- latest_memory_note: `%s`\n", latest)
-	fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n\n", shortDocumentHash(ev.Issue.Title))
+	fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
+	writeMemoryValidationSummary(&b, validation)
+	b.WriteByte('\n')
 
 	b.WriteString("GitClaw memory is repo-local Markdown loaded as read-only prompt context. This report never dumps memory bodies; hashes let maintainers verify exactly which git-backed memory files were present and loaded.\n\n")
 	b.WriteString("Memory edits require normal reviewed git changes. GitClaw does not self-write `.gitclaw/MEMORY.md` or `.gitclaw/memory/*.md` during assistant turns.\n\n")
@@ -56,7 +62,15 @@ func RenderMemoryReport(ev Event, cfg Config, repoContext RepoContext) string {
 	b.WriteString("\n### Loaded For This Turn\n")
 	writeLoadedMemoryPaths(&b, surface)
 
+	b.WriteString("\n### Validation\n")
+	writeMemoryValidationFindings(&b, validation)
+
 	return strings.TrimSpace(b.String())
+}
+
+func isMemoryValidateRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && (fields[0] == "/memory" || fields[0] == "/memories") && strings.EqualFold(fields[1], "validate")
 }
 
 func inspectMemorySurface(root string, repoContext RepoContext) memorySurface {

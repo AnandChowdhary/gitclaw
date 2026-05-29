@@ -28,6 +28,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runProactiveCommand(ctx, args[1:])
 	case "skills":
 		return runSkillsCommand(args[1:])
+	case "memory":
+		return runMemoryCommand(args[1:])
 	case "soul":
 		return runSoulCommand(args[1:])
 	case "tools":
@@ -42,6 +44,34 @@ func RunCLI(ctx context.Context, args []string) error {
 	default:
 		return fmt.Errorf("unknown command %q", args[0])
 	}
+}
+
+func runMemoryCommand(args []string) error {
+	if len(args) == 0 {
+		return fmt.Errorf("usage: gitclaw memory validate")
+	}
+	switch args[0] {
+	case "validate":
+		return runMemoryValidateCommand(args[1:])
+	default:
+		return fmt.Errorf("unknown memory command %q", args[0])
+	}
+}
+
+func runMemoryValidateCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown memory validate argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderMemoryValidationReport(Event{}, cfg, repoContext))
+	return nil
 }
 
 func runSoulCommand(args []string) error {

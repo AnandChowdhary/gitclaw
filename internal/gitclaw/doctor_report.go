@@ -27,6 +27,7 @@ type doctorSurface struct {
 	SkillValidation    SkillValidationReport
 	SoulValidation     SoulValidationReport
 	ToolValidation     ToolValidationReport
+	MemoryValidation   MemoryValidationReport
 	ConfigValid        bool
 	ConfigError        string
 	ModelHost          string
@@ -75,6 +76,9 @@ func RenderDoctorReport(ev Event, cfg Config, repoContext RepoContext) string {
 	fmt.Fprintf(&b, "- soul_validation_status: `%s`\n", surface.SoulValidation.Status)
 	fmt.Fprintf(&b, "- soul_validation_errors: `%d`\n", surface.SoulValidation.Errors)
 	fmt.Fprintf(&b, "- soul_validation_warnings: `%d`\n", surface.SoulValidation.Warnings)
+	fmt.Fprintf(&b, "- memory_validation_status: `%s`\n", surface.MemoryValidation.Status)
+	fmt.Fprintf(&b, "- memory_validation_errors: `%d`\n", surface.MemoryValidation.Errors)
+	fmt.Fprintf(&b, "- memory_validation_warnings: `%d`\n", surface.MemoryValidation.Warnings)
 	fmt.Fprintf(&b, "- tool_validation_status: `%s`\n", surface.ToolValidation.Status)
 	fmt.Fprintf(&b, "- tool_validation_errors: `%d`\n", surface.ToolValidation.Errors)
 	fmt.Fprintf(&b, "- tool_validation_warnings: `%d`\n", surface.ToolValidation.Warnings)
@@ -140,6 +144,7 @@ func inspectDoctorSurface(cfg Config, repoContext RepoContext) doctorSurface {
 	skillValidation := ValidateSkillSummaries(repoContext.SkillSummaries)
 	soulValidation := ValidateSoulContext(repoContext)
 	toolValidation := ValidateTools(repoContext)
+	memoryValidation := ValidateMemory(root, repoContext)
 	surface := doctorSurface{
 		Config:             inspectConfigSurfaceFile(root, gitclawConfigPath),
 		Workflows:          make([]configSurfaceFile, 0, len(configWorkflowPaths)),
@@ -148,11 +153,12 @@ func inspectDoctorSurface(cfg Config, repoContext RepoContext) doctorSurface {
 		SkillValidation:    skillValidation,
 		SoulValidation:     soulValidation,
 		ToolValidation:     toolValidation,
+		MemoryValidation:   memoryValidation,
 		ConfigSource:       configSource(cfg),
 		ModelHost:          llmEndpointHost(llmBaseURL(cfg)),
 		ManagedLabels:      managedPolicyLabels(cfg),
-		ValidationErrors:   skillValidation.Errors + soulValidation.Errors + toolValidation.Errors,
-		ValidationWarnings: skillValidation.Warnings + soulValidation.Warnings + toolValidation.Warnings,
+		ValidationErrors:   skillValidation.Errors + soulValidation.Errors + memoryValidation.Errors + toolValidation.Errors,
+		ValidationWarnings: skillValidation.Warnings + soulValidation.Warnings + memoryValidation.Warnings + toolValidation.Warnings,
 	}
 	configCheck := DefaultConfig()
 	configCheck.Workdir = root
@@ -240,6 +246,11 @@ func doctorChecks(surface doctorSurface) []doctorCheck {
 			Name:   "soul_validation",
 			Status: surface.SoulValidation.Status,
 			Detail: doctorValidationDetail(surface.SoulValidation.Errors, surface.SoulValidation.Warnings),
+		},
+		{
+			Name:   "memory_validation",
+			Status: surface.MemoryValidation.Status,
+			Detail: doctorValidationDetail(surface.MemoryValidation.Errors, surface.MemoryValidation.Warnings),
 		},
 		{
 			Name:   "tool_validation",

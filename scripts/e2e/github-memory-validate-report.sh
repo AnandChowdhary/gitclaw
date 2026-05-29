@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "doctor-report-e2e: $*" >&2
+  echo "memory-validate-report-e2e: $*" >&2
 }
 
 die() {
@@ -33,12 +33,12 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_DOCTOR_REPORT_E2E_${timestamp}"
-title="@gitclaw /doctor e2e ${timestamp}"
-body="Live doctor-report E2E.
+token="GITCLAW_MEMORY_VALIDATE_E2E_${timestamp}"
+title="@gitclaw /memory validate e2e ${timestamp}"
+body="Live memory-validate E2E.
 
-Hidden doctor body token: ${token}
-This should produce a deterministic health report without a model call."
+Hidden memory validate body token: ${token}
+This should produce a deterministic memory validation report without dumping memory bodies."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -52,7 +52,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "doctor-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "memory-validate-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -109,6 +109,13 @@ error_count() {
     --jq '[.comments[] | select(.body | contains("<!-- gitclaw:error"))] | length'
 }
 
+issue_label_names() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json labels \
+    --jq '.labels[].name'
+}
+
 wait_for_assistant_count() {
   local want="$1"
   for _ in {1..90}; do
@@ -127,60 +134,53 @@ wait_for_assistant_count() {
   return 1
 }
 
+wait_for_done_status() {
+  for _ in {1..60}; do
+    local labels
+    labels="$(issue_label_names)"
+    if grep -Fxq "gitclaw:done" <<<"$labels" &&
+      ! grep -Fxq "gitclaw:running" <<<"$labels" &&
+      ! grep -Fxq "gitclaw:error" <<<"$labels"; then
+      return 0
+    fi
+    sleep 5
+  done
+  return 1
+}
+
 run_json="$(wait_for_run "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one doctor report comment"
+wait_for_assistant_count 1 || die "expected one memory validation report comment"
 comments="$(assistant_comments)"
 
 for expected in \
-  'model="gitclaw/doctor"' \
-  "GitClaw Doctor Report" \
+  'model="gitclaw/memory"' \
+  "GitClaw Memory Validate Report" \
   "Generated without a model call" \
-  'health_status: `ok`' \
-  'config_source: `defaults+repo+environment`' \
-  'config_valid: `true`' \
-  'config_file_present: `true`' \
-  'model: `openai/gpt-5-mini`' \
-  'run_mode: `read-only`' \
-  'workflows_present: `4`' \
-  'context_files_present: `6`' \
-  'memory_notes: `1`' \
-  'skill_files: `1`' \
-  'proactive_prompt_files: `1`' \
-  'managed_labels: `9`' \
-  'validation_errors: `0`' \
-  'validation_warnings: `0`' \
-  'skill_validation_status: `ok`' \
-  'skill_validation_errors: `0`' \
-  'skill_validation_warnings: `0`' \
-  'soul_validation_status: `ok`' \
-  'soul_validation_errors: `0`' \
-  'soul_validation_warnings: `0`' \
   'memory_validation_status: `ok`' \
   'memory_validation_errors: `0`' \
   'memory_validation_warnings: `0`' \
-  'tool_validation_status: `ok`' \
-  'tool_validation_errors: `0`' \
-  'tool_validation_warnings: `0`' \
-  '`config_validation`: `ok`' \
-  '`workflow_set`: `ok`' \
-  '`identity_context`: `ok`' \
-  '`local_skills`: `ok`' \
-  '`skill_validation`: `ok`' \
-  '`soul_validation`: `ok`' \
-  '`memory_validation`: `ok`' \
-  '`tool_validation`: `ok`' \
-  '.gitclaw/config.yml' \
-  '.github/workflows/gitclaw.yml' \
-  '.gitclaw/SOUL.md' \
-  '.gitclaw/SKILLS/repo-reader/SKILL.md' \
-  '.gitclaw/proactive/repo-hygiene.md' \
-  'sha256_12='; do
-  grep -Fq "$expected" <<<"$comments" || die "doctor report missing ${expected}"
+  'long_term_memory_present: `true`' \
+  'long_term_memory_loaded: `true`' \
+  'dated_memory_notes: `1`' \
+  'canonical_dated_memory_notes: `1`' \
+  'noncanonical_dated_memory_notes: `0`' \
+  'loaded_memory_notes: `1`' \
+  'max_loaded_memory_notes: `3`' \
+  'empty_memory_files: `0`' \
+  'memory_files_at_limit: `0`' \
+  'potential_secret_findings: `0`' \
+  "validates git-backed memory hygiene" \
+  "### Findings" \
+  "- none"; do
+  grep -Fq -- "$expected" <<<"$comments" || die "memory validation report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "doctor report leaked issue body token"
-fi
+for leaked in "$token" "Durable memory token" "GITCLAW_MEMORY_CONTEXT_V1"; do
+  if grep -Fq "$leaked" <<<"$comments"; then
+    die "memory validation report leaked body token ${leaked}"
+  fi
+done
 
+wait_for_done_status || die "expected gitclaw:done without running/error"
 url="$(jq -r '.url' <<<"$run_json")"
 log "passed for issue #${issue_number}: ${url}"

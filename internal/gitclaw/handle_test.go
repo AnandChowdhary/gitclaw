@@ -708,7 +708,7 @@ func TestHandleMemoryCommandPostsReportWithoutLLM(t *testing.T) {
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Memory Report", "Generated without a model call", "model=\"gitclaw/memory\"", "memory_mode: `read-only`", "long_term_memory_present: `true`", "long_term_memory_loaded: `true`", "dated_memory_notes: `5`", "canonical_dated_memory_notes: `4`", "noncanonical_dated_memory_notes: `1`", "loaded_memory_notes: `3`", "max_loaded_memory_notes: `3`", "omitted_memory_notes: `2`", "latest_memory_note: `.gitclaw/memory/2026-05-29.md`", ".gitclaw/MEMORY.md", ".gitclaw/memory/scratch.md", "sha256_12="} {
+	for _, want := range []string{"GitClaw Memory Report", "Generated without a model call", "model=\"gitclaw/memory\"", "memory_mode: `read-only`", "long_term_memory_present: `true`", "long_term_memory_loaded: `true`", "dated_memory_notes: `5`", "canonical_dated_memory_notes: `4`", "noncanonical_dated_memory_notes: `1`", "loaded_memory_notes: `3`", "max_loaded_memory_notes: `3`", "omitted_memory_notes: `2`", "latest_memory_note: `.gitclaw/memory/2026-05-29.md`", "memory_validation_status: `warn`", "memory_validation_errors: `0`", "memory_validation_warnings: `1`", "code=`noncanonical_memory_note`", ".gitclaw/MEMORY.md", ".gitclaw/memory/scratch.md", "sha256_12="} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("memory report missing %q:\n%s", want, body)
 		}
@@ -720,6 +720,55 @@ func TestHandleMemoryCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 	if !hasLabel(github.IssueLabels[103], "gitclaw:done") || hasLabel(github.IssueLabels[103], "gitclaw:running") || hasLabel(github.IssueLabels[103], "gitclaw:error") {
 		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[103])
+	}
+}
+
+func TestHandleMemoryValidateCommandPostsReportWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/MEMORY.md", "MEMORY_VALIDATE_HANDLER_SECRET")
+	writeTestFile(t, root, ".gitclaw/memory/2026-05-29.md", "DATED_MEMORY_VALIDATE_HANDLER_SECRET")
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 114,
+			"title": "@gitclaw /memory validate",
+			"body": "Hidden memory validate body token: MEMORY_VALIDATE_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{114: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic memory validate command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Memory Validate Report", "Generated without a model call", "model=\"gitclaw/memory\"", "memory_validation_status: `ok`", "memory_validation_errors: `0`", "memory_validation_warnings: `0`", "long_term_memory_present: `true`", "dated_memory_notes: `1`", "canonical_dated_memory_notes: `1`", "potential_secret_findings: `0`", "### Findings", "- none"} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("memory validate report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"MEMORY_VALIDATE_HANDLER_SECRET", "DATED_MEMORY_VALIDATE_HANDLER_SECRET", "MEMORY_VALIDATE_BODY_SECRET"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("memory validate report leaked body token %q:\n%s", leaked, body)
+		}
+	}
+	if !hasLabel(github.IssueLabels[114], "gitclaw:done") || hasLabel(github.IssueLabels[114], "gitclaw:running") || hasLabel(github.IssueLabels[114], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[114])
 	}
 }
 
@@ -918,7 +967,7 @@ func TestHandleCommandsCommandPostsReportWithoutLLM(t *testing.T) {
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Commands Report", "Generated without a model call", "model=\"gitclaw/commands\"", "commands: `15`", "aliases: `7`", "local_cli_helpers: `13`", "/commands", "/backup", "/tools", "`gitclaw commands` command=`/help`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw tools validate` command=`/tools`"} {
+	for _, want := range []string{"GitClaw Commands Report", "Generated without a model call", "model=\"gitclaw/commands\"", "commands: `15`", "aliases: `7`", "local_cli_helpers: `14`", "/commands", "/backup", "/tools", "`gitclaw commands` command=`/help`", "`gitclaw memory validate` command=`/memory`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw tools validate` command=`/tools`"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("commands report missing %q:\n%s", want, body)
 		}
@@ -989,7 +1038,7 @@ SKILL_DOCTOR_SECRET
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Doctor Report", "Generated without a model call", "model=\"gitclaw/doctor\"", "health_status: `ok`", "config_source: `defaults+repo`", "config_valid: `true`", "config_file_present: `true`", "workflows_present: `4`", "context_files_present: `6`", "memory_notes: `1`", "skill_files: `1`", "proactive_prompt_files: `1`", "validation_errors: `0`", "validation_warnings: `0`", "skill_validation_status: `ok`", "skill_validation_errors: `0`", "skill_validation_warnings: `0`", "soul_validation_status: `ok`", "soul_validation_errors: `0`", "soul_validation_warnings: `0`", "tool_validation_status: `ok`", "tool_validation_errors: `0`", "tool_validation_warnings: `0`", "`config_validation`: `ok`", "`main_workflow`: `ok`", "`local_skills`: `ok`", "`skill_validation`: `ok`", "`soul_validation`: `ok`", "`tool_validation`: `ok`", ".gitclaw/SOUL.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", "sha256_12="} {
+	for _, want := range []string{"GitClaw Doctor Report", "Generated without a model call", "model=\"gitclaw/doctor\"", "health_status: `ok`", "config_source: `defaults+repo`", "config_valid: `true`", "config_file_present: `true`", "workflows_present: `4`", "context_files_present: `6`", "memory_notes: `1`", "skill_files: `1`", "proactive_prompt_files: `1`", "validation_errors: `0`", "validation_warnings: `0`", "skill_validation_status: `ok`", "skill_validation_errors: `0`", "skill_validation_warnings: `0`", "soul_validation_status: `ok`", "soul_validation_errors: `0`", "soul_validation_warnings: `0`", "memory_validation_status: `ok`", "memory_validation_errors: `0`", "memory_validation_warnings: `0`", "tool_validation_status: `ok`", "tool_validation_errors: `0`", "tool_validation_warnings: `0`", "`config_validation`: `ok`", "`main_workflow`: `ok`", "`local_skills`: `ok`", "`skill_validation`: `ok`", "`soul_validation`: `ok`", "`memory_validation`: `ok`", "`tool_validation`: `ok`", ".gitclaw/SOUL.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", "sha256_12="} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("doctor report missing %q:\n%s", want, body)
 		}

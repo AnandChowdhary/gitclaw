@@ -322,6 +322,15 @@ GitClaw should map that to `@gitclaw /skills info <name>` and
 selection state, and validation findings without dumping full `SKILL.md`
 bodies into issues or logs.
 
+2026-05-29 memory-validation follow-up: OpenClaw's memory CLI exposes
+status/index/search/promotion surfaces and treats deep writes to `MEMORY.md` as
+special, while Hermes' memory guidance separates durable facts from procedural
+skills and warns against storing secrets or stale task logs. GitClaw's
+git-native equivalent should keep memory read-only in assistant turns but add
+`@gitclaw /memory validate` and `gitclaw memory validate` for body-free checks:
+long-term memory presence, canonical dated-note paths, empty files, context
+size limits, and obvious secret-like token patterns.
+
 2026-05-29 repo config follow-up: OpenClaw's `config` CLI exposes schema,
 validation, dry-run patching, and guarded writes, while `configure` preserves
 existing model defaults unless the operator explicitly changes them. Hermes

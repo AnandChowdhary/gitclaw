@@ -159,6 +159,11 @@ for expected in \
   'max_loaded_memory_notes: `3`' \
   'omitted_memory_notes: `0`' \
   'latest_memory_note: `.gitclaw/memory/2026-05-29.md`' \
+  'memory_validation_status: `ok`' \
+  'memory_validation_errors: `0`' \
+  'memory_validation_warnings: `0`' \
+  'empty_memory_files: `0`' \
+  'potential_secret_findings: `0`' \
   '.gitclaw/MEMORY.md' \
   '.gitclaw/memory/2026-05-29.md' \
   'sha256_12='; do
