@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T13:41:43Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "workflow_dispatch",
+  "issue": {
+    "number": 15,
+    "title": "GitClaw workflow_dispatch e2e 20260529T133927Z",
+    "body": "Live workflow_dispatch E2E.\n\nWhen GitClaw is manually dispatched for this issue, reply with exact token `GITCLAW_WORKFLOW_DISPATCH_E2E_20260529T133927Z`.\nAlso include the exact word `workflow_dispatch`.\n",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw",
+      "gitclaw:e2e",
+      "gitclaw:done"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw workflow_dispatch e2e 20260529T133927Z\n\nLive workflow_dispatch E2E.\n\nWhen GitClaw is manually dispatched for this issue, reply with exact token `GITCLAW_WORKFLOW_DISPATCH_E2E_20260529T133927Z`.\nAlso include the exact word `workflow_dispatch`.\n",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_WORKFLOW_DISPATCH_E2E_20260529T133927Z workflow_dispatch",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4575866983,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4575866983,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26640595310\" event_id=\"dispatch-workflow-dispatch-e2e-20260529T133927Z\" model=\"openai/gpt-5-mini\" idempotency_key=\"faa97d4e11f3699aa654e2242515952d\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26640595310\" --\u003e\nGITCLAW_WORKFLOW_DISPATCH_E2E_20260529T133927Z workflow_dispatch",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T13:41:13Z",
+      "updated_at": "2026-05-29T13:41:13Z"
+    }
+  ]
+}
