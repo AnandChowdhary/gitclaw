@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T18:15:10Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 47,
+    "title": "@gitclaw /doctor e2e 20260529T181410Z",
+    "body": "Live doctor-report E2E.\n\nHidden doctor body token: GITCLAW_DOCTOR_REPORT_E2E_20260529T181410Z\nThis should produce a deterministic health report without a model call.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /doctor e2e 20260529T181410Z\n\nLive doctor-report E2E.\n\nHidden doctor body token: GITCLAW_DOCTOR_REPORT_E2E_20260529T181410Z\nThis should produce a deterministic health report without a model call.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Doctor Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#47`\n- health_status: `ok`\n- config_source: `defaults+repo+environment`\n- config_valid: `true`\n- config_file_present: `true`\n- model: `openai/gpt-5-mini`\n- model_provider: `github-models`\n- model_endpoint_host: `models.github.ai`\n- run_mode: `read-only`\n- workflows_present: `4`\n- context_files_present: `6`\n- memory_notes: `1`\n- skill_files: `1`\n- proactive_prompt_files: `1`\n- managed_labels: `9`\n- issue_title_sha256_12: `07e0b6b0dd96`\n\nThis report checks the GitClaw control plane from the checked-out repository. File bodies, issue bodies, comments, prompts, and secrets are not included.\n\n### Checks\n- `config_file`: `ok` - present\n- `config_validation`: `ok` - schema accepted\n- `main_workflow`: `ok` - .github/workflows/gitclaw.yml\n- `workflow_set`: `ok` - 4/4 present\n- `identity_context`: `ok` - SOUL.md and IDENTITY.md\n- `local_skills`: `ok` - 1 SKILL.md file(s)\n- `proactive_prompt`: `ok` - 1 prompt file(s)\n\n### Config File\n- `.gitclaw/config.yml` present=`true` bytes=`438` lines=`22` sha256_12=`2dc7072ae711`\n\n### Workflow Files\n- `.github/workflows/gitclaw-channel-ingest.yml` present=`true` bytes=`2068` lines=`67` sha256_12=`3f9d36543965`\n- `.github/workflows/gitclaw-heartbeat.yml` present=`true` bytes=`1822` lines=`64` sha256_12=`3ac653ece16a`\n- `.github/workflows/gitclaw-proactive.yml` present=`true` bytes=`2373` lines=`71` sha256_12=`0f868c2d4ff5`\n- `.github/workflows/gitclaw.yml` present=`true` bytes=`5461` lines=`165` sha256_12=`f731ad9017fb`\n\n### Context Files\n- `.gitclaw/SOUL.md` present=`true` bytes=`577` lines=`14` sha256_12=`8730bbfc62ad`\n- `.gitclaw/IDENTITY.md` present=`true` bytes=`180` lines=`6` sha256_12=`0992eb1ea7db`\n- `.gitclaw/USER.md` present=`true` bytes=`159` lines=`4` sha256_12=`8acd063089ea`\n- `.gitclaw/TOOLS.md` present=`true` bytes=`641` lines=`15` sha256_12=`faa527374ce7`\n- `.gitclaw/MEMORY.md` present=`true` bytes=`243` lines=`5` sha256_12=`e0e1314cdfc1`\n- `.gitclaw/HEARTBEAT.md` present=`true` bytes=`595` lines=`14` sha256_12=`18c511b8d61b`\n\n### Memory Notes\n- `.gitclaw/memory/2026-05-29.md` present=`true` bytes=`7312` lines=`108` sha256_12=`9600aca76520`\n\n### Skills\n- `.gitclaw/SKILLS/repo-reader/SKILL.md` present=`true` bytes=`449` lines=`13` sha256_12=`116811664f6d`\n\n### Proactive Prompts\n- `.gitclaw/proactive/repo-hygiene.md` bytes=`591` lines=`11` sha256_12=`704e85ada3f3`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4578427026,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4578427026,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26654239289\" event_id=\"issue-47\" model=\"gitclaw/doctor\" idempotency_key=\"bd19c70e7987e07de15f7271e9f08860\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26654239289\" --\u003e\n## GitClaw Doctor Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#47`\n- health_status: `ok`\n- config_source: `defaults+repo+environment`\n- config_valid: `true`\n- config_file_present: `true`\n- model: `openai/gpt-5-mini`\n- model_provider: `github-models`\n- model_endpoint_host: `models.github.ai`\n- run_mode: `read-only`\n- workflows_present: `4`\n- context_files_present: `6`\n- memory_notes: `1`\n- skill_files: `1`\n- proactive_prompt_files: `1`\n- managed_labels: `9`\n- issue_title_sha256_12: `07e0b6b0dd96`\n\nThis report checks the GitClaw control plane from the checked-out repository. File bodies, issue bodies, comments, prompts, and secrets are not included.\n\n### Checks\n- `config_file`: `ok` - present\n- `config_validation`: `ok` - schema accepted\n- `main_workflow`: `ok` - .github/workflows/gitclaw.yml\n- `workflow_set`: `ok` - 4/4 present\n- `identity_context`: `ok` - SOUL.md and IDENTITY.md\n- `local_skills`: `ok` - 1 SKILL.md file(s)\n- `proactive_prompt`: `ok` - 1 prompt file(s)\n\n### Config File\n- `.gitclaw/config.yml` present=`true` bytes=`438` lines=`22` sha256_12=`2dc7072ae711`\n\n### Workflow Files\n- `.github/workflows/gitclaw-channel-ingest.yml` present=`true` bytes=`2068` lines=`67` sha256_12=`3f9d36543965`\n- `.github/workflows/gitclaw-heartbeat.yml` present=`true` bytes=`1822` lines=`64` sha256_12=`3ac653ece16a`\n- `.github/workflows/gitclaw-proactive.yml` present=`true` bytes=`2373` lines=`71` sha256_12=`0f868c2d4ff5`\n- `.github/workflows/gitclaw.yml` present=`true` bytes=`5461` lines=`165` sha256_12=`f731ad9017fb`\n\n### Context Files\n- `.gitclaw/SOUL.md` present=`true` bytes=`577` lines=`14` sha256_12=`8730bbfc62ad`\n- `.gitclaw/IDENTITY.md` present=`true` bytes=`180` lines=`6` sha256_12=`0992eb1ea7db`\n- `.gitclaw/USER.md` present=`true` bytes=`159` lines=`4` sha256_12=`8acd063089ea`\n- `.gitclaw/TOOLS.md` present=`true` bytes=`641` lines=`15` sha256_12=`faa527374ce7`\n- `.gitclaw/MEMORY.md` present=`true` bytes=`243` lines=`5` sha256_12=`e0e1314cdfc1`\n- `.gitclaw/HEARTBEAT.md` present=`true` bytes=`595` lines=`14` sha256_12=`18c511b8d61b`\n\n### Memory Notes\n- `.gitclaw/memory/2026-05-29.md` present=`true` bytes=`7312` lines=`108` sha256_12=`9600aca76520`\n\n### Skills\n- `.gitclaw/SKILLS/repo-reader/SKILL.md` present=`true` bytes=`449` lines=`13` sha256_12=`116811664f6d`\n\n### Proactive Prompts\n- `.gitclaw/proactive/repo-hygiene.md` bytes=`591` lines=`11` sha256_12=`704e85ada3f3`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T18:14:52Z",
+      "updated_at": "2026-05-29T18:14:52Z"
+    }
+  ]
+}
