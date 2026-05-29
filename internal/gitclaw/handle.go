@@ -95,6 +95,20 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		status.SetDone()
 		return nil
 	}
+	if IsSessionReportRequest(ev, cfg) {
+		body := RenderAssistantComment(Marker{
+			RunID:          envFirst("GITHUB_RUN_ID", "local"),
+			EventID:        eventID(ev),
+			Model:          "gitclaw/session",
+			IdempotencyKey: key,
+			RunURL:         actionRunURL(ev),
+		}, RenderSessionReport(ev, comments, transcript))
+		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post session report comment: %w", err))
+		}
+		status.SetDone()
+		return nil
+	}
 	if IsSkillsReportRequest(ev, cfg) {
 		body := RenderAssistantComment(Marker{
 			RunID:          envFirst("GITHUB_RUN_ID", "local"),

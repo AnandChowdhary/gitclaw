@@ -425,6 +425,73 @@ func TestHandlePolicyCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 }
 
+func TestHandleSessionCommandPostsReportWithoutLLM(t *testing.T) {
+	ev, err := ParseEvent("issue_comment", []byte(`{
+		"action": "created",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 95,
+			"title": "@gitclaw explain",
+			"body": "Initial body token: ISSUE_SECRET_SESSION_TOKEN.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"comment": {
+			"id": 22,
+			"body": "@gitclaw /session\nHidden comment token: COMMENT_SECRET_SESSION_TOKEN.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"created_at": "2026-05-29T12:00:00Z",
+			"updated_at": "2026-05-29T12:00:00Z"
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{95: {
+		{
+			ID:                21,
+			Body:              "<!-- gitclaw:assistant-turn idempotency_key=old -->\nAssistant body token: ASSISTANT_SECRET_SESSION_TOKEN.",
+			User:              User{Login: "github-actions[bot]", Type: "Bot"},
+			AuthorAssociation: "MEMBER",
+		},
+		{
+			ID:                22,
+			Body:              "@gitclaw /session\nHidden comment token: COMMENT_SECRET_SESSION_TOKEN.",
+			User:              User{Login: "alice", Type: "User"},
+			AuthorAssociation: "MEMBER",
+			CreatedAt:         "2026-05-29T12:00:00Z",
+			UpdatedAt:         "2026-05-29T12:00:00Z",
+		},
+	}}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, DefaultConfig(), github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic session command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Session Report", "Generated without a model call", "model=\"gitclaw/session\"", "raw_comments: `2`", "transcript_messages: `3`", "user_messages: `2`", "assistant_messages: `1`", "assistant_turn_comments: `1`", "source=`comment:21`", "source=`comment:22`", "sha256_12="} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("session report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"ISSUE_SECRET_SESSION_TOKEN", "COMMENT_SECRET_SESSION_TOKEN", "ASSISTANT_SECRET_SESSION_TOKEN"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("session report leaked body token %q:\n%s", leaked, body)
+		}
+	}
+	if !hasLabel(github.IssueLabels[95], "gitclaw:done") || hasLabel(github.IssueLabels[95], "gitclaw:running") || hasLabel(github.IssueLabels[95], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[95])
+	}
+}
+
 func TestHandleLabelsWriteRequestsAndAddsPolicyContext(t *testing.T) {
 	ev, err := ParseEvent("issues", []byte(`{
 		"action": "opened",

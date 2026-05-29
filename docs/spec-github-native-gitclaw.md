@@ -557,6 +557,30 @@ Hidden status marker:
 <!-- gitclaw:status run_id=123 state=running -->
 ```
 
+## Session Inspection Command
+
+GitClaw supports a deterministic session audit command inspired by OpenClaw's
+transcript/session CLIs and Hermes' saved/searchable sessions:
+
+```text
+@gitclaw /session
+```
+
+The command runs after normal preflight authorization and transcript
+reconstruction, but before model inference. It posts a `gitclaw:assistant-turn`
+comment with `model="gitclaw/session"` and summarizes:
+
+- raw comment count and reconstructed transcript message count,
+- user/assistant and trusted/untrusted message counts,
+- GitClaw assistant, heartbeat, error, and channel-message marker counts,
+- whether the issue is a channel-thread or proactive-run issue,
+- per-transcript-message source, actor, trust state, size, line count, and
+  short hash.
+
+It never dumps issue/comment bodies. The hashes make session reconstruction
+debuggable without turning the issue-visible report into another raw transcript
+copy.
+
 ## Context Contract
 
 Borrow the useful parts of OpenClaw and Hermes, but make them repo-native:
@@ -1455,7 +1479,17 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert `gitclaw:write-requested` and `gitclaw:done` are present without
      `gitclaw:running` or `gitclaw:error`.
 
-20. **Backup index**
+20. **Session inspection**
+
+   - create a real issue that gets one deterministic assistant turn,
+   - post a follow-up comment with `@gitclaw /session`,
+   - assert the reply is marked `model="gitclaw/session"`,
+   - assert the report shows raw comment count, transcript message count,
+     assistant-turn marker count, and per-message hashes,
+   - assert the report does not dump issue or comment body tokens,
+   - assert the run succeeds without requiring a model provider response.
+
+21. **Backup index**
 
    - create a real deterministic GitClaw issue turn,
    - wait for the successful backup job,
@@ -1643,6 +1677,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven policy-report E2E harness verifies `@gitclaw /policy` produces
   a deterministic preflight/label/write-policy audit without a model call or
   issue-body leakage.
+- A `gh`-driven session-report E2E harness verifies `@gitclaw /session`
+  reconstructs a real multi-turn GitHub issue session without a model call or
+  transcript-body leakage.
 - A `gh`-driven failure E2E harness verifies the safe failure path against a
   real Actions/model failure.
 - A `gh`-driven prompt-budget E2E harness verifies a large real issue still

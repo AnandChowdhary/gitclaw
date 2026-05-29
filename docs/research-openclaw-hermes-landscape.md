@@ -124,6 +124,13 @@ portable artifact. GitClaw should make its backup branch similarly inspectable:
 raw issue transcripts stay in per-issue JSON files, and a repo-scoped
 `index.json`/`README.md` summarizes coverage without exposing every raw message.
 
+2026-05-29 session-inspection follow-up: OpenClaw exposes transcript and
+session CLIs around JSONL transcript directories, while Hermes automatically
+saves conversations as sessions and can export them to JSONL. GitClaw should
+keep the GitHub issue as the canonical session but add `@gitclaw /session` as
+the safe inspection layer: count reconstructed messages, markers, trust states,
+and hashes without copying raw conversation bodies into a new comment.
+
 2026-05-29 memory follow-up: the right GitClaw cut is read-only memory
 injection, not self-writing memory. Load compact files such as
 `.gitclaw/MEMORY.md`, `.gitclaw/USER.md`, `.gitclaw/IDENTITY.md`, and the
@@ -743,6 +750,8 @@ Recommended non-goals for the first spec:
 - OpenClaw GitHub: https://github.com/openclaw/openclaw
 - OpenClaw agent runtime docs: https://docs.openclaw.ai/concepts/agent
 - OpenClaw gateway architecture docs: https://docs.openclaw.ai/concepts/architecture
+- OpenClaw transcript CLI docs: https://docs.openclaw.ai/cli/transcripts
+- OpenClaw sessions CLI docs: https://docs.openclaw.ai/cli/sessions
 - OpenClaw automation docs: https://docs.openclaw.ai/automation
 - OpenClaw heartbeat docs: https://openclawlab.com/en/docs/agent/heartbeat/
 - OpenClaw memory docs: https://docs.openclaw.ai/concepts/memory
@@ -754,6 +763,7 @@ Recommended non-goals for the first spec:
 - Hermes docs index: https://hermes-agent.nousresearch.com/docs/llms.txt
 - Hermes GitHub and README: https://github.com/NousResearch/hermes-agent
 - Hermes architecture docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/developer-guide/architecture.md
+- Hermes sessions docs: https://hermes-agent.nousresearch.com/docs/user-guide/sessions
 - Hermes memory docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/memory.md
 - Hermes skills docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/skills.md
 - Hermes tools docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/tools/
