@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T14:14:17Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "workflow_dispatch",
+  "issue": {
+    "number": 20,
+    "title": "GitClaw proactive proactive-e2e-20260529t141156z slot-20260529T141156Z",
+    "body": "\u003c!-- gitclaw:proactive-run name=\"proactive-e2e-20260529t141156z\" slot=\"slot-20260529T141156Z\" --\u003e\nGitClaw proactive run.\n\n- name: proactive-e2e-20260529t141156z\n- slot: slot-20260529T141156Z\n\nProactive instruction:\n\nProactive E2E instruction.\n\nReply with exact token `GITCLAW_PROACTIVE_E2E_20260529T141156Z`.\nAlso include the exact word `proactive`.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw",
+      "gitclaw:done",
+      "gitclaw:proactive"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw proactive proactive-e2e-20260529t141156z slot-20260529T141156Z\n\n\u003c!-- gitclaw:proactive-run name=\"proactive-e2e-20260529t141156z\" slot=\"slot-20260529T141156Z\" --\u003e\nGitClaw proactive run.\n\n- name: proactive-e2e-20260529t141156z\n- slot: slot-20260529T141156Z\n\nProactive instruction:\n\nProactive E2E instruction.\n\nReply with exact token `GITCLAW_PROACTIVE_E2E_20260529T141156Z`.\nAlso include the exact word `proactive`.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_PROACTIVE_E2E_20260529T141156Z\nproactive\n\nEvidence: the proactive-run comment (\u003c!-- gitclaw:proactive-run ... --\u003e) in the issue transcript.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4576139701,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4576139701,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26642266365\" event_id=\"dispatch-proactive-proactive-e2e-20260529t141156z-slot-20260529T141156Z\" model=\"openai/gpt-5-mini\" idempotency_key=\"b7f61f101612fd7b2d317a850fef7ba3\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26642266365\" --\u003e\nGITCLAW_PROACTIVE_E2E_20260529T141156Z\nproactive\n\nEvidence: the proactive-run comment (\u003c!-- gitclaw:proactive-run ... --\u003e) in the issue transcript.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T14:13:45Z",
+      "updated_at": "2026-05-29T14:13:45Z"
+    }
+  ]
+}
