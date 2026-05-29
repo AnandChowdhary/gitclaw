@@ -140,6 +140,13 @@ repo-scoped `index.json`, `README.md`, canonical `issues/000000.json` paths,
 schema version, counts, timestamps, and absence of unindexed issue backups
 before treating the branch as restorable.
 
+2026-05-29 backup-export follow-up: Hermes exposes session export as JSONL.
+GitClaw can get the same portability without a local SQLite store by exporting
+the fetched `gitclaw-backups` branch: read the repo index and canonical issue
+JSON files, then emit one JSON object per reconstructed transcript message.
+Because this is raw recovery output, keep it as an explicit local CLI command,
+not an issue-visible report.
+
 2026-05-29 session-inspection follow-up: OpenClaw exposes transcript and
 session CLIs around JSONL transcript directories, while Hermes automatically
 saves conversations as sessions and can export them to JSONL. GitClaw should

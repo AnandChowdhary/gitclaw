@@ -71,6 +71,25 @@ type BackupVerifyResult struct {
 	VerificationFailures []string
 }
 
+type BackupJSONLRecord struct {
+	Schema            string `json:"schema"`
+	Repo              string `json:"repo"`
+	IssueNumber       int    `json:"issue_number"`
+	IssueTitle        string `json:"issue_title"`
+	BackupGeneratedAt string `json:"backup_generated_at"`
+	EventName         string `json:"event_name"`
+	Sequence          int    `json:"sequence"`
+	Source            string `json:"source"`
+	Role              string `json:"role"`
+	Actor             string `json:"actor"`
+	AuthorAssociation string `json:"author_association"`
+	CommentID         int64  `json:"comment_id,omitempty"`
+	Edited            bool   `json:"edited"`
+	Trusted           bool   `json:"trusted"`
+	BodySHA           string `json:"body_sha256_12"`
+	Body              string `json:"body"`
+}
+
 func (r BackupVerifyResult) OK() bool {
 	return len(r.VerificationFailures) == 0
 }
@@ -214,6 +233,99 @@ func WriteBackupIndex(root, repo string, generatedAt time.Time) (string, error) 
 		return "", err
 	}
 	return indexPath, nil
+}
+
+func ExportBackupJSONL(root, repo string, issueNumber int) (string, error) {
+	if err := validateRepoName(repo); err != nil {
+		return "", err
+	}
+	if root == "" {
+		root = filepath.Join(".gitclaw", "backups")
+	}
+	repoDir := backupRepoDir(root, repo)
+	indexData, err := os.ReadFile(filepath.Join(repoDir, "index.json"))
+	if err != nil {
+		return "", fmt.Errorf("read backup index: %w", err)
+	}
+	var index BackupIndex
+	if err := json.Unmarshal(indexData, &index); err != nil {
+		return "", fmt.Errorf("parse backup index: %w", err)
+	}
+	if index.Repo != repo {
+		return "", fmt.Errorf("backup index repo %q does not match %q", index.Repo, repo)
+	}
+
+	var b strings.Builder
+	matched := 0
+	for _, issue := range index.Issues {
+		if issueNumber > 0 && issue.Number != issueNumber {
+			continue
+		}
+		backup, err := readIndexedBackup(repoDir, repo, issue)
+		if err != nil {
+			return "", err
+		}
+		matched++
+		for i, msg := range backup.Transcript {
+			line, err := json.Marshal(backupJSONLRecord(backup, msg, i+1))
+			if err != nil {
+				return "", err
+			}
+			b.Write(line)
+			b.WriteByte('\n')
+		}
+	}
+	if issueNumber > 0 && matched == 0 {
+		return "", fmt.Errorf("issue #%d not found in backup index", issueNumber)
+	}
+	return b.String(), nil
+}
+
+func readIndexedBackup(repoDir, repo string, issue BackupIndexIssue) (IssueBackup, error) {
+	absPath, err := safeBackupPayloadPath(repoDir, issue.Path)
+	if err != nil {
+		return IssueBackup{}, err
+	}
+	data, err := os.ReadFile(absPath)
+	if err != nil {
+		return IssueBackup{}, fmt.Errorf("read issue backup %s: %w", issue.Path, err)
+	}
+	var backup IssueBackup
+	if err := json.Unmarshal(data, &backup); err != nil {
+		return IssueBackup{}, fmt.Errorf("parse issue backup %s: %w", issue.Path, err)
+	}
+	if backup.Repo != repo {
+		return IssueBackup{}, fmt.Errorf("issue backup %s repo %q does not match %q", issue.Path, backup.Repo, repo)
+	}
+	if backup.Issue.Number != issue.Number {
+		return IssueBackup{}, fmt.Errorf("issue backup %s number %d does not match index number %d", issue.Path, backup.Issue.Number, issue.Number)
+	}
+	return backup, nil
+}
+
+func backupJSONLRecord(backup IssueBackup, msg TranscriptMessage, sequence int) BackupJSONLRecord {
+	source := "issue"
+	if msg.CommentID > 0 {
+		source = fmt.Sprintf("comment:%d", msg.CommentID)
+	}
+	return BackupJSONLRecord{
+		Schema:            "gitclaw.backup.transcript.v1",
+		Repo:              backup.Repo,
+		IssueNumber:       backup.Issue.Number,
+		IssueTitle:        backup.Issue.Title,
+		BackupGeneratedAt: backup.GeneratedAt,
+		EventName:         backup.EventName,
+		Sequence:          sequence,
+		Source:            source,
+		Role:              msg.Role,
+		Actor:             msg.Actor,
+		AuthorAssociation: msg.AuthorAssociation,
+		CommentID:         msg.CommentID,
+		Edited:            msg.Edited,
+		Trusted:           msg.Trusted,
+		BodySHA:           shortDocumentHash(msg.Body),
+		Body:              msg.Body,
+	}
 }
 
 func (r *BackupVerifyResult) verifyIndexIssue(repoDir, repo string, issue BackupIndexIssue, seenNumbers map[int]bool, seenPaths map[string]bool, lastNumber *int) {

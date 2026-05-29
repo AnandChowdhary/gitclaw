@@ -1510,6 +1510,30 @@ The command prints a deterministic `GitClaw Backup Verify Report` with status,
 counts, paths, and failures. It exits non-zero when verification fails. It does
 not print issue bodies, comments, or transcript text.
 
+## Backup JSONL Export Command
+
+GitClaw supports a local JSONL export command inspired by Hermes'
+`sessions export` workflow:
+
+```bash
+gitclaw backup export-jsonl --root .gitclaw/backups --repo <owner/repo> --issue 123
+```
+
+The command reads the repo-scoped backup index and canonical issue JSON files
+from a fetched backup tree, then emits one JSON object per reconstructed
+transcript message. Each record includes:
+
+- `schema: "gitclaw.backup.transcript.v1"`,
+- repository, issue number, issue title, event name, and backup timestamp,
+- sequence number and source (`issue` or `comment:<id>`),
+- transcript role, actor, author association, trust/edited flags,
+- body hash and raw body text.
+
+This is an explicit recovery/export command, so it may print raw issue and
+comment bodies to stdout. It is intentionally local CLI output, not an issue
+comment or Actions diagnostic. Use it only against a trusted checkout of the
+backup branch.
+
 ## Testing Strategy
 
 End-to-end testing is a core product requirement. Unit tests and event fixtures
@@ -1824,6 +1848,18 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert `backup_verify_status: ok`, zero verification failures, zero
      unindexed issue files, and an index entry for the just-created issue.
 
+26. **Backup JSONL export**
+
+   - create a real issue with `@gitclaw /backup`,
+   - wait for the successful backup job,
+   - fetch the real `gitclaw-backups` branch,
+   - run `gitclaw backup export-jsonl --root <fetched>/.gitclaw/backups --repo
+     <owner/repo> --issue <issue-number>`,
+   - assert the JSONL contains exactly the new issue transcript records,
+   - assert the first record contains the issue body token and the second record
+     contains the assistant backup report body, proving the command is an
+     explicit raw recovery/export path rather than an issue-visible report.
+
 ### Example Live Commands
 
 The script can use commands in this shape:
@@ -1873,6 +1909,8 @@ MVP is not complete until:
   message into an issue and dispatches the main handler,
 - the proactive enqueue harness verifies manual/scheduled job primitives can
   create their own work issues idempotently,
+- the backup JSONL export harness verifies a real backed-up issue can be
+  exported as one JSONL transcript record per reconstructed message,
 - the live harness verifies status labels end at `gitclaw:done` without
   `gitclaw:running` or `gitclaw:error`,
 - the failure harness forces a real invalid-model run and verifies a bounded
@@ -2012,6 +2050,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven backup-verify E2E harness verifies the fetched
   `gitclaw-backups` branch with `gitclaw backup verify` after a real issue
   backup job succeeds.
+- A `gh`-driven backup-export-jsonl E2E harness verifies the fetched
+  `gitclaw-backups` branch can be exported into raw JSONL transcript records
+  for one real issue.
 - A `gh`-driven context-report E2E harness verifies `@gitclaw /context`
   produces a deterministic context summary without a model call.
 - A `gh`-driven prompt-report E2E harness verifies `@gitclaw /prompt`

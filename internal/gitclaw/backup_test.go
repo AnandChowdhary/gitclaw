@@ -135,6 +135,66 @@ func TestWriteBackupIndexSummarizesIssueBackups(t *testing.T) {
 	}
 }
 
+func TestExportBackupJSONLEmitsTranscriptRecords(t *testing.T) {
+	root := t.TempDir()
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T12:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue: IssueBackupIssue{
+			Number: 7,
+			Title:  "@gitclaw export",
+			Labels: []string{"gitclaw"},
+		},
+		Transcript: []TranscriptMessage{
+			{Role: "user", Body: "initial export token", Actor: "alice", AuthorAssociation: "OWNER", Trusted: true},
+			{Role: "assistant", Body: "assistant export reply", Actor: "github-actions[bot]", AuthorAssociation: "NONE", CommentID: 12, Trusted: true},
+		},
+		Comments: []IssueBackupComment{{ID: 12, Body: "assistant raw comment"}},
+	})
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T13:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue:       IssueBackupIssue{Number: 8, Title: "@gitclaw other"},
+		Transcript:  []TranscriptMessage{{Role: "user", Body: "other issue token"}},
+	})
+	if _, err := WriteBackupIndex(root, "owner/repo", time.Date(2026, 5, 29, 14, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+
+	output, err := ExportBackupJSONL(root, "owner/repo", 7)
+	if err != nil {
+		t.Fatalf("ExportBackupJSONL returned error: %v", err)
+	}
+	lines := strings.Split(strings.TrimSpace(output), "\n")
+	if len(lines) != 2 {
+		t.Fatalf("jsonl lines = %d, want 2:\n%s", len(lines), output)
+	}
+	var first BackupJSONLRecord
+	if err := json.Unmarshal([]byte(lines[0]), &first); err != nil {
+		t.Fatalf("first line is not JSON: %v\n%s", err, lines[0])
+	}
+	if first.Schema != "gitclaw.backup.transcript.v1" || first.Repo != "owner/repo" || first.IssueNumber != 7 || first.Sequence != 1 || first.Source != "issue" || first.Body != "initial export token" {
+		t.Fatalf("unexpected first record: %#v", first)
+	}
+	if first.BodySHA != shortDocumentHash("initial export token") {
+		t.Fatalf("first body hash = %q", first.BodySHA)
+	}
+	var second BackupJSONLRecord
+	if err := json.Unmarshal([]byte(lines[1]), &second); err != nil {
+		t.Fatalf("second line is not JSON: %v\n%s", err, lines[1])
+	}
+	if second.Source != "comment:12" || second.CommentID != 12 || second.Body != "assistant export reply" {
+		t.Fatalf("unexpected second record: %#v", second)
+	}
+	if strings.Contains(output, "other issue token") {
+		t.Fatalf("filtered export included another issue:\n%s", output)
+	}
+}
+
 func TestVerifyBackupTreeAcceptsCanonicalBackupIndex(t *testing.T) {
 	root := t.TempDir()
 	writeBackupFixture(t, root, IssueBackup{
