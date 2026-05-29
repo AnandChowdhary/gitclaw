@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-05-29T19:52:11Z`
-- issue_count: `48`
+- generated_at: `2026-05-29T20:00:23Z`
+- issue_count: `49`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -53,3 +53,4 @@
 | #58 | @gitclaw /config e2e 20260529T191815Z | `2026-05-29T19:19:30Z` | 1 | 2 | `issues/000058.json` |
 | #59 | @gitclaw /backup restore-plan e2e 20260529T192649Z | `2026-05-29T19:27:48Z` | 1 | 2 | `issues/000059.json` |
 | #62 | GitClaw proactive proactive-init-e2e-20260529t195052z slot-20260529T195052Z | `2026-05-29T19:52:10Z` | 2 | 3 | `issues/000062.json` |
+| #63 | @gitclaw /backup manifest e2e 20260529T195917Z | `2026-05-29T20:00:22Z` | 1 | 2 | `issues/000063.json` |
