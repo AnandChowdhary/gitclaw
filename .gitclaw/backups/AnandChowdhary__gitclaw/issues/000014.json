@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T13:29:03Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 14,
+    "title": "@gitclaw write request e2e 20260529T132713Z",
+    "body": "Live write-request E2E.\n\nPlease implement a new command in this repository and open a PR.\nReply with exact token `GITCLAW_WRITE_REQUEST_E2E_20260529T132713Z`.\nAlso explicitly say that current GitClaw mode is read-only and that no files were modified.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw write request e2e 20260529T132713Z\n\nLive write-request E2E.\n\nPlease implement a new command in this repository and open a PR.\nReply with exact token `GITCLAW_WRITE_REQUEST_E2E_20260529T132713Z`.\nAlso explicitly say that current GitClaw mode is read-only and that no files were modified.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_WRITE_REQUEST_E2E_20260529T132713Z\n\nCurrent GitClaw mode is read-only: I detected a write request and no files were modified.\n\nProposal (read-only): implement a new CLI command \"write-request-e2e\" and open a PR. Suggested minimal plan a maintainer can apply:\n\n1. Create a branch:\n   - git checkout -b feat/write-request-e2e-20260529\n\n2. Implement the command:\n   - Add a subcommand handler in cmd/gitclaw/main.go (or register with the existing CLI framework used in the repo) that runs a new \"write-request-e2e\" command and prints the exact token:\n     GITCLAW_WRITE_REQUEST_E2E_20260529T132713Z\n   - Keep behavior minimal so it can be used by e2e scripts (exit 0 after printing).\n\n3. Tests and docs:\n   - Add a small unit test that invokes the command and asserts the token is printed.\n   - Update docs or scripts (scripts/e2e/github-write-request.sh) if they should call the new command directly.\n\n4. Commit and PR:\n   - Commit: \"feat(cli): add write-request-e2e command to print verification token\"\n   - Push branch and open a PR describing the change and linking this issue.\n\nIf you want, I can propose a concrete patch text (diff) for cmd/gitclaw/main.go and a test file; tell me whether to produce a patch for the maintainer to apply.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4575706348,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4575706348,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26639985069\" event_id=\"issue-14\" model=\"openai/gpt-5-mini\" idempotency_key=\"60195714a7713018a3eb372e5b7be054\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26639985069\" --\u003e\nGITCLAW_WRITE_REQUEST_E2E_20260529T132713Z\n\nCurrent GitClaw mode is read-only: I detected a write request and no files were modified.\n\nProposal (read-only): implement a new CLI command \"write-request-e2e\" and open a PR. Suggested minimal plan a maintainer can apply:\n\n1. Create a branch:\n   - git checkout -b feat/write-request-e2e-20260529\n\n2. Implement the command:\n   - Add a subcommand handler in cmd/gitclaw/main.go (or register with the existing CLI framework used in the repo) that runs a new \"write-request-e2e\" command and prints the exact token:\n     GITCLAW_WRITE_REQUEST_E2E_20260529T132713Z\n   - Keep behavior minimal so it can be used by e2e scripts (exit 0 after printing).\n\n3. Tests and docs:\n   - Add a small unit test that invokes the command and asserts the token is printed.\n   - Update docs or scripts (scripts/e2e/github-write-request.sh) if they should call the new command directly.\n\n4. Commit and PR:\n   - Commit: \"feat(cli): add write-request-e2e command to print verification token\"\n   - Push branch and open a PR describing the change and linking this issue.\n\nIf you want, I can propose a concrete patch text (diff) for cmd/gitclaw/main.go and a test file; tell me whether to produce a patch for the maintainer to apply.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T13:28:31Z",
+      "updated_at": "2026-05-29T13:28:31Z"
+    }
+  ]
+}
