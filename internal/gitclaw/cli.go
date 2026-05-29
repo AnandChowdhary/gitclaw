@@ -47,6 +47,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runContextCommand(args[1:])
 	case "prompt", "budget", "prompt-budget":
 		return runPromptCommand(args[1:])
+	case "session":
+		return runSessionCommand(args[1:])
 	case "doctor":
 		return runDoctorCommand(args[1:])
 	case "commands":
@@ -338,6 +340,43 @@ func runPromptCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderPromptCLIReport(cfg, repoContext))
+	return nil
+}
+
+func runSessionCommand(args []string) error {
+	if len(args) == 0 {
+		return fmt.Errorf("usage: gitclaw session list --backup <issue.json>")
+	}
+	switch args[0] {
+	case "list":
+		return runSessionListCommand(args[1:])
+	default:
+		return fmt.Errorf("unknown session command %q", args[0])
+	}
+}
+
+func runSessionListCommand(args []string) error {
+	backupPath := ""
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--backup":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--backup requires a value")
+			}
+			backupPath = args[i+1]
+			i++
+		default:
+			return fmt.Errorf("unknown session list argument %q", args[i])
+		}
+	}
+	if backupPath == "" {
+		return fmt.Errorf("usage: gitclaw session list --backup <issue.json>")
+	}
+	backup, err := ReadIssueBackupFile(backupPath)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSessionCLIReport(backupPath, backup))
 	return nil
 }
 

@@ -1,7 +1,9 @@
 package gitclaw
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 	"sort"
 	"strings"
 )
@@ -53,12 +55,36 @@ func RenderSessionReport(ev Event, cfg Config, comments []Comment, transcript []
 	if query := requestedSessionSearchQuery(ev, cfg); query != "" {
 		return RenderSessionSearchReport(ev, transcript, query, defaultSessionSearchMaxResults)
 	}
+	return renderSessionReport(ev, comments, transcript, true, "")
+}
+
+func RenderSessionCLIReport(backupPath string, backup IssueBackup) string {
+	ev := Event{
+		Kind: backup.EventName,
+		Repo: backup.Repo,
+		Issue: Issue{
+			Number: backup.Issue.Number,
+			Title:  backup.Issue.Title,
+			Body:   backup.Issue.Body,
+		},
+	}
+	return renderSessionReport(ev, commentsFromBackup(backup.Comments), backup.Transcript, false, backupPath)
+}
+
+func renderSessionReport(ev Event, comments []Comment, transcript []TranscriptMessage, includeIssue bool, backupPath string) string {
 	counts := countSessionMarkers(comments)
 	var b strings.Builder
 	b.WriteString("## GitClaw Session Report\n\n")
 	b.WriteString("Generated without a model call.\n\n")
-	fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
-	fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-backup")
+		fmt.Fprintf(&b, "- backup_file: `%s`\n", inlineCode(backupPath))
+		fmt.Fprintf(&b, "- backup_repo: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- backup_issue: `#%d`\n", ev.Issue.Number)
+	}
 	fmt.Fprintf(&b, "- event_kind: `%s`\n", ev.Kind)
 	fmt.Fprintf(&b, "- raw_comments: `%d`\n", len(comments))
 	fmt.Fprintf(&b, "- transcript_messages: `%d`\n", len(transcript))
@@ -78,6 +104,36 @@ func RenderSessionReport(ev Event, cfg Config, comments []Comment, transcript []
 	writeTranscriptMessageList(&b, transcript)
 
 	return strings.TrimSpace(b.String())
+}
+
+func ReadIssueBackupFile(path string) (IssueBackup, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return IssueBackup{}, fmt.Errorf("read issue backup %s: %w", path, err)
+	}
+	var backup IssueBackup
+	if err := json.Unmarshal(data, &backup); err != nil {
+		return IssueBackup{}, fmt.Errorf("parse issue backup %s: %w", path, err)
+	}
+	if backup.Repo == "" || backup.Issue.Number == 0 {
+		return IssueBackup{}, fmt.Errorf("issue backup %s is missing repo or issue number", path)
+	}
+	return backup, nil
+}
+
+func commentsFromBackup(comments []IssueBackupComment) []Comment {
+	out := make([]Comment, 0, len(comments))
+	for _, comment := range comments {
+		out = append(out, Comment{
+			ID:                comment.ID,
+			Body:              comment.Body,
+			AuthorAssociation: comment.AuthorAssociation,
+			User:              User{Login: comment.Author},
+			CreatedAt:         comment.CreatedAt,
+			UpdatedAt:         comment.UpdatedAt,
+		})
+	}
+	return out
 }
 
 func RenderSessionSearchReport(ev Event, transcript []TranscriptMessage, query string, maxResults int) string {

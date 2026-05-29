@@ -200,6 +200,13 @@ keep the GitHub issue as the canonical session but add `@gitclaw /session` as
 the safe inspection layer: count reconstructed messages, markers, trust states,
 and hashes without copying raw conversation bodies into a new comment.
 
+2026-05-30 session-list follow-up: local session inspection should operate on
+GitClaw's canonical backup JSON, not a new session database. Add
+`gitclaw session list --backup <issue.json>` as the local mirror of `/session`:
+read a backed-up issue transcript, count messages and markers, report sources,
+trust states, sizes, and hashes, and avoid dumping issue/comment/assistant
+bodies.
+
 2026-05-30 session-search follow-up: OpenClaw's transcript/session tooling is
 built around finding prior session artifacts, and Hermes documents
 cross-session search backed by FTS5. GitClaw should not add a hidden session

@@ -654,6 +654,7 @@ transcript/session CLIs and Hermes' saved/searchable sessions:
 
 ```text
 @gitclaw /session
+@gitclaw /session list
 @gitclaw /session search deployment window
 ```
 
@@ -671,6 +672,17 @@ comment with `model="gitclaw/session"` and summarizes:
 It never dumps issue/comment bodies. The hashes make session reconstruction
 debuggable without turning the issue-visible report into another raw transcript
 copy.
+
+Local operators can inspect a backed-up issue session without calling GitHub:
+
+```bash
+gitclaw session list --backup .gitclaw/backups/owner/repo/issues/000123.json
+```
+
+The local report reads the canonical backup JSON, uses `scope: local-backup`,
+and emits repo/issue backup metadata, marker counts, transcript counts, trust
+states, sources, sizes, and hashes without dumping issue bodies, comment bodies,
+or assistant replies.
 
 When called as `@gitclaw /session search <query>`, the command searches the
 current reconstructed GitHub issue transcript with a local lexical matcher. It
@@ -2307,6 +2319,7 @@ assert the expected comments/labels, and close the issue in cleanup.
 
    - create a real issue that gets one deterministic assistant turn,
    - post a follow-up comment with `@gitclaw /session`,
+   - post a follow-up comment with `@gitclaw /session list`,
    - assert the reply is marked `model="gitclaw/session"`,
    - assert the report shows raw comment count, transcript message count,
      assistant-turn marker count, and per-message hashes,
@@ -2730,6 +2743,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven session-report E2E harness verifies `@gitclaw /session`
   reconstructs a real multi-turn GitHub issue session without a model call or
   transcript-body leakage.
+- A `gh`-driven session-list E2E harness verifies `@gitclaw /session list` is
+  an explicit report alias, while local
+  `gitclaw session list --backup <issue.json>` inspects a backed-up issue
+  session without dumping raw issue, comment, assistant, or transcript bodies.
 - A `gh`-driven failure E2E harness verifies the safe failure path against a
   real Actions/model failure.
 - A `gh`-driven prompt-budget E2E harness verifies a large real issue still
