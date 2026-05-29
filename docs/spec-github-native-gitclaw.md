@@ -896,6 +896,32 @@ actions:
   mode: read_only
 ```
 
+### Config Inspection Command
+
+GitClaw supports a deterministic config/control-plane audit command:
+
+```text
+@gitclaw /config
+```
+
+The command runs after normal preflight and context loading, but before model
+inference. It posts a `gitclaw:assistant-turn` comment with
+`model="gitclaw/config"` and summarizes:
+
+- effective config source,
+- expected `.gitclaw/config.yml` path and file presence,
+- trigger label and prefix,
+- managed status/feature labels,
+- trusted author associations,
+- selected model and prompt budget settings,
+- known deterministic slash commands,
+- key workflow files by path, size, and hash.
+
+It never dumps config, workflow, issue, or comment bodies. This is the
+GitHub-native equivalent of OpenClaw/Hermes config/profile status: enough to
+understand the active control plane without exposing secrets or allowing the
+agent to rewrite configuration.
+
 ## Prompt Budgeting
 
 GitClaw uses character/byte budgets before the model call rather than relying
@@ -1758,6 +1784,9 @@ examples/workflows/gitclaw.yml
   reports workflow triggers and prompt metadata without a model call.
 - A `gh`-driven model-report E2E harness verifies `@gitclaw /models` reports
   GitHub Models provider and retry settings without a model call.
+- A `gh`-driven config-report E2E harness verifies `@gitclaw /config` reports
+  effective labels, prompt budgets, commands, and workflow metadata without a
+  model call.
 - A `gh`-driven backup-index E2E harness verifies the dedicated backup branch
   contains issue JSON plus a repo-scoped `index.json` and `README.md`.
 - A `gh`-driven backup-report E2E harness verifies `@gitclaw /backup`
@@ -1823,7 +1852,9 @@ examples/workflows/gitclaw.yml
 - OpenClaw heartbeat docs: https://openclawlab.com/en/docs/agent/heartbeat/
 - OpenClaw automation docs: https://docs.openclaw.ai/automation/index
 - OpenClaw scheduled tasks docs: https://docs.openclaw.ai/automation/cron-jobs
+- OpenClaw models CLI docs: https://docs.openclaw.ai/cli/models
 - Hermes cron docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/cron.md
+- Hermes profiles docs: https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 - Slack Socket Mode: https://api.slack.com/apis/connections/socket
 - Slack Events API: https://docs.slack.dev/apis/events-api/
 - Telegram Bot API `getUpdates`: https://core.telegram.org/bots/api#getupdates

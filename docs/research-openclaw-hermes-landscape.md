@@ -231,6 +231,15 @@ configuration, and safe failure comments. `@gitclaw /models` is the GitHub-nativ
 audit surface for provider family, model, token source name, timeout, and retry
 budget without exposing tokens or raw provider bodies.
 
+2026-05-29 config visibility follow-up: OpenClaw's `models status` separates
+read-only provider/auth visibility from live probes that may spend tokens, and
+Hermes profiles isolate config, API keys, memory, sessions, skills, cron jobs,
+and state per agent. GitClaw's no-daemon version should expose equivalent
+operator confidence as metadata only: `@gitclaw /config` reports effective
+labels, trusted associations, prompt budgets, command surface, and workflow file
+hashes without dumping config or workflow bodies and without allowing the agent
+to mutate its own configuration.
+
 ### Multi-Agent Routing
 
 OpenClaw's multi-agent model treats each agent as a full isolated persona scope:
@@ -789,10 +798,12 @@ Recommended non-goals for the first spec:
 - OpenClaw sandboxing docs: https://docs.openclaw.ai/gateway/sandboxing
 - OpenClaw migrating from Hermes: https://docs.openclaw.ai/install/migrating-hermes
 - OpenClaw migrate CLI docs: https://docs.openclaw.ai/cli/migrate
+- OpenClaw models CLI docs: https://docs.openclaw.ai/cli/models
 - Hermes docs index: https://hermes-agent.nousresearch.com/docs/llms.txt
 - Hermes GitHub and README: https://github.com/NousResearch/hermes-agent
 - Hermes architecture docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/developer-guide/architecture.md
 - Hermes sessions docs: https://hermes-agent.nousresearch.com/docs/user-guide/sessions
+- Hermes profiles docs: https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 - Hermes migrate from OpenClaw docs: https://hermes-agent.nousresearch.com/docs/guides/migrate-from-openclaw
 - Hermes memory docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/memory.md
 - Hermes skills docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/skills.md

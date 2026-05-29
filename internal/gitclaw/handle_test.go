@@ -348,6 +348,54 @@ func TestHandleModelsCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 }
 
+func TestHandleConfigCommandPostsReportWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".github/workflows/gitclaw.yml", "name: GitClaw\n")
+	writeTestFile(t, root, ".github/workflows/gitclaw-heartbeat.yml", "name: GitClaw Heartbeat\n")
+	writeTestFile(t, root, ".gitclaw/config.yml", "secret: CONFIG_REPORT_SECRET\n")
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 100,
+			"title": "@gitclaw /config",
+			"body": "Hidden config token: CONFIG_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{100: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic config command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Config Report", "Generated without a model call", "model=\"gitclaw/config\"", "config_source: `defaults+environment`", "config_file_path: `.gitclaw/config.yml`", "config_file_present: `true`", "trigger_label: `gitclaw`", "trigger_prefix: `@gitclaw`", "run_mode: `read-only`", "max_prompt_bytes: `60000`", "workflows_present: `2`", "slash_commands: `10`", "OWNER", "COLLABORATOR", "gitclaw:disabled", "/models", "/config", ".github/workflows/gitclaw.yml", ".github/workflows/gitclaw-heartbeat.yml", "sha256_12="} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("config report missing %q:\n%s", want, body)
+		}
+	}
+	if strings.Contains(body, "CONFIG_BODY_SECRET") || strings.Contains(body, "CONFIG_REPORT_SECRET") {
+		t.Fatalf("config report leaked sensitive value:\n%s", body)
+	}
+	if !hasLabel(github.IssueLabels[100], "gitclaw:done") || hasLabel(github.IssueLabels[100], "gitclaw:running") || hasLabel(github.IssueLabels[100], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[100])
+	}
+}
+
 func TestHandleSkillsCommandPostsReportWithoutLLM(t *testing.T) {
 	root := t.TempDir()
 	if err := os.MkdirAll(filepath.Join(root, ".gitclaw", "SKILLS", "repo-reader"), 0o755); err != nil {
