@@ -118,6 +118,13 @@ assistant_count() {
     --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length'
 }
 
+error_count() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json comments \
+    --jq '[.comments[] | select(.body | contains("gitclaw:error"))] | length'
+}
+
 wait_for_assistant_count() {
   local want="$1"
   for _ in {1..120}; do
@@ -125,6 +132,11 @@ wait_for_assistant_count() {
     got="$(assistant_count 2>/dev/null || true)"
     if [[ "$got" =~ ^[0-9]+$ && "$got" == "$want" ]]; then
       return 0
+    fi
+    local errors
+    errors="$(error_count 2>/dev/null || true)"
+    if [[ "$errors" =~ ^[0-9]+$ && "$errors" != "0" ]]; then
+      die "assistant run posted ${errors} error comment(s)"
     fi
     sleep 5
   done
