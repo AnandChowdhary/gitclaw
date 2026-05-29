@@ -15,13 +15,13 @@ func IsModelReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderModelReport(ev Event, cfg Config) string {
-	baseURL := llmBaseURLFromEnv()
+	baseURL := llmBaseURL(cfg)
 	var b strings.Builder
 	b.WriteString("## GitClaw Model Report\n\n")
 	b.WriteString("Generated without a model call.\n\n")
 	fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
 	fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
-	fmt.Fprintf(&b, "- provider: `%s`\n", llmProviderName(baseURL))
+	fmt.Fprintf(&b, "- provider: `%s`\n", llmProviderForReport(cfg, baseURL))
 	fmt.Fprintf(&b, "- model: `%s`\n", cfg.Model)
 	fmt.Fprintf(&b, "- endpoint_host: `%s`\n", llmEndpointHost(baseURL))
 	fmt.Fprintf(&b, "- token_source: `%s`\n", llmTokenSource(baseURL))
@@ -46,10 +46,20 @@ func RenderModelReport(ev Event, cfg Config) string {
 	return strings.TrimSpace(b.String())
 }
 
-func llmBaseURLFromEnv() string {
+func llmProviderForReport(cfg Config, baseURL string) string {
+	if os.Getenv("GITCLAW_LLM_BASE_URL") != "" || strings.TrimSpace(cfg.ModelProvider) == "" {
+		return llmProviderName(baseURL)
+	}
+	return cfg.ModelProvider
+}
+
+func llmBaseURL(cfg Config) string {
 	baseURL := strings.TrimSpace(os.Getenv("GITCLAW_LLM_BASE_URL"))
 	if baseURL == "" {
-		return defaultGitHubModelsBaseURL
+		baseURL = strings.TrimSpace(cfg.LLMBaseURL)
+	}
+	if baseURL == "" {
+		baseURL = defaultGitHubModelsBaseURL
 	}
 	return baseURL
 }

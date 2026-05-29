@@ -22,9 +22,13 @@ type Config struct {
 	ProactiveLabel            string
 	WriteRequestedLabel       string
 	AllowedAssociations       map[string]bool
+	ModelProvider             string
 	Model                     string
+	LLMBaseURL                string
 	Workdir                   string
+	ConfigSource              string
 	MaxPromptBytes            int
+	MaxOutputTokens           int
 	MaxTranscriptMessages     int
 	MaxTranscriptMessageBytes int
 }
@@ -46,9 +50,13 @@ func DefaultConfig() Config {
 			"MEMBER":       true,
 			"COLLABORATOR": true,
 		},
+		ModelProvider:             "github-models",
 		Model:                     "openai/gpt-5-mini",
+		LLMBaseURL:                defaultGitHubModelsBaseURL,
 		Workdir:                   ".",
+		ConfigSource:              "defaults",
 		MaxPromptBytes:            60000,
+		MaxOutputTokens:           4000,
 		MaxTranscriptMessages:     40,
 		MaxTranscriptMessageBytes: 8000,
 	}

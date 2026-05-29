@@ -240,6 +240,14 @@ labels, trusted associations, prompt budgets, command surface, and workflow file
 hashes without dumping config or workflow bodies and without allowing the agent
 to mutate its own configuration.
 
+2026-05-29 repo config follow-up: OpenClaw's `config` CLI exposes schema,
+validation, dry-run patching, and guarded writes, while `configure` preserves
+existing model defaults unless the operator explicitly changes them. Hermes
+profiles make `config.yaml` one of the isolated per-agent artifacts alongside
+`.env`, `SOUL.md`, memories, sessions, skills, cron jobs, and state. GitClaw's
+matching primitive is a checked-in `.gitclaw/config.yml` loaded read-only with
+unknown fields rejected and environment overrides applied last.
+
 2026-05-29 channel visibility follow-up: Slack's Events API expects either a
 server HTTP endpoint or Socket Mode, Socket Mode uses a stateful WebSocket
 instead of a static public URL, Telegram's `getUpdates` provides long polling
@@ -801,6 +809,8 @@ Recommended non-goals for the first spec:
 - OpenClaw heartbeat docs: https://openclawlab.com/en/docs/agent/heartbeat/
 - OpenClaw memory docs: https://docs.openclaw.ai/concepts/memory
 - OpenClaw tools overview: https://docs.openclaw.ai/tools
+- OpenClaw config CLI docs: https://docs.openclaw.ai/cli/config
+- OpenClaw configure docs: https://docs.openclaw.ai/cli/configure
 - OpenClaw migration guide: https://docs.openclaw.ai/install/migrating
 - OpenClaw sandbox vs tool policy vs elevated: https://docs.openclaw.ai/gateway/sandbox-vs-tool-policy-vs-elevated
 - OpenClaw exec approvals: https://docs.openclaw.ai/tools/exec-approvals

@@ -135,15 +135,16 @@ for expected in \
   'model="gitclaw/config"' \
   "GitClaw Config Report" \
   "Generated without a model call" \
-  'config_source: `defaults+environment`' \
+  'config_source: `defaults+repo+environment`' \
   'config_file_path: `.gitclaw/config.yml`' \
-  'config_file_present: `false`' \
+  'config_file_present: `true`' \
   'trigger_label: `gitclaw`' \
   'trigger_prefix: `@gitclaw`' \
   'disabled_label: `gitclaw:disabled`' \
   'model: `openai/gpt-5-mini`' \
   'run_mode: `read-only`' \
   'max_prompt_bytes: `60000`' \
+  'max_output_tokens: `4000`' \
   'max_transcript_messages: `40`' \
   'max_transcript_message_bytes: `8000`' \
   'workflows_present: `4`' \

@@ -56,7 +56,7 @@ func RenderConfigReport(ev Event, cfg Config) string {
 	b.WriteString("Generated without a model call.\n\n")
 	fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
 	fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
-	fmt.Fprintf(&b, "- config_source: `%s`\n", "defaults+environment")
+	fmt.Fprintf(&b, "- config_source: `%s`\n", configSource(cfg))
 	fmt.Fprintf(&b, "- config_file_path: `%s`\n", gitclawConfigPath)
 	fmt.Fprintf(&b, "- config_file_present: `%t`\n", surface.ConfigFile.Present)
 	fmt.Fprintf(&b, "- trigger_label: `%s`\n", cfg.TriggerLabel)
@@ -66,6 +66,7 @@ func RenderConfigReport(ev Event, cfg Config) string {
 	fmt.Fprintf(&b, "- run_mode: `%s`\n", "read-only")
 	fmt.Fprintf(&b, "- workdir: `%s`\n", inlineCode(cfg.Workdir))
 	fmt.Fprintf(&b, "- max_prompt_bytes: `%d`\n", cfg.MaxPromptBytes)
+	fmt.Fprintf(&b, "- max_output_tokens: `%d`\n", cfg.MaxOutputTokens)
 	fmt.Fprintf(&b, "- max_transcript_messages: `%d`\n", cfg.MaxTranscriptMessages)
 	fmt.Fprintf(&b, "- max_transcript_message_bytes: `%d`\n", cfg.MaxTranscriptMessageBytes)
 	fmt.Fprintf(&b, "- workflows_present: `%d`\n", countPresentConfigFiles(surface.Workflows))
@@ -97,6 +98,13 @@ func RenderConfigReport(ev Event, cfg Config) string {
 	}
 
 	return strings.TrimSpace(b.String())
+}
+
+func configSource(cfg Config) string {
+	if cfg.ConfigSource == "" {
+		return "defaults"
+	}
+	return cfg.ConfigSource
 }
 
 func inspectConfigSurface(root string) configSurface {

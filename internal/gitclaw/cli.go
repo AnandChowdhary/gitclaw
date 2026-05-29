@@ -94,12 +94,9 @@ func runBackupIndex(args []string) error {
 }
 
 func runHeartbeatCommand(ctx context.Context, args []string) error {
-	cfg := DefaultConfig()
-	if workdir := os.Getenv("GITCLAW_WORKDIR"); workdir != "" {
-		cfg.Workdir = workdir
-	}
-	if model := os.Getenv("GITCLAW_MODEL"); model != "" {
-		cfg.Model = model
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
 	}
 	opts := HeartbeatOptions{
 		Repo:  os.Getenv("GITHUB_REPOSITORY"),
@@ -165,7 +162,10 @@ func runHeartbeatCommand(ctx context.Context, args []string) error {
 }
 
 func runChannelIngestCommand(ctx context.Context, args []string) error {
-	cfg := DefaultConfig()
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
 	opts := ChannelIngestOptions{
 		Repo:      os.Getenv("GITHUB_REPOSITORY"),
 		Channel:   os.Getenv("GITCLAW_CHANNEL"),
@@ -244,7 +244,10 @@ func runProactiveCommand(ctx context.Context, args []string) error {
 }
 
 func runProactiveEnqueueCommand(ctx context.Context, args []string) error {
-	cfg := DefaultConfig()
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
 	opts := ProactiveEnqueueOptions{
 		Repo:       os.Getenv("GITHUB_REPOSITORY"),
 		Name:       os.Getenv("GITCLAW_PROACTIVE_NAME"),
@@ -397,12 +400,9 @@ func loadEventAndConfig(args []string) (Event, Config, error) {
 	if ev.SHA == "" {
 		ev.SHA = os.Getenv("GITHUB_SHA")
 	}
-	cfg := DefaultConfig()
-	if model := os.Getenv("GITCLAW_MODEL"); model != "" {
-		cfg.Model = model
-	}
-	if workdir := os.Getenv("GITCLAW_WORKDIR"); workdir != "" {
-		cfg.Workdir = workdir
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return Event{}, Config{}, err
 	}
 	return ev, cfg, nil
 }

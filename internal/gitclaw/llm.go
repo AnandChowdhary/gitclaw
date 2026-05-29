@@ -48,7 +48,10 @@ func NewLLMFromEnv(cfg Config) (LLMClient, error) {
 	if response := os.Getenv("GITCLAW_FAKE_LLM_RESPONSE"); response != "" {
 		return StaticLLM{Response: response}, nil
 	}
-	baseURL := os.Getenv("GITCLAW_LLM_BASE_URL")
+	baseURL := strings.TrimSpace(os.Getenv("GITCLAW_LLM_BASE_URL"))
+	if baseURL == "" {
+		baseURL = strings.TrimSpace(cfg.LLMBaseURL)
+	}
 	if baseURL == "" {
 		baseURL = defaultGitHubModelsBaseURL
 	}
@@ -99,6 +102,9 @@ func (c *OpenAICompatibleLLM) Complete(ctx context.Context, req LLMRequest) (str
 				"content": prompt,
 			},
 		},
+	}
+	if req.Config.MaxOutputTokens > 0 {
+		payload["max_tokens"] = req.Config.MaxOutputTokens
 	}
 	body, err := json.Marshal(payload)
 	if err != nil {

@@ -1,0 +1,22 @@
+trigger:
+  label: gitclaw
+  prefix: "@gitclaw"
+  disabled_label: gitclaw:disabled
+
+authorization:
+  allowed_associations:
+    - OWNER
+    - MEMBER
+    - COLLABORATOR
+
+model:
+  provider: github-models
+  model: openai/gpt-5-mini
+  base_url: https://models.github.ai/inference/chat/completions
+  max_prompt_bytes: 60000
+  max_output_tokens: 4000
+  max_transcript_messages: 40
+  max_transcript_message_bytes: 8000
+
+actions:
+  mode: read_only

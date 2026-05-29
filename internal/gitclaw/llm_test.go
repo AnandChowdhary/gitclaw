@@ -2,6 +2,7 @@ package gitclaw
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -113,6 +114,35 @@ func TestOpenAICompatibleLLMRetriesRateLimit(t *testing.T) {
 	}
 	if calls != 2 {
 		t.Fatalf("server calls = %d, want 2", calls)
+	}
+}
+
+func TestOpenAICompatibleLLMSendsMaxOutputTokensFromConfig(t *testing.T) {
+	var payload map[string]any
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+			t.Fatalf("decode request body: %v", err)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"choices":[{"message":{"content":"ok"}}]}`))
+	}))
+	defer server.Close()
+
+	llm := &OpenAICompatibleLLM{
+		APIKey:  "token",
+		BaseURL: server.URL,
+		Model:   "test-model",
+		Client:  server.Client(),
+	}
+	_, err := llm.Complete(context.Background(), LLMRequest{
+		Event:  Event{Repo: "owner/repo", Issue: Issue{Number: 1, Title: "max tokens"}},
+		Config: Config{MaxOutputTokens: 321},
+	})
+	if err != nil {
+		t.Fatalf("Complete returned error: %v", err)
+	}
+	if got := payload["max_tokens"]; got != float64(321) {
+		t.Fatalf("max_tokens = %#v, want 321", got)
 	}
 }
 

@@ -896,6 +896,36 @@ actions:
   mode: read_only
 ```
 
+### Repo Config Loading
+
+GitClaw loads `.gitclaw/config.yml` as human-reviewed repository policy before
+each preflight, handle, heartbeat, proactive, or channel-ingest command. The
+load order is:
+
+1. built-in safe defaults,
+2. repo `.gitclaw/config.yml`, if present,
+3. environment overrides such as `GITCLAW_MODEL` and `GITCLAW_WORKDIR`.
+
+The first supported schema is deliberately narrow:
+
+- `trigger.label`,
+- `trigger.prefix`,
+- `trigger.disabled_label`,
+- `authorization.allowed_associations`,
+- `model.provider`,
+- `model.model`,
+- `model.base_url`,
+- `model.max_prompt_bytes` or legacy alias `model.max_input_tokens`,
+- `model.max_output_tokens`,
+- `model.max_transcript_messages`,
+- `model.max_transcript_message_bytes`,
+- `actions.mode`, which must currently be `read_only`.
+
+Unknown YAML fields are rejected. This mirrors OpenClaw's schema/validate
+discipline without adding agent-authored config writes. Secrets do not belong
+in this file; model auth continues to come from GitHub Actions tokens or
+environment variables.
+
 ### Config Inspection Command
 
 GitClaw supports a deterministic config/control-plane audit command:
@@ -1881,6 +1911,8 @@ examples/workflows/gitclaw.yml
 - OpenClaw automation docs: https://docs.openclaw.ai/automation/index
 - OpenClaw scheduled tasks docs: https://docs.openclaw.ai/automation/cron-jobs
 - OpenClaw models CLI docs: https://docs.openclaw.ai/cli/models
+- OpenClaw config CLI docs: https://docs.openclaw.ai/cli/config
+- OpenClaw configure docs: https://docs.openclaw.ai/cli/configure
 - Hermes cron docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/cron.md
 - Hermes profiles docs: https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 - Slack Socket Mode: https://api.slack.com/apis/connections/socket
