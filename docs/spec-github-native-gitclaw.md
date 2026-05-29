@@ -259,7 +259,7 @@ GitHub issue/comment event
 `cmd/gitclaw`
 
 - CLI entry point.
-- Subcommands: `handle`, `doctor`, `prompt-dump`, `version`.
+- Subcommands: `preflight`, `handle`, `backup`, `version`.
 
 `internal/github`
 
@@ -679,6 +679,29 @@ gitclaw-issue-<number>-run-<run_id>-patch.diff
 ```
 
 Prompt artifacts should redact secrets and be disabled by default for private-sensitive repos.
+
+## Git-Backed Backups
+
+GitClaw should be able to export an issue conversation into a canonical JSON
+backup file inside the repository:
+
+```text
+.gitclaw/backups/<owner>__<repo>/issues/<issue-number>.json
+```
+
+The backup includes:
+
+- issue metadata,
+- raw issue comments,
+- reconstructed transcript with GitClaw assistant markers stripped,
+- generation timestamp,
+- schema version.
+
+This is intentionally a normal file, not a hidden database. Repositories can
+commit backups to the default branch, push them to a dedicated backup branch,
+or mirror them privately. The MVP command writes the backup file but does not
+auto-commit it from the assistant workflow; automatic backup commits require a
+separate permission decision because they need `contents: write`.
 
 ## Testing Strategy
 

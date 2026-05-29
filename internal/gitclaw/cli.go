@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"time"
 )
 
 func RunCLI(ctx context.Context, args []string) error {
@@ -15,12 +16,36 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runPreflight(args[1:])
 	case "handle":
 		return runHandle(ctx, args[1:])
+	case "backup":
+		return runBackup(ctx, args[1:])
 	case "version":
 		fmt.Println("gitclaw dev")
 		return nil
 	default:
 		return fmt.Errorf("unknown command %q", args[0])
 	}
+}
+
+func runBackup(ctx context.Context, args []string) error {
+	outDir := filepathArg(args, "--out")
+	filteredArgs := removeFlagWithValue(args, "--out")
+	ev, _, err := loadEventAndConfig(filteredArgs)
+	if err != nil {
+		return err
+	}
+	token := os.Getenv("GH_TOKEN")
+	if token == "" {
+		token = os.Getenv("GITHUB_TOKEN")
+	}
+	if token == "" {
+		return fmt.Errorf("missing GH_TOKEN or GITHUB_TOKEN")
+	}
+	path, err := BackupIssue(ctx, ev, NewRESTGitHubClient(token), outDir, time.Now())
+	if err != nil {
+		return err
+	}
+	fmt.Println(path)
+	return nil
 }
 
 func runPreflight(args []string) error {
@@ -114,4 +139,25 @@ func loadEventAndConfig(args []string) (Event, Config, error) {
 		cfg.Workdir = workdir
 	}
 	return ev, cfg, nil
+}
+
+func filepathArg(args []string, name string) string {
+	for i := 0; i < len(args)-1; i++ {
+		if args[i] == name {
+			return args[i+1]
+		}
+	}
+	return ""
+}
+
+func removeFlagWithValue(args []string, name string) []string {
+	out := make([]string, 0, len(args))
+	for i := 0; i < len(args); i++ {
+		if args[i] == name && i+1 < len(args) {
+			i++
+			continue
+		}
+		out = append(out, args[i])
+	}
+	return out
 }
