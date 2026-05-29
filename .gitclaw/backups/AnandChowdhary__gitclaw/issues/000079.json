@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T22:18:49Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 79,
+    "title": "@gitclaw /context session search e2e 20260529T221748Z",
+    "body": "Live session-search E2E.\n\nSearch anchor: session-search-anchor-20260529T221748Z\nHidden root token: GITCLAW_SESSION_SEARCH_ROOT_20260529T221748Z\nThis should first produce a deterministic context report.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /context session search e2e 20260529T221748Z\n\nLive session-search E2E.\n\nSearch anchor: session-search-anchor-20260529T221748Z\nHidden root token: GITCLAW_SESSION_SEARCH_ROOT_20260529T221748Z\nThis should first produce a deterministic context report.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Context Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#79`\n- transcript_messages: `1`\n- max_prompt_bytes: `60000`\n- max_transcript_messages: `40`\n- max_transcript_message_bytes: `8000`\n\n### Context Files\n- `.gitclaw/SOUL.md` bytes=`576` lines=`14`\n- `.gitclaw/IDENTITY.md` bytes=`179` lines=`6`\n- `.gitclaw/USER.md` bytes=`158` lines=`4`\n- `.gitclaw/TOOLS.md` bytes=`640` lines=`15`\n- `.gitclaw/MEMORY.md` bytes=`242` lines=`5`\n- `.gitclaw/HEARTBEAT.md` bytes=`594` lines=`14`\n- `.gitclaw/memory/2026-05-29.md` bytes=`12000` lines=`177`\n\n### Selected Skills\n- `.gitclaw/SKILLS/repo-reader/SKILL.md` bytes=`448` lines=`13`\n\n### Tool Outputs\n- `gitclaw.list_files` input=`.` bytes=`3966` lines=`118`\n- `gitclaw.skill_index` input=`.gitclaw/SKILLS` bytes=`328` lines=`1`\n- `gitclaw.search_files` input=`T221748Z | session-search | anchor: | session-search-anchor-20260529T221748Z ...` bytes=`1770` lines=`23`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4580291864,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4580291864,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26665041868\" event_id=\"issue-79\" model=\"gitclaw/context\" idempotency_key=\"171a205cf637b5b2f9d6bd10145133ab\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26665041868\" --\u003e\n## GitClaw Context Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#79`\n- transcript_messages: `1`\n- max_prompt_bytes: `60000`\n- max_transcript_messages: `40`\n- max_transcript_message_bytes: `8000`\n\n### Context Files\n- `.gitclaw/SOUL.md` bytes=`576` lines=`14`\n- `.gitclaw/IDENTITY.md` bytes=`179` lines=`6`\n- `.gitclaw/USER.md` bytes=`158` lines=`4`\n- `.gitclaw/TOOLS.md` bytes=`640` lines=`15`\n- `.gitclaw/MEMORY.md` bytes=`242` lines=`5`\n- `.gitclaw/HEARTBEAT.md` bytes=`594` lines=`14`\n- `.gitclaw/memory/2026-05-29.md` bytes=`12000` lines=`177`\n\n### Selected Skills\n- `.gitclaw/SKILLS/repo-reader/SKILL.md` bytes=`448` lines=`13`\n\n### Tool Outputs\n- `gitclaw.list_files` input=`.` bytes=`3966` lines=`118`\n- `gitclaw.skill_index` input=`.gitclaw/SKILLS` bytes=`328` lines=`1`\n- `gitclaw.search_files` input=`T221748Z | session-search | anchor: | session-search-anchor-20260529T221748Z ...` bytes=`1770` lines=`23`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T22:18:30Z",
+      "updated_at": "2026-05-29T22:18:30Z"
+    }
+  ]
+}
