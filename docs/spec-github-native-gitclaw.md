@@ -97,6 +97,9 @@ We should support two modes:
 - **Per-repo assistant mode:** only issues with label `gitclaw` or title/body prefix `@gitclaw` trigger the agent.
 
 Default for public repositories should be per-repo assistant mode with a required trigger label or prefix.
+Deterministic slash commands are recognized when the issue title, comment
+body, or a line in the issue body starts with the trigger prefix plus command,
+such as `@gitclaw /proactive`. Inline mentions inside prose are ignored.
 
 ## GitHub Actions Event Model
 

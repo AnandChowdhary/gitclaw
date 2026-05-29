@@ -10,20 +10,36 @@ func IsSkillsReportRequest(ev Event, cfg Config) bool {
 }
 
 func activeSlashCommand(ev Event, cfg Config) string {
-	text := strings.TrimSpace(activeRequestText(ev))
+	for _, line := range strings.Split(activeRequestText(ev), "\n") {
+		command := slashCommandFromLine(line, cfg.TriggerPrefix)
+		if command != "" {
+			return command
+		}
+	}
+	return ""
+}
+
+func slashCommandFromLine(line, triggerPrefix string) string {
+	text := strings.TrimSpace(line)
 	if text == "" {
 		return ""
 	}
 	lower := strings.ToLower(text)
-	prefix := strings.ToLower(cfg.TriggerPrefix)
+	prefix := strings.ToLower(triggerPrefix)
 	if strings.HasPrefix(lower, prefix) {
-		text = strings.TrimSpace(text[len(cfg.TriggerPrefix):])
+		text = strings.TrimSpace(text[len(triggerPrefix):])
+	} else if !strings.HasPrefix(text, "/") {
+		return ""
 	}
 	fields := strings.Fields(text)
 	if len(fields) == 0 {
 		return ""
 	}
-	return strings.Trim(strings.ToLower(fields[0]), " \t\r\n.,:;!?")
+	command := strings.Trim(strings.ToLower(fields[0]), " \t\r\n.,:;!?")
+	if !strings.HasPrefix(command, "/") {
+		return ""
+	}
+	return command
 }
 
 func RenderSkillsReport(ev Event, repoContext RepoContext) string {

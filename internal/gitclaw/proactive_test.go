@@ -181,6 +181,30 @@ func TestProactiveInitRejectsUnsafePathAndCron(t *testing.T) {
 	}
 }
 
+func TestActiveSlashCommandFindsTriggeredBodyLine(t *testing.T) {
+	ev := Event{
+		Issue: Issue{
+			Title: "GitClaw proactive repo-watch 2026-05-29",
+			Body:  "Proactive instruction:\n\n@gitclaw /proactive\n\nHidden token must not leak.",
+		},
+	}
+	if got := activeSlashCommand(ev, DefaultConfig()); got != "/proactive" {
+		t.Fatalf("activeSlashCommand() = %q, want /proactive", got)
+	}
+}
+
+func TestActiveSlashCommandIgnoresInlineMention(t *testing.T) {
+	ev := Event{
+		Issue: Issue{
+			Title: "Regular issue",
+			Body:  "Please do not treat this inline @gitclaw /proactive mention as the active command.",
+		},
+	}
+	if got := activeSlashCommand(ev, DefaultConfig()); got != "" {
+		t.Fatalf("activeSlashCommand() = %q, want empty command", got)
+	}
+}
+
 func readTestFile(t *testing.T, path string) string {
 	t.Helper()
 	body, err := os.ReadFile(path)
