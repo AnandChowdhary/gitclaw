@@ -387,6 +387,9 @@ func runBackup(ctx context.Context, args []string) error {
 	if len(args) > 0 && args[0] == "retention-plan" {
 		return runBackupRetentionPlan(args[1:])
 	}
+	if len(args) > 0 && args[0] == "search" {
+		return runBackupSearch(args[1:])
+	}
 	outDir := filepathArg(args, "--out")
 	filteredArgs := removeFlagWithValue(args, "--out")
 	ev, _, err := loadEventAndConfig(filteredArgs)
@@ -661,6 +664,67 @@ func runBackupRetentionPlan(args []string) error {
 	fmt.Println(RenderBackupRetentionPlan(plan))
 	if plan.RetentionPlanStatus != "ok" {
 		return fmt.Errorf("backup retention plan reported %s", plan.RetentionPlanStatus)
+	}
+	return nil
+}
+
+func runBackupSearch(args []string) error {
+	root := filepath.Join(".gitclaw", "backups")
+	repo := os.Getenv("GITHUB_REPOSITORY")
+	maxResults := defaultBackupSearchMaxResults
+	queryFlag := ""
+	var queryParts []string
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--root":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--root requires a value")
+			}
+			root = args[i+1]
+			i++
+		case "--repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--repo requires a value")
+			}
+			repo = args[i+1]
+			i++
+		case "--query":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--query requires a value")
+			}
+			queryFlag = args[i+1]
+			i++
+		case "--max-results":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--max-results requires a value")
+			}
+			parsed, err := strconv.Atoi(args[i+1])
+			if err != nil || parsed <= 0 {
+				return fmt.Errorf("invalid --max-results: %q", args[i+1])
+			}
+			maxResults = parsed
+			i++
+		default:
+			queryParts = append(queryParts, args[i])
+		}
+	}
+	if repo == "" {
+		return fmt.Errorf("missing --repo or GITHUB_REPOSITORY")
+	}
+	query := strings.TrimSpace(strings.Join(queryParts, " "))
+	if strings.TrimSpace(queryFlag) != "" {
+		query = strings.TrimSpace(queryFlag)
+	}
+	if query == "" {
+		return fmt.Errorf("usage: gitclaw backup search --root .gitclaw/backups --repo <owner/repo> <query>")
+	}
+	report, err := BuildBackupSearch(root, repo, query, maxResults)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderBackupSearchReport(report))
+	if report.BackupVerifyStatus != "ok" {
+		return fmt.Errorf("backup search verification reported %s", report.BackupVerifyStatus)
 	}
 	return nil
 }

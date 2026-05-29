@@ -178,6 +178,14 @@ GitClaw's git-native equivalent should start with a non-mutating
 backups by timestamp, keep the latest N, list older payloads as prune
 candidates, and expose only paths, counts, timestamps, and title hashes.
 
+2026-05-30 backup-search follow-up: OpenClaw's transcript/session CLIs and
+Hermes' cross-session search both make old conversations discoverable. GitClaw
+can copy the operator value without copying the storage shape: search the
+fetched `gitclaw-backups` branch directly, verify it first, and return issue
+paths, sources, trust metadata, scores, and body/line hashes only. Raw backup
+JSON remains available through explicit local recovery/export commands, but the
+default search report should be body-free and query-free.
+
 2026-05-29 session-inspection follow-up: OpenClaw exposes transcript and
 session CLIs around JSONL transcript directories, while Hermes automatically
 saves conversations as sessions and can export them to JSONL. GitClaw should

@@ -555,7 +555,8 @@ GitHub issue/comment event
 `cmd/gitclaw`
 
 - CLI entry point.
-- Subcommands: `preflight`, `handle`, `backup`, `backup retention-plan`,
+- Subcommands: `preflight`, `handle`, `backup`, `backup search`,
+  `backup retention-plan`,
   `heartbeat`,
   `channel-ingest`, `proactive enqueue`, `proactive init`,
   `memory validate`, `skills validate`, `skills info`, `skills search`,
@@ -1775,6 +1776,33 @@ It never prints raw issue titles, issue bodies, comments, or transcript bodies.
 The stats report is meant for routine backup-health monitoring where opening
 every raw JSON file would be noisy.
 
+## Backup Search Command
+
+GitClaw supports a local backup search command inspired by OpenClaw's
+transcript/session inspection CLIs and Hermes' cross-session search posture,
+but without adding a hidden database:
+
+```bash
+gitclaw backup search --root .gitclaw/backups --repo <owner/repo> <query>
+```
+
+The command reads a fetched `gitclaw-backups` tree, verifies it, searches issue
+titles, issue bodies, raw comment bodies, and reconstructed transcript messages,
+then prints a deterministic `GitClaw Backup Search Report` with:
+
+- backup search and verify status,
+- schema version and index generation time,
+- query hash and query term count without echoing the raw query,
+- indexed issue count plus searched issue-field/comment/transcript counts,
+- matched issue count, matched line count, and returned result count,
+- per-result issue number, backup path, source, role, actor/trust metadata,
+  line number, score, body hash, line hash, timestamp, and event name.
+
+It never prints raw issue titles, issue bodies, comments, transcript bodies, or
+search query text. This gives operators a body-safe way to find old
+conversations in durable git backups before choosing an explicit raw recovery
+path such as `backup export-jsonl`.
+
 ## Backup Retention Plan Command
 
 GitClaw supports a local non-mutating retention plan command inspired by
@@ -2246,7 +2274,22 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the just-created issue is included without dumping the issue body
      token or raw title.
 
-32. **Proactive init generator**
+32. **Backup search**
+
+   - create a real issue with `@gitclaw /backup`,
+   - include a unique hidden token in the issue body,
+   - wait for the successful backup job,
+   - fetch the real `gitclaw-backups` branch,
+   - run `gitclaw backup search --root <fetched>/.gitclaw/backups --repo
+     <owner/repo> <hidden-token>`,
+   - assert the report is marked `backup_search_status: ok` and
+     `backup_verify_status: ok`,
+   - assert it lists query hash, issue/search counts, the just-created issue,
+     source metadata, scores, and hashes,
+   - assert it does not dump the hidden token, raw issue body, raw issue title,
+     raw comments, raw transcript messages, or raw query text.
+
+33. **Proactive init generator**
 
    - run `gitclaw proactive init` against a temporary repo root,
    - assert it writes the expected prompt file and scheduled workflow,
@@ -2319,6 +2362,9 @@ MVP is not complete until:
 - the backup retention-plan harness verifies a fetched backup branch can
   produce a dry-run keep-latest plan with kept/prune-candidate paths and hashes
   but no raw title/body leakage,
+- the backup-search harness verifies a fetched backup branch can search actual
+  backed-up conversation content and return only paths, sources, trust
+  metadata, scores, and hashes without leaking the searched token or bodies,
 - the live harness verifies status labels end at `gitclaw:done` without
   `gitclaw:running` or `gitclaw:error`,
 - the failure harness forces a real invalid-model run and verifies a bounded

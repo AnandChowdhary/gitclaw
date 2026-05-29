@@ -347,6 +347,59 @@ func TestBuildBackupStatsSummarizesBackupsWithoutBodies(t *testing.T) {
 	}
 }
 
+func TestBuildBackupSearchFindsBackedUpConversationWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T12:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue: IssueBackupIssue{
+			Number:            7,
+			Title:             "@gitclaw backup search title BACKUP_SEARCH_TITLE_SECRET",
+			Body:              "Backup search issue body has BACKUP_SEARCH_BODY_SECRET and retrieval notes.",
+			Author:            "alice",
+			AuthorAssociation: "OWNER",
+			Labels:            []string{"gitclaw"},
+		},
+		Transcript: []TranscriptMessage{
+			{Role: "user", Body: "retrieval transcript token BACKUP_SEARCH_TRANSCRIPT_SECRET", Actor: "alice", AuthorAssociation: "OWNER", Trusted: true},
+			{Role: "assistant", Body: "assistant backup search reply BACKUP_SEARCH_ASSISTANT_SECRET", Actor: "github-actions[bot]", AuthorAssociation: "NONE", CommentID: 12, Trusted: true},
+		},
+		Comments: []IssueBackupComment{{ID: 12, Body: "<!-- gitclaw:assistant-turn -->\nBACKUP_SEARCH_COMMENT_SECRET", Author: "github-actions[bot]", AuthorAssociation: "NONE"}},
+	})
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T13:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue:       IssueBackupIssue{Number: 8, Title: "@gitclaw unrelated", Body: "OTHER_BACKUP_SEARCH_SECRET"},
+		Transcript:  []TranscriptMessage{{Role: "user", Body: "other body"}},
+	})
+	if _, err := WriteBackupIndex(root, "owner/repo", time.Date(2026, 5, 29, 14, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+
+	report, err := BuildBackupSearch(root, "owner/repo", "retrieval BACKUP_SEARCH_QUERY_SECRET", 2)
+	if err != nil {
+		t.Fatalf("BuildBackupSearch returned error: %v", err)
+	}
+	if report.SearchStatus != "ok" || report.BackupVerifyStatus != "ok" || report.IssueCount != 2 || report.MatchedIssues != 1 || report.MatchedLines != 2 || report.ResultsReturned != 2 {
+		t.Fatalf("unexpected backup search report: %#v", report)
+	}
+	rendered := RenderBackupSearchReport(report)
+	for _, want := range []string{"GitClaw Backup Search Report", "backup_search_status: `ok`", "backup_verify_status: `ok`", "query_sha256_12:", "query_terms:", "max_results: `2`", "issue_count: `2`", "issue_fields_searched: `4`", "comment_bodies_searched: `1`", "transcript_messages_searched: `3`", "matched_issues: `1`", "matched_lines: `2`", "results_returned: `2`", "raw_bodies_included: `false`", "issue=`#7` path=`issues/000007.json`", "source=`issue.body`", "source=`transcript:01`", "line_sha256_12="} {
+		if !strings.Contains(rendered, want) {
+			t.Fatalf("backup search report missing %q:\n%s", want, rendered)
+		}
+	}
+	for _, leaked := range []string{"BACKUP_SEARCH_TITLE_SECRET", "BACKUP_SEARCH_BODY_SECRET", "BACKUP_SEARCH_TRANSCRIPT_SECRET", "BACKUP_SEARCH_ASSISTANT_SECRET", "BACKUP_SEARCH_COMMENT_SECRET", "OTHER_BACKUP_SEARCH_SECRET", "BACKUP_SEARCH_QUERY_SECRET", "retrieval BACKUP_SEARCH_QUERY_SECRET", "@gitclaw backup search title"} {
+		if strings.Contains(rendered, leaked) {
+			t.Fatalf("backup search report leaked %q:\n%s", leaked, rendered)
+		}
+	}
+}
+
 func TestBuildBackupRetentionPlanKeepsNewestWithoutBodies(t *testing.T) {
 	root := t.TempDir()
 	writeBackupFixture(t, root, IssueBackup{

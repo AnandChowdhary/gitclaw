@@ -45,8 +45,9 @@ func RenderBackupReport(ev Event, comments []Comment, transcript []TranscriptMes
 	b.WriteString("- schema version\n")
 	b.WriteString("\n### Verification\n")
 	b.WriteString("- `gitclaw backup verify --root .gitclaw/backups --repo <owner/repo>`\n")
+	b.WriteString("- `gitclaw backup search --root .gitclaw/backups --repo <owner/repo> <query>`\n")
 	b.WriteString("- `gitclaw backup retention-plan --root .gitclaw/backups --repo <owner/repo> --keep-latest 50`\n")
-	b.WriteString("- validates the repo-scoped index, README, canonical issue paths, JSON schema version, counts, timestamps, and traversal-safe payload paths\n")
+	b.WriteString("- validates the repo-scoped index, README, canonical issue paths, JSON schema version, counts, timestamps, and traversal-safe payload paths; search reports hashes and metadata without printing raw backup bodies\n")
 
 	return strings.TrimSpace(b.String())
 }

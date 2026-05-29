@@ -265,7 +265,7 @@ func TestCommandsCommandReportsCatalog(t *testing.T) {
 			t.Fatalf("commands returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `7`", "local_cli_helpers: `19`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`gitclaw commands` command=`/help`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools search <query>` command=`/tools`"} {
+	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `7`", "local_cli_helpers: `20`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`gitclaw commands` command=`/help`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools search <query>` command=`/tools`"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("commands output missing %q:\n%s", want, output)
 		}
@@ -300,6 +300,42 @@ func TestBackupStatsCommandReportsFetchedBackupTree(t *testing.T) {
 	}
 	if strings.Contains(output, "CLI_STATS_BODY_TOKEN") || strings.Contains(output, "CLI_STATS_TRANSCRIPT_TOKEN") || strings.Contains(output, "@gitclaw cli stats") {
 		t.Fatalf("backup stats leaked body/title token:\n%s", output)
+	}
+}
+
+func TestBackupSearchCommandReportsFetchedBackupMatches(t *testing.T) {
+	dir := t.TempDir()
+	writeBackupFixture(t, dir, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T12:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue: IssueBackupIssue{
+			Number:            7,
+			Title:             "@gitclaw cli backup search CLI_BACKUP_SEARCH_TITLE_TOKEN",
+			Body:              "CLI backup search retrieval body CLI_BACKUP_SEARCH_BODY_TOKEN",
+			Author:            "alice",
+			AuthorAssociation: "OWNER",
+		},
+		Transcript: []TranscriptMessage{{Role: "user", Body: "retrieval transcript CLI_BACKUP_SEARCH_TRANSCRIPT_TOKEN", Actor: "alice", AuthorAssociation: "OWNER", Trusted: true}},
+	})
+	if _, err := WriteBackupIndex(dir, "owner/repo", time.Date(2026, 5, 29, 13, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+	output := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"backup", "search", "--root", dir, "--repo", "owner/repo", "--query", "retrieval CLI_BACKUP_SEARCH_QUERY_TOKEN", "--max-results", "1"}); err != nil {
+			t.Fatalf("backup search returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"GitClaw Backup Search Report", "backup_search_status: `ok`", "backup_verify_status: `ok`", "query_sha256_12:", "max_results: `1`", "issue_count: `1`", "matched_issues: `1`", "matched_lines: `2`", "results_returned: `1`", "raw_bodies_included: `false`", "issue=`#7` path=`issues/000007.json`", "line_sha256_12="} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("backup search output missing %q:\n%s", want, output)
+		}
+	}
+	for _, leaked := range []string{"CLI_BACKUP_SEARCH_TITLE_TOKEN", "CLI_BACKUP_SEARCH_BODY_TOKEN", "CLI_BACKUP_SEARCH_TRANSCRIPT_TOKEN", "CLI_BACKUP_SEARCH_QUERY_TOKEN", "retrieval CLI_BACKUP_SEARCH_QUERY_TOKEN", "@gitclaw cli backup search"} {
+		if strings.Contains(output, leaked) {
+			t.Fatalf("backup search leaked body/title/query token %q:\n%s", leaked, output)
+		}
 	}
 }
 
