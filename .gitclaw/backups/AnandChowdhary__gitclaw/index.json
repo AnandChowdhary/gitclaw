@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-29T21:15:07Z",
+  "generated_at": "2026-05-29T21:26:19Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 58,
+  "count": 59,
   "issues": [
     {
       "number": 3,
@@ -719,6 +719,18 @@
       "title": "@gitclaw /memory validate e2e 20260529T211357Z",
       "path": "issues/000072.json",
       "backup_generated_at": "2026-05-29T21:15:06Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
+    },
+    {
+      "number": 73,
+      "title": "@gitclaw /backup retention-plan e2e 20260529T212513Z",
+      "path": "issues/000073.json",
+      "backup_generated_at": "2026-05-29T21:26:18Z",
       "event_name": "issues",
       "labels": [
         "gitclaw"
