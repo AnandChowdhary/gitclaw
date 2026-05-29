@@ -147,8 +147,9 @@ func toolOutputLimitFinding(contract toolContract, output ToolOutput) string {
 			return fmt.Sprintf("list_files returned %d lines, max %d", lineCount(output.Output), maxRepoFilesListed)
 		}
 	case "gitclaw.search_files":
-		if lineCount(output.Output) > maxSearchMatches {
-			return fmt.Sprintf("search_files returned %d lines, max %d", lineCount(output.Output), maxSearchMatches)
+		matches := searchToolMatchLineCount(output.Output)
+		if matches > maxSearchMatches {
+			return fmt.Sprintf("search_files returned %d matches, max %d", matches, maxSearchMatches)
 		}
 	case "gitclaw.read_file":
 		if len(output.Output) > maxToolReadBytes {
@@ -164,6 +165,18 @@ func toolOutputLimitFinding(contract toolContract, output ToolOutput) string {
 		}
 	}
 	return ""
+}
+
+func searchToolMatchLineCount(output string) int {
+	count := 0
+	for _, line := range strings.Split(strings.TrimSpace(output), "\n") {
+		line = strings.TrimSpace(line)
+		if line == "" || strings.HasPrefix(line, "[query ") {
+			continue
+		}
+		count++
+	}
+	return count
 }
 
 func (r *ToolValidationReport) addFinding(severity, code, name, detail string) {

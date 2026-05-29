@@ -45,11 +45,12 @@ func TestValidateToolSurfaceReportsProblemsWithoutBodies(t *testing.T) {
 }
 
 func TestValidateToolsAcceptsCurrentToolShape(t *testing.T) {
+	searchOutput := "[query \"fixture\"]\n" + strings.Repeat("docs/search-fixture.md:1:fixture\n", maxSearchMatches)
 	report := ValidateTools(RepoContext{
 		Documents: []ContextDocument{{Path: ".gitclaw/TOOLS.md", Body: "Read-only tools."}},
 		ToolOutputs: []ToolOutput{
 			{Name: "gitclaw.list_files", Input: ".", Output: "go.mod\nREADME.md"},
-			{Name: "gitclaw.search_files", Input: "fixture", Output: "docs/search-fixture.md:1:fixture"},
+			{Name: "gitclaw.search_files", Input: "fixture", Output: searchOutput},
 			{Name: "gitclaw.read_file", Input: "go.mod", Output: "module github.com/AnandChowdhary/gitclaw"},
 			{Name: "gitclaw.skill_index", Input: ".gitclaw/SKILLS", Output: "repo-reader sha256_12=abcdef123456"},
 			{Name: "gitclaw.policy", Input: "write-request", Output: "Current GitClaw mode is read-only."},
