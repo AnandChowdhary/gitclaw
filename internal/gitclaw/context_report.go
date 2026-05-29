@@ -6,21 +6,7 @@ import (
 )
 
 func IsContextReportRequest(ev Event, cfg Config) bool {
-	text := strings.TrimSpace(activeRequestText(ev))
-	if text == "" {
-		return false
-	}
-	lower := strings.ToLower(text)
-	prefix := strings.ToLower(cfg.TriggerPrefix)
-	if strings.HasPrefix(lower, prefix) {
-		text = strings.TrimSpace(text[len(cfg.TriggerPrefix):])
-	}
-	fields := strings.Fields(text)
-	if len(fields) == 0 {
-		return false
-	}
-	command := strings.Trim(strings.ToLower(fields[0]), " \t\r\n.,:;!?")
-	return command == "/context"
+	return activeSlashCommand(ev, cfg) == "/context"
 }
 
 func activeRequestText(ev Event) string {

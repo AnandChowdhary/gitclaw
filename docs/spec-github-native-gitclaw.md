@@ -623,6 +623,27 @@ discovered local skills. Full skill instructions are loaded only when:
 Remote skill installation, skill execution scripts, dependency installation,
 and agent-authored skill edits remain out of scope.
 
+## Skills Inspection Command
+
+GitClaw supports a deterministic skill inventory command inspired by
+OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
+`skill_view` split:
+
+```text
+@gitclaw /skills
+```
+
+The command runs after normal preflight authorization and context assembly, but
+before model inference. It posts a `gitclaw:assistant-turn` comment with
+`model="gitclaw/skills"` and summarizes:
+
+- available local skills from git-tracked `SKILL.md` files,
+- selected skills for the current issue/comment,
+- `always` activation state and frontmatter descriptions.
+
+It does not dump full skill bodies. Full `SKILL.md` content remains a prompt
+input only when selected by the normal progressive-disclosure rules.
+
 ## Read-Only Tool Context
 
 GitClaw v1 adds a small deterministic tool layer before the model call:
@@ -1311,6 +1332,14 @@ assert the expected comments/labels, and close the issue in cleanup.
      tool output names,
    - assert the run succeeds without requiring a model provider response.
 
+16. **Skills inspection**
+
+   - create a real issue with `@gitclaw /skills`,
+   - assert the reply is marked `model="gitclaw/skills"`,
+   - assert the report lists available skill metadata and selected skill paths,
+   - assert the report does not dump full skill bodies or verification tokens,
+   - assert the run succeeds without requiring a model provider response.
+
 ### Example Live Commands
 
 The script can use commands in this shape:
@@ -1477,6 +1506,8 @@ examples/workflows/gitclaw.yml
   workflow end to end.
 - A `gh`-driven context-report E2E harness verifies `@gitclaw /context`
   produces a deterministic context summary without a model call.
+- A `gh`-driven skills-report E2E harness verifies `@gitclaw /skills`
+  produces a deterministic local skill inventory without a model call.
 - A `gh`-driven failure E2E harness verifies the safe failure path against a
   real Actions/model failure.
 - A `gh`-driven prompt-budget E2E harness verifies a large real issue still

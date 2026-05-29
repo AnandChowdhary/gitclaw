@@ -300,6 +300,13 @@ Hermes skills are on-demand knowledge documents, also compatible with AgentSkill
 
 Notable difference from conservative systems: Hermes explicitly allows the agent to create, modify, or delete skills. That supports self-improvement, but it increases the need for review, quarantine, provenance, and rollback.
 
+2026-05-29 skill-inspection follow-up: OpenClaw exposes skill inventory through
+`openclaw skills` commands, and Hermes separates `skills_list` metadata from
+`skill_view` full-body loading. GitClaw should keep the same progressive
+disclosure in issue form: `@gitclaw /skills` lists local git-tracked skill
+metadata and selected paths without dumping `SKILL.md` bodies or allowing
+agent-authored skill mutation.
+
 ### Cron And Long-Horizon Work
 
 Hermes cron jobs are first-class agent tasks, not just shell tasks. They can:
