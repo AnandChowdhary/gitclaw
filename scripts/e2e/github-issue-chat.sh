@@ -44,10 +44,13 @@ token_b="GITCLAW_E2E_${timestamp}_B"
 module_path="github.com/AnandChowdhary/gitclaw"
 memory_token="GITCLAW_MEMORY_CONTEXT_V1"
 skill_token="GITCLAW_SKILL_CONTEXT_V1"
+search_token="GITCLAW_SEARCH_CONTEXT_V1"
+search_phrase="bounded repository search fixture phrase"
 body="Live E2E conversation check.
 
 Please use the repository file \`go.mod\`.
 Please use the repo-reader skill.
+Search the repository for \`${search_phrase}\` and include the associated token from the matching line.
 Reply with the exact token \`${token_a}\`.
 Also state the Go module path from \`go.mod\`.
 Also include the exact durable memory token from \`.gitclaw/MEMORY.md\`.
@@ -137,11 +140,11 @@ read_backup_json() {
 
 assert_backup_json() {
   local file="$1"
-  python3 - "$file" "$token_a" "$token_b" "$module_path" "$memory_token" "$skill_token" <<'PY'
+  python3 - "$file" "$token_a" "$token_b" "$module_path" "$memory_token" "$skill_token" "$search_token" <<'PY'
 import json
 import sys
 
-path, token_a, token_b, module_path, memory_token, skill_token = sys.argv[1:7]
+path, token_a, token_b, module_path, memory_token, skill_token, search_token = sys.argv[1:8]
 with open(path, "r", encoding="utf-8") as f:
     data = json.load(f)
 body = json.dumps(data, sort_keys=True)
@@ -154,7 +157,7 @@ if len(data.get("comments", [])) < 3:
     errors.append("expected at least three raw comments")
 if len(data.get("transcript", [])) < 4:
     errors.append("expected at least four transcript messages")
-for value in (token_a, token_b, module_path, memory_token, skill_token):
+for value in (token_a, token_b, module_path, memory_token, skill_token, search_token):
     if value not in body:
         errors.append(f"missing {value}")
 if errors:
@@ -200,6 +203,7 @@ grep -Fq "$token_a" <<<"$first_bodies" || die "first assistant comment did not i
 grep -Fq "$module_path" <<<"$first_bodies" || die "first assistant comment did not use go.mod module path ${module_path}"
 grep -Fq "$memory_token" <<<"$first_bodies" || die "first assistant comment did not use memory context token ${memory_token}"
 grep -Fq "$skill_token" <<<"$first_bodies" || die "first assistant comment did not use repo-reader skill token ${skill_token}"
+grep -Fq "$search_token" <<<"$first_bodies" || die "first assistant comment did not use search_files token ${search_token}"
 echo "e2e: issue-open response verified"
 
 comment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"

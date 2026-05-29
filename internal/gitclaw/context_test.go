@@ -25,10 +25,11 @@ description: Use read-only repository files.
 Use read-only files.`)
 	writeTestFile(t, root, "go.mod", "module github.com/AnandChowdhary/gitclaw\n")
 	writeTestFile(t, root, "README.md", "hello")
+	writeTestFile(t, root, "docs/search-fixture.md", "bounded repository search fixture phrase => GITCLAW_SEARCH_CONTEXT_V1\n")
 
 	ctx, err := LoadRepoContext(root, []TranscriptMessage{{
 		Role: "user",
-		Body: "Please use the repo-reader skill, inspect `go.mod`, and tell me the module path.",
+		Body: "Please use the repo-reader skill, inspect `go.mod`, search for `bounded repository search fixture phrase`, and tell me the module path.",
 	}})
 	if err != nil {
 		t.Fatalf("LoadRepoContext returned error: %v", err)
@@ -63,6 +64,9 @@ Use read-only files.`)
 	}
 	if !hasToolOutput(ctx.ToolOutputs, "gitclaw.read_file", "go.mod", "module github.com/AnandChowdhary/gitclaw") {
 		t.Fatalf("read_file tool output missing go.mod contents: %#v", ctx.ToolOutputs)
+	}
+	if !hasToolOutputBody(ctx.ToolOutputs, "gitclaw.search_files", "GITCLAW_SEARCH_CONTEXT_V1") {
+		t.Fatalf("search_files tool output missing search token: %#v", ctx.ToolOutputs)
 	}
 }
 
@@ -132,6 +136,23 @@ metadata:
 	}
 	if !skill.Always {
 		t.Fatalf("always metadata was not parsed")
+	}
+}
+
+func TestSearchQueriesPreferExplicitPhrasesAndIdentifiers(t *testing.T) {
+	queries := searchQueriesFromTranscript([]TranscriptMessage{{
+		Role: "user",
+		Body: "Please search for `bounded repository search fixture phrase` and find BackupIssue without treating Please as code.",
+	}})
+	joined := strings.Join(queries, "\n")
+	if !strings.Contains(joined, "bounded repository search fixture phrase") {
+		t.Fatalf("queries missing explicit phrase: %#v", queries)
+	}
+	if !strings.Contains(joined, "BackupIssue") {
+		t.Fatalf("queries missing code identifier: %#v", queries)
+	}
+	if strings.Contains(joined, "Please") {
+		t.Fatalf("queries should not include title-case prose: %#v", queries)
 	}
 }
 
@@ -216,6 +237,15 @@ func hasContextDoc(docs []ContextDocument, path, bodyPart string) bool {
 func hasToolOutput(outputs []ToolOutput, name, input, bodyPart string) bool {
 	for _, output := range outputs {
 		if output.Name == name && output.Input == input && strings.Contains(output.Output, bodyPart) {
+			return true
+		}
+	}
+	return false
+}
+
+func hasToolOutputBody(outputs []ToolOutput, name, bodyPart string) bool {
+	for _, output := range outputs {
+		if output.Name == name && strings.Contains(output.Output, bodyPart) {
 			return true
 		}
 	}

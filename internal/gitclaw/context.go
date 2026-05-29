@@ -5,6 +5,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 )
@@ -15,7 +16,13 @@ const (
 	maxRepoFilesListed      = 240
 	maxToolFilesRead        = 5
 	maxMemoryDocuments      = 3
+	maxSearchQueries        = 5
+	maxSearchMatches        = 20
+	maxSearchFileBytes      = 64000
+	maxSearchLineBytes      = 300
 )
+
+var searchIdentifierPattern = regexp.MustCompile(`[A-Za-z_][A-Za-z0-9_.:-]{5,}`)
 
 var contextDocumentPaths = []string{
 	"AGENTS.md",
@@ -63,6 +70,16 @@ func LoadRepoContext(root string, transcript []TranscriptMessage) (RepoContext, 
 			Input:  ".gitclaw/SKILLS",
 			Output: renderSkillIndex(skillSummaries),
 		})
+	}
+	searchQueries := searchQueriesFromTranscript(transcript)
+	if len(searchQueries) > 0 {
+		if output := searchRepoFiles(absRoot, files, searchQueries); output != "" {
+			ctx.ToolOutputs = append(ctx.ToolOutputs, ToolOutput{
+				Name:   "gitclaw.search_files",
+				Input:  strings.Join(searchQueries, " | "),
+				Output: output,
+			})
+		}
 	}
 	for _, file := range mentionedRepoFiles(files, transcript) {
 		body, err := readRepoTextFile(absRoot, file, maxToolReadBytes)
@@ -337,6 +354,223 @@ func renderSkillIndex(skills []SkillSummary) string {
 		b.WriteByte('\n')
 	}
 	return strings.TrimSpace(b.String())
+}
+
+func searchQueriesFromTranscript(transcript []TranscriptMessage) []string {
+	text := transcriptText(transcript)
+	queries := uniqueStrings(append(delimitedSearchQueries(text), commandSearchQueries(text)...))
+	for _, match := range searchIdentifierPattern.FindAllString(text, -1) {
+		if len(queries) >= maxSearchQueries {
+			break
+		}
+		query := sanitizeSearchQuery(match)
+		if query == "" || looksLikeRepoPath(query) || !looksLikeSearchIdentifier(query) || containsStringFold(queries, query) {
+			continue
+		}
+		if isStopWord(strings.ToLower(query)) {
+			continue
+		}
+		queries = append(queries, query)
+	}
+	if len(queries) > maxSearchQueries {
+		return queries[:maxSearchQueries]
+	}
+	return queries
+}
+
+func delimitedSearchQueries(text string) []string {
+	var queries []string
+	for _, delimiter := range []rune{'`', '"'} {
+		in := false
+		var b strings.Builder
+		for _, r := range text {
+			if r == delimiter {
+				if in {
+					if query := sanitizeSearchQuery(b.String()); query != "" {
+						queries = append(queries, query)
+					}
+					b.Reset()
+				}
+				in = !in
+				continue
+			}
+			if in {
+				b.WriteRune(r)
+			}
+		}
+	}
+	return queries
+}
+
+func commandSearchQueries(text string) []string {
+	lower := strings.ToLower(text)
+	triggers := []string{"search for ", "search repository for ", "find "}
+	var queries []string
+	for _, trigger := range triggers {
+		start := 0
+		for {
+			idx := strings.Index(lower[start:], trigger)
+			if idx < 0 {
+				break
+			}
+			begin := start + idx + len(trigger)
+			for begin < len(text) && text[begin] == ' ' {
+				begin++
+			}
+			if begin < len(text) && (text[begin] == '`' || text[begin] == '"') {
+				delimiter := text[begin]
+				end := begin + 1
+				for end < len(text) && text[end] != delimiter {
+					end++
+				}
+				if end < len(text) {
+					if query := sanitizeSearchQuery(text[begin+1 : end]); query != "" {
+						queries = append(queries, query)
+					}
+					start = end + 1
+					continue
+				}
+			}
+			end := begin
+			for end < len(text) {
+				switch text[end] {
+				case '\n', '.', ',', ';', ':':
+					goto done
+				default:
+					end++
+				}
+			}
+		done:
+			if query := sanitizeSearchQuery(trimCommandSearchTail(text[begin:end])); query != "" {
+				queries = append(queries, query)
+			}
+			start = end
+		}
+	}
+	return queries
+}
+
+func trimCommandSearchTail(value string) string {
+	lower := strings.ToLower(value)
+	cut := len(value)
+	for _, marker := range []string{" and ", " without ", " from ", " in ", " with "} {
+		if idx := strings.Index(lower, marker); idx >= 0 && idx < cut {
+			cut = idx
+		}
+	}
+	return value[:cut]
+}
+
+func sanitizeSearchQuery(value string) string {
+	value = strings.TrimSpace(value)
+	value = strings.Trim(value, "`\"'()[]{}")
+	value = strings.Join(strings.Fields(value), " ")
+	if len(value) < 4 || len(value) > 120 {
+		return ""
+	}
+	return value
+}
+
+func searchRepoFiles(root string, files []string, queries []string) string {
+	var b strings.Builder
+	matches := 0
+	for _, query := range queries {
+		queryLower := strings.ToLower(query)
+		queryHeaderWritten := false
+		for _, file := range files {
+			if matches >= maxSearchMatches {
+				break
+			}
+			body, err := readRepoTextFile(root, file, maxSearchFileBytes)
+			if err != nil {
+				continue
+			}
+			lines := strings.Split(body, "\n")
+			for i, line := range lines {
+				if matches >= maxSearchMatches {
+					break
+				}
+				if !strings.Contains(strings.ToLower(line), queryLower) {
+					continue
+				}
+				if !queryHeaderWritten {
+					fmt.Fprintf(&b, "[query %q]\n", query)
+					queryHeaderWritten = true
+				}
+				fmt.Fprintf(&b, "%s:%d:%s\n", file, i+1, trimSearchLine(line))
+				matches++
+			}
+		}
+	}
+	return strings.TrimSpace(b.String())
+}
+
+func trimSearchLine(line string) string {
+	line = strings.Join(strings.Fields(line), " ")
+	if len(line) <= maxSearchLineBytes {
+		return line
+	}
+	return line[:maxSearchLineBytes] + "..."
+}
+
+func uniqueStrings(values []string) []string {
+	unique := make([]string, 0, len(values))
+	for _, value := range values {
+		if value == "" || containsStringFold(unique, value) {
+			continue
+		}
+		unique = append(unique, value)
+	}
+	return unique
+}
+
+func containsStringFold(values []string, value string) bool {
+	for _, existing := range values {
+		if strings.EqualFold(existing, value) {
+			return true
+		}
+	}
+	return false
+}
+
+func looksLikeRepoPath(value string) bool {
+	return strings.Contains(value, "/") || strings.Contains(value, "\\")
+}
+
+func looksLikeSearchIdentifier(value string) bool {
+	if strings.ContainsAny(value, "_.:-") {
+		return true
+	}
+	hasLower := false
+	hasUpper := false
+	hasDigit := false
+	for _, r := range value {
+		switch {
+		case r >= 'a' && r <= 'z':
+			hasLower = true
+		case r >= 'A' && r <= 'Z':
+			hasUpper = true
+		case r >= '0' && r <= '9':
+			hasDigit = true
+		}
+	}
+	return hasDigit || (hasLower && hasUpper && !isTitleCaseWord(value))
+}
+
+func isTitleCaseWord(value string) bool {
+	if len(value) < 2 {
+		return false
+	}
+	runes := []rune(value)
+	if !(runes[0] >= 'A' && runes[0] <= 'Z') {
+		return false
+	}
+	for _, r := range runes[1:] {
+		if !(r >= 'a' && r <= 'z') {
+			return false
+		}
+	}
+	return true
 }
 
 func listRepoFiles(root string) ([]string, error) {

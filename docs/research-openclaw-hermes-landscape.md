@@ -251,6 +251,13 @@ of every conversation. The GitClaw adaptation should keep this same separation:
 context files and skills are prompt inputs, while tools are bounded read-only
 operations whose outputs are visible in the prompt and testable in E2E runs.
 
+2026-05-29 search-tool follow-up: Hermes' file toolset includes both file read
+and search operations. GitClaw should preserve that shape but keep it pre-model
+and non-interactive: derive a few explicit search queries from the issue
+thread, scan only bounded text files from the checkout, and insert matched
+lines as `gitclaw.search_files` context. That gives the model grounded recall
+without granting shell access or a general command runner.
+
 ### Skills
 
 Hermes skills are on-demand knowledge documents, also compatible with AgentSkills. The default local source of truth is `~/.hermes/skills/`, with optional external directories.

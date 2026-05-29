@@ -480,6 +480,8 @@ and agent-authored skill edits remain out of scope.
 GitClaw v1 adds a small deterministic tool layer before the model call:
 
 - `gitclaw.list_files`: lists a bounded set of repository files in the checkout.
+- `gitclaw.search_files`: searches bounded text files for explicit quoted
+  phrases or identifiers from the issue thread and returns matching lines.
 - `gitclaw.read_file`: reads a bounded text file only when the issue thread
   explicitly mentions that repository-relative path.
 
@@ -981,6 +983,8 @@ assert the expected comments/labels, and close the issue in cleanup.
 
    - ask the assistant to read a concrete repository file such as `go.mod`,
    - assert the reply includes an exact expected token or module path,
+   - ask the assistant to search for a fixture phrase and return the associated
+     token from `gitclaw.search_files`,
    - ask for a selected local skill token,
    - assert the targeted skill is loaded and irrelevant skills stay unloaded.
 
@@ -1021,7 +1025,8 @@ MVP is not complete until:
 - the live GitHub E2E harness creates an issue and receives a GitClaw reply,
 - the live harness comments again and receives exactly one additional reply,
 - the live harness verifies actual conversation content, including exact
-  nonce tokens across turns and repository file context from `go.mod`,
+  nonce tokens across turns, repository file context from `go.mod`, and
+  `gitclaw.search_files` context from the search fixture,
 - the heartbeat harness dispatches a real workflow, receives one heartbeat
   comment, and proves same-slot idempotency,
 - bot loop prevention is verified live,
