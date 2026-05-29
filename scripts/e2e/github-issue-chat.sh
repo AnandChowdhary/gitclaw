@@ -23,7 +23,7 @@ comment_deadline_seconds="${GITCLAW_E2E_COMMENT_DEADLINE_SECONDS:-180}"
 gh auth status >/dev/null
 gh repo view "$GITCLAW_E2E_REPO" >/dev/null
 
-if ! gh label list --repo "$GITCLAW_E2E_REPO" --json name --jq '.[].name' | grep -Fxq gitclaw; then
+if ! gh label list --repo "$GITCLAW_E2E_REPO" --limit 1000 --json name --jq '.[].name' | grep -Fxq gitclaw; then
   die "sandbox repo is missing required label: gitclaw"
 fi
 
@@ -54,10 +54,10 @@ issue_number="${issue_url##*/}"
 cleanup() {
   status=$?
   if [[ -n "${issue_number:-}" ]]; then
-    if gh label list --repo "$GITCLAW_E2E_REPO" --json name --jq '.[].name' | grep -Fxq "gitclaw:disabled"; then
+    if gh label list --repo "$GITCLAW_E2E_REPO" --limit 1000 --json name --jq '.[].name' | grep -Fxq "gitclaw:disabled"; then
       gh issue edit "$issue_number" --repo "$GITCLAW_E2E_REPO" --add-label "gitclaw:disabled" >/dev/null 2>&1 || true
     fi
-    if gh label list --repo "$GITCLAW_E2E_REPO" --json name --jq '.[].name' | grep -Fxq "$retention_label"; then
+    if gh label list --repo "$GITCLAW_E2E_REPO" --limit 1000 --json name --jq '.[].name' | grep -Fxq "$retention_label"; then
       gh issue edit "$issue_number" --repo "$GITCLAW_E2E_REPO" --add-label "$retention_label" >/dev/null 2>&1 || true
     fi
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
