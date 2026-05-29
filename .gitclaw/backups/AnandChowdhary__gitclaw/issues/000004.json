@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T12:05:42Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 4,
+    "title": "@gitclaw e2e 20260529T120409Z",
+    "body": "Live E2E conversation check.\n\nPlease use the repository file `go.mod`.\nReply with the exact token `GITCLAW_E2E_20260529T120409Z_A`.\nAlso state the Go module path from `go.mod`.\nAlso include the exact durable memory token from `.gitclaw/MEMORY.md`.\nKeep the answer under 80 words.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw e2e 20260529T120409Z\n\nLive E2E conversation check.\n\nPlease use the repository file `go.mod`.\nReply with the exact token `GITCLAW_E2E_20260529T120409Z_A`.\nAlso state the Go module path from `go.mod`.\nAlso include the exact durable memory token from `.gitclaw/MEMORY.md`.\nKeep the answer under 80 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_E2E_20260529T120409Z_A\nGo module path: github.com/AnandChowdhary/gitclaw\nDurable memory token: GITCLAW_MEMORY_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4574750435,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4574750435,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26636203703\" event_id=\"issue-4\" model=\"openai/gpt-5-mini\" idempotency_key=\"ce505c75c84f2634f1f0314cedd55d11\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26636203703\" --\u003e\nGITCLAW_E2E_20260529T120409Z_A\nGo module path: github.com/AnandChowdhary/gitclaw\nDurable memory token: GITCLAW_MEMORY_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T12:05:14Z",
+      "updated_at": "2026-05-29T12:05:14Z"
+    }
+  ]
+}
