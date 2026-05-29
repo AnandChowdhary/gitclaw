@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-29T16:01:47Z",
+  "generated_at": "2026-05-29T16:03:44Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 38,
     "title": "@gitclaw /context session e2e 20260529T160007Z",
@@ -10,7 +10,8 @@
     "author": "AnandChowdhary",
     "author_association": "OWNER",
     "labels": [
-      "gitclaw"
+      "gitclaw",
+      "gitclaw:done"
     ]
   },
   "transcript": [
@@ -31,6 +32,24 @@
       "CommentID": 4577276517,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /session\n\nPlease audit this issue session.\nHidden comment token: GITCLAW_SESSION_COMMENT_20260529T160007Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4577284998,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Session Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#38`\n- event_kind: `issue_comment`\n- raw_comments: `2`\n- transcript_messages: `3`\n- user_messages: `2`\n- assistant_messages: `1`\n- trusted_messages: `3`\n- untrusted_messages: `0`\n- assistant_turn_comments: `1`\n- heartbeat_comments: `0`\n- error_marker_comments: `0`\n- channel_message_comments: `0`\n- channel_thread_issue: `false`\n- proactive_run_issue: `false`\n\nMessage bodies are not included; hashes let maintainers verify exactly which issue-thread messages were loaded.\n\n### Transcript Messages\n- `01` role=`user` source=`issue` actor=`AnandChowdhary` association=`OWNER` trusted=`true` edited=`false` bytes=`188` lines=`6` sha256_12=`a15535c20552`\n- `02` role=`assistant` source=`comment:4577276517` actor=`github-actions[bot]` association=`NONE` trusted=`true` edited=`false` bytes=`957` lines=`27` sha256_12=`8a238943707f`\n- `03` role=`user` source=`comment:4577284998` actor=`AnandChowdhary` association=`OWNER` trusted=`true` edited=`false` bytes=`114` lines=`4` sha256_12=`b3270b0b9ac1`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4577298876,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -41,6 +60,22 @@
       "author_association": "NONE",
       "created_at": "2026-05-29T16:01:14Z",
       "updated_at": "2026-05-29T16:01:14Z"
+    },
+    {
+      "id": 4577284998,
+      "body": "@gitclaw /session\n\nPlease audit this issue session.\nHidden comment token: GITCLAW_SESSION_COMMENT_20260529T160007Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-05-29T16:01:59Z",
+      "updated_at": "2026-05-29T16:01:59Z"
+    },
+    {
+      "id": 4577298876,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26647863473\" event_id=\"comment-4577284998\" model=\"gitclaw/session\" idempotency_key=\"bc73ea4beaaa4287d22e66f0ab60e7b3\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26647863473\" --\u003e\n## GitClaw Session Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#38`\n- event_kind: `issue_comment`\n- raw_comments: `2`\n- transcript_messages: `3`\n- user_messages: `2`\n- assistant_messages: `1`\n- trusted_messages: `3`\n- untrusted_messages: `0`\n- assistant_turn_comments: `1`\n- heartbeat_comments: `0`\n- error_marker_comments: `0`\n- channel_message_comments: `0`\n- channel_thread_issue: `false`\n- proactive_run_issue: `false`\n\nMessage bodies are not included; hashes let maintainers verify exactly which issue-thread messages were loaded.\n\n### Transcript Messages\n- `01` role=`user` source=`issue` actor=`AnandChowdhary` association=`OWNER` trusted=`true` edited=`false` bytes=`188` lines=`6` sha256_12=`a15535c20552`\n- `02` role=`assistant` source=`comment:4577276517` actor=`github-actions[bot]` association=`NONE` trusted=`true` edited=`false` bytes=`957` lines=`27` sha256_12=`8a238943707f`\n- `03` role=`user` source=`comment:4577284998` actor=`AnandChowdhary` association=`OWNER` trusted=`true` edited=`false` bytes=`114` lines=`4` sha256_12=`b3270b0b9ac1`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T16:03:11Z",
+      "updated_at": "2026-05-29T16:03:11Z"
     }
   ]
 }
