@@ -506,6 +506,14 @@ are only `read-only` or `metadata-only`, active outputs are declared and
 bounded, `.gitclaw/TOOLS.md` is loaded, and `/tools` plus
 `gitclaw tools validate` expose the result without dumping output bodies.
 
+2026-05-29 tools-search follow-up: OpenClaw's tools docs distinguish
+tool-policy visibility from skill/plugin instructions, and Hermes' tool
+reference keeps tool names and schemas inspectable as first-class registry
+metadata. GitClaw should add the same operator affordance without exposing
+prompt internals: `@gitclaw /tools search <query>` and `gitclaw tools search
+<query>` should search contract names/modes/triggers and active-output
+names/inputs, but report only match fields, counts, hashes, and sizes.
+
 2026-05-29 prompt-budget follow-up: OpenClaw's context docs expose per-file and
 total prompt caps plus visible truncation markers, while Hermes' memory/context
 docs treat character limits as a core defense against context bloat. GitClaw

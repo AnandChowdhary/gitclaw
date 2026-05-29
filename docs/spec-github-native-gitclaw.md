@@ -559,8 +559,8 @@ GitHub issue/comment event
   `heartbeat`,
   `channel-ingest`, `proactive enqueue`, `proactive init`,
   `memory validate`, `skills validate`, `skills info`, `skills search`,
-  `soul validate`, `soul search`, `tools validate`, `doctor`, `commands`,
-  `version`.
+  `soul validate`, `soul search`, `tools validate`, `tools search`, `doctor`,
+  `commands`, `version`.
 
 `internal/github`
 
@@ -950,6 +950,7 @@ Validation is visible in the `/tools` report and locally through:
 
 ```bash
 gitclaw tools validate
+gitclaw tools search <query> --max-results 10
 ```
 
 The validation output includes only names, counts, and short finding details.
@@ -962,6 +963,7 @@ OpenClaw's tool policy visibility and Hermes' toolset inventory:
 
 ```text
 @gitclaw /tools
+@gitclaw /tools search read_file
 ```
 
 The command runs after normal preflight authorization and context assembly, but
@@ -981,6 +983,16 @@ It never dumps full tool output bodies. Tool output bodies remain prompt inputs
 only; the issue-visible report exposes enough metadata to debug whether
 `gitclaw.list_files`, `gitclaw.search_files`, `gitclaw.read_file`,
 `gitclaw.skill_index`, or `gitclaw.policy` ran for the turn.
+
+When called as `@gitclaw /tools search <query>`, the command searches declared
+tool-contract metadata and active tool-output metadata. It reports the query
+hash and term count, matched contract and output counts, result limits,
+matched fields, contract mode/trigger metadata, active-output input hashes,
+output byte/line counts, and output hashes. It never emits raw tool inputs,
+tool output bodies, issue/comment bodies, prompts, or raw search queries. This
+keeps tool debugging aligned with OpenClaw's tool-policy visibility and
+Hermes' explicit toolset inventory without turning issue comments into a
+secondary prompt dump.
 
 ## Context Inspection Command
 

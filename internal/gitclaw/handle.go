@@ -102,7 +102,7 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 			Model:          "gitclaw/tools",
 			IdempotencyKey: key,
 			RunURL:         actionRunURL(ev),
-		}, RenderToolsReport(ev, repoContext))
+		}, RenderToolsReport(ev, cfg, repoContext))
 		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
 			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post tools report comment: %w", err))
 		}

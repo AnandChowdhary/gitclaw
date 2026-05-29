@@ -988,6 +988,56 @@ func TestHandleToolsCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 }
 
+func TestHandleToolsSearchCommandPostsReportWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/TOOLS.md", "TOOLS_SEARCH_HANDLER_SECRET: read-only tools only.")
+	writeTestFile(t, root, "go.mod", "module github.com/AnandChowdhary/gitclaw\n")
+
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 117,
+			"title": "GitClaw tools search handler test",
+			"body": "@gitclaw /tools search read_file TOOLS_SEARCH_HANDLER_QUERY_SECRET\n\nMention go.mod so read_file output exists. Hidden tools search body token: TOOLS_SEARCH_HANDLER_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{117: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic tools search command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Tools Search Report", "Generated without a model call", "model=\"gitclaw/tools\"", "tool_search_status: `ok`", "query_sha256_12:", "max_results: `10`", "available_tools: `5`", "active_tool_outputs: `3`", "matched_contracts: `1`", "matched_outputs: `2`", "results_returned: `3`", "raw_bodies_included: `false`", "raw_inputs_included: `false`", "kind=`contract` name=`gitclaw.read_file`", "kind=`active-output` name=`gitclaw.read_file`", "kind=`active-output` name=`gitclaw.search_files`", "input_sha256_12=", "output_sha256_12="} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("tools search report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"TOOLS_SEARCH_HANDLER_SECRET", "TOOLS_SEARCH_HANDLER_QUERY_SECRET", "TOOLS_SEARCH_HANDLER_BODY_SECRET", "module github.com/AnandChowdhary/gitclaw", "go.mod"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("tools search report leaked body/input/query token %q:\n%s", leaked, body)
+		}
+	}
+	if !hasLabel(github.IssueLabels[117], "gitclaw:done") || hasLabel(github.IssueLabels[117], "gitclaw:running") || hasLabel(github.IssueLabels[117], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[117])
+	}
+}
+
 func TestHandlePolicyCommandPostsReportWithoutLLM(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/TOOLS.md", "Use read-only tools.")
@@ -1066,7 +1116,7 @@ func TestHandleCommandsCommandPostsReportWithoutLLM(t *testing.T) {
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Commands Report", "Generated without a model call", "model=\"gitclaw/commands\"", "commands: `15`", "aliases: `7`", "local_cli_helpers: `18`", "/commands", "/backup", "/tools", "`gitclaw commands` command=`/help`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools validate` command=`/tools`"} {
+	for _, want := range []string{"GitClaw Commands Report", "Generated without a model call", "model=\"gitclaw/commands\"", "commands: `15`", "aliases: `7`", "local_cli_helpers: `19`", "/commands", "/backup", "/tools", "`gitclaw commands` command=`/help`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools validate` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("commands report missing %q:\n%s", want, body)
 		}
