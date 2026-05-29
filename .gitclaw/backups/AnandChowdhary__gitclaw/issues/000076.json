@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T21:57:52Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 76,
+    "title": "GitClaw soul search e2e 20260529T215648Z",
+    "body": "@gitclaw /soul search durable state layer\n\nLive soul-search E2E 20260529T215648Z.\n\nHidden soul search token: GITCLAW_SOUL_SEARCH_E2E_20260529T215648Z\nThis should produce a deterministic soul search report without dumping high-authority context bodies or the raw search query.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw soul search e2e 20260529T215648Z\n\n@gitclaw /soul search durable state layer\n\nLive soul-search E2E 20260529T215648Z.\n\nHidden soul search token: GITCLAW_SOUL_SEARCH_E2E_20260529T215648Z\nThis should produce a deterministic soul search report without dumping high-authority context bodies or the raw search query.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Soul Search Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#76`\n- soul_search_status: `ok`\n- query_sha256_12: `faee352d2ba1`\n- query_terms: `3`\n- max_results: `10`\n- files_scanned: `7`\n- matched_files: `5`\n- matched_lines: `9`\n- results_returned: `9`\n- raw_bodies_included: `false`\n\nThis report searches loaded high-authority GitClaw context files with a local lexical matcher. It reports paths, categories, line numbers, scores, and hashes only; raw soul, user, memory, tool, heartbeat, issue, comment, prompt, and raw search query bodies are not included.\n\n### Results\n- path=`.gitclaw/IDENTITY.md` category=`identity` line=`6` score=`81` matched_terms=`3` file_sha256_12=`8ba22d9e5696` line_sha256_12=`bea5d979c685`\n- path=`.gitclaw/SOUL.md` category=`soul` line=`13` score=`17` matched_terms=`1` file_sha256_12=`0460b93e1a5c` line_sha256_12=`41019d42f4a6`\n- path=`.gitclaw/MEMORY.md` category=`memory` line=`3` score=`15` matched_terms=`1` file_sha256_12=`5a8fa3488b00` line_sha256_12=`64e88174a019`\n- path=`.gitclaw/MEMORY.md` category=`memory` line=`4` score=`15` matched_terms=`1` file_sha256_12=`5a8fa3488b00` line_sha256_12=`72bf6c268b34`\n- path=`.gitclaw/TOOLS.md` category=`tools` line=`12` score=`13` matched_terms=`1` file_sha256_12=`d769defecc49` line_sha256_12=`201d13b80fef`\n- path=`.gitclaw/memory/2026-05-29.md` category=`memory-note` line=`63` score=`13` matched_terms=`1` file_sha256_12=`5db382a572b5` line_sha256_12=`3ec9787d6b85`\n- path=`.gitclaw/memory/2026-05-29.md` category=`memory-note` line=`98` score=`13` matched_terms=`1` file_sha256_12=`5db382a572b5` line_sha256_12=`22991f89f6fb`\n- path=`.gitclaw/memory/2026-05-29.md` category=`memory-note` line=`166` score=`13` matched_terms=`1` file_sha256_12=`5db382a572b5` line_sha256_12=`ae3c73d8208b`\n- path=`.gitclaw/memory/2026-05-29.md` category=`memory-note` line=`171` score=`13` matched_terms=`1` file_sha256_12=`5db382a572b5` line_sha256_12=`f4196b593684`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4580196286,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4580196286,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26664276624\" event_id=\"issue-76\" model=\"gitclaw/soul\" idempotency_key=\"dba2cacb1445f97df8bab79f5e54b30a\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26664276624\" --\u003e\n## GitClaw Soul Search Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#76`\n- soul_search_status: `ok`\n- query_sha256_12: `faee352d2ba1`\n- query_terms: `3`\n- max_results: `10`\n- files_scanned: `7`\n- matched_files: `5`\n- matched_lines: `9`\n- results_returned: `9`\n- raw_bodies_included: `false`\n\nThis report searches loaded high-authority GitClaw context files with a local lexical matcher. It reports paths, categories, line numbers, scores, and hashes only; raw soul, user, memory, tool, heartbeat, issue, comment, prompt, and raw search query bodies are not included.\n\n### Results\n- path=`.gitclaw/IDENTITY.md` category=`identity` line=`6` score=`81` matched_terms=`3` file_sha256_12=`8ba22d9e5696` line_sha256_12=`bea5d979c685`\n- path=`.gitclaw/SOUL.md` category=`soul` line=`13` score=`17` matched_terms=`1` file_sha256_12=`0460b93e1a5c` line_sha256_12=`41019d42f4a6`\n- path=`.gitclaw/MEMORY.md` category=`memory` line=`3` score=`15` matched_terms=`1` file_sha256_12=`5a8fa3488b00` line_sha256_12=`64e88174a019`\n- path=`.gitclaw/MEMORY.md` category=`memory` line=`4` score=`15` matched_terms=`1` file_sha256_12=`5a8fa3488b00` line_sha256_12=`72bf6c268b34`\n- path=`.gitclaw/TOOLS.md` category=`tools` line=`12` score=`13` matched_terms=`1` file_sha256_12=`d769defecc49` line_sha256_12=`201d13b80fef`\n- path=`.gitclaw/memory/2026-05-29.md` category=`memory-note` line=`63` score=`13` matched_terms=`1` file_sha256_12=`5db382a572b5` line_sha256_12=`3ec9787d6b85`\n- path=`.gitclaw/memory/2026-05-29.md` category=`memory-note` line=`98` score=`13` matched_terms=`1` file_sha256_12=`5db382a572b5` line_sha256_12=`22991f89f6fb`\n- path=`.gitclaw/memory/2026-05-29.md` category=`memory-note` line=`166` score=`13` matched_terms=`1` file_sha256_12=`5db382a572b5` line_sha256_12=`ae3c73d8208b`\n- path=`.gitclaw/memory/2026-05-29.md` category=`memory-note` line=`171` score=`13` matched_terms=`1` file_sha256_12=`5db382a572b5` line_sha256_12=`f4196b593684`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T21:57:30Z",
+      "updated_at": "2026-05-29T21:57:30Z"
+    }
+  ]
+}
