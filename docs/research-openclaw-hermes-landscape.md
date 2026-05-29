@@ -154,6 +154,13 @@ latest bounded `.gitclaw/memory/*.md` notes as context, but require normal git
 commits for any memory edits. That preserves OpenClaw's portability while
 avoiding Hermes-style self-improvement authority in early versions.
 
+2026-05-29 memory-audit follow-up: OpenClaw documents `MEMORY.md` plus
+`memory/YYYY-MM-DD.md` as the durable Markdown memory layer, while Hermes keeps
+small prompt memory separate from larger session search. GitClaw should make
+this boundary issue-visible with `@gitclaw /memory`: report long-term memory
+presence, dated-note counts, loaded/omitted notes, canonical date filenames,
+and hashes without dumping memory bodies or allowing hidden memory writes.
+
 2026-05-29 soul-inspection follow-up: because OpenClaw and Hermes treat
 `SOUL.md`, `IDENTITY.md`, `USER.md`, `MEMORY.md`, and dated memory notes as
 high-authority portable context, GitClaw should make that load set auditable

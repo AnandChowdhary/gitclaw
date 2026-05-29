@@ -23,6 +23,7 @@ var configSlashCommands = []string{
 	"/config",
 	"/context",
 	"/doctor",
+	"/memory",
 	"/models",
 	"/policy",
 	"/proactive",

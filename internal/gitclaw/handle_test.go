@@ -393,7 +393,7 @@ model:
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Config Report", "Generated without a model call", "model=\"gitclaw/config\"", "config_source: `defaults+repo`", "config_file_path: `.gitclaw/config.yml`", "config_file_present: `true`", "trigger_label: `gitclaw`", "trigger_prefix: `@gitclaw`", "run_mode: `read-only`", "max_prompt_bytes: `60000`", "max_output_tokens: `4000`", "workflows_present: `2`", "slash_commands: `12`", "OWNER", "COLLABORATOR", "gitclaw:disabled", "/channels", "/doctor", "/models", "/config", ".github/workflows/gitclaw.yml", ".github/workflows/gitclaw-heartbeat.yml", "sha256_12="} {
+	for _, want := range []string{"GitClaw Config Report", "Generated without a model call", "model=\"gitclaw/config\"", "config_source: `defaults+repo`", "config_file_path: `.gitclaw/config.yml`", "config_file_present: `true`", "trigger_label: `gitclaw`", "trigger_prefix: `@gitclaw`", "run_mode: `read-only`", "max_prompt_bytes: `60000`", "max_output_tokens: `4000`", "workflows_present: `2`", "slash_commands: `13`", "OWNER", "COLLABORATOR", "gitclaw:disabled", "/channels", "/doctor", "/memory", "/models", "/config", ".github/workflows/gitclaw.yml", ".github/workflows/gitclaw-heartbeat.yml", "sha256_12="} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("config report missing %q:\n%s", want, body)
 		}
@@ -613,6 +613,59 @@ func TestHandleSoulCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 	if !hasLabel(github.IssueLabels[92], "gitclaw:done") || hasLabel(github.IssueLabels[92], "gitclaw:running") || hasLabel(github.IssueLabels[92], "gitclaw:error") {
 		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[92])
+	}
+}
+
+func TestHandleMemoryCommandPostsReportWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/MEMORY.md", "LONG_TERM_MEMORY_SECRET: durable facts.")
+	writeTestFile(t, root, ".gitclaw/memory/2026-05-26.md", "OLD_MEMORY_SECRET")
+	writeTestFile(t, root, ".gitclaw/memory/2026-05-27.md", "THIRD_MEMORY_SECRET")
+	writeTestFile(t, root, ".gitclaw/memory/2026-05-28.md", "SECOND_MEMORY_SECRET")
+	writeTestFile(t, root, ".gitclaw/memory/2026-05-29.md", "LATEST_MEMORY_SECRET")
+	writeTestFile(t, root, ".gitclaw/memory/scratch.md", "NONCANONICAL_MEMORY_SECRET")
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 103,
+			"title": "@gitclaw /memory",
+			"body": "Show memory inventory. Hidden memory body token: MEMORY_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{103: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic memory command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Memory Report", "Generated without a model call", "model=\"gitclaw/memory\"", "memory_mode: `read-only`", "long_term_memory_present: `true`", "long_term_memory_loaded: `true`", "dated_memory_notes: `5`", "canonical_dated_memory_notes: `4`", "noncanonical_dated_memory_notes: `1`", "loaded_memory_notes: `3`", "max_loaded_memory_notes: `3`", "omitted_memory_notes: `2`", "latest_memory_note: `.gitclaw/memory/2026-05-29.md`", ".gitclaw/MEMORY.md", ".gitclaw/memory/scratch.md", "sha256_12="} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("memory report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"LONG_TERM_MEMORY_SECRET", "LATEST_MEMORY_SECRET", "OLD_MEMORY_SECRET", "MEMORY_BODY_SECRET"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("memory report leaked body token %q:\n%s", leaked, body)
+		}
+	}
+	if !hasLabel(github.IssueLabels[103], "gitclaw:done") || hasLabel(github.IssueLabels[103], "gitclaw:running") || hasLabel(github.IssueLabels[103], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[103])
 	}
 }
 

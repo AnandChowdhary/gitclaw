@@ -679,6 +679,33 @@ Do not let the agent write these files in MVP. Skills, soul, tools notes, and
 memory are git-backed source files: edits happen through normal human-reviewed
 commits, not hidden agent mutation.
 
+## Memory Inspection Command
+
+GitClaw supports a deterministic memory audit command inspired by OpenClaw's
+Markdown memory files and Hermes' split between compact prompt memory and
+larger session recall:
+
+```text
+@gitclaw /memory
+```
+
+The command runs after normal context assembly, but before model inference. It
+posts a `gitclaw:assistant-turn` comment with `model="gitclaw/memory"` and
+summarizes:
+
+- whether `.gitclaw/MEMORY.md` exists and was loaded,
+- total `.gitclaw/memory/*.md` notes,
+- canonical `YYYY-MM-DD.md` dated note count,
+- noncanonical note count,
+- loaded dated memory note count,
+- max loaded memory note budget,
+- omitted note count,
+- latest canonical dated note path,
+- byte, line, and short hash metadata for memory files.
+
+It never dumps memory file bodies, issue bodies, or comments. Memory remains
+read-only during assistant turns; edits require normal reviewed git changes.
+
 ## Skill Loading
 
 GitClaw skills use the AgentSkills/OpenClaw shape: a skill is a directory with
@@ -1665,7 +1692,16 @@ assert the expected comments/labels, and close the issue in cleanup.
      tool output names,
    - assert the run succeeds without requiring a model provider response.
 
-16. **Skills inspection**
+16. **Memory inspection**
+
+   - create a real issue with `@gitclaw /memory`,
+   - assert the reply is marked `model="gitclaw/memory"`,
+   - assert the report lists `.gitclaw/MEMORY.md`, dated memory note counts,
+     loaded/omitted note counts, and memory file hashes,
+   - assert the report does not dump memory file bodies or issue body tokens,
+   - assert the run succeeds without requiring a model provider response.
+
+17. **Skills inspection**
 
    - create a real issue with `@gitclaw /skills`,
    - assert the reply is marked `model="gitclaw/skills"`,
@@ -1675,7 +1711,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump full skill bodies or verification tokens,
    - assert the run succeeds without requiring a model provider response.
 
-17. **Soul inspection**
+18. **Soul inspection**
 
    - create a real issue with `@gitclaw /soul`,
    - assert the reply is marked `model="gitclaw/soul"`,
@@ -1684,7 +1720,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump full soul or memory bodies,
    - assert the run succeeds without requiring a model provider response.
 
-18. **Tools inspection**
+19. **Tools inspection**
 
    - create a real issue with `@gitclaw /tools`,
    - ask for a concrete file read and search fixture phrase,
@@ -1694,7 +1730,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump full file or search output bodies,
    - assert the run succeeds without requiring a model provider response.
 
-19. **Policy inspection**
+20. **Policy inspection**
 
    - create a real issue with `@gitclaw /policy` that also asks for write-mode
      work,
@@ -1706,7 +1742,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert `gitclaw:write-requested` and `gitclaw:done` are present without
      `gitclaw:running` or `gitclaw:error`.
 
-20. **Session inspection**
+21. **Session inspection**
 
    - create a real issue that gets one deterministic assistant turn,
    - post a follow-up comment with `@gitclaw /session`,
@@ -1716,7 +1752,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump issue or comment body tokens,
    - assert the run succeeds without requiring a model provider response.
 
-21. **Backup index**
+22. **Backup index**
 
    - create a real deterministic GitClaw issue turn,
    - wait for the successful backup job,
@@ -1725,7 +1761,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      number, title, and backup path,
    - assert the index contains metadata counts but not raw transcript bodies.
 
-22. **Backup inspection**
+23. **Backup inspection**
 
    - create a real issue with `@gitclaw /backup`,
    - assert the reply is marked `model="gitclaw/backup"`,
@@ -1736,7 +1772,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      entry for that same issue,
    - assert the report does not dump issue or comment body tokens.
 
-23. **Backup verification**
+24. **Backup verification**
 
    - create a real issue with `@gitclaw /backup`,
    - wait for the successful backup job,
@@ -1933,6 +1969,9 @@ examples/workflows/gitclaw.yml
   backup job succeeds.
 - A `gh`-driven context-report E2E harness verifies `@gitclaw /context`
   produces a deterministic context summary without a model call.
+- A `gh`-driven memory-report E2E harness verifies `@gitclaw /memory`
+  produces a deterministic memory inventory without a model call or body
+  leakage.
 - A `gh`-driven skills-report E2E harness verifies `@gitclaw /skills`
   produces a deterministic local skill inventory with provenance and
   requirement metadata, without a model call.
@@ -1992,6 +2031,7 @@ examples/workflows/gitclaw.yml
 - OpenClaw heartbeat docs: https://openclawlab.com/en/docs/agent/heartbeat/
 - OpenClaw automation docs: https://docs.openclaw.ai/automation/index
 - OpenClaw scheduled tasks docs: https://docs.openclaw.ai/automation/cron-jobs
+- OpenClaw memory docs: https://docs.openclaw.ai/concepts/memory
 - OpenClaw creating skills docs: https://docs.openclaw.ai/tools/creating-skills
 - OpenClaw skill format docs: https://docs.openclaw.ai/clawhub/skill-format
 - OpenClaw models CLI docs: https://docs.openclaw.ai/cli/models
@@ -1999,6 +2039,7 @@ examples/workflows/gitclaw.yml
 - OpenClaw configure docs: https://docs.openclaw.ai/cli/configure
 - OpenClaw doctor docs: https://docs.openclaw.ai/doctor
 - OpenClaw backup docs: https://docs.openclaw.ai/cli/backup
+- Hermes memory docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/memory.md
 - Hermes cron docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/cron.md
 - Hermes profiles docs: https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 - Slack Socket Mode: https://api.slack.com/apis/connections/socket
