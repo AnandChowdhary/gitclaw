@@ -30,9 +30,7 @@ ensure_label() {
   local name="$1"
   local color="$2"
   local description="$3"
-  if ! gh label list --repo "$GITCLAW_E2E_REPO" --limit 1000 --json name --jq '.[].name' | grep -Fxq "$name"; then
-    gh label create "$name" --repo "$GITCLAW_E2E_REPO" --color "$color" --description "$description" >/dev/null
-  fi
+  gh label create "$name" --repo "$GITCLAW_E2E_REPO" --color "$color" --description "$description" --force >/dev/null
 }
 
 ensure_label gitclaw 0e8a16 "Handled by GitClaw"

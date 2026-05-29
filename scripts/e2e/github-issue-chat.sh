@@ -33,9 +33,7 @@ ensure_label() {
   local name="$1"
   local color="$2"
   local description="$3"
-  if ! gh label list --repo "$GITCLAW_E2E_REPO" --limit 1000 --json name --jq '.[].name' | grep -Fxq "$name"; then
-    gh label create "$name" --repo "$GITCLAW_E2E_REPO" --color "$color" --description "$description" >/dev/null
-  fi
+  gh label create "$name" --repo "$GITCLAW_E2E_REPO" --color "$color" --description "$description" --force >/dev/null
 }
 
 ensure_label gitclaw 0e8a16 "Handled by GitClaw"
@@ -80,12 +78,8 @@ issue_number="${issue_url##*/}"
 cleanup() {
   status=$?
   if [[ -n "${issue_number:-}" ]]; then
-    if gh label list --repo "$GITCLAW_E2E_REPO" --limit 1000 --json name --jq '.[].name' | grep -Fxq "gitclaw:disabled"; then
-      gh issue edit "$issue_number" --repo "$GITCLAW_E2E_REPO" --add-label "gitclaw:disabled" >/dev/null 2>&1 || true
-    fi
-    if gh label list --repo "$GITCLAW_E2E_REPO" --limit 1000 --json name --jq '.[].name' | grep -Fxq "$retention_label"; then
-      gh issue edit "$issue_number" --repo "$GITCLAW_E2E_REPO" --add-label "$retention_label" >/dev/null 2>&1 || true
-    fi
+    gh issue edit "$issue_number" --repo "$GITCLAW_E2E_REPO" --add-label "gitclaw:disabled" >/dev/null 2>&1 || true
+    gh issue edit "$issue_number" --repo "$GITCLAW_E2E_REPO" --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
       gh issue close "$issue_number" --repo "$GITCLAW_E2E_REPO" >/dev/null 2>&1 || true
     fi

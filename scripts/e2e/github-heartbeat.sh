@@ -25,8 +25,9 @@ gh auth status >/dev/null
 gh repo view "$GITCLAW_E2E_REPO" >/dev/null
 gh workflow view "$workflow_name" --repo "$GITCLAW_E2E_REPO" >/dev/null 2>&1 || die "repo is missing workflow: $workflow_name"
 
+labels="$(gh label list --repo "$GITCLAW_E2E_REPO" --limit 1000 --json name --jq '.[].name')"
 for label in "$heartbeat_label"; do
-  if ! gh label list --repo "$GITCLAW_E2E_REPO" --limit 1000 --json name --jq '.[].name' | grep -Fxq "$label"; then
+  if ! grep -Fxq "$label" <<<"$labels"; then
     die "repo is missing required label: $label"
   fi
 done
@@ -52,12 +53,8 @@ issue_number="${issue_url##*/}"
 cleanup() {
   status=$?
   if [[ -n "${issue_number:-}" ]]; then
-    if gh label list --repo "$GITCLAW_E2E_REPO" --limit 1000 --json name --jq '.[].name' | grep -Fxq "gitclaw:disabled"; then
-      gh issue edit "$issue_number" --repo "$GITCLAW_E2E_REPO" --add-label "gitclaw:disabled" >/dev/null 2>&1 || true
-    fi
-    if gh label list --repo "$GITCLAW_E2E_REPO" --limit 1000 --json name --jq '.[].name' | grep -Fxq "$retention_label"; then
-      gh issue edit "$issue_number" --repo "$GITCLAW_E2E_REPO" --add-label "$retention_label" >/dev/null 2>&1 || true
-    fi
+    gh issue edit "$issue_number" --repo "$GITCLAW_E2E_REPO" --add-label "gitclaw:disabled" >/dev/null 2>&1 || true
+    gh issue edit "$issue_number" --repo "$GITCLAW_E2E_REPO" --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
       gh issue close "$issue_number" --repo "$GITCLAW_E2E_REPO" >/dev/null 2>&1 || true
     fi
