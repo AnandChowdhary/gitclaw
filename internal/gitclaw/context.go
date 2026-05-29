@@ -14,6 +14,7 @@ const (
 	maxToolReadBytes        = 8000
 	maxRepoFilesListed      = 240
 	maxToolFilesRead        = 5
+	maxMemoryDocuments      = 3
 )
 
 var contextDocumentPaths = []string{
@@ -21,8 +22,11 @@ var contextDocumentPaths = []string{
 	".github/copilot-instructions.md",
 	".gitclaw/GITCLAW.md",
 	".gitclaw/SOUL.md",
+	".gitclaw/IDENTITY.md",
+	".gitclaw/USER.md",
 	".gitclaw/TOOLS.md",
 	".gitclaw/MEMORY.md",
+	".gitclaw/HEARTBEAT.md",
 }
 
 func LoadRepoContext(root string, transcript []TranscriptMessage) (RepoContext, error) {
@@ -45,8 +49,10 @@ func LoadRepoContext(root string, transcript []TranscriptMessage) (RepoContext, 
 	if err != nil {
 		return RepoContext{}, err
 	}
+	documents := loadContextDocuments(absRoot, contextDocumentPaths)
+	documents = append(documents, loadMemoryDocuments(absRoot)...)
 	ctx := RepoContext{
-		Documents:   loadContextDocuments(absRoot, contextDocumentPaths),
+		Documents:   documents,
 		Skills:      loadSkillDocuments(absRoot),
 		ToolOutputs: []ToolOutput{{Name: "gitclaw.list_files", Input: ".", Output: strings.Join(files, "\n")}},
 	}
@@ -62,6 +68,31 @@ func LoadRepoContext(root string, transcript []TranscriptMessage) (RepoContext, 
 		})
 	}
 	return ctx, nil
+}
+
+func loadMemoryDocuments(root string) []ContextDocument {
+	matches, _ := filepath.Glob(filepath.Join(root, ".gitclaw", "memory", "*.md"))
+	sort.Slice(matches, func(i, j int) bool {
+		return filepath.Base(matches[i]) > filepath.Base(matches[j])
+	})
+	if len(matches) > maxMemoryDocuments {
+		matches = matches[:maxMemoryDocuments]
+	}
+	docs := make([]ContextDocument, 0, len(matches))
+	for _, match := range matches {
+		rel, err := filepath.Rel(root, match)
+		if err != nil {
+			continue
+		}
+		rel = filepath.ToSlash(rel)
+		body, err := readRepoTextFile(root, rel, maxContextDocumentBytes)
+		if err != nil {
+			continue
+		}
+		docs = append(docs, ContextDocument{Path: rel, Body: body})
+	}
+	sort.Slice(docs, func(i, j int) bool { return docs[i].Path < docs[j].Path })
+	return docs
 }
 
 func loadContextDocuments(root string, paths []string) []ContextDocument {

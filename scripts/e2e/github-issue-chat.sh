@@ -42,11 +42,13 @@ title="@gitclaw e2e ${timestamp}"
 token_a="GITCLAW_E2E_${timestamp}_A"
 token_b="GITCLAW_E2E_${timestamp}_B"
 module_path="github.com/AnandChowdhary/gitclaw"
+memory_token="GITCLAW_MEMORY_CONTEXT_V1"
 body="Live E2E conversation check.
 
 Please use the repository file \`go.mod\`.
 Reply with the exact token \`${token_a}\`.
 Also state the Go module path from \`go.mod\`.
+Also include the exact durable memory token from \`.gitclaw/MEMORY.md\`.
 Keep the answer under 80 words."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
@@ -193,6 +195,7 @@ wait_for_comment_count 1 || die "expected one GitClaw assistant comment after is
 first_bodies="$(gitclaw_comment_bodies)"
 grep -Fq "$token_a" <<<"$first_bodies" || die "first assistant comment did not include expected conversation token ${token_a}"
 grep -Fq "$module_path" <<<"$first_bodies" || die "first assistant comment did not use go.mod module path ${module_path}"
+grep -Fq "$memory_token" <<<"$first_bodies" || die "first assistant comment did not use memory context token ${memory_token}"
 echo "e2e: issue-open response verified"
 
 comment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"

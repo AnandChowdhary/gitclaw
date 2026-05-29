@@ -109,6 +109,13 @@ credentials, auth profiles, and raw session state out of that repo. For
 GitClaw, that maps cleanly to git-backed, reviewable `.gitclaw/` state and a
 separate backup branch for raw issue transcript snapshots.
 
+2026-05-29 memory follow-up: the right GitClaw cut is read-only memory
+injection, not self-writing memory. Load compact files such as
+`.gitclaw/MEMORY.md`, `.gitclaw/USER.md`, `.gitclaw/IDENTITY.md`, and the
+latest bounded `.gitclaw/memory/*.md` notes as context, but require normal git
+commits for any memory edits. That preserves OpenClaw's portability while
+avoiding Hermes-style self-improvement authority in early versions.
+
 ### Skills And Plugins
 
 OpenClaw uses AgentSkills-compatible skill folders with a `SKILL.md`. Skills can come from:

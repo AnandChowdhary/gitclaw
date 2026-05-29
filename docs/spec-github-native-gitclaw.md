@@ -336,8 +336,12 @@ Borrow the useful parts of OpenClaw and Hermes, but make them repo-native:
 AGENTS.md                    # existing coding-agent instructions, if present
 .gitclaw/GITCLAW.md          # GitClaw-specific repo instructions
 .gitclaw/POLICY.md           # repo-local permission and behavior policy
+.gitclaw/IDENTITY.md         # agent identity and product framing
+.gitclaw/USER.md             # maintainer preferences, human-reviewed only
+.gitclaw/HEARTBEAT.md        # scheduled/heartbeat intent, inert unless wired
 .gitclaw/SKILLS/*.md         # optional read-only local skills, v1+
 .gitclaw/MEMORY.md           # optional curated repo memory, human-reviewed only
+.gitclaw/memory/YYYY-MM-DD.md # dated working memory notes, human-reviewed only
 ```
 
 MVP loads:
@@ -346,8 +350,12 @@ MVP loads:
 - `.github/copilot-instructions.md`, if present
 - `.gitclaw/GITCLAW.md`, if present
 - `.gitclaw/SOUL.md`, if present
+- `.gitclaw/IDENTITY.md`, if present
+- `.gitclaw/USER.md`, if present and human-reviewed
 - `.gitclaw/TOOLS.md`, if present
 - `.gitclaw/MEMORY.md`, if present and human-reviewed
+- latest bounded `.gitclaw/memory/*.md` notes, if present and human-reviewed
+- `.gitclaw/HEARTBEAT.md`, if present, as context only
 - `.gitclaw/SKILLS/*/SKILL.md`, if present
 - issue thread transcript
 - small repository summary from a read-only file listing
