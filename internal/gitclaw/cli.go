@@ -298,11 +298,13 @@ func runDoctorCommand(args []string) error {
 
 func runSkillsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw skills validate|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw skills validate|list|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "validate":
 		return runSkillsValidateCommand(args[1:])
+	case "list":
+		return runSkillsListCommand(args[1:])
 	case "info":
 		return runSkillsInfoCommand(args[1:])
 	case "search":
@@ -310,6 +312,22 @@ func runSkillsCommand(args []string) error {
 	default:
 		return fmt.Errorf("unknown skills command %q", args[0])
 	}
+}
+
+func runSkillsListCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown skills list argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSkillsCLIReport(repoContext))
+	return nil
 }
 
 func runSkillsSearchCommand(args []string) error {

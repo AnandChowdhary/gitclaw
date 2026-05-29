@@ -354,6 +354,13 @@ GitClaw should map that to `@gitclaw /skills info <name>` and
 selection state, and validation findings without dumping full `SKILL.md`
 bodies into issues or logs.
 
+2026-05-30 skill-list follow-up: the inventory side should be just as explicit
+as focused lookup. `@gitclaw /skills` already behaves like OpenClaw/Hermes'
+skills list surface, but local operators should not have to remember that
+`validate` is not inventory. Add `gitclaw skills list` and treat
+`@gitclaw /skills list` as a documented alias for the same body-free skill
+inventory report.
+
 2026-05-29 skill-search follow-up: OpenClaw's `skills search [query...]`
 searches the ClawHub skill feed, while Hermes' skill surface keeps a compact
 searchable/listable skill atlas separate from full `skill_view` body loading.

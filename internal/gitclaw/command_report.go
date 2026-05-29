@@ -27,7 +27,7 @@ var commandCatalog = []commandCatalogEntry{
 	{Command: "/prompt", Model: "gitclaw/prompt", Category: "prompt", Summary: "Show prompt budget, truncation, context, skill, and tool-output metadata."},
 	{Command: "/proactive", Model: "gitclaw/proactive", Category: "proactive", Summary: "Audit proactive prompt files and scheduled workflow metadata.", LocalCLI: []string{"gitclaw proactive init", "gitclaw proactive enqueue"}},
 	{Command: "/session", Model: "gitclaw/session", Category: "session", Summary: "Show or search reconstructed transcript counts, markers, trust, and hashes."},
-	{Command: "/skills", Model: "gitclaw/skills", Category: "skills", Summary: "List local skill metadata, selection state, validation findings, or one focused skill info/search report.", LocalCLI: []string{"gitclaw skills validate", "gitclaw skills info <name>", "gitclaw skills search <query>"}},
+	{Command: "/skills", Model: "gitclaw/skills", Category: "skills", Summary: "List local skill metadata, selection state, validation findings, or one focused skill info/search report.", LocalCLI: []string{"gitclaw skills validate", "gitclaw skills list", "gitclaw skills info <name>", "gitclaw skills search <query>"}},
 	{Command: "/soul", Model: "gitclaw/soul", Category: "soul", Summary: "Audit or search high-authority context files and soul validation findings.", LocalCLI: []string{"gitclaw soul validate", "gitclaw soul search <query>"}},
 	{Command: "/tools", Model: "gitclaw/tools", Category: "tools", Summary: "Audit or search deterministic tool contracts, active outputs, and validation findings.", LocalCLI: []string{"gitclaw tools validate", "gitclaw tools search <query>"}},
 }

@@ -73,12 +73,23 @@ func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if query := requestedSkillSearchQuery(ev, cfg); query != "" {
 		return renderSkillSearchReport(ev, repoContext, query, true)
 	}
+	return renderSkillsListReport(ev, repoContext, true)
+}
 
+func RenderSkillsCLIReport(repoContext RepoContext) string {
+	return renderSkillsListReport(Event{}, repoContext, false)
+}
+
+func renderSkillsListReport(ev Event, repoContext RepoContext, includeIssue bool) string {
 	var b strings.Builder
 	b.WriteString("## GitClaw Skills Report\n\n")
 	b.WriteString("Generated without a model call.\n\n")
-	fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
-	fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
 	fmt.Fprintf(&b, "- available_skills: `%d`\n", availableSkillCount(repoContext))
 	fmt.Fprintf(&b, "- selected_skills: `%d`\n", len(repoContext.Skills))
 	fmt.Fprintf(&b, "- skills_with_frontmatter: `%d`\n", skillsWithFrontmatter(repoContext.SkillSummaries))

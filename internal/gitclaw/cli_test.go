@@ -123,6 +123,31 @@ SECRET_SKILLS_SEARCH_CLI_BODY
 	}
 }
 
+func TestSkillsListCommandReportsInventoryWithoutBodies(t *testing.T) {
+	dir := t.TempDir()
+	writeTestFile(t, dir, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Use read-only repository context.
+---
+
+SECRET_SKILLS_LIST_CLI_BODY
+`)
+	t.Setenv("GITCLAW_WORKDIR", dir)
+	output := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"skills", "list"}); err != nil {
+			t.Fatalf("skills list returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"GitClaw Skills Report", "scope: `local-cli`", "available_skills: `1`", "selected_skills: `0`", "skills_with_frontmatter: `1`", "skills_with_description: `1`", "skill_validation_status: `ok`", "### Available Skills", "name=`repo-reader`", ".gitclaw/SKILLS/repo-reader/SKILL.md", "description=`Use read-only repository context.`", "sha256_12=", "### Selected For This Turn", "- none"} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("skills list output missing %q:\n%s", want, output)
+		}
+	}
+	if strings.Contains(output, "SECRET_SKILLS_LIST_CLI_BODY") {
+		t.Fatalf("skills list leaked skill body:\n%s", output)
+	}
+}
+
 func TestSoulValidateCommandReportsCurrentRepoShape(t *testing.T) {
 	dir := t.TempDir()
 	writeTestFile(t, dir, ".gitclaw/SOUL.md", "SOUL_BODY_TOKEN")
@@ -265,7 +290,7 @@ func TestCommandsCommandReportsCatalog(t *testing.T) {
 			t.Fatalf("commands returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `7`", "local_cli_helpers: `20`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`gitclaw commands` command=`/help`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools search <query>` command=`/tools`"} {
+	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `7`", "local_cli_helpers: `21`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`gitclaw commands` command=`/help`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools search <query>` command=`/tools`"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("commands output missing %q:\n%s", want, output)
 		}

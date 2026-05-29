@@ -559,7 +559,8 @@ GitHub issue/comment event
   `backup retention-plan`,
   `heartbeat`,
   `channel-ingest`, `proactive enqueue`, `proactive init`,
-  `memory validate`, `skills validate`, `skills info`, `skills search`,
+  `memory validate`, `skills validate`, `skills list`, `skills info`,
+  `skills search`,
   `soul validate`, `soul search`, `tools validate`, `tools search`, `doctor`,
   `commands`, `version`.
 
@@ -817,6 +818,7 @@ Validation is visible in the `/skills` report and locally through:
 
 ```bash
 gitclaw skills validate
+gitclaw skills list
 gitclaw skills info <name>
 gitclaw skills search <query>
 ```
@@ -832,6 +834,7 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 
 ```text
 @gitclaw /skills
+@gitclaw /skills list
 @gitclaw /skills info repo-reader
 @gitclaw /skills search repository context
 ```
@@ -850,6 +853,8 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 
 It does not dump full skill bodies. Full `SKILL.md` content remains a prompt
 input only when selected by the normal progressive-disclosure rules.
+`@gitclaw /skills list` is an explicit inventory alias for the same report,
+matching the local `gitclaw skills list` helper.
 
 When called as `@gitclaw /skills info <name>`, the same deterministic command
 switches from inventory mode to focused skill-info mode. The info report shows
@@ -2128,6 +2133,7 @@ assert the expected comments/labels, and close the issue in cleanup.
 19. **Skills inspection**
 
    - create a real issue with `@gitclaw /skills`,
+   - create a second real issue with `@gitclaw /skills list`,
    - assert the reply is marked `model="gitclaw/skills"`,
    - assert the report lists available skill metadata and selected skill paths,
    - assert hashes, frontmatter/description presence, and requirement counts
@@ -2545,6 +2551,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven skills-report E2E harness verifies `@gitclaw /skills`
   produces a deterministic local skill inventory with provenance and
   requirement and validation metadata, without a model call.
+- A `gh`-driven skills-list E2E harness verifies `@gitclaw /skills list`
+  is an explicit inventory alias with the same body-free skill metadata and
+  selected-skill provenance.
 - A `gh`-driven skills-info E2E harness verifies
   `@gitclaw /skills info repo-reader` produces focused skill metadata without
   a model call or full `SKILL.md` body leakage.
