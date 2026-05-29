@@ -153,6 +153,16 @@ OpenClaw splits automation into several mechanisms:
 
 The important design lesson is that "automation" is not one feature. Exact time, approximate awareness, detached work, event hooks, and persistent authority need separate semantics.
 
+2026-05-29 heartbeat follow-up: OpenClaw's heartbeat docs define heartbeat as
+"periodic awareness": it reads `HEARTBEAT.md`, runs lightweight checks on a
+fixed interval, and expects `HEARTBEAT_OK` when there is nothing useful to say.
+For GitClaw, the direct translation is not a local gateway loop. It is a
+scheduled GitHub Actions workflow that scans issue sessions explicitly opted in
+with a `gitclaw:heartbeat` label, loads `.gitclaw/HEARTBEAT.md`, and posts only
+when there is a visible update. The critical safety difference is that each
+heartbeat is a fresh Actions run with a hidden idempotency slot, not a
+long-lived main session that can silently mutate memory.
+
 ### Multi-Agent Routing
 
 OpenClaw's multi-agent model treats each agent as a full isolated persona scope:
@@ -258,6 +268,13 @@ Hermes cron jobs are first-class agent tasks, not just shell tasks. They can:
 - use project `workdir`,
 - run in profile-specific contexts,
 - run in no-agent/script-only mode.
+
+The useful Hermes lesson for GitClaw heartbeat is the fresh-run boundary:
+scheduled work should make its delivery, project directory, toolset, and
+idempotency explicit. GitClaw should not try to emulate Hermes' full cron
+manager. It should use GitHub's built-in `schedule` trigger for best-effort
+periodic checks, `workflow_dispatch` for manual and E2E runs, and visible issue
+comments as the delivery/audit surface.
 
 Hermes' session docs also expose a practical backup primitive:
 `hermes sessions export backup.jsonl` writes conversation metadata and messages
@@ -603,6 +620,7 @@ Recommended non-goals for the first spec:
 - OpenClaw agent runtime docs: https://docs.openclaw.ai/concepts/agent
 - OpenClaw gateway architecture docs: https://docs.openclaw.ai/concepts/architecture
 - OpenClaw automation docs: https://docs.openclaw.ai/automation
+- OpenClaw heartbeat docs: https://openclawlab.com/en/docs/agent/heartbeat/
 - OpenClaw memory docs: https://docs.openclaw.ai/concepts/memory
 - OpenClaw sandboxing docs: https://docs.openclaw.ai/gateway/sandboxing
 - OpenClaw migrating from Hermes: https://docs.openclaw.ai/install/migrating-hermes

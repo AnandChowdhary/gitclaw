@@ -9,6 +9,7 @@ import (
 )
 
 var markerPattern = regexp.MustCompile(`<!--\s*gitclaw:assistant-turn\s+([^>]*)-->`)
+var heartbeatMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:heartbeat\s+([^>]*)-->`)
 
 func IdempotencyKey(ev Event) string {
 	trigger := fmt.Sprintf("issue:%d", ev.Issue.Number)
@@ -33,8 +34,28 @@ func RenderAssistantComment(marker Marker, text string) string {
 	return fmt.Sprintf("<!-- gitclaw:assistant-turn %s -->\n%s", strings.Join(parts, " "), strings.TrimSpace(text))
 }
 
+func RenderHeartbeatComment(marker HeartbeatMarker, text string) string {
+	parts := []string{
+		fmt.Sprintf(`run_id="%s"`, escapeMarkerValue(marker.RunID)),
+		fmt.Sprintf(`slot="%s"`, escapeMarkerValue(marker.Slot)),
+	}
+	if marker.RunURL != "" {
+		parts = append(parts, fmt.Sprintf(`run_url="%s"`, escapeMarkerValue(marker.RunURL)))
+	}
+	return fmt.Sprintf("<!-- gitclaw:heartbeat %s -->\n%s", strings.Join(parts, " "), strings.TrimSpace(text))
+}
+
 func HasGitClawMarker(body string) bool {
 	return markerPattern.MatchString(body)
+}
+
+func HasHeartbeatMarker(body string) bool {
+	return heartbeatMarkerPattern.MatchString(body)
+}
+
+func ContainsHeartbeatSlot(body, slot string) bool {
+	return strings.Contains(body, fmt.Sprintf(`slot="%s"`, slot)) ||
+		strings.Contains(body, fmt.Sprintf("slot=%s", slot))
 }
 
 func ContainsIdempotencyKey(body, key string) bool {

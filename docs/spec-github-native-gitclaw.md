@@ -51,7 +51,8 @@ The product should therefore be much narrower than OpenClaw: a GitHub issue assi
 - No self-improving skills.
 - No agent-written config, skills, workflows, or memory without human review.
 - No multi-agent delegation.
-- No always-on scheduler or daemon.
+- No external always-on scheduler or daemon. GitHub Actions `schedule` is
+  allowed for best-effort heartbeat checks.
 - No broad local-machine automation.
 - No hidden database required for conversation continuity.
 - No autonomous push to protected branches.
@@ -109,12 +110,25 @@ on:
     types: [created]
 ```
 
+Use a separate workflow for heartbeat:
+
+```yaml
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 * * * *"
+```
+
 Important details:
 
 - `issues.opened` starts a new session.
 - `issue_comment.created` continues a session.
+- `workflow_dispatch` starts a manual or e2e heartbeat pass.
+- `schedule` starts a best-effort periodic heartbeat pass.
 - `issue_comment` fires for both issues and pull requests, so we must ignore PR comments for the issue-chat workflow using `!github.event.issue.pull_request`.
 - GitHub requires the workflow file to exist on the default branch for these events to run.
+- Scheduled workflows run on GitHub's UTC cron schedule and should not be
+  treated as exact timers; they can be delayed and should be idempotent.
 - Actions jobs should use explicit `permissions`; never rely on repository defaults.
 - Model-running jobs need `models: read` in addition to `issues: write` and
   `contents: read` when using GitHub Models.
@@ -179,6 +193,71 @@ jobs:
 ```
 
 Later, when GitClaw is released as a binary, the workflow should download the pinned release binary instead of compiling on every run.
+
+## Reference Heartbeat Workflow
+
+Heartbeat is the GitHub-native replacement for an OpenClaw-style periodic
+awareness loop. It does require a scheduled workflow; without `schedule`,
+heartbeat only runs when manually dispatched.
+
+```yaml
+name: GitClaw Heartbeat
+
+on:
+  workflow_dispatch:
+    inputs:
+      label:
+        required: false
+        default: gitclaw:heartbeat
+      slot:
+        required: false
+      limit:
+        required: false
+        default: "3"
+  schedule:
+    - cron: "17 * * * *"
+
+permissions:
+  contents: read
+  issues: write
+  models: read
+
+concurrency:
+  group: gitclaw-heartbeat
+  cancel-in-progress: false
+
+jobs:
+  heartbeat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+      - run: go run ./cmd/gitclaw heartbeat --repo "$GITHUB_REPOSITORY"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
+          GITCLAW_MODEL: openai/gpt-5-mini
+```
+
+Heartbeat behavior:
+
+- scan open issues labeled `gitclaw:heartbeat`,
+- skip pull requests and issues labeled `gitclaw:disabled`,
+- reconstruct the issue transcript the same way normal issue chat does,
+- load `.gitclaw/HEARTBEAT.md` and other repo context,
+- append a trusted synthetic heartbeat instruction,
+- call GitHub Models with the Actions token,
+- post a short issue comment only when the model does not return
+  `HEARTBEAT_OK`,
+- include a hidden `gitclaw:heartbeat` marker with run id, run URL, and
+  idempotency slot.
+
+Default idempotency slot: current UTC hour. Manual dispatch and E2E can pass an
+explicit slot. Re-running the same slot must not create a second heartbeat
+comment.
 
 ## Model Provider Default: GitHub Models
 
@@ -340,7 +419,7 @@ AGENTS.md                    # existing coding-agent instructions, if present
 .gitclaw/POLICY.md           # repo-local permission and behavior policy
 .gitclaw/IDENTITY.md         # agent identity and product framing
 .gitclaw/USER.md             # maintainer preferences, human-reviewed only
-.gitclaw/HEARTBEAT.md        # scheduled/heartbeat intent, inert unless wired
+.gitclaw/HEARTBEAT.md        # scheduled heartbeat checklist
 .gitclaw/SKILLS/*.md         # optional read-only local skills, v1+
 .gitclaw/MEMORY.md           # optional curated repo memory, human-reviewed only
 .gitclaw/memory/YYYY-MM-DD.md # dated working memory notes, human-reviewed only
@@ -357,7 +436,8 @@ MVP loads:
 - `.gitclaw/TOOLS.md`, if present
 - `.gitclaw/MEMORY.md`, if present and human-reviewed
 - latest bounded `.gitclaw/memory/*.md` notes, if present and human-reviewed
-- `.gitclaw/HEARTBEAT.md`, if present, as context only
+- `.gitclaw/HEARTBEAT.md`, if present, for heartbeat turns and as optional
+  issue context
 - `.gitclaw/SKILLS/*/SKILL.md`, if selected by the issue thread or marked
   always-on
 - issue thread transcript
@@ -807,23 +887,30 @@ gh repo view "$GITCLAW_E2E_REPO"
 The harness should fail fast if `gh` is missing, not authenticated, or lacks
 repo/workflow permissions.
 
-Recommended default: use a dedicated private sandbox repository, for example:
+Recommended default for this repository's own development: use the main
+`AnandChowdhary/gitclaw` repository because the goal is to test real issue,
+comment, workflow, permission, model, context, tool, backup, and heartbeat
+behavior in the same repo users will install from. Downstream users can run the
+same harness against a dedicated private sandbox repository:
 
 ```bash
-export GITCLAW_E2E_REPO=sycamore-labs/gitclaw-e2e-sandbox
+export GITCLAW_E2E_REPO=AnandChowdhary/gitclaw
 ```
 
-Why a sandbox repo:
+Why a main-repo E2E is acceptable during GitClaw development:
 
 - issue events only use workflow files from the default branch,
-- we need freedom to create/close issues repeatedly,
-- we need stable labels and secrets,
-- we do not want test noise in the product repository.
+- the real workflow, model permissions, labels, backup branch, and context files
+  are the product surface,
+- E2E issues are labeled `gitclaw:e2e` and closed automatically,
+- failures leave auditable evidence in the same issue/action logs users will
+  rely on.
 
-The harness should install or update a workflow on the sandbox repository's
-default branch that runs the GitClaw binary or the GitClaw source ref under
-test. During early development, this can be a generated workflow that checks
-out the current GitClaw branch/SHA explicitly.
+The harness should verify that the target repository's default branch contains
+the required workflow files. For this repo, the harness tests committed
+workflows directly. For downstream sandbox repositories, a setup helper can
+install or update generated workflows that run a pinned GitClaw binary or source
+ref.
 
 ### Required Live Scenarios
 
@@ -878,6 +965,24 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert a safe failure comment or label is produced without leaking tokens,
      prompt content, or provider response bodies beyond a bounded diagnostic.
 
+9. **Heartbeat conversation**
+
+   - create an issue labeled `gitclaw` and `gitclaw:heartbeat`,
+   - include an exact nonce token in the issue body,
+   - dispatch `gitclaw-heartbeat.yml` with an explicit slot,
+   - assert one heartbeat comment with the hidden `gitclaw:heartbeat` marker,
+   - assert the comment includes the nonce token and
+     `GITCLAW_HEARTBEAT_CONTEXT_V1` from `.gitclaw/HEARTBEAT.md`,
+   - dispatch the same slot again,
+   - assert no duplicate heartbeat comment is created.
+
+10. **Tool/context usage**
+
+   - ask the assistant to read a concrete repository file such as `go.mod`,
+   - assert the reply includes an exact expected token or module path,
+   - ask for a selected local skill token,
+   - assert the targeted skill is loaded and irrelevant skills stay unloaded.
+
 ### Example Live Commands
 
 The script can use commands in this shape:
@@ -916,6 +1021,8 @@ MVP is not complete until:
 - the live harness comments again and receives exactly one additional reply,
 - the live harness verifies actual conversation content, including exact
   nonce tokens across turns and repository file context from `go.mod`,
+- the heartbeat harness dispatches a real workflow, receives one heartbeat
+  comment, and proves same-slot idempotency,
 - bot loop prevention is verified live,
 - the issue is cleaned up or labeled with an E2E retention label.
 
@@ -1008,6 +1115,9 @@ examples/workflows/gitclaw.yml
 - The code is packaged as a Go CLI with a documented workflow.
 - A `gh`-driven live E2E harness verifies the new-issue and follow-up-comment flows against a real GitHub repository.
 - Bot-loop prevention, PR-comment ignore, disabled-label behavior, and idempotent retry behavior are covered by automated tests; bot-loop prevention is verified live.
+- A `gh`-driven heartbeat E2E harness verifies a real scheduled-workflow path
+  via `workflow_dispatch`, including issue transcript context,
+  `.gitclaw/HEARTBEAT.md`, exact token content, and same-slot idempotency.
 
 ## Open Questions
 
@@ -1018,7 +1128,8 @@ examples/workflows/gitclaw.yml
 3. Should v0 include read-only repo file search, or should it be pure issue-thread chat first?
 4. Do we want GitClaw to support GitHub App authentication in v1, or rely on `GITHUB_TOKEN` until PR automation exists?
 5. Should write mode create draft PRs only, or also allow direct commits on non-protected branches?
-6. What sandbox repository should the live E2E harness use by default?
+6. Should downstream users default the live E2E harness to their main repo, or
+   should the template recommend a disposable sandbox repo?
 7. Which channel bridge should ship first: Telegram polling, Slack Socket Mode in Actions, or an external dispatcher?
 8. Where should durable channel offsets and dedupe state live: bridge state issue, state branch, or repository variables?
 
@@ -1036,6 +1147,8 @@ examples/workflows/gitclaw.yml
 - GitHub Models for Actions issue summaries: https://docs.github.com/en/github-models/github-models-at-scale/use-models-at-scale
 - GitHub Models billing and rate-limit notes: https://docs.github.com/en/billing/concepts/product-billing/github-models
 - GitHub Models `models:read` changelog: https://github.blog/changelog/2025-05-15-modelsread-now-required-for-github-models-access/
+- OpenClaw heartbeat docs: https://openclawlab.com/en/docs/agent/heartbeat/
+- Hermes cron docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/cron.md
 - Slack Socket Mode: https://api.slack.com/apis/connections/socket
 - Slack Events API: https://docs.slack.dev/apis/events-api/
 - Telegram Bot API `getUpdates`: https://core.telegram.org/bots/api#getupdates

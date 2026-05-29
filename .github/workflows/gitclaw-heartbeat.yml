@@ -1,0 +1,60 @@
+name: GitClaw Heartbeat
+
+on:
+  workflow_dispatch:
+    inputs:
+      label:
+        description: Issue label to scan
+        required: false
+        default: gitclaw:heartbeat
+      slot:
+        description: Idempotency slot override
+        required: false
+      limit:
+        description: Maximum issues to scan
+        required: false
+        default: "3"
+  schedule:
+    - cron: "17 * * * *"
+
+concurrency:
+  group: gitclaw-heartbeat
+  cancel-in-progress: false
+
+jobs:
+  heartbeat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      issues: write
+      models: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+
+      - run: |
+          set -euo pipefail
+          args=(heartbeat --repo "$GITHUB_REPOSITORY")
+          if [[ -n "${GITCLAW_HEARTBEAT_LABEL}" ]]; then
+            args+=(--label "$GITCLAW_HEARTBEAT_LABEL")
+          fi
+          if [[ -n "${GITCLAW_HEARTBEAT_SLOT}" ]]; then
+            args+=(--slot "$GITCLAW_HEARTBEAT_SLOT")
+          fi
+          if [[ -n "${GITCLAW_HEARTBEAT_LIMIT}" ]]; then
+            args+=(--limit "$GITCLAW_HEARTBEAT_LIMIT")
+          fi
+          go run ./cmd/gitclaw "${args[@]}"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
+          GITCLAW_MODEL: openai/gpt-5-mini
+          GITCLAW_HEARTBEAT_LABEL: ${{ github.event.inputs.label }}
+          GITCLAW_HEARTBEAT_SLOT: ${{ github.event.inputs.slot }}
+          GITCLAW_HEARTBEAT_LIMIT: ${{ github.event.inputs.limit }}

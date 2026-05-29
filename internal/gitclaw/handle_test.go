@@ -134,8 +134,23 @@ func TestHandlePassesRepoContextToLLM(t *testing.T) {
 }
 
 type FakeGitHub struct {
+	Issues          []Issue
 	CommentsByIssue map[int][]Comment
 	Posted          []PostedComment
+}
+
+func (f *FakeGitHub) ListOpenIssues(ctx context.Context, repo string, labels []string, limit int) ([]Issue, error) {
+	var issues []Issue
+	for _, issue := range f.Issues {
+		if !issueHasAllLabels(issue, labels) {
+			continue
+		}
+		issues = append(issues, issue)
+		if limit > 0 && len(issues) >= limit {
+			break
+		}
+	}
+	return issues, nil
 }
 
 func (f *FakeGitHub) ListIssueComments(ctx context.Context, repo string, issueNumber int) ([]Comment, error) {
@@ -163,4 +178,13 @@ func (f *FakeLLM) Complete(ctx context.Context, req LLMRequest) (string, error) 
 	f.Calls++
 	f.LastRequest = req
 	return f.Response, nil
+}
+
+func issueHasAllLabels(issue Issue, labels []string) bool {
+	for _, label := range labels {
+		if !hasLabel(issue.Labels, label) {
+			return false
+		}
+	}
+	return true
 }

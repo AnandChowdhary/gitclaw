@@ -69,6 +69,69 @@ func (c *RESTGitHubClient) ListIssueComments(ctx context.Context, repo string, i
 	return comments, nil
 }
 
+func (c *RESTGitHubClient) ListOpenIssues(ctx context.Context, repo string, labels []string, limit int) ([]Issue, error) {
+	if c.Token == "" {
+		return nil, fmt.Errorf("missing GitHub token")
+	}
+	if limit <= 0 {
+		limit = 20
+	}
+	values := url.Values{}
+	values.Set("state", "open")
+	values.Set("per_page", fmt.Sprintf("%d", limit))
+	if len(labels) > 0 {
+		values.Set("labels", strings.Join(labels, ","))
+	}
+	endpoint := fmt.Sprintf("%s/repos/%s/issues?%s", strings.TrimRight(c.APIBaseURL, "/"), repo, values.Encode())
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
+	if err != nil {
+		return nil, err
+	}
+	c.setHeaders(req)
+	res, err := c.httpClient().Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+	if res.StatusCode < 200 || res.StatusCode >= 300 {
+		body, _ := io.ReadAll(io.LimitReader(res.Body, 4096))
+		return nil, fmt.Errorf("GitHub list issues failed: status=%d body=%s", res.StatusCode, strings.TrimSpace(string(body)))
+	}
+	var raw []struct {
+		Number            int    `json:"number"`
+		Title             string `json:"title"`
+		Body              string `json:"body"`
+		AuthorAssociation string `json:"author_association"`
+		User              User   `json:"user"`
+		Labels            []struct {
+			Name string `json:"name"`
+		} `json:"labels"`
+		PullRequest *struct {
+			URL string `json:"url"`
+		} `json:"pull_request"`
+	}
+	if err := json.NewDecoder(res.Body).Decode(&raw); err != nil {
+		return nil, err
+	}
+	issues := make([]Issue, 0, len(raw))
+	for _, item := range raw {
+		labels := make([]string, 0, len(item.Labels))
+		for _, label := range item.Labels {
+			labels = append(labels, label.Name)
+		}
+		issues = append(issues, Issue{
+			Number:            item.Number,
+			Title:             item.Title,
+			Body:              item.Body,
+			AuthorAssociation: item.AuthorAssociation,
+			User:              item.User,
+			Labels:            labels,
+			IsPullRequest:     item.PullRequest != nil,
+		})
+	}
+	return issues, nil
+}
+
 func (c *RESTGitHubClient) PostIssueComment(ctx context.Context, repo string, issueNumber int, body string) (PostedComment, error) {
 	if c.Token == "" {
 		return PostedComment{}, fmt.Errorf("missing GitHub token")

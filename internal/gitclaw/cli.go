@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -18,6 +19,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runHandle(ctx, args[1:])
 	case "backup":
 		return runBackup(ctx, args[1:])
+	case "heartbeat":
+		return runHeartbeatCommand(ctx, args[1:])
 	case "version":
 		fmt.Println("gitclaw dev")
 		return nil
@@ -45,6 +48,80 @@ func runBackup(ctx context.Context, args []string) error {
 		return err
 	}
 	fmt.Println(path)
+	return nil
+}
+
+func runHeartbeatCommand(ctx context.Context, args []string) error {
+	cfg := DefaultConfig()
+	if workdir := os.Getenv("GITCLAW_WORKDIR"); workdir != "" {
+		cfg.Workdir = workdir
+	}
+	if model := os.Getenv("GITCLAW_MODEL"); model != "" {
+		cfg.Model = model
+	}
+	opts := HeartbeatOptions{
+		Repo:  os.Getenv("GITHUB_REPOSITORY"),
+		Label: envFirst("GITCLAW_HEARTBEAT_LABEL", cfg.HeartbeatLabel),
+		Slot:  os.Getenv("GITCLAW_HEARTBEAT_SLOT"),
+		Limit: 3,
+	}
+	if limit := os.Getenv("GITCLAW_HEARTBEAT_LIMIT"); limit != "" {
+		parsed, err := strconv.Atoi(limit)
+		if err != nil {
+			return fmt.Errorf("invalid GITCLAW_HEARTBEAT_LIMIT: %w", err)
+		}
+		opts.Limit = parsed
+	}
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--repo requires a value")
+			}
+			opts.Repo = args[i+1]
+			i++
+		case "--label":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--label requires a value")
+			}
+			opts.Label = args[i+1]
+			i++
+		case "--slot":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--slot requires a value")
+			}
+			opts.Slot = args[i+1]
+			i++
+		case "--limit":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--limit requires a value")
+			}
+			parsed, err := strconv.Atoi(args[i+1])
+			if err != nil {
+				return fmt.Errorf("invalid --limit: %w", err)
+			}
+			opts.Limit = parsed
+			i++
+		default:
+			return fmt.Errorf("unknown heartbeat argument %q", args[i])
+		}
+	}
+	token := os.Getenv("GH_TOKEN")
+	if token == "" {
+		token = os.Getenv("GITHUB_TOKEN")
+	}
+	if token == "" {
+		return fmt.Errorf("missing GH_TOKEN or GITHUB_TOKEN")
+	}
+	llm, err := NewLLMFromEnv(cfg)
+	if err != nil {
+		return err
+	}
+	result, err := RunHeartbeat(ctx, cfg, NewRESTGitHubClient(token), llm, opts)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("heartbeat scanned=%d posted=%d skipped=%d\n", result.Scanned, result.Posted, result.Skipped)
 	return nil
 }
 
