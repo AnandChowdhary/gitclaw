@@ -555,7 +555,7 @@ GitHub issue/comment event
 - CLI entry point.
 - Subcommands: `preflight`, `handle`, `backup`, `heartbeat`,
   `channel-ingest`, `proactive enqueue`, `proactive init`,
-  `skills validate`, `doctor`, `version`.
+  `skills validate`, `soul validate`, `doctor`, `version`.
 
 `internal/github`
 
@@ -801,6 +801,30 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 It does not dump full skill bodies. Full `SKILL.md` content remains a prompt
 input only when selected by the normal progressive-disclosure rules.
 
+## Soul Validation
+
+GitClaw validates the high-authority context surface that OpenClaw/Hermes-style
+agents rely on for durable identity and policy:
+
+- `.gitclaw/SOUL.md` should be present and non-empty,
+- `.gitclaw/IDENTITY.md` should be present and non-empty,
+- `.gitclaw/USER.md` should be present and non-empty,
+- `.gitclaw/TOOLS.md` should be present and non-empty,
+- `.gitclaw/MEMORY.md` should be present and non-empty,
+- `.gitclaw/HEARTBEAT.md` should be present and non-empty,
+- dated memory notes should use `.gitclaw/memory/YYYY-MM-DD.md`,
+- context files at the prompt loading limit are warned about because their
+  bodies may have been truncated before model inference.
+
+Validation is visible in the `/soul` report and locally through:
+
+```bash
+gitclaw soul validate
+```
+
+The validation output includes only paths, counts, and short finding details.
+It never dumps full soul, user, memory, tool, or heartbeat file bodies.
+
 ## Soul Inspection Command
 
 GitClaw supports a deterministic high-authority context audit command inspired
@@ -818,7 +842,9 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
   `.gitclaw/IDENTITY.md`, `.gitclaw/USER.md`, `.gitclaw/TOOLS.md`,
   `.gitclaw/MEMORY.md`, and `.gitclaw/HEARTBEAT.md`,
 - loaded dated memory notes from `.gitclaw/memory/*.md`,
-- byte counts, line counts, and short hashes for each file.
+- byte counts, line counts, and short hashes for each file,
+- soul validation status, error/warning counts, required-file counts,
+  memory-note counts, noncanonical memory-note counts, and body-free findings.
 
 It never dumps full file bodies. The hashes make the issue-visible report
 verifiable without exposing private user, memory, or policy text.
@@ -1872,6 +1898,8 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the reply is marked `model="gitclaw/soul"`,
    - assert the report lists loaded identity, policy, user, and memory paths
      with byte counts, line counts, and hashes,
+   - assert soul validation status, required-file counts, memory-note counts,
+     and noncanonical memory-note counts are present,
    - assert the report does not dump full soul or memory bodies,
    - assert the run succeeds without requiring a model provider response.
 
@@ -2206,8 +2234,8 @@ examples/workflows/gitclaw.yml
   produces a deterministic local skill inventory with provenance and
   requirement and validation metadata, without a model call.
 - A `gh`-driven soul-report E2E harness verifies `@gitclaw /soul` produces a
-  deterministic high-authority context file audit without a model call or body
-  leakage.
+  deterministic high-authority context file audit with validation metadata,
+  without a model call or body leakage.
 - A `gh`-driven tools-report E2E harness verifies `@gitclaw /tools` produces a
   deterministic tool contract and active-output audit without a model call or
   output-body leakage.

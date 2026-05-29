@@ -12,6 +12,7 @@ func IsSoulReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderSoulReport(ev Event, repoContext RepoContext) string {
+	validation := ValidateSoulContext(repoContext)
 	var b strings.Builder
 	b.WriteString("## GitClaw Soul Report\n\n")
 	b.WriteString("Generated without a model call.\n\n")
@@ -19,6 +20,8 @@ func RenderSoulReport(ev Event, repoContext RepoContext) string {
 	fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
 	fmt.Fprintf(&b, "- identity_policy_files: `%d`\n", soulIdentityDocumentCount(repoContext.Documents))
 	fmt.Fprintf(&b, "- memory_notes: `%d`\n\n", soulMemoryDocumentCount(repoContext.Documents))
+	writeSoulValidationSummary(&b, validation)
+	b.WriteString("\n")
 	b.WriteString("File bodies are not included; hashes let maintainers verify exactly which git-backed context was loaded.\n\n")
 
 	b.WriteString("### Identity And Policy Files\n")
@@ -26,6 +29,9 @@ func RenderSoulReport(ev Event, repoContext RepoContext) string {
 
 	b.WriteString("\n### Memory Notes\n")
 	writeSoulDocumentList(&b, repoContext.Documents, true)
+
+	b.WriteString("\n### Validation\n")
+	writeSoulValidationFindings(&b, validation)
 
 	return strings.TrimSpace(b.String())
 }

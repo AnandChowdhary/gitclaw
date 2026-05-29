@@ -565,7 +565,9 @@ func TestHandleSoulCommandPostsReportWithoutLLM(t *testing.T) {
 		".gitclaw/SOUL.md":              "SOUL_SECRET_TOKEN: stay repo native.",
 		".gitclaw/IDENTITY.md":          "Identity: GitClaw.",
 		".gitclaw/USER.md":              "USER_PRIVATE_TOKEN: maintainer facts.",
+		".gitclaw/TOOLS.md":             "TOOLS_PRIVATE_TOKEN: read-only tools.",
 		".gitclaw/MEMORY.md":            "Memory: durable facts.",
+		".gitclaw/HEARTBEAT.md":         "Heartbeat: scheduled workflow notes.",
 		".gitclaw/memory/2026-05-29.md": "Daily note token.",
 	}
 	for path, body := range files {
@@ -603,12 +605,12 @@ func TestHandleSoulCommandPostsReportWithoutLLM(t *testing.T) {
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Soul Report", "Generated without a model call", "model=\"gitclaw/soul\"", ".gitclaw/SOUL.md", ".gitclaw/IDENTITY.md", ".gitclaw/USER.md", ".gitclaw/MEMORY.md", ".gitclaw/memory/2026-05-29.md", "sha256_12="} {
+	for _, want := range []string{"GitClaw Soul Report", "Generated without a model call", "model=\"gitclaw/soul\"", "soul_validation_status: `ok`", "soul_validation_errors: `0`", "soul_validation_warnings: `0`", "soul_required_files_present: `6`", "soul_required_files_missing: `0`", "soul_memory_notes: `1`", "soul_noncanonical_memory_notes: `0`", "### Validation", "- none", ".gitclaw/SOUL.md", ".gitclaw/IDENTITY.md", ".gitclaw/USER.md", ".gitclaw/TOOLS.md", ".gitclaw/MEMORY.md", ".gitclaw/HEARTBEAT.md", ".gitclaw/memory/2026-05-29.md", "sha256_12="} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("soul report missing %q:\n%s", want, body)
 		}
 	}
-	if strings.Contains(body, "SOUL_SECRET_TOKEN") || strings.Contains(body, "USER_PRIVATE_TOKEN") {
+	if strings.Contains(body, "SOUL_SECRET_TOKEN") || strings.Contains(body, "USER_PRIVATE_TOKEN") || strings.Contains(body, "TOOLS_PRIVATE_TOKEN") {
 		t.Fatalf("soul report should not dump full context bodies:\n%s", body)
 	}
 	if !hasLabel(github.IssueLabels[92], "gitclaw:done") || hasLabel(github.IssueLabels[92], "gitclaw:running") || hasLabel(github.IssueLabels[92], "gitclaw:error") {

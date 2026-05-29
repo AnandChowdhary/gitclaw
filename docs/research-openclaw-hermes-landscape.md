@@ -190,6 +190,14 @@ without exposing the contents in issue comments. The narrow command is
 `@gitclaw /soul`: list loaded identity, policy, and memory files with byte
 counts, line counts, and short hashes, but never dump file bodies.
 
+2026-05-29 soul-validation follow-up: the same high-authority files should have
+a local safety gate, not just an inventory. GitClaw should treat
+`.gitclaw/SOUL.md`, `.gitclaw/IDENTITY.md`, `.gitclaw/USER.md`,
+`.gitclaw/TOOLS.md`, `.gitclaw/MEMORY.md`, and `.gitclaw/HEARTBEAT.md` as the
+required minimal context set, warn on noncanonical dated memory filenames, and
+expose the result in both `/soul` and `gitclaw soul validate` without dumping
+file bodies.
+
 ### Skills And Plugins
 
 OpenClaw uses AgentSkills-compatible skill folders with a `SKILL.md`. Skills can come from:

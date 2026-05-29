@@ -154,13 +154,24 @@ for expected in \
   'model="gitclaw/soul"' \
   "GitClaw Soul Report" \
   "Generated without a model call" \
+  "soul_validation_status: \`ok\`" \
+  "soul_validation_errors: \`0\`" \
+  "soul_validation_warnings: \`0\`" \
+  "soul_required_files_present: \`6\`" \
+  "soul_required_files_missing: \`0\`" \
+  "soul_memory_notes: \`1\`" \
+  "soul_noncanonical_memory_notes: \`0\`" \
+  "### Validation" \
+  "- none" \
   ".gitclaw/SOUL.md" \
   ".gitclaw/IDENTITY.md" \
   ".gitclaw/USER.md" \
+  ".gitclaw/TOOLS.md" \
   ".gitclaw/MEMORY.md" \
+  ".gitclaw/HEARTBEAT.md" \
   ".gitclaw/memory/2026-05-29.md" \
   "sha256_12="; do
-  grep -Fq "$expected" <<<"$comments" || die "soul report missing ${expected}"
+  grep -Fq -- "$expected" <<<"$comments" || die "soul report missing ${expected}"
 done
 
 if grep -Fq "GitClaw is a repo-native GitHub issue assistant" <<<"$comments"; then

@@ -70,6 +70,33 @@ SECRET_SKILL_BODY_TOKEN
 	}
 }
 
+func TestSoulValidateCommandReportsCurrentRepoShape(t *testing.T) {
+	dir := t.TempDir()
+	writeTestFile(t, dir, ".gitclaw/SOUL.md", "SOUL_BODY_TOKEN")
+	writeTestFile(t, dir, ".gitclaw/IDENTITY.md", "IDENTITY_BODY_TOKEN")
+	writeTestFile(t, dir, ".gitclaw/USER.md", "USER_BODY_TOKEN")
+	writeTestFile(t, dir, ".gitclaw/TOOLS.md", "TOOLS_BODY_TOKEN")
+	writeTestFile(t, dir, ".gitclaw/MEMORY.md", "MEMORY_BODY_TOKEN")
+	writeTestFile(t, dir, ".gitclaw/HEARTBEAT.md", "HEARTBEAT_BODY_TOKEN")
+	writeTestFile(t, dir, ".gitclaw/memory/2026-05-29.md", "DATED_MEMORY_BODY_TOKEN")
+	t.Setenv("GITCLAW_WORKDIR", dir)
+	output := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"soul", "validate"}); err != nil {
+			t.Fatalf("soul validate returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"GitClaw Soul Validate Report", "soul_validation_status: `ok`", "soul_validation_errors: `0`", "soul_validation_warnings: `0`", "soul_required_files_present: `6`", "soul_memory_notes: `1`", "- none"} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("soul validate output missing %q:\n%s", want, output)
+		}
+	}
+	for _, leaked := range []string{"SOUL_BODY_TOKEN", "USER_BODY_TOKEN", "MEMORY_BODY_TOKEN", "DATED_MEMORY_BODY_TOKEN"} {
+		if strings.Contains(output, leaked) {
+			t.Fatalf("soul validate leaked body token %q:\n%s", leaked, output)
+		}
+	}
+}
+
 func captureStdout(t *testing.T, fn func()) string {
 	t.Helper()
 	original := os.Stdout
