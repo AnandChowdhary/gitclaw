@@ -543,7 +543,7 @@ Always token.
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Skills Report", "Generated without a model call", "available_skills: `2`", "selected_skills: `2`", "repo-reader", "always-on", ".gitclaw/SKILLS/repo-reader/SKILL.md", "model=\"gitclaw/skills\""} {
+	for _, want := range []string{"GitClaw Skills Report", "Generated without a model call", "available_skills: `2`", "selected_skills: `2`", "skills_with_frontmatter: `2`", "skills_with_description: `2`", "skills_missing_requirements: `0`", "repo-reader", "always-on", ".gitclaw/SKILLS/repo-reader/SKILL.md", "frontmatter=`true`", "description=`true`", "sha256_12=", "requires_env=`0`", "missing_bins=`0`", "model=\"gitclaw/skills\""} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("skills report missing %q:\n%s", want, body)
 		}

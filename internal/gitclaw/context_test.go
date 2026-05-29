@@ -59,6 +59,9 @@ Use read-only files.`)
 	if !hasToolOutput(ctx.ToolOutputs, "gitclaw.skill_index", ".gitclaw/SKILLS", "repo-reader") {
 		t.Fatalf("skill index missing repo-reader: %#v", ctx.ToolOutputs)
 	}
+	if !hasToolOutput(ctx.ToolOutputs, "gitclaw.skill_index", ".gitclaw/SKILLS", "sha256_12=") {
+		t.Fatalf("skill index missing audit hashes: %#v", ctx.ToolOutputs)
+	}
 	if !hasToolOutput(ctx.ToolOutputs, "gitclaw.list_files", ".", "go.mod") {
 		t.Fatalf("list_files tool output missing go.mod: %#v", ctx.ToolOutputs)
 	}
@@ -85,6 +88,10 @@ description: Always loaded baseline behavior.
 metadata:
   openclaw:
     always: true
+    requires:
+      env:
+        - GITCLAW_SKILL_TEST_ENV_MISSING
+      bins: [gitclaw-no-such-binary-for-test]
 ---
 
 # Always On
@@ -111,7 +118,7 @@ Should not be selected.`)
 		t.Fatalf("unrelated skill should not be selected: %#v", skills)
 	}
 	index := renderSkillIndex(summaries)
-	for _, want := range []string{"repo-reader", "always-on", "unrelated"} {
+	for _, want := range []string{"repo-reader", "always-on", "unrelated", "frontmatter=true", "description=true", "sha256_12=", "requires_env=1", "requires_bins=1", "missing_env=1", "missing_bins=1"} {
 		if !strings.Contains(index, want) {
 			t.Fatalf("skill index missing %q: %s", want, index)
 		}
@@ -125,6 +132,10 @@ description: Frontmatter description.
 metadata:
   openclaw:
     always: true
+    requires:
+      env:
+        - GITCLAW_SKILL_TEST_ENV
+      bins: [gitclaw-no-such-binary-for-test]
 ---
 
 # Example`)
@@ -136,6 +147,15 @@ metadata:
 	}
 	if !skill.Always {
 		t.Fatalf("always metadata was not parsed")
+	}
+	if !skill.FrontmatterPresent {
+		t.Fatalf("frontmatter presence was not parsed")
+	}
+	if len(skill.RequiredEnv) != 1 || skill.RequiredEnv[0] != "GITCLAW_SKILL_TEST_ENV" {
+		t.Fatalf("required env not parsed: %#v", skill.RequiredEnv)
+	}
+	if len(skill.RequiredBins) != 1 || skill.RequiredBins[0] != "gitclaw-no-such-binary-for-test" {
+		t.Fatalf("required bins not parsed: %#v", skill.RequiredBins)
 	}
 }
 

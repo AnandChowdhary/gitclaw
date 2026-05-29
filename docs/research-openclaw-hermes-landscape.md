@@ -403,6 +403,13 @@ disclosure in issue form: `@gitclaw /skills` lists local git-tracked skill
 metadata and selected paths without dumping `SKILL.md` bodies or allowing
 agent-authored skill mutation.
 
+2026-05-29 skill-audit follow-up: OpenClaw skill metadata includes runtime
+requirements such as env vars and binaries, while Hermes' progressive skill
+tools keep compact metadata separate from full instruction bodies. GitClaw
+should therefore make skill provenance explicit in the repo-local index:
+frontmatter/description presence, byte and line counts, hashes, `always`
+activation, declared requirement counts, and missing requirement counts.
+
 ### Cron And Long-Horizon Work
 
 Hermes cron jobs are first-class agent tasks, not just shell tasks. They can:
@@ -829,6 +836,8 @@ Recommended non-goals for the first spec:
 - OpenClaw configure docs: https://docs.openclaw.ai/cli/configure
 - OpenClaw doctor docs: https://docs.openclaw.ai/doctor
 - OpenClaw backup docs: https://docs.openclaw.ai/cli/backup
+- OpenClaw creating skills docs: https://docs.openclaw.ai/tools/creating-skills
+- OpenClaw skill format docs: https://docs.openclaw.ai/clawhub/skill-format
 - OpenClaw migration guide: https://docs.openclaw.ai/install/migrating
 - OpenClaw sandbox vs tool policy vs elevated: https://docs.openclaw.ai/gateway/sandbox-vs-tool-policy-vs-elevated
 - OpenClaw exec approvals: https://docs.openclaw.ai/tools/exec-approvals

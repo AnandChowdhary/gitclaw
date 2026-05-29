@@ -156,8 +156,17 @@ for expected in \
   "Generated without a model call" \
   'available_skills: `1`' \
   'selected_skills: `1`' \
+  'skills_with_frontmatter: `1`' \
+  'skills_with_description: `1`' \
+  'skills_with_requirements: `0`' \
+  'skills_missing_requirements: `0`' \
   "repo-reader" \
   ".gitclaw/SKILLS/repo-reader/SKILL.md" \
+  'frontmatter=`true`' \
+  'description=`true`' \
+  'sha256_12=' \
+  'requires_env=`0`' \
+  'missing_bins=`0`' \
   "progressive disclosure"; do
   grep -Fq "$expected" <<<"$comments" || die "skills report missing ${expected}"
 done

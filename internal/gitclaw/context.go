@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/fs"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
 	"sort"
@@ -60,9 +61,10 @@ func LoadRepoContext(root string, transcript []TranscriptMessage) (RepoContext, 
 	documents = append(documents, loadMemoryDocuments(absRoot)...)
 	skillSummaries, skills := loadSkillContext(absRoot, transcript)
 	ctx := RepoContext{
-		Documents:   documents,
-		Skills:      skills,
-		ToolOutputs: []ToolOutput{{Name: "gitclaw.list_files", Input: ".", Output: strings.Join(files, "\n")}},
+		Documents:      documents,
+		Skills:         skills,
+		SkillSummaries: skillSummaries,
+		ToolOutputs:    []ToolOutput{{Name: "gitclaw.list_files", Input: ".", Output: strings.Join(files, "\n")}},
 	}
 	if len(skillSummaries) > 0 {
 		ctx.ToolOutputs = append(ctx.ToolOutputs, ToolOutput{
@@ -142,10 +144,18 @@ func loadSkillContext(root string, transcript []TranscriptMessage) ([]SkillSumma
 	selected := make([]ContextDocument, 0, len(available))
 	for _, skill := range available {
 		summaries = append(summaries, SkillSummary{
-			Name:        skill.Name,
-			Description: skill.Description,
-			Path:        skill.Path,
-			Always:      skill.Always,
+			Name:               skill.Name,
+			Description:        skill.Description,
+			Path:               skill.Path,
+			Always:             skill.Always,
+			FrontmatterPresent: skill.FrontmatterPresent,
+			Bytes:              len(skill.Body),
+			Lines:              lineCount(skill.Body),
+			SHA:                shortDocumentHash(skill.Body),
+			RequiredEnv:        append([]string(nil), skill.RequiredEnv...),
+			RequiredBins:       append([]string(nil), skill.RequiredBins...),
+			MissingEnv:         missingEnvVars(skill.RequiredEnv),
+			MissingBins:        missingBins(skill.RequiredBins),
 		})
 		if skill.Always || skillMatchesQuery(skill, query) {
 			selected = append(selected, ContextDocument{Path: skill.Path, Body: skill.Body})
@@ -155,11 +165,14 @@ func loadSkillContext(root string, transcript []TranscriptMessage) ([]SkillSumma
 }
 
 type skillDocument struct {
-	Name        string
-	Description string
-	Path        string
-	Body        string
-	Always      bool
+	Name               string
+	Description        string
+	Path               string
+	Body               string
+	Always             bool
+	FrontmatterPresent bool
+	RequiredEnv        []string
+	RequiredBins       []string
 }
 
 func discoverSkills(root string) []skillDocument {
@@ -198,7 +211,11 @@ func parseSkillDocument(path, body string) skillDocument {
 	name := filepath.Base(filepath.Dir(filepath.FromSlash(path)))
 	description := ""
 	always := false
+	frontmatterPresent := false
+	var requiredEnv []string
+	var requiredBins []string
 	if fm, ok := frontmatter(body); ok {
+		frontmatterPresent = true
 		if value := frontmatterValue(fm, "name"); value != "" {
 			name = value
 		}
@@ -209,13 +226,19 @@ func parseSkillDocument(path, body string) skillDocument {
 			name = value
 		}
 		always = frontmatterBool(fm, "always") || frontmatterBool(fm, "metadata.openclaw.always")
+		requiredEnv = append(requiredEnv, frontmatterList(fm, "metadata.openclaw.requires.env")...)
+		requiredEnv = append(requiredEnv, frontmatterList(fm, "metadata.openclaw.env")...)
+		requiredBins = append(requiredBins, frontmatterList(fm, "metadata.openclaw.requires.bins")...)
 	}
 	return skillDocument{
-		Name:        name,
-		Description: description,
-		Path:        path,
-		Body:        body,
-		Always:      always,
+		Name:               name,
+		Description:        description,
+		Path:               path,
+		Body:               body,
+		Always:             always,
+		FrontmatterPresent: frontmatterPresent,
+		RequiredEnv:        uniqueSortedStrings(requiredEnv),
+		RequiredBins:       uniqueSortedStrings(requiredBins),
 	}
 }
 
@@ -256,6 +279,59 @@ func frontmatterBool(lines []string, key string) bool {
 	default:
 		return false
 	}
+}
+
+func frontmatterList(lines []string, key string) []string {
+	parts := strings.Split(key, ".")
+	for i, line := range lines {
+		if !frontmatterPathMatches(lines, i, parts) {
+			continue
+		}
+		value := strings.TrimSpace(strings.TrimPrefix(strings.TrimSpace(line), parts[len(parts)-1]+":"))
+		items := parseFrontmatterInlineList(value)
+		items = append(items, frontmatterChildList(lines, i)...)
+		return uniqueSortedStrings(items)
+	}
+	return nil
+}
+
+func frontmatterChildList(lines []string, index int) []string {
+	parentIndent := leadingSpaces(lines[index])
+	var items []string
+	for i := index + 1; i < len(lines); i++ {
+		line := lines[i]
+		trimmed := strings.TrimSpace(line)
+		if trimmed == "" {
+			continue
+		}
+		indent := leadingSpaces(line)
+		if indent <= parentIndent {
+			break
+		}
+		if strings.HasPrefix(trimmed, "- ") {
+			items = append(items, strings.Trim(strings.TrimSpace(strings.TrimPrefix(trimmed, "- ")), `"'`))
+		}
+	}
+	return items
+}
+
+func parseFrontmatterInlineList(value string) []string {
+	value = strings.TrimSpace(value)
+	if value == "" {
+		return nil
+	}
+	if strings.HasPrefix(value, "[") && strings.HasSuffix(value, "]") {
+		value = strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(value, "["), "]"))
+	}
+	parts := strings.Split(value, ",")
+	items := make([]string, 0, len(parts))
+	for _, part := range parts {
+		part = strings.Trim(strings.TrimSpace(part), `"'`)
+		if part != "" {
+			items = append(items, part)
+		}
+	}
+	return items
 }
 
 func frontmatterPathMatches(lines []string, index int, parts []string) bool {
@@ -347,13 +423,65 @@ func isStopWord(value string) bool {
 func renderSkillIndex(skills []SkillSummary) string {
 	var b strings.Builder
 	for _, skill := range skills {
-		fmt.Fprintf(&b, "- name=%s path=%s always=%t", skill.Name, skill.Path, skill.Always)
+		fmt.Fprintf(&b, "- name=%s path=%s always=%t frontmatter=%t description=%t bytes=%d lines=%d sha256_12=%s requires_env=%d requires_bins=%d missing_env=%d missing_bins=%d",
+			skill.Name,
+			skill.Path,
+			skill.Always,
+			skill.FrontmatterPresent,
+			strings.TrimSpace(skill.Description) != "",
+			skill.Bytes,
+			skill.Lines,
+			skill.SHA,
+			len(skill.RequiredEnv),
+			len(skill.RequiredBins),
+			len(skill.MissingEnv),
+			len(skill.MissingBins),
+		)
 		if skill.Description != "" {
 			fmt.Fprintf(&b, " description=%q", skill.Description)
 		}
 		b.WriteByte('\n')
 	}
 	return strings.TrimSpace(b.String())
+}
+
+func missingEnvVars(names []string) []string {
+	var missing []string
+	for _, name := range names {
+		if strings.TrimSpace(name) != "" && os.Getenv(name) == "" {
+			missing = append(missing, name)
+		}
+	}
+	return uniqueSortedStrings(missing)
+}
+
+func missingBins(names []string) []string {
+	var missing []string
+	for _, name := range names {
+		name = strings.TrimSpace(name)
+		if name == "" {
+			continue
+		}
+		if _, err := exec.LookPath(name); err != nil {
+			missing = append(missing, name)
+		}
+	}
+	return uniqueSortedStrings(missing)
+}
+
+func uniqueSortedStrings(values []string) []string {
+	seen := map[string]bool{}
+	var out []string
+	for _, value := range values {
+		value = strings.TrimSpace(value)
+		if value == "" || seen[value] {
+			continue
+		}
+		seen[value] = true
+		out = append(out, value)
+	}
+	sort.Strings(out)
+	return out
 }
 
 func searchQueriesFromTranscript(transcript []TranscriptMessage) []string {

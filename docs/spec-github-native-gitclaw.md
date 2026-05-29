@@ -693,11 +693,19 @@ description: Use read-only repository files.
 metadata:
   openclaw:
     always: false
+    requires:
+      env:
+        - GITHUB_TOKEN
+      bins:
+        - gh
 ---
 ```
 
 GitClaw inserts a compact `gitclaw.skill_index` tool output listing all
-discovered local skills. Full skill instructions are loaded only when:
+discovered local skills. The index includes only review metadata: path, byte
+and line counts, short hash, frontmatter/description presence, `always`, and
+counts of declared/missing runtime requirements. Full skill instructions are
+loaded only when:
 
 - the user mentions the skill name, folder, path, or relevant description terms;
 - the skill declares `always: true` or `metadata.openclaw.always: true`.
@@ -721,7 +729,9 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 
 - available local skills from git-tracked `SKILL.md` files,
 - selected skills for the current issue/comment,
-- `always` activation state and frontmatter descriptions.
+- `always` activation state and frontmatter descriptions,
+- short hashes and size metadata for review,
+- declared env/bin requirement counts and whether any are missing.
 
 It does not dump full skill bodies. Full `SKILL.md` content remains a prompt
 input only when selected by the normal progressive-disclosure rules.
@@ -1660,6 +1670,8 @@ assert the expected comments/labels, and close the issue in cleanup.
    - create a real issue with `@gitclaw /skills`,
    - assert the reply is marked `model="gitclaw/skills"`,
    - assert the report lists available skill metadata and selected skill paths,
+   - assert hashes, frontmatter/description presence, and requirement counts
+     are present,
    - assert the report does not dump full skill bodies or verification tokens,
    - assert the run succeeds without requiring a model provider response.
 
@@ -1922,7 +1934,8 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven context-report E2E harness verifies `@gitclaw /context`
   produces a deterministic context summary without a model call.
 - A `gh`-driven skills-report E2E harness verifies `@gitclaw /skills`
-  produces a deterministic local skill inventory without a model call.
+  produces a deterministic local skill inventory with provenance and
+  requirement metadata, without a model call.
 - A `gh`-driven soul-report E2E harness verifies `@gitclaw /soul` produces a
   deterministic high-authority context file audit without a model call or body
   leakage.
@@ -1979,6 +1992,8 @@ examples/workflows/gitclaw.yml
 - OpenClaw heartbeat docs: https://openclawlab.com/en/docs/agent/heartbeat/
 - OpenClaw automation docs: https://docs.openclaw.ai/automation/index
 - OpenClaw scheduled tasks docs: https://docs.openclaw.ai/automation/cron-jobs
+- OpenClaw creating skills docs: https://docs.openclaw.ai/tools/creating-skills
+- OpenClaw skill format docs: https://docs.openclaw.ai/clawhub/skill-format
 - OpenClaw models CLI docs: https://docs.openclaw.ai/cli/models
 - OpenClaw config CLI docs: https://docs.openclaw.ai/cli/config
 - OpenClaw configure docs: https://docs.openclaw.ai/cli/configure
