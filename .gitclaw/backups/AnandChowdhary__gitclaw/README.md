@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-05-29T21:26:19Z`
-- issue_count: `59`
+- generated_at: `2026-05-29T21:37:02Z`
+- issue_count: `60`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -64,3 +64,4 @@
 | #71 | @gitclaw /skills info repo-reader e2e 20260529T210357Z | `2026-05-29T21:04:59Z` | 1 | 2 | `issues/000071.json` |
 | #72 | @gitclaw /memory validate e2e 20260529T211357Z | `2026-05-29T21:15:06Z` | 1 | 2 | `issues/000072.json` |
 | #73 | @gitclaw /backup retention-plan e2e 20260529T212513Z | `2026-05-29T21:26:18Z` | 1 | 2 | `issues/000073.json` |
+| #74 | @gitclaw /skills search repository context e2e 20260529T213555Z | `2026-05-29T21:37:01Z` | 1 | 2 | `issues/000074.json` |

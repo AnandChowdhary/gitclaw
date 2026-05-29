@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-29T21:26:19Z",
+  "generated_at": "2026-05-29T21:37:02Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 59,
+  "count": 60,
   "issues": [
     {
       "number": 3,
@@ -731,6 +731,18 @@
       "title": "@gitclaw /backup retention-plan e2e 20260529T212513Z",
       "path": "issues/000073.json",
       "backup_generated_at": "2026-05-29T21:26:18Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
+    },
+    {
+      "number": 74,
+      "title": "@gitclaw /skills search repository context e2e 20260529T213555Z",
+      "path": "issues/000074.json",
+      "backup_generated_at": "2026-05-29T21:37:01Z",
       "event_name": "issues",
       "labels": [
         "gitclaw"

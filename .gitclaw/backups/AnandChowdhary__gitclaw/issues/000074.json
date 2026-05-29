@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T21:37:01Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 74,
+    "title": "@gitclaw /skills search repository context e2e 20260529T213555Z",
+    "body": "Live skills-search E2E.\n\nHidden skills search token: GITCLAW_SKILLS_SEARCH_E2E_20260529T213555Z\nThis should produce a deterministic skill search report without dumping the full SKILL.md body or raw search text.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /skills search repository context e2e 20260529T213555Z\n\nLive skills-search E2E.\n\nHidden skills search token: GITCLAW_SKILLS_SEARCH_E2E_20260529T213555Z\nThis should produce a deterministic skill search report without dumping the full SKILL.md body or raw search text.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Skills Search Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#74`\n- skill_search_status: `ok`\n- query_sha256_12: `10843bd938b0`\n- query_terms: `4`\n- available_skills: `1`\n- matched_skills: `1`\n- run_mode: `read-only`\n- raw_bodies_included: `false`\n\nThis report searches only skill metadata: name, folder, path, and frontmatter description. Full `SKILL.md` bodies, issue bodies, comments, prompts, and raw search queries are not included.\n\n### Matches\n- skill_name=`repo-reader` path=`.gitclaw/SKILLS/repo-reader/SKILL.md` folder=`repo-reader` match_fields=`description` selected_for_this_turn=`true` always=`false` frontmatter=`true` description=`true` bytes=`448` lines=`13` sha256_12=`a4afc96b87e1` requires_env=`0` requires_bins=`0` missing_env=`0` missing_bins=`0`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4580060532,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4580060532,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26663427654\" event_id=\"issue-74\" model=\"gitclaw/skills\" idempotency_key=\"772da1466849eeea58d7279e22911aa8\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26663427654\" --\u003e\n## GitClaw Skills Search Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#74`\n- skill_search_status: `ok`\n- query_sha256_12: `10843bd938b0`\n- query_terms: `4`\n- available_skills: `1`\n- matched_skills: `1`\n- run_mode: `read-only`\n- raw_bodies_included: `false`\n\nThis report searches only skill metadata: name, folder, path, and frontmatter description. Full `SKILL.md` bodies, issue bodies, comments, prompts, and raw search queries are not included.\n\n### Matches\n- skill_name=`repo-reader` path=`.gitclaw/SKILLS/repo-reader/SKILL.md` folder=`repo-reader` match_fields=`description` selected_for_this_turn=`true` always=`false` frontmatter=`true` description=`true` bytes=`448` lines=`13` sha256_12=`a4afc96b87e1` requires_env=`0` requires_bins=`0` missing_env=`0` missing_bins=`0`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T21:36:38Z",
+      "updated_at": "2026-05-29T21:36:38Z"
+    }
+  ]
+}
