@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T15:42:11Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 35,
+    "title": "@gitclaw /tools e2e 20260529T154038Z",
+    "body": "Live tools-report E2E.\n\nPlease inspect `go.mod` and search for `bounded repository search fixture phrase`.\nThis should produce a deterministic tools report without calling a model.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /tools e2e 20260529T154038Z\n\nLive tools-report E2E.\n\nPlease inspect `go.mod` and search for `bounded repository search fixture phrase`.\nThis should produce a deterministic tools report without calling a model.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Tools Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#35`\n- available_tools: `5`\n- active_tool_outputs: `4`\n- tool_guidance_files: `1`\n\nGitClaw v1 tools are deterministic pre-model context builders. They do not execute shell commands, mutate files, open pull requests, or modify repository state.\n\nTool output bodies are not included; hashes let maintainers verify exactly which prompt-visible outputs were produced.\n\n### Available Tools\n- `gitclaw.list_files` mode=`read-only` trigger=`always`\n- `gitclaw.search_files` mode=`read-only` trigger=`explicit quoted phrase or identifier`\n- `gitclaw.read_file` mode=`read-only` trigger=`explicit repository-relative path`\n- `gitclaw.skill_index` mode=`metadata-only` trigger=`local skills exist`\n- `gitclaw.policy` mode=`metadata-only` trigger=`write intent detected`\n\n### Tool Guidance Files\n- `.gitclaw/TOOLS.md` bytes=`640` lines=`15` sha256_12=`d769defecc49`\n\n### Active Tool Outputs\n- `gitclaw.list_files` input=`.` bytes=`2023` lines=`65` sha256_12=`4210e4094123`\n- `gitclaw.skill_index` input=`.gitclaw/SKILLS` bytes=`192` lines=`1` sha256_12=`eba3638f8225`\n- `gitclaw.search_files` input=`go.mod | bounded repository search fixture phrase | T154038Z | tools-report |...` bytes=`2397` lines=`21` sha256_12=`f935c10def8b`\n- `gitclaw.read_file` input=`go.mod` bytes=`49` lines=`3` sha256_12=`602673de6523`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4577100612,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4577100612,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26646774557\" event_id=\"issue-35\" model=\"gitclaw/tools\" idempotency_key=\"fb58c6d6dd86b57f0451f5414e013bae\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26646774557\" --\u003e\n## GitClaw Tools Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#35`\n- available_tools: `5`\n- active_tool_outputs: `4`\n- tool_guidance_files: `1`\n\nGitClaw v1 tools are deterministic pre-model context builders. They do not execute shell commands, mutate files, open pull requests, or modify repository state.\n\nTool output bodies are not included; hashes let maintainers verify exactly which prompt-visible outputs were produced.\n\n### Available Tools\n- `gitclaw.list_files` mode=`read-only` trigger=`always`\n- `gitclaw.search_files` mode=`read-only` trigger=`explicit quoted phrase or identifier`\n- `gitclaw.read_file` mode=`read-only` trigger=`explicit repository-relative path`\n- `gitclaw.skill_index` mode=`metadata-only` trigger=`local skills exist`\n- `gitclaw.policy` mode=`metadata-only` trigger=`write intent detected`\n\n### Tool Guidance Files\n- `.gitclaw/TOOLS.md` bytes=`640` lines=`15` sha256_12=`d769defecc49`\n\n### Active Tool Outputs\n- `gitclaw.list_files` input=`.` bytes=`2023` lines=`65` sha256_12=`4210e4094123`\n- `gitclaw.skill_index` input=`.gitclaw/SKILLS` bytes=`192` lines=`1` sha256_12=`eba3638f8225`\n- `gitclaw.search_files` input=`go.mod | bounded repository search fixture phrase | T154038Z | tools-report |...` bytes=`2397` lines=`21` sha256_12=`f935c10def8b`\n- `gitclaw.read_file` input=`go.mod` bytes=`49` lines=`3` sha256_12=`602673de6523`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T15:41:40Z",
+      "updated_at": "2026-05-29T15:41:40Z"
+    }
+  ]
+}
