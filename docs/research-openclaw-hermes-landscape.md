@@ -459,6 +459,15 @@ should therefore make skill provenance explicit in the repo-local index:
 frontmatter/description presence, byte and line counts, hashes, `always`
 activation, declared requirement counts, and missing requirement counts.
 
+2026-05-29 skill-validation follow-up: OpenClaw's current skill docs require
+`name` and `description`, recommend lower hyphen-case names, and tell authors
+to align the leaf folder with frontmatter. The ClawHub format also makes
+runtime requirements part of registry/security analysis. GitClaw should expose
+the same safety bar without installing or executing skills: `/skills` and
+`gitclaw skills validate` report validation status, duplicate names, invalid
+names, folder/name mismatches, and missing declared requirements without
+dumping full skill bodies.
+
 ### Cron And Long-Horizon Work
 
 Hermes cron jobs are first-class agent tasks, not just shell tasks. They can:

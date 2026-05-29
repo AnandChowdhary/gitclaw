@@ -160,6 +160,14 @@ for expected in \
   'skills_with_description: `1`' \
   'skills_with_requirements: `0`' \
   'skills_missing_requirements: `0`' \
+  'skill_validation_status: `ok`' \
+  'skill_validation_errors: `0`' \
+  'skill_validation_warnings: `0`' \
+  'skill_duplicate_names: `0`' \
+  'skill_invalid_names: `0`' \
+  'skill_name_folder_mismatches: `0`' \
+  '### Validation' \
+  '- none' \
   "repo-reader" \
   ".gitclaw/SKILLS/repo-reader/SKILL.md" \
   'frontmatter=`true`' \
@@ -168,7 +176,7 @@ for expected in \
   'requires_env=`0`' \
   'missing_bins=`0`' \
   "progressive disclosure"; do
-  grep -Fq "$expected" <<<"$comments" || die "skills report missing ${expected}"
+  grep -Fq -- "$expected" <<<"$comments" || die "skills report missing ${expected}"
 done
 
 if grep -Fq "GITCLAW_SKILL_CONTEXT_V1" <<<"$comments"; then

@@ -26,6 +26,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runChannelIngestCommand(ctx, args[1:])
 	case "proactive":
 		return runProactiveCommand(ctx, args[1:])
+	case "skills":
+		return runSkillsCommand(args[1:])
 	case "doctor":
 		return runDoctorCommand(args[1:])
 	case "version":
@@ -45,6 +47,34 @@ func runDoctorCommand(args []string) error {
 		return err
 	}
 	PrintDoctorReport(cfg)
+	return nil
+}
+
+func runSkillsCommand(args []string) error {
+	if len(args) == 0 {
+		return fmt.Errorf("usage: gitclaw skills validate")
+	}
+	switch args[0] {
+	case "validate":
+		return runSkillsValidateCommand(args[1:])
+	default:
+		return fmt.Errorf("unknown skills command %q", args[0])
+	}
+}
+
+func runSkillsValidateCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown skills validate argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSkillsValidationReport(repoContext))
 	return nil
 }
 

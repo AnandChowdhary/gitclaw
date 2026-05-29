@@ -53,7 +53,10 @@ func RenderSkillsReport(ev Event, repoContext RepoContext) string {
 	fmt.Fprintf(&b, "- skills_with_frontmatter: `%d`\n", skillsWithFrontmatter(repoContext.SkillSummaries))
 	fmt.Fprintf(&b, "- skills_with_description: `%d`\n", skillsWithDescription(repoContext.SkillSummaries))
 	fmt.Fprintf(&b, "- skills_with_requirements: `%d`\n", skillsWithRequirements(repoContext.SkillSummaries))
-	fmt.Fprintf(&b, "- skills_missing_requirements: `%d`\n\n", skillsMissingRequirements(repoContext.SkillSummaries))
+	fmt.Fprintf(&b, "- skills_missing_requirements: `%d`\n", skillsMissingRequirements(repoContext.SkillSummaries))
+	validation := ValidateSkillSummaries(repoContext.SkillSummaries)
+	writeSkillValidationSummary(&b, validation)
+	b.WriteByte('\n')
 	b.WriteString("GitClaw uses progressive disclosure: this report lists available skill metadata, while full `SKILL.md` bodies are loaded only when selected or marked always-on.\n\n")
 	b.WriteString("Skill bodies are not included; hashes and requirement counts make local skills reviewable like code before they influence a model turn.\n\n")
 
@@ -74,6 +77,9 @@ func RenderSkillsReport(ev Event, repoContext RepoContext) string {
 
 	b.WriteString("\n### Selected For This Turn\n")
 	writeSelectedSkillList(&b, repoContext.Skills)
+
+	b.WriteString("\n### Validation\n")
+	writeSkillValidationFindings(&b, validation)
 
 	return strings.TrimSpace(b.String())
 }

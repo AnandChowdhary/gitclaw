@@ -554,8 +554,8 @@ GitHub issue/comment event
 
 - CLI entry point.
 - Subcommands: `preflight`, `handle`, `backup`, `heartbeat`,
-  `channel-ingest`, `proactive enqueue`, `proactive init`, `doctor`,
-  `version`.
+  `channel-ingest`, `proactive enqueue`, `proactive init`,
+  `skills validate`, `doctor`, `version`.
 
 `internal/github`
 
@@ -755,6 +755,27 @@ loaded only when:
 Remote skill installation, skill execution scripts, dependency installation,
 and agent-authored skill edits remain out of scope.
 
+### Skill Validation
+
+GitClaw validates discovered skills against the safe subset borrowed from
+OpenClaw/AgentSkills:
+
+- `SKILL.md` should start with YAML frontmatter,
+- `name` must be lower hyphen-case: `^[a-z0-9][a-z0-9-]*$`,
+- `description` should be present,
+- leaf folder name should match the effective skill name,
+- duplicate effective names are warned about,
+- missing declared env/bin requirements are warned about.
+
+Validation is visible in the `/skills` report and locally through:
+
+```bash
+gitclaw skills validate
+```
+
+The validation output includes only paths, counts, hashes, and short finding
+details. It never dumps full `SKILL.md` bodies.
+
 ## Skills Inspection Command
 
 GitClaw supports a deterministic skill inventory command inspired by
@@ -774,6 +795,8 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 - `always` activation state and frontmatter descriptions,
 - short hashes and size metadata for review,
 - declared env/bin requirement counts and whether any are missing.
+- validation status, error/warning counts, duplicate-name count, invalid-name
+  count, folder/name mismatch count, and body-free findings.
 
 It does not dump full skill bodies. Full `SKILL.md` content remains a prompt
 input only when selected by the normal progressive-disclosure rules.
@@ -1838,6 +1861,8 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report lists available skill metadata and selected skill paths,
    - assert hashes, frontmatter/description presence, and requirement counts
      are present,
+   - assert skill validation status, duplicate-name count, invalid-name count,
+     and folder/name mismatch count are present,
    - assert the report does not dump full skill bodies or verification tokens,
    - assert the run succeeds without requiring a model provider response.
 
@@ -2179,7 +2204,7 @@ examples/workflows/gitclaw.yml
   leakage.
 - A `gh`-driven skills-report E2E harness verifies `@gitclaw /skills`
   produces a deterministic local skill inventory with provenance and
-  requirement metadata, without a model call.
+  requirement and validation metadata, without a model call.
 - A `gh`-driven soul-report E2E harness verifies `@gitclaw /soul` produces a
   deterministic high-authority context file audit without a model call or body
   leakage.

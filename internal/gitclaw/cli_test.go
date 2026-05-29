@@ -2,6 +2,7 @@ package gitclaw
 
 import (
 	"context"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -42,4 +43,49 @@ func TestPreflightCommandWritesOutputsWithoutLLMSecret(t *testing.T) {
 	if !strings.Contains(string(output), "allowed=true") {
 		t.Fatalf("GITHUB_OUTPUT missing allowed=true: %s", output)
 	}
+}
+
+func TestSkillsValidateCommandReportsCurrentRepoShape(t *testing.T) {
+	dir := t.TempDir()
+	writeTestFile(t, dir, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Use read-only repository context.
+---
+
+SECRET_SKILL_BODY_TOKEN
+`)
+	t.Setenv("GITCLAW_WORKDIR", dir)
+	output := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"skills", "validate"}); err != nil {
+			t.Fatalf("skills validate returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"GitClaw Skills Validate Report", "skill_validation_status: `ok`", "skill_validation_errors: `0`", "skill_validation_warnings: `0`", "- none"} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("skills validate output missing %q:\n%s", want, output)
+		}
+	}
+	if strings.Contains(output, "SECRET_SKILL_BODY_TOKEN") {
+		t.Fatalf("skills validate leaked skill body:\n%s", output)
+	}
+}
+
+func captureStdout(t *testing.T, fn func()) string {
+	t.Helper()
+	original := os.Stdout
+	reader, writer, err := os.Pipe()
+	if err != nil {
+		t.Fatal(err)
+	}
+	os.Stdout = writer
+	fn()
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+	os.Stdout = original
+	output, err := io.ReadAll(reader)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return string(output)
 }
