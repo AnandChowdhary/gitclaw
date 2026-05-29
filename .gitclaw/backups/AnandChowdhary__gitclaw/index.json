@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-29T19:27:49Z",
+  "generated_at": "2026-05-29T19:52:11Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 47,
+  "count": 48,
   "issues": [
     {
       "number": 3,
@@ -589,6 +589,22 @@
       ],
       "comment_count": 1,
       "transcript_messages": 2
+    },
+    {
+      "number": 62,
+      "title": "GitClaw proactive proactive-init-e2e-20260529t195052z slot-20260529T195052Z",
+      "path": "issues/000062.json",
+      "backup_generated_at": "2026-05-29T19:52:10Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:disabled",
+        "gitclaw:e2e",
+        "gitclaw:done",
+        "gitclaw:proactive"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
