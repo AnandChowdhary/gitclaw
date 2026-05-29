@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T14:03:17Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "workflow_dispatch",
+  "issue": {
+    "number": 18,
+    "title": "GitClaw telegram thread channel-ingest-e2e-20260529T140055Z",
+    "body": "\u003c!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"channel-ingest-e2e-20260529T140055Z\" --\u003e\nGitClaw channel bridge thread.\n\n- channel: telegram\n- thread_id: channel-ingest-e2e-20260529T140055Z\n\nMessages from this external channel are mirrored into this issue as comments\nwith gitclaw:channel-message provenance markers.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw",
+      "gitclaw:done",
+      "gitclaw:channel"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw telegram thread channel-ingest-e2e-20260529T140055Z\n\n\u003c!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"channel-ingest-e2e-20260529T140055Z\" --\u003e\nGitClaw channel bridge thread.\n\n- channel: telegram\n- thread_id: channel-ingest-e2e-20260529T140055Z\n\nMessages from this external channel are mirrored into this issue as comments\nwith gitclaw:channel-message provenance markers.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "Mirrored Telegram ingest message.\n\nWhen this channel ingest is dispatched, reply with exact token `GITCLAW_CHANNEL_INGEST_E2E_20260529T140055Z`.\nAlso include the exact word `ingest`.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4576042390,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_INGEST_E2E_20260529T140055Z\n\ningest\n\nEvidence used: mirrored channel message in the issue thread and repository files .github/workflows/gitclaw-channel-ingest.yml and .gitclaw/memory/2026-05-29.md.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4576052599,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4576042390,
+      "body": "\u003c!-- gitclaw:channel-message channel=\"telegram\" thread_id=\"channel-ingest-e2e-20260529T140055Z\" message_id=\"message-20260529T140055Z\" author=\"telegram:e2e\" --\u003e\nMirrored Telegram ingest message.\n\nWhen this channel ingest is dispatched, reply with exact token `GITCLAW_CHANNEL_INGEST_E2E_20260529T140055Z`.\nAlso include the exact word `ingest`.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T14:01:31Z",
+      "updated_at": "2026-05-29T14:01:31Z"
+    },
+    {
+      "id": 4576052599,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26641714584\" event_id=\"dispatch-telegram-message-20260529T140055Z\" model=\"openai/gpt-5-mini\" idempotency_key=\"7bdd5ef45422a0a00be3049831a94386\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26641714584\" --\u003e\nGITCLAW_CHANNEL_INGEST_E2E_20260529T140055Z\n\ningest\n\nEvidence used: mirrored channel message in the issue thread and repository files .github/workflows/gitclaw-channel-ingest.yml and .gitclaw/memory/2026-05-29.md.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T14:02:47Z",
+      "updated_at": "2026-05-29T14:02:47Z"
+    }
+  ]
+}
