@@ -359,6 +359,12 @@ labels, trusted associations, prompt budgets, command surface, and workflow file
 hashes without dumping config or workflow bodies and without allowing the agent
 to mutate its own configuration.
 
+2026-05-30 config-list follow-up: config inspection should also exist outside
+issue chat. Add `gitclaw config list` as the local mirror of `/config`: report
+effective config source, labels, trusted associations, model/prompt budgets,
+deterministic command surface, and config/workflow file hashes, but omit
+issue-only metadata and all file bodies.
+
 2026-05-29 command-catalog follow-up: OpenClaw and Hermes both lean on command
 help as a discoverability and operations primitive. GitClaw's issue-native
 version should expose `@gitclaw /help` and `@gitclaw /commands` as a

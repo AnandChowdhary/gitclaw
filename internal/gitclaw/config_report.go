@@ -38,12 +38,24 @@ func IsConfigReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderConfigReport(ev Event, cfg Config) string {
+	return renderConfigReport(ev, cfg, true)
+}
+
+func RenderConfigCLIReport(cfg Config) string {
+	return renderConfigReport(Event{}, cfg, false)
+}
+
+func renderConfigReport(ev Event, cfg Config, includeIssue bool) string {
 	surface := inspectConfigSurface(cfg.Workdir)
 	var b strings.Builder
 	b.WriteString("## GitClaw Config Report\n\n")
 	b.WriteString("Generated without a model call.\n\n")
-	fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
-	fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
 	fmt.Fprintf(&b, "- config_source: `%s`\n", configSource(cfg))
 	fmt.Fprintf(&b, "- config_file_path: `%s`\n", gitclawConfigPath)
 	fmt.Fprintf(&b, "- config_file_present: `%t`\n", surface.ConfigFile.Present)
@@ -59,7 +71,10 @@ func RenderConfigReport(ev Event, cfg Config) string {
 	fmt.Fprintf(&b, "- max_transcript_message_bytes: `%d`\n", cfg.MaxTranscriptMessageBytes)
 	fmt.Fprintf(&b, "- workflows_present: `%d`\n", countPresentConfigFiles(surface.Workflows))
 	fmt.Fprintf(&b, "- slash_commands: `%d`\n", len(configSlashCommands))
-	fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n\n", shortDocumentHash(ev.Issue.Title))
+	if includeIssue {
+		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
+	}
+	b.WriteByte('\n')
 	b.WriteString("This report shows effective GitClaw control-plane settings and file metadata. Config, workflow, issue, and comment bodies are not included.\n\n")
 
 	b.WriteString("### Trusted Associations\n")

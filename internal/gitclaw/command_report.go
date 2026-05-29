@@ -17,7 +17,7 @@ type commandCatalogEntry struct {
 var commandCatalog = []commandCatalogEntry{
 	{Command: "/backup", Aliases: []string{"/backups"}, Model: "gitclaw/backup", Category: "backup", Summary: "Show expected backup branch paths for the current issue.", LocalCLI: []string{"gitclaw backup verify", "gitclaw backup manifest", "gitclaw backup list", "gitclaw backup stats", "gitclaw backup search <query>", "gitclaw backup export-jsonl", "gitclaw backup restore-plan", "gitclaw backup retention-plan"}},
 	{Command: "/channels", Aliases: []string{"/channel"}, Model: "gitclaw/channels", Category: "channels", Summary: "Audit channel bridge settings and workflow-dispatch ingress.", LocalCLI: []string{"gitclaw channels list"}},
-	{Command: "/config", Aliases: []string{"/configuration"}, Model: "gitclaw/config", Category: "control-plane", Summary: "Show effective config, labels, prompt budgets, commands, and workflows."},
+	{Command: "/config", Aliases: []string{"/configuration"}, Model: "gitclaw/config", Category: "control-plane", Summary: "Show effective config, labels, prompt budgets, commands, and workflows.", LocalCLI: []string{"gitclaw config list"}},
 	{Command: "/context", Model: "gitclaw/context", Category: "context", Summary: "Show loaded context documents and deterministic tool output metadata."},
 	{Command: "/doctor", Aliases: []string{"/health"}, Model: "gitclaw/doctor", Category: "health", Summary: "Run a body-free health check with skill, soul, and tool validation rollups.", LocalCLI: []string{"gitclaw doctor"}},
 	{Command: "/help", Aliases: []string{"/commands"}, Model: "gitclaw/commands", Category: "control-plane", Summary: "List deterministic GitClaw slash commands, aliases, and local CLI helpers.", LocalCLI: []string{"gitclaw commands"}},

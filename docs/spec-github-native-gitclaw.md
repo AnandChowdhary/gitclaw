@@ -1212,6 +1212,7 @@ GitClaw supports a deterministic config/control-plane audit command:
 
 ```text
 @gitclaw /config
+@gitclaw /config list
 ```
 
 The command runs after normal preflight and context loading, but before model
@@ -1231,6 +1232,17 @@ It never dumps config, workflow, issue, or comment bodies. This is the
 GitHub-native equivalent of OpenClaw/Hermes config/profile status: enough to
 understand the active control plane without exposing secrets or allowing the
 agent to rewrite configuration.
+
+Local operators can inspect the same effective control plane without opening an
+issue:
+
+```bash
+gitclaw config list
+```
+
+The local report omits repository, issue number, and issue-title hash while
+retaining effective config source, labels, trusted associations, prompt
+budgets, deterministic slash commands, and config/workflow file metadata.
 
 ### Command Catalog Command
 
@@ -2583,6 +2595,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven config-report E2E harness verifies `@gitclaw /config` reports
   effective labels, prompt budgets, commands, and workflow metadata without a
   model call.
+- A `gh`-driven config-list E2E harness verifies `@gitclaw /config list` is an
+  explicit report alias, while local `gitclaw config list` exposes the same
+  control-plane metadata without issue-only fields.
 - A `gh`-driven commands-report E2E harness verifies `@gitclaw /help` reports
   deterministic commands, aliases, and local CLI helpers without a model call
   or issue-body leakage.

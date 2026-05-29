@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "commands-report-e2e: $*" >&2
+  echo "config-list-report-e2e: $*" >&2
 }
 
 die() {
@@ -33,12 +33,12 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_COMMANDS_REPORT_E2E_${timestamp}"
-title="@gitclaw /help e2e ${timestamp}"
-body="Live commands-report E2E.
+token="GITCLAW_CONFIG_LIST_E2E_${timestamp}"
+title="@gitclaw /config list e2e ${timestamp}"
+body="Live config-list E2E.
 
-Hidden commands report body token: ${token}
-This should produce a deterministic command catalog report without a model call."
+Hidden config list body token: ${token}
+This should produce a deterministic config report through the explicit list alias without a model call."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -52,7 +52,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "commands-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "config-list-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -73,11 +73,11 @@ wait_for_run() {
       --json databaseId,status,conclusion,url,createdAt,displayTitle \
       --jq '. as $runs | $runs | map(select(.displayTitle == "'"${title}"'")) | sort_by(.createdAt) | reverse | .[0] // empty')"
     if [[ -n "$run_json" && "$run_json" != "null" ]]; then
-      local run_status conclusion url
-      run_status="$(jq -r '.status' <<<"$run_json")"
+      local status conclusion url
+      status="$(jq -r '.status' <<<"$run_json")"
       conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
       url="$(jq -r '.url' <<<"$run_json")"
-      if [[ "$run_status" == "completed" ]]; then
+      if [[ "$status" == "completed" ]]; then
         [[ "$conclusion" == "success" ]] || die "issues run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
@@ -128,50 +128,46 @@ wait_for_assistant_count() {
 }
 
 run_json="$(wait_for_run "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one commands report comment"
+wait_for_assistant_count 1 || die "expected one config list report comment"
 comments="$(assistant_comments)"
 
 for expected in \
-  'model="gitclaw/commands"' \
-  "GitClaw Commands Report" \
+  'model="gitclaw/config"' \
+  "GitClaw Config Report" \
   "Generated without a model call" \
+  'config_source: `defaults+repo+environment`' \
+  'config_file_path: `.gitclaw/config.yml`' \
+  'config_file_present: `true`' \
+  'trigger_label: `gitclaw`' \
   'trigger_prefix: `@gitclaw`' \
-  'commands: `15`' \
-  'aliases: `7`' \
-  'local_cli_helpers: `28`' \
+  'disabled_label: `gitclaw:disabled`' \
+  'model: `openai/gpt-5-mini`' \
   'run_mode: `read-only`' \
-  "### Slash Commands" \
-  '/help' \
-  '/commands' \
-  '/backup' \
-  '/tools' \
+  'max_prompt_bytes: `60000`' \
+  'max_output_tokens: `4000`' \
+  'max_transcript_messages: `40`' \
+  'max_transcript_message_bytes: `8000`' \
+  'workflows_present: `4`' \
+  'slash_commands: `15`' \
+  'OWNER' \
+  'MEMBER' \
+  'COLLABORATOR' \
+  '/channels' \
+  '/config' \
   '/doctor' \
-  '/skills' \
-  '/soul' \
-  'gitclaw channels list' \
-  'gitclaw config list' \
-  'gitclaw models list' \
-  'gitclaw backup list' \
-  'gitclaw backup stats' \
-  'gitclaw backup search <query>' \
-  'gitclaw backup retention-plan' \
-  'gitclaw commands' \
-  'gitclaw memory validate' \
-  'gitclaw memory list' \
-  'gitclaw memory search <query>' \
-  'gitclaw soul list' \
-  'gitclaw soul search <query>' \
-  'gitclaw skills list' \
-  'gitclaw skills info <name>' \
-  'gitclaw skills search <query>' \
-  'gitclaw tools validate' \
-  'gitclaw tools list' \
-  'gitclaw tools search <query>'; do
-  grep -Fq "$expected" <<<"$comments" || die "commands report missing ${expected}"
+  '/help' \
+  '/memory' \
+  '/models' \
+  '/prompt' \
+  '.github/workflows/gitclaw.yml' \
+  '.github/workflows/gitclaw-heartbeat.yml' \
+  '.github/workflows/gitclaw-proactive.yml' \
+  '.github/workflows/gitclaw-channel-ingest.yml'; do
+  grep -Fq "$expected" <<<"$comments" || die "config list report missing ${expected}"
 done
 
 if grep -Fq "$token" <<<"$comments"; then
-  die "commands report leaked issue body token"
+  die "config list report leaked issue body token"
 fi
 
 url="$(jq -r '.url' <<<"$run_json")"
