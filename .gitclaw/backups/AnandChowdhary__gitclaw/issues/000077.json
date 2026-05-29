@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T22:07:26Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 77,
+    "title": "GitClaw tools search e2e 20260529T220627Z",
+    "body": "@gitclaw /tools search read_file GITCLAW_TOOLS_SEARCH_QUERY_20260529T220627Z\n\nLive tools-search E2E 20260529T220627Z.\n\nMention go.mod so the read_file tool-output metadata exists.\nHidden tools search token: GITCLAW_TOOLS_SEARCH_BODY_20260529T220627Z\nThis should produce a deterministic tools search report without dumping tool inputs, tool outputs, issue bodies, or the raw search query.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw tools search e2e 20260529T220627Z\n\n@gitclaw /tools search read_file GITCLAW_TOOLS_SEARCH_QUERY_20260529T220627Z\n\nLive tools-search E2E 20260529T220627Z.\n\nMention go.mod so the read_file tool-output metadata exists.\nHidden tools search token: GITCLAW_TOOLS_SEARCH_BODY_20260529T220627Z\nThis should produce a deterministic tools search report without dumping tool inputs, tool outputs, issue bodies, or the raw search query.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Tools Search Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#77`\n- tool_search_status: `ok`\n- query_sha256_12: `653a04e73427`\n- query_terms: `2`\n- max_results: `10`\n- available_tools: `5`\n- active_tool_outputs: `4`\n- matched_contracts: `1`\n- matched_outputs: `2`\n- results_returned: `3`\n- raw_bodies_included: `false`\n- raw_inputs_included: `false`\n\nThis report searches deterministic tool contracts and active tool-output metadata. It reports names, match fields, counts, sizes, and hashes only; raw tool outputs, tool inputs, issue bodies, comments, prompts, and raw search queries are not included.\n\n### Results\n- kind=`contract` name=`gitclaw.read_file` match_fields=`name` score=`42` mode=`read-only` trigger=`explicit repository-relative path`\n- kind=`active-output` name=`gitclaw.read_file` match_fields=`name` score=`35` input_sha256_12=`33ef32bf6c23` output_bytes=`82` output_lines=`5` output_sha256_12=`75f65b201821`\n- kind=`active-output` name=`gitclaw.search_files` match_fields=`input` score=`24` input_sha256_12=`dd99d50d0ff1` output_bytes=`1652` output_lines=`21` output_sha256_12=`8cdb2e539fe5`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4580242259,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4580242259,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26664641430\" event_id=\"issue-77\" model=\"gitclaw/tools\" idempotency_key=\"f504cae0c4283dca8a9c772e6131df0b\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26664641430\" --\u003e\n## GitClaw Tools Search Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#77`\n- tool_search_status: `ok`\n- query_sha256_12: `653a04e73427`\n- query_terms: `2`\n- max_results: `10`\n- available_tools: `5`\n- active_tool_outputs: `4`\n- matched_contracts: `1`\n- matched_outputs: `2`\n- results_returned: `3`\n- raw_bodies_included: `false`\n- raw_inputs_included: `false`\n\nThis report searches deterministic tool contracts and active tool-output metadata. It reports names, match fields, counts, sizes, and hashes only; raw tool outputs, tool inputs, issue bodies, comments, prompts, and raw search queries are not included.\n\n### Results\n- kind=`contract` name=`gitclaw.read_file` match_fields=`name` score=`42` mode=`read-only` trigger=`explicit repository-relative path`\n- kind=`active-output` name=`gitclaw.read_file` match_fields=`name` score=`35` input_sha256_12=`33ef32bf6c23` output_bytes=`82` output_lines=`5` output_sha256_12=`75f65b201821`\n- kind=`active-output` name=`gitclaw.search_files` match_fields=`input` score=`24` input_sha256_12=`dd99d50d0ff1` output_bytes=`1652` output_lines=`21` output_sha256_12=`8cdb2e539fe5`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T22:07:06Z",
+      "updated_at": "2026-05-29T22:07:06Z"
+    }
+  ]
+}
