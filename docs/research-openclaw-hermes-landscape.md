@@ -147,6 +147,13 @@ JSON files, then emit one JSON object per reconstructed transcript message.
 Because this is raw recovery output, keep it as an explicit local CLI command,
 not an issue-visible report.
 
+2026-05-29 backup-restore-plan follow-up: OpenClaw's migration/backup posture
+emphasizes preview before state-changing recovery. GitClaw should copy that
+separation: a local `backup restore-plan` command reads the backup branch and
+prints a dry-run restore plan with counts and hashes, but makes no GitHub API
+calls and does not dump raw issue/comment bodies. A future mutating restore can
+require explicit approval and compare the restored issue against this plan.
+
 2026-05-29 session-inspection follow-up: OpenClaw exposes transcript and
 session CLIs around JSONL transcript directories, while Hermes automatically
 saves conversations as sessions and can export them to JSONL. GitClaw should

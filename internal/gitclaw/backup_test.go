@@ -195,6 +195,51 @@ func TestExportBackupJSONLEmitsTranscriptRecords(t *testing.T) {
 	}
 }
 
+func TestPlanBackupRestoreRendersDryRunWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T12:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue: IssueBackupIssue{
+			Number: 7,
+			Title:  "@gitclaw restore",
+			Body:   "RESTORE_ISSUE_BODY_SECRET",
+			Labels: []string{"gitclaw", "gitclaw:e2e"},
+		},
+		Transcript: []TranscriptMessage{
+			{Role: "user", Body: "RESTORE_TRANSCRIPT_SECRET", Actor: "alice", AuthorAssociation: "OWNER", Trusted: true},
+			{Role: "assistant", Body: "RESTORE_ASSISTANT_SECRET", Actor: "github-actions[bot]", AuthorAssociation: "NONE", CommentID: 12, Trusted: true},
+		},
+		Comments: []IssueBackupComment{
+			{ID: 12, Body: "<!-- gitclaw:assistant-turn -->\nRESTORE_COMMENT_SECRET"},
+			{ID: 13, Body: "<!-- gitclaw:error -->\nRESTORE_ERROR_SECRET"},
+		},
+	})
+	if _, err := WriteBackupIndex(root, "owner/repo", time.Date(2026, 5, 29, 14, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+	plan, err := PlanBackupRestore(root, "owner/repo", 7, "owner/restored")
+	if err != nil {
+		t.Fatalf("PlanBackupRestore returned error: %v", err)
+	}
+	if plan.TargetRepo != "owner/restored" || plan.Comments != 2 || plan.TranscriptMessages != 2 || plan.AssistantTurns != 1 || plan.ErrorComments != 1 {
+		t.Fatalf("unexpected restore plan: %#v", plan)
+	}
+	report := RenderBackupRestorePlan(plan)
+	for _, want := range []string{"GitClaw Backup Restore Plan", "restore_mode: `dry-run`", "source_repository: `owner/repo`", "target_repository: `owner/restored`", "issue: `#7`", "issue_backup_path: `issues/000007.json`", "backup_schema_version: `1`", "comments: `2`", "transcript_messages: `2`", "assistant_turn_comments: `1`", "error_comments: `1`", "raw_bodies_included: `false`", "comment_1_sha256_12:", "message_1_sha256_12:", "gitclaw:e2e"} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("restore plan report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"RESTORE_ISSUE_BODY_SECRET", "RESTORE_TRANSCRIPT_SECRET", "RESTORE_ASSISTANT_SECRET", "RESTORE_COMMENT_SECRET", "RESTORE_ERROR_SECRET"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("restore plan leaked body token %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestVerifyBackupTreeAcceptsCanonicalBackupIndex(t *testing.T) {
 	root := t.TempDir()
 	writeBackupFixture(t, root, IssueBackup{

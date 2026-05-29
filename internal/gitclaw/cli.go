@@ -58,6 +58,9 @@ func runBackup(ctx context.Context, args []string) error {
 	if len(args) > 0 && args[0] == "export-jsonl" {
 		return runBackupExportJSONL(args[1:])
 	}
+	if len(args) > 0 && args[0] == "restore-plan" {
+		return runBackupRestorePlan(args[1:])
+	}
 	outDir := filepathArg(args, "--out")
 	filteredArgs := removeFlagWithValue(args, "--out")
 	ev, _, err := loadEventAndConfig(filteredArgs)
@@ -156,6 +159,59 @@ func runBackupExportJSONL(args []string) error {
 		return err
 	}
 	fmt.Print(output)
+	return nil
+}
+
+func runBackupRestorePlan(args []string) error {
+	root := filepath.Join(".gitclaw", "backups")
+	repo := os.Getenv("GITHUB_REPOSITORY")
+	targetRepo := ""
+	issueNumber := 0
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--root":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--root requires a value")
+			}
+			root = args[i+1]
+			i++
+		case "--repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--repo requires a value")
+			}
+			repo = args[i+1]
+			i++
+		case "--target-repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--target-repo requires a value")
+			}
+			targetRepo = args[i+1]
+			i++
+		case "--issue":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--issue requires a value")
+			}
+			parsed, err := strconv.Atoi(args[i+1])
+			if err != nil || parsed <= 0 {
+				return fmt.Errorf("invalid --issue: %q", args[i+1])
+			}
+			issueNumber = parsed
+			i++
+		default:
+			return fmt.Errorf("unknown backup restore-plan argument %q", args[i])
+		}
+	}
+	if repo == "" {
+		return fmt.Errorf("missing --repo or GITHUB_REPOSITORY")
+	}
+	if issueNumber <= 0 {
+		return fmt.Errorf("missing --issue")
+	}
+	plan, err := PlanBackupRestore(root, repo, issueNumber, targetRepo)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderBackupRestorePlan(plan))
 	return nil
 }
 

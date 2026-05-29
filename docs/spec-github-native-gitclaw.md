@@ -1538,6 +1538,31 @@ comment bodies to stdout. It is intentionally local CLI output, not an issue
 comment or Actions diagnostic. Use it only against a trusted checkout of the
 backup branch.
 
+## Backup Restore Plan Command
+
+GitClaw supports a local non-mutating restore plan command inspired by
+OpenClaw's backup/migration preview posture:
+
+```bash
+gitclaw backup restore-plan --root .gitclaw/backups --repo <owner/repo> --issue 123
+```
+
+The command reads the repo-scoped backup index and one canonical issue JSON
+file from a fetched backup tree, then prints a deterministic
+`GitClaw Backup Restore Plan`. The report includes:
+
+- source repository and target repository,
+- backup path, timestamp, event name, and schema version,
+- issue title/body hashes,
+- label, comment, transcript, assistant-turn, and error-comment counts,
+- comment body hashes and transcript body hashes,
+- planned restore actions for a future approved mutating restore command.
+
+It does not call GitHub APIs, create issues, post comments, apply labels, or
+print raw issue/comment/transcript bodies. A future mutating restore command
+must be separately approved and should verify the restored issue against this
+plan before considering recovery complete.
+
 ## Testing Strategy
 
 End-to-end testing is a core product requirement. Unit tests and event fixtures
@@ -1864,6 +1889,18 @@ assert the expected comments/labels, and close the issue in cleanup.
      contains the assistant backup report body, proving the command is an
      explicit raw recovery/export path rather than an issue-visible report.
 
+27. **Backup restore plan**
+
+   - create a real issue with `@gitclaw /backup`,
+   - wait for the successful backup job,
+   - fetch the real `gitclaw-backups` branch,
+   - run `gitclaw backup restore-plan --root <fetched>/.gitclaw/backups --repo
+     <owner/repo> --issue <issue-number>`,
+   - assert the report is marked `restore_mode: dry-run`,
+   - assert it lists backup path, schema version, label/comment/transcript
+     counts, assistant-turn/error counts, and body hashes,
+   - assert it does not dump the issue body token or raw transcript bodies.
+
 ### Example Live Commands
 
 The script can use commands in this shape:
@@ -1915,6 +1952,8 @@ MVP is not complete until:
   create their own work issues idempotently,
 - the backup JSONL export harness verifies a real backed-up issue can be
   exported as one JSONL transcript record per reconstructed message,
+- the backup restore-plan harness verifies a real backed-up issue can produce
+  a non-mutating restore plan with counts and hashes but no raw body leakage,
 - the live harness verifies status labels end at `gitclaw:done` without
   `gitclaw:running` or `gitclaw:error`,
 - the failure harness forces a real invalid-model run and verifies a bounded
@@ -2057,6 +2096,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven backup-export-jsonl E2E harness verifies the fetched
   `gitclaw-backups` branch can be exported into raw JSONL transcript records
   for one real issue.
+- A `gh`-driven backup-restore-plan E2E harness verifies the fetched
+  `gitclaw-backups` branch can produce a dry-run restore plan for one real
+  issue without dumping raw bodies.
 - A `gh`-driven context-report E2E harness verifies `@gitclaw /context`
   produces a deterministic context summary without a model call.
 - A `gh`-driven prompt-report E2E harness verifies `@gitclaw /prompt`

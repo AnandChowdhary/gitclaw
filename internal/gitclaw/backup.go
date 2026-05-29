@@ -90,6 +90,28 @@ type BackupJSONLRecord struct {
 	Body              string `json:"body"`
 }
 
+type BackupRestorePlan struct {
+	Root                  string
+	Repo                  string
+	TargetRepo            string
+	IssuePath             string
+	IssueNumber           int
+	BackupGeneratedAt     string
+	EventName             string
+	SchemaVersion         int
+	Labels                []string
+	Comments              int
+	TranscriptMessages    int
+	AssistantTurns        int
+	ErrorComments         int
+	UserMessages          int
+	AssistantMessages     int
+	IssueTitleSHA         string
+	IssueBodySHA          string
+	CommentBodySHAs       []string
+	TranscriptMessageSHAs []string
+}
+
 func (r BackupVerifyResult) OK() bool {
 	return len(r.VerificationFailures) == 0
 }
@@ -239,20 +261,9 @@ func ExportBackupJSONL(root, repo string, issueNumber int) (string, error) {
 	if err := validateRepoName(repo); err != nil {
 		return "", err
 	}
-	if root == "" {
-		root = filepath.Join(".gitclaw", "backups")
-	}
-	repoDir := backupRepoDir(root, repo)
-	indexData, err := os.ReadFile(filepath.Join(repoDir, "index.json"))
+	repoDir, index, err := readBackupIndex(root, repo)
 	if err != nil {
-		return "", fmt.Errorf("read backup index: %w", err)
-	}
-	var index BackupIndex
-	if err := json.Unmarshal(indexData, &index); err != nil {
-		return "", fmt.Errorf("parse backup index: %w", err)
-	}
-	if index.Repo != repo {
-		return "", fmt.Errorf("backup index repo %q does not match %q", index.Repo, repo)
+		return "", err
 	}
 
 	var b strings.Builder
@@ -281,6 +292,100 @@ func ExportBackupJSONL(root, repo string, issueNumber int) (string, error) {
 	return b.String(), nil
 }
 
+func PlanBackupRestore(root, repo string, issueNumber int, targetRepo string) (BackupRestorePlan, error) {
+	if issueNumber <= 0 {
+		return BackupRestorePlan{}, fmt.Errorf("missing positive issue number")
+	}
+	if err := validateRepoName(repo); err != nil {
+		return BackupRestorePlan{}, err
+	}
+	if targetRepo == "" {
+		targetRepo = repo
+	}
+	if err := validateRepoName(targetRepo); err != nil {
+		return BackupRestorePlan{}, err
+	}
+	repoDir, index, err := readBackupIndex(root, repo)
+	if err != nil {
+		return BackupRestorePlan{}, err
+	}
+	for _, issue := range index.Issues {
+		if issue.Number != issueNumber {
+			continue
+		}
+		backup, err := readIndexedBackup(repoDir, repo, issue)
+		if err != nil {
+			return BackupRestorePlan{}, err
+		}
+		return buildBackupRestorePlan(root, repo, targetRepo, issue, backup), nil
+	}
+	return BackupRestorePlan{}, fmt.Errorf("issue #%d not found in backup index", issueNumber)
+}
+
+func RenderBackupRestorePlan(plan BackupRestorePlan) string {
+	var b strings.Builder
+	b.WriteString("## GitClaw Backup Restore Plan\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	fmt.Fprintf(&b, "- restore_mode: `%s`\n", "dry-run")
+	fmt.Fprintf(&b, "- source_repository: `%s`\n", plan.Repo)
+	fmt.Fprintf(&b, "- target_repository: `%s`\n", plan.TargetRepo)
+	fmt.Fprintf(&b, "- issue: `#%d`\n", plan.IssueNumber)
+	fmt.Fprintf(&b, "- backup_root: `%s`\n", filepath.ToSlash(plan.Root))
+	fmt.Fprintf(&b, "- issue_backup_path: `%s`\n", plan.IssuePath)
+	fmt.Fprintf(&b, "- backup_generated_at: `%s`\n", plan.BackupGeneratedAt)
+	fmt.Fprintf(&b, "- backup_event_name: `%s`\n", plan.EventName)
+	fmt.Fprintf(&b, "- backup_schema_version: `%d`\n", plan.SchemaVersion)
+	fmt.Fprintf(&b, "- labels: `%d`\n", len(plan.Labels))
+	fmt.Fprintf(&b, "- comments: `%d`\n", plan.Comments)
+	fmt.Fprintf(&b, "- transcript_messages: `%d`\n", plan.TranscriptMessages)
+	fmt.Fprintf(&b, "- user_messages: `%d`\n", plan.UserMessages)
+	fmt.Fprintf(&b, "- assistant_messages: `%d`\n", plan.AssistantMessages)
+	fmt.Fprintf(&b, "- assistant_turn_comments: `%d`\n", plan.AssistantTurns)
+	fmt.Fprintf(&b, "- error_comments: `%d`\n", plan.ErrorComments)
+	fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", plan.IssueTitleSHA)
+	fmt.Fprintf(&b, "- issue_body_sha256_12: `%s`\n", plan.IssueBodySHA)
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n\n", false)
+	b.WriteString("This is a non-mutating recovery plan. It reads the local backup tree only; it does not create issues, post comments, apply labels, or call GitHub APIs.\n\n")
+	b.WriteString("### Planned Restore Actions\n")
+	b.WriteString("- create one new issue in the target repository using the backed-up title and body\n")
+	b.WriteString("- apply backed-up labels that still exist or can be created by a future approved restore command\n")
+	b.WriteString("- replay backed-up comments in backup order as the restoring actor, preserving original author/comment metadata in comment headers\n")
+	b.WriteString("- preserve assistant-turn and error marker bodies from the raw backup if a future approved restore command is allowed to post them\n")
+	b.WriteString("- verify the new issue transcript against the hashes below before considering restore complete\n\n")
+	b.WriteString("### Labels\n")
+	if len(plan.Labels) == 0 {
+		b.WriteString("- none\n")
+	} else {
+		for _, label := range plan.Labels {
+			fmt.Fprintf(&b, "- `%s`\n", inlineCode(label))
+		}
+	}
+	b.WriteString("\n### Comment Body Hashes\n")
+	writeHashList(&b, "comment", plan.CommentBodySHAs)
+	b.WriteString("\n### Transcript Body Hashes\n")
+	writeHashList(&b, "message", plan.TranscriptMessageSHAs)
+	return strings.TrimSpace(b.String())
+}
+
+func readBackupIndex(root, repo string) (string, BackupIndex, error) {
+	if root == "" {
+		root = filepath.Join(".gitclaw", "backups")
+	}
+	repoDir := backupRepoDir(root, repo)
+	indexData, err := os.ReadFile(filepath.Join(repoDir, "index.json"))
+	if err != nil {
+		return "", BackupIndex{}, fmt.Errorf("read backup index: %w", err)
+	}
+	var index BackupIndex
+	if err := json.Unmarshal(indexData, &index); err != nil {
+		return "", BackupIndex{}, fmt.Errorf("parse backup index: %w", err)
+	}
+	if index.Repo != repo {
+		return "", BackupIndex{}, fmt.Errorf("backup index repo %q does not match %q", index.Repo, repo)
+	}
+	return repoDir, index, nil
+}
+
 func readIndexedBackup(repoDir, repo string, issue BackupIndexIssue) (IssueBackup, error) {
 	absPath, err := safeBackupPayloadPath(repoDir, issue.Path)
 	if err != nil {
@@ -301,6 +406,55 @@ func readIndexedBackup(repoDir, repo string, issue BackupIndexIssue) (IssueBacku
 		return IssueBackup{}, fmt.Errorf("issue backup %s number %d does not match index number %d", issue.Path, backup.Issue.Number, issue.Number)
 	}
 	return backup, nil
+}
+
+func buildBackupRestorePlan(root, repo, targetRepo string, issue BackupIndexIssue, backup IssueBackup) BackupRestorePlan {
+	plan := BackupRestorePlan{
+		Root:               root,
+		Repo:               repo,
+		TargetRepo:         targetRepo,
+		IssuePath:          issue.Path,
+		IssueNumber:        backup.Issue.Number,
+		BackupGeneratedAt:  backup.GeneratedAt,
+		EventName:          backup.EventName,
+		SchemaVersion:      backup.Version,
+		Labels:             append([]string(nil), backup.Issue.Labels...),
+		Comments:           len(backup.Comments),
+		TranscriptMessages: len(backup.Transcript),
+		IssueTitleSHA:      shortDocumentHash(backup.Issue.Title),
+		IssueBodySHA:       shortDocumentHash(backup.Issue.Body),
+		CommentBodySHAs:    make([]string, 0, len(backup.Comments)),
+	}
+	for _, comment := range backup.Comments {
+		plan.CommentBodySHAs = append(plan.CommentBodySHAs, shortDocumentHash(comment.Body))
+		if HasGitClawMarker(comment.Body) {
+			plan.AssistantTurns++
+		}
+		if HasGitClawErrorMarker(comment.Body) {
+			plan.ErrorComments++
+		}
+	}
+	plan.TranscriptMessageSHAs = make([]string, 0, len(backup.Transcript))
+	for _, msg := range backup.Transcript {
+		plan.TranscriptMessageSHAs = append(plan.TranscriptMessageSHAs, shortDocumentHash(msg.Body))
+		switch msg.Role {
+		case "assistant":
+			plan.AssistantMessages++
+		default:
+			plan.UserMessages++
+		}
+	}
+	return plan
+}
+
+func writeHashList(b *strings.Builder, prefix string, hashes []string) {
+	if len(hashes) == 0 {
+		b.WriteString("- none\n")
+		return
+	}
+	for i, hash := range hashes {
+		fmt.Fprintf(b, "- %s_%d_sha256_12: `%s`\n", prefix, i+1, hash)
+	}
 }
 
 func backupJSONLRecord(backup IssueBackup, msg TranscriptMessage, sequence int) BackupJSONLRecord {
