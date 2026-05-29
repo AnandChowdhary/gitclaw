@@ -43,6 +43,48 @@ func RenderBackupReport(ev Event, comments []Comment, transcript []TranscriptMes
 	b.WriteString("- reconstructed transcript with GitClaw assistant markers stripped\n")
 	b.WriteString("- generation timestamp\n")
 	b.WriteString("- schema version\n")
+	b.WriteString("\n### Verification\n")
+	b.WriteString("- `gitclaw backup verify --root .gitclaw/backups --repo <owner/repo>`\n")
+	b.WriteString("- validates the repo-scoped index, README, canonical issue paths, JSON schema version, counts, timestamps, and traversal-safe payload paths\n")
 
+	return strings.TrimSpace(b.String())
+}
+
+func RenderBackupVerifyReport(result BackupVerifyResult) string {
+	status := "ok"
+	if !result.OK() {
+		status = "warn"
+	}
+	var b strings.Builder
+	b.WriteString("## GitClaw Backup Verify Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	fmt.Fprintf(&b, "- repository: `%s`\n", result.Repo)
+	fmt.Fprintf(&b, "- backup_verify_status: `%s`\n", status)
+	fmt.Fprintf(&b, "- backup_root: `%s`\n", result.Root)
+	fmt.Fprintf(&b, "- repo_backup_dir: `%s`\n", result.RepoDir)
+	fmt.Fprintf(&b, "- index_path: `%s`\n", result.IndexPath)
+	fmt.Fprintf(&b, "- readme_path: `%s`\n", result.ReadmePath)
+	fmt.Fprintf(&b, "- issues_checked: `%d`\n", result.IssuesChecked)
+	fmt.Fprintf(&b, "- comments_checked: `%d`\n", result.CommentsChecked)
+	fmt.Fprintf(&b, "- transcript_messages_checked: `%d`\n", result.TranscriptMessages)
+	fmt.Fprintf(&b, "- unindexed_issue_files: `%d`\n", result.UnindexedIssueFiles)
+	fmt.Fprintf(&b, "- verification_failures: `%d`\n\n", len(result.VerificationFailures))
+
+	b.WriteString("### Verification Scope\n")
+	b.WriteString("- repo-scoped `index.json`\n")
+	b.WriteString("- repo-scoped `README.md`\n")
+	b.WriteString("- canonical `issues/000000.json` payload paths\n")
+	b.WriteString("- traversal-safe index paths\n")
+	b.WriteString("- issue backup schema version, repository, number, title, counts, and timestamps\n")
+	b.WriteString("- no unindexed issue backup JSON files\n\n")
+
+	b.WriteString("### Failures\n")
+	if result.OK() {
+		b.WriteString("- none\n")
+	} else {
+		for _, failure := range result.VerificationFailures {
+			fmt.Fprintf(&b, "- `%s`\n", inlineCode(failure))
+		}
+	}
 	return strings.TrimSpace(b.String())
 }

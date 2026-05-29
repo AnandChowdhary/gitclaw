@@ -135,6 +135,91 @@ func TestWriteBackupIndexSummarizesIssueBackups(t *testing.T) {
 	}
 }
 
+func TestVerifyBackupTreeAcceptsCanonicalBackupIndex(t *testing.T) {
+	root := t.TempDir()
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T12:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue: IssueBackupIssue{
+			Number: 7,
+			Title:  "@gitclaw verify",
+			Labels: []string{"gitclaw"},
+		},
+		Transcript: []TranscriptMessage{{Role: "user"}, {Role: "assistant"}},
+		Comments:   []IssueBackupComment{{ID: 1}},
+	})
+	if _, err := WriteBackupIndex(root, "owner/repo", time.Date(2026, 5, 29, 14, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+	result, err := VerifyBackupTree(root, "owner/repo")
+	if err != nil {
+		t.Fatalf("VerifyBackupTree returned error: %v", err)
+	}
+	if !result.OK() {
+		t.Fatalf("verification failed: %#v", result.VerificationFailures)
+	}
+	if result.IssuesChecked != 1 || result.CommentsChecked != 1 || result.TranscriptMessages != 2 {
+		t.Fatalf("unexpected verification counts: %#v", result)
+	}
+	report := RenderBackupVerifyReport(result)
+	for _, want := range []string{"GitClaw Backup Verify Report", "backup_verify_status: `ok`", "issues_checked: `1`", "comments_checked: `1`", "verification_failures: `0`", "canonical `issues/000000.json`"} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("verify report missing %q:\n%s", want, report)
+		}
+	}
+}
+
+func TestVerifyBackupTreeRejectsTraversalPath(t *testing.T) {
+	root := t.TempDir()
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T12:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue: IssueBackupIssue{
+			Number: 7,
+			Title:  "@gitclaw verify",
+		},
+		Transcript: []TranscriptMessage{{Role: "user"}},
+	})
+	indexPath, err := WriteBackupIndex(root, "owner/repo", time.Date(2026, 5, 29, 14, 0, 0, 0, time.UTC))
+	if err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+	data, err := os.ReadFile(indexPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var index BackupIndex
+	if err := json.Unmarshal(data, &index); err != nil {
+		t.Fatal(err)
+	}
+	index.Issues[0].Path = "../escape.json"
+	data, err = json.MarshalIndent(index, "", "  ")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(indexPath, append(data, '\n'), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	result, err := VerifyBackupTree(root, "owner/repo")
+	if err != nil {
+		t.Fatalf("VerifyBackupTree returned error: %v", err)
+	}
+	if result.OK() {
+		t.Fatalf("verification unexpectedly passed: %#v", result)
+	}
+	report := RenderBackupVerifyReport(result)
+	for _, want := range []string{"backup_verify_status: `warn`", "issue_path_safe", "issue_path_canonical", "issue_indexed"} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("verify report missing %q:\n%s", want, report)
+		}
+	}
+}
+
 func writeBackupFixture(t *testing.T, root string, backup IssueBackup) {
 	t.Helper()
 	path := issueBackupPath(root, backup.Repo, backup.Issue.Number)

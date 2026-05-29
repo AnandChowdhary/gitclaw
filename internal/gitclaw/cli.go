@@ -52,6 +52,9 @@ func runBackup(ctx context.Context, args []string) error {
 	if len(args) > 0 && args[0] == "index" {
 		return runBackupIndex(args[1:])
 	}
+	if len(args) > 0 && args[0] == "verify" {
+		return runBackupVerify(args[1:])
+	}
 	outDir := filepathArg(args, "--out")
 	filteredArgs := removeFlagWithValue(args, "--out")
 	ev, _, err := loadEventAndConfig(filteredArgs)
@@ -72,6 +75,41 @@ func runBackup(ctx context.Context, args []string) error {
 		return err
 	}
 	fmt.Println(path)
+	return nil
+}
+
+func runBackupVerify(args []string) error {
+	root := filepath.Join(".gitclaw", "backups")
+	repo := os.Getenv("GITHUB_REPOSITORY")
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--root":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--root requires a value")
+			}
+			root = args[i+1]
+			i++
+		case "--repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--repo requires a value")
+			}
+			repo = args[i+1]
+			i++
+		default:
+			return fmt.Errorf("unknown backup verify argument %q", args[i])
+		}
+	}
+	if repo == "" {
+		return fmt.Errorf("missing --repo or GITHUB_REPOSITORY")
+	}
+	result, err := VerifyBackupTree(root, repo)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderBackupVerifyReport(result))
+	if !result.OK() {
+		return fmt.Errorf("backup verification failed")
+	}
 	return nil
 }
 

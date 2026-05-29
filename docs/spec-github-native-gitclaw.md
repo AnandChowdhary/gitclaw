@@ -1417,6 +1417,32 @@ It never dumps issue/comment bodies. The report is navigational metadata; the
 raw transcript copy remains the canonical backup JSON written by the post-turn
 backup job.
 
+## Backup Verification Command
+
+GitClaw also supports a local verifier for the dedicated backup branch:
+
+```bash
+gitclaw backup verify --root .gitclaw/backups --repo <owner/repo>
+```
+
+The verifier is the git-native equivalent of `openclaw backup verify`. Instead
+of checking a tarball manifest, it checks the repo-scoped backup tree:
+
+- `index.json` exists, parses, has schema version `1`, matches the repository,
+  has a valid timestamp, and has a count that matches its issue entries;
+- `README.md` exists beside the index;
+- every index entry points to canonical `issues/000000.json` form;
+- index paths are relative, traversal-safe, and stay inside the repo backup
+  directory;
+- every issue payload exists, parses, has schema version `1`, matches the
+  repository/issue/title/count metadata from the index, and has a valid backup
+  timestamp;
+- every `issues/*.json` file is listed in the index.
+
+The command prints a deterministic `GitClaw Backup Verify Report` with status,
+counts, paths, and failures. It exits non-zero when verification fails. It does
+not print issue bodies, comments, or transcript text.
+
 ## Testing Strategy
 
 End-to-end testing is a core product requirement. Unit tests and event fixtures
@@ -1698,6 +1724,16 @@ assert the expected comments/labels, and close the issue in cleanup.
      entry for that same issue,
    - assert the report does not dump issue or comment body tokens.
 
+23. **Backup verification**
+
+   - create a real issue with `@gitclaw /backup`,
+   - wait for the successful backup job,
+   - fetch the real `gitclaw-backups` branch,
+   - run `gitclaw backup verify --root <fetched>/.gitclaw/backups --repo
+     <owner/repo>`,
+   - assert `backup_verify_status: ok`, zero verification failures, zero
+     unindexed issue files, and an index entry for the just-created issue.
+
 ### Example Live Commands
 
 The script can use commands in this shape:
@@ -1880,6 +1916,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven backup-report E2E harness verifies `@gitclaw /backup`
   publishes deterministic backup paths without a model call and that the
   backup branch receives the corresponding issue JSON and index entry.
+- A `gh`-driven backup-verify E2E harness verifies the fetched
+  `gitclaw-backups` branch with `gitclaw backup verify` after a real issue
+  backup job succeeds.
 - A `gh`-driven context-report E2E harness verifies `@gitclaw /context`
   produces a deterministic context summary without a model call.
 - A `gh`-driven skills-report E2E harness verifies `@gitclaw /skills`
@@ -1944,6 +1983,7 @@ examples/workflows/gitclaw.yml
 - OpenClaw config CLI docs: https://docs.openclaw.ai/cli/config
 - OpenClaw configure docs: https://docs.openclaw.ai/cli/configure
 - OpenClaw doctor docs: https://docs.openclaw.ai/doctor
+- OpenClaw backup docs: https://docs.openclaw.ai/cli/backup
 - Hermes cron docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/cron.md
 - Hermes profiles docs: https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 - Slack Socket Mode: https://api.slack.com/apis/connections/socket

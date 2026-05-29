@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "backup-report-e2e: $*" >&2
+  echo "backup-verify-e2e: $*" >&2
 }
 
 die() {
@@ -34,12 +34,12 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_BACKUP_REPORT_E2E_${timestamp}"
-title="@gitclaw /backup e2e ${timestamp}"
-body="Live backup-report E2E.
+token="GITCLAW_BACKUP_VERIFY_E2E_${timestamp}"
+title="@gitclaw /backup verify e2e ${timestamp}"
+body="Live backup-verify E2E.
 
-Hidden backup body token: ${token}
-This should produce a deterministic backup report, then the backup job should update the backup branch."
+Hidden backup verify token: ${token}
+This should produce a deterministic backup report, then the backup branch verifier should validate the repo-scoped backup tree."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -48,12 +48,16 @@ issue_url="$(gh issue create \
   --body "$body" \
   --label gitclaw)"
 issue_number="${issue_url##*/}"
+tmp_dir=""
 
 cleanup() {
+  if [[ -n "${tmp_dir:-}" ]]; then
+    rm -rf "$tmp_dir"
+  fi
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "backup-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "backup-verify e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -80,6 +84,7 @@ wait_for_run() {
       url="$(jq -r '.url' <<<"$run_json")"
       if [[ "$status" == "completed" ]]; then
         [[ "$conclusion" == "success" ]] || die "issues run failed with conclusion ${conclusion}: ${url}"
+        echo "$run_json"
         return 0
       fi
     fi
@@ -109,13 +114,6 @@ error_count() {
     --jq '[.comments[] | select(.body | contains("<!-- gitclaw:error"))] | length'
 }
 
-issue_label_names() {
-  gh issue view "$issue_number" \
-    --repo "$repo" \
-    --json labels \
-    --jq '.labels[].name'
-}
-
 wait_for_assistant_count() {
   local want="$1"
   for _ in {1..90}; do
@@ -134,34 +132,7 @@ wait_for_assistant_count() {
   return 1
 }
 
-wait_for_done_status() {
-  for _ in {1..60}; do
-    local labels
-    labels="$(issue_label_names)"
-    if grep -Fxq "gitclaw:done" <<<"$labels" &&
-      ! grep -Fxq "gitclaw:running" <<<"$labels" &&
-      ! grep -Fxq "gitclaw:error" <<<"$labels"; then
-      return 0
-    fi
-    sleep 5
-  done
-  return 1
-}
-
-read_branch_file() {
-  local path="$1"
-  gh api "repos/${repo}/contents/${path}?ref=${backup_branch}" \
-    --jq '.content' \
-    | python3 -c 'import base64, sys; print(base64.b64decode(sys.stdin.read()).decode(), end="")'
-}
-
-repo_key="${repo//\//__}"
-issue_padded="$(printf "%06d" "$issue_number")"
-issue_backup_path=".gitclaw/backups/${repo_key}/issues/${issue_padded}.json"
-index_path=".gitclaw/backups/${repo_key}/index.json"
-readme_path=".gitclaw/backups/${repo_key}/README.md"
-
-wait_for_run "$issue_started_at" || die "timed out waiting for issues workflow run"
+run_json="$(wait_for_run "$issue_started_at")" || die "timed out waiting for issues workflow run"
 wait_for_assistant_count 1 || die "expected one backup report comment"
 comments="$(assistant_comments)"
 
@@ -170,13 +141,9 @@ for expected in \
   "GitClaw Backup Report" \
   "Generated without a model call" \
   'backup_branch: `gitclaw-backups`' \
-  "$issue_backup_path" \
-  "$index_path" \
-  "$readme_path" \
   'backup_schema_version: `1`' \
   'gitclaw backup verify --root .gitclaw/backups --repo <owner/repo>' \
-  'traversal-safe payload paths' \
-  'transcript_messages_now: `1`'; do
+  'traversal-safe payload paths'; do
   grep -Fq "$expected" <<<"$comments" || die "backup report missing ${expected}"
 done
 
@@ -184,31 +151,48 @@ if grep -Fq "$token" <<<"$comments"; then
   die "backup report leaked issue body token"
 fi
 
-tmp_index="$(mktemp)"
-tmp_readme="$(mktemp)"
-cleanup_tmp() {
-  rm -f "$tmp_index" "$tmp_readme"
+tmp_dir="$(mktemp -d)"
+backup_checkout="${tmp_dir}/backup-branch"
+mkdir -p "$backup_checkout"
+git -C "$backup_checkout" init >/dev/null
+git -C "$backup_checkout" remote add origin "https://github.com/${repo}.git"
+
+repo_key="${repo//\//__}"
+issue_padded="$(printf "%06d" "$issue_number")"
+index_path="${backup_checkout}/.gitclaw/backups/${repo_key}/index.json"
+issue_path="issues/${issue_padded}.json"
+auth_token="$(gh auth token 2>/dev/null || true)"
+
+fetch_backup_branch() {
+  if [[ -n "$auth_token" ]]; then
+    git -c "http.https://github.com/.extraheader=AUTHORIZATION: bearer ${auth_token}" \
+      -C "$backup_checkout" fetch --depth=1 origin "$backup_branch" >/dev/null 2>&1
+  else
+    git -C "$backup_checkout" fetch --depth=1 origin "$backup_branch" >/dev/null 2>&1
+  fi
+  git -C "$backup_checkout" checkout --detach FETCH_HEAD >/dev/null 2>&1
 }
-trap 'cleanup_tmp; cleanup' EXIT
 
 for _ in {1..60}; do
-  if read_branch_file "$index_path" >"$tmp_index" 2>/dev/null &&
-    read_branch_file "$readme_path" >"$tmp_readme" 2>/dev/null &&
-    read_branch_file "$issue_backup_path" >/dev/null 2>&1; then
-    if jq -e --argjson number "$issue_number" --arg title "$title" --arg path "issues/${issue_padded}.json" '
-      .version == 1
-      and .repo == "'"${repo}"'"
-      and (.count >= 1)
-      and any(.issues[]; .number == $number and .title == $title and .path == $path and .comment_count >= 1 and .transcript_messages >= 1)
-    ' "$tmp_index" >/dev/null &&
-      grep -Fq "#${issue_number}" "$tmp_readme" &&
-      grep -Fq "issues/${issue_padded}.json" "$tmp_readme"; then
-      wait_for_done_status || die "expected gitclaw:done without running/error"
-      log "passed for issue #${issue_number}"
-      exit 0
-    fi
+  if fetch_backup_branch && [[ -f "$index_path" ]] &&
+    jq -e --argjson number "$issue_number" --arg title "$title" --arg path "$issue_path" '
+      any(.issues[]; .number == $number and .title == $title and .path == $path)
+    ' "$index_path" >/dev/null; then
+    verify_output="$(go run ./cmd/gitclaw backup verify --root "${backup_checkout}/.gitclaw/backups" --repo "$repo")"
+    for expected in \
+      "GitClaw Backup Verify Report" \
+      'backup_verify_status: `ok`' \
+      'verification_failures: `0`' \
+      'unindexed_issue_files: `0`' \
+      "${repo_key}/index.json" \
+      "${repo_key}/README.md"; do
+      grep -Fq "$expected" <<<"$verify_output" || die "backup verify output missing ${expected}"
+    done
+    url="$(jq -r '.url' <<<"$run_json")"
+    log "passed for issue #${issue_number}: ${url}"
+    exit 0
   fi
   sleep 5
 done
 
-die "backup branch did not include report issue #${issue_number}"
+die "backup verifier did not observe issue #${issue_number} in ${backup_branch}"

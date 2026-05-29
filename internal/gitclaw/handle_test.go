@@ -233,7 +233,7 @@ func TestHandleBackupCommandPostsReportWithoutLLM(t *testing.T) {
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Backup Report", "Generated without a model call", "model=\"gitclaw/backup\"", "backup_branch: `gitclaw-backups`", ".gitclaw/backups/owner__repo/issues/000096.json", ".gitclaw/backups/owner__repo/index.json", ".gitclaw/backups/owner__repo/README.md", "raw_comments_now: `1`", "transcript_messages_now: `2`", "assistant_turn_comments_now: `1`", "backup_schema_version: `1`"} {
+	for _, want := range []string{"GitClaw Backup Report", "Generated without a model call", "model=\"gitclaw/backup\"", "backup_branch: `gitclaw-backups`", ".gitclaw/backups/owner__repo/issues/000096.json", ".gitclaw/backups/owner__repo/index.json", ".gitclaw/backups/owner__repo/README.md", "raw_comments_now: `1`", "transcript_messages_now: `2`", "assistant_turn_comments_now: `1`", "backup_schema_version: `1`", "gitclaw backup verify --root .gitclaw/backups --repo <owner/repo>", "traversal-safe payload paths"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("backup report missing %q:\n%s", want, body)
 		}

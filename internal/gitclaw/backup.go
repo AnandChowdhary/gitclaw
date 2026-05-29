@@ -58,6 +58,23 @@ type BackupIndexIssue struct {
 	TranscriptMessages int      `json:"transcript_messages"`
 }
 
+type BackupVerifyResult struct {
+	Root                 string
+	Repo                 string
+	RepoDir              string
+	IndexPath            string
+	ReadmePath           string
+	IssuesChecked        int
+	CommentsChecked      int
+	TranscriptMessages   int
+	UnindexedIssueFiles  int
+	VerificationFailures []string
+}
+
+func (r BackupVerifyResult) OK() bool {
+	return len(r.VerificationFailures) == 0
+}
+
 func BackupIssue(ctx context.Context, ev Event, github GitHubClient, outDir string, generatedAt time.Time) (string, error) {
 	if err := validateRepoName(ev.Repo); err != nil {
 		return "", err
@@ -99,6 +116,58 @@ func BackupIssue(ctx context.Context, ev Event, github GitHubClient, outDir stri
 		return "", err
 	}
 	return path, nil
+}
+
+func VerifyBackupTree(root, repo string) (BackupVerifyResult, error) {
+	if err := validateRepoName(repo); err != nil {
+		return BackupVerifyResult{}, err
+	}
+	if root == "" {
+		root = filepath.Join(".gitclaw", "backups")
+	}
+	repoDir := backupRepoDir(root, repo)
+	result := BackupVerifyResult{
+		Root:       filepath.ToSlash(root),
+		Repo:       repo,
+		RepoDir:    filepath.ToSlash(repoDir),
+		IndexPath:  filepath.ToSlash(filepath.Join(repoDir, "index.json")),
+		ReadmePath: filepath.ToSlash(filepath.Join(repoDir, "README.md")),
+	}
+
+	indexData, err := os.ReadFile(filepath.Join(repoDir, "index.json"))
+	if err != nil {
+		result.addFailure("index_json_readable", err.Error())
+		return result, nil
+	}
+	var index BackupIndex
+	if err := json.Unmarshal(indexData, &index); err != nil {
+		result.addFailure("index_json_valid", err.Error())
+		return result, nil
+	}
+	if index.Version != 1 {
+		result.addFailure("index_version", fmt.Sprintf("got %d, want 1", index.Version))
+	}
+	if index.Repo != repo {
+		result.addFailure("index_repo", fmt.Sprintf("got %q, want %q", index.Repo, repo))
+	}
+	if index.Count != len(index.Issues) {
+		result.addFailure("index_count", fmt.Sprintf("got %d, want %d", index.Count, len(index.Issues)))
+	}
+	if _, err := time.Parse(time.RFC3339, index.GeneratedAt); err != nil {
+		result.addFailure("index_generated_at", "not RFC3339")
+	}
+	if _, err := os.Stat(filepath.Join(repoDir, "README.md")); err != nil {
+		result.addFailure("readme_present", err.Error())
+	}
+
+	seenNumbers := map[int]bool{}
+	seenPaths := map[string]bool{}
+	lastNumber := -1
+	for _, issue := range index.Issues {
+		result.verifyIndexIssue(repoDir, repo, issue, seenNumbers, seenPaths, &lastNumber)
+	}
+	result.verifyNoUnindexedIssues(repoDir, seenPaths)
+	return result, nil
 }
 
 func WriteBackupIndex(root, repo string, generatedAt time.Time) (string, error) {
@@ -145,6 +214,115 @@ func WriteBackupIndex(root, repo string, generatedAt time.Time) (string, error) 
 		return "", err
 	}
 	return indexPath, nil
+}
+
+func (r *BackupVerifyResult) verifyIndexIssue(repoDir, repo string, issue BackupIndexIssue, seenNumbers map[int]bool, seenPaths map[string]bool, lastNumber *int) {
+	r.IssuesChecked++
+	if issue.Number <= 0 {
+		r.addFailure("issue_number", fmt.Sprintf("invalid issue number %d", issue.Number))
+	}
+	if seenNumbers[issue.Number] {
+		r.addFailure("issue_unique", fmt.Sprintf("duplicate issue #%d", issue.Number))
+	}
+	seenNumbers[issue.Number] = true
+	if issue.Number < *lastNumber {
+		r.addFailure("index_sorted", fmt.Sprintf("issue #%d appears after #%d", issue.Number, *lastNumber))
+	}
+	*lastNumber = issue.Number
+
+	wantPath := filepath.ToSlash(filepath.Join("issues", fmt.Sprintf("%06d.json", issue.Number)))
+	if issue.Path != wantPath {
+		r.addFailure("issue_path_canonical", fmt.Sprintf("issue #%d path %q, want %q", issue.Number, issue.Path, wantPath))
+	}
+	absPath, err := safeBackupPayloadPath(repoDir, issue.Path)
+	if err != nil {
+		r.addFailure("issue_path_safe", err.Error())
+		return
+	}
+	seenPaths[filepath.ToSlash(issue.Path)] = true
+	data, err := os.ReadFile(absPath)
+	if err != nil {
+		r.addFailure("issue_payload_readable", fmt.Sprintf("%s: %v", issue.Path, err))
+		return
+	}
+	var backup IssueBackup
+	if err := json.Unmarshal(data, &backup); err != nil {
+		r.addFailure("issue_payload_json", fmt.Sprintf("%s: %v", issue.Path, err))
+		return
+	}
+	r.CommentsChecked += len(backup.Comments)
+	r.TranscriptMessages += len(backup.Transcript)
+	if backup.Version != 1 {
+		r.addFailure("issue_payload_version", fmt.Sprintf("%s version %d, want 1", issue.Path, backup.Version))
+	}
+	if backup.Repo != repo {
+		r.addFailure("issue_payload_repo", fmt.Sprintf("%s repo %q, want %q", issue.Path, backup.Repo, repo))
+	}
+	if backup.Issue.Number != issue.Number {
+		r.addFailure("issue_payload_number", fmt.Sprintf("%s number %d, want %d", issue.Path, backup.Issue.Number, issue.Number))
+	}
+	if backup.Issue.Title != issue.Title {
+		r.addFailure("issue_payload_title", fmt.Sprintf("issue #%d title hash mismatch", issue.Number))
+	}
+	if len(backup.Comments) != issue.CommentCount {
+		r.addFailure("issue_comment_count", fmt.Sprintf("issue #%d got %d, want %d", issue.Number, len(backup.Comments), issue.CommentCount))
+	}
+	if len(backup.Transcript) != issue.TranscriptMessages {
+		r.addFailure("issue_transcript_count", fmt.Sprintf("issue #%d got %d, want %d", issue.Number, len(backup.Transcript), issue.TranscriptMessages))
+	}
+	if _, err := time.Parse(time.RFC3339, backup.GeneratedAt); err != nil {
+		r.addFailure("issue_generated_at", fmt.Sprintf("issue #%d timestamp is not RFC3339", issue.Number))
+	}
+}
+
+func (r *BackupVerifyResult) verifyNoUnindexedIssues(repoDir string, seenPaths map[string]bool) {
+	matches, err := filepath.Glob(filepath.Join(repoDir, "issues", "*.json"))
+	if err != nil {
+		r.addFailure("issue_glob", err.Error())
+		return
+	}
+	for _, match := range matches {
+		rel, err := filepath.Rel(repoDir, match)
+		if err != nil {
+			r.addFailure("issue_relpath", err.Error())
+			continue
+		}
+		rel = filepath.ToSlash(rel)
+		if !seenPaths[rel] {
+			r.UnindexedIssueFiles++
+			r.addFailure("issue_indexed", fmt.Sprintf("%s is not listed in index.json", rel))
+		}
+	}
+}
+
+func safeBackupPayloadPath(repoDir, relPath string) (string, error) {
+	if strings.TrimSpace(relPath) == "" {
+		return "", fmt.Errorf("empty backup payload path")
+	}
+	clean := filepath.Clean(filepath.FromSlash(relPath))
+	if clean == "." || filepath.IsAbs(clean) || clean == ".." || strings.HasPrefix(clean, ".."+string(filepath.Separator)) {
+		return "", fmt.Errorf("unsafe backup payload path %q", relPath)
+	}
+	absRepoDir, err := filepath.Abs(repoDir)
+	if err != nil {
+		return "", err
+	}
+	absPath, err := filepath.Abs(filepath.Join(absRepoDir, clean))
+	if err != nil {
+		return "", err
+	}
+	rel, err := filepath.Rel(absRepoDir, absPath)
+	if err != nil {
+		return "", err
+	}
+	if rel == ".." || strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
+		return "", fmt.Errorf("unsafe backup payload path %q", relPath)
+	}
+	return absPath, nil
+}
+
+func (r *BackupVerifyResult) addFailure(name, detail string) {
+	r.VerificationFailures = append(r.VerificationFailures, fmt.Sprintf("%s: %s", name, detail))
 }
 
 func readBackupIndexIssue(repoDir, path string) (BackupIndexIssue, error) {

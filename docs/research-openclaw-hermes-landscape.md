@@ -132,6 +132,14 @@ from the issue itself: `@gitclaw /backup` reports the expected backup branch,
 per-issue JSON path, and repo index paths, then the post-turn backup job writes
 the canonical raw transcript copy.
 
+2026-05-29 backup-verify follow-up: OpenClaw's `backup verify` command checks
+that an archive has exactly one manifest, rejects traversal-style paths, and
+confirms every manifest-declared payload exists. GitClaw's git-native analogue
+is not a tarball, so the invariant moves to the backup branch: verify
+repo-scoped `index.json`, `README.md`, canonical `issues/000000.json` paths,
+schema version, counts, timestamps, and absence of unindexed issue backups
+before treating the branch as restorable.
+
 2026-05-29 session-inspection follow-up: OpenClaw exposes transcript and
 session CLIs around JSONL transcript directories, while Hermes automatically
 saves conversations as sessions and can export them to JSONL. GitClaw should
@@ -820,6 +828,7 @@ Recommended non-goals for the first spec:
 - OpenClaw config CLI docs: https://docs.openclaw.ai/cli/config
 - OpenClaw configure docs: https://docs.openclaw.ai/cli/configure
 - OpenClaw doctor docs: https://docs.openclaw.ai/doctor
+- OpenClaw backup docs: https://docs.openclaw.ai/cli/backup
 - OpenClaw migration guide: https://docs.openclaw.ai/install/migrating
 - OpenClaw sandbox vs tool policy vs elevated: https://docs.openclaw.ai/gateway/sandbox-vs-tool-policy-vs-elevated
 - OpenClaw exec approvals: https://docs.openclaw.ai/tools/exec-approvals
