@@ -387,14 +387,72 @@ func runChannelIngestCommand(ctx context.Context, args []string) error {
 
 func runProactiveCommand(ctx context.Context, args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw proactive enqueue")
+		return fmt.Errorf("usage: gitclaw proactive <enqueue|init>")
 	}
 	switch args[0] {
 	case "enqueue":
 		return runProactiveEnqueueCommand(ctx, args[1:])
+	case "init":
+		return runProactiveInitCommand(args[1:])
 	default:
 		return fmt.Errorf("unknown proactive command %q", args[0])
 	}
+}
+
+func runProactiveInitCommand(args []string) error {
+	opts := ProactiveInitOptions{}
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--root":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--root requires a value")
+			}
+			opts.Root = args[i+1]
+			i++
+		case "--name":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--name requires a value")
+			}
+			opts.Name = args[i+1]
+			i++
+		case "--cron":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--cron requires a value")
+			}
+			opts.Cron = args[i+1]
+			i++
+		case "--prompt", "--prompt-file":
+			if i+1 >= len(args) {
+				return fmt.Errorf("%s requires a value", args[i])
+			}
+			opts.PromptPath = args[i+1]
+			i++
+		case "--prompt-body":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--prompt-body requires a value")
+			}
+			opts.PromptBody = args[i+1]
+			i++
+		case "--workflow", "--workflow-file":
+			if i+1 >= len(args) {
+				return fmt.Errorf("%s requires a value", args[i])
+			}
+			opts.WorkflowPath = args[i+1]
+			i++
+		case "--force":
+			opts.Force = true
+		case "--dry-run":
+			opts.DryRun = true
+		default:
+			return fmt.Errorf("unknown proactive init argument %q", args[i])
+		}
+	}
+	result, err := RunProactiveInit(opts)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderProactiveInitReport(result))
+	return nil
 }
 
 func runProactiveEnqueueCommand(ctx context.Context, args []string) error {

@@ -311,7 +311,7 @@ Examples:
 - personal inbox or notification digest.
 
 Proactive jobs should be easy to create, but not silently self-installed by the
-agent. The current primitive is:
+agent. The enqueue primitive is:
 
 ```text
 gitclaw proactive enqueue \
@@ -323,18 +323,25 @@ gitclaw proactive enqueue \
 It is exposed through `.github/workflows/gitclaw-proactive.yml` for manual
 dispatch, a weekly default scheduled run, and E2E. The checked-in default uses
 `.gitclaw/proactive/repo-hygiene.md` so a repository has a working proactive
-job without a daemon. The future safe v1 interface is a generator command or
-reviewed PR that creates additional scheduled workflows plus prompt files, for
-example:
+job without a daemon. GitClaw also ships a safe generator command that creates
+additional scheduled workflows plus prompt files as ordinary reviewed repo
+files:
 
 ```text
 gitclaw proactive init \
   --name email-triage \
   --cron "17 8 * * 1-5" \
-  --prompt .gitclaw/proactive/email-triage.md
+  --prompt-file .gitclaw/proactive/email-triage.md \
+  --prompt-body "Summarize inbox state and open an issue only when action is needed."
 ```
 
-Generated files should be ordinary repo files:
+`--prompt` is accepted as a path alias for `--prompt-file`. If no prompt file
+is supplied, the generator defaults to `.gitclaw/proactive/<name>.md`; if no
+workflow file is supplied, it defaults to
+`.github/workflows/gitclaw-proactive-<name>.yml`. The command refuses to
+overwrite differing files unless `--force` is used, supports `--dry-run`, and
+prints a body-free `GitClaw Proactive Init Report` with file paths, write
+status, byte counts, and hashes. Generated files are:
 
 ```text
 .github/workflows/gitclaw-proactive-email-triage.yml
@@ -1901,6 +1908,18 @@ assert the expected comments/labels, and close the issue in cleanup.
      counts, assistant-turn/error counts, and body hashes,
    - assert it does not dump the issue body token or raw transcript bodies.
 
+28. **Proactive init generator**
+
+   - run `gitclaw proactive init` against a temporary repo root,
+   - assert it writes the expected prompt file and scheduled workflow,
+   - assert the init report includes hashes and file status but not the prompt
+     body token,
+   - lint the generated workflow when `actionlint` is available,
+   - dispatch the real generic proactive workflow with the generated job name
+     and prompt body,
+   - assert it creates a real proactive issue and receives one assistant turn
+     with the exact token.
+
 ### Example Live Commands
 
 The script can use commands in this shape:
@@ -1950,6 +1969,9 @@ MVP is not complete until:
   message into an issue and dispatches the main handler,
 - the proactive enqueue harness verifies manual/scheduled job primitives can
   create their own work issues idempotently,
+- the proactive-init harness verifies the generator writes ordinary repo files
+  without leaking prompt bodies and backs that up with a real proactive issue
+  conversation,
 - the backup JSONL export harness verifies a real backed-up issue can be
   exported as one JSONL transcript record per reconstructed message,
 - the backup restore-plan harness verifies a real backed-up issue can produce
@@ -2075,6 +2097,9 @@ examples/workflows/gitclaw.yml
   message marker counts without a model call.
 - A `gh`-driven proactive E2E harness verifies the generic proactive enqueue
   workflow end to end.
+- A `gh`-driven proactive-init E2E harness verifies
+  `gitclaw proactive init` generates a scheduled workflow and prompt file
+  without leaking prompt bodies, then dispatches a real proactive conversation.
 - A `gh`-driven proactive-report E2E harness verifies `@gitclaw /proactive`
   reports workflow triggers and prompt metadata without a model call.
 - A `gh`-driven model-report E2E harness verifies `@gitclaw /models` reports
@@ -2146,8 +2171,9 @@ examples/workflows/gitclaw.yml
 8. Where should durable channel offsets and dedupe state live: bridge state issue, state branch, or repository variables?
 9. What proactive jobs should ship as first-class templates: reminders, email
    triage, dependency health, CI failure follow-up, or repository hygiene?
-10. Should proactive job generation be a local CLI command only, or can GitClaw
-   propose a PR containing the generated workflow and prompt files?
+10. Now that proactive job generation exists as a local CLI command, should a
+   future write-approved mode propose a PR containing the generated workflow
+   and prompt files?
 
 ## Sources
 

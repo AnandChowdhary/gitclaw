@@ -250,6 +250,13 @@ operator visibility through issue-visible metadata: `@gitclaw /proactive`
 reports the proactive workflow, schedule trigger, prompt files, labels, and
 enqueue contract without dumping the prompt bodies.
 
+2026-05-29 proactive-init follow-up: the reviewed-file boundary matters as much
+as the scheduler. GitClaw should make new cron-like jobs easy through a local
+generator that writes `.gitclaw/proactive/<name>.md` and
+`.github/workflows/gitclaw-proactive-<name>.yml`, but the files still land in
+git for review. This borrows OpenClaw/Hermes' durable job-definition idea
+without allowing an agent turn to silently install new scheduled automation.
+
 2026-05-29 model resilience follow-up: OpenClaw cron records model/provider
 failures as job errors instead of treating empty replies as success, and Hermes
 cron documents fresh sessions plus provider recovery/fallback behavior for
