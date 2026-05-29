@@ -557,8 +557,8 @@ GitHub issue/comment event
 - CLI entry point.
 - Subcommands: `preflight`, `handle`, `backup`, `heartbeat`,
   `channel-ingest`, `proactive enqueue`, `proactive init`,
-  `skills validate`, `soul validate`, `tools validate`, `doctor`, `commands`,
-  `version`.
+  `skills validate`, `skills info`, `soul validate`, `tools validate`,
+  `doctor`, `commands`, `version`.
 
 `internal/github`
 
@@ -774,6 +774,7 @@ Validation is visible in the `/skills` report and locally through:
 
 ```bash
 gitclaw skills validate
+gitclaw skills info <name>
 ```
 
 The validation output includes only paths, counts, hashes, and short finding
@@ -787,6 +788,7 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 
 ```text
 @gitclaw /skills
+@gitclaw /skills info repo-reader
 ```
 
 The command runs after normal preflight authorization and context assembly, but
@@ -803,6 +805,21 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 
 It does not dump full skill bodies. Full `SKILL.md` content remains a prompt
 input only when selected by the normal progressive-disclosure rules.
+
+When called as `@gitclaw /skills info <name>`, the same deterministic command
+switches from inventory mode to focused skill-info mode. The info report shows
+one skill's safe metadata:
+
+- requested name and match count,
+- path, folder, byte/line counts, and content hash,
+- whether the skill was selected for this turn,
+- `always`, frontmatter, and description presence,
+- declared and missing env/bin requirement names/counts,
+- validation findings for matching skill files only.
+
+This mirrors OpenClaw's `skills info <name>` and Hermes' progressive
+`skills_list()` / `skill_view(name)` split while preserving GitClaw's rule that
+issue-visible diagnostics never dump full skill bodies or secret values.
 
 ## Soul Validation
 
@@ -2330,6 +2347,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven skills-report E2E harness verifies `@gitclaw /skills`
   produces a deterministic local skill inventory with provenance and
   requirement and validation metadata, without a model call.
+- A `gh`-driven skills-info E2E harness verifies
+  `@gitclaw /skills info repo-reader` produces focused skill metadata without
+  a model call or full `SKILL.md` body leakage.
 - A `gh`-driven soul-report E2E harness verifies `@gitclaw /soul` produces a
   deterministic high-authority context file audit with validation metadata,
   without a model call or body leakage.

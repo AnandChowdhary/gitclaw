@@ -126,14 +126,36 @@ func runDoctorCommand(args []string) error {
 
 func runSkillsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw skills validate")
+		return fmt.Errorf("usage: gitclaw skills validate|info <name>")
 	}
 	switch args[0] {
 	case "validate":
 		return runSkillsValidateCommand(args[1:])
+	case "info":
+		return runSkillsInfoCommand(args[1:])
 	default:
 		return fmt.Errorf("unknown skills command %q", args[0])
 	}
+}
+
+func runSkillsInfoCommand(args []string) error {
+	if len(args) != 1 {
+		return fmt.Errorf("usage: gitclaw skills info <name>")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContext(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "skills info " + args[0]}})
+	if err != nil {
+		return err
+	}
+	report := RenderSkillInfoCLIReport(repoContext, args[0])
+	fmt.Println(report)
+	if len(matchingSkillSummaries(repoContext.SkillSummaries, args[0])) == 0 {
+		return fmt.Errorf("skill %q not found", args[0])
+	}
+	return nil
 }
 
 func runSkillsValidateCommand(args []string) error {

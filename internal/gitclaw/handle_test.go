@@ -556,6 +556,58 @@ Always token.
 	}
 }
 
+func TestHandleSkillsInfoCommandPostsReportWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Use read-only repository files.
+---
+
+SKILL_INFO_HANDLER_SECRET
+`)
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 113,
+			"title": "@gitclaw /skills info repo-reader",
+			"body": "Hidden skill info body token: SKILL_INFO_HANDLER_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{113: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic skills info command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Skill Info Report", "Generated without a model call", "model=\"gitclaw/skills\"", "requested_skill: `repo-reader`", "skill_info_status: `ok`", "matched_skills: `1`", "skill_name=`repo-reader`", "selected_for_this_turn=`true`", ".gitclaw/SKILLS/repo-reader/SKILL.md", "### Validation For Matches", "- none"} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("skills info report missing %q:\n%s", want, body)
+		}
+	}
+	if strings.Contains(body, "SKILL_INFO_HANDLER_SECRET") || strings.Contains(body, "SKILL_INFO_HANDLER_BODY_SECRET") {
+		t.Fatalf("skills info report leaked body token:\n%s", body)
+	}
+	if !hasLabel(github.IssueLabels[113], "gitclaw:done") || hasLabel(github.IssueLabels[113], "gitclaw:running") || hasLabel(github.IssueLabels[113], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[113])
+	}
+}
+
 func TestHandleSoulCommandPostsReportWithoutLLM(t *testing.T) {
 	root := t.TempDir()
 	if err := os.MkdirAll(filepath.Join(root, ".gitclaw", "memory"), 0o755); err != nil {
@@ -866,7 +918,7 @@ func TestHandleCommandsCommandPostsReportWithoutLLM(t *testing.T) {
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Commands Report", "Generated without a model call", "model=\"gitclaw/commands\"", "commands: `15`", "aliases: `7`", "local_cli_helpers: `12`", "/commands", "/backup", "/tools", "`gitclaw commands` command=`/help`", "`gitclaw tools validate` command=`/tools`"} {
+	for _, want := range []string{"GitClaw Commands Report", "Generated without a model call", "model=\"gitclaw/commands\"", "commands: `15`", "aliases: `7`", "local_cli_helpers: `13`", "/commands", "/backup", "/tools", "`gitclaw commands` command=`/help`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw tools validate` command=`/tools`"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("commands report missing %q:\n%s", want, body)
 		}

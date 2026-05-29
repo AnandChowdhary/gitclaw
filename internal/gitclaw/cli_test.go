@@ -71,6 +71,31 @@ SECRET_SKILL_BODY_TOKEN
 	}
 }
 
+func TestSkillsInfoCommandReportsOneSkill(t *testing.T) {
+	dir := t.TempDir()
+	writeTestFile(t, dir, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Use read-only repository context.
+---
+
+SECRET_SKILLS_INFO_CLI_BODY
+`)
+	t.Setenv("GITCLAW_WORKDIR", dir)
+	output := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"skills", "info", "repo-reader"}); err != nil {
+			t.Fatalf("skills info returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"GitClaw Skill Info Report", "scope: `local-cli`", "requested_skill: `repo-reader`", "skill_info_status: `ok`", "matched_skills: `1`", "skill_name=`repo-reader`", "selected_for_this_turn=`true`", ".gitclaw/SKILLS/repo-reader/SKILL.md", "missing_env=`0`", "missing_bins=`0`", "### Validation For Matches", "- none"} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("skills info output missing %q:\n%s", want, output)
+		}
+	}
+	if strings.Contains(output, "SECRET_SKILLS_INFO_CLI_BODY") {
+		t.Fatalf("skills info leaked skill body:\n%s", output)
+	}
+}
+
 func TestSoulValidateCommandReportsCurrentRepoShape(t *testing.T) {
 	dir := t.TempDir()
 	writeTestFile(t, dir, ".gitclaw/SOUL.md", "SOUL_BODY_TOKEN")
@@ -125,7 +150,7 @@ func TestCommandsCommandReportsCatalog(t *testing.T) {
 			t.Fatalf("commands returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `7`", "local_cli_helpers: `12`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`gitclaw commands` command=`/help`", "`gitclaw backup stats` command=`/backup`"} {
+	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `7`", "local_cli_helpers: `13`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`gitclaw commands` command=`/help`", "`gitclaw backup stats` command=`/backup`", "`gitclaw skills info <name>` command=`/skills`"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("commands output missing %q:\n%s", want, output)
 		}

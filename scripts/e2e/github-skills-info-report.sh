@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "commands-report-e2e: $*" >&2
+  echo "skills-info-report-e2e: $*" >&2
 }
 
 die() {
@@ -33,12 +33,12 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_COMMANDS_REPORT_E2E_${timestamp}"
-title="@gitclaw /help e2e ${timestamp}"
-body="Live commands-report E2E.
+token="GITCLAW_SKILLS_INFO_E2E_${timestamp}"
+title="@gitclaw /skills info repo-reader e2e ${timestamp}"
+body="Live skills-info E2E.
 
-Hidden commands report body token: ${token}
-This should produce a deterministic command catalog report without a model call."
+Hidden skills info token: ${token}
+This should produce a deterministic skill info report without dumping the full SKILL.md body."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -52,7 +52,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "commands-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "skills-info-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -109,13 +109,20 @@ error_count() {
     --jq '[.comments[] | select(.body | contains("<!-- gitclaw:error"))] | length'
 }
 
+issue_label_names() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json labels \
+    --jq '.labels[].name'
+}
+
 wait_for_assistant_count() {
   local want="$1"
   for _ in {1..90}; do
     local errors
     errors="$(error_count)"
     if [[ "$errors" != "0" ]]; then
-      die "assistant run posted ${errors} error marker comment(s)"
+      die "assistant run posted ${errors} error comment(s)"
     fi
     local got
     got="$(assistant_count)"
@@ -127,37 +134,63 @@ wait_for_assistant_count() {
   return 1
 }
 
+wait_for_done_status() {
+  for _ in {1..60}; do
+    local labels
+    labels="$(issue_label_names)"
+    if grep -Fxq "gitclaw:done" <<<"$labels" &&
+      ! grep -Fxq "gitclaw:running" <<<"$labels" &&
+      ! grep -Fxq "gitclaw:error" <<<"$labels"; then
+      return 0
+    fi
+    sleep 5
+  done
+  return 1
+}
+
 run_json="$(wait_for_run "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one commands report comment"
+wait_for_assistant_count 1 || die "expected one skills info report comment"
 comments="$(assistant_comments)"
 
 for expected in \
-  'model="gitclaw/commands"' \
-  "GitClaw Commands Report" \
+  'model="gitclaw/skills"' \
+  "GitClaw Skill Info Report" \
   "Generated without a model call" \
-  'trigger_prefix: `@gitclaw`' \
-  'commands: `15`' \
-  'aliases: `7`' \
-  'local_cli_helpers: `13`' \
+  'requested_skill: `repo-reader`' \
+  'skill_info_status: `ok`' \
+  'available_skills: `1`' \
+  'matched_skills: `1`' \
   'run_mode: `read-only`' \
-  "### Slash Commands" \
-  '/help' \
-  '/commands' \
-  '/backup' \
-  '/tools' \
-  '/doctor' \
-  '/skills' \
-  '/soul' \
-  'gitclaw backup stats' \
-  'gitclaw commands' \
-  'gitclaw skills info <name>' \
-  'gitclaw tools validate'; do
-  grep -Fq "$expected" <<<"$comments" || die "commands report missing ${expected}"
+  "This report shows metadata for one local skill" \
+  'skill_name=`repo-reader`' \
+  'path=`.gitclaw/SKILLS/repo-reader/SKILL.md`' \
+  'folder=`repo-reader`' \
+  'selected_for_this_turn=`true`' \
+  'always=`false`' \
+  'frontmatter=`true`' \
+  'description=`true`' \
+  'requires_env=`0`' \
+  'requires_bins=`0`' \
+  'missing_env=`0`' \
+  'missing_bins=`0`' \
+  'required_env=`none`' \
+  'required_bins=`none`' \
+  'missing_env=`none`' \
+  'missing_bins=`none`' \
+  '### Validation For Matches' \
+  '- none' \
+  'sha256_12='; do
+  grep -Fq -- "$expected" <<<"$comments" || die "skills info report missing ${expected}"
 done
 
 if grep -Fq "$token" <<<"$comments"; then
-  die "commands report leaked issue body token"
+  die "skills info report leaked issue body token"
 fi
 
+if grep -Fq "GITCLAW_SKILL_CONTEXT_V1" <<<"$comments"; then
+  die "skills info report leaked full skill body token"
+fi
+
+wait_for_done_status || die "expected gitclaw:done without running/error"
 url="$(jq -r '.url' <<<"$run_json")"
 log "passed for issue #${issue_number}: ${url}"

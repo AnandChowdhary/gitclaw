@@ -314,6 +314,14 @@ body-free, deterministic command catalog with aliases, model marker names,
 categories, summaries, and local CLI helpers, so maintainers can inspect the
 available control-plane surface before invoking a more specific report.
 
+2026-05-29 skill-info follow-up: OpenClaw's skills CLI includes local
+`list`/`info`/`check` commands, while Hermes documents a compact `/skills` or
+`hermes skills list` inventory plus progressive `skill_view(name)` loading.
+GitClaw should map that to `@gitclaw /skills info <name>` and
+`gitclaw skills info <name>`: report one skill's path, hash, requirements,
+selection state, and validation findings without dumping full `SKILL.md`
+bodies into issues or logs.
+
 2026-05-29 repo config follow-up: OpenClaw's `config` CLI exposes schema,
 validation, dry-run patching, and guarded writes, while `configure` preserves
 existing model defaults unless the operator explicitly changes them. Hermes
