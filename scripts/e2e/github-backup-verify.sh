@@ -151,30 +151,25 @@ if grep -Fq "$token" <<<"$comments"; then
   die "backup report leaked issue body token"
 fi
 
-tmp_dir="$(mktemp -d)"
-backup_checkout="${tmp_dir}/backup-branch"
-mkdir -p "$backup_checkout"
-git -C "$backup_checkout" init >/dev/null
-git -C "$backup_checkout" remote add origin "https://github.com/${repo}.git"
-
 repo_key="${repo//\//__}"
 issue_padded="$(printf "%06d" "$issue_number")"
-index_path="${backup_checkout}/.gitclaw/backups/${repo_key}/index.json"
 issue_path="issues/${issue_padded}.json"
-auth_token="$(gh auth token 2>/dev/null || true)"
 
 fetch_backup_branch() {
-  if [[ -n "$auth_token" ]]; then
-    git -c "http.https://github.com/.extraheader=AUTHORIZATION: bearer ${auth_token}" \
-      -C "$backup_checkout" fetch --depth=1 origin "$backup_branch" >/dev/null 2>&1
-  else
-    git -C "$backup_checkout" fetch --depth=1 origin "$backup_branch" >/dev/null 2>&1
-  fi
-  git -C "$backup_checkout" checkout --detach FETCH_HEAD >/dev/null 2>&1
+  rm -rf "$tmp_dir"
+  tmp_dir="$(mktemp -d)"
+  backup_checkout="${tmp_dir}/backup-branch"
+  gh repo clone "$repo" "$backup_checkout" -- --depth=1 --branch "$backup_branch" >/dev/null 2>&1
 }
 
 for _ in {1..60}; do
-  if fetch_backup_branch && [[ -f "$index_path" ]] &&
+  if fetch_backup_branch; then
+    index_path="${backup_checkout}/.gitclaw/backups/${repo_key}/index.json"
+  else
+    sleep 5
+    continue
+  fi
+  if [[ -f "$index_path" ]] &&
     jq -e --argjson number "$issue_number" --arg title "$title" --arg path "$issue_path" '
       any(.issues[]; .number == $number and .title == $title and .path == $path)
     ' "$index_path" >/dev/null; then
