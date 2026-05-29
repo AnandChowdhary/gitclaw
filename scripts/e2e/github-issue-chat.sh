@@ -15,7 +15,7 @@ need date
 
 : "${GITCLAW_E2E_REPO:?set GITCLAW_E2E_REPO, e.g. owner/gitclaw-e2e-sandbox}"
 
-workflow_name="${GITCLAW_E2E_WORKFLOW:-GitClaw}"
+workflow_name="${GITCLAW_E2E_WORKFLOW:-.github/workflows/gitclaw.yml}"
 retention_label="${GITCLAW_E2E_RETENTION_LABEL:-gitclaw:e2e}"
 backup_branch="${GITCLAW_E2E_BACKUP_BRANCH:-gitclaw-backups}"
 expect_backup="${GITCLAW_E2E_EXPECT_BACKUP:-0}"

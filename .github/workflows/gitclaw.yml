@@ -64,7 +64,6 @@ jobs:
       issues: read
     env:
       BACKUP_BRANCH: gitclaw-backups
-      BACKUP_ROOT: ${{ runner.temp }}/gitclaw-backups
     steps:
       - uses: actions/checkout@v4
         with:
@@ -77,8 +76,10 @@ jobs:
       - id: export
         run: |
           set -euo pipefail
-          path="$(go run ./cmd/gitclaw backup --event "$GITHUB_EVENT_PATH" --out "$BACKUP_ROOT")"
+          backup_root="${RUNNER_TEMP}/gitclaw-backups"
+          path="$(go run ./cmd/gitclaw backup --event "$GITHUB_EVENT_PATH" --out "$backup_root")"
           echo "path=$path" >> "$GITHUB_OUTPUT"
+          echo "root=$backup_root" >> "$GITHUB_OUTPUT"
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
@@ -86,7 +87,8 @@ jobs:
       - run: |
           set -euo pipefail
           backup_file="${{ steps.export.outputs.path }}"
-          backup_rel="${backup_file#${BACKUP_ROOT}/}"
+          backup_root="${{ steps.export.outputs.root }}"
+          backup_rel="${backup_file#${backup_root}/}"
           dest=".gitclaw/backups/${backup_rel}"
           worktree="${RUNNER_TEMP}/gitclaw-backup-worktree"
 
