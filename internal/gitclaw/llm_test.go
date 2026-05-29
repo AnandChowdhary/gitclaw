@@ -107,6 +107,25 @@ func TestOpenAICompatibleLLMRetriesRateLimit(t *testing.T) {
 	}
 }
 
+func TestLLMTimeoutFromEnvIsBounded(t *testing.T) {
+	t.Setenv("GITCLAW_LLM_TIMEOUT_SECONDS", "999")
+	if got := llmTimeout(); got != 10*time.Minute {
+		t.Fatalf("llmTimeout() = %s, want 10m0s", got)
+	}
+	t.Setenv("GITCLAW_LLM_TIMEOUT_SECONDS", "7")
+	if got := llmTimeout(); got != 7*time.Second {
+		t.Fatalf("llmTimeout() = %s, want 7s", got)
+	}
+}
+
+func TestLLMRetryDelayCapsRetryAfter(t *testing.T) {
+	t.Setenv("GITCLAW_LLM_RETRY_MAX_DELAY_SECONDS", "2")
+	res := &http.Response{Header: http.Header{"Retry-After": []string{"120"}}}
+	if got := llmRetryDelay(res); got != 2*time.Second {
+		t.Fatalf("llmRetryDelay() = %s, want 2s", got)
+	}
+}
+
 func TestSystemPromptNamesToolOutputsAndExactTokens(t *testing.T) {
 	for _, want := range []string{"tool_output", "gitclaw.policy", "hard constraints", "exact verification tokens", "copy those tokens verbatim"} {
 		if !strings.Contains(systemPrompt, want) {

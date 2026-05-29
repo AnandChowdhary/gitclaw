@@ -459,7 +459,8 @@ Security and operational notes:
   the model client retries transient `429`, timeout, and `5xx` responses before
   surfacing a safe issue-level provider failure. Individual model HTTP requests
   are also time-bounded so a stuck inference call cannot consume the whole
-  Actions job timeout.
+  Actions job timeout, and provider `Retry-After` values are capped so dense
+  E2E runs do not park a workflow for an unbounded cooldown window.
 
 ## Runtime Architecture
 
