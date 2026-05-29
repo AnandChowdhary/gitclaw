@@ -2,6 +2,7 @@ package gitclaw
 
 import (
 	"context"
+	"errors"
 	"os"
 	"path/filepath"
 	"strings"
@@ -51,6 +52,9 @@ func TestHandleDryRunPostsExactlyOneIdempotentComment(t *testing.T) {
 	}
 	if llm.Calls != 1 {
 		t.Fatalf("LLM called %d times, want 1 due existing idempotency marker", llm.Calls)
+	}
+	if !hasLabel(github.IssueLabels[42], "gitclaw:done") || hasLabel(github.IssueLabels[42], "gitclaw:running") || hasLabel(github.IssueLabels[42], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[42])
 	}
 }
 
@@ -133,10 +137,43 @@ func TestHandlePassesRepoContextToLLM(t *testing.T) {
 	}
 }
 
+func TestHandleSetsErrorStatusWhenLLMFails(t *testing.T) {
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 77,
+			"title": "@gitclaw fail",
+			"body": "Please fail.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{77: nil}}
+	llm := &FakeLLM{Err: errors.New("provider unavailable")}
+	err = Handle(context.Background(), ev, DefaultConfig(), github, llm)
+	if err == nil {
+		t.Fatalf("Handle should return LLM error")
+	}
+	if len(github.Posted) != 0 {
+		t.Fatalf("posted comments despite LLM failure: %#v", github.Posted)
+	}
+	labels := github.IssueLabels[77]
+	if !hasLabel(labels, "gitclaw:error") || hasLabel(labels, "gitclaw:running") || hasLabel(labels, "gitclaw:done") {
+		t.Fatalf("unexpected error labels: %#v", labels)
+	}
+}
+
 type FakeGitHub struct {
 	Issues          []Issue
 	CommentsByIssue map[int][]Comment
 	Posted          []PostedComment
+	IssueLabels     map[int][]string
 }
 
 func (f *FakeGitHub) ListOpenIssues(ctx context.Context, repo string, labels []string, limit int) ([]Issue, error) {
@@ -168,8 +205,38 @@ func (f *FakeGitHub) PostIssueComment(ctx context.Context, repo string, issueNum
 	return posted, nil
 }
 
+func (f *FakeGitHub) AddIssueLabels(ctx context.Context, repo string, issueNumber int, labels []string) error {
+	f.ensureIssueLabels()
+	for _, label := range labels {
+		if label == "" || hasLabel(f.IssueLabels[issueNumber], label) {
+			continue
+		}
+		f.IssueLabels[issueNumber] = append(f.IssueLabels[issueNumber], label)
+	}
+	return nil
+}
+
+func (f *FakeGitHub) RemoveIssueLabel(ctx context.Context, repo string, issueNumber int, label string) error {
+	f.ensureIssueLabels()
+	var kept []string
+	for _, existing := range f.IssueLabels[issueNumber] {
+		if !strings.EqualFold(existing, label) {
+			kept = append(kept, existing)
+		}
+	}
+	f.IssueLabels[issueNumber] = kept
+	return nil
+}
+
+func (f *FakeGitHub) ensureIssueLabels() {
+	if f.IssueLabels == nil {
+		f.IssueLabels = map[int][]string{}
+	}
+}
+
 type FakeLLM struct {
 	Response    string
+	Err         error
 	Calls       int
 	LastRequest LLMRequest
 }
@@ -177,6 +244,9 @@ type FakeLLM struct {
 func (f *FakeLLM) Complete(ctx context.Context, req LLMRequest) (string, error) {
 	f.Calls++
 	f.LastRequest = req
+	if f.Err != nil {
+		return "", f.Err
+	}
 	return f.Response, nil
 }
 

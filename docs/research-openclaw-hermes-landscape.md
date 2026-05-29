@@ -508,6 +508,13 @@ Recent research frames OpenClaw/Hermes-style agents as a new risk class because 
 - credentials,
 - external content ingestion.
 
+2026-05-29 status-label follow-up: OpenClaw's task/status CLI and Hermes'
+Kanban task lifecycle both point to the same product requirement: a durable
+agent turn needs a visible state machine, not just a final chat message. The
+GitClaw adaptation should stay GitHub-native by using lightweight issue labels
+for current status (`gitclaw:running`, `gitclaw:done`, `gitclaw:error`) while
+keeping hidden comment markers and Actions run URLs as the provenance record.
+
 Main attack pattern: an untrusted input enters through one surface, persists into memory/skills/cron/filesystem, then fires later through a different surface when the attacker is no longer present.
 
 Design requirements for `gitclaw`:

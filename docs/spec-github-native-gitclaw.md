@@ -490,18 +490,26 @@ not autonomous shell execution, and they do not mutate the repository.
 
 ## Labels
 
-Recommended labels:
+Managed labels:
 
 - `gitclaw`: issue should be handled by GitClaw.
-- `gitclaw:running`: a run is active.
-- `gitclaw:needs-human`: blocked on approval or authorization.
-- `gitclaw:done`: latest turn completed.
-- `gitclaw:error`: latest turn failed.
+- `gitclaw:running`: a run is active; added before model/tool context work.
+- `gitclaw:done`: latest turn completed; added after the assistant comment is
+  posted.
+- `gitclaw:error`: latest turn failed; added when the run fails after it starts.
 - `gitclaw:disabled`: ignore future comments.
+
+Planned labels:
+
+- `gitclaw:needs-human`: blocked on approval or authorization.
 - `gitclaw:write-requested`: user is asking for code changes.
 - `gitclaw:approved`: maintainer approved a write-capable turn.
 
-Labels are state hints, not the source of truth. The issue thread and run artifacts remain the source of truth.
+Labels are state hints, not the source of truth. The issue thread and run
+artifacts remain the source of truth. Label update failures should not prevent
+the assistant from answering, but the live E2E harness verifies that configured
+repositories end successful turns with `gitclaw:done` and without
+`gitclaw:running` or `gitclaw:error`.
 
 ## Authorization And Abuse Controls
 
@@ -1029,6 +1037,8 @@ MVP is not complete until:
   `gitclaw.search_files` context from the search fixture,
 - the heartbeat harness dispatches a real workflow, receives one heartbeat
   comment, and proves same-slot idempotency,
+- the live harness verifies status labels end at `gitclaw:done` without
+  `gitclaw:running` or `gitclaw:error`,
 - bot loop prevention is verified live,
 - the issue is cleaned up or labeled with an E2E retention label.
 

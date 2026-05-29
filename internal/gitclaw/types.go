@@ -13,6 +13,9 @@ type Config struct {
 	TriggerLabel        string
 	TriggerPrefix       string
 	DisabledLabel       string
+	RunningLabel        string
+	DoneLabel           string
+	ErrorLabel          string
 	HeartbeatLabel      string
 	AllowedAssociations map[string]bool
 	Model               string
@@ -24,6 +27,9 @@ func DefaultConfig() Config {
 		TriggerLabel:   "gitclaw",
 		TriggerPrefix:  "@gitclaw",
 		DisabledLabel:  "gitclaw:disabled",
+		RunningLabel:   "gitclaw:running",
+		DoneLabel:      "gitclaw:done",
+		ErrorLabel:     "gitclaw:error",
 		HeartbeatLabel: "gitclaw:heartbeat",
 		AllowedAssociations: map[string]bool{
 			"OWNER":        true,
@@ -113,6 +119,8 @@ type PostedComment struct {
 type GitHubClient interface {
 	ListIssueComments(ctx context.Context, repo string, issueNumber int) ([]Comment, error)
 	PostIssueComment(ctx context.Context, repo string, issueNumber int, body string) (PostedComment, error)
+	AddIssueLabels(ctx context.Context, repo string, issueNumber int, labels []string) error
+	RemoveIssueLabel(ctx context.Context, repo string, issueNumber int, label string) error
 }
 
 type HeartbeatGitHubClient interface {

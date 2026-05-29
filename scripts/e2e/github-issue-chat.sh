@@ -29,9 +29,21 @@ fi
 gh auth status >/dev/null
 gh repo view "$GITCLAW_E2E_REPO" >/dev/null
 
-if ! gh label list --repo "$GITCLAW_E2E_REPO" --limit 1000 --json name --jq '.[].name' | grep -Fxq gitclaw; then
-  die "sandbox repo is missing required label: gitclaw"
-fi
+ensure_label() {
+  local name="$1"
+  local color="$2"
+  local description="$3"
+  if ! gh label list --repo "$GITCLAW_E2E_REPO" --limit 1000 --json name --jq '.[].name' | grep -Fxq "$name"; then
+    gh label create "$name" --repo "$GITCLAW_E2E_REPO" --color "$color" --description "$description" >/dev/null
+  fi
+}
+
+ensure_label gitclaw 0e8a16 "Handled by GitClaw"
+ensure_label gitclaw:running fbca04 "GitClaw run is active"
+ensure_label gitclaw:done 0e8a16 "Latest GitClaw run completed"
+ensure_label gitclaw:error b60205 "Latest GitClaw run failed"
+ensure_label gitclaw:disabled 5319e7 "GitClaw should ignore this issue"
+ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 if ! gh workflow view "$workflow_name" --repo "$GITCLAW_E2E_REPO" >/dev/null 2>&1; then
   die "sandbox repo is missing workflow: $workflow_name"
@@ -120,6 +132,28 @@ gitclaw_comment_bodies() {
     --repo "$GITCLAW_E2E_REPO" \
     --json comments \
     --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | join("\n---GITCLAW-COMMENT---\n")'
+}
+
+issue_label_names() {
+  gh issue view "$issue_number" \
+    --repo "$GITCLAW_E2E_REPO" \
+    --json labels \
+    --jq '.labels[].name'
+}
+
+wait_for_done_status() {
+  local deadline=$((SECONDS + comment_deadline_seconds))
+  while (( SECONDS < deadline )); do
+    local labels
+    labels="$(issue_label_names)"
+    if grep -Fxq "gitclaw:done" <<<"$labels" &&
+      ! grep -Fxq "gitclaw:running" <<<"$labels" &&
+      ! grep -Fxq "gitclaw:error" <<<"$labels"; then
+      return 0
+    fi
+    sleep 5
+  done
+  return 1
 }
 
 backup_path_for_issue() {
@@ -227,6 +261,9 @@ if [[ "$expect_backup" == "1" ]]; then
   wait_for_backup || die "expected backup JSON on ${backup_branch} with conversation and tool evidence"
   echo "e2e: git-backed backup verified"
 fi
+
+wait_for_done_status || die "expected final status label gitclaw:done without running/error"
+echo "e2e: status labels verified"
 
 sleep 15
 final_count="$(count_gitclaw_comments)"

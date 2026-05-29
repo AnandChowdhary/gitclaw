@@ -166,6 +166,63 @@ func (c *RESTGitHubClient) PostIssueComment(ctx context.Context, repo string, is
 	return PostedComment{ID: raw.ID, Body: raw.Body, URL: raw.HTMLURL}, nil
 }
 
+func (c *RESTGitHubClient) AddIssueLabels(ctx context.Context, repo string, issueNumber int, labels []string) error {
+	if c.Token == "" {
+		return fmt.Errorf("missing GitHub token")
+	}
+	if len(labels) == 0 {
+		return nil
+	}
+	payload, err := json.Marshal(map[string][]string{"labels": labels})
+	if err != nil {
+		return err
+	}
+	endpoint := fmt.Sprintf("%s/repos/%s/issues/%d/labels", strings.TrimRight(c.APIBaseURL, "/"), repo, issueNumber)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, endpoint, bytes.NewReader(payload))
+	if err != nil {
+		return err
+	}
+	c.setHeaders(req)
+	res, err := c.httpClient().Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+	if res.StatusCode < 200 || res.StatusCode >= 300 {
+		body, _ := io.ReadAll(io.LimitReader(res.Body, 4096))
+		return fmt.Errorf("GitHub add labels failed: status=%d body=%s", res.StatusCode, strings.TrimSpace(string(body)))
+	}
+	return nil
+}
+
+func (c *RESTGitHubClient) RemoveIssueLabel(ctx context.Context, repo string, issueNumber int, label string) error {
+	if c.Token == "" {
+		return fmt.Errorf("missing GitHub token")
+	}
+	if label == "" {
+		return nil
+	}
+	endpoint := fmt.Sprintf("%s/repos/%s/issues/%d/labels/%s", strings.TrimRight(c.APIBaseURL, "/"), repo, issueNumber, url.PathEscape(label))
+	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, endpoint, nil)
+	if err != nil {
+		return err
+	}
+	c.setHeaders(req)
+	res, err := c.httpClient().Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+	if res.StatusCode == http.StatusNotFound {
+		return nil
+	}
+	if res.StatusCode < 200 || res.StatusCode >= 300 {
+		body, _ := io.ReadAll(io.LimitReader(res.Body, 4096))
+		return fmt.Errorf("GitHub remove label failed: status=%d body=%s", res.StatusCode, strings.TrimSpace(string(body)))
+	}
+	return nil
+}
+
 func (c *RESTGitHubClient) setHeaders(req *http.Request) {
 	req.Header.Set("Accept", "application/vnd.github+json")
 	req.Header.Set("X-GitHub-Api-Version", "2022-11-28")
