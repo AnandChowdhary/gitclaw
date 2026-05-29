@@ -680,6 +680,29 @@ GitClaw v1 adds a small deterministic tool layer before the model call:
 Tool outputs are inserted into the prompt as auditable context blocks. They are
 not autonomous shell execution, and they do not mutate the repository.
 
+## Tools Inspection Command
+
+GitClaw supports a deterministic tool-surface audit command inspired by
+OpenClaw's tool policy visibility and Hermes' toolset inventory:
+
+```text
+@gitclaw /tools
+```
+
+The command runs after normal preflight authorization and context assembly, but
+before model inference. It posts a `gitclaw:assistant-turn` comment with
+`model="gitclaw/tools"` and summarizes:
+
+- available deterministic GitClaw tool contracts and their trigger conditions,
+- `.gitclaw/TOOLS.md` metadata, if present,
+- active tool outputs generated for the current issue/comment,
+- each active output's input, byte count, line count, and short hash.
+
+It never dumps full tool output bodies. Tool output bodies remain prompt inputs
+only; the issue-visible report exposes enough metadata to debug whether
+`gitclaw.list_files`, `gitclaw.search_files`, `gitclaw.read_file`,
+`gitclaw.skill_index`, or `gitclaw.policy` ran for the turn.
+
 ## Context Inspection Command
 
 GitClaw supports a deterministic context inspection command inspired by
@@ -1385,7 +1408,17 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump full soul or memory bodies,
    - assert the run succeeds without requiring a model provider response.
 
-18. **Backup index**
+18. **Tools inspection**
+
+   - create a real issue with `@gitclaw /tools`,
+   - ask for a concrete file read and search fixture phrase,
+   - assert the reply is marked `model="gitclaw/tools"`,
+   - assert the report lists available tool contracts and active output
+     metadata for list/search/read,
+   - assert the report does not dump full file or search output bodies,
+   - assert the run succeeds without requiring a model provider response.
+
+19. **Backup index**
 
    - create a real deterministic GitClaw issue turn,
    - wait for the successful backup job,
@@ -1567,6 +1600,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven soul-report E2E harness verifies `@gitclaw /soul` produces a
   deterministic high-authority context file audit without a model call or body
   leakage.
+- A `gh`-driven tools-report E2E harness verifies `@gitclaw /tools` produces a
+  deterministic tool contract and active-output audit without a model call or
+  output-body leakage.
 - A `gh`-driven failure E2E harness verifies the safe failure path against a
   real Actions/model failure.
 - A `gh`-driven prompt-budget E2E harness verifies a large real issue still

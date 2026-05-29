@@ -327,6 +327,57 @@ func TestHandleSoulCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 }
 
+func TestHandleToolsCommandPostsReportWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/TOOLS.md", "TOOL_SECRET_TOKEN: read-only tools only.")
+	writeTestFile(t, root, "go.mod", "module github.com/AnandChowdhary/gitclaw\n")
+	writeTestFile(t, root, "docs/search-fixture.md", "bounded repository search fixture phrase => GITCLAW_SEARCH_CONTEXT_V1\n")
+
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 93,
+			"title": "@gitclaw /tools",
+			"body": "Inspect go.mod and search for \"bounded repository search fixture phrase\".",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{93: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic tools command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Tools Report", "Generated without a model call", "model=\"gitclaw/tools\"", "available_tools: `5`", "active_tool_outputs: `3`", ".gitclaw/TOOLS.md", "gitclaw.list_files", "gitclaw.search_files", "gitclaw.read_file", "input=`go.mod`", "sha256_12="} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("tools report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"TOOL_SECRET_TOKEN", "module github.com/AnandChowdhary/gitclaw", "GITCLAW_SEARCH_CONTEXT_V1"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("tools report leaked output/body token %q:\n%s", leaked, body)
+		}
+	}
+	if !hasLabel(github.IssueLabels[93], "gitclaw:done") || hasLabel(github.IssueLabels[93], "gitclaw:running") || hasLabel(github.IssueLabels[93], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[93])
+	}
+}
+
 func TestHandleLabelsWriteRequestsAndAddsPolicyContext(t *testing.T) {
 	ev, err := ParseEvent("issues", []byte(`{
 		"action": "opened",

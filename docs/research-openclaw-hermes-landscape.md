@@ -293,6 +293,14 @@ thread, scan only bounded text files from the checkout, and insert matched
 lines as `gitclaw.search_files` context. That gives the model grounded recall
 without granting shell access or a general command runner.
 
+2026-05-29 tools-inspection follow-up: OpenClaw's tool docs emphasize the
+difference between tools, skills, and plugins, and note that effective policy
+can remove tools before the model sees them. Hermes exposes toolsets and an
+authoritative tool registry. GitClaw's no-server version should make the same
+surface inspectable with `@gitclaw /tools`: list deterministic tool contracts,
+show which tool outputs were produced for the current turn, and publish
+input/size/hash metadata without dumping output bodies.
+
 2026-05-29 prompt-budget follow-up: OpenClaw's context docs expose per-file and
 total prompt caps plus visible truncation markers, while Hermes' memory/context
 docs treat character limits as a core defense against context bloat. GitClaw
@@ -730,6 +738,7 @@ Recommended non-goals for the first spec:
 - OpenClaw automation docs: https://docs.openclaw.ai/automation
 - OpenClaw heartbeat docs: https://openclawlab.com/en/docs/agent/heartbeat/
 - OpenClaw memory docs: https://docs.openclaw.ai/concepts/memory
+- OpenClaw tools overview: https://docs.openclaw.ai/tools
 - OpenClaw sandboxing docs: https://docs.openclaw.ai/gateway/sandboxing
 - OpenClaw migrating from Hermes: https://docs.openclaw.ai/install/migrating-hermes
 - Hermes docs index: https://hermes-agent.nousresearch.com/docs/llms.txt
@@ -737,6 +746,8 @@ Recommended non-goals for the first spec:
 - Hermes architecture docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/developer-guide/architecture.md
 - Hermes memory docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/memory.md
 - Hermes skills docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/skills.md
+- Hermes tools docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/tools/
+- Hermes tools reference: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/reference/tools-reference.md
 - Hermes cron docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/cron.md
 - Hermes security docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/security.md
 - NanoClaw: https://github.com/nanocoai/nanoclaw
