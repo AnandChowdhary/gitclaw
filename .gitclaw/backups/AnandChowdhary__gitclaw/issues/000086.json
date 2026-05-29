@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T23:18:15Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 86,
+    "title": "@gitclaw /channels list e2e 20260529T231714Z",
+    "body": "Live channels list E2E.\n\nHidden channels list token: GITCLAW_CHANNELS_LIST_E2E_20260529T231714Z\nThis should produce the deterministic channel bridge report through the explicit list alias.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels list e2e 20260529T231714Z\n\nLive channels list E2E.\n\nHidden channels list token: GITCLAW_CHANNELS_LIST_E2E_20260529T231714Z\nThis should produce the deterministic channel bridge report through the explicit list alias.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#86`\n- channel_label: `gitclaw:channel`\n- trigger_label: `gitclaw`\n- workflow_path: `.github/workflows/gitclaw-channel-ingest.yml`\n- workflow_present: `true`\n- workflow_dispatch_trigger: `true`\n- permissions_actions_write: `true`\n- permissions_issues_write: `true`\n- workflow_inputs: `5`\n- channel_thread_issue: `false`\n- channel_message_comments_now: `0`\n- supported_providers: `telegram, slack, generic`\n- wake_strategy: `workflow_dispatch`\n- issue_title_sha256_12: `ddcb4d262e2f`\n\nChannel ingress mirrors external messages into canonical GitHub issues, then wakes the normal handler with `workflow_dispatch`. Channel message bodies, issue bodies, and tokens are not included in this report.\n\n### Workflow\n- `.github/workflows/gitclaw-channel-ingest.yml` bytes=`2068` lines=`67` workflow_dispatch=`true` actions_write=`true` issues_write=`true` inputs=`5` sha256_12=`b90dbb5ee660`\n\n### Providers\n- `telegram`\n- `slack`\n- `generic`\n\n### Ingest Contract\n- `gitclaw channel-ingest --channel \u003cprovider\u003e --thread-id \u003cthread\u003e --message-id \u003cmessage\u003e --body \u003ctext\u003e`\n- one canonical issue per `channel + thread_id`\n- one mirrored comment per `channel + message_id`\n- dispatch id: `\u003cchannel\u003e-\u003cmessage_id\u003e`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4580599739,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4580599739,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26667061277\" event_id=\"issue-86\" model=\"gitclaw/channels\" idempotency_key=\"6f1861d8147d8d9948074fbdce6e8b69\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26667061277\" --\u003e\n## GitClaw Channel Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#86`\n- channel_label: `gitclaw:channel`\n- trigger_label: `gitclaw`\n- workflow_path: `.github/workflows/gitclaw-channel-ingest.yml`\n- workflow_present: `true`\n- workflow_dispatch_trigger: `true`\n- permissions_actions_write: `true`\n- permissions_issues_write: `true`\n- workflow_inputs: `5`\n- channel_thread_issue: `false`\n- channel_message_comments_now: `0`\n- supported_providers: `telegram, slack, generic`\n- wake_strategy: `workflow_dispatch`\n- issue_title_sha256_12: `ddcb4d262e2f`\n\nChannel ingress mirrors external messages into canonical GitHub issues, then wakes the normal handler with `workflow_dispatch`. Channel message bodies, issue bodies, and tokens are not included in this report.\n\n### Workflow\n- `.github/workflows/gitclaw-channel-ingest.yml` bytes=`2068` lines=`67` workflow_dispatch=`true` actions_write=`true` issues_write=`true` inputs=`5` sha256_12=`b90dbb5ee660`\n\n### Providers\n- `telegram`\n- `slack`\n- `generic`\n\n### Ingest Contract\n- `gitclaw channel-ingest --channel \u003cprovider\u003e --thread-id \u003cthread\u003e --message-id \u003cmessage\u003e --body \u003ctext\u003e`\n- one canonical issue per `channel + thread_id`\n- one mirrored comment per `channel + message_id`\n- dispatch id: `\u003cchannel\u003e-\u003cmessage_id\u003e`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T23:17:54Z",
+      "updated_at": "2026-05-29T23:17:54Z"
+    }
+  ]
+}
