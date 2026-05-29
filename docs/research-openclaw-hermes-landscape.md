@@ -617,6 +617,14 @@ issue text, memory, skills, and tool output. GitClaw should therefore make
 prompt artifacts explicit opt-in, redact common token shapes before upload, and
 store them as GitHub Actions artifacts rather than issue comments or logs.
 
+2026-05-29 policy-inspection follow-up: OpenClaw's security docs separate
+sandbox location, tool allow/deny policy, and elevated host execution, and
+Hermes' docs frame safety around authorization, command approval, and container
+isolation. GitClaw's GitHub-native equivalent should be issue-visible and
+serverless: `@gitclaw /policy` reports preflight authorization, trusted actor
+state, managed labels, expected workflow permissions, write-intent gating, and
+policy-output metadata without exposing issue bodies.
+
 Main attack pattern: an untrusted input enters through one surface, persists into memory/skills/cron/filesystem, then fires later through a different surface when the attacker is no longer present.
 
 Design requirements for `gitclaw`:
@@ -739,6 +747,8 @@ Recommended non-goals for the first spec:
 - OpenClaw heartbeat docs: https://openclawlab.com/en/docs/agent/heartbeat/
 - OpenClaw memory docs: https://docs.openclaw.ai/concepts/memory
 - OpenClaw tools overview: https://docs.openclaw.ai/tools
+- OpenClaw sandbox vs tool policy vs elevated: https://docs.openclaw.ai/gateway/sandbox-vs-tool-policy-vs-elevated
+- OpenClaw exec approvals: https://docs.openclaw.ai/tools/exec-approvals
 - OpenClaw sandboxing docs: https://docs.openclaw.ai/gateway/sandboxing
 - OpenClaw migrating from Hermes: https://docs.openclaw.ai/install/migrating-hermes
 - Hermes docs index: https://hermes-agent.nousresearch.com/docs/llms.txt
@@ -748,6 +758,7 @@ Recommended non-goals for the first spec:
 - Hermes skills docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/skills.md
 - Hermes tools docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/tools/
 - Hermes tools reference: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/reference/tools-reference.md
+- Hermes security overview: https://hermes-agent.nousresearch.com/docs/
 - Hermes cron docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/cron.md
 - Hermes security docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/security.md
 - NanoClaw: https://github.com/nanocoai/nanoclaw

@@ -749,6 +749,31 @@ the assistant from answering, but the live E2E harness verifies that configured
 repositories end successful turns with `gitclaw:done` and without
 `gitclaw:running` or `gitclaw:error`.
 
+## Policy Inspection Command
+
+GitClaw supports a deterministic policy audit command inspired by OpenClaw's
+sandbox/tool-policy/elevated split and Hermes' authorization and approval
+posture:
+
+```text
+@gitclaw /policy
+```
+
+The command runs after normal preflight authorization and context assembly, but
+before model inference. It posts a `gitclaw:assistant-turn` comment with
+`model="gitclaw/policy"` and summarizes:
+
+- preflight result, trigger state, actor association, and trust decision,
+- configured trusted GitHub author associations,
+- managed labels and event labels,
+- write-request detection state,
+- expected least-privilege workflow permissions for preflight, handle, and
+  backup jobs,
+- active `gitclaw.policy` output metadata, if a policy output was injected.
+
+It never dumps issue/comment bodies or the `gitclaw.policy` body. The report is
+for checking the enforcement shape and provenance without exposing prompt text.
+
 ## Authorization And Abuse Controls
 
 Public repos need strict defaults because any GitHub user can open issues or comment.
@@ -1418,7 +1443,19 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump full file or search output bodies,
    - assert the run succeeds without requiring a model provider response.
 
-19. **Backup index**
+19. **Policy inspection**
+
+   - create a real issue with `@gitclaw /policy` that also asks for write-mode
+     work,
+   - assert the reply is marked `model="gitclaw/policy"`,
+   - assert the report shows trusted actor state, write-request detection,
+     managed labels, expected workflow permissions, and `gitclaw.policy`
+     metadata,
+   - assert the report does not dump the issue body or policy output body,
+   - assert `gitclaw:write-requested` and `gitclaw:done` are present without
+     `gitclaw:running` or `gitclaw:error`.
+
+20. **Backup index**
 
    - create a real deterministic GitClaw issue turn,
    - wait for the successful backup job,
@@ -1603,6 +1640,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven tools-report E2E harness verifies `@gitclaw /tools` produces a
   deterministic tool contract and active-output audit without a model call or
   output-body leakage.
+- A `gh`-driven policy-report E2E harness verifies `@gitclaw /policy` produces
+  a deterministic preflight/label/write-policy audit without a model call or
+  issue-body leakage.
 - A `gh`-driven failure E2E harness verifies the safe failure path against a
   real Actions/model failure.
 - A `gh`-driven prompt-budget E2E harness verifies a large real issue still

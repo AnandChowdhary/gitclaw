@@ -378,6 +378,53 @@ func TestHandleToolsCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 }
 
+func TestHandlePolicyCommandPostsReportWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/TOOLS.md", "Use read-only tools.")
+
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 94,
+			"title": "@gitclaw /policy",
+			"body": "Please implement this change and open a PR. Hidden token: GITCLAW_POLICY_SECRET_E2E.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{94: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic policy command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Policy Report", "Generated without a model call", "model=\"gitclaw/policy\"", "preflight_allowed: `true`", "actor_association: `MEMBER`", "actor_trusted: `true`", "write_request_detected: `true`", "run_mode: `read-only`", "OWNER", "MEMBER", "COLLABORATOR", "gitclaw:write-requested", "gitclaw.policy", "sha256_12="} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("policy report missing %q:\n%s", want, body)
+		}
+	}
+	if strings.Contains(body, "GITCLAW_POLICY_SECRET_E2E") || strings.Contains(body, "Please implement this change") {
+		t.Fatalf("policy report should not dump issue body:\n%s", body)
+	}
+	if !hasLabel(github.IssueLabels[94], "gitclaw:write-requested") || !hasLabel(github.IssueLabels[94], "gitclaw:done") || hasLabel(github.IssueLabels[94], "gitclaw:running") || hasLabel(github.IssueLabels[94], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[94])
+	}
+}
+
 func TestHandleLabelsWriteRequestsAndAddsPolicyContext(t *testing.T) {
 	ev, err := ParseEvent("issues", []byte(`{
 		"action": "opened",
