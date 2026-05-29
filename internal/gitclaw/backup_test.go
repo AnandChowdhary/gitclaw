@@ -240,6 +240,61 @@ func TestPlanBackupRestoreRendersDryRunWithoutBodies(t *testing.T) {
 	}
 }
 
+func TestBuildBackupManifestRendersHashesWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T12:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue: IssueBackupIssue{
+			Number: 7,
+			Title:  "@gitclaw manifest",
+			Body:   "MANIFEST_ISSUE_BODY_SECRET",
+			Labels: []string{"gitclaw"},
+		},
+		Transcript: []TranscriptMessage{
+			{Role: "user", Body: "MANIFEST_TRANSCRIPT_SECRET", Actor: "alice", AuthorAssociation: "OWNER", Trusted: true},
+			{Role: "assistant", Body: "MANIFEST_ASSISTANT_SECRET", Actor: "github-actions[bot]", AuthorAssociation: "NONE", CommentID: 12, Trusted: true},
+		},
+		Comments: []IssueBackupComment{{ID: 12, Body: "MANIFEST_COMMENT_SECRET"}},
+	})
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T13:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue:       IssueBackupIssue{Number: 8, Title: "@gitclaw other", Body: "OTHER_MANIFEST_SECRET"},
+		Transcript:  []TranscriptMessage{{Role: "user", Body: "other"}},
+	})
+	if _, err := WriteBackupIndex(root, "owner/repo", time.Date(2026, 5, 29, 14, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+
+	manifest, err := BuildBackupManifest(root, "owner/repo", 7)
+	if err != nil {
+		t.Fatalf("BuildBackupManifest returned error: %v", err)
+	}
+	if manifest.Repo != "owner/repo" || manifest.SchemaVersion != 1 || len(manifest.ControlFiles) != 2 || len(manifest.IssuePayloads) != 1 {
+		t.Fatalf("unexpected manifest: %#v", manifest)
+	}
+	payload := manifest.IssuePayloads[0]
+	if payload.IssueNumber != 7 || payload.Path != "issues/000007.json" || payload.Comments != 1 || payload.TranscriptMessages != 2 || payload.SHA == "" || payload.Bytes == 0 {
+		t.Fatalf("unexpected manifest payload: %#v", payload)
+	}
+	report := RenderBackupManifest(manifest)
+	for _, want := range []string{"GitClaw Backup Manifest", "repository: `owner/repo`", "backup_schema_version: `1`", "issue_filter: `#7`", "control_files: `2`", "issue_payload_files: `1`", "total_comments: `1`", "total_transcript_messages: `2`", "raw_bodies_included: `false`", "`index.json` bytes=", "`README.md` bytes=", "issue=`#7` path=`issues/000007.json`", "sha256_12="} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("manifest report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"MANIFEST_ISSUE_BODY_SECRET", "MANIFEST_TRANSCRIPT_SECRET", "MANIFEST_ASSISTANT_SECRET", "MANIFEST_COMMENT_SECRET", "OTHER_MANIFEST_SECRET"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("manifest leaked body token %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestVerifyBackupTreeAcceptsCanonicalBackupIndex(t *testing.T) {
 	root := t.TempDir()
 	writeBackupFixture(t, root, IssueBackup{

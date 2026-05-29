@@ -140,6 +140,14 @@ repo-scoped `index.json`, `README.md`, canonical `issues/000000.json` paths,
 schema version, counts, timestamps, and absence of unindexed issue backups
 before treating the branch as restorable.
 
+2026-05-29 backup-manifest follow-up: OpenClaw's manifest-centered backup
+verification and Hermes' portable session export both point to a compact
+provenance view. GitClaw should expose a local `backup manifest` command over
+the fetched `gitclaw-backups` branch that lists control files, issue payload
+paths, byte counts, counts, and hashes without dumping raw transcript bodies.
+That gives restore reviews and mirrors a stable checklist without requiring
+operators to open every raw issue JSON file.
+
 2026-05-29 backup-export follow-up: Hermes exposes session export as JSONL.
 GitClaw can get the same portability without a local SQLite store by exporting
 the fetched `gitclaw-backups` branch: read the repo index and canonical issue

@@ -554,7 +554,8 @@ GitHub issue/comment event
 
 - CLI entry point.
 - Subcommands: `preflight`, `handle`, `backup`, `heartbeat`,
-  `channel-ingest`, `proactive enqueue`, `version`.
+  `channel-ingest`, `proactive enqueue`, `proactive init`, `doctor`,
+  `version`.
 
 `internal/github`
 
@@ -1524,6 +1525,30 @@ The command prints a deterministic `GitClaw Backup Verify Report` with status,
 counts, paths, and failures. It exits non-zero when verification fails. It does
 not print issue bodies, comments, or transcript text.
 
+## Backup Manifest Command
+
+GitClaw supports a local backup manifest command inspired by OpenClaw's
+backup verification posture and Hermes' portable session export mindset:
+
+```bash
+gitclaw backup manifest --root .gitclaw/backups --repo <owner/repo> --issue 123
+```
+
+`--issue` is optional. Without it, the command summarizes every indexed issue
+payload in the fetched backup tree. The command prints a deterministic
+`GitClaw Backup Manifest` with:
+
+- repository backup root, repo backup directory, index path, and README path,
+- backup schema version and index generation time,
+- control-file count and hashes for `index.json` and `README.md`,
+- indexed issue payload file count, bytes, hashes, event names, timestamps,
+  comment counts, and transcript message counts,
+- aggregate payload bytes, comments, and transcript messages.
+
+It never prints raw issue, comment, or transcript bodies. The manifest is a
+compact provenance view for audits, mirrors, and restore reviews before anyone
+uses the explicit raw `export-jsonl` path.
+
 ## Backup JSONL Export Command
 
 GitClaw supports a local JSONL export command inspired by Hermes'
@@ -1887,7 +1912,19 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert `backup_verify_status: ok`, zero verification failures, zero
      unindexed issue files, and an index entry for the just-created issue.
 
-26. **Backup JSONL export**
+26. **Backup manifest**
+
+   - create a real issue with `@gitclaw /backup`,
+   - wait for the successful backup job,
+   - fetch the real `gitclaw-backups` branch,
+   - run `gitclaw backup manifest --root <fetched>/.gitclaw/backups --repo
+     <owner/repo> --issue <issue-number>`,
+   - assert the manifest lists index/README control file hashes plus the
+     just-created issue payload path, bytes, hash, schema, event, comment
+     count, and transcript count,
+   - assert it does not dump the issue body token or raw transcript bodies.
+
+27. **Backup JSONL export**
 
    - create a real issue with `@gitclaw /backup`,
    - wait for the successful backup job,
@@ -1899,7 +1936,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      contains the assistant backup report body, proving the command is an
      explicit raw recovery/export path rather than an issue-visible report.
 
-27. **Backup restore plan**
+28. **Backup restore plan**
 
    - create a real issue with `@gitclaw /backup`,
    - wait for the successful backup job,
@@ -1911,7 +1948,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      counts, assistant-turn/error counts, and body hashes,
    - assert it does not dump the issue body token or raw transcript bodies.
 
-28. **Proactive init generator**
+29. **Proactive init generator**
 
    - run `gitclaw proactive init` against a temporary repo root,
    - assert it writes the expected prompt file and scheduled workflow,
@@ -1975,6 +2012,8 @@ MVP is not complete until:
 - the proactive-init harness verifies the generator writes ordinary repo files
   without leaking prompt bodies and backs that up with a real deterministic
   proactive issue conversation,
+- the backup-manifest harness verifies a real backed-up issue has a compact
+  file-level manifest with hashes and counts but no raw body leakage,
 - the backup JSONL export harness verifies a real backed-up issue can be
   exported as one JSONL transcript record per reconstructed message,
 - the backup restore-plan harness verifies a real backed-up issue can produce
@@ -2121,6 +2160,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven backup-verify E2E harness verifies the fetched
   `gitclaw-backups` branch with `gitclaw backup verify` after a real issue
   backup job succeeds.
+- A `gh`-driven backup-manifest E2E harness verifies the fetched
+  `gitclaw-backups` branch can produce a file-level manifest with control-file
+  and issue-payload hashes for one real issue, without dumping raw bodies.
 - A `gh`-driven backup-export-jsonl E2E harness verifies the fetched
   `gitclaw-backups` branch can be exported into raw JSONL transcript records
   for one real issue.

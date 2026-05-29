@@ -112,6 +112,39 @@ type BackupRestorePlan struct {
 	TranscriptMessageSHAs []string
 }
 
+type BackupManifest struct {
+	Root              string
+	Repo              string
+	RepoDir           string
+	IndexPath         string
+	ReadmePath        string
+	SchemaVersion     int
+	IndexGeneratedAt  string
+	IssueFilter       int
+	IssuePayloads     []BackupManifestPayload
+	ControlFiles      []BackupManifestFile
+	TotalPayloadBytes int
+	TotalComments     int
+	TotalTranscript   int
+	RawBodiesIncluded bool
+}
+
+type BackupManifestFile struct {
+	Path  string
+	Bytes int
+	SHA   string
+}
+
+type BackupManifestPayload struct {
+	BackupManifestFile
+	IssueNumber        int
+	BackupGeneratedAt  string
+	EventName          string
+	SchemaVersion      int
+	Comments           int
+	TranscriptMessages int
+}
+
 func (r BackupVerifyResult) OK() bool {
 	return len(r.VerificationFailures) == 0
 }
@@ -322,6 +355,61 @@ func PlanBackupRestore(root, repo string, issueNumber int, targetRepo string) (B
 	return BackupRestorePlan{}, fmt.Errorf("issue #%d not found in backup index", issueNumber)
 }
 
+func BuildBackupManifest(root, repo string, issueNumber int) (BackupManifest, error) {
+	if issueNumber < 0 {
+		return BackupManifest{}, fmt.Errorf("invalid issue number %d", issueNumber)
+	}
+	if err := validateRepoName(repo); err != nil {
+		return BackupManifest{}, err
+	}
+	repoDir, index, err := readBackupIndex(root, repo)
+	if err != nil {
+		return BackupManifest{}, err
+	}
+	if root == "" {
+		root = filepath.Join(".gitclaw", "backups")
+	}
+	manifest := BackupManifest{
+		Root:              filepath.ToSlash(root),
+		Repo:              repo,
+		RepoDir:           filepath.ToSlash(repoDir),
+		IndexPath:         filepath.ToSlash(filepath.Join(repoDir, "index.json")),
+		ReadmePath:        filepath.ToSlash(filepath.Join(repoDir, "README.md")),
+		SchemaVersion:     index.Version,
+		IndexGeneratedAt:  index.GeneratedAt,
+		IssueFilter:       issueNumber,
+		RawBodiesIncluded: false,
+	}
+
+	for _, path := range []string{filepath.Join(repoDir, "index.json"), filepath.Join(repoDir, "README.md")} {
+		file, err := manifestFile(repoDir, path)
+		if err != nil {
+			return BackupManifest{}, err
+		}
+		manifest.ControlFiles = append(manifest.ControlFiles, file)
+	}
+
+	matched := 0
+	for _, issue := range index.Issues {
+		if issueNumber > 0 && issue.Number != issueNumber {
+			continue
+		}
+		backup, payload, err := manifestPayload(repoDir, repo, issue)
+		if err != nil {
+			return BackupManifest{}, err
+		}
+		matched++
+		manifest.IssuePayloads = append(manifest.IssuePayloads, payload)
+		manifest.TotalPayloadBytes += payload.Bytes
+		manifest.TotalComments += len(backup.Comments)
+		manifest.TotalTranscript += len(backup.Transcript)
+	}
+	if issueNumber > 0 && matched == 0 {
+		return BackupManifest{}, fmt.Errorf("issue #%d not found in backup index", issueNumber)
+	}
+	return manifest, nil
+}
+
 func RenderBackupRestorePlan(plan BackupRestorePlan) string {
 	var b strings.Builder
 	b.WriteString("## GitClaw Backup Restore Plan\n\n")
@@ -367,6 +455,58 @@ func RenderBackupRestorePlan(plan BackupRestorePlan) string {
 	return strings.TrimSpace(b.String())
 }
 
+func RenderBackupManifest(manifest BackupManifest) string {
+	var b strings.Builder
+	b.WriteString("## GitClaw Backup Manifest\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	fmt.Fprintf(&b, "- repository: `%s`\n", manifest.Repo)
+	fmt.Fprintf(&b, "- backup_root: `%s`\n", manifest.Root)
+	fmt.Fprintf(&b, "- repo_backup_dir: `%s`\n", manifest.RepoDir)
+	fmt.Fprintf(&b, "- index_path: `%s`\n", manifest.IndexPath)
+	fmt.Fprintf(&b, "- readme_path: `%s`\n", manifest.ReadmePath)
+	fmt.Fprintf(&b, "- backup_schema_version: `%d`\n", manifest.SchemaVersion)
+	fmt.Fprintf(&b, "- index_generated_at: `%s`\n", manifest.IndexGeneratedAt)
+	if manifest.IssueFilter > 0 {
+		fmt.Fprintf(&b, "- issue_filter: `#%d`\n", manifest.IssueFilter)
+	} else {
+		b.WriteString("- issue_filter: `all`\n")
+	}
+	fmt.Fprintf(&b, "- control_files: `%d`\n", len(manifest.ControlFiles))
+	fmt.Fprintf(&b, "- issue_payload_files: `%d`\n", len(manifest.IssuePayloads))
+	fmt.Fprintf(&b, "- total_payload_bytes: `%d`\n", manifest.TotalPayloadBytes)
+	fmt.Fprintf(&b, "- total_comments: `%d`\n", manifest.TotalComments)
+	fmt.Fprintf(&b, "- total_transcript_messages: `%d`\n", manifest.TotalTranscript)
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n\n", manifest.RawBodiesIncluded)
+	b.WriteString("This manifest reads a fetched backup tree and reports file-level provenance, counts, and hashes. It does not print raw issue, comment, or transcript bodies.\n\n")
+
+	b.WriteString("### Control Files\n")
+	for _, file := range manifest.ControlFiles {
+		fmt.Fprintf(&b, "- `%s` bytes=`%d` sha256_12=`%s`\n", file.Path, file.Bytes, file.SHA)
+	}
+
+	b.WriteString("\n### Issue Payloads\n")
+	if len(manifest.IssuePayloads) == 0 {
+		b.WriteString("- none\n")
+	} else {
+		for _, payload := range manifest.IssuePayloads {
+			fmt.Fprintf(
+				&b,
+				"- issue=`#%d` path=`%s` bytes=`%d` sha256_12=`%s` schema=`%d` event=`%s` generated_at=`%s` comments=`%d` transcript_messages=`%d`\n",
+				payload.IssueNumber,
+				payload.Path,
+				payload.Bytes,
+				payload.SHA,
+				payload.SchemaVersion,
+				payload.EventName,
+				payload.BackupGeneratedAt,
+				payload.Comments,
+				payload.TranscriptMessages,
+			)
+		}
+	}
+	return strings.TrimSpace(b.String())
+}
+
 func readBackupIndex(root, repo string) (string, BackupIndex, error) {
 	if root == "" {
 		root = filepath.Join(".gitclaw", "backups")
@@ -384,6 +524,46 @@ func readBackupIndex(root, repo string) (string, BackupIndex, error) {
 		return "", BackupIndex{}, fmt.Errorf("backup index repo %q does not match %q", index.Repo, repo)
 	}
 	return repoDir, index, nil
+}
+
+func manifestPayload(repoDir, repo string, issue BackupIndexIssue) (IssueBackup, BackupManifestPayload, error) {
+	absPath, err := safeBackupPayloadPath(repoDir, issue.Path)
+	if err != nil {
+		return IssueBackup{}, BackupManifestPayload{}, err
+	}
+	file, err := manifestFile(repoDir, absPath)
+	if err != nil {
+		return IssueBackup{}, BackupManifestPayload{}, err
+	}
+	backup, err := readIndexedBackup(repoDir, repo, issue)
+	if err != nil {
+		return IssueBackup{}, BackupManifestPayload{}, err
+	}
+	return backup, BackupManifestPayload{
+		BackupManifestFile: file,
+		IssueNumber:        backup.Issue.Number,
+		BackupGeneratedAt:  backup.GeneratedAt,
+		EventName:          backup.EventName,
+		SchemaVersion:      backup.Version,
+		Comments:           len(backup.Comments),
+		TranscriptMessages: len(backup.Transcript),
+	}, nil
+}
+
+func manifestFile(repoDir, absPath string) (BackupManifestFile, error) {
+	data, err := os.ReadFile(absPath)
+	if err != nil {
+		return BackupManifestFile{}, err
+	}
+	rel, err := filepath.Rel(repoDir, absPath)
+	if err != nil {
+		return BackupManifestFile{}, err
+	}
+	return BackupManifestFile{
+		Path:  filepath.ToSlash(rel),
+		Bytes: len(data),
+		SHA:   shortDocumentHash(string(data)),
+	}, nil
 }
 
 func readIndexedBackup(repoDir, repo string, issue BackupIndexIssue) (IssueBackup, error) {
