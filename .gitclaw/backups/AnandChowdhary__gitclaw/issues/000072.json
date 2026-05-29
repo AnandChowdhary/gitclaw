@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T21:15:06Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 72,
+    "title": "@gitclaw /memory validate e2e 20260529T211357Z",
+    "body": "Live memory-validate E2E.\n\nHidden memory validate body token: GITCLAW_MEMORY_VALIDATE_E2E_20260529T211357Z\nThis should produce a deterministic memory validation report without dumping memory bodies.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /memory validate e2e 20260529T211357Z\n\nLive memory-validate E2E.\n\nHidden memory validate body token: GITCLAW_MEMORY_VALIDATE_E2E_20260529T211357Z\nThis should produce a deterministic memory validation report without dumping memory bodies.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Memory Validate Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#72`\n- memory_validation_status: `ok`\n- memory_validation_errors: `0`\n- memory_validation_warnings: `0`\n- long_term_memory_present: `true`\n- long_term_memory_loaded: `true`\n- dated_memory_notes: `1`\n- canonical_dated_memory_notes: `1`\n- noncanonical_dated_memory_notes: `0`\n- loaded_memory_notes: `1`\n- max_loaded_memory_notes: `3`\n- empty_memory_files: `0`\n- memory_files_at_limit: `0`\n- potential_secret_findings: `0`\n\nThis report validates git-backed memory hygiene without dumping memory bodies, issue bodies, comments, prompts, or secret values.\n\n### Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4579941533,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4579941533,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26662529051\" event_id=\"issue-72\" model=\"gitclaw/memory\" idempotency_key=\"b311bfacadeb8b104f5fb56a6ffa0859\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26662529051\" --\u003e\n## GitClaw Memory Validate Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#72`\n- memory_validation_status: `ok`\n- memory_validation_errors: `0`\n- memory_validation_warnings: `0`\n- long_term_memory_present: `true`\n- long_term_memory_loaded: `true`\n- dated_memory_notes: `1`\n- canonical_dated_memory_notes: `1`\n- noncanonical_dated_memory_notes: `0`\n- loaded_memory_notes: `1`\n- max_loaded_memory_notes: `3`\n- empty_memory_files: `0`\n- memory_files_at_limit: `0`\n- potential_secret_findings: `0`\n\nThis report validates git-backed memory hygiene without dumping memory bodies, issue bodies, comments, prompts, or secret values.\n\n### Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T21:14:42Z",
+      "updated_at": "2026-05-29T21:14:42Z"
+    }
+  ]
+}
