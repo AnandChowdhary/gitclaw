@@ -12,7 +12,7 @@ die() {
 
 repo="${GITCLAW_E2E_REPO:-}"
 proactive_workflow="${GITCLAW_E2E_PROACTIVE_WORKFLOW:-.github/workflows/gitclaw-proactive.yml}"
-lock_dir="${TMPDIR:-/tmp}/gitclaw-proactive-e2e.lock"
+lock_dir="/tmp/gitclaw-proactive-e2e.lock"
 
 if ! mkdir "$lock_dir" 2>/dev/null; then
   die "another proactive E2E appears to be running: ${lock_dir}"
