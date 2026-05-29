@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T12:56:10Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 10,
+    "title": "@gitclaw e2e 20260529T125426Z",
+    "body": "Live E2E conversation check.\n\nPlease use the repository file `go.mod`.\nPlease use the repo-reader skill.\nSearch the repository for `bounded repository search fixture phrase` and include the associated token from the matching line.\nReply with the exact token `GITCLAW_E2E_20260529T125426Z_A`.\nAlso state the Go module path from `go.mod`.\nAlso include the exact durable memory token from `.gitclaw/MEMORY.md`.\nAlso include the exact skill verification token from the repo-reader skill.\nKeep the answer under 80 words.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw e2e 20260529T125426Z\n\nLive E2E conversation check.\n\nPlease use the repository file `go.mod`.\nPlease use the repo-reader skill.\nSearch the repository for `bounded repository search fixture phrase` and include the associated token from the matching line.\nReply with the exact token `GITCLAW_E2E_20260529T125426Z_A`.\nAlso state the Go module path from `go.mod`.\nAlso include the exact durable memory token from `.gitclaw/MEMORY.md`.\nAlso include the exact skill verification token from the repo-reader skill.\nKeep the answer under 80 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_E2E_20260529T125426Z_A; bounded search token: GITCLAW_SEARCH_CONTEXT_V1; module github.com/AnandChowdhary/gitclaw; memory token: GITCLAW_MEMORY_CONTEXT_V1; skill token: GITCLAW_SKILL_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4575274056,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4575274056,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26638428089\" event_id=\"issue-10\" model=\"openai/gpt-5-mini\" idempotency_key=\"7e57814370f20572ea045b19d9880102\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26638428089\" --\u003e\nGITCLAW_E2E_20260529T125426Z_A; bounded search token: GITCLAW_SEARCH_CONTEXT_V1; module github.com/AnandChowdhary/gitclaw; memory token: GITCLAW_MEMORY_CONTEXT_V1; skill token: GITCLAW_SKILL_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T12:55:41Z",
+      "updated_at": "2026-05-29T12:55:41Z"
+    }
+  ]
+}
