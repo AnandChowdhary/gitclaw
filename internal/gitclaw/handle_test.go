@@ -851,7 +851,13 @@ func TestHandleDoctorCommandPostsReportWithoutLLM(t *testing.T) {
 	writeTestFile(t, root, ".gitclaw/MEMORY.md", "MEMORY_DOCTOR_SECRET")
 	writeTestFile(t, root, ".gitclaw/HEARTBEAT.md", "HEARTBEAT_DOCTOR_SECRET")
 	writeTestFile(t, root, ".gitclaw/memory/2026-05-29.md", "MEMORY_NOTE_DOCTOR_SECRET")
-	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", "SKILL_DOCTOR_SECRET")
+	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Use read-only repository context.
+---
+
+SKILL_DOCTOR_SECRET
+`)
 	writeTestFile(t, root, ".gitclaw/proactive/repo-hygiene.md", "PROACTIVE_DOCTOR_SECRET")
 	ev, err := ParseEvent("issues", []byte(`{
 		"action": "opened",
@@ -887,7 +893,7 @@ func TestHandleDoctorCommandPostsReportWithoutLLM(t *testing.T) {
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Doctor Report", "Generated without a model call", "model=\"gitclaw/doctor\"", "health_status: `ok`", "config_source: `defaults+repo`", "config_valid: `true`", "config_file_present: `true`", "workflows_present: `4`", "context_files_present: `6`", "memory_notes: `1`", "skill_files: `1`", "proactive_prompt_files: `1`", "`config_validation`: `ok`", "`main_workflow`: `ok`", "`local_skills`: `ok`", ".gitclaw/SOUL.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", "sha256_12="} {
+	for _, want := range []string{"GitClaw Doctor Report", "Generated without a model call", "model=\"gitclaw/doctor\"", "health_status: `ok`", "config_source: `defaults+repo`", "config_valid: `true`", "config_file_present: `true`", "workflows_present: `4`", "context_files_present: `6`", "memory_notes: `1`", "skill_files: `1`", "proactive_prompt_files: `1`", "validation_errors: `0`", "validation_warnings: `0`", "skill_validation_status: `ok`", "skill_validation_errors: `0`", "skill_validation_warnings: `0`", "soul_validation_status: `ok`", "soul_validation_errors: `0`", "soul_validation_warnings: `0`", "tool_validation_status: `ok`", "tool_validation_errors: `0`", "tool_validation_warnings: `0`", "`config_validation`: `ok`", "`main_workflow`: `ok`", "`local_skills`: `ok`", "`skill_validation`: `ok`", "`soul_validation`: `ok`", "`tool_validation`: `ok`", ".gitclaw/SOUL.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", "sha256_12="} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("doctor report missing %q:\n%s", want, body)
 		}

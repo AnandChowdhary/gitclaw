@@ -1129,7 +1129,9 @@ inference. It posts a `gitclaw:assistant-turn` comment with
 - local skill count,
 - proactive prompt count,
 - managed label count,
-- pass/warn checks for the core control plane.
+- validation error/warning totals,
+- skill, soul, and tool validation statuses plus error/warning counts,
+- pass/warn checks for the core control plane and validation rollups.
 
 It never dumps file bodies, issue bodies, comments, prompts, or secrets. This
 is the GitHub-native equivalent of `openclaw config validate` plus the cold,
@@ -2233,7 +2235,8 @@ examples/workflows/gitclaw.yml
   model call.
 - A `gh`-driven doctor-report E2E harness verifies `@gitclaw /doctor` reports
   config validation, workflow presence, context files, skills, memory notes,
-  and proactive prompts without a model call.
+  proactive prompts, and skill/soul/tool validation rollups without a model
+  call.
 - A `gh`-driven backup-index E2E harness verifies the dedicated backup branch
   contains issue JSON plus a repo-scoped `index.json` and `README.md`.
 - A `gh`-driven backup-report E2E harness verifies `@gitclaw /backup`

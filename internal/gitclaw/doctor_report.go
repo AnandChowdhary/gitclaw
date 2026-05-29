@@ -18,17 +18,22 @@ var doctorContextPaths = []string{
 }
 
 type doctorSurface struct {
-	Config        configSurfaceFile
-	Workflows     []configSurfaceFile
-	ContextFiles  []configSurfaceFile
-	MemoryNotes   []configSurfaceFile
-	SkillFiles    []configSurfaceFile
-	Proactive     proactiveSurface
-	ConfigValid   bool
-	ConfigError   string
-	ModelHost     string
-	ConfigSource  string
-	ManagedLabels []string
+	Config             configSurfaceFile
+	Workflows          []configSurfaceFile
+	ContextFiles       []configSurfaceFile
+	MemoryNotes        []configSurfaceFile
+	SkillFiles         []configSurfaceFile
+	Proactive          proactiveSurface
+	SkillValidation    SkillValidationReport
+	SoulValidation     SoulValidationReport
+	ToolValidation     ToolValidationReport
+	ConfigValid        bool
+	ConfigError        string
+	ModelHost          string
+	ConfigSource       string
+	ManagedLabels      []string
+	ValidationErrors   int
+	ValidationWarnings int
 }
 
 func IsDoctorReportRequest(ev Event, cfg Config) bool {
@@ -36,8 +41,8 @@ func IsDoctorReportRequest(ev Event, cfg Config) bool {
 	return command == "/doctor" || command == "/health"
 }
 
-func RenderDoctorReport(ev Event, cfg Config) string {
-	surface := inspectDoctorSurface(cfg)
+func RenderDoctorReport(ev Event, cfg Config, repoContext RepoContext) string {
+	surface := inspectDoctorSurface(cfg, repoContext)
 	checks := doctorChecks(surface)
 	var b strings.Builder
 	b.WriteString("## GitClaw Doctor Report\n\n")
@@ -62,6 +67,17 @@ func RenderDoctorReport(ev Event, cfg Config) string {
 	fmt.Fprintf(&b, "- skill_files: `%d`\n", len(surface.SkillFiles))
 	fmt.Fprintf(&b, "- proactive_prompt_files: `%d`\n", len(surface.Proactive.Prompts))
 	fmt.Fprintf(&b, "- managed_labels: `%d`\n", len(surface.ManagedLabels))
+	fmt.Fprintf(&b, "- validation_errors: `%d`\n", surface.ValidationErrors)
+	fmt.Fprintf(&b, "- validation_warnings: `%d`\n", surface.ValidationWarnings)
+	fmt.Fprintf(&b, "- skill_validation_status: `%s`\n", surface.SkillValidation.Status)
+	fmt.Fprintf(&b, "- skill_validation_errors: `%d`\n", surface.SkillValidation.Errors)
+	fmt.Fprintf(&b, "- skill_validation_warnings: `%d`\n", surface.SkillValidation.Warnings)
+	fmt.Fprintf(&b, "- soul_validation_status: `%s`\n", surface.SoulValidation.Status)
+	fmt.Fprintf(&b, "- soul_validation_errors: `%d`\n", surface.SoulValidation.Errors)
+	fmt.Fprintf(&b, "- soul_validation_warnings: `%d`\n", surface.SoulValidation.Warnings)
+	fmt.Fprintf(&b, "- tool_validation_status: `%s`\n", surface.ToolValidation.Status)
+	fmt.Fprintf(&b, "- tool_validation_errors: `%d`\n", surface.ToolValidation.Errors)
+	fmt.Fprintf(&b, "- tool_validation_warnings: `%d`\n", surface.ToolValidation.Warnings)
 	if ev.Issue.Title != "" {
 		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
 	}
@@ -116,19 +132,27 @@ type doctorCheck struct {
 	Detail string
 }
 
-func inspectDoctorSurface(cfg Config) doctorSurface {
+func inspectDoctorSurface(cfg Config, repoContext RepoContext) doctorSurface {
 	root := cfg.Workdir
 	if root == "" {
 		root = "."
 	}
+	skillValidation := ValidateSkillSummaries(repoContext.SkillSummaries)
+	soulValidation := ValidateSoulContext(repoContext)
+	toolValidation := ValidateTools(repoContext)
 	surface := doctorSurface{
-		Config:        inspectConfigSurfaceFile(root, gitclawConfigPath),
-		Workflows:     make([]configSurfaceFile, 0, len(configWorkflowPaths)),
-		ContextFiles:  make([]configSurfaceFile, 0, len(doctorContextPaths)),
-		Proactive:     inspectProactiveSurface(root),
-		ConfigSource:  configSource(cfg),
-		ModelHost:     llmEndpointHost(llmBaseURL(cfg)),
-		ManagedLabels: managedPolicyLabels(cfg),
+		Config:             inspectConfigSurfaceFile(root, gitclawConfigPath),
+		Workflows:          make([]configSurfaceFile, 0, len(configWorkflowPaths)),
+		ContextFiles:       make([]configSurfaceFile, 0, len(doctorContextPaths)),
+		Proactive:          inspectProactiveSurface(root),
+		SkillValidation:    skillValidation,
+		SoulValidation:     soulValidation,
+		ToolValidation:     toolValidation,
+		ConfigSource:       configSource(cfg),
+		ModelHost:          llmEndpointHost(llmBaseURL(cfg)),
+		ManagedLabels:      managedPolicyLabels(cfg),
+		ValidationErrors:   skillValidation.Errors + soulValidation.Errors + toolValidation.Errors,
+		ValidationWarnings: skillValidation.Warnings + soulValidation.Warnings + toolValidation.Warnings,
 	}
 	configCheck := DefaultConfig()
 	configCheck.Workdir = root
@@ -207,6 +231,21 @@ func doctorChecks(surface doctorSurface) []doctorCheck {
 			Status: doctorStatus(len(surface.Proactive.Prompts) > 0),
 			Detail: fmt.Sprintf("%d prompt file(s)", len(surface.Proactive.Prompts)),
 		},
+		{
+			Name:   "skill_validation",
+			Status: surface.SkillValidation.Status,
+			Detail: doctorValidationDetail(surface.SkillValidation.Errors, surface.SkillValidation.Warnings),
+		},
+		{
+			Name:   "soul_validation",
+			Status: surface.SoulValidation.Status,
+			Detail: doctorValidationDetail(surface.SoulValidation.Errors, surface.SoulValidation.Warnings),
+		},
+		{
+			Name:   "tool_validation",
+			Status: surface.ToolValidation.Status,
+			Detail: doctorValidationDetail(surface.ToolValidation.Errors, surface.ToolValidation.Warnings),
+		},
 	}
 }
 
@@ -231,6 +270,10 @@ func doctorBoolDetail(ok bool, yes, no string) string {
 		return yes
 	}
 	return no
+}
+
+func doctorValidationDetail(errors, warnings int) string {
+	return fmt.Sprintf("%d error(s), %d warning(s)", errors, warnings)
 }
 
 func configWorkflowPresent(files []configSurfaceFile, path string) bool {
@@ -258,5 +301,6 @@ func writeDoctorFileList(b *strings.Builder, files []configSurfaceFile) {
 
 func PrintDoctorReport(cfg Config) {
 	repo := os.Getenv("GITHUB_REPOSITORY")
-	fmt.Println(RenderDoctorReport(Event{Repo: repo}, cfg))
+	repoContext, _ := LoadRepoContext(cfg.Workdir, nil)
+	fmt.Println(RenderDoctorReport(Event{Repo: repo}, cfg, repoContext))
 }

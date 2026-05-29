@@ -315,6 +315,13 @@ read-only subset first: `@gitclaw /doctor` reports config validation, workflow
 presence, context file metadata, skill counts, memory note counts, and proactive
 prompt counts without auto-repair or body dumps.
 
+2026-05-29 doctor-validation follow-up: after adding dedicated skill, soul, and
+tool validators, the doctor command should become the top-level rollup. This
+matches OpenClaw's health-diagnostics posture and Hermes' platform/toolset
+status surfaces: `/doctor` should report validation error/warning totals plus
+skill, soul, and tool validation statuses without listing body-level findings
+or exposing private context.
+
 2026-05-29 channel visibility follow-up: Slack's Events API expects either a
 server HTTP endpoint or Socket Mode, Socket Mode uses a stateful WebSocket
 instead of a static public URL, Telegram's `getUpdates` provides long polling

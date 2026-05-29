@@ -147,10 +147,24 @@ for expected in \
   'skill_files: `1`' \
   'proactive_prompt_files: `1`' \
   'managed_labels: `9`' \
+  'validation_errors: `0`' \
+  'validation_warnings: `0`' \
+  'skill_validation_status: `ok`' \
+  'skill_validation_errors: `0`' \
+  'skill_validation_warnings: `0`' \
+  'soul_validation_status: `ok`' \
+  'soul_validation_errors: `0`' \
+  'soul_validation_warnings: `0`' \
+  'tool_validation_status: `ok`' \
+  'tool_validation_errors: `0`' \
+  'tool_validation_warnings: `0`' \
   '`config_validation`: `ok`' \
   '`workflow_set`: `ok`' \
   '`identity_context`: `ok`' \
   '`local_skills`: `ok`' \
+  '`skill_validation`: `ok`' \
+  '`soul_validation`: `ok`' \
+  '`tool_validation`: `ok`' \
   '.gitclaw/config.yml' \
   '.github/workflows/gitclaw.yml' \
   '.gitclaw/SOUL.md' \
