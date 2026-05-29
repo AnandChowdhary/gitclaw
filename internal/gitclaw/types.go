@@ -27,7 +27,7 @@ func DefaultConfig() Config {
 			"MEMBER":       true,
 			"COLLABORATOR": true,
 		},
-		Model: "openai/gpt-4o-mini",
+		Model: "openai/gpt-5-mini",
 	}
 }
 

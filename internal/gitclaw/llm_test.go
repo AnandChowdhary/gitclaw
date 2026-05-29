@@ -6,8 +6,8 @@ import (
 
 func TestDefaultConfigUsesGitHubModelsSmallDefault(t *testing.T) {
 	cfg := DefaultConfig()
-	if cfg.Model != "openai/gpt-4o-mini" {
-		t.Fatalf("default model = %q, want openai/gpt-4o-mini", cfg.Model)
+	if cfg.Model != "openai/gpt-5-mini" {
+		t.Fatalf("default model = %q, want openai/gpt-5-mini", cfg.Model)
 	}
 }
 
@@ -33,8 +33,8 @@ func TestNewLLMFromEnvDefaultsToGitHubModelsWithActionsToken(t *testing.T) {
 	if client.BaseURL != "https://models.github.ai/inference/chat/completions" {
 		t.Fatalf("BaseURL = %q, want GitHub Models endpoint", client.BaseURL)
 	}
-	if client.Model != "openai/gpt-4o-mini" {
-		t.Fatalf("Model = %q, want openai/gpt-4o-mini", client.Model)
+	if client.Model != "openai/gpt-5-mini" {
+		t.Fatalf("Model = %q, want openai/gpt-5-mini", client.Model)
 	}
 }
 

@@ -175,7 +175,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
-          GITCLAW_MODEL: openai/gpt-4o-mini
+          GITCLAW_MODEL: openai/gpt-5-mini
 ```
 
 Later, when GitClaw is released as a binary, the workflow should download the pinned release binary instead of compiling on every run.
@@ -207,16 +207,18 @@ https://models.github.ai/orgs/<org>/inference/chat/completions
 Default MVP behavior:
 
 - provider: `github-models`
-- model: `openai/gpt-4o-mini`
+- model: `openai/gpt-5-mini`
 - auth token lookup: `GITHUB_TOKEN`, then `GH_TOKEN`, then optional
   `GITCLAW_LLM_API_KEY` for local/manual runs
 - base URL override: `GITCLAW_LLM_BASE_URL`
 - model override: `GITCLAW_MODEL`
 
-`openai/gpt-4o-mini` is the recommended default because the first assistant
-version is issue-thread chat plus repository context summarization, where
-latency and cost matter more than maximum reasoning depth. Repositories can
-override to `openai/gpt-4o` or another GitHub Models catalog model when needed.
+`openai/gpt-5-mini` is the recommended default because it is the smallest
+new-generation OpenAI model currently visible in the GitHub Models Marketplace.
+The first assistant version is issue-thread chat plus repository context
+summarization, where latency and cost matter more than maximum reasoning depth.
+Repositories can override to `openai/gpt-5.4-mini`, `openai/gpt-4o`, or another
+GitHub Models catalog model when that model is available to the repository.
 
 Fallback provider rule:
 
@@ -314,7 +316,7 @@ No external session DB is required.
 Hidden assistant marker:
 
 ```html
-<!-- gitclaw:assistant-turn run_id=123 event_id=456 model=openai/gpt-4o-mini -->
+<!-- gitclaw:assistant-turn run_id=123 event_id=456 model=openai/gpt-5-mini -->
 ```
 
 Hidden status marker:
@@ -392,7 +394,7 @@ authorization:
 
 model:
   provider: github-models
-  model: openai/gpt-4o-mini
+  model: openai/gpt-5-mini
   base_url: https://models.github.ai/inference/chat/completions
   max_input_tokens: 60000
   max_output_tokens: 4000
@@ -917,8 +919,9 @@ examples/workflows/gitclaw.yml
 ## Open Questions
 
 1. Should the first user-facing default be all issues in a dedicated inbox repo, or label/prefix-triggered issues in any repo?
-2. Which GitHub Models catalog model should be the default after live E2E:
-   `openai/gpt-4o-mini`, `openai/gpt-4o`, or another approved model?
+2. Should the default move from `openai/gpt-5-mini` to
+   `openai/gpt-5.4-mini` once the GitHub Models catalog exposes that ID to
+   Actions?
 3. Should v0 include read-only repo file search, or should it be pure issue-thread chat first?
 4. Do we want GitClaw to support GitHub App authentication in v1, or rely on `GITHUB_TOKEN` until PR automation exists?
 5. Should write mode create draft PRs only, or also allow direct commits on non-protected branches?
