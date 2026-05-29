@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T22:41:13Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 81,
+    "title": "@gitclaw /skills list e2e 20260529T224015Z",
+    "body": "Live skills-list E2E.\n\nPlease list the local GitClaw skill inventory and select the repo-reader skill.\nHidden skills list body token: GITCLAW_SKILLS_LIST_E2E_20260529T224015Z\nThis should produce a deterministic skills list report without calling a model.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /skills list e2e 20260529T224015Z\n\nLive skills-list E2E.\n\nPlease list the local GitClaw skill inventory and select the repo-reader skill.\nHidden skills list body token: GITCLAW_SKILLS_LIST_E2E_20260529T224015Z\nThis should produce a deterministic skills list report without calling a model.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Skills Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#81`\n- available_skills: `1`\n- selected_skills: `1`\n- skills_with_frontmatter: `1`\n- skills_with_description: `1`\n- skills_with_requirements: `0`\n- skills_missing_requirements: `0`\n- skill_validation_status: `ok`\n- skill_validation_errors: `0`\n- skill_validation_warnings: `0`\n- skill_duplicate_names: `0`\n- skill_invalid_names: `0`\n- skill_name_folder_mismatches: `0`\n\nGitClaw uses progressive disclosure: this report lists available skill metadata, while full `SKILL.md` bodies are loaded only when selected or marked always-on.\n\nSkill bodies are not included; hashes and requirement counts make local skills reviewable like code before they influence a model turn.\n\n### Available Skills\n- name=`repo-reader` path=`.gitclaw/SKILLS/repo-reader/SKILL.md` always=`false` frontmatter=`true` description=`true` bytes=`448` lines=`13` sha256_12=`a4afc96b87e1` requires_env=`0` requires_bins=`0` missing_env=`0` missing_bins=`0` description=`Use GitClaw's read-only repository context and tool outputs to answer file-aw...`\n\n### Selected For This Turn\n- `.gitclaw/SKILLS/repo-reader/SKILL.md` bytes=`448` lines=`13` sha256_12=`a4afc96b87e1`\n\n### Validation\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4580398023,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4580398023,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26665840092\" event_id=\"issue-81\" model=\"gitclaw/skills\" idempotency_key=\"13f3e0184c9a83a4655e58bd0dd83ee4\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26665840092\" --\u003e\n## GitClaw Skills Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#81`\n- available_skills: `1`\n- selected_skills: `1`\n- skills_with_frontmatter: `1`\n- skills_with_description: `1`\n- skills_with_requirements: `0`\n- skills_missing_requirements: `0`\n- skill_validation_status: `ok`\n- skill_validation_errors: `0`\n- skill_validation_warnings: `0`\n- skill_duplicate_names: `0`\n- skill_invalid_names: `0`\n- skill_name_folder_mismatches: `0`\n\nGitClaw uses progressive disclosure: this report lists available skill metadata, while full `SKILL.md` bodies are loaded only when selected or marked always-on.\n\nSkill bodies are not included; hashes and requirement counts make local skills reviewable like code before they influence a model turn.\n\n### Available Skills\n- name=`repo-reader` path=`.gitclaw/SKILLS/repo-reader/SKILL.md` always=`false` frontmatter=`true` description=`true` bytes=`448` lines=`13` sha256_12=`a4afc96b87e1` requires_env=`0` requires_bins=`0` missing_env=`0` missing_bins=`0` description=`Use GitClaw's read-only repository context and tool outputs to answer file-aw...`\n\n### Selected For This Turn\n- `.gitclaw/SKILLS/repo-reader/SKILL.md` bytes=`448` lines=`13` sha256_12=`a4afc96b87e1`\n\n### Validation\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-29T22:40:53Z",
+      "updated_at": "2026-05-29T22:40:53Z"
+    }
+  ]
+}
