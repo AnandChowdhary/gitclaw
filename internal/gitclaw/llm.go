@@ -129,6 +129,19 @@ func (c *OpenAICompatibleLLM) httpClient() *http.Client {
 func BuildPrompt(req LLMRequest) string {
 	var b strings.Builder
 	fmt.Fprintf(&b, "Repository: %s\nIssue: #%d %s\n\n", req.Event.Repo, req.Event.Issue.Number, req.Event.Issue.Title)
+	if len(req.Context.Documents) > 0 || len(req.Context.Skills) > 0 || len(req.Context.ToolOutputs) > 0 {
+		b.WriteString("Repository context:\n")
+		for _, doc := range req.Context.Documents {
+			fmt.Fprintf(&b, "\n[context_file path=%s]\n%s\n", doc.Path, doc.Body)
+		}
+		for _, skill := range req.Context.Skills {
+			fmt.Fprintf(&b, "\n[skill path=%s]\n%s\n", skill.Path, skill.Body)
+		}
+		for _, output := range req.Context.ToolOutputs {
+			fmt.Fprintf(&b, "\n[tool_output name=%s input=%s]\n%s\n", output.Name, output.Input, output.Output)
+		}
+		b.WriteByte('\n')
+	}
 	b.WriteString("Transcript:\n")
 	for _, msg := range req.Transcript {
 		trust := "untrusted"

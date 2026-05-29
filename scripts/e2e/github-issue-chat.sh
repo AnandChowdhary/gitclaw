@@ -33,7 +33,15 @@ fi
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
 title="@gitclaw e2e ${timestamp}"
-body="Live E2E: reply with a short acknowledgement and include the issue number if you can."
+token_a="GITCLAW_E2E_${timestamp}_A"
+token_b="GITCLAW_E2E_${timestamp}_B"
+module_path="github.com/AnandChowdhary/gitclaw"
+body="Live E2E conversation check.
+
+Please use the repository file \`go.mod\`.
+Reply with the exact token \`${token_a}\`.
+Also state the Go module path from \`go.mod\`.
+Keep the answer under 80 words."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -93,6 +101,13 @@ count_gitclaw_comments() {
     --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length'
 }
 
+gitclaw_comment_bodies() {
+  gh issue view "$issue_number" \
+    --repo "$GITCLAW_E2E_REPO" \
+    --json comments \
+    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | join("\n---GITCLAW-COMMENT---\n")'
+}
+
 wait_for_comment_count() {
   local want="$1"
   local deadline=$((SECONDS + comment_deadline_seconds))
@@ -111,17 +126,26 @@ if ! wait_for_run issues "$issue_started_at" >/dev/null; then
   die "timed out waiting for issues workflow run for #${issue_number}"
 fi
 wait_for_comment_count 1 || die "expected one GitClaw assistant comment after issue open"
+first_bodies="$(gitclaw_comment_bodies)"
+grep -Fq "$token_a" <<<"$first_bodies" || die "first assistant comment did not include expected conversation token ${token_a}"
+grep -Fq "$module_path" <<<"$first_bodies" || die "first assistant comment did not use go.mod module path ${module_path}"
 echo "e2e: issue-open response verified"
 
 comment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \
   --repo "$GITCLAW_E2E_REPO" \
-  --body "Follow up from live E2E: reply once more." >/dev/null
+  --body "Follow-up E2E conversation check.
+
+Reply with the exact new token \`${token_b}\`.
+Also mention the earlier token \`${token_a}\` from this issue thread." >/dev/null
 
 if ! wait_for_run issue_comment "$comment_started_at" >/dev/null; then
   die "timed out waiting for issue_comment workflow run for #${issue_number}"
 fi
 wait_for_comment_count 2 || die "expected exactly two GitClaw assistant comments after follow-up"
+all_bodies="$(gitclaw_comment_bodies)"
+grep -Fq "$token_b" <<<"$all_bodies" || die "second assistant comment did not include expected follow-up token ${token_b}"
+grep -Fq "$token_a" <<<"$all_bodies" || die "assistant comments do not preserve prior conversation token ${token_a}"
 echo "e2e: follow-up response verified"
 
 sleep 15

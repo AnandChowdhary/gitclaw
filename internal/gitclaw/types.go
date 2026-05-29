@@ -15,6 +15,7 @@ type Config struct {
 	DisabledLabel       string
 	AllowedAssociations map[string]bool
 	Model               string
+	Workdir             string
 }
 
 func DefaultConfig() Config {
@@ -27,7 +28,8 @@ func DefaultConfig() Config {
 			"MEMBER":       true,
 			"COLLABORATOR": true,
 		},
-		Model: "openai/gpt-5-mini",
+		Model:   "openai/gpt-5-mini",
+		Workdir: ".",
 	}
 }
 
@@ -112,5 +114,23 @@ type LLMClient interface {
 type LLMRequest struct {
 	Event      Event
 	Transcript []TranscriptMessage
+	Context    RepoContext
 	Config     Config
+}
+
+type RepoContext struct {
+	Documents   []ContextDocument
+	Skills      []ContextDocument
+	ToolOutputs []ToolOutput
+}
+
+type ContextDocument struct {
+	Path string
+	Body string
+}
+
+type ToolOutput struct {
+	Name   string
+	Input  string
+	Output string
 }

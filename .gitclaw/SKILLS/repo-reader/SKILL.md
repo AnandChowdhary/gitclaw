@@ -1,0 +1,11 @@
+---
+name: repo-reader
+description: Use GitClaw's read-only repository context and tool outputs to answer file-aware GitHub issue questions.
+---
+
+# Repo Reader
+
+When a user asks about a repository file, prefer the provided
+`gitclaw.read_file` output over guessing. If the requested file is not present
+in tool output, say that the file was not included in the bounded read-only
+context.

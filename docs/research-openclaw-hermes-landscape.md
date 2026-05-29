@@ -81,6 +81,14 @@ Workspace/bootstrap files matter. OpenClaw expects user-editable files such as:
 - `USER.md`: user profile.
 - `BOOTSTRAP.md`: first-run ritual.
 
+2026-05-29 follow-up: OpenClaw's skills documentation reinforces two useful
+constraints for GitClaw. First, skills are plain directories containing
+`SKILL.md`, which makes them easy to keep in git and review like code. Second,
+skill loading must be gated because third-party skills are a supply-chain and
+prompt-injection surface. GitClaw should therefore start with repo-local,
+read-only `.gitclaw/SKILLS/*/SKILL.md` files and should not install remote
+skills or let the agent edit skills automatically.
+
 ### Memory
 
 OpenClaw's default memory model is file-centric:
@@ -200,6 +208,13 @@ Hermes uses bounded curated memory plus searchable sessions:
 - external memory providers can run alongside built-in memory.
 
 This is a stronger distinction than OpenClaw's default docs suggest: memory is the tiny always-in-context layer, while session search is the large on-demand recall layer.
+
+2026-05-29 follow-up: Hermes' feature docs explicitly group tools into
+toolsets that can be enabled per platform and describe project context files
+such as `AGENTS.md`, `SOUL.md`, and other repo-local instruction files as part
+of every conversation. The GitClaw adaptation should keep this same separation:
+context files and skills are prompt inputs, while tools are bounded read-only
+operations whose outputs are visible in the prompt and testable in E2E runs.
 
 ### Skills
 

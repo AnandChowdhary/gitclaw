@@ -2,6 +2,8 @@ package gitclaw
 
 import (
 	"context"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -89,6 +91,48 @@ func TestHandleSkipsUntrustedBeforeLLM(t *testing.T) {
 	}
 }
 
+func TestHandlePassesRepoContextToLLM(t *testing.T) {
+	root := t.TempDir()
+	if err := os.WriteFile(filepath.Join(root, "go.mod"), []byte("module github.com/AnandChowdhary/gitclaw\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.MkdirAll(filepath.Join(root, ".gitclaw"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(root, ".gitclaw", "SOUL.md"), []byte("Be repo-native."), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 88,
+			"title": "@gitclaw inspect go.mod",
+			"body": "What module path is in go.mod?",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{88: nil}}
+	llm := &FakeLLM{Response: "module path found"}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if !hasContextDoc(llm.LastRequest.Context.Documents, ".gitclaw/SOUL.md", "repo-native") {
+		t.Fatalf("LLM request missing soul context: %#v", llm.LastRequest.Context.Documents)
+	}
+	if !hasToolOutput(llm.LastRequest.Context.ToolOutputs, "gitclaw.read_file", "go.mod", "module github.com/AnandChowdhary/gitclaw") {
+		t.Fatalf("LLM request missing read_file tool output: %#v", llm.LastRequest.Context.ToolOutputs)
+	}
+}
+
 type FakeGitHub struct {
 	CommentsByIssue map[int][]Comment
 	Posted          []PostedComment
@@ -110,11 +154,13 @@ func (f *FakeGitHub) PostIssueComment(ctx context.Context, repo string, issueNum
 }
 
 type FakeLLM struct {
-	Response string
-	Calls    int
+	Response    string
+	Calls       int
+	LastRequest LLMRequest
 }
 
 func (f *FakeLLM) Complete(ctx context.Context, req LLMRequest) (string, error) {
 	f.Calls++
+	f.LastRequest = req
 	return f.Response, nil
 }

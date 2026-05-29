@@ -279,6 +279,9 @@ GitHub issue/comment event
 - Loads repo context files.
 - Builds the system prompt and run prompt.
 - Applies token budgets.
+- Loads repo-native soul, tools notes, curated memory, and local skills from
+  git-tracked files.
+- Runs bounded read-only repository tools before the model turn.
 
 `internal/agent`
 
@@ -342,10 +345,29 @@ MVP loads:
 - `AGENTS.md`
 - `.github/copilot-instructions.md`, if present
 - `.gitclaw/GITCLAW.md`, if present
+- `.gitclaw/SOUL.md`, if present
+- `.gitclaw/TOOLS.md`, if present
+- `.gitclaw/MEMORY.md`, if present and human-reviewed
+- `.gitclaw/SKILLS/*/SKILL.md`, if present
 - issue thread transcript
-- small repository summary from `git ls-files`
+- small repository summary from a read-only file listing
+- bounded `gitclaw.read_file` output for files explicitly mentioned in the
+  issue thread
 
-Do not let the agent write these files in MVP.
+Do not let the agent write these files in MVP. Skills, soul, tools notes, and
+memory are git-backed source files: edits happen through normal human-reviewed
+commits, not hidden agent mutation.
+
+## Read-Only Tool Context
+
+GitClaw v1 adds a small deterministic tool layer before the model call:
+
+- `gitclaw.list_files`: lists a bounded set of repository files in the checkout.
+- `gitclaw.read_file`: reads a bounded text file only when the issue thread
+  explicitly mentions that repository-relative path.
+
+Tool outputs are inserted into the prompt as auditable context blocks. They are
+not autonomous shell execution, and they do not mutate the repository.
 
 ## Labels
 
@@ -823,6 +845,8 @@ MVP is not complete until:
 - the dry-run command tests pass,
 - the live GitHub E2E harness creates an issue and receives a GitClaw reply,
 - the live harness comments again and receives exactly one additional reply,
+- the live harness verifies actual conversation content, including exact
+  nonce tokens across turns and repository file context from `go.mod`,
 - bot loop prevention is verified live,
 - the issue is cleaned up or labeled with an E2E retention label.
 

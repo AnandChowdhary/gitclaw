@@ -110,5 +110,8 @@ func loadEventAndConfig(args []string) (Event, Config, error) {
 	if model := os.Getenv("GITCLAW_MODEL"); model != "" {
 		cfg.Model = model
 	}
+	if workdir := os.Getenv("GITCLAW_WORKDIR"); workdir != "" {
+		cfg.Workdir = workdir
+	}
 	return ev, cfg, nil
 }

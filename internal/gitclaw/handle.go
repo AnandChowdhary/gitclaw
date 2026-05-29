@@ -25,9 +25,14 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 	}
 
 	transcript := BuildTranscript(ev, comments)
+	repoContext, err := LoadRepoContext(cfg.Workdir, transcript)
+	if err != nil {
+		return fmt.Errorf("load repo context: %w", err)
+	}
 	response, err := llm.Complete(ctx, LLMRequest{
 		Event:      ev,
 		Transcript: transcript,
+		Context:    repoContext,
 		Config:     cfg,
 	})
 	if err != nil {
