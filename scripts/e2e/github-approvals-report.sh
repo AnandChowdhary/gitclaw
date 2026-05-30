@@ -162,9 +162,9 @@ for expected in \
   "Generated without a model call" \
   'repository: `'"$repo"'`' \
   'issue: `#'"$issue_number"'`' \
-  'event_kind: `issues`' \
+  'event_kind: `issue_opened`' \
   'preflight_allowed: `true`' \
-  'preflight_code: `ok`' \
+  'preflight_code: `allowed`' \
   'actor_association: `OWNER`' \
   'actor_trusted: `true`' \
   'triggered: `true`' \
