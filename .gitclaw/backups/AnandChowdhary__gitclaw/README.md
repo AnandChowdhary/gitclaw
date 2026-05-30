@@ -1,6 +1,6 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-05-30T23:35:40Z`
+- generated_at: `2026-05-30T23:37:07Z`
 - issue_count: `291`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
@@ -295,4 +295,4 @@
 | #325 | @gitclaw session coverage e2e 20260530T224805Z | `2026-05-30T22:50:36Z` | 3 | 4 | `issues/000325.json` |
 | #326 | @gitclaw /doctor e2e 20260530T230325Z | `2026-05-30T23:05:40Z` | 3 | 4 | `issues/000326.json` |
 | #327 | @gitclaw /secrets risk e2e 20260530T231835Z | `2026-05-30T23:20:59Z` | 3 | 4 | `issues/000327.json` |
-| #328 | @gitclaw /migrate risk hermes e2e 20260530T233436Z | `2026-05-30T23:35:39Z` | 1 | 2 | `issues/000328.json` |
+| #328 | @gitclaw /migrate risk hermes e2e 20260530T233436Z | `2026-05-30T23:37:05Z` | 3 | 4 | `issues/000328.json` |
