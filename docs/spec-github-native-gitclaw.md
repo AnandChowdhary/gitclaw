@@ -675,6 +675,7 @@ GitHub issue/comment event
   `rollback list`,
   `proactive enqueue`, `proactive init`, `proactive info`,
   `approvals list`, `approvals verify`,
+  `hooks list`, `hooks verify`,
   `migrate plan`,
   `orders list`, `orders verify`,
   `profile show`, `profile verify`,
@@ -838,6 +839,8 @@ AGENTS.md                    # existing coding-agent instructions, if present
 .gitclaw/USER.md             # maintainer preferences, human-reviewed only
 .gitclaw/HEARTBEAT.md        # scheduled heartbeat checklist
 .gitclaw/STANDING_ORDERS.md  # durable operating authority boundaries
+.gitclaw/HOOKS.md            # declarative hook safety policy
+.gitclaw/hooks/*.md          # declarative hook specs, metadata-only in v1
 .gitclaw/SKILLS/*.md         # optional read-only local skills, v1+
 .gitclaw/MEMORY.md           # optional curated repo memory, human-reviewed only
 .gitclaw/memory/YYYY-MM-DD.md # dated working memory notes, human-reviewed only
@@ -858,6 +861,9 @@ MVP loads:
   issue context
 - `.gitclaw/STANDING_ORDERS.md`, if present, as persistent repo-reviewed
   authority boundaries for normal and proactive turns
+- `.gitclaw/HOOKS.md`, if present, as hook safety policy for event-driven
+  automation; individual `.gitclaw/hooks/*.md` specs are audited by metadata
+  reports and are not executed by the model runtime
 - `.gitclaw/SKILLS/*/SKILL.md`, if selected by the issue thread or marked
   always-on
 - bounded `@file:<repo-path>[:start-end]` context references explicitly named
@@ -2131,6 +2137,40 @@ gitclaw orders list
 gitclaw orders verify
 ```
 
+### Hooks Command
+
+GitClaw supports declarative hooks inspired by OpenClaw's file-based hook
+surface:
+
+```text
+@gitclaw /hooks
+@gitclaw /hook
+```
+
+The command runs after preflight and before model inference. It posts a
+`gitclaw:assistant-turn` comment with `model="gitclaw/hooks"` and summarizes:
+
+- whether `.gitclaw/HOOKS.md` exists and is loaded into model context,
+- declarative hook specs in `.gitclaw/hooks/*.md`,
+- declared event counts,
+- whether specs are `audit-only`,
+- whether specs require approval before side effects,
+- whether executable-looking handler files are present,
+- body-free findings for missing metadata or unsafe-looking files.
+
+GitClaw v1 does not execute hook handlers. Hook specs are reviewed repo
+metadata, not runtime code. The report never dispatches workflows, mutates the
+repo, calls the model, or prints raw hook policy, hook spec, issue, comment, or
+provider payload bodies. Future executable hooks require explicit workflow
+permissions, approval gates, and audit cards before any handler can run.
+
+Local operators can inspect the same surface with:
+
+```bash
+gitclaw hooks list
+gitclaw hooks verify
+```
+
 ### Doctor Command
 
 GitClaw supports a deterministic doctor/health audit command:
@@ -3060,6 +3100,14 @@ lives in GitHub's event, permission, and workflow runtime semantics.
    reconstruction, tool-output injection, or GitHub Models permissions still
    work.
 
+   Release rule: a feature batch is not done when only deterministic commands
+   pass. The final validation set must include the feature-specific report E2E
+   plus one live GitHub Models conversation E2E, and the result should be
+   reported with the issue number and workflow run URL. For changes involving
+   tools, context loading, memory, skills, hooks, standing orders, prompts, or
+   policy, prefer `scripts/e2e/github-search-tool-chat.sh` because it proves a
+   real model turn consumed deterministic repository tool output.
+
 ### Live E2E Harness
 
 The E2E harness should be a script, not a manual checklist:
@@ -3854,6 +3902,11 @@ examples/workflows/gitclaw.yml
   coverage, proactive enforcement metadata, and body-free findings without a
   model call or standing-order body leakage. Each standing-orders feature batch
   must still run a live GitHub Models conversation E2E.
+- A `gh`-driven hooks-report E2E harness verifies `@gitclaw /hooks` reports
+  hook policy metadata, model-context loading, declarative hook spec metadata,
+  approval/audit-only gates, ignored executable handler state, and body-free
+  findings without a model call or hook body leakage. Each hooks feature batch
+  must still run a live GitHub Models conversation E2E.
 - A `gh`-driven runs-report E2E harness verifies `@gitclaw /runs` reports
   current turn/run provenance, managed labels, marker counts, prompt-visible
   input hashes, and active tool-output hashes without a model call or body
@@ -4145,6 +4198,7 @@ examples/workflows/gitclaw.yml
 - OpenClaw automation docs: https://docs.openclaw.ai/automation/index
 - OpenClaw scheduled tasks docs: https://docs.openclaw.ai/automation/cron-jobs
 - OpenClaw standing orders docs: https://docs.openclaw.ai/automation/standing-orders
+- OpenClaw hooks docs: https://docs.openclaw.ai/automation/hooks
 - OpenClaw memory docs: https://docs.openclaw.ai/concepts/memory
 - OpenClaw agent workspace docs: https://docs.openclaw.ai/agent-workspace
 - OpenClaw creating skills docs: https://docs.openclaw.ai/tools/creating-skills

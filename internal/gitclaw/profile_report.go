@@ -127,6 +127,8 @@ func profileDocumentCategory(path string) string {
 		return "heartbeat"
 	case path == standingOrdersPath:
 		return "standing-orders"
+	case path == hookPolicyPath:
+		return "hooks"
 	default:
 		return "profile"
 	}

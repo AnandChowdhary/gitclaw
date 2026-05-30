@@ -23,6 +23,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runBackup(ctx, args[1:])
 	case "heartbeat":
 		return runHeartbeatCommand(ctx, args[1:])
+	case "hooks", "hook":
+		return runHooksCommand(args[1:])
 	case "channel-ingest":
 		return runChannelIngestCommand(ctx, args[1:])
 	case "channel-state":
@@ -250,6 +252,30 @@ func runOrdersListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderStandingOrdersCLIReport(cfg))
+	return nil
+}
+
+func runHooksCommand(args []string) error {
+	if len(args) == 0 {
+		return runHooksListCommand(nil)
+	}
+	switch args[0] {
+	case "list", "verify":
+		return runHooksListCommand(args[1:])
+	default:
+		return fmt.Errorf("usage: gitclaw hooks [list|verify]")
+	}
+}
+
+func runHooksListCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown hooks argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderHookCLIReport(cfg))
 	return nil
 }
 

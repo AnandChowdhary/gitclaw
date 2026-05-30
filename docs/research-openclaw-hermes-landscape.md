@@ -422,6 +422,16 @@ plus `@gitclaw /orders` and `gitclaw orders list|verify` reports that audit
 program clause coverage and proactive enforcement metadata without executing
 orders or printing their bodies.
 
+2026-05-30 hooks follow-up: OpenClaw's hook docs split coarse file-based
+internal hooks from typed plugin hooks and webhooks. Internal hooks react to
+command, session, gateway, and message events and are inspected with
+`openclaw hooks list|check|info`, but they are still executable integration
+surface. GitClaw should start with declarative hook policy and specs:
+`.gitclaw/HOOKS.md` plus `.gitclaw/hooks/*.md`, reported by `@gitclaw /hooks`
+and `gitclaw hooks list|verify` without executing handlers. This preserves the
+event-driven design lesson while keeping all side effects behind reviewed
+GitHub workflows and approval gates.
+
 2026-05-29 proactive implementation follow-up: the minimal GitClaw cut is a
 generic `proactive enqueue` command and dispatchable workflow. It creates one
 issue per job name and slot, stores a `gitclaw:proactive-run` marker in the
