@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-30T19:50:06Z",
+  "generated_at": "2026-05-30T19:51:14Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 313,
     "title": "@gitclaw session risk e2e 20260530T194902Z",
@@ -10,7 +10,8 @@
     "author": "AnandChowdhary",
     "author_association": "OWNER",
     "labels": [
-      "gitclaw"
+      "gitclaw",
+      "gitclaw:done"
     ]
   },
   "transcript": [
@@ -31,6 +32,24 @@
       "CommentID": 4584260951,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /session risk\n\nPlease audit assistant-turn session risk metadata.\nHidden comment token: GITCLAW_SESSION_RISK_COMMENT_20260530T194902Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4584265860,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Session Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#313`\n- session_risk_status: `ok`\n- verification_scope: `github_issue_session_provenance`\n- event_kind: `issue_comment`\n- raw_comments: `2`\n- transcript_messages: `3`\n- user_messages: `2`\n- assistant_messages: `1`\n- trusted_messages: `3`\n- untrusted_messages: `0`\n- edited_messages: `0`\n- assistant_turn_comments: `1`\n- assistant_turns_with_prompt_provenance: `1`\n- assistant_turns_missing_prompt_provenance: `0`\n- unique_prompt_context_hashes: `1`\n- prompt_visible_skill_names: `repo-reader`\n- prompt_visible_tool_names: `gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files`\n- heartbeat_comments: `0`\n- error_marker_comments: `0`\n- channel_message_comments: `0`\n- channel_thread_issue: `false`\n- proactive_run_issue: `false`\n- surfaces_with_risk_findings: `0`\n- session_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_bodies_included: `false`\n- raw_prompt_bodies_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_search_queries_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_session_risk_change: `true`\n- issue_title_sha256_12: `3f39841c6b76`\n\nThis report audits the GitHub issue session boundary inspired by OpenClaw's transcript/session commands and Hermes' searchable saved sessions. It reports counts, marker/provenance metadata, trust state, finding codes, and hashes only; issue bodies, comment bodies, assistant replies, prompts, tool outputs, search queries, credentials, and secret values are not included.\n\n### Transcript Trust Risk Card\n- kind=`session-transcript` transcript_messages=`3` user_messages=`2` assistant_messages=`1` trusted_messages=`3` untrusted_messages=`0` edited_messages=`0` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` evidence_hashes=`none`\n\n### Assistant Provenance Risk Card\n- kind=`session-provenance` assistant_turn_comments=`1` assistant_turns_with_prompt_provenance=`1` assistant_turns_missing_prompt_provenance=`0` unique_prompt_context_hashes=`1` skills=`repo-reader` tools=`gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` evidence_hashes=`none`\n\n### Marker Risk Card\n- kind=`session-marker` heartbeat_comments=`0` error_marker_comments=`0` channel_message_comments=`0` channel_thread_issue=`false` proactive_run_issue=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` evidence_hashes=`none`\n\n### Current Session Request Risk Card\n- kind=`current-session-request` current_issue_session_request=`true` issue_body_scanned=`false` comment_bodies_scanned=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Risk Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4584271735,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -41,6 +60,22 @@
       "author_association": "NONE",
       "created_at": "2026-05-30T19:49:42Z",
       "updated_at": "2026-05-30T19:49:42Z"
+    },
+    {
+      "id": 4584265860,
+      "body": "@gitclaw /session risk\n\nPlease audit assistant-turn session risk metadata.\nHidden comment token: GITCLAW_SESSION_RISK_COMMENT_20260530T194902Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-05-30T19:50:16Z",
+      "updated_at": "2026-05-30T19:50:16Z"
+    },
+    {
+      "id": 4584271735,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26693318692\" event_id=\"comment-4584265860\" model=\"gitclaw/session\" idempotency_key=\"877c9a8656e92496387a93704f1d04a6\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26693318692\" --\u003e\n## GitClaw Session Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#313`\n- session_risk_status: `ok`\n- verification_scope: `github_issue_session_provenance`\n- event_kind: `issue_comment`\n- raw_comments: `2`\n- transcript_messages: `3`\n- user_messages: `2`\n- assistant_messages: `1`\n- trusted_messages: `3`\n- untrusted_messages: `0`\n- edited_messages: `0`\n- assistant_turn_comments: `1`\n- assistant_turns_with_prompt_provenance: `1`\n- assistant_turns_missing_prompt_provenance: `0`\n- unique_prompt_context_hashes: `1`\n- prompt_visible_skill_names: `repo-reader`\n- prompt_visible_tool_names: `gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files`\n- heartbeat_comments: `0`\n- error_marker_comments: `0`\n- channel_message_comments: `0`\n- channel_thread_issue: `false`\n- proactive_run_issue: `false`\n- surfaces_with_risk_findings: `0`\n- session_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_bodies_included: `false`\n- raw_prompt_bodies_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_search_queries_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_session_risk_change: `true`\n- issue_title_sha256_12: `3f39841c6b76`\n\nThis report audits the GitHub issue session boundary inspired by OpenClaw's transcript/session commands and Hermes' searchable saved sessions. It reports counts, marker/provenance metadata, trust state, finding codes, and hashes only; issue bodies, comment bodies, assistant replies, prompts, tool outputs, search queries, credentials, and secret values are not included.\n\n### Transcript Trust Risk Card\n- kind=`session-transcript` transcript_messages=`3` user_messages=`2` assistant_messages=`1` trusted_messages=`3` untrusted_messages=`0` edited_messages=`0` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` evidence_hashes=`none`\n\n### Assistant Provenance Risk Card\n- kind=`session-provenance` assistant_turn_comments=`1` assistant_turns_with_prompt_provenance=`1` assistant_turns_missing_prompt_provenance=`0` unique_prompt_context_hashes=`1` skills=`repo-reader` tools=`gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` evidence_hashes=`none`\n\n### Marker Risk Card\n- kind=`session-marker` heartbeat_comments=`0` error_marker_comments=`0` channel_message_comments=`0` channel_thread_issue=`false` proactive_run_issue=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` evidence_hashes=`none`\n\n### Current Session Request Risk Card\n- kind=`current-session-request` current_issue_session_request=`true` issue_body_scanned=`false` comment_bodies_scanned=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Risk Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T19:50:55Z",
+      "updated_at": "2026-05-30T19:50:55Z"
     }
   ]
 }
