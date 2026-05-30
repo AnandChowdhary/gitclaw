@@ -61,6 +61,9 @@ func RenderToolsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isToolsValidateRequest(ev, cfg) {
 		return renderToolsValidationReport(ev, repoContext, true)
 	}
+	if toolName := requestedToolInfoName(ev, cfg); toolName != "" {
+		return renderToolInfoReport(ev, repoContext, toolName, true)
+	}
 	if query := requestedToolSearchQuery(ev, cfg); query != "" {
 		return RenderToolSearchReport(ev, repoContext, query, defaultToolSearchMaxResults)
 	}
@@ -69,6 +72,10 @@ func RenderToolsReport(ev Event, cfg Config, repoContext RepoContext) string {
 
 func RenderToolsCLIReport(repoContext RepoContext) string {
 	return renderToolsListReport(Event{}, repoContext, false)
+}
+
+func RenderToolInfoCLIReport(repoContext RepoContext, name string) string {
+	return renderToolInfoReport(Event{}, repoContext, name, false)
 }
 
 func renderToolsListReport(ev Event, repoContext RepoContext, includeIssue bool) string {
@@ -143,6 +150,70 @@ func RenderToolSearchReport(ev Event, repoContext RepoContext, query string, max
 	return strings.TrimSpace(b.String())
 }
 
+func renderToolInfoReport(ev Event, repoContext RepoContext, name string, includeIssue bool) string {
+	name = cleanToolLookupName(name)
+	matches := matchingToolContracts(toolReportContracts, name)
+	activeOutputs := matchingToolOutputs(repoContext.ToolOutputs, matches)
+	validation := ValidateTools(repoContext)
+	status := "not_found"
+	if len(matches) == 1 {
+		status = "ok"
+	} else if len(matches) > 1 {
+		status = "ambiguous"
+	}
+
+	var b strings.Builder
+	b.WriteString("## GitClaw Tool Info Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
+	fmt.Fprintf(&b, "- requested_tool: `%s`\n", inlineCode(name))
+	fmt.Fprintf(&b, "- tool_info_status: `%s`\n", status)
+	fmt.Fprintf(&b, "- available_tools: `%d`\n", len(toolReportContracts))
+	fmt.Fprintf(&b, "- matched_tools: `%d`\n", len(matches))
+	fmt.Fprintf(&b, "- active_outputs_for_tool: `%d`\n", len(activeOutputs))
+	fmt.Fprintf(&b, "- run_mode: `%s`\n", "read-only")
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_inputs_included: `%t`\n\n", false)
+	b.WriteString("This report shows one deterministic tool contract plus active-output hashes for that tool. Raw tool inputs, tool output bodies, file bodies, issue bodies, comments, prompts, and secret values are not included.\n\n")
+
+	b.WriteString("### Matches\n")
+	if len(matches) == 0 {
+		b.WriteString("- none\n")
+	} else {
+		activeCounts := toolActiveOutputCounts(repoContext.ToolOutputs)
+		for _, contract := range matches {
+			writeToolInfoContract(&b, contract, activeCounts[contract.Name])
+		}
+	}
+
+	b.WriteString("\n### Active Outputs For Tool\n")
+	writeToolInfoActiveOutputs(&b, activeOutputs)
+
+	b.WriteString("\n### Validation For Matches\n")
+	writeToolInfoValidationFindings(&b, validation, matches)
+
+	if len(matches) == 0 {
+		b.WriteString("\n### Available Tools\n")
+		for _, contract := range toolReportContracts {
+			fmt.Fprintf(&b, "- `%s` mode=`%s`\n", contract.Name, contract.Mode)
+		}
+	}
+	return strings.TrimSpace(b.String())
+}
+
+func requestedToolInfoName(ev Event, cfg Config) string {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 3 || fields[0] != "/tools" || !strings.EqualFold(fields[1], "info") {
+		return ""
+	}
+	return cleanToolLookupName(fields[2])
+}
+
 func requestedToolSearchQuery(ev Event, cfg Config) string {
 	fields := activeSlashCommandFields(ev, cfg)
 	if len(fields) < 3 || fields[0] != "/tools" || !strings.EqualFold(fields[1], "search") {
@@ -159,6 +230,43 @@ func isToolsValidateRequest(ev Event, cfg Config) bool {
 func isToolsVerifyRequest(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && fields[0] == "/tools" && strings.EqualFold(fields[1], "verify")
+}
+
+func cleanToolLookupName(name string) string {
+	return strings.Trim(strings.TrimSpace(name), " \t\r\n.,:;!?`\"'")
+}
+
+func matchingToolContracts(contracts []toolContract, name string) []toolContract {
+	name = strings.ToLower(cleanToolLookupName(name))
+	if name == "" {
+		return nil
+	}
+	matches := make([]toolContract, 0, 1)
+	for _, contract := range contracts {
+		contractName := strings.ToLower(contract.Name)
+		shortName := strings.TrimPrefix(contractName, "gitclaw.")
+		if contractName == name || shortName == name {
+			matches = append(matches, contract)
+		}
+	}
+	return matches
+}
+
+func matchingToolOutputs(outputs []ToolOutput, contracts []toolContract) []ToolOutput {
+	if len(outputs) == 0 || len(contracts) == 0 {
+		return nil
+	}
+	names := map[string]bool{}
+	for _, contract := range contracts {
+		names[contract.Name] = true
+	}
+	matches := make([]ToolOutput, 0, len(outputs))
+	for _, output := range outputs {
+		if names[output.Name] {
+			matches = append(matches, output)
+		}
+	}
+	return matches
 }
 
 func BuildToolSearchReport(repoContext RepoContext, query string, maxResults int) ToolSearchReport {
@@ -243,6 +351,14 @@ func BuildToolSearchReport(repoContext RepoContext, query string, maxResults int
 		report.SearchStatus = "no_matches"
 	}
 	return report
+}
+
+func toolActiveOutputCounts(outputs []ToolOutput) map[string]int {
+	counts := map[string]int{}
+	for _, output := range outputs {
+		counts[output.Name]++
+	}
+	return counts
 }
 
 func toolContractSearchScore(contract toolContract, query string, terms []string) (int, []string) {
@@ -343,6 +459,56 @@ func writeToolGuidanceDocumentList(b *strings.Builder, docs []ContextDocument) {
 		}
 		wrote = true
 		fmt.Fprintf(b, "- `%s` bytes=`%d` lines=`%d` sha256_12=`%s`\n", doc.Path, len(doc.Body), lineCount(doc.Body), shortDocumentHash(doc.Body))
+	}
+	if !wrote {
+		b.WriteString("- none\n")
+	}
+}
+
+func writeToolInfoContract(b *strings.Builder, contract toolContract, activeOutputs int) {
+	fmt.Fprintf(b, "- name=`%s` source=`builtin-gitclaw` mode=`%s` mutating=`%t` trigger=`%s` active_outputs=`%d`\n",
+		contract.Name,
+		contract.Mode,
+		isMutatingToolContract(contract),
+		inlineCode(contract.Trigger),
+		activeOutputs,
+	)
+}
+
+func writeToolInfoActiveOutputs(b *strings.Builder, outputs []ToolOutput) {
+	if len(outputs) == 0 {
+		b.WriteString("- none\n")
+		return
+	}
+	contracts := toolContractNameSet()
+	for _, output := range outputs {
+		fmt.Fprintf(b, "- name=`%s` contract_known=`%t` input_sha256_12=`%s` output_bytes=`%d` output_lines=`%d` output_sha256_12=`%s`\n",
+			output.Name,
+			contracts[output.Name],
+			shortDocumentHash(output.Input),
+			len(output.Output),
+			lineCount(output.Output),
+			shortDocumentHash(output.Output),
+		)
+	}
+}
+
+func writeToolInfoValidationFindings(b *strings.Builder, validation ToolValidationReport, matches []toolContract) {
+	if len(matches) == 0 {
+		b.WriteString("- none\n")
+		return
+	}
+	names := map[string]bool{}
+	for _, contract := range matches {
+		names[contract.Name] = true
+	}
+	wrote := false
+	for _, finding := range validation.Findings {
+		if !names[finding.Name] {
+			continue
+		}
+		fmt.Fprintf(b, "- severity=`%s` code=`%s` name=`%s` detail=`%s`\n", finding.Severity, finding.Code, finding.Name, inlineCode(finding.Detail))
+		wrote = true
 	}
 	if !wrote {
 		b.WriteString("- none\n")

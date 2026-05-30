@@ -471,7 +471,7 @@ func runSessionSearchCommand(args []string) error {
 
 func runToolsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw tools verify|validate|list|search <query>")
+		return fmt.Errorf("usage: gitclaw tools verify|validate|list|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -480,6 +480,8 @@ func runToolsCommand(args []string) error {
 		return runToolsValidateCommand(args[1:])
 	case "list":
 		return runToolsListCommand(args[1:])
+	case "info":
+		return runToolsInfoCommand(args[1:])
 	case "search":
 		return runToolsSearchCommand(args[1:])
 	default:
@@ -516,6 +518,26 @@ func runToolsListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderToolsCLIReport(repoContext))
+	return nil
+}
+
+func runToolsInfoCommand(args []string) error {
+	if len(args) != 1 {
+		return fmt.Errorf("usage: gitclaw tools info <name>")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContext(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "tools info " + args[0]}})
+	if err != nil {
+		return err
+	}
+	report := RenderToolInfoCLIReport(repoContext, args[0])
+	fmt.Println(report)
+	if len(matchingToolContracts(toolReportContracts, args[0])) == 0 {
+		return fmt.Errorf("tool %q not found", args[0])
+	}
 	return nil
 }
 

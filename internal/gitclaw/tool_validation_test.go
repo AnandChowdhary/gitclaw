@@ -167,3 +167,45 @@ func TestRenderToolSearchReportFindsContractsAndOutputsWithoutBodies(t *testing.
 		}
 	}
 }
+
+func TestRenderToolInfoReportShowsOneContractWithoutBodies(t *testing.T) {
+	repoContext := RepoContext{
+		Documents: []ContextDocument{{Path: ".gitclaw/TOOLS.md", Body: "TOOL_INFO_GUIDANCE_SECRET"}},
+		ToolOutputs: []ToolOutput{
+			{Name: "gitclaw.read_file", Input: "go.mod TOOL_INFO_INPUT_SECRET", Output: "module github.com/AnandChowdhary/gitclaw\nTOOL_INFO_OUTPUT_SECRET"},
+			{Name: "gitclaw.list_files", Input: ".", Output: "go.mod\nREADME.md"},
+		},
+	}
+	body := RenderToolInfoCLIReport(repoContext, "read_file")
+	for _, want := range []string{
+		"GitClaw Tool Info Report",
+		"scope: `local-cli`",
+		"requested_tool: `read_file`",
+		"tool_info_status: `ok`",
+		"available_tools: `5`",
+		"matched_tools: `1`",
+		"active_outputs_for_tool: `1`",
+		"run_mode: `read-only`",
+		"raw_bodies_included: `false`",
+		"raw_inputs_included: `false`",
+		"### Matches",
+		"name=`gitclaw.read_file` source=`builtin-gitclaw` mode=`read-only` mutating=`false`",
+		"trigger=`explicit repository-relative path`",
+		"active_outputs=`1`",
+		"### Active Outputs For Tool",
+		"name=`gitclaw.read_file` contract_known=`true` input_sha256_12=",
+		"output_bytes=",
+		"output_sha256_12=",
+		"### Validation For Matches",
+		"- none",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("tool info report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"TOOL_INFO_GUIDANCE_SECRET", "TOOL_INFO_INPUT_SECRET", "TOOL_INFO_OUTPUT_SECRET", "module github.com/AnandChowdhary/gitclaw", "go.mod TOOL_INFO_INPUT_SECRET"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("tool info report leaked body/input token %q:\n%s", leaked, body)
+		}
+	}
+}
