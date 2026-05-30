@@ -642,6 +642,7 @@ GitHub issue/comment event
   `proactive enqueue`, `proactive init`, `proactive info`,
   `approvals list`, `approvals verify`,
   `profile show`, `profile verify`,
+  `runs current`, `runs verify`,
   `memory verify`, `memory validate`, `memory list`, `memory info`,
   `memory search`,
   `skills validate`,
@@ -1174,6 +1175,51 @@ gitclaw profile verify
 ```
 
 The aliases intentionally return the same body-free report in v1.
+
+## Run Ledger Command
+
+GitClaw supports a deterministic current-turn provenance report inspired by
+OpenClaw's visible runtime/audit surfaces and Hermes' session/checkpoint
+metadata:
+
+```text
+@gitclaw /runs
+@gitclaw /run
+@gitclaw /ledger
+```
+
+The command runs after normal preflight authorization, transcript
+reconstruction, and repo-context assembly, but before model inference. It posts
+a `gitclaw:assistant-turn` comment with `model="gitclaw/runs"` and summarizes:
+
+- repository, issue, event kind/name/action, event ID, active command, and
+  idempotency key,
+- Actions run ID, attempt, run URL presence/hash, event SHA hash, and a compact
+  run-environment hash,
+- preflight decision, trusted actor state, trigger state, disabled-label state,
+  and write-intent detection,
+- raw comment count, reconstructed transcript counts, and GitClaw marker
+  counts before the turn,
+- context document, selected skill, available skill, skill bundle, and active
+  tool-output counts,
+- label presence across the managed run/status/channel/proactive labels,
+- prompt-visible context/skill document paths with byte, line, and hash
+  metadata,
+- active tool-output names with input/output hashes and output sizes.
+
+It never dumps issue bodies, comments, prompt text, context bodies, skill
+bodies, tool output bodies, workflow payloads, or secrets. The report is a
+read-only ledger view: the canonical conversation log remains GitHub issue
+comments, the canonical execution trace remains GitHub Actions, and the
+canonical post-turn archive remains the `gitclaw-backups` branch when enabled.
+
+Local operators can inspect the same body-free local run envelope without
+opening an issue:
+
+```bash
+gitclaw runs current
+gitclaw runs verify
+```
 
 ## Soul Validation
 
@@ -3519,6 +3565,12 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven commands-report E2E harness verifies `@gitclaw /help` reports
   deterministic commands, aliases, and every advertised local CLI helper
   without a model call or issue-body leakage.
+- A `gh`-driven runs-report E2E harness verifies `@gitclaw /runs` reports
+  current turn/run provenance, managed labels, marker counts, prompt-visible
+  input hashes, and active tool-output hashes without a model call or body
+  leakage. Each run-ledger feature batch must still run at least one
+  LLM-backed GitHub Models conversation E2E in addition to this deterministic
+  report.
 - A `gh`-driven doctor-report E2E harness verifies `@gitclaw /doctor` reports
   config validation, workflow presence, context files, skills, memory notes,
   proactive prompts, and skill/soul/tool validation rollups without a model

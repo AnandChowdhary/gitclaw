@@ -152,7 +152,7 @@ for expected in \
   'tools_allowed_configured: `0`' \
   'tools_disabled_configured: `0`' \
   'workflows_present: `7`' \
-  'slash_commands: `20`' \
+  'slash_commands: `21`' \
   '/approvals' \
   '/bundles' \
   '/checkpoints' \
@@ -171,6 +171,7 @@ for expected in \
   '/memory' \
   '/models' \
   '/profile' \
+  '/runs' \
   '/prompt' \
   '.github/workflows/gitclaw.yml' \
   '.github/workflows/gitclaw-heartbeat.yml' \

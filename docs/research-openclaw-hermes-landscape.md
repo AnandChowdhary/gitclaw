@@ -239,6 +239,17 @@ message/line hashes without raw transcript snippets or raw query text.
 Local `gitclaw session search <query> --backup <issue.json>` should use the
 same matcher over canonical backup JSON for offline triage.
 
+2026-05-30 run-ledger follow-up: OpenClaw's gateway/runtime docs make
+execution provenance visible through workspace, session, and run surfaces,
+while Hermes' checkpoint/session model treats runs as replayable, auditable
+units. GitClaw should expose a read-only `@gitclaw /runs` report before adding
+any mutable ledger database: issue comments remain the canonical conversation
+log, GitHub Actions remains the canonical execution trace, and
+`gitclaw-backups` remains the canonical post-turn archive. The report should
+show event/run IDs, idempotency key, preflight gates, managed labels, marker
+counts, prompt-visible input hashes, and active tool-output hashes without
+printing raw bodies or run payloads.
+
 2026-05-29 memory follow-up: the right GitClaw cut is read-only memory
 injection, not self-writing memory. Load compact files such as
 `.gitclaw/MEMORY.md`, `.gitclaw/USER.md`, `.gitclaw/IDENTITY.md`, and the

@@ -43,6 +43,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runProactiveCommand(ctx, args[1:])
 	case "profile", "profiles":
 		return runProfileCommand(args[1:])
+	case "runs", "run", "ledger":
+		return runRunsCommand(args[1:])
 	case "skills":
 		return runSkillsCommand(args[1:])
 	case "bundles", "bundle":
@@ -124,6 +126,34 @@ func runProfileShowCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderProfileCLIReport(cfg, repoContext))
+	return nil
+}
+
+func runRunsCommand(args []string) error {
+	if len(args) == 0 {
+		return runRunsCurrentCommand(nil)
+	}
+	switch args[0] {
+	case "current", "verify", "list":
+		return runRunsCurrentCommand(args[1:])
+	default:
+		return fmt.Errorf("usage: gitclaw runs [current|verify|list]")
+	}
+}
+
+func runRunsCurrentCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown runs argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderRunCLIReport(cfg, repoContext))
 	return nil
 }
 
