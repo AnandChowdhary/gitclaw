@@ -165,6 +165,16 @@ related subcommands should be treated as deterministic command intents: record
 the exact branch paths, local command, privacy boundary, and hashes, then let
 the post-turn backup job and fetched-branch CLI command perform the real audit.
 
+2026-05-30 backup-risk follow-up: OpenClaw's backup verification treats unsafe
+paths and malformed manifests as restore blockers, while Hermes' checkpoint and
+session export posture makes rollback review a local operator action. GitClaw
+should add `gitclaw backup risk`: verify the fetched `gitclaw-backups` branch,
+scan indexed issue payloads for integrity, path-safety, credential-handling,
+prompt-boundary, restore-safety, and retention risks, and report only paths,
+counts, codes, severities, and hashes. Issue-side `/backup risk` stays a
+deferred intent because the raw backup branch is only written after the
+assistant turn.
+
 2026-05-29 backup-manifest follow-up: OpenClaw's manifest-centered backup
 verification and Hermes' portable session export both point to a compact
 provenance view. GitClaw should expose a local `backup manifest` command over

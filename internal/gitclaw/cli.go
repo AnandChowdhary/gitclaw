@@ -1519,6 +1519,9 @@ func runBackup(ctx context.Context, args []string) error {
 	if len(args) > 0 && args[0] == "verify" {
 		return runBackupVerify(args[1:])
 	}
+	if len(args) > 0 && (args[0] == "risk" || args[0] == "risk-audit") {
+		return runBackupRisk(args[1:])
+	}
 	if len(args) > 0 && args[0] == "export-jsonl" {
 		return runBackupExportJSONL(args[1:])
 	}
@@ -1598,6 +1601,38 @@ func runBackupVerify(args []string) error {
 	if !result.OK() {
 		return fmt.Errorf("backup verification failed")
 	}
+	return nil
+}
+
+func runBackupRisk(args []string) error {
+	root := filepath.Join(".gitclaw", "backups")
+	repo := os.Getenv("GITHUB_REPOSITORY")
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--root":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--root requires a value")
+			}
+			root = args[i+1]
+			i++
+		case "--repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--repo requires a value")
+			}
+			repo = args[i+1]
+			i++
+		default:
+			return fmt.Errorf("unknown backup risk argument %q", args[i])
+		}
+	}
+	if repo == "" {
+		return fmt.Errorf("missing --repo or GITHUB_REPOSITORY")
+	}
+	report, err := BuildBackupRisk(root, repo)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderBackupRiskReport(report))
 	return nil
 }
 

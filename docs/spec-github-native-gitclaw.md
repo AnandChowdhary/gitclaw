@@ -3240,11 +3240,13 @@ backup verification and Hermes' exportable session artifacts without pretending
 the issue handler can verify a branch that has not been written yet. For
 example, `@gitclaw /backup verify` records the exact local verification command
 and the backup paths, then the post-turn backup job commits the raw issue JSON
-and index to `gitclaw-backups`. `@gitclaw /backup info <issue-number>` records
-the exact focused-inspection command for one backed-up issue, defaulting to the
-current issue when no number is supplied. `@gitclaw /backup search <query>`
-records only a query hash and term count; raw search terms and raw backup bodies
-stay out of the issue-visible comment.
+and index to `gitclaw-backups`. `@gitclaw /backup risk` records the exact local
+risk-audit command and risk categories while making clear that raw payload
+scanning is deferred to a fetched backup branch. `@gitclaw /backup info
+<issue-number>` records the exact focused-inspection command for one backed-up
+issue, defaulting to the current issue when no number is supplied. `@gitclaw
+/backup search <query>` records only a query hash and term count; raw search
+terms and raw backup bodies stay out of the issue-visible comment.
 
 ## Backup Verification Command
 
@@ -3271,6 +3273,30 @@ of checking a tarball manifest, it checks the repo-scoped backup tree:
 The command prints a deterministic `GitClaw Backup Verify Report` with status,
 counts, paths, and failures. It exits non-zero when verification fails. It does
 not print issue bodies, comments, or transcript text.
+
+## Backup Risk Command
+
+GitClaw also supports a local backup risk audit for fetched backup branches:
+
+```bash
+gitclaw backup risk --root .gitclaw/backups --repo <owner/repo>
+```
+
+The command first runs the normal backup verifier, then scans indexed issue
+payloads for recovery risks without echoing raw bodies. It reports only paths,
+fields, severities, risk codes, categories, and short line hashes. The initial
+rules cover integrity failures, path traversal, credential-looking material,
+prompt-boundary text, restore-side-effect instructions, and oversized payloads.
+This keeps the raw JSONL/export path explicit while still making it easy to
+spot a backup tree that should not be blindly restored or copied into a prompt.
+
+Issue-side `@gitclaw /backup risk` is intentionally deferred: the issue handler
+records `gitclaw backup risk --root .gitclaw/backups --repo <owner/repo>` and
+the fact that raw backup payloads are not scanned in the visible comment. The
+real audit runs after fetching the post-turn `gitclaw-backups` branch. The live
+E2E harness also posts a second normal comment that forces a GitHub Models call
+and repo-reader tool usage, so the feature is tested with both deterministic
+metadata and real model inference.
 
 ## Backup Manifest Command
 
@@ -3986,7 +4012,27 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert `backup_verify_status: ok`, zero verification failures, zero
      unindexed issue files, and an index entry for the just-created issue.
 
-32. **Backup manifest**
+32. **Backup risk audit**
+
+   - create a real issue with `@gitclaw /backup risk`,
+   - assert the issue-side report lists `requested_backup_command: risk`,
+     `backup_risk_status: deferred`, the deferred execution marker, the
+     concrete local risk command, and no raw backup payload bodies,
+   - wait for the successful backup job,
+   - fetch the real `gitclaw-backups` branch,
+   - run `gitclaw backup risk --root <fetched>/.gitclaw/backups --repo
+     <owner/repo>`,
+   - assert the local risk report lists verify status, indexed/scanned issue
+     counts, scanned comment/transcript counts, risk counts, categories, and
+     hashes only,
+   - assert it does not dump the issue body token, raw comments, raw
+     transcript messages, prompt text, or credential-looking values,
+   - post a normal follow-up on the same issue that requires a repo-reader
+     repository search and assert the second assistant turn is model-backed by
+     GitHub Models with prompt context, selected skill, and prompt-visible tool
+     markers.
+
+33. **Backup manifest**
 
    - create a real issue with `@gitclaw /backup manifest`,
    - assert the issue-side report lists `requested_backup_command: manifest`,
@@ -4001,7 +4047,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      count, and transcript count,
    - assert it does not dump the issue body token or raw transcript bodies.
 
-33. **Backup stats**
+34. **Backup stats**
 
    - create a real issue with `@gitclaw /backup stats`,
    - assert the issue-side report lists `requested_backup_command: stats`,
@@ -4017,7 +4063,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      metadata, event counts, and payload bytes,
    - assert it does not dump the issue body token or raw title.
 
-34. **Backup list**
+35. **Backup list**
 
    - create a real issue with `@gitclaw /backup list`,
    - assert the issue-side report lists `requested_backup_command: list`,
@@ -4033,7 +4079,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      event name, label/comment/transcript counts, and title hash,
    - assert it does not dump the issue body token or raw title.
 
-35. **Backup info**
+36. **Backup info**
 
    - create a real issue with `@gitclaw /backup info`,
    - assert the issue-side report lists `requested_backup_command: info`, the
@@ -4050,7 +4096,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      hashes,
    - assert it does not dump the issue body token or raw title.
 
-36. **Backup JSONL export**
+37. **Backup JSONL export**
 
    - create a real issue with `@gitclaw /backup export-jsonl`,
    - assert the issue-side report lists `requested_backup_command:
@@ -4065,7 +4111,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      contains the assistant backup report body, proving the command is an
      explicit raw recovery/export path rather than an issue-visible report.
 
-37. **Backup restore plan**
+38. **Backup restore plan**
 
    - create a real issue with `@gitclaw /backup restore-plan`,
    - assert the issue-side report lists `requested_backup_command:
@@ -4080,7 +4126,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      counts, assistant-turn/error counts, and body hashes,
    - assert it does not dump the issue body token or raw transcript bodies.
 
-38. **Backup retention plan**
+39. **Backup retention plan**
 
    - create a real issue with `@gitclaw /backup retention-plan`,
    - assert the issue-side report lists `requested_backup_command:
@@ -4097,7 +4143,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the just-created issue is included without dumping the issue body
      token or raw title.
 
-39. **Backup search**
+40. **Backup search**
 
    - create a real issue with `@gitclaw /backup search <query>`,
    - include a unique hidden token in the issue body,
@@ -4115,7 +4161,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert it does not dump the hidden token, raw issue body, raw issue title,
      raw comments, raw transcript messages, or raw query text.
 
-40. **Proactive init generator**
+41. **Proactive init generator**
 
    - run `gitclaw proactive init` against a temporary repo root,
    - assert it writes the expected prompt file and scheduled workflow,
@@ -4127,7 +4173,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert it creates a real proactive issue and receives one deterministic
      proactive report without leaking the hidden prompt token.
 
-41. **Proactive info report**
+42. **Proactive info report**
 
    - create a real issue with `@gitclaw /proactive info repo-hygiene`,
    - include a unique hidden token in the issue body,
@@ -4445,6 +4491,12 @@ examples/workflows/gitclaw.yml
   records the deferred issue-side command intent, then verifies the fetched
   `gitclaw-backups` branch with `gitclaw backup verify` after the real backup
   job succeeds.
+- A `gh`-driven backup-risk E2E harness verifies `@gitclaw /backup risk`
+  records the deferred issue-side command intent, then scans the fetched
+  `gitclaw-backups` branch with `gitclaw backup risk` for integrity,
+  path-safety, credential-handling, prompt-boundary, restore-safety, and
+  retention findings without dumping raw payloads. It also posts a normal
+  follow-up that must use GitHub Models and repo-reader search.
 - A `gh`-driven backup-manifest E2E harness verifies
   `@gitclaw /backup manifest` records the deferred issue-side command intent,
   then verifies the fetched `gitclaw-backups` branch can produce a file-level

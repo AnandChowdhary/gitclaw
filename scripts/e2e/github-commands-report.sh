@@ -138,7 +138,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `33`' \
   'aliases: `31`' \
-  'local_cli_helpers: `95`' \
+  'local_cli_helpers: `100`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/agents' \
@@ -201,6 +201,7 @@ for expected in \
   'gitclaw bundles list' \
   'gitclaw bundles info <name>' \
   'gitclaw channels verify' \
+  'gitclaw channels risk' \
   'gitclaw channels list' \
   'gitclaw channels info <provider>' \
   'gitclaw channel-state' \
@@ -246,6 +247,7 @@ for expected in \
   'gitclaw policy list' \
   'gitclaw policy verify' \
   'gitclaw backup verify' \
+  'gitclaw backup risk' \
   'gitclaw backup manifest' \
   'gitclaw backup list' \
   'gitclaw backup info --issue <number>' \
@@ -263,12 +265,14 @@ for expected in \
   'gitclaw memory search <query>' \
   'gitclaw migrate plan <source>' \
   'gitclaw soul verify' \
+  'gitclaw soul risk' \
   'gitclaw soul validate' \
   'gitclaw soul list' \
   'gitclaw soul edit-plan <path>' \
   'gitclaw soul info <path>' \
   'gitclaw soul search <query>' \
   'gitclaw skills verify' \
+  'gitclaw skills risk' \
   'gitclaw skills validate' \
   'gitclaw skills check' \
   'gitclaw skills list' \
@@ -278,6 +282,7 @@ for expected in \
   'gitclaw skills info <name>' \
   'gitclaw skills search <query>' \
   'gitclaw tools verify' \
+  'gitclaw tools risk' \
   'gitclaw tools validate' \
   'gitclaw tools list' \
   'gitclaw tools run-plan <name>' \

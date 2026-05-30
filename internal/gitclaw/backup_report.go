@@ -58,6 +58,9 @@ func RenderBackupReport(ev Event, cfg Config, comments []Comment, transcript []T
 		fmt.Fprintf(&b, "- query_sha256_12: `%s`\n", request.QueryHash)
 		fmt.Fprintf(&b, "- query_terms: `%d`\n", request.QueryTerms)
 	}
+	if request.Name == "risk" {
+		writeBackupIssueRiskSummary(&b)
+	}
 	b.WriteByte('\n')
 
 	b.WriteString("The backup job runs after a successful assistant turn and writes the raw transcript backup plus repo-scoped index to the dedicated backup branch.\n\n")
@@ -72,6 +75,7 @@ func RenderBackupReport(ev Event, cfg Config, comments []Comment, transcript []T
 	writeBackupIssueCommandSummary(&b, request)
 	b.WriteString("\n### Verification\n")
 	b.WriteString("- `gitclaw backup verify --root .gitclaw/backups --repo <owner/repo>`\n")
+	b.WriteString("- `gitclaw backup risk --root .gitclaw/backups --repo <owner/repo>`\n")
 	b.WriteString("- `gitclaw backup search --root .gitclaw/backups --repo <owner/repo> <query>`\n")
 	b.WriteString("- `gitclaw backup retention-plan --root .gitclaw/backups --repo <owner/repo> --keep-latest 50`\n")
 	b.WriteString("- validates the repo-scoped index, README, canonical issue paths, JSON schema version, counts, timestamps, and traversal-safe payload paths; search reports hashes and metadata without printing raw backup bodies\n")
@@ -95,6 +99,12 @@ func requestedBackupIssueCommand(ev Event, cfg Config) backupIssueCommand {
 			Name:         "verify",
 			Status:       "ok",
 			LocalCommand: fmt.Sprintf("gitclaw backup verify --root %s --repo %s", defaultBackupRoot, backupReportRepo(ev.Repo)),
+		}
+	case "risk", "risk-audit":
+		return backupIssueCommand{
+			Name:         "risk",
+			Status:       "ok",
+			LocalCommand: fmt.Sprintf("gitclaw backup risk --root %s --repo %s", defaultBackupRoot, backupReportRepo(ev.Repo)),
 		}
 	case "manifest":
 		return backupIssueCommand{
@@ -177,13 +187,21 @@ func writeBackupIssueCommandSummary(b *strings.Builder, request backupIssueComma
 			b.WriteString("- raw search query is not printed; only query hash and term count are shown\n")
 		}
 	case "unknown":
-		b.WriteString("- unknown backup subcommand; supported issue intents are `verify`, `manifest`, `list`, `info`, `stats`, `search`, `export-jsonl`, `restore-plan`, and `retention-plan`\n")
+		b.WriteString("- unknown backup subcommand; supported issue intents are `verify`, `risk`, `manifest`, `list`, `info`, `stats`, `search`, `export-jsonl`, `restore-plan`, and `retention-plan`\n")
 	case "invalid_issue":
 		b.WriteString("- invalid backup issue number; use `@gitclaw /backup info <issue-number>` or inspect the current issue with `@gitclaw /backup info`\n")
 	default:
 		b.WriteString("- summary report requested\n")
 	}
 	b.WriteString("- issue-side execution is metadata-only because the backup branch is written after this assistant turn\n")
+}
+
+func writeBackupIssueRiskSummary(b *strings.Builder) {
+	b.WriteString("- backup_risk_status: `deferred`\n")
+	b.WriteString("- backup_risk_execution: `local_fetched_backup_branch`\n")
+	b.WriteString("- backup_risk_categories: `integrity, path-safety, credential-handling, prompt-boundary, restore-safety, retention`\n")
+	b.WriteString("- raw_backup_payloads_scanned_issue_side: `false`\n")
+	b.WriteString("- llm_e2e_required_after_backup_risk_change: `true`\n")
 }
 
 func parseBackupIssueNumber(value string) (int, bool) {
