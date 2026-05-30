@@ -64,6 +64,12 @@ func RenderToolsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isToolsValidateRequest(ev, cfg) {
 		return renderToolsValidationReport(ev, repoContext, true)
 	}
+	if toolName := requestedToolRunPlanName(ev, cfg); toolName != "" {
+		if toolName == "__missing__" {
+			toolName = ""
+		}
+		return renderToolRunPlanReport(ev, repoContext, toolName, true)
+	}
 	if toolName := requestedToolInfoName(ev, cfg); toolName != "" {
 		return renderToolInfoReport(ev, repoContext, toolName, true)
 	}

@@ -212,3 +212,60 @@ func TestRenderToolInfoReportShowsOneContractWithoutBodies(t *testing.T) {
 		}
 	}
 }
+
+func TestRenderToolRunPlanReportShowsOneContractWithoutBodies(t *testing.T) {
+	repoContext := RepoContext{
+		Documents: []ContextDocument{{Path: ".gitclaw/TOOLS.md", Body: "TOOL_RUN_PLAN_GUIDANCE_SECRET"}},
+		ToolOutputs: []ToolOutput{
+			{Name: "gitclaw.search_files", Input: "bounded phrase TOOL_RUN_PLAN_INPUT_SECRET", Output: "docs/search-fixture.md:7:GITCLAW_SEARCH_CONTEXT_V1 TOOL_RUN_PLAN_OUTPUT_SECRET"},
+			{Name: "gitclaw.list_files", Input: ".", Output: "go.mod\nREADME.md"},
+		},
+	}
+	body := RenderToolRunPlanCLIReport(repoContext, "search_files")
+	for _, want := range []string{
+		"GitClaw Tool Run Plan Report",
+		"scope: `local-cli`",
+		"tool_run_plan_status: `ok`",
+		"requested_tool_sha256_12:",
+		"normalized_tool: `gitclaw.search_files`",
+		"matched_tools: `1`",
+		"active_outputs_for_tool: `1`",
+		"tool_enabled: `true`",
+		"disabled_by_config: `false`",
+		"blocked_by_allowlist: `false`",
+		"tool_mode: `read-only`",
+		"tool_trigger: `explicit quoted phrase or identifier`",
+		"mutating_contract: `false`",
+		"run_mode: `read-only`",
+		"model_call_required: `false`",
+		"shell_execution_allowed: `false`",
+		"network_allowed: `false`",
+		"repository_mutation_allowed: `false`",
+		"raw_tool_name_included: `false`",
+		"raw_inputs_included: `false`",
+		"raw_outputs_included: `false`",
+		"tool_validation_status: `ok`",
+		"### Contract",
+		"name=`gitclaw.search_files` source=`builtin-gitclaw` enabled=`true`",
+		"active_outputs=`1`",
+		"### Active Outputs For Tool",
+		"name=`gitclaw.search_files` contract_known=`true` input_sha256_12=",
+		"output_sha256_12=",
+		"### Review Steps",
+		"Use a live GitHub Models conversation E2E",
+		"### Findings",
+		"code=`deterministic_tool_contract`",
+		"code=`shell_execution_disabled`",
+		"code=`repository_mutation_disabled`",
+		"code=`read_only_or_metadata_only`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("tool run-plan report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"TOOL_RUN_PLAN_GUIDANCE_SECRET", "TOOL_RUN_PLAN_INPUT_SECRET", "TOOL_RUN_PLAN_OUTPUT_SECRET", "GITCLAW_SEARCH_CONTEXT_V1", "bounded phrase"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("tool run-plan report leaked body/input token %q:\n%s", leaked, body)
+		}
+	}
+}

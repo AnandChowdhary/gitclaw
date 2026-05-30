@@ -651,8 +651,8 @@ GitHub issue/comment event
   `bundles list`, `bundles info`,
   `soul verify`, `soul validate`, `soul list`, `soul edit-plan`, `soul info`,
   `soul search`,
-  `tools verify`, `tools validate`, `tools list`, `tools info`,
-  `tools search`, `doctor`,
+  `tools verify`, `tools validate`, `tools list`, `tools run-plan`,
+  `tools info`, `tools search`, `doctor`,
   `policy verify`,
   `secrets audit`, `secrets scan`, `secrets list`,
   `commands`, `version`.
@@ -1413,6 +1413,7 @@ Validation is visible in the `/tools` report and locally through:
 gitclaw tools verify
 gitclaw tools validate
 gitclaw tools list
+gitclaw tools run-plan <name>
 gitclaw tools info <name>
 gitclaw tools search <query> --max-results 10
 ```
@@ -1430,6 +1431,7 @@ OpenClaw's tool policy visibility and Hermes' toolset inventory:
 @gitclaw /tools list
 @gitclaw /tools verify
 @gitclaw /tools validate
+@gitclaw /tools run-plan search_files
 @gitclaw /tools info read_file
 @gitclaw /tools search read_file
 ```
@@ -1477,6 +1479,17 @@ validation findings. It never emits raw tool inputs, tool output bodies,
 issue/comment bodies, prompts, or file bodies. This mirrors the skill-info
 workflow for tools: one contract can be inspected without dumping the full
 tool inventory.
+
+When called as `@gitclaw /tools run-plan <name>`, the command posts a
+body-free dry-run plan for one declared tool contract. It reports the
+normalized tool name, match count, active-output count, enabled/disabled/
+allowlist gate state, contract mode, trigger, mutation flag, validation
+summary, active-output hashes, and review steps. It never calls a model,
+executes shell commands, makes network calls, mutates the repository, or emits
+raw tool names from the issue, raw inputs, raw outputs, issue/comment bodies,
+prompts, or file bodies. Any implementation change to tool behavior must pair
+the deterministic run-plan E2E with a live GitHub Models conversation E2E so
+the real model path stays tested too.
 
 When called as `@gitclaw /tools search <query>`, the command searches declared
 tool-contract metadata and active tool-output metadata. It reports the query
@@ -3181,6 +3194,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - create a second real issue with `@gitclaw /tools list`,
    - create a third real issue with `@gitclaw /tools verify`,
    - create another real issue with `@gitclaw /tools info read_file`,
+   - create another real issue with `@gitclaw /tools run-plan search_files`,
    - ask for a concrete file read and search fixture phrase,
    - assert the reply is marked `model="gitclaw/tools"`,
    - assert the report lists available tool contracts and active output
@@ -3190,6 +3204,9 @@ assert the expected comments/labels, and close the issue in cleanup.
      suppression, and verification findings,
    - assert the info report includes one contract, active-output hashes,
      validation scoped to the match, and no raw inputs,
+   - assert the run-plan report includes one contract, gate state, active-output
+     hashes, review steps, no shell/network/repository/model execution, and
+     no raw inputs or outputs,
    - assert tool validation status, contract counts, active-output counts,
      unknown-output counts, unsafe-contract counts, and over-limit output
      counts, missing-guidance count, and duplicate-contract count are present,
@@ -3832,6 +3849,11 @@ examples/workflows/gitclaw.yml
   `@gitclaw /tools info read_file` exposes one body-free tool contract card,
   active-output hashes, and match-scoped validation without raw inputs or
   output-body leakage.
+- A `gh`-driven tools-run-plan E2E harness verifies
+  `@gitclaw /tools run-plan search_files` exposes one body-free dry-run plan,
+  gate-state metadata, active-output hashes, no shell/network/repository/model
+  execution flags, and explicit reminder coverage that tool-behavior changes
+  must also run a live GitHub Models conversation E2E.
 - A `gh`-driven sandbox-report E2E harness verifies `@gitclaw /sandbox`
   exposes the current GitHub Actions runtime boundary, denied host exec,
   read-only tool modes, workflow permission cards, and backup-job-only write

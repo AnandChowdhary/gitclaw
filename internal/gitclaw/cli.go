@@ -781,7 +781,7 @@ func runSessionSearchCommand(args []string) error {
 
 func runToolsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw tools verify|validate|list|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw tools verify|validate|list|run-plan <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -790,6 +790,8 @@ func runToolsCommand(args []string) error {
 		return runToolsValidateCommand(args[1:])
 	case "list":
 		return runToolsListCommand(args[1:])
+	case "run-plan", "plan":
+		return runToolsRunPlanCommand(args[1:])
 	case "info":
 		return runToolsInfoCommand(args[1:])
 	case "search":
@@ -856,6 +858,22 @@ func runToolsListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderToolsCLIReport(repoContext))
+	return nil
+}
+
+func runToolsRunPlanCommand(args []string) error {
+	if len(args) != 1 {
+		return fmt.Errorf("usage: gitclaw tools run-plan <name>")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "tools run-plan " + args[0]}}, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderToolRunPlanCLIReport(repoContext, args[0]))
 	return nil
 }
 

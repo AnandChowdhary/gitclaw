@@ -833,6 +833,16 @@ prompt internals: `@gitclaw /tools search <query>` and `gitclaw tools search
 <query>` should search contract names/modes/triggers and active-output
 names/inputs, but report only match fields, counts, hashes, and sizes.
 
+2026-05-30 tools-run-plan follow-up: OpenClaw's exec-approval model makes
+tool execution an inspectable policy decision before action, while Hermes'
+tool registry makes tool names, modes, and platform constraints explicit.
+GitClaw should add `@gitclaw /tools run-plan <name>` and
+`gitclaw tools run-plan <name>` as the GitHub-native equivalent of a
+body-free dry run: one contract, gate state, trigger, mutation flag,
+active-output hashes, validation summary, no shell/network/repository/model
+execution, and an explicit requirement that tool-behavior changes also pass a
+live GitHub Models conversation E2E.
+
 2026-05-29 prompt-budget follow-up: OpenClaw's context docs expose per-file and
 total prompt caps plus visible truncation markers, while Hermes' memory/context
 docs treat character limits as a core defense against context bloat. GitClaw
