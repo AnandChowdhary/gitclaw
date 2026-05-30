@@ -108,6 +108,7 @@ func renderChannelReport(ev Event, cfg Config, comments []Comment, includeIssue 
 
 	b.WriteString("\n### Ingest Contract\n")
 	b.WriteString("- `gitclaw channel-ingest --channel <provider> --thread-id <thread> --message-id <message> --body <text>`\n")
+	b.WriteString("- `gitclaw channel-state --channel <provider> --account-id <account> --offset <offset>` stores durable provider offsets as hashes\n")
 	b.WriteString("- one canonical issue per `channel + thread_id`\n")
 	b.WriteString("- one mirrored comment per `channel + message_id`\n")
 	b.WriteString("- dispatch id: `<channel>-<message_id>`\n")

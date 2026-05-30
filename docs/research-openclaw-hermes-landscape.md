@@ -802,6 +802,14 @@ message be the active request. GitClaw should do the same for
 Telegram/Slack and gives channel E2E tests a stable path during model
 rate-limit spikes.
 
+2026-05-30 channel state follow-up: Telegram long polling and Slack gateway
+experiments need durable offset/dedupe state before any runner loop can be
+trusted. GitClaw should store this as one GitHub issue per
+`channel + account_sha256_12`, with `gitclaw:channel-state-update` comments for
+new offsets. Account IDs and offsets should appear only as short hashes so the
+state issue stays auditable without becoming a plaintext credential or cursor
+store.
+
 Hermes' session docs also expose a practical backup primitive:
 `hermes sessions export backup.jsonl` writes conversation metadata and messages
 as durable JSONL. GitClaw should preserve the same principle, but use GitHub

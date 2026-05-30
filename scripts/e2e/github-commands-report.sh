@@ -138,7 +138,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `15`' \
   'aliases: `10`' \
-  'local_cli_helpers: `41`' \
+  'local_cli_helpers: `42`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/help' \
@@ -153,6 +153,7 @@ for expected in \
   '/cron' \
   'gitclaw channels verify' \
   'gitclaw channels list' \
+  'gitclaw channel-state' \
   'gitclaw config list' \
   'gitclaw context list' \
   'gitclaw doctor' \

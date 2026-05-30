@@ -582,7 +582,7 @@ GitHub issue/comment event
 - Subcommands: `preflight`, `handle`, `backup`, `backup search`,
   `backup retention-plan`,
   `heartbeat`,
-  `channel-ingest`, `proactive enqueue`, `proactive init`,
+  `channel-ingest`, `channel-state`, `proactive enqueue`, `proactive init`,
   `memory verify`, `memory validate`, `memory list`, `memory search`,
   `skills validate`,
   `skills list`, `skills info`, `skills search`,
@@ -1641,6 +1641,36 @@ This workflow is useful for E2E, manual bridge experiments, and tiny external
 dispatchers. Provider-specific pollers can later call the same CLI path after
 they read Telegram/Slack events.
 
+### Channel State Command
+
+Provider-specific bridges need durable state before GitClaw can safely poll
+Telegram or Slack without a server. GitClaw exposes this as a GitHub-native
+state issue instead of a database:
+
+```bash
+gitclaw channel-state \
+  --repo OWNER/REPO \
+  --channel telegram \
+  --account-id <provider-account-or-workspace-id> \
+  --offset <provider-offset-or-update-id>
+```
+
+Behavior:
+
+- find or create one open issue with a hidden `gitclaw:channel-state` marker
+  for `channel + account_sha256_12`,
+- label it with `gitclaw:channel` but do not apply the normal `gitclaw`
+  trigger label,
+- store account IDs and offsets only as `sha256_12` hashes in issue titles,
+  issue bodies, comments, CLI output, and GitHub Actions output,
+- post a `gitclaw:channel-state-update` comment for a new offset,
+- treat a repeated `channel + account_sha256_12 + offset_sha256_12` as a
+  duplicate and avoid posting a second state update comment.
+
+This gives polling and long-running gateway experiments an auditable offset and
+dedupe primitive without a webhook server, socket service, runner filesystem
+state, or plaintext provider state in GitHub issues.
+
 ### Channel Inspection Command
 
 GitClaw supports a deterministic channel/control-plane audit command:
@@ -1679,6 +1709,7 @@ Local operators can inspect the same bridge contract without opening an issue:
 ```bash
 gitclaw channels list
 gitclaw channels verify
+gitclaw channel-state --channel telegram --account-id <id> --offset <offset>
 ```
 
 The local report omits issue-only fields such as repository, issue number,
@@ -2817,6 +2848,9 @@ examples/workflows/gitclaw.yml
   comment is included in the dispatched conversation transcript.
 - A `gh`-driven channel-ingest E2E harness verifies the generic channel ingress
   workflow end to end, including duplicate provider-message retries.
+- A `gh`-driven channel-state E2E harness verifies real GitHub issue-backed
+  channel offset storage, duplicate offset suppression, `gitclaw:channel`
+  labeling, and no raw account/offset leakage.
 - A `gh`-driven channels-report E2E harness verifies `@gitclaw /channels`
   reports workflow dispatch, channel labels, provider keys, and mirrored
   message marker counts without a model call.

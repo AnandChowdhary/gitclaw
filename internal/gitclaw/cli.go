@@ -25,6 +25,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runHeartbeatCommand(ctx, args[1:])
 	case "channel-ingest":
 		return runChannelIngestCommand(ctx, args[1:])
+	case "channel-state":
+		return runChannelStateCommand(ctx, args[1:])
 	case "channels", "channel":
 		return runChannelsCommand(args[1:])
 	case "proactive":
@@ -1275,6 +1277,79 @@ func runChannelIngestCommand(ctx context.Context, args []string) error {
 		return err
 	}
 	fmt.Printf("channel_ingest issue=%d comment=%d created=%t duplicate=%t url=%s\n", result.IssueNumber, result.CommentID, result.Created, result.Duplicate, result.IssueURL)
+	return nil
+}
+
+func runChannelStateCommand(ctx context.Context, args []string) error {
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	opts := ChannelStateOptions{
+		Repo:       os.Getenv("GITHUB_REPOSITORY"),
+		Channel:    os.Getenv("GITCLAW_CHANNEL"),
+		AccountID:  os.Getenv("GITCLAW_CHANNEL_ACCOUNT_ID"),
+		Offset:     os.Getenv("GITCLAW_CHANNEL_OFFSET"),
+		LeaseRunID: os.Getenv("GITHUB_RUN_ID"),
+	}
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--repo requires a value")
+			}
+			opts.Repo = args[i+1]
+			i++
+		case "--channel":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--channel requires a value")
+			}
+			opts.Channel = args[i+1]
+			i++
+		case "--account-id":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--account-id requires a value")
+			}
+			opts.AccountID = args[i+1]
+			i++
+		case "--offset":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--offset requires a value")
+			}
+			opts.Offset = args[i+1]
+			i++
+		case "--lease-run-id":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--lease-run-id requires a value")
+			}
+			opts.LeaseRunID = args[i+1]
+			i++
+		default:
+			return fmt.Errorf("unknown channel-state argument %q", args[i])
+		}
+	}
+	token := githubTokenFromEnv()
+	if token == "" {
+		return fmt.Errorf("missing GH_TOKEN or GITHUB_TOKEN")
+	}
+	result, err := RunChannelState(ctx, cfg, NewRESTGitHubClient(token), opts)
+	if err != nil {
+		return err
+	}
+	if err := writeChannelStateOutputs(result); err != nil {
+		return err
+	}
+	fmt.Printf(
+		"channel_state issue=%d comment=%d created=%t updated=%t duplicate=%t account_sha256_12=%s offset_sha256_12=%s url=%s\n",
+		result.IssueNumber,
+		result.CommentID,
+		result.Created,
+		result.Updated,
+		result.Duplicate,
+		result.AccountHash,
+		result.OffsetHash,
+		result.IssueURL,
+	)
 	return nil
 }
 

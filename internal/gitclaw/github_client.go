@@ -163,46 +163,62 @@ func (c *RESTGitHubClient) ListOpenIssues(ctx context.Context, repo string, labe
 	if limit <= 0 {
 		limit = 20
 	}
-	values := url.Values{}
-	values.Set("state", "open")
-	values.Set("per_page", fmt.Sprintf("%d", limit))
-	if len(labels) > 0 {
-		values.Set("labels", strings.Join(labels, ","))
-	}
-	endpoint := fmt.Sprintf("%s/repos/%s/issues?%s", strings.TrimRight(c.APIBaseURL, "/"), repo, values.Encode())
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
-	if err != nil {
-		return nil, err
-	}
-	c.setHeaders(req)
-	res, err := c.httpClient().Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer res.Body.Close()
-	if res.StatusCode < 200 || res.StatusCode >= 300 {
-		body, _ := io.ReadAll(io.LimitReader(res.Body, 4096))
-		return nil, fmt.Errorf("GitHub list issues failed: status=%d body=%s", res.StatusCode, strings.TrimSpace(string(body)))
-	}
-	var raw []struct {
-		Number            int    `json:"number"`
-		Title             string `json:"title"`
-		Body              string `json:"body"`
-		AuthorAssociation string `json:"author_association"`
-		User              User   `json:"user"`
-		Labels            []struct {
-			Name string `json:"name"`
-		} `json:"labels"`
-		PullRequest *struct {
-			URL string `json:"url"`
-		} `json:"pull_request"`
-	}
-	if err := json.NewDecoder(res.Body).Decode(&raw); err != nil {
-		return nil, err
-	}
-	issues := make([]Issue, 0, len(raw))
-	for _, item := range raw {
-		issues = append(issues, issueFromREST(item.Number, item.Title, item.Body, item.AuthorAssociation, item.User, item.Labels, item.PullRequest != nil))
+	issues := make([]Issue, 0, limit)
+	page := 1
+	for len(issues) < limit {
+		perPage := limit - len(issues)
+		if perPage > 100 {
+			perPage = 100
+		}
+		values := url.Values{}
+		values.Set("state", "open")
+		values.Set("sort", "created")
+		values.Set("direction", "desc")
+		values.Set("per_page", fmt.Sprintf("%d", perPage))
+		values.Set("page", fmt.Sprintf("%d", page))
+		if len(labels) > 0 {
+			values.Set("labels", strings.Join(labels, ","))
+		}
+		endpoint := fmt.Sprintf("%s/repos/%s/issues?%s", strings.TrimRight(c.APIBaseURL, "/"), repo, values.Encode())
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
+		if err != nil {
+			return nil, err
+		}
+		c.setHeaders(req)
+		res, err := c.httpClient().Do(req)
+		if err != nil {
+			return nil, err
+		}
+		var raw []struct {
+			Number            int    `json:"number"`
+			Title             string `json:"title"`
+			Body              string `json:"body"`
+			AuthorAssociation string `json:"author_association"`
+			User              User   `json:"user"`
+			Labels            []struct {
+				Name string `json:"name"`
+			} `json:"labels"`
+			PullRequest *struct {
+				URL string `json:"url"`
+			} `json:"pull_request"`
+		}
+		if res.StatusCode < 200 || res.StatusCode >= 300 {
+			body, _ := io.ReadAll(io.LimitReader(res.Body, 4096))
+			res.Body.Close()
+			return nil, fmt.Errorf("GitHub list issues failed: status=%d body=%s", res.StatusCode, strings.TrimSpace(string(body)))
+		}
+		if err := json.NewDecoder(res.Body).Decode(&raw); err != nil {
+			res.Body.Close()
+			return nil, err
+		}
+		res.Body.Close()
+		for _, item := range raw {
+			issues = append(issues, issueFromREST(item.Number, item.Title, item.Body, item.AuthorAssociation, item.User, item.Labels, item.PullRequest != nil))
+		}
+		if len(raw) < perPage {
+			break
+		}
+		page++
 	}
 	return issues, nil
 }
