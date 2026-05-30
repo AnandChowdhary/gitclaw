@@ -843,6 +843,18 @@ active-output hashes, validation summary, no shell/network/repository/model
 execution, and an explicit requirement that tool-behavior changes also pass a
 live GitHub Models conversation E2E.
 
+2026-05-30 migration-plan follow-up: OpenClaw's migration posture is
+preview-first, secret-redacted, and backup-backed, while Hermes' profiles keep
+agent state isolated by config, `.env`, `SOUL.md`, memories, sessions, skills,
+cron jobs, and gateway state. GitClaw should add `@gitclaw /migrate plan
+<source>` and `gitclaw migrate plan <source>` as the GitHub-native equivalent:
+map `openclaw`, `hermes`, `codex`, and `claude` state into repo-local targets,
+but only as a deterministic body-free plan. The command should not scan source
+home directories from an issue, import secrets, execute hooks/plugins/MCP
+servers/installers, mutate the repository, or call a model. Any implementation
+batch for migration behavior must pair the deterministic migration E2E with a
+live GitHub Models conversation E2E that performs an actual LLM call.
+
 2026-05-29 prompt-budget follow-up: OpenClaw's context docs expose per-file and
 total prompt caps plus visible truncation markers, while Hermes' memory/context
 docs treat character limits as a core defense against context bloat. GitClaw

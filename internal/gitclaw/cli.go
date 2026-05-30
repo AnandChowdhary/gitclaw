@@ -41,6 +41,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runRollbackCommand(args[1:])
 	case "proactive":
 		return runProactiveCommand(ctx, args[1:])
+	case "migrate", "migration":
+		return runMigrateCommand(args[1:])
 	case "profile", "profiles":
 		return runProfileCommand(args[1:])
 	case "runs", "run", "ledger":
@@ -971,6 +973,28 @@ func runDoctorCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderDoctorCLIReport(cfg, repoContext))
+	return nil
+}
+
+func runMigrateCommand(args []string) error {
+	if len(args) == 0 {
+		return fmt.Errorf("usage: gitclaw migrate plan <source>")
+	}
+	if args[0] != "plan" && args[0] != "dry-run" {
+		return fmt.Errorf("usage: gitclaw migrate plan <source>")
+	}
+	if len(args) != 2 {
+		return fmt.Errorf("usage: gitclaw migrate plan <source>")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "migrate plan " + args[1]}}, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderMigrationCLIReport(repoContext, args[1]))
 	return nil
 }
 

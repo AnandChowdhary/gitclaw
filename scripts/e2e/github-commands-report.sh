@@ -136,9 +136,9 @@ for expected in \
   "GitClaw Commands Report" \
   "Generated without a model call" \
   'trigger_prefix: `@gitclaw`' \
-  'commands: `22`' \
-  'aliases: `19`' \
-  'local_cli_helpers: `74`' \
+  'commands: `23`' \
+  'aliases: `20`' \
+  'local_cli_helpers: `75`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/approvals' \
@@ -153,6 +153,8 @@ for expected in \
   '/tools' \
   '/secrets' \
   '/secret' \
+  '/migrate' \
+  '/migration' \
   '/doctor' \
   '/skills' \
   '/soul' \
@@ -220,6 +222,7 @@ for expected in \
   'gitclaw memory list' \
   'gitclaw memory info <path>' \
   'gitclaw memory search <query>' \
+  'gitclaw migrate plan <source>' \
   'gitclaw soul verify' \
   'gitclaw soul validate' \
   'gitclaw soul list' \

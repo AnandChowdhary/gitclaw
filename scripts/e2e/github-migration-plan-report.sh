@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "config-report-e2e: $*" >&2
+  echo "migration-plan-report-e2e: $*" >&2
 }
 
 die() {
@@ -33,12 +33,13 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_CONFIG_REPORT_E2E_${timestamp}"
-title="@gitclaw /config e2e ${timestamp}"
-body="Live config-report E2E.
+token="GITCLAW_MIGRATION_PLAN_E2E_${timestamp}"
+title="@gitclaw /migrate plan hermes e2e ${timestamp}"
+body="Live migration-plan E2E.
 
-Hidden config report body token: ${token}
-This should produce a deterministic config report without a model call."
+Hidden migration plan token: ${token}
+This should produce a deterministic dry-run migration plan for Hermes without scanning source homes, importing secrets, mutating the repository, or dumping issue bodies.
+Any migration behavior change must also run a live GitHub Models conversation E2E."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -52,7 +53,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "config-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "migration-plan-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -73,11 +74,11 @@ wait_for_run() {
       --json databaseId,status,conclusion,url,createdAt,displayTitle \
       --jq '. as $runs | $runs | map(select(.displayTitle == "'"${title}"'")) | sort_by(.createdAt) | reverse | .[0] // empty')"
     if [[ -n "$run_json" && "$run_json" != "null" ]]; then
-      local status conclusion url
-      status="$(jq -r '.status' <<<"$run_json")"
+      local run_status conclusion url
+      run_status="$(jq -r '.status' <<<"$run_json")"
       conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
       url="$(jq -r '.url' <<<"$run_json")"
-      if [[ "$status" == "completed" ]]; then
+      if [[ "$run_status" == "completed" ]]; then
         [[ "$conclusion" == "success" ]] || die "issues run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
@@ -109,13 +110,20 @@ error_count() {
     --jq '[.comments[] | select(.body | contains("<!-- gitclaw:error"))] | length'
 }
 
+issue_label_names() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json labels \
+    --jq '.labels[].name'
+}
+
 wait_for_assistant_count() {
   local want="$1"
   for _ in {1..90}; do
     local errors
     errors="$(error_count)"
     if [[ "$errors" != "0" ]]; then
-      die "assistant run posted ${errors} error marker comment(s)"
+      die "assistant run posted ${errors} error comment(s)"
     fi
     local got
     got="$(assistant_count)"
@@ -127,66 +135,73 @@ wait_for_assistant_count() {
   return 1
 }
 
+wait_for_done_status() {
+  for _ in {1..60}; do
+    local labels
+    labels="$(issue_label_names)"
+    if grep -Fxq "gitclaw:done" <<<"$labels" &&
+      ! grep -Fxq "gitclaw:running" <<<"$labels" &&
+      ! grep -Fxq "gitclaw:error" <<<"$labels"; then
+      return 0
+    fi
+    sleep 5
+  done
+  return 1
+}
+
 run_json="$(wait_for_run "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one config report comment"
+wait_for_assistant_count 1 || die "expected one migration plan report comment"
 comments="$(assistant_comments)"
 
 for expected in \
-  'model="gitclaw/config"' \
-  "GitClaw Config Report" \
+  'model="gitclaw/migration"' \
+  "GitClaw Migration Plan Report" \
   "Generated without a model call" \
-  'config_source: `defaults+repo+environment`' \
-  'config_file_path: `.gitclaw/config.yml`' \
-  'config_file_present: `true`' \
-  'trigger_label: `gitclaw`' \
-  'trigger_prefix: `@gitclaw`' \
-  'disabled_label: `gitclaw:disabled`' \
-  'model: `openai/gpt-5-nano`' \
-  'run_mode: `read-only`' \
-  'max_prompt_bytes: `60000`' \
-  'max_output_tokens: `4000`' \
-  'max_transcript_messages: `40`' \
-  'max_transcript_message_bytes: `8000`' \
-  'skills_allowed_configured: `0`' \
-  'skills_disabled_configured: `0`' \
-  'tools_allowed_configured: `0`' \
-  'tools_disabled_configured: `0`' \
-  'workflows_present: `7`' \
-  'slash_commands: `23`' \
-  '/approvals' \
-  '/bundles' \
-  '/checkpoints' \
-  '/secrets' \
-  '### Skill Gates' \
-  '### Tool Gates' \
-  'allowed=`none`' \
-  'disabled=`none`' \
-  'OWNER' \
-  'MEMBER' \
-  'COLLABORATOR' \
-  '/channels' \
-  '/config' \
-  '/doctor' \
-  '/help' \
-  '/memory' \
-  '/models' \
-  '/profile' \
-  '/runs' \
-  '/sandbox' \
-  '/prompt' \
-  '.github/workflows/gitclaw.yml' \
-  '.github/workflows/gitclaw-heartbeat.yml' \
-  '.github/workflows/gitclaw-proactive.yml' \
-  '.github/workflows/gitclaw-channel-ingest.yml' \
-  '.github/workflows/gitclaw-channel-state.yml' \
-  '.github/workflows/gitclaw-channel-gateway.yml' \
-  '.github/workflows/gitclaw-channel-delivery.yml'; do
-  grep -Fq "$expected" <<<"$comments" || die "config report missing ${expected}"
+  'migration_plan_status: `needs_review`' \
+  'normalized_source: `hermes`' \
+  'supported_source: `true`' \
+  'plan_scope: `repo-local-declarative-state`' \
+  'source_scan_allowed: `false`' \
+  'apply_supported: `false`' \
+  'model_call_required: `false`' \
+  'repository_mutation_allowed: `false`' \
+  'backup_required_before_apply: `true`' \
+  'credentials_import_allowed: `false`' \
+  'executable_state_import_allowed: `false`' \
+  'raw_source_body_included: `false`' \
+  'raw_secret_values_included: `false`' \
+  'llm_e2e_required_after_change: `true`' \
+  'backup_branch: `gitclaw-backups`' \
+  'backup_schema_version: `1`' \
+  'soul_validation_status: `ok`' \
+  'skill_validation_status: `ok`' \
+  'tool_validation_status: `ok`' \
+  "### Source Import Map" \
+  'source_kind=`config.yaml providers` target=`.gitclaw/config.yml` action=`reviewed-merge`' \
+  'source_kind=`SOUL.md` target=`.gitclaw/SOUL.md` action=`manual-copy`' \
+  'source_kind=`memories/MEMORY.md` target=`.gitclaw/MEMORY.md` action=`reviewed-append`' \
+  'source_kind=`skills/<name>/SKILL.md` target=`.gitclaw/SKILLS/<name>/SKILL.md` action=`manual-copy`' \
+  'source_kind=`auth.json/.env` target=`manual secret setup` action=`skip`' \
+  "### Current GitClaw Target Inventory" \
+  'kind=`context` path=`.gitclaw/SOUL.md`' \
+  'kind=`skill` name=`repo-reader`' \
+  "### Review Steps" \
+  "Verify the current GitClaw backup branch" \
+  "### Findings" \
+  'code=`preview_first`' \
+  'code=`backup_first`' \
+  'code=`credentials_manual`' \
+  'code=`executable_state_quarantined`' \
+  'code=`manual_review_required`'; do
+  grep -Fq -- "$expected" <<<"$comments" || die "migration plan report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "config report leaked issue body token"
-fi
+for leaked in "$token" "$title" "Hidden migration plan token" "deterministic dry-run migration plan"; do
+  if grep -Fq "$leaked" <<<"$comments"; then
+    die "migration plan report leaked ${leaked}"
+  fi
+done
 
+wait_for_done_status || die "expected gitclaw:done without running/error"
 url="$(jq -r '.url' <<<"$run_json")"
 log "passed for issue #${issue_number}: ${url}"

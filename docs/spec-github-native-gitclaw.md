@@ -641,6 +641,7 @@ GitHub issue/comment event
   `rollback list`,
   `proactive enqueue`, `proactive init`, `proactive info`,
   `approvals list`, `approvals verify`,
+  `migrate plan`,
   `profile show`, `profile verify`,
   `runs current`, `runs verify`,
   `sandbox explain`, `sandbox verify`,
@@ -1218,6 +1219,52 @@ gitclaw profile verify
 ```
 
 The aliases intentionally return the same body-free report in v1.
+
+## Migration Plan Command
+
+GitClaw supports a deterministic migration planner inspired by OpenClaw's
+preview-first migration model and Hermes' isolated profile directories:
+
+```text
+@gitclaw /migrate plan hermes
+@gitclaw /migration openclaw
+```
+
+```bash
+gitclaw migrate plan hermes
+gitclaw migrate plan openclaw
+```
+
+OpenClaw's migration CLI previews a plan before apply, redacts secrets, and
+backs apply with a verified backup. Hermes profiles keep config, `.env`,
+`SOUL.md`, memories, sessions, skills, cron jobs, and gateway state in a
+profile-specific home. GitClaw's serverless version keeps the same safety
+shape but narrows v1 to a body-free plan for importing declarative state into
+the repository.
+
+The command runs after normal preflight authorization and context assembly, but
+before model inference. It posts a `gitclaw:assistant-turn` comment with
+`model="gitclaw/migration"` and summarizes:
+
+- requested source hash and normalized source (`openclaw`, `hermes`, `codex`,
+  or `claude`),
+- the fixed repo-local migration scope,
+- disabled source scanning, apply, model-call, repository mutation, credential
+  import, and executable-state import flags,
+- current GitClaw target inventory: loaded context documents, required context
+  files, skills, bundles, memory notes, tool contracts, active tool outputs,
+  backup branch, and backup schema version,
+- soul, skill, and tool validation rollups,
+- source-specific import-map rows for reviewed manual copy, reviewed merge,
+  archive-only, manual review, or skipped-secret state.
+
+It never scans `~/.hermes`, `~/.openclaw`, `~/.codex`, or `~/.claude` from an
+issue command; never imports secrets; never executes hooks, installers, MCP
+servers, or plugins; never writes files; and never dumps source bodies,
+credentials, issue/comment bodies, prompts, or raw source payloads. Any actual
+migration change must be made through reviewed repository edits, then followed
+by `/soul verify`, `/skills verify`, `/tools verify`, backup verification, and
+a live GitHub Models conversation E2E that performs an actual model call.
 
 ## Run Ledger Command
 
@@ -2918,12 +2965,15 @@ lives in GitHub's event, permission, and workflow runtime semantics.
    check before being considered complete.
 
    Live E2E coverage must not drift into deterministic reports only. Each
-   implementation batch should include at least one LLM-backed conversation E2E
+   implementation batch must include at least one LLM-backed conversation E2E
    through GitHub Models, such as `github-issue-chat.sh`,
-   `github-context-reference-chat.sh`, or `github-git-reference-chat.sh`,
-   unless the change is provably unrelated to assistant turns. Report-only
-   E2Es validate command surfaces; they do not prove inference, prompt assembly,
-   transcript reconstruction, or GitHub Models permissions still work.
+   `github-search-tool-chat.sh`, `github-context-reference-chat.sh`, or
+   `github-git-reference-chat.sh`, unless the change is provably unrelated to
+   assistant turns. That test must exercise an actual model call and assert the
+   assistant marker/model plus a real answer. Report-only E2Es validate command
+   surfaces; they do not prove inference, prompt assembly, transcript
+   reconstruction, tool-output injection, or GitHub Models permissions still
+   work.
 
 ### Live E2E Harness
 
@@ -3840,6 +3890,13 @@ examples/workflows/gitclaw.yml
   produces a deterministic repo-local profile envelope across identity,
   memory, skills, tools, model, and validation state without a model call or
   profile-body leakage.
+- A `gh`-driven migration-plan E2E harness verifies
+  `@gitclaw /migrate plan hermes` produces a body-free, non-mutating import
+  plan for OpenClaw/Hermes/Codex/Claude-style state, with source scanning,
+  credential import, executable-state import, repository mutation, and model
+  calls disabled. This deterministic check must be paired in the same
+  implementation batch with a live GitHub Models conversation E2E that makes
+  an actual LLM call, such as `github-search-tool-chat.sh`.
 - A `gh`-driven soul-report E2E harness verifies `@gitclaw /soul` produces a
   deterministic high-authority context file audit with validation metadata,
   without a model call or body leakage.
