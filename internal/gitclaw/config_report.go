@@ -16,6 +16,7 @@ var configWorkflowPaths = []string{
 	".github/workflows/gitclaw-proactive.yml",
 	".github/workflows/gitclaw-channel-ingest.yml",
 	".github/workflows/gitclaw-channel-state.yml",
+	".github/workflows/gitclaw-channel-gateway.yml",
 }
 
 var configSlashCommands = commandCatalogNames()

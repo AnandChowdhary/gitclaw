@@ -146,6 +146,8 @@ for expected in \
   'workflow_inputs: `5`' \
   'state_workflow_present: `true`' \
   'state_workflow_inputs: `4`' \
+  'gateway_workflow_present: `true`' \
+  'gateway_workflow_inputs: `6`' \
   'channel_thread_issue: `false`' \
   'channel_message_comments_now: `0`' \
   'supported_providers: `telegram, slack, generic`' \
@@ -154,6 +156,7 @@ for expected in \
   'slack' \
   'generic' \
   'gitclaw channel-ingest' \
+  'gitclaw channel-gateway' \
   'dispatch id: `<channel>-<message_id>`'; do
   grep -Fq "$expected" <<<"$comments" || die "channels list report missing ${expected}"
 done

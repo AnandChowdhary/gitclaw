@@ -1678,6 +1678,35 @@ Provider pollers or manually dispatched bridge jobs can call it with
 `gitclaw channel-state`, so bridge state updates do not need a server-side
 webhook endpoint or a local machine with credentials.
 
+### Channel Gateway Command
+
+GitClaw also exposes a minimal gateway lease command for the no-server,
+long-running Actions strategy:
+
+```bash
+gitclaw channel-gateway \
+  --repo OWNER/REPO \
+  --channel telegram \
+  --account-id <provider-account-or-workspace-id> \
+  --gateway-slot <slot> \
+  --lease-run-id <run-id> \
+  --renew
+```
+
+The command does not yet open provider sockets or poll Telegram/Slack APIs.
+Instead, it records the gateway lease through the same
+`gitclaw:channel-state-update` mechanism, hashing a lease payload derived from
+`channel`, `account_id`, `gateway_slot`, and `lease_run_id`. Repeating the same
+lease run is idempotent, while a renewed run gets a new `lease_run_id` and
+therefore a new auditable state update.
+
+`.github/workflows/gitclaw-channel-gateway.yml` wraps this command with
+`workflow_dispatch`. With `renew=false`, it records one interrupt-safe gateway
+lease and exits. With `renew=true`, it dispatches a successor gateway run before
+the job exits, using `actions: write`. This is the first executable version of
+the long-running Actions gateway idea: no webhook server, no always-on VM, and
+state durable in GitHub issues.
+
 ### Channel Inspection Command
 
 GitClaw supports a deterministic channel/control-plane audit command:
@@ -1717,6 +1746,7 @@ Local operators can inspect the same bridge contract without opening an issue:
 gitclaw channels list
 gitclaw channels verify
 gitclaw channel-state --channel telegram --account-id <id> --offset <offset>
+gitclaw channel-gateway --channel telegram --account-id <id> --renew
 ```
 
 The local report omits issue-only fields such as repository, issue number,
@@ -1726,10 +1756,11 @@ contract.
 
 ### Tier 2: Long-Running Actions Gateway
 
-Run a `channel-gateway.yml` workflow via `workflow_dispatch`. The job opens a
-Telegram long-poll loop and/or Slack Socket Mode WebSocket, mirrors channel
-messages into GitHub issues/comments, and mirrors GitClaw replies back to the
-channel.
+Run `.github/workflows/gitclaw-channel-gateway.yml` via `workflow_dispatch`.
+Today, the job records a durable gateway lease and can self-dispatch a
+successor run. Later, the same job can open a Telegram long-poll loop and/or
+Slack Socket Mode WebSocket, mirror channel messages into GitHub
+issues/comments, and mirror GitClaw replies back to the channel.
 
 This is the "no server, but effectively a temporary runner daemon" option.
 
@@ -2862,6 +2893,10 @@ examples/workflows/gitclaw.yml
   `.github/workflows/gitclaw-channel-state.yml`, verifies the state issue and
   update comment, then dispatches the same offset again to prove retry
   idempotency in GitHub Actions.
+- A `gh`-driven channel-gateway-workflow E2E harness dispatches
+  `.github/workflows/gitclaw-channel-gateway.yml`, verifies the gateway lease is
+  persisted through channel-state hashes, then repeats the same lease to prove
+  duplicate gateway runs are idempotent.
 - A `gh`-driven channels-report E2E harness verifies `@gitclaw /channels`
   reports workflow dispatch, channel labels, provider keys, and mirrored
   message marker counts without a model call.

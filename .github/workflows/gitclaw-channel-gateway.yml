@@ -1,0 +1,89 @@
+name: GitClaw Channel Gateway
+
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: External channel name, such as telegram or slack
+        required: true
+      account_id:
+        description: External channel account, bot, or workspace id
+        required: true
+      gateway_slot:
+        description: Gateway lease slot for audit
+        required: false
+      lease_run_id:
+        description: Optional bridge run id for deterministic tests
+        required: false
+      renew:
+        description: Dispatch the next gateway run before this job exits
+        required: false
+        default: "false"
+      renew_delay_seconds:
+        description: Delay before renewal dispatch
+        required: false
+        default: "0"
+
+concurrency:
+  group: gitclaw-channel-gateway-${{ inputs.channel }}-${{ inputs.account_id }}
+  cancel-in-progress: false
+
+jobs:
+  gateway:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      actions: write
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: stable
+
+      - id: gateway
+        run: |
+          set -euo pipefail
+          lease_run_id="${GITCLAW_CHANNEL_GATEWAY_LEASE_RUN_ID:-$GITHUB_RUN_ID}"
+          go run ./cmd/gitclaw channel-gateway --lease-run-id "$lease_run_id"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
+          GITCLAW_CHANNEL: ${{ inputs.channel }}
+          GITCLAW_CHANNEL_ACCOUNT_ID: ${{ inputs.account_id }}
+          GITCLAW_CHANNEL_GATEWAY_SLOT: ${{ inputs.gateway_slot }}
+          GITCLAW_CHANNEL_GATEWAY_LEASE_RUN_ID: ${{ inputs.lease_run_id }}
+          GITCLAW_CHANNEL_GATEWAY_RENEW: ${{ inputs.renew }}
+
+      - run: |
+          set -euo pipefail
+          delay="${GITCLAW_RENEW_DELAY_SECONDS:-0}"
+          if ! [[ "$delay" =~ ^[0-9]+$ ]]; then
+            echo "renew_delay_seconds must be a non-negative integer" >&2
+            exit 1
+          fi
+          if [[ "$delay" -gt 300 ]]; then
+            echo "renew_delay_seconds must be <= 300" >&2
+            exit 1
+          fi
+          sleep "$delay"
+          gh workflow run .github/workflows/gitclaw-channel-gateway.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            -f channel="$GITCLAW_CHANNEL" \
+            -f account_id="$GITCLAW_CHANNEL_ACCOUNT_ID" \
+            -f gateway_slot="$GITCLAW_CHANNEL_GATEWAY_SLOT" \
+            -f renew="$GITCLAW_CHANNEL_GATEWAY_RENEW" \
+            -f renew_delay_seconds="$GITCLAW_RENEW_DELAY_SECONDS"
+        if: steps.gateway.outputs.renew == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
+          GITCLAW_CHANNEL: ${{ inputs.channel }}
+          GITCLAW_CHANNEL_ACCOUNT_ID: ${{ inputs.account_id }}
+          GITCLAW_CHANNEL_GATEWAY_SLOT: ${{ steps.gateway.outputs.gateway_slot }}
+          GITCLAW_CHANNEL_GATEWAY_RENEW: ${{ steps.gateway.outputs.renew }}
+          GITCLAW_RENEW_DELAY_SECONDS: ${{ inputs.renew_delay_seconds }}

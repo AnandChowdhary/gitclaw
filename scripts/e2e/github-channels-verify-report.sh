@@ -152,6 +152,12 @@ for expected in \
   'state_workflow_dispatch_trigger: `true`' \
   'state_workflow_permissions_issues_write: `true`' \
   'state_workflow_inputs: `4`' \
+  'gateway_workflow_path: `.github/workflows/gitclaw-channel-gateway.yml`' \
+  'gateway_workflow_present: `true`' \
+  'gateway_workflow_dispatch_trigger: `true`' \
+  'gateway_workflow_permissions_actions_write: `true`' \
+  'gateway_workflow_permissions_issues_write: `true`' \
+  'gateway_workflow_inputs: `6`' \
   'supported_providers: `telegram, slack, generic`' \
   'wake_strategy: `workflow_dispatch`' \
   'channel_thread_issue: `false`' \
@@ -160,6 +166,8 @@ for expected in \
   "### Verification Findings" \
   "- none" \
   'workflow has `workflow_dispatch`' \
+  'channel state and gateway workflows are callable with `workflow_dispatch`' \
+  'gateway workflow can dispatch its renewal with `actions: write`' \
   'dispatch id `<channel>-<message_id>`'; do
   grep -Fq -- "$expected" <<<"$comments" || die "channels verify report missing ${expected}"
 done

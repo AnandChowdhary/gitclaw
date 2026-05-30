@@ -816,6 +816,13 @@ CLI. Provider pollers, manual bridge experiments, and future self-renewing
 gateway jobs can then update state with the repository `GITHUB_TOKEN`, keeping
 the bridge architecture GitHub-native rather than webhook/socket-hosted.
 
+2026-05-30 channel gateway follow-up: OpenClaw's gateway and Slack Socket Mode
+loop can be approximated in GitHub Actions as a renewable lease rather than a
+server. A `gitclaw channel-gateway` command should first record one
+hash-only lease in the channel-state issue; the workflow wrapper can optionally
+`workflow_dispatch` its successor with `actions: write`. Provider sockets and
+pollers can be added behind that lease once the renewal surface is proven live.
+
 Hermes' session docs also expose a practical backup primitive:
 `hermes sessions export backup.jsonl` writes conversation metadata and messages
 as durable JSONL. GitClaw should preserve the same principle, but use GitHub

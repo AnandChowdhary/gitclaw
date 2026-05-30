@@ -471,6 +471,41 @@ jobs:
     steps:
       - run: echo WORKFLOW_CHANNEL_SECRET
 `)
+	writeTestFile(t, root, ".github/workflows/gitclaw-channel-state.yml", `name: GitClaw Channel State
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        required: true
+      account_id:
+        required: true
+      offset:
+        required: false
+      lease_run_id:
+        required: false
+permissions:
+  issues: write
+`)
+	writeTestFile(t, root, ".github/workflows/gitclaw-channel-gateway.yml", `name: GitClaw Channel Gateway
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        required: true
+      account_id:
+        required: true
+      gateway_slot:
+        required: false
+      lease_run_id:
+        required: false
+      renew:
+        required: false
+      renew_delay_seconds:
+        required: false
+permissions:
+  actions: write
+  issues: write
+`)
 	ev, err := ParseEvent("issues", []byte(`{
 		"action": "opened",
 		"repository": {"full_name": "owner/repo", "default_branch": "main"},
@@ -512,7 +547,7 @@ jobs:
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Channel Report", "Generated without a model call", "model=\"gitclaw/channels\"", "channel_label: `gitclaw:channel`", "trigger_label: `gitclaw`", "workflow_present: `true`", "workflow_dispatch_trigger: `true`", "permissions_actions_write: `true`", "permissions_issues_write: `true`", "workflow_inputs: `5`", "channel_thread_issue: `true`", "channel_message_comments_now: `1`", "supported_providers: `telegram, slack, generic`", "wake_strategy: `workflow_dispatch`", ".github/workflows/gitclaw-channel-ingest.yml", "telegram", "slack", "generic", "gitclaw channel-ingest", "dispatch id: `<channel>-<message_id>`", "sha256_12="} {
+	for _, want := range []string{"GitClaw Channel Report", "Generated without a model call", "model=\"gitclaw/channels\"", "channel_label: `gitclaw:channel`", "trigger_label: `gitclaw`", "workflow_present: `true`", "workflow_dispatch_trigger: `true`", "permissions_actions_write: `true`", "permissions_issues_write: `true`", "workflow_inputs: `5`", "state_workflow_present: `true`", "gateway_workflow_present: `true`", "gateway_workflow_inputs: `6`", "channel_thread_issue: `true`", "channel_message_comments_now: `1`", "supported_providers: `telegram, slack, generic`", "wake_strategy: `workflow_dispatch`", ".github/workflows/gitclaw-channel-ingest.yml", "telegram", "slack", "generic", "gitclaw channel-ingest", "gitclaw channel-gateway", "dispatch id: `<channel>-<message_id>`", "sha256_12="} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("channel report missing %q:\n%s", want, body)
 		}
@@ -550,6 +585,41 @@ jobs:
       issues: write
     steps:
       - run: echo CHANNEL_VERIFY_WORKFLOW_SECRET
+`)
+	writeTestFile(t, root, ".github/workflows/gitclaw-channel-state.yml", `name: GitClaw Channel State
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        required: true
+      account_id:
+        required: true
+      offset:
+        required: false
+      lease_run_id:
+        required: false
+permissions:
+  issues: write
+`)
+	writeTestFile(t, root, ".github/workflows/gitclaw-channel-gateway.yml", `name: GitClaw Channel Gateway
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        required: true
+      account_id:
+        required: true
+      gateway_slot:
+        required: false
+      lease_run_id:
+        required: false
+      renew:
+        required: false
+      renew_delay_seconds:
+        required: false
+permissions:
+  actions: write
+  issues: write
 `)
 	ev, err := ParseEvent("issues", []byte(`{
 		"action": "opened",
@@ -592,7 +662,7 @@ jobs:
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Channel Verify Report", "Generated without a model call", "model=\"gitclaw/channels\"", "channel_verify_status: `ok`", "verification_scope: `workflow_dispatch_channel_bridge`", "workflow_present: `true`", "workflow_dispatch_trigger: `true`", "permissions_actions_write: `true`", "permissions_issues_write: `true`", "workflow_inputs: `5`", "required_workflow_inputs: `5`", "channel_thread_issue: `true`", "channel_message_comments_now: `1`", "raw_bodies_included: `false`", "### Verification Findings", "- none", "dispatch id `<channel>-<message_id>`"} {
+	for _, want := range []string{"GitClaw Channel Verify Report", "Generated without a model call", "model=\"gitclaw/channels\"", "channel_verify_status: `ok`", "verification_scope: `workflow_dispatch_channel_bridge`", "workflow_present: `true`", "workflow_dispatch_trigger: `true`", "permissions_actions_write: `true`", "permissions_issues_write: `true`", "workflow_inputs: `5`", "required_workflow_inputs: `5`", "state_workflow_present: `true`", "gateway_workflow_present: `true`", "gateway_workflow_permissions_actions_write: `true`", "gateway_workflow_inputs: `6`", "channel_thread_issue: `true`", "channel_message_comments_now: `1`", "raw_bodies_included: `false`", "### Verification Findings", "- none", "channel state and gateway workflows are callable", "dispatch id `<channel>-<message_id>`"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("channel verify report missing %q:\n%s", want, body)
 		}
@@ -1753,7 +1823,7 @@ func TestHandleCommandsCommandPostsReportWithoutLLM(t *testing.T) {
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Commands Report", "Generated without a model call", "model=\"gitclaw/commands\"", "commands: `15`", "aliases: `10`", "local_cli_helpers: `42`", "/commands", "/backup", "/tools", "/budget", "/prompt-budget", "/cron", "`gitclaw commands` command=`/help`", "`gitclaw doctor` command=`/doctor`", "`gitclaw doctor list` command=`/doctor`", "`gitclaw channels verify` command=`/channels`", "`gitclaw channels list` command=`/channels`", "`gitclaw channel-state` command=`/channels`", "`gitclaw config list` command=`/config`", "`gitclaw context list` command=`/context`", "`gitclaw prompt list` command=`/prompt`", "`gitclaw proactive list` command=`/proactive`", "`gitclaw proactive init` command=`/proactive`", "`gitclaw proactive enqueue` command=`/proactive`", "`gitclaw session list --backup <issue.json>` command=`/session`", "`gitclaw session search <query> --backup <issue.json>` command=`/session`", "`gitclaw models list` command=`/models`", "`gitclaw policy list` command=`/policy`", "`gitclaw backup verify` command=`/backup`", "`gitclaw backup manifest` command=`/backup`", "`gitclaw backup list` command=`/backup`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup export-jsonl` command=`/backup`", "`gitclaw backup restore-plan` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory verify` command=`/memory`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul verify` command=`/soul`", "`gitclaw soul validate` command=`/soul`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills verify` command=`/skills`", "`gitclaw skills validate` command=`/skills`", "`gitclaw skills check` command=`/skills`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools verify` command=`/tools`", "`gitclaw tools validate` command=`/tools`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
+	for _, want := range []string{"GitClaw Commands Report", "Generated without a model call", "model=\"gitclaw/commands\"", "commands: `15`", "aliases: `10`", "local_cli_helpers: `43`", "/commands", "/backup", "/tools", "/budget", "/prompt-budget", "/cron", "`gitclaw commands` command=`/help`", "`gitclaw doctor` command=`/doctor`", "`gitclaw doctor list` command=`/doctor`", "`gitclaw channels verify` command=`/channels`", "`gitclaw channels list` command=`/channels`", "`gitclaw channel-state` command=`/channels`", "`gitclaw channel-gateway` command=`/channels`", "`gitclaw config list` command=`/config`", "`gitclaw context list` command=`/context`", "`gitclaw prompt list` command=`/prompt`", "`gitclaw proactive list` command=`/proactive`", "`gitclaw proactive init` command=`/proactive`", "`gitclaw proactive enqueue` command=`/proactive`", "`gitclaw session list --backup <issue.json>` command=`/session`", "`gitclaw session search <query> --backup <issue.json>` command=`/session`", "`gitclaw models list` command=`/models`", "`gitclaw policy list` command=`/policy`", "`gitclaw backup verify` command=`/backup`", "`gitclaw backup manifest` command=`/backup`", "`gitclaw backup list` command=`/backup`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup export-jsonl` command=`/backup`", "`gitclaw backup restore-plan` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory verify` command=`/memory`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul verify` command=`/soul`", "`gitclaw soul validate` command=`/soul`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills verify` command=`/skills`", "`gitclaw skills validate` command=`/skills`", "`gitclaw skills check` command=`/skills`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools verify` command=`/tools`", "`gitclaw tools validate` command=`/tools`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("commands report missing %q:\n%s", want, body)
 		}
@@ -1776,6 +1846,7 @@ func TestHandleDoctorCommandPostsReportWithoutLLM(t *testing.T) {
 	writeTestFile(t, root, ".github/workflows/gitclaw-proactive.yml", "name: GitClaw Proactive\non:\n  workflow_dispatch:\n  schedule:\n")
 	writeTestFile(t, root, ".github/workflows/gitclaw-channel-ingest.yml", "name: GitClaw Channel Ingest\n")
 	writeTestFile(t, root, ".github/workflows/gitclaw-channel-state.yml", "name: GitClaw Channel State\n")
+	writeTestFile(t, root, ".github/workflows/gitclaw-channel-gateway.yml", "name: GitClaw Channel Gateway\n")
 	writeTestFile(t, root, ".gitclaw/SOUL.md", "SOUL_DOCTOR_SECRET")
 	writeTestFile(t, root, ".gitclaw/IDENTITY.md", "IDENTITY_DOCTOR_SECRET")
 	writeTestFile(t, root, ".gitclaw/USER.md", "USER_DOCTOR_SECRET")
@@ -1825,7 +1896,7 @@ SKILL_DOCTOR_SECRET
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Doctor Report", "Generated without a model call", "model=\"gitclaw/doctor\"", "health_status: `ok`", "config_source: `defaults+repo`", "config_valid: `true`", "config_file_present: `true`", "workflows_present: `5`", "context_files_present: `6`", "memory_notes: `1`", "skill_files: `1`", "proactive_prompt_files: `1`", "validation_errors: `0`", "validation_warnings: `0`", "skill_validation_status: `ok`", "skill_validation_errors: `0`", "skill_validation_warnings: `0`", "soul_validation_status: `ok`", "soul_validation_errors: `0`", "soul_validation_warnings: `0`", "memory_validation_status: `ok`", "memory_validation_errors: `0`", "memory_validation_warnings: `0`", "tool_validation_status: `ok`", "tool_validation_errors: `0`", "tool_validation_warnings: `0`", "`config_validation`: `ok`", "`main_workflow`: `ok`", "`local_skills`: `ok`", "`skill_validation`: `ok`", "`soul_validation`: `ok`", "`memory_validation`: `ok`", "`tool_validation`: `ok`", ".gitclaw/SOUL.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", "sha256_12="} {
+	for _, want := range []string{"GitClaw Doctor Report", "Generated without a model call", "model=\"gitclaw/doctor\"", "health_status: `ok`", "config_source: `defaults+repo`", "config_valid: `true`", "config_file_present: `true`", "workflows_present: `6`", "context_files_present: `6`", "memory_notes: `1`", "skill_files: `1`", "proactive_prompt_files: `1`", "validation_errors: `0`", "validation_warnings: `0`", "skill_validation_status: `ok`", "skill_validation_errors: `0`", "skill_validation_warnings: `0`", "soul_validation_status: `ok`", "soul_validation_errors: `0`", "soul_validation_warnings: `0`", "memory_validation_status: `ok`", "memory_validation_errors: `0`", "memory_validation_warnings: `0`", "tool_validation_status: `ok`", "tool_validation_errors: `0`", "tool_validation_warnings: `0`", "`config_validation`: `ok`", "`main_workflow`: `ok`", "`local_skills`: `ok`", "`skill_validation`: `ok`", "`soul_validation`: `ok`", "`memory_validation`: `ok`", "`tool_validation`: `ok`", ".gitclaw/SOUL.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", "sha256_12="} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("doctor report missing %q:\n%s", want, body)
 		}

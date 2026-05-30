@@ -27,6 +27,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runChannelIngestCommand(ctx, args[1:])
 	case "channel-state":
 		return runChannelStateCommand(ctx, args[1:])
+	case "channel-gateway":
+		return runChannelGatewayCommand(ctx, args[1:])
 	case "channels", "channel":
 		return runChannelsCommand(args[1:])
 	case "proactive":
@@ -1348,6 +1350,86 @@ func runChannelStateCommand(ctx context.Context, args []string) error {
 		result.Duplicate,
 		result.AccountHash,
 		result.OffsetHash,
+		result.IssueURL,
+	)
+	return nil
+}
+
+func runChannelGatewayCommand(ctx context.Context, args []string) error {
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	opts := ChannelGatewayOptions{
+		Repo:        os.Getenv("GITHUB_REPOSITORY"),
+		Channel:     os.Getenv("GITCLAW_CHANNEL"),
+		AccountID:   os.Getenv("GITCLAW_CHANNEL_ACCOUNT_ID"),
+		GatewaySlot: os.Getenv("GITCLAW_CHANNEL_GATEWAY_SLOT"),
+		LeaseRunID:  os.Getenv("GITCLAW_CHANNEL_GATEWAY_LEASE_RUN_ID"),
+		Renew:       parseBoolEnv(os.Getenv("GITCLAW_CHANNEL_GATEWAY_RENEW")),
+	}
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--repo requires a value")
+			}
+			opts.Repo = args[i+1]
+			i++
+		case "--channel":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--channel requires a value")
+			}
+			opts.Channel = args[i+1]
+			i++
+		case "--account-id":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--account-id requires a value")
+			}
+			opts.AccountID = args[i+1]
+			i++
+		case "--gateway-slot":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--gateway-slot requires a value")
+			}
+			opts.GatewaySlot = args[i+1]
+			i++
+		case "--lease-run-id":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--lease-run-id requires a value")
+			}
+			opts.LeaseRunID = args[i+1]
+			i++
+		case "--renew":
+			opts.Renew = true
+		case "--no-renew":
+			opts.Renew = false
+		default:
+			return fmt.Errorf("unknown channel-gateway argument %q", args[i])
+		}
+	}
+	token := githubTokenFromEnv()
+	if token == "" {
+		return fmt.Errorf("missing GH_TOKEN or GITHUB_TOKEN")
+	}
+	result, err := RunChannelGateway(ctx, cfg, NewRESTGitHubClient(token), opts, time.Now())
+	if err != nil {
+		return err
+	}
+	if err := writeChannelGatewayOutputs(result); err != nil {
+		return err
+	}
+	fmt.Printf(
+		"channel_gateway issue=%d comment=%d created=%t updated=%t duplicate=%t renew=%t gateway_slot=%s account_sha256_12=%s lease_sha256_12=%s url=%s\n",
+		result.IssueNumber,
+		result.CommentID,
+		result.Created,
+		result.Updated,
+		result.Duplicate,
+		result.Renew,
+		result.GatewaySlot,
+		result.AccountHash,
+		result.LeaseHash,
 		result.IssueURL,
 	)
 	return nil

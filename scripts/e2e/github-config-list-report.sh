@@ -147,7 +147,7 @@ for expected in \
   'max_output_tokens: `4000`' \
   'max_transcript_messages: `40`' \
   'max_transcript_message_bytes: `8000`' \
-  'workflows_present: `5`' \
+  'workflows_present: `6`' \
   'slash_commands: `15`' \
   'OWNER' \
   'MEMBER' \
@@ -163,7 +163,8 @@ for expected in \
   '.github/workflows/gitclaw-heartbeat.yml' \
   '.github/workflows/gitclaw-proactive.yml' \
   '.github/workflows/gitclaw-channel-ingest.yml' \
-  '.github/workflows/gitclaw-channel-state.yml'; do
+  '.github/workflows/gitclaw-channel-state.yml' \
+  '.github/workflows/gitclaw-channel-gateway.yml'; do
   grep -Fq "$expected" <<<"$comments" || die "config list report missing ${expected}"
 done
 
