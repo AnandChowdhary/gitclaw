@@ -11,7 +11,7 @@ func TestRunChannelDeliveryRecordsHashOnlyReceiptAndDedupes(t *testing.T) {
 	sourceComment := RenderAssistantComment(Marker{
 		RunID:          "run-delivery",
 		EventID:        "issue-42",
-		Model:          "openai/gpt-5-mini",
+		Model:          "openai/gpt-5-nano",
 		IdempotencyKey: "delivery-key",
 	}, "assistant reply body")
 	github := &FakeGitHub{

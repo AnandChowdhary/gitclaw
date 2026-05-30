@@ -55,7 +55,7 @@ func DefaultConfig() Config {
 			"COLLABORATOR": true,
 		},
 		ModelProvider:             "github-models",
-		Model:                     "openai/gpt-5-mini",
+		Model:                     "openai/gpt-5-nano",
 		LLMBaseURL:                defaultGitHubModelsBaseURL,
 		Workdir:                   ".",
 		ConfigSource:              "defaults",

@@ -54,7 +54,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
-          GITCLAW_MODEL: openai/gpt-5-mini
+          GITCLAW_MODEL: openai/gpt-5-nano
           GITCLAW_HEARTBEAT_LABEL: ${{ github.event.inputs.label }}
           GITCLAW_HEARTBEAT_SLOT: ${{ github.event.inputs.slot }}
           GITCLAW_HEARTBEAT_LIMIT: ${{ github.event.inputs.limit }}

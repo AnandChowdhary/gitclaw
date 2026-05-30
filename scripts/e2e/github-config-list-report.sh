@@ -141,7 +141,7 @@ for expected in \
   'trigger_label: `gitclaw`' \
   'trigger_prefix: `@gitclaw`' \
   'disabled_label: `gitclaw:disabled`' \
-  'model: `openai/gpt-5-mini`' \
+  'model: `openai/gpt-5-nano`' \
   'run_mode: `read-only`' \
   'max_prompt_bytes: `60000`' \
   'max_output_tokens: `4000`' \

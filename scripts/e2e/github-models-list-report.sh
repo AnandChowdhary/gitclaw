@@ -136,7 +136,9 @@ for expected in \
   "GitClaw Model Report" \
   "Generated without a model call" \
   'provider: `github-models`' \
-  'model: `openai/gpt-5-mini`' \
+  'model: `openai/gpt-5-nano`' \
+  'default_model_policy: `smallest-openai-github-models-catalog-model`' \
+  'catalog_endpoint_host: `models.github.ai`' \
   'endpoint_host: `models.github.ai`' \
   'token_source: `GITHUB_TOKEN`' \
   'request_timeout_seconds: `75`' \

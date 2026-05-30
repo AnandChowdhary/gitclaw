@@ -405,6 +405,14 @@ of `/models`: provider family, model ID, endpoint host, token-source name,
 timeout, retry settings, and environment knobs, with no provider call and no
 token value.
 
+2026-05-30 model-default follow-up: the GitHub-native default should track the
+smallest OpenAI model available through the GitHub Models catalog, not the
+latest OpenAI API name in isolation. GitHub's catalog API exposes
+`https://models.github.ai/catalog/models`; the live catalog for this repo
+currently includes `openai/gpt-5-nano` and does not include
+`openai/gpt-5.4-mini`, so the default should move to `openai/gpt-5-nano` while
+keeping `GITCLAW_MODEL` overrides for repos with different catalog access.
+
 2026-05-29 workflow-runtime follow-up: GitClaw's serverless runtime is GitHub
 Actions itself, so action runtime deprecations are part of product reliability.
 Checked-in workflows and spec snippets should track Node 24-compatible

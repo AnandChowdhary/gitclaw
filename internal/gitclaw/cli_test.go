@@ -827,7 +827,7 @@ func TestModelsListCommandReportsProviderWithoutCallingModel(t *testing.T) {
 			t.Fatalf("models list returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Model Report", "scope: `local-cli`", "Generated without a model call", "provider: `github-models`", "model: `openai/gpt-5-mini`", "endpoint_host: `models.github.ai`", "token_source: `GITHUB_TOKEN`", "request_timeout_seconds: `60`", "retry_max_attempts: `5`", "retry_base_delay_seconds: `5`", "retry_max_delay_seconds: `60`", "retryable_statuses: `429, 408, 5xx`", "prompt_artifact_enabled: `false`", "GITCLAW_MODEL", "GITCLAW_LLM_BASE_URL"} {
+	for _, want := range []string{"GitClaw Model Report", "scope: `local-cli`", "Generated without a model call", "provider: `github-models`", "model: `openai/gpt-5-nano`", "default_model_policy: `smallest-openai-github-models-catalog-model`", "catalog_endpoint_host: `models.github.ai`", "endpoint_host: `models.github.ai`", "token_source: `GITHUB_TOKEN`", "request_timeout_seconds: `60`", "retry_max_attempts: `5`", "retry_base_delay_seconds: `5`", "retry_max_delay_seconds: `60`", "retryable_statuses: `429, 408, 5xx`", "prompt_artifact_enabled: `false`", "GITCLAW_MODEL", "GITCLAW_LLM_BASE_URL"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("models list output missing %q:\n%s", want, output)
 		}
@@ -845,7 +845,7 @@ func TestConfigListCommandReportsEffectiveConfigWithoutBodies(t *testing.T) {
   label: gitclaw
   prefix: "@gitclaw"
 model:
-  model: openai/gpt-5-mini
+  model: openai/gpt-5-nano
   max_prompt_bytes: 60000
 `)
 	writeTestFile(t, dir, ".github/workflows/gitclaw.yml", "name: GitClaw\n# CONFIG_LIST_WORKFLOW_BODY\n")
@@ -856,7 +856,7 @@ model:
 			t.Fatalf("config list returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Config Report", "scope: `local-cli`", "Generated without a model call", "config_source: `defaults+repo+environment`", "config_file_path: `.gitclaw/config.yml`", "config_file_present: `true`", "trigger_label: `gitclaw`", "trigger_prefix: `@gitclaw`", "disabled_label: `gitclaw:disabled`", "model: `openai/gpt-5-mini`", "run_mode: `read-only`", "max_prompt_bytes: `60000`", "max_output_tokens: `4000`", "max_transcript_messages: `40`", "max_transcript_message_bytes: `8000`", "skills_allowed_configured: `0`", "skills_disabled_configured: `0`", "tools_allowed_configured: `0`", "tools_disabled_configured: `0`", "workflows_present: `2`", "slash_commands: `15`", "### Skill Gates", "### Tool Gates", "allowed=`none`", "disabled=`none`", "OWNER", "COLLABORATOR", "gitclaw:disabled", "/channels", "/config", "/models", ".gitclaw/config.yml", ".github/workflows/gitclaw.yml", ".github/workflows/gitclaw-heartbeat.yml", "sha256_12="} {
+	for _, want := range []string{"GitClaw Config Report", "scope: `local-cli`", "Generated without a model call", "config_source: `defaults+repo+environment`", "config_file_path: `.gitclaw/config.yml`", "config_file_present: `true`", "trigger_label: `gitclaw`", "trigger_prefix: `@gitclaw`", "disabled_label: `gitclaw:disabled`", "model: `openai/gpt-5-nano`", "run_mode: `read-only`", "max_prompt_bytes: `60000`", "max_output_tokens: `4000`", "max_transcript_messages: `40`", "max_transcript_message_bytes: `8000`", "skills_allowed_configured: `0`", "skills_disabled_configured: `0`", "tools_allowed_configured: `0`", "tools_disabled_configured: `0`", "workflows_present: `2`", "slash_commands: `15`", "### Skill Gates", "### Tool Gates", "allowed=`none`", "disabled=`none`", "OWNER", "COLLABORATOR", "gitclaw:disabled", "/channels", "/config", "/models", ".gitclaw/config.yml", ".github/workflows/gitclaw.yml", ".github/workflows/gitclaw-heartbeat.yml", "sha256_12="} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("config list output missing %q:\n%s", want, output)
 		}
@@ -877,7 +877,7 @@ func TestPolicyListCommandReportsStaticPolicyWithoutIssueFields(t *testing.T) {
 			t.Fatalf("policy list returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Policy Report", "scope: `local-cli`", "Generated without a model call", "run_mode: `read-only`", "model: `openai/gpt-5-mini`", "### Trusted Associations", "OWNER", "MEMBER", "COLLABORATOR", "### Managed Labels", "gitclaw:disabled", "gitclaw:write-requested", "gitclaw:heartbeat", "gitclaw:channel", "gitclaw:proactive", "### Expected Workflow Permissions", "`preflight`: `contents:read`, `issues:read`", "`handle`: `contents:read`, `issues:write`, `models:read`", "`backup`: `contents:write`, `issues:read`", "### Active Policy Outputs", "- none"} {
+	for _, want := range []string{"GitClaw Policy Report", "scope: `local-cli`", "Generated without a model call", "run_mode: `read-only`", "model: `openai/gpt-5-nano`", "### Trusted Associations", "OWNER", "MEMBER", "COLLABORATOR", "### Managed Labels", "gitclaw:disabled", "gitclaw:write-requested", "gitclaw:heartbeat", "gitclaw:channel", "gitclaw:proactive", "### Expected Workflow Permissions", "`preflight`: `contents:read`, `issues:read`", "`handle`: `contents:read`, `issues:write`, `models:read`", "`backup`: `contents:write`, `issues:read`", "### Active Policy Outputs", "- none"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("policy list output missing %q:\n%s", want, output)
 		}
@@ -1034,7 +1034,7 @@ PROMPT_LIST_SKILL_BODY
 			t.Fatalf("prompt list returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Prompt Report", "scope: `local-cli`", "Generated without a model call", "provider: `github-models`", "model: `openai/gpt-5-mini`", "system_prompt_sha256_12:", "prompt_bytes:", "prompt_lines:", "prompt_sha256_12:", "max_prompt_bytes: `60000`", "max_output_tokens: `4000`", "max_transcript_messages: `40`", "max_transcript_message_bytes: `8000`", "transcript_messages: `0`", "bounded_transcript_messages: `0`", "omitted_older_messages: `0`", "truncated_transcript_bodies: `0`", "prompt_contains_truncation_marker: `false`", "prompt_artifact_enabled: `false`", "prompt_body_included: `false`", "### Prompt Inputs", "context_files:", "selected_skills: `1`", "available_skills: `1`", "tool_outputs:", "### Context Files", ".gitclaw/SOUL.md", ".gitclaw/MEMORY.md", ".gitclaw/TOOLS.md", "### Selected Skills", ".gitclaw/SKILLS/repo-reader/SKILL.md", "### Tool Outputs", "gitclaw.list_files", "gitclaw.skill_index", "sha256_12="} {
+	for _, want := range []string{"GitClaw Prompt Report", "scope: `local-cli`", "Generated without a model call", "provider: `github-models`", "model: `openai/gpt-5-nano`", "system_prompt_sha256_12:", "prompt_bytes:", "prompt_lines:", "prompt_sha256_12:", "max_prompt_bytes: `60000`", "max_output_tokens: `4000`", "max_transcript_messages: `40`", "max_transcript_message_bytes: `8000`", "transcript_messages: `0`", "bounded_transcript_messages: `0`", "omitted_older_messages: `0`", "truncated_transcript_bodies: `0`", "prompt_contains_truncation_marker: `false`", "prompt_artifact_enabled: `false`", "prompt_body_included: `false`", "### Prompt Inputs", "context_files:", "selected_skills: `1`", "available_skills: `1`", "tool_outputs:", "### Context Files", ".gitclaw/SOUL.md", ".gitclaw/MEMORY.md", ".gitclaw/TOOLS.md", "### Selected Skills", ".gitclaw/SKILLS/repo-reader/SKILL.md", "### Tool Outputs", "gitclaw.list_files", "gitclaw.skill_index", "sha256_12="} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("prompt list output missing %q:\n%s", want, output)
 		}
@@ -1131,7 +1131,7 @@ func TestProactiveEnqueueCommandSkipsFutureNotBeforeWithoutToken(t *testing.T) {
 func TestDoctorListCommandReportsHealthWithoutBodies(t *testing.T) {
 	dir := t.TempDir()
 	writeTestFile(t, dir, ".gitclaw/config.yml", `model:
-  model: openai/gpt-5-mini
+  model: openai/gpt-5-nano
 `)
 	writeTestFile(t, dir, ".github/workflows/gitclaw.yml", "name: GitClaw\n")
 	writeTestFile(t, dir, ".github/workflows/gitclaw-heartbeat.yml", "name: GitClaw Heartbeat\n")
@@ -1161,7 +1161,7 @@ SKILL_DOCTOR_LIST_SECRET
 			t.Fatalf("doctor list returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Doctor Report", "scope: `local-cli`", "Generated without a model call", "health_status: `ok`", "config_source: `defaults+repo+environment`", "config_valid: `true`", "config_file_present: `true`", "model: `openai/gpt-5-mini`", "run_mode: `read-only`", "workflows_present: `7`", "context_files_present: `6`", "memory_notes: `1`", "skill_files: `1`", "enabled_skills: `1`", "disabled_skills: `0`", "allowlist_blocked_skills: `0`", "enabled_tools: `5`", "disabled_tools: `0`", "allowlist_blocked_tools: `0`", "proactive_prompt_files: `1`", "managed_labels: `9`", "validation_errors: `0`", "validation_warnings: `0`", "skill_validation_status: `ok`", "soul_validation_status: `ok`", "memory_validation_status: `ok`", "tool_validation_status: `ok`", "`config_validation`: `ok`", "`workflow_set`: `ok`", "`identity_context`: `ok`", "`local_skills`: `ok`", "`proactive_prompt`: `ok`", ".gitclaw/config.yml", ".github/workflows/gitclaw.yml", ".gitclaw/SOUL.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", ".gitclaw/proactive/repo-hygiene.md", "sha256_12="} {
+	for _, want := range []string{"GitClaw Doctor Report", "scope: `local-cli`", "Generated without a model call", "health_status: `ok`", "config_source: `defaults+repo+environment`", "config_valid: `true`", "config_file_present: `true`", "model: `openai/gpt-5-nano`", "run_mode: `read-only`", "workflows_present: `7`", "context_files_present: `6`", "memory_notes: `1`", "skill_files: `1`", "enabled_skills: `1`", "disabled_skills: `0`", "allowlist_blocked_skills: `0`", "enabled_tools: `5`", "disabled_tools: `0`", "allowlist_blocked_tools: `0`", "proactive_prompt_files: `1`", "managed_labels: `9`", "validation_errors: `0`", "validation_warnings: `0`", "skill_validation_status: `ok`", "soul_validation_status: `ok`", "memory_validation_status: `ok`", "tool_validation_status: `ok`", "`config_validation`: `ok`", "`workflow_set`: `ok`", "`identity_context`: `ok`", "`local_skills`: `ok`", "`proactive_prompt`: `ok`", ".gitclaw/config.yml", ".github/workflows/gitclaw.yml", ".gitclaw/SOUL.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", ".gitclaw/proactive/repo-hygiene.md", "sha256_12="} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("doctor list output missing %q:\n%s", want, output)
 		}

@@ -139,7 +139,7 @@ for expected in \
   'config_source: `defaults+repo+environment`' \
   'config_valid: `true`' \
   'config_file_present: `true`' \
-  'model: `openai/gpt-5-mini`' \
+  'model: `openai/gpt-5-nano`' \
   'run_mode: `read-only`' \
   'workflows_present: `7`' \
   'context_files_present: `6`' \

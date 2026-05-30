@@ -165,7 +165,7 @@ for expected in \
   "GitClaw Prompt Report" \
   "Generated without a model call" \
   'provider: `github-models`' \
-  'model: `openai/gpt-5-mini`' \
+  'model: `openai/gpt-5-nano`' \
   "system_prompt_sha256_12:" \
   "prompt_bytes:" \
   "prompt_sha256_12:" \

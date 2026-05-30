@@ -8,6 +8,7 @@ import (
 )
 
 const defaultGitHubModelsBaseURL = "https://models.github.ai/inference/chat/completions"
+const defaultGitHubModelsCatalogURL = "https://models.github.ai/catalog/models"
 
 func IsModelReportRequest(ev Event, cfg Config) bool {
 	command := activeSlashCommand(ev, cfg)
@@ -35,6 +36,8 @@ func renderModelReport(ev Event, cfg Config, includeIssue bool) string {
 	}
 	fmt.Fprintf(&b, "- provider: `%s`\n", llmProviderForReport(cfg, baseURL))
 	fmt.Fprintf(&b, "- model: `%s`\n", cfg.Model)
+	fmt.Fprintf(&b, "- default_model_policy: `%s`\n", "smallest-openai-github-models-catalog-model")
+	fmt.Fprintf(&b, "- catalog_endpoint_host: `%s`\n", llmEndpointHost(defaultGitHubModelsCatalogURL))
 	fmt.Fprintf(&b, "- endpoint_host: `%s`\n", llmEndpointHost(baseURL))
 	fmt.Fprintf(&b, "- token_source: `%s`\n", llmTokenSource(baseURL))
 	fmt.Fprintf(&b, "- request_timeout_seconds: `%d`\n", int(llmTimeout().Seconds()))

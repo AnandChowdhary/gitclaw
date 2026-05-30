@@ -220,7 +220,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
-          GITCLAW_MODEL: openai/gpt-5-mini
+          GITCLAW_MODEL: openai/gpt-5-nano
 ```
 
 Later, when GitClaw is released as a binary, the workflow should download the pinned release binary instead of compiling on every run.
@@ -270,7 +270,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
-          GITCLAW_MODEL: openai/gpt-5-mini
+          GITCLAW_MODEL: openai/gpt-5-nano
 ```
 
 Heartbeat behavior:
@@ -520,18 +520,24 @@ https://models.github.ai/orgs/<org>/inference/chat/completions
 Default MVP behavior:
 
 - provider: `github-models`
-- model: `openai/gpt-5-mini`
+- model: `openai/gpt-5-nano`
+- default model policy: smallest OpenAI model currently visible in the
+  authenticated GitHub Models catalog API
 - auth token lookup: `GITHUB_TOKEN`, then `GH_TOKEN`, then optional
   `GITCLAW_LLM_API_KEY` for local/manual runs
 - base URL override: `GITCLAW_LLM_BASE_URL`
 - model override: `GITCLAW_MODEL`
 
-`openai/gpt-5-mini` is the recommended default because it is the smallest
-new-generation OpenAI model currently visible in the GitHub Models Marketplace.
-The first assistant version is issue-thread chat plus repository context
-summarization, where latency and cost matter more than maximum reasoning depth.
-Repositories can override to `openai/gpt-5.4-mini`, `openai/gpt-4o`, or another
-GitHub Models catalog model when that model is available to the repository.
+2026-05-30 catalog check: GitHub's authenticated Models catalog API documents
+`https://models.github.ai/catalog/models`, and the live catalog for this repo
+currently lists `openai/gpt-5`, `openai/gpt-5-chat`, `openai/gpt-5-mini`, and
+`openai/gpt-5-nano`, but not `openai/gpt-5.4-mini`. `openai/gpt-5-nano` is
+therefore the default because it is the smallest OpenAI model currently exposed
+through the GitHub Models path usable with the Actions token. The first
+assistant version is issue-thread chat plus repository context summarization,
+where latency and cost matter more than maximum reasoning depth. Repositories
+can override to `openai/gpt-5.4-mini`, `openai/gpt-4o`, or another GitHub
+Models catalog model when that model is available to the repository.
 
 Fallback provider rule:
 
@@ -579,6 +585,7 @@ inference. It posts a `gitclaw:assistant-turn` comment with
 
 - provider family,
 - selected model,
+- default model policy and catalog endpoint host,
 - endpoint host without URL credentials,
 - token source name without token value,
 - request timeout,
@@ -700,7 +707,7 @@ No external session DB is required.
 Hidden assistant marker:
 
 ```html
-<!-- gitclaw:assistant-turn run_id=123 event_id=456 model=openai/gpt-5-mini -->
+<!-- gitclaw:assistant-turn run_id=123 event_id=456 model=openai/gpt-5-nano -->
 ```
 
 Hidden status marker:
@@ -1442,7 +1449,7 @@ authorization:
 
 model:
   provider: github-models
-  model: openai/gpt-5-mini
+  model: openai/gpt-5-nano
   base_url: https://models.github.ai/inference/chat/completions
   max_input_tokens: 60000
   max_output_tokens: 4000
@@ -3366,9 +3373,9 @@ examples/workflows/gitclaw.yml
 ## Open Questions
 
 1. Should the first user-facing default be all issues in a dedicated inbox repo, or label/prefix-triggered issues in any repo?
-2. Should the default move from `openai/gpt-5-mini` to
-   `openai/gpt-5.4-mini` once the GitHub Models catalog exposes that ID to
-   Actions?
+2. Should the default move from `openai/gpt-5-nano` to
+   `openai/gpt-5.4-mini` or a newer small model once the GitHub Models catalog
+   exposes that ID to Actions?
 3. Should v0 include read-only repo file search, or should it be pure issue-thread chat first?
 4. Do we want GitClaw to support GitHub App authentication in v1, or rely on `GITHUB_TOKEN` until PR automation exists?
 5. Should write mode create draft PRs only, or also allow direct commits on non-protected branches?
@@ -3392,6 +3399,7 @@ examples/workflows/gitclaw.yml
 - GitHub Actions limits: https://docs.github.com/actions/reference/limits
 - GitHub workflow dispatch REST API: https://docs.github.com/en/rest/actions/workflows#create-a-workflow-dispatch-event
 - GitHub Models quickstart: https://docs.github.com/en/github-models/quickstart
+- GitHub Models catalog REST API: https://docs.github.com/en/rest/models/catalog
 - GitHub Models REST inference API: https://docs.github.com/en/rest/models/inference
 - GitHub Models for Actions issue summaries: https://docs.github.com/en/github-models/github-models-at-scale/use-models-at-scale
 - GitHub Models billing and rate-limit notes: https://docs.github.com/en/billing/concepts/product-billing/github-models

@@ -14,8 +14,8 @@ import (
 
 func TestDefaultConfigUsesGitHubModelsSmallDefault(t *testing.T) {
 	cfg := DefaultConfig()
-	if cfg.Model != "openai/gpt-5-mini" {
-		t.Fatalf("default model = %q, want openai/gpt-5-mini", cfg.Model)
+	if cfg.Model != "openai/gpt-5-nano" {
+		t.Fatalf("default model = %q, want openai/gpt-5-nano", cfg.Model)
 	}
 }
 
@@ -44,8 +44,8 @@ func TestNewLLMFromEnvDefaultsToGitHubModelsWithActionsToken(t *testing.T) {
 	if client.BaseURL != "https://models.github.ai/inference/chat/completions" {
 		t.Fatalf("BaseURL = %q, want GitHub Models endpoint", client.BaseURL)
 	}
-	if client.Model != "openai/gpt-5-mini" {
-		t.Fatalf("Model = %q, want openai/gpt-5-mini", client.Model)
+	if client.Model != "openai/gpt-5-nano" {
+		t.Fatalf("Model = %q, want openai/gpt-5-nano", client.Model)
 	}
 	if client.Client.Timeout != time.Minute {
 		t.Fatalf("client timeout = %s, want 1m0s", client.Client.Timeout)
@@ -260,7 +260,7 @@ func TestRenderPromptArtifactRedactsSecrets(t *testing.T) {
 			EventName: "issues",
 			Issue:     Issue{Number: 12},
 		},
-	}, "openai/gpt-5-mini", prompt)
+	}, "openai/gpt-5-nano", prompt)
 	for _, notWant := range []string{secret, "ghp_abcdefghijklmnopqrstuvwxyz123456"} {
 		if strings.Contains(artifact, notWant) {
 			t.Fatalf("artifact leaked %q:\n%s", notWant, artifact)

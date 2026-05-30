@@ -482,7 +482,7 @@ func TestHandleModelsCommandPostsReportWithoutLLM(t *testing.T) {
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Model Report", "Generated without a model call", "model=\"gitclaw/models\"", "provider: `github-models`", "model: `openai/gpt-5-mini`", "endpoint_host: `models.github.ai`", "token_source: `GITHUB_TOKEN`", "request_timeout_seconds: `75`", "retry_max_attempts: `6`", "retry_base_delay_seconds: `10`", "retry_max_delay_seconds: `90`", "retryable_statuses: `429, 408, 5xx`"} {
+	for _, want := range []string{"GitClaw Model Report", "Generated without a model call", "model=\"gitclaw/models\"", "provider: `github-models`", "model: `openai/gpt-5-nano`", "default_model_policy: `smallest-openai-github-models-catalog-model`", "catalog_endpoint_host: `models.github.ai`", "endpoint_host: `models.github.ai`", "token_source: `GITHUB_TOKEN`", "request_timeout_seconds: `75`", "retry_max_attempts: `6`", "retry_base_delay_seconds: `10`", "retry_max_delay_seconds: `90`", "retryable_statuses: `429, 408, 5xx`"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("model report missing %q:\n%s", want, body)
 		}
@@ -1806,7 +1806,7 @@ PROMPT_SKILL_SECRET
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Prompt Report", "Generated without a model call", "model=\"gitclaw/prompt\"", "provider: `github-models`", "model: `openai/gpt-5-mini`", "system_prompt_sha256_12:", "prompt_bytes:", "prompt_sha256_12:", "max_prompt_bytes: `60000`", "max_transcript_messages: `2`", "max_transcript_message_bytes: `80`", "transcript_messages: `4`", "bounded_transcript_messages: `2`", "omitted_older_messages: `2`", "truncated_transcript_bodies: `2`", "prompt_contains_truncation_marker: `true`", "prompt_artifact_enabled: `true`", "prompt_artifact_redaction_patterns:", "prompt_body_included: `false`", "context_files:", "selected_skills: `1`", "available_skills: `1`", "tool_outputs:", ".gitclaw/SOUL.md", ".gitclaw/TOOLS.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", "gitclaw.list_files", "gitclaw.skill_index", "gitclaw.search_files", "gitclaw.read_file", "input=`go.mod`", "sha256_12="} {
+	for _, want := range []string{"GitClaw Prompt Report", "Generated without a model call", "model=\"gitclaw/prompt\"", "provider: `github-models`", "model: `openai/gpt-5-nano`", "system_prompt_sha256_12:", "prompt_bytes:", "prompt_sha256_12:", "max_prompt_bytes: `60000`", "max_transcript_messages: `2`", "max_transcript_message_bytes: `80`", "transcript_messages: `4`", "bounded_transcript_messages: `2`", "omitted_older_messages: `2`", "truncated_transcript_bodies: `2`", "prompt_contains_truncation_marker: `true`", "prompt_artifact_enabled: `true`", "prompt_artifact_redaction_patterns:", "prompt_body_included: `false`", "context_files:", "selected_skills: `1`", "available_skills: `1`", "tool_outputs:", ".gitclaw/SOUL.md", ".gitclaw/TOOLS.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", "gitclaw.list_files", "gitclaw.skill_index", "gitclaw.search_files", "gitclaw.read_file", "input=`go.mod`", "sha256_12="} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("prompt report missing %q:\n%s", want, body)
 		}
@@ -2184,7 +2184,7 @@ func TestHandleCommandsCommandPostsReportWithoutLLM(t *testing.T) {
 func TestHandleDoctorCommandPostsReportWithoutLLM(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/config.yml", `model:
-  model: openai/gpt-5-mini
+  model: openai/gpt-5-nano
 `)
 	writeTestFile(t, root, ".github/workflows/gitclaw.yml", "name: GitClaw\n")
 	writeTestFile(t, root, ".github/workflows/gitclaw-heartbeat.yml", "name: GitClaw Heartbeat\n")

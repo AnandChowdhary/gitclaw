@@ -19,7 +19,7 @@ authorization:
 
 model:
   provider: github-models
-  model: openai/gpt-5-mini
+  model: openai/gpt-5-nano
   base_url: https://models.github.ai/inference/chat/completions
   max_prompt_bytes: 12345
   max_output_tokens: 678
@@ -101,7 +101,7 @@ func TestLoadEffectiveConfigAppliesEnvironmentAfterRepoConfig(t *testing.T) {
 func TestLoadConfigRejectsUnknownFields(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/config.yml", `model:
-  model: openai/gpt-5-mini
+  model: openai/gpt-5-nano
   api_key: SHOULD_NOT_BE_ACCEPTED
 `)
 	cfg := DefaultConfig()
