@@ -56,6 +56,9 @@ func RenderMemoryReport(ev Event, cfg Config, repoContext RepoContext, transcrip
 	if isMemoryVerifyRequest(ev, cfg) {
 		return RenderMemoryVerifyReport(ev, cfg, repoContext)
 	}
+	if isMemoryRiskRequest(ev, cfg) {
+		return RenderMemoryRiskReport(ev, cfg, repoContext)
+	}
 	if isMemoryValidateRequest(ev, cfg) {
 		return RenderMemoryValidationReport(ev, cfg, repoContext)
 	}
@@ -226,6 +229,11 @@ func renderMemoryInfoReport(ev Event, cfg Config, repoContext RepoContext, path 
 func isMemoryValidateRequest(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && (fields[0] == "/memory" || fields[0] == "/memories") && strings.EqualFold(fields[1], "validate")
+}
+
+func isMemoryRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && (fields[0] == "/memory" || fields[0] == "/memories") && (strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit"))
 }
 
 func isMemoryVerifyRequest(ev Event, cfg Config) bool {

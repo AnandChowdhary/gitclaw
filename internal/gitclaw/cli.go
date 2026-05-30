@@ -105,11 +105,13 @@ func RunCLI(ctx context.Context, args []string) error {
 
 func runMemoryCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw memory verify|validate|list|promote-plan [target]|info <path>|search <query>")
+		return fmt.Errorf("usage: gitclaw memory verify|risk|validate|list|promote-plan [target]|info <path>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
 		return runMemoryVerifyCommand(args[1:])
+	case "risk", "risk-audit":
+		return runMemoryRiskCommand(args[1:])
 	case "validate":
 		return runMemoryValidateCommand(args[1:])
 	case "list":
@@ -451,6 +453,22 @@ func runMemoryVerifyCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderMemoryVerifyReport(Event{}, cfg, repoContext))
+	return nil
+}
+
+func runMemoryRiskCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown memory risk argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderMemoryRiskCLIReport(cfg, repoContext))
 	return nil
 }
 

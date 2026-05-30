@@ -51,6 +51,18 @@ gitclaw soul info <path>
 gitclaw soul search <query>
 ```
 
+Memory:
+
+```bash
+gitclaw memory verify
+gitclaw memory risk
+gitclaw memory validate
+gitclaw memory list
+gitclaw memory promote-plan [target]
+gitclaw memory info <path>
+gitclaw memory search <query>
+```
+
 Skills and bundles:
 
 ```bash
@@ -127,6 +139,7 @@ Run a live E2E harness against the current GitHub repository:
 
 ```bash
 scripts/e2e/github-backup-risk-report.sh
+scripts/e2e/github-memory-risk-report.sh
 scripts/e2e/github-tools-risk-report.sh
 scripts/e2e/github-channels-risk-report.sh
 ```

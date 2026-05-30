@@ -129,6 +129,14 @@ credentials, auth profiles, and raw session state out of that repo. For
 GitClaw, that maps cleanly to git-backed, reviewable `.gitclaw/` state and a
 separate backup branch for raw issue transcript snapshots.
 
+2026-05-30 memory-risk follow-up: Durable memory is high-leverage prompt state.
+OpenClaw's editable memory and Hermes' profile/memory layers imply a review
+boundary before anything becomes future context. GitClaw should add `@gitclaw
+/memory risk` and `gitclaw memory risk`: scan `.gitclaw/MEMORY.md` and dated
+notes for prompt-boundary overrides, credential-looking material, hidden
+persistence, unbounded automation, and unreviewed host execution, while
+publishing only paths, counts, codes, categories, and line hashes.
+
 2026-05-29 backup-index follow-up: OpenClaw migration applies only after a
 reviewed plan and verified backup, while Hermes exposes session export as a
 portable artifact. GitClaw should make its backup branch similarly inspectable:
