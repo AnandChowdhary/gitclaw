@@ -647,7 +647,7 @@ GitHub issue/comment event
   `memory verify`, `memory validate`, `memory list`, `memory info`,
   `memory search`,
   `skills validate`,
-  `skills list`, `skills info`, `skills search`,
+  `skills list`, `skills select-plan`, `skills info`, `skills search`,
   `bundles list`, `bundles info`,
   `soul verify`, `soul validate`, `soul list`, `soul edit-plan`, `soul info`,
   `soul search`,
@@ -1018,6 +1018,7 @@ gitclaw skills verify
 gitclaw skills validate
 gitclaw skills check
 gitclaw skills list
+gitclaw skills select-plan <name>
 gitclaw skills install-plan <target>
 gitclaw skills upgrade-plan <target>
 gitclaw bundles list
@@ -1046,6 +1047,7 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills verify
 @gitclaw /skills validate
 @gitclaw /skills check
+@gitclaw /skills select-plan repo-reader
 @gitclaw /skills install-plan repo-reader
 @gitclaw /skills upgrade-plan repo-reader
 @gitclaw /bundles
@@ -1067,6 +1069,7 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 - declared env/bin requirement counts and whether any are missing.
 - validation status, error/warning counts, duplicate-name count, invalid-name
   count, folder/name mismatch count, and body-free findings.
+- dry-run selection planning metadata when explicitly requested.
 - dry-run install/upgrade planning metadata when explicitly requested.
 
 It does not dump full skill bodies. Full `SKILL.md` content remains a prompt
@@ -1117,6 +1120,20 @@ explicit
 `registry_verification=not_configured` field. This mirrors OpenClaw's
 verification posture while preserving GitClaw's no-registry, no-installer MVP
 boundary.
+
+When called as `@gitclaw /skills select-plan <name>`, the command posts a
+body-free dry-run explanation for one repo-local skill's influence on the
+current turn. It reports the requested-skill hash, request-text hash, term
+count, available/enabled/matched/selected skill counts, selected bundle count,
+enabled/disabled/allowlist gate state, always-on state, validation summary,
+metadata-only skill match, and selection reason codes such as
+`request_metadata_match`, `always`, or `selected_bundle`.
+
+The selection planner never calls a model, mutates the repository, prints the
+raw requested skill string, prints raw request text, or dumps full `SKILL.md`
+bodies. It includes `llm_e2e_required_after_change=true` because skill
+selection changes must be proven with a live GitHub Models conversation E2E,
+not only deterministic report tests.
 
 When called as `@gitclaw /skills install-plan <target>` or
 `@gitclaw /skills upgrade-plan <target>`, the command switches to a
@@ -3168,7 +3185,19 @@ assert the expected comments/labels, and close the issue in cleanup.
      `SKILL.md` verification token,
    - assert the run succeeds without requiring a model provider response.
 
-21. **Soul inspection**
+21. **Skills selection plan**
+
+   - create a real issue with `@gitclaw /skills select-plan repo-reader`,
+   - assert the reply is marked `model="gitclaw/skills"`,
+   - assert the report is marked `GitClaw Skill Select Plan Report`,
+   - assert it reports requested-skill hash, request-text hash, matched skill
+     count, selected-for-turn state, gate state, selection reasons, validation
+     status, no model call, no repository mutation, and the live-LLM E2E rule,
+   - assert it does not dump the raw issue body token, raw request text, or
+     full `SKILL.md` verification token,
+   - assert the run succeeds without requiring a model provider response.
+
+22. **Soul inspection**
 
    - create a real issue with `@gitclaw /soul`,
    - create a second real issue with `@gitclaw /soul list`,
@@ -3188,7 +3217,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump full soul or memory bodies,
    - assert the run succeeds without requiring a model provider response.
 
-22. **Tools inspection**
+23. **Tools inspection**
 
    - create a real issue with `@gitclaw /tools`,
    - create a second real issue with `@gitclaw /tools list`,
@@ -3213,7 +3242,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump full file or search output bodies,
    - assert the run succeeds without requiring a model provider response.
 
-23. **Policy inspection**
+24. **Policy inspection**
 
    - create a real issue with `@gitclaw /policy` that also asks for write-mode
      work,
@@ -3230,7 +3259,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert `gitclaw:write-requested` and `gitclaw:done` are present without
      `gitclaw:running` or `gitclaw:error`.
 
-24. **Session inspection**
+25. **Session inspection**
 
    - create a real issue that gets one deterministic assistant turn,
    - post a follow-up comment with `@gitclaw /session`,
@@ -3241,7 +3270,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump issue or comment body tokens,
    - assert the run succeeds without requiring a model provider response.
 
-25. **Backup index**
+26. **Backup index**
 
    - create a real deterministic GitClaw issue turn,
    - wait for the successful backup job,
@@ -3250,7 +3279,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      number, title, and backup path,
    - assert the index contains metadata counts but not raw transcript bodies.
 
-26. **Backup inspection**
+27. **Backup inspection**
 
    - create a real issue with `@gitclaw /backup`,
    - assert the reply is marked `model="gitclaw/backup"`,
@@ -3261,7 +3290,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      entry for that same issue,
    - assert the report does not dump issue or comment body tokens.
 
-27. **Backup verification**
+28. **Backup verification**
 
    - create a real issue with `@gitclaw /backup verify`,
    - assert the issue-side report lists `requested_backup_command: verify`,
@@ -3274,7 +3303,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert `backup_verify_status: ok`, zero verification failures, zero
      unindexed issue files, and an index entry for the just-created issue.
 
-28. **Backup manifest**
+29. **Backup manifest**
 
    - create a real issue with `@gitclaw /backup manifest`,
    - assert the issue-side report lists `requested_backup_command: manifest`,
@@ -3289,7 +3318,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      count, and transcript count,
    - assert it does not dump the issue body token or raw transcript bodies.
 
-29. **Backup stats**
+30. **Backup stats**
 
    - create a real issue with `@gitclaw /backup stats`,
    - assert the issue-side report lists `requested_backup_command: stats`,
@@ -3305,7 +3334,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      metadata, event counts, and payload bytes,
    - assert it does not dump the issue body token or raw title.
 
-30. **Backup list**
+31. **Backup list**
 
    - create a real issue with `@gitclaw /backup list`,
    - assert the issue-side report lists `requested_backup_command: list`,
@@ -3321,7 +3350,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      event name, label/comment/transcript counts, and title hash,
    - assert it does not dump the issue body token or raw title.
 
-31. **Backup info**
+32. **Backup info**
 
    - create a real issue with `@gitclaw /backup info`,
    - assert the issue-side report lists `requested_backup_command: info`, the
@@ -3338,7 +3367,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      hashes,
    - assert it does not dump the issue body token or raw title.
 
-32. **Backup JSONL export**
+33. **Backup JSONL export**
 
    - create a real issue with `@gitclaw /backup export-jsonl`,
    - assert the issue-side report lists `requested_backup_command:
@@ -3353,7 +3382,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      contains the assistant backup report body, proving the command is an
      explicit raw recovery/export path rather than an issue-visible report.
 
-33. **Backup restore plan**
+34. **Backup restore plan**
 
    - create a real issue with `@gitclaw /backup restore-plan`,
    - assert the issue-side report lists `requested_backup_command:
@@ -3368,7 +3397,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      counts, assistant-turn/error counts, and body hashes,
    - assert it does not dump the issue body token or raw transcript bodies.
 
-34. **Backup retention plan**
+35. **Backup retention plan**
 
    - create a real issue with `@gitclaw /backup retention-plan`,
    - assert the issue-side report lists `requested_backup_command:
@@ -3385,7 +3414,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the just-created issue is included without dumping the issue body
      token or raw title.
 
-35. **Backup search**
+36. **Backup search**
 
    - create a real issue with `@gitclaw /backup search <query>`,
    - include a unique hidden token in the issue body,
@@ -3403,7 +3432,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert it does not dump the hidden token, raw issue body, raw issue title,
      raw comments, raw transcript messages, or raw query text.
 
-36. **Proactive init generator**
+37. **Proactive init generator**
 
    - run `gitclaw proactive init` against a temporary repo root,
    - assert it writes the expected prompt file and scheduled workflow,
@@ -3415,7 +3444,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert it creates a real proactive issue and receives one deterministic
      proactive report without leaking the hidden prompt token.
 
-37. **Proactive info report**
+38. **Proactive info report**
 
    - create a real issue with `@gitclaw /proactive info repo-hygiene`,
    - include a unique hidden token in the issue body,
@@ -3790,6 +3819,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven skills-info E2E harness verifies
   `@gitclaw /skills info repo-reader` produces focused skill metadata without
   a model call or full `SKILL.md` body leakage.
+- A `gh`-driven skills-select-plan E2E harness verifies
+  `@gitclaw /skills select-plan repo-reader` explains selected-for-turn state,
+  gate metadata, selection reasons, validation status, and the live-LLM E2E
+  rule without a model call, raw request text, or full `SKILL.md` body leakage.
 - A `gh`-driven skills-install-plan E2E harness verifies
   `@gitclaw /skills install-plan repo-reader` produces a body-free,
   non-mutating install/upgrade plan with remote fetches, installer scripts,

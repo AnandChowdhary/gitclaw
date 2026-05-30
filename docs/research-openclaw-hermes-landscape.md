@@ -881,6 +881,13 @@ availability as policy, not only discovery. Add repo-reviewed
 and hashable, but disabled or allowlist-blocked skill bodies never load into
 prompt context even when mentioned or marked always-on.
 
+2026-05-30 skill-select-plan follow-up: Hermes profiles and skill bundles make
+task-specific skill loading powerful but also easy to misread. Add
+`@gitclaw /skills select-plan <name>` and `gitclaw skills select-plan <name>`
+as the body-free dry run for progressive disclosure: one skill, selected state,
+gate state, bundle/request/always selection reasons, validation summary, no
+model call, no repo mutation, no raw request text, and no `SKILL.md` body dump.
+
 2026-05-30 tool-gating follow-up: Hermes/OpenClaw toolsets are useful partly
 because the operator can see and constrain what the agent may call. GitClaw
 should mirror that with repo-reviewed `tools.allowed` and `tools.disabled`

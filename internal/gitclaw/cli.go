@@ -976,7 +976,7 @@ func runDoctorCommand(args []string) error {
 
 func runSkillsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw skills verify|validate|check|list|install-plan <target>|upgrade-plan <target>|bundles|bundle <name>|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw skills verify|validate|check|list|select-plan <name>|install-plan <target>|upgrade-plan <target>|bundles|bundle <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -985,6 +985,8 @@ func runSkillsCommand(args []string) error {
 		return runSkillsValidateCommand(args[1:])
 	case "list":
 		return runSkillsListCommand(args[1:])
+	case "select-plan", "selection-plan":
+		return runSkillsSelectPlanCommand(args[1:])
 	case "install-plan", "plan":
 		return runSkillsInstallPlanCommand(args[1:], "install-plan")
 	case "upgrade-plan":
@@ -1000,6 +1002,22 @@ func runSkillsCommand(args []string) error {
 	default:
 		return fmt.Errorf("unknown skills command %q", args[0])
 	}
+}
+
+func runSkillsSelectPlanCommand(args []string) error {
+	if len(args) != 1 {
+		return fmt.Errorf("usage: gitclaw skills select-plan <name>")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "skills select-plan " + args[0]}}, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSkillSelectPlanCLIReport(repoContext, args[0]))
+	return nil
 }
 
 func runBundlesCommand(args []string) error {

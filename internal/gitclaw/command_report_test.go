@@ -28,7 +28,7 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"Generated without a model call",
 		"commands: `22`",
 		"aliases: `19`",
-		"local_cli_helpers: `73`",
+		"local_cli_helpers: `74`",
 		"run_mode: `read-only`",
 		"### Slash Commands",
 		"### Local CLI Helpers",

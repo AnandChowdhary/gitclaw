@@ -76,6 +76,81 @@ SECRET_SKILL_INFO_BODY_TOKEN
 	}
 }
 
+func TestRenderSkillSelectPlanReportExplainsSelectionWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Use read-only repository files.
+---
+
+# Repo Reader
+SECRET_SKILL_SELECT_PLAN_BODY_TOKEN
+`)
+	ctx, err := LoadRepoContext(root, []TranscriptMessage{{Role: "user", Body: "Please use repo-reader for this turn."}})
+	if err != nil {
+		t.Fatalf("LoadRepoContext returned error: %v", err)
+	}
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 116,
+			"title": "@gitclaw /skills select-plan repo-reader",
+			"body": "Hidden skill select plan token: SKILL_SELECT_PLAN_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	report := RenderSkillsReport(ev, DefaultConfig(), ctx)
+	for _, want := range []string{
+		"GitClaw Skill Select Plan Report",
+		"Generated without a model call",
+		"skill_select_plan_status: `ok`",
+		"requested_skill_sha256_12:",
+		"request_text_sha256_12:",
+		"available_skills: `1`",
+		"matched_skills: `1`",
+		"selected_skills: `1`",
+		"selected_for_this_turn: `true`",
+		"skill_enabled: `true`",
+		"disabled_by_config: `false`",
+		"blocked_by_allowlist: `false`",
+		"always_on: `false`",
+		"model_call_required: `false`",
+		"repository_mutation_allowed: `false`",
+		"raw_requested_skill_included: `false`",
+		"raw_request_text_included: `false`",
+		"raw_skill_body_included: `false`",
+		"llm_e2e_required_after_change: `true`",
+		"skill_validation_status: `ok`",
+		"### Skill Match",
+		"skill_name=`repo-reader`",
+		"path=`.gitclaw/SKILLS/repo-reader/SKILL.md`",
+		"### Selection Reasons",
+		"reasons=`request_metadata_match`",
+		"### Review Steps",
+		"Use a live GitHub Models conversation E2E",
+		"### Findings",
+		"code=`progressive_disclosure`",
+		"code=`repository_mutation_disabled`",
+		"code=`skill_selected_for_turn`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("skill select plan report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"SECRET_SKILL_SELECT_PLAN_BODY_TOKEN", "SKILL_SELECT_PLAN_BODY_SECRET", "Please use repo-reader"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("skill select plan report leaked %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestRenderSkillInstallPlanReportPlansExistingSkillWithoutBodies(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---

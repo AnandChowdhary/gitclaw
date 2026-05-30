@@ -74,6 +74,12 @@ func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if bundleName := requestedSkillBundleInfoName(ev, cfg); bundleName != "" {
 		return renderSkillBundleInfoReport(ev, repoContext, bundleName, true)
 	}
+	if skillName := requestedSkillSelectPlanName(ev, cfg); skillName != "" {
+		if skillName == "__missing__" {
+			skillName = ""
+		}
+		return renderSkillSelectPlanReport(ev, repoContext, skillName, activeRequestText(ev), true)
+	}
 	if operation, target, ok := requestedSkillInstallPlan(ev, cfg); ok {
 		return renderSkillInstallPlanReport(ev, repoContext, operation, target, true)
 	}
