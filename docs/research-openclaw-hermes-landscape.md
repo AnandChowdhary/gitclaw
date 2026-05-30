@@ -374,6 +374,13 @@ focused `proactive info <name>` report that names the prompt file, generic
 workflow, generated workflow candidate, trigger metadata, hashes, and enqueue
 contract while keeping prompt/workflow/issue bodies out of comments.
 
+2026-05-30 skill-backed proactive follow-up: Hermes cron jobs run in fresh
+sessions and can attach skills in execution order, while OpenClaw standing
+orders keep durable authority in reviewed workspace files. GitClaw should keep
+the no-daemon boundary by storing skill hints inside the reviewed proactive
+prompt file, then letting the normal issue transcript trigger progressive
+repo-local skill loading when the scheduled issue is handled.
+
 2026-05-29 proactive-init follow-up: the reviewed-file boundary matters as much
 as the scheduler. GitClaw should make new cron-like jobs easy through a local
 generator that writes `.gitclaw/proactive/<name>.md` and
@@ -1238,6 +1245,7 @@ Recommended non-goals for the first spec:
 - OpenClaw sessions CLI docs: https://docs.openclaw.ai/cli/sessions
 - OpenClaw automation docs: https://docs.openclaw.ai/automation
 - OpenClaw scheduled tasks docs: https://docs.openclaw.ai/automation/cron-jobs
+- OpenClaw standing orders docs: https://docs.openclaw.ai/automation/standing-orders
 - OpenClaw heartbeat docs: https://openclawlab.com/en/docs/agent/heartbeat/
 - OpenClaw memory docs: https://docs.openclaw.ai/concepts/memory
 - OpenClaw tools overview: https://docs.openclaw.ai/tools
@@ -1263,10 +1271,12 @@ Recommended non-goals for the first spec:
 - Hermes memory docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/memory.md
 - Hermes three-layer memory explainer: https://hermes-agent.ai/blog/hermes-agent-memory-system
 - Hermes skills docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/skills.md
+- Hermes working with skills docs: https://hermes-agent.nousresearch.com/docs/guides/work-with-skills/
 - Hermes tools docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/tools/
 - Hermes tools reference: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/reference/tools-reference.md
 - Hermes security overview: https://hermes-agent.nousresearch.com/docs/
 - Hermes cron docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/cron.md
+- Hermes cron internals docs: https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals
 - Hermes security docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/security.md
 - NanoClaw: https://github.com/nanocoai/nanoclaw
 - LightClaw: https://github.com/OthmaneBlial/lightclaw

@@ -159,6 +159,8 @@ for expected in \
   'requested_proactive: `repo-hygiene`' \
   'proactive_info_status: `ok`' \
   'prompt_matches: `1`' \
+  'prompt_skill_hints: `1`' \
+  'skill_hints: `repo-reader`' \
   'generic_workflow_path: `.github/workflows/gitclaw-proactive.yml`' \
   'generic_workflow_present: `true`' \
   'generic_workflow_dispatch_trigger: `true`' \
@@ -167,6 +169,7 @@ for expected in \
   'generated_workflow_present: `false`' \
   'raw_bodies_included: `false`' \
   '.gitclaw/proactive/repo-hygiene.md' \
+  'skill_hints=`repo-reader`' \
   'gitclaw proactive enqueue --name repo-hygiene'; do
   grep -Fq "$expected" <<<"$comments" || die "proactive info report missing ${expected}"
 done

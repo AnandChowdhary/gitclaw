@@ -136,6 +136,7 @@ func TestProactiveInitWritesWorkflowAndPrompt(t *testing.T) {
 		Name:       "Email Triage",
 		Cron:       "17 8 * * 1-5",
 		PromptBody: "Summarize inbox state without leaking private data.",
+		Skills:     []string{"repo-reader", "repo-reader"},
 	})
 	if err != nil {
 		t.Fatalf("RunProactiveInit returned error: %v", err)
@@ -145,8 +146,10 @@ func TestProactiveInitWritesWorkflowAndPrompt(t *testing.T) {
 	}
 
 	prompt := readTestFile(t, filepath.Join(dir, ".gitclaw", "proactive", "email-triage.md"))
-	if prompt != "Summarize inbox state without leaking private data.\n" {
-		t.Fatalf("unexpected prompt body: %q", prompt)
+	for _, want := range []string{"gitclaw:proactive-skills repo-reader", "Suggested GitClaw skills", "- repo-reader", "Summarize inbox state without leaking private data."} {
+		if !strings.Contains(prompt, want) {
+			t.Fatalf("generated prompt missing %q:\n%s", want, prompt)
+		}
 	}
 	workflow := readTestFile(t, filepath.Join(dir, ".github", "workflows", "gitclaw-proactive-email-triage.yml"))
 	for _, want := range []string{
@@ -173,6 +176,8 @@ func TestProactiveInitWritesWorkflowAndPrompt(t *testing.T) {
 		"GitClaw Proactive Init Report",
 		"mode: `apply`",
 		"name: `email-triage`",
+		"skill_hints: `1`",
+		"skill_hint_names: `repo-reader`",
 		"prompt_written: `true`",
 		"workflow_written: `true`",
 		"prompt_body_sha256_12:",
@@ -203,6 +208,13 @@ func TestProactiveInitDryRunDoesNotWrite(t *testing.T) {
 	}
 	if _, err := os.Stat(filepath.Join(dir, ".github", "workflows", "gitclaw-proactive-repo-watch.yml")); !os.IsNotExist(err) {
 		t.Fatalf("dry run wrote workflow file or returned unexpected stat error: %v", err)
+	}
+}
+
+func TestParseProactiveSkillHints(t *testing.T) {
+	hints := parseProactiveSkillHints("<!-- gitclaw:proactive-skills repo-reader, deploy-watch -->\nbody")
+	if got := strings.Join(hints, ","); got != "deploy-watch,repo-reader" {
+		t.Fatalf("parseProactiveSkillHints() = %q", got)
 	}
 }
 

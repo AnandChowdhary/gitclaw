@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 )
 
@@ -14,6 +15,7 @@ type ProactiveInitOptions struct {
 	PromptPath   string
 	PromptBody   string
 	WorkflowPath string
+	Skills       []string
 	Force        bool
 	DryRun       bool
 }
@@ -30,6 +32,7 @@ type ProactiveInitResult struct {
 	WorkflowExisted   bool
 	Force             bool
 	DryRun            bool
+	Skills            []string
 	PromptBodySHA     string
 	WorkflowBodySHA   string
 	PromptBodyBytes   int
@@ -52,6 +55,7 @@ func RunProactiveInit(opts ProactiveInitOptions) (ProactiveInitResult, error) {
 		WorkflowPath:      opts.WorkflowPath,
 		Force:             opts.Force,
 		DryRun:            opts.DryRun,
+		Skills:            append([]string(nil), opts.Skills...),
 		PromptBodySHA:     shortDocumentHash(promptBody),
 		WorkflowBodySHA:   shortDocumentHash(workflowBody),
 		PromptBodyBytes:   len([]byte(promptBody)),
@@ -99,6 +103,7 @@ func normalizeProactiveInitOptions(opts ProactiveInitOptions) ProactiveInitOptio
 	opts.PromptPath = cleanRepoRelPath(opts.PromptPath)
 	opts.WorkflowPath = cleanRepoRelPath(opts.WorkflowPath)
 	opts.PromptBody = strings.TrimSpace(opts.PromptBody)
+	opts.Skills = normalizeProactiveSkillHints(opts.Skills)
 	if opts.Name != "" {
 		if opts.PromptPath == "" {
 			opts.PromptPath = ".gitclaw/proactive/" + opts.Name + ".md"
@@ -169,6 +174,8 @@ func RenderProactiveInitReport(result ProactiveInitResult) string {
 	fmt.Fprintf(&b, "- prompt_file: `%s`\n", result.PromptPath)
 	fmt.Fprintf(&b, "- workflow_file: `%s`\n", result.WorkflowPath)
 	fmt.Fprintf(&b, "- force: `%t`\n", result.Force)
+	fmt.Fprintf(&b, "- skill_hints: `%d`\n", len(result.Skills))
+	fmt.Fprintf(&b, "- skill_hint_names: `%s`\n", inlineList(result.Skills))
 	fmt.Fprintf(&b, "- prompt_written: `%t`\n", result.PromptWritten)
 	fmt.Fprintf(&b, "- workflow_written: `%t`\n", result.WorkflowWritten)
 	fmt.Fprintf(&b, "- prompt_existed: `%t`\n", result.PromptExisted)
@@ -252,13 +259,55 @@ jobs:
 }
 
 func proactivePromptBody(opts ProactiveInitOptions) string {
+	skillBlock := proactiveSkillHintBlock(opts.Skills)
 	if opts.PromptBody != "" {
-		return opts.PromptBody + "\n"
+		if skillBlock == "" {
+			return opts.PromptBody + "\n"
+		}
+		return skillBlock + strings.TrimSpace(opts.PromptBody) + "\n"
 	}
 	return fmt.Sprintf(`# GitClaw Proactive %s
 
-Review the repository for useful proactive work. Open a concise issue thread only when there is something actionable to report.
-`, proactiveDisplayName(opts.Name))
+%sReview the repository for useful proactive work. Open a concise issue thread only when there is something actionable to report.
+`, proactiveDisplayName(opts.Name), skillBlock)
+}
+
+func proactiveSkillHintBlock(skills []string) string {
+	skills = normalizeProactiveSkillHints(skills)
+	if len(skills) == 0 {
+		return ""
+	}
+	var b strings.Builder
+	fmt.Fprintf(&b, "<!-- gitclaw:proactive-skills %s -->\n\n", strings.Join(skills, ", "))
+	b.WriteString("Suggested GitClaw skills for this scheduled job:\n")
+	for _, skill := range skills {
+		fmt.Fprintf(&b, "- %s\n", skill)
+	}
+	b.WriteByte('\n')
+	return b.String()
+}
+
+func normalizeProactiveSkillHints(skills []string) []string {
+	var out []string
+	seen := map[string]bool{}
+	for _, raw := range skills {
+		for _, part := range strings.FieldsFunc(raw, func(r rune) bool {
+			return r == ',' || r == ';' || r == '\n' || r == '\t'
+		}) {
+			skill := strings.ToLower(cleanSkillLookupName(part))
+			if skill == "" {
+				continue
+			}
+			key := strings.ToLower(skill)
+			if seen[key] {
+				continue
+			}
+			seen[key] = true
+			out = append(out, skill)
+		}
+	}
+	sort.Strings(out)
+	return out
 }
 
 func proactiveDisplayName(name string) string {

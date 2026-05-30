@@ -1,3 +1,8 @@
+<!-- gitclaw:proactive-skills repo-reader -->
+
+Suggested GitClaw skills for this scheduled job:
+- repo-reader
+
 Run a short, read-only repository hygiene check.
 
 Look for visible GitClaw maintenance work that would be useful to mention in

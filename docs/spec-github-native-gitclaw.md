@@ -337,6 +337,7 @@ files:
 gitclaw proactive init \
   --name email-triage \
   --cron "17 8 * * 1-5" \
+  --skill repo-reader \
   --prompt-file .gitclaw/proactive/email-triage.md \
   --prompt-body "Summarize inbox state and open an issue only when action is needed."
 ```
@@ -347,7 +348,14 @@ workflow file is supplied, it defaults to
 `.github/workflows/gitclaw-proactive-<name>.yml`. The command refuses to
 overwrite differing files unless `--force` is used, supports `--dry-run`, and
 prints a body-free `GitClaw Proactive Init Report` with file paths, write
-status, byte counts, and hashes. Generated files are:
+status, skill-hint counts, byte counts, and hashes. `--skill <name>` can be
+passed more than once, and `--skills a,b` is accepted for comma-separated skill
+hints. The generated prompt file records the hints in a
+`gitclaw:proactive-skills` marker and a short "Suggested GitClaw skills"
+section. When the proactive issue is later created, those skill names are part
+of the canonical issue transcript, so GitClaw's normal progressive skill
+loading can select the corresponding local `SKILL.md` files without a hidden
+cron database or runtime-specific state. Generated files are:
 
 ```text
 .github/workflows/gitclaw-proactive-email-triage.yml
@@ -451,8 +459,8 @@ The focused info form:
 ```
 
 posts a `GitClaw Proactive Info Report` for one job name. It reports the
-matched prompt file path, size, line count, and hash; the generic proactive
-workflow trigger metadata; the generated workflow candidate path
+matched prompt file path, size, line count, skill hints, and hash; the generic
+proactive workflow trigger metadata; the generated workflow candidate path
 `.github/workflows/gitclaw-proactive-<name>.yml`; whether that generated
 workflow exists and has `workflow_dispatch`/`schedule`; and the exact enqueue
 command shape. It includes `proactive_info_status` as `ok`, `not_found`, or
@@ -3316,6 +3324,7 @@ examples/workflows/gitclaw.yml
 - OpenClaw heartbeat docs: https://openclawlab.com/en/docs/agent/heartbeat/
 - OpenClaw automation docs: https://docs.openclaw.ai/automation/index
 - OpenClaw scheduled tasks docs: https://docs.openclaw.ai/automation/cron-jobs
+- OpenClaw standing orders docs: https://docs.openclaw.ai/automation/standing-orders
 - OpenClaw memory docs: https://docs.openclaw.ai/concepts/memory
 - OpenClaw creating skills docs: https://docs.openclaw.ai/tools/creating-skills
 - OpenClaw skill format docs: https://docs.openclaw.ai/clawhub/skill-format
@@ -3326,6 +3335,8 @@ examples/workflows/gitclaw.yml
 - OpenClaw backup docs: https://docs.openclaw.ai/cli/backup
 - Hermes memory docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/memory.md
 - Hermes cron docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/cron.md
+- Hermes cron internals docs: https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals
+- Hermes working with skills docs: https://hermes-agent.nousresearch.com/docs/guides/work-with-skills/
 - Hermes profiles docs: https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 - Slack Socket Mode: https://api.slack.com/apis/connections/socket
 - Slack Events API: https://docs.slack.dev/apis/events-api/

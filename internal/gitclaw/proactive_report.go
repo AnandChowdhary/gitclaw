@@ -26,11 +26,12 @@ type proactiveWorkflow struct {
 }
 
 type proactivePrompt struct {
-	Name  string
-	Path  string
-	Bytes int
-	Lines int
-	SHA   string
+	Name       string
+	Path       string
+	Bytes      int
+	Lines      int
+	SHA        string
+	SkillHints []string
 }
 
 func IsProactiveReportRequest(ev Event, cfg Config) bool {
@@ -70,6 +71,7 @@ func renderProactiveReport(ev Event, cfg Config, includeIssue bool) string {
 	fmt.Fprintf(&b, "- workflow_dispatch_trigger: `%t`\n", surface.Workflow.WorkflowDispatch)
 	fmt.Fprintf(&b, "- schedule_trigger: `%t`\n", surface.Workflow.Schedule)
 	fmt.Fprintf(&b, "- prompt_files: `%d`\n", len(surface.Prompts))
+	fmt.Fprintf(&b, "- prompt_skill_hints: `%d`\n", proactivePromptSkillHintCount(surface.Prompts))
 	if includeIssue {
 		fmt.Fprintf(&b, "- proactive_run_issue: `%t`\n", HasProactiveRunMarker(ev.Issue.Body))
 		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
@@ -98,7 +100,7 @@ func renderProactiveReport(ev Event, cfg Config, includeIssue bool) string {
 		b.WriteString("- none\n")
 	} else {
 		for _, prompt := range surface.Prompts {
-			fmt.Fprintf(&b, "- `%s` bytes=`%d` lines=`%d` sha256_12=`%s`\n", prompt.Path, prompt.Bytes, prompt.Lines, prompt.SHA)
+			fmt.Fprintf(&b, "- `%s` bytes=`%d` lines=`%d` skill_hints=`%d` sha256_12=`%s`\n", prompt.Path, prompt.Bytes, prompt.Lines, len(prompt.SkillHints), prompt.SHA)
 		}
 	}
 
@@ -140,6 +142,8 @@ func renderProactiveInfoReport(ev Event, cfg Config, name string, includeIssue b
 	fmt.Fprintf(&b, "- requested_proactive: `%s`\n", inlineCode(name))
 	fmt.Fprintf(&b, "- proactive_info_status: `%s`\n", status)
 	fmt.Fprintf(&b, "- prompt_matches: `%d`\n", len(matches))
+	fmt.Fprintf(&b, "- prompt_skill_hints: `%d`\n", proactivePromptSkillHintCount(matches))
+	fmt.Fprintf(&b, "- skill_hints: `%s`\n", inlineList(proactivePromptSkillHintNames(matches)))
 	fmt.Fprintf(&b, "- generic_workflow_path: `%s`\n", proactiveWorkflowPath)
 	fmt.Fprintf(&b, "- generic_workflow_present: `%t`\n", surface.Workflow.Present)
 	fmt.Fprintf(&b, "- generic_workflow_dispatch_trigger: `%t`\n", surface.Workflow.WorkflowDispatch)
@@ -161,7 +165,7 @@ func renderProactiveInfoReport(ev Event, cfg Config, name string, includeIssue b
 		b.WriteString("- none\n")
 	} else {
 		for _, prompt := range matches {
-			fmt.Fprintf(&b, "- `%s` name=`%s` bytes=`%d` lines=`%d` sha256_12=`%s`\n", prompt.Path, prompt.Name, prompt.Bytes, prompt.Lines, prompt.SHA)
+			fmt.Fprintf(&b, "- `%s` name=`%s` bytes=`%d` lines=`%d` skill_hints=`%s` sha256_12=`%s`\n", prompt.Path, prompt.Name, prompt.Bytes, prompt.Lines, inlineList(prompt.SkillHints), prompt.SHA)
 		}
 	}
 
@@ -213,11 +217,12 @@ func inspectProactiveSurface(root string) proactiveSurface {
 		text := string(body)
 		relPath := filepath.ToSlash(rel)
 		surface.Prompts = append(surface.Prompts, proactivePrompt{
-			Name:  proactivePromptName(relPath),
-			Path:  relPath,
-			Bytes: len(body),
-			Lines: lineCount(text),
-			SHA:   shortDocumentHash(text),
+			Name:       proactivePromptName(relPath),
+			Path:       relPath,
+			Bytes:      len(body),
+			Lines:      lineCount(text),
+			SHA:        shortDocumentHash(text),
+			SkillHints: parseProactiveSkillHints(text),
 		})
 	}
 	return surface
@@ -304,4 +309,36 @@ func proactiveGeneratedWorkflowPath(name string) string {
 
 func isProactiveCommand(command string) bool {
 	return command == "/proactive" || command == "/cron"
+}
+
+func parseProactiveSkillHints(text string) []string {
+	const marker = "gitclaw:proactive-skills"
+	var hints []string
+	remaining := text
+	for {
+		start := strings.Index(remaining, marker)
+		if start < 0 {
+			break
+		}
+		after := remaining[start+len(marker):]
+		end := strings.Index(after, "-->")
+		if end < 0 {
+			break
+		}
+		hints = append(hints, after[:end])
+		remaining = after[end+len("-->"):]
+	}
+	return normalizeProactiveSkillHints(hints)
+}
+
+func proactivePromptSkillHintCount(prompts []proactivePrompt) int {
+	return len(proactivePromptSkillHintNames(prompts))
+}
+
+func proactivePromptSkillHintNames(prompts []proactivePrompt) []string {
+	var hints []string
+	for _, prompt := range prompts {
+		hints = append(hints, prompt.SkillHints...)
+	}
+	return normalizeProactiveSkillHints(hints)
 }

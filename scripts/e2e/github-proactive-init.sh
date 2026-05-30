@@ -69,6 +69,7 @@ init_output="$(go run ./cmd/gitclaw proactive init \
   --root "$tmp_dir" \
   --name "$name" \
   --cron "17 8 * * 1" \
+  --skill repo-reader \
   --prompt-body "$prompt_body")"
 
 for expected in \
@@ -77,6 +78,8 @@ for expected in \
   "name: \`${name}\`" \
   "prompt_file: \`${prompt_path}\`" \
   "workflow_file: \`${workflow_path}\`" \
+  'skill_hints: `1`' \
+  'skill_hint_names: `repo-reader`' \
   'prompt_written: `true`' \
   'workflow_written: `true`' \
   'prompt_body_sha256_12:' \
@@ -91,6 +94,9 @@ fi
 generated_prompt="${tmp_dir}/${prompt_path}"
 generated_workflow="${tmp_dir}/${workflow_path}"
 grep -Fq "$token" "$generated_prompt" || die "generated prompt missing token"
+grep -Fq "gitclaw:proactive-skills repo-reader" "$generated_prompt" || die "generated prompt missing skill marker"
+grep -Fq "Suggested GitClaw skills" "$generated_prompt" || die "generated prompt missing skill hint section"
+grep -Fq -- "- repo-reader" "$generated_prompt" || die "generated prompt missing repo-reader skill hint"
 for expected in \
   "name: GitClaw Proactive Proactive Init E2e ${normalized_timestamp}" \
   "workflow_dispatch:" \

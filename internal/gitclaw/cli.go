@@ -1736,6 +1736,12 @@ func runProactiveInitCommand(args []string) error {
 			}
 			opts.PromptBody = args[i+1]
 			i++
+		case "--skill", "--skills":
+			if i+1 >= len(args) {
+				return fmt.Errorf("%s requires a value", args[i])
+			}
+			opts.Skills = append(opts.Skills, args[i+1])
+			i++
 		case "--workflow", "--workflow-file":
 			if i+1 >= len(args) {
 				return fmt.Errorf("%s requires a value", args[i])
