@@ -163,7 +163,7 @@ for expected in \
   'tool_validation_errors: `0`' \
   'tool_validation_warnings: `0`' \
   'tool_contracts: `5`' \
-  'tool_active_outputs: `3`' \
+  'tool_active_outputs: `4`' \
   'tool_guidance_files: `1`' \
   'tool_unknown_outputs: `0`' \
   'tool_unsafe_contracts: `0`' \
