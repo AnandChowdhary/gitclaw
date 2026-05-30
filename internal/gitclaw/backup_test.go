@@ -404,6 +404,52 @@ func TestBuildBackupListListsNewestBackupsWithoutBodies(t *testing.T) {
 	}
 }
 
+func TestBuildBackupInfoReportsOneBackupWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T13:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issue_comment",
+		Issue: IssueBackupIssue{
+			Number: 8,
+			Title:  "@gitclaw info title BACKUP_INFO_TITLE_TOKEN",
+			Body:   "BACKUP_INFO_BODY_TOKEN",
+			Labels: []string{"gitclaw:e2e", "gitclaw"},
+		},
+		Transcript: []TranscriptMessage{
+			{Role: "user", Body: "BACKUP_INFO_TRANSCRIPT_TOKEN", Actor: "alice", Trusted: true},
+			{Role: "assistant", Body: "BACKUP_INFO_ASSISTANT_TOKEN", Actor: "github-actions[bot]", CommentID: 12, Trusted: true},
+		},
+		Comments: []IssueBackupComment{
+			{ID: 12, Body: "<!-- gitclaw:assistant-turn -->\nBACKUP_INFO_COMMENT_TOKEN"},
+			{ID: 13, Body: "<!-- gitclaw:error -->\nBACKUP_INFO_ERROR_TOKEN"},
+		},
+	})
+	if _, err := WriteBackupIndex(root, "owner/repo", time.Date(2026, 5, 29, 14, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+
+	info, err := BuildBackupInfo(root, "owner/repo", 8)
+	if err != nil {
+		t.Fatalf("BuildBackupInfo returned error: %v", err)
+	}
+	if info.BackupInfoStatus != "ok" || info.BackupVerifyStatus != "ok" || info.IssueNumber != 8 || info.Comments != 2 || info.TranscriptMessages != 2 || info.UserMessages != 1 || info.AssistantMessages != 1 || info.AssistantTurns != 1 || info.ErrorComments != 1 {
+		t.Fatalf("unexpected backup info metadata: %#v", info)
+	}
+	report := RenderBackupInfo(info)
+	for _, want := range []string{"GitClaw Backup Info Report", "repository: `owner/repo`", "backup_info_status: `ok`", "backup_verify_status: `ok`", "verification_failures: `0`", "backup_schema_version: `1`", "issue: `#8`", "issue_backup_path: `issues/000008.json`", "backup_event_name: `issue_comment`", "payload_bytes:", "payload_sha256_12:", "labels: `2`", "comments: `2`", "transcript_messages: `2`", "user_messages: `1`", "assistant_messages: `1`", "assistant_turn_comments: `1`", "error_comments: `1`", "issue_title_sha256_12:", "issue_body_sha256_12:", "raw_bodies_included: `false`", "gitclaw:e2e", "comment_1_sha256_12:", "message_1_sha256_12:"} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("backup info report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"BACKUP_INFO_TITLE_TOKEN", "BACKUP_INFO_BODY_TOKEN", "BACKUP_INFO_TRANSCRIPT_TOKEN", "BACKUP_INFO_ASSISTANT_TOKEN", "BACKUP_INFO_COMMENT_TOKEN", "BACKUP_INFO_ERROR_TOKEN", "@gitclaw info title"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("backup info leaked body/title token %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestBuildBackupSearchFindsBackedUpConversationWithoutBodies(t *testing.T) {
 	root := t.TempDir()
 	writeBackupFixture(t, root, IssueBackup{

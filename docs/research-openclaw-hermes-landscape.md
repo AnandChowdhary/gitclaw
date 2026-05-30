@@ -178,6 +178,14 @@ restore. GitClaw should add `gitclaw backup list`: verify the fetched
 numbers, payload paths, timestamps, event names, label/comment/transcript
 counts, and title hashes only. This keeps routine backup navigation body-free.
 
+2026-05-30 backup-info follow-up: The same landscape also needs a focused
+single-session card between list and raw export. GitClaw should add
+`gitclaw backup info --issue <n>`: verify the fetched backup tree, locate one
+canonical payload, and print payload bytes/hash, backup timestamp/event,
+label/comment/transcript/message counts, assistant/error marker counts, and
+body hashes only. This matches Hermes' session detail ergonomics while keeping
+OpenClaw-style restore/export behind explicit commands.
+
 2026-05-29 backup-restore-plan follow-up: OpenClaw's migration/backup posture
 emphasizes preview before state-changing recovery. GitClaw should copy that
 separation: a local `backup restore-plan` command reads the backup branch and

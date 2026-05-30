@@ -746,6 +746,9 @@ func runBackup(ctx context.Context, args []string) error {
 	if len(args) > 0 && args[0] == "list" {
 		return runBackupList(args[1:])
 	}
+	if len(args) > 0 && args[0] == "info" {
+		return runBackupInfo(args[1:])
+	}
 	if len(args) > 0 && args[0] == "stats" {
 		return runBackupStats(args[1:])
 	}
@@ -994,6 +997,62 @@ func runBackupList(args []string) error {
 	fmt.Println(RenderBackupList(list))
 	if list.BackupListStatus != "ok" {
 		return fmt.Errorf("backup list reported %s", list.BackupListStatus)
+	}
+	return nil
+}
+
+func runBackupInfo(args []string) error {
+	root := filepath.Join(".gitclaw", "backups")
+	repo := os.Getenv("GITHUB_REPOSITORY")
+	issueNumber := 0
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--root":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--root requires a value")
+			}
+			root = args[i+1]
+			i++
+		case "--repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--repo requires a value")
+			}
+			repo = args[i+1]
+			i++
+		case "--issue":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--issue requires a value")
+			}
+			parsed, err := strconv.Atoi(args[i+1])
+			if err != nil || parsed <= 0 {
+				return fmt.Errorf("invalid --issue: %q", args[i+1])
+			}
+			issueNumber = parsed
+			i++
+		default:
+			if issueNumber == 0 {
+				parsed, err := strconv.Atoi(args[i])
+				if err == nil && parsed > 0 {
+					issueNumber = parsed
+					continue
+				}
+			}
+			return fmt.Errorf("unknown backup info argument %q", args[i])
+		}
+	}
+	if repo == "" {
+		return fmt.Errorf("missing --repo or GITHUB_REPOSITORY")
+	}
+	if issueNumber <= 0 {
+		return fmt.Errorf("missing --issue")
+	}
+	info, err := BuildBackupInfo(root, repo, issueNumber)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderBackupInfo(info))
+	if info.BackupInfoStatus != "ok" {
+		return fmt.Errorf("backup info reported %s", info.BackupInfoStatus)
 	}
 	return nil
 }

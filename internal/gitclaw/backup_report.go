@@ -3,6 +3,7 @@ package gitclaw
 import (
 	"fmt"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
@@ -107,6 +108,23 @@ func requestedBackupIssueCommand(ev Event, cfg Config) backupIssueCommand {
 			Status:       "ok",
 			LocalCommand: fmt.Sprintf("gitclaw backup list --root %s --repo %s --limit 20", defaultBackupRoot, backupReportRepo(ev.Repo)),
 		}
+	case "info":
+		issueNumber := ev.Issue.Number
+		if len(fields) >= 3 {
+			parsed, ok := parseBackupIssueNumber(fields[2])
+			if !ok {
+				return backupIssueCommand{
+					Name:   "info",
+					Status: "invalid_issue",
+				}
+			}
+			issueNumber = parsed
+		}
+		return backupIssueCommand{
+			Name:         "info",
+			Status:       "ok",
+			LocalCommand: fmt.Sprintf("gitclaw backup info --root %s --repo %s --issue %d", defaultBackupRoot, backupReportRepo(ev.Repo), issueNumber),
+		}
 	case "stats":
 		return backupIssueCommand{
 			Name:         "stats",
@@ -159,11 +177,19 @@ func writeBackupIssueCommandSummary(b *strings.Builder, request backupIssueComma
 			b.WriteString("- raw search query is not printed; only query hash and term count are shown\n")
 		}
 	case "unknown":
-		b.WriteString("- unknown backup subcommand; supported issue intents are `verify`, `manifest`, `list`, `stats`, `search`, `export-jsonl`, `restore-plan`, and `retention-plan`\n")
+		b.WriteString("- unknown backup subcommand; supported issue intents are `verify`, `manifest`, `list`, `info`, `stats`, `search`, `export-jsonl`, `restore-plan`, and `retention-plan`\n")
+	case "invalid_issue":
+		b.WriteString("- invalid backup issue number; use `@gitclaw /backup info <issue-number>` or inspect the current issue with `@gitclaw /backup info`\n")
 	default:
 		b.WriteString("- summary report requested\n")
 	}
 	b.WriteString("- issue-side execution is metadata-only because the backup branch is written after this assistant turn\n")
+}
+
+func parseBackupIssueNumber(value string) (int, bool) {
+	cleaned := strings.Trim(strings.TrimSpace(value), "#.,:;!?`\"'")
+	parsed, err := strconv.Atoi(cleaned)
+	return parsed, err == nil && parsed > 0
 }
 
 func backupReportRepo(repo string) string {

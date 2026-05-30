@@ -207,6 +207,37 @@ type BackupListIssue struct {
 	IssueTitleSHA      string
 }
 
+type BackupInfo struct {
+	Root                 string
+	Repo                 string
+	RepoDir              string
+	IndexPath            string
+	ReadmePath           string
+	SchemaVersion        int
+	IndexGeneratedAt     string
+	BackupInfoStatus     string
+	BackupVerifyStatus   string
+	VerificationFailures int
+	IssueNumber          int
+	IssuePath            string
+	BackupGeneratedAt    string
+	EventName            string
+	PayloadBytes         int
+	PayloadSHA           string
+	Labels               []string
+	Comments             int
+	TranscriptMessages   int
+	UserMessages         int
+	AssistantMessages    int
+	AssistantTurns       int
+	ErrorComments        int
+	IssueTitleSHA        string
+	IssueBodySHA         string
+	CommentBodySHAs      []string
+	TranscriptBodySHAs   []string
+	RawBodiesIncluded    bool
+}
+
 type BackupRetentionPlan struct {
 	Root                  string
 	Repo                  string
@@ -665,6 +696,87 @@ func BuildBackupList(root, repo string, limit int) (BackupList, error) {
 	return list, nil
 }
 
+func BuildBackupInfo(root, repo string, issueNumber int) (BackupInfo, error) {
+	if issueNumber <= 0 {
+		return BackupInfo{}, fmt.Errorf("missing positive issue number")
+	}
+	if err := validateRepoName(repo); err != nil {
+		return BackupInfo{}, err
+	}
+	repoDir, index, err := readBackupIndex(root, repo)
+	if err != nil {
+		return BackupInfo{}, err
+	}
+	if root == "" {
+		root = filepath.Join(".gitclaw", "backups")
+	}
+	verify, err := VerifyBackupTree(root, repo)
+	if err != nil {
+		return BackupInfo{}, err
+	}
+	info := BackupInfo{
+		Root:                 filepath.ToSlash(root),
+		Repo:                 repo,
+		RepoDir:              filepath.ToSlash(repoDir),
+		IndexPath:            filepath.ToSlash(filepath.Join(repoDir, "index.json")),
+		ReadmePath:           filepath.ToSlash(filepath.Join(repoDir, "README.md")),
+		SchemaVersion:        index.Version,
+		IndexGeneratedAt:     index.GeneratedAt,
+		BackupInfoStatus:     "ok",
+		BackupVerifyStatus:   "ok",
+		VerificationFailures: len(verify.VerificationFailures),
+		IssueNumber:          issueNumber,
+		RawBodiesIncluded:    false,
+	}
+	if !verify.OK() {
+		info.BackupInfoStatus = "warn"
+		info.BackupVerifyStatus = "warn"
+	}
+
+	for _, issue := range index.Issues {
+		if issue.Number != issueNumber {
+			continue
+		}
+		backup, payload, err := manifestPayload(repoDir, repo, issue)
+		if err != nil {
+			return BackupInfo{}, err
+		}
+		info.IssuePath = filepath.ToSlash(issue.Path)
+		info.BackupGeneratedAt = backup.GeneratedAt
+		info.EventName = backup.EventName
+		info.PayloadBytes = payload.Bytes
+		info.PayloadSHA = payload.SHA
+		info.Labels = append([]string(nil), backup.Issue.Labels...)
+		sort.Strings(info.Labels)
+		info.Comments = len(backup.Comments)
+		info.TranscriptMessages = len(backup.Transcript)
+		info.IssueTitleSHA = shortDocumentHash(backup.Issue.Title)
+		info.IssueBodySHA = shortDocumentHash(backup.Issue.Body)
+		info.CommentBodySHAs = make([]string, 0, len(backup.Comments))
+		for _, comment := range backup.Comments {
+			info.CommentBodySHAs = append(info.CommentBodySHAs, shortDocumentHash(comment.Body))
+			if HasGitClawMarker(comment.Body) {
+				info.AssistantTurns++
+			}
+			if HasGitClawErrorMarker(comment.Body) {
+				info.ErrorComments++
+			}
+		}
+		info.TranscriptBodySHAs = make([]string, 0, len(backup.Transcript))
+		for _, msg := range backup.Transcript {
+			info.TranscriptBodySHAs = append(info.TranscriptBodySHAs, shortDocumentHash(msg.Body))
+			switch msg.Role {
+			case "assistant":
+				info.AssistantMessages++
+			default:
+				info.UserMessages++
+			}
+		}
+		return info, nil
+	}
+	return BackupInfo{}, fmt.Errorf("issue #%d not found in backup index", issueNumber)
+}
+
 func BuildBackupRetentionPlan(root, repo string, keepLatest int) (BackupRetentionPlan, error) {
 	if keepLatest <= 0 {
 		return BackupRetentionPlan{}, fmt.Errorf("keep latest must be positive")
@@ -961,6 +1073,53 @@ func RenderBackupList(list BackupList) string {
 
 	b.WriteString("### Indexed Backups\n")
 	writeBackupListIssues(&b, list.Issues)
+	return strings.TrimSpace(b.String())
+}
+
+func RenderBackupInfo(info BackupInfo) string {
+	var b strings.Builder
+	b.WriteString("## GitClaw Backup Info Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	fmt.Fprintf(&b, "- repository: `%s`\n", info.Repo)
+	fmt.Fprintf(&b, "- backup_info_status: `%s`\n", info.BackupInfoStatus)
+	fmt.Fprintf(&b, "- backup_verify_status: `%s`\n", info.BackupVerifyStatus)
+	fmt.Fprintf(&b, "- verification_failures: `%d`\n", info.VerificationFailures)
+	fmt.Fprintf(&b, "- backup_root: `%s`\n", info.Root)
+	fmt.Fprintf(&b, "- repo_backup_dir: `%s`\n", info.RepoDir)
+	fmt.Fprintf(&b, "- index_path: `%s`\n", info.IndexPath)
+	fmt.Fprintf(&b, "- readme_path: `%s`\n", info.ReadmePath)
+	fmt.Fprintf(&b, "- backup_schema_version: `%d`\n", info.SchemaVersion)
+	fmt.Fprintf(&b, "- index_generated_at: `%s`\n", info.IndexGeneratedAt)
+	fmt.Fprintf(&b, "- issue: `#%d`\n", info.IssueNumber)
+	fmt.Fprintf(&b, "- issue_backup_path: `%s`\n", info.IssuePath)
+	fmt.Fprintf(&b, "- backup_generated_at: `%s`\n", info.BackupGeneratedAt)
+	fmt.Fprintf(&b, "- backup_event_name: `%s`\n", info.EventName)
+	fmt.Fprintf(&b, "- payload_bytes: `%d`\n", info.PayloadBytes)
+	fmt.Fprintf(&b, "- payload_sha256_12: `%s`\n", info.PayloadSHA)
+	fmt.Fprintf(&b, "- labels: `%d`\n", len(info.Labels))
+	fmt.Fprintf(&b, "- comments: `%d`\n", info.Comments)
+	fmt.Fprintf(&b, "- transcript_messages: `%d`\n", info.TranscriptMessages)
+	fmt.Fprintf(&b, "- user_messages: `%d`\n", info.UserMessages)
+	fmt.Fprintf(&b, "- assistant_messages: `%d`\n", info.AssistantMessages)
+	fmt.Fprintf(&b, "- assistant_turn_comments: `%d`\n", info.AssistantTurns)
+	fmt.Fprintf(&b, "- error_comments: `%d`\n", info.ErrorComments)
+	fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", info.IssueTitleSHA)
+	fmt.Fprintf(&b, "- issue_body_sha256_12: `%s`\n", info.IssueBodySHA)
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n\n", info.RawBodiesIncluded)
+	b.WriteString("This report inspects one fetched backup payload from the local backup tree. It does not print raw issue titles, issue bodies, comments, transcript messages, prompts, or restored content.\n\n")
+
+	b.WriteString("### Labels\n")
+	if len(info.Labels) == 0 {
+		b.WriteString("- none\n")
+	} else {
+		for _, label := range info.Labels {
+			fmt.Fprintf(&b, "- `%s`\n", inlineCode(label))
+		}
+	}
+	b.WriteString("\n### Comment Body Hashes\n")
+	writeHashList(&b, "comment", info.CommentBodySHAs)
+	b.WriteString("\n### Transcript Body Hashes\n")
+	writeHashList(&b, "message", info.TranscriptBodySHAs)
 	return strings.TrimSpace(b.String())
 }
 

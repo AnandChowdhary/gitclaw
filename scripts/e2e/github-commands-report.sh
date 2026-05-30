@@ -138,7 +138,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `15`' \
   'aliases: `10`' \
-  'local_cli_helpers: `46`' \
+  'local_cli_helpers: `47`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/help' \
@@ -172,6 +172,7 @@ for expected in \
   'gitclaw backup verify' \
   'gitclaw backup manifest' \
   'gitclaw backup list' \
+  'gitclaw backup info --issue <number>' \
   'gitclaw backup stats' \
   'gitclaw backup search <query>' \
   'gitclaw backup export-jsonl' \

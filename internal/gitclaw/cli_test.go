@@ -992,7 +992,7 @@ func TestCommandsCommandReportsCatalog(t *testing.T) {
 			t.Fatalf("commands returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `10`", "local_cli_helpers: `46`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`/prompt` model=`gitclaw/prompt`", "aliases=`/budget, /prompt-budget`", "`/proactive` model=`gitclaw/proactive`", "aliases=`/cron`", "`gitclaw commands` command=`/help`", "`gitclaw doctor` command=`/doctor`", "`gitclaw doctor list` command=`/doctor`", "`gitclaw channels verify` command=`/channels`", "`gitclaw channels list` command=`/channels`", "`gitclaw channel-state` command=`/channels`", "`gitclaw channel-gateway` command=`/channels`", "`gitclaw channel-delivery` command=`/channels`", "`gitclaw config list` command=`/config`", "`gitclaw context list` command=`/context`", "`gitclaw prompt list` command=`/prompt`", "`gitclaw proactive list` command=`/proactive`", "`gitclaw proactive init` command=`/proactive`", "`gitclaw proactive enqueue` command=`/proactive`", "`gitclaw session list --backup <issue.json>` command=`/session`", "`gitclaw session search <query> --backup <issue.json>` command=`/session`", "`gitclaw models list` command=`/models`", "`gitclaw policy list` command=`/policy`", "`gitclaw policy verify` command=`/policy`", "`gitclaw backup verify` command=`/backup`", "`gitclaw backup manifest` command=`/backup`", "`gitclaw backup list` command=`/backup`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup export-jsonl` command=`/backup`", "`gitclaw backup restore-plan` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory verify` command=`/memory`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul verify` command=`/soul`", "`gitclaw soul validate` command=`/soul`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills verify` command=`/skills`", "`gitclaw skills validate` command=`/skills`", "`gitclaw skills check` command=`/skills`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools verify` command=`/tools`", "`gitclaw tools validate` command=`/tools`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools info <name>` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
+	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `10`", "local_cli_helpers: `47`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`/prompt` model=`gitclaw/prompt`", "aliases=`/budget, /prompt-budget`", "`/proactive` model=`gitclaw/proactive`", "aliases=`/cron`", "`gitclaw commands` command=`/help`", "`gitclaw doctor` command=`/doctor`", "`gitclaw doctor list` command=`/doctor`", "`gitclaw channels verify` command=`/channels`", "`gitclaw channels list` command=`/channels`", "`gitclaw channel-state` command=`/channels`", "`gitclaw channel-gateway` command=`/channels`", "`gitclaw channel-delivery` command=`/channels`", "`gitclaw config list` command=`/config`", "`gitclaw context list` command=`/context`", "`gitclaw prompt list` command=`/prompt`", "`gitclaw proactive list` command=`/proactive`", "`gitclaw proactive init` command=`/proactive`", "`gitclaw proactive enqueue` command=`/proactive`", "`gitclaw session list --backup <issue.json>` command=`/session`", "`gitclaw session search <query> --backup <issue.json>` command=`/session`", "`gitclaw models list` command=`/models`", "`gitclaw policy list` command=`/policy`", "`gitclaw policy verify` command=`/policy`", "`gitclaw backup verify` command=`/backup`", "`gitclaw backup manifest` command=`/backup`", "`gitclaw backup list` command=`/backup`", "`gitclaw backup info --issue <number>` command=`/backup`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup export-jsonl` command=`/backup`", "`gitclaw backup restore-plan` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory verify` command=`/memory`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul verify` command=`/soul`", "`gitclaw soul validate` command=`/soul`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills verify` command=`/skills`", "`gitclaw skills validate` command=`/skills`", "`gitclaw skills check` command=`/skills`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools verify` command=`/tools`", "`gitclaw tools validate` command=`/tools`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools info <name>` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("commands output missing %q:\n%s", want, output)
 		}
@@ -1047,6 +1047,42 @@ func TestBackupListCommandReportsFetchedBackupTree(t *testing.T) {
 	for _, leaked := range []string{"CLI_BACKUP_LIST_OLD_TITLE", "CLI_BACKUP_LIST_OLD_BODY", "CLI_BACKUP_LIST_OLD_TRANSCRIPT", "CLI_BACKUP_LIST_NEW_TITLE", "CLI_BACKUP_LIST_NEW_BODY", "CLI_BACKUP_LIST_NEW_TRANSCRIPT", "CLI_BACKUP_LIST_ASSISTANT", "CLI_BACKUP_LIST_COMMENT", "@gitclaw cli backup list"} {
 		if strings.Contains(output, leaked) {
 			t.Fatalf("backup list leaked body/title token %q:\n%s", leaked, output)
+		}
+	}
+}
+
+func TestBackupInfoCommandReportsFetchedIssueBackup(t *testing.T) {
+	dir := t.TempDir()
+	writeBackupFixture(t, dir, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T13:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issue_comment",
+		Issue: IssueBackupIssue{
+			Number: 8,
+			Title:  "@gitclaw cli backup info CLI_BACKUP_INFO_TITLE",
+			Body:   "CLI_BACKUP_INFO_BODY",
+			Labels: []string{"gitclaw", "gitclaw:e2e"},
+		},
+		Transcript: []TranscriptMessage{{Role: "user", Body: "CLI_BACKUP_INFO_TRANSCRIPT"}, {Role: "assistant", Body: "CLI_BACKUP_INFO_ASSISTANT"}},
+		Comments:   []IssueBackupComment{{ID: 12, Body: "<!-- gitclaw:assistant-turn -->\nCLI_BACKUP_INFO_COMMENT"}},
+	})
+	if _, err := WriteBackupIndex(dir, "owner/repo", time.Date(2026, 5, 29, 14, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+	output := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"backup", "info", "--root", dir, "--repo", "owner/repo", "--issue", "8"}); err != nil {
+			t.Fatalf("backup info returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"GitClaw Backup Info Report", "backup_info_status: `ok`", "backup_verify_status: `ok`", "issue: `#8`", "issue_backup_path: `issues/000008.json`", "backup_event_name: `issue_comment`", "labels: `2`", "comments: `1`", "transcript_messages: `2`", "assistant_turn_comments: `1`", "raw_bodies_included: `false`", "comment_1_sha256_12:", "message_1_sha256_12:"} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("backup info output missing %q:\n%s", want, output)
+		}
+	}
+	for _, leaked := range []string{"CLI_BACKUP_INFO_TITLE", "CLI_BACKUP_INFO_BODY", "CLI_BACKUP_INFO_TRANSCRIPT", "CLI_BACKUP_INFO_ASSISTANT", "CLI_BACKUP_INFO_COMMENT", "@gitclaw cli backup info"} {
+		if strings.Contains(output, leaked) {
+			t.Fatalf("backup info leaked body/title token %q:\n%s", leaked, output)
 		}
 	}
 }

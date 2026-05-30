@@ -598,7 +598,7 @@ GitHub issue/comment event
 
 - CLI entry point.
 - Subcommands: `preflight`, `handle`, `backup`, `backup search`,
-  `backup retention-plan`,
+  `backup info`, `backup retention-plan`,
   `heartbeat`,
   `channel-ingest`, `channel-state`, `channel-gateway`, `channel-delivery`,
   `proactive enqueue`, `proactive init`,
@@ -2070,7 +2070,8 @@ reconstruction, but before model inference. It posts a `gitclaw:assistant-turn`
 comment with `model="gitclaw/backup"` and summarizes:
 
 - requested backup command intent (`summary`, `verify`, `manifest`, `list`,
-  `stats`, `search`, `export-jsonl`, `restore-plan`, or `retention-plan`),
+  `info`, `stats`, `search`, `export-jsonl`, `restore-plan`, or
+  `retention-plan`),
 - the matching local `gitclaw backup ...` command to run against a fetched
   `gitclaw-backups` branch,
 - that issue-side execution is metadata-only because the backup branch is
@@ -2092,9 +2093,11 @@ backup verification and Hermes' exportable session artifacts without pretending
 the issue handler can verify a branch that has not been written yet. For
 example, `@gitclaw /backup verify` records the exact local verification command
 and the backup paths, then the post-turn backup job commits the raw issue JSON
-and index to `gitclaw-backups`. `@gitclaw /backup search <query>` records only
-a query hash and term count; raw search terms and raw backup bodies stay out of
-the issue-visible comment.
+and index to `gitclaw-backups`. `@gitclaw /backup info <issue-number>` records
+the exact focused-inspection command for one backed-up issue, defaulting to the
+current issue when no number is supplied. `@gitclaw /backup search <query>`
+records only a query hash and term count; raw search terms and raw backup bodies
+stay out of the issue-visible comment.
 
 ## Backup Verification Command
 
@@ -2191,8 +2194,35 @@ backups by backup timestamp descending, and prints a deterministic
 
 It never prints raw issue titles, issue bodies, comments, or transcript bodies.
 The list report is the body-safe navigation layer before a more specific
-`backup manifest`, `backup search`, `backup restore-plan`, or raw
+`backup info`, `backup manifest`, `backup search`, `backup restore-plan`, or raw
 `backup export-jsonl` command.
+
+## Backup Info Command
+
+GitClaw supports a focused single-backup inspection command inspired by
+Hermes' session detail view and OpenClaw's body-safe backup verification
+posture:
+
+```bash
+gitclaw backup info --root .gitclaw/backups --repo <owner/repo> --issue 123
+```
+
+The command reads a fetched `gitclaw-backups` tree, verifies it, locates one
+indexed issue payload, and prints a deterministic `GitClaw Backup Info Report`
+with:
+
+- backup info and verify status,
+- schema version and index generation time,
+- issue number, canonical payload path, payload bytes, and payload hash,
+- backup timestamp and event name,
+- label, comment, transcript, user-message, assistant-message,
+  assistant-turn, and error-comment counts,
+- issue-title, issue-body, comment-body, and transcript-message hashes.
+
+It never prints raw issue titles, issue bodies, comments, transcript messages,
+prompts, or restore content. This is the narrow body-safe card to run after
+`backup list` and before choosing `backup export-jsonl` or `backup
+restore-plan`.
 
 ## Backup Search Command
 
@@ -2723,7 +2753,24 @@ assert the expected comments/labels, and close the issue in cleanup.
      event name, label/comment/transcript counts, and title hash,
    - assert it does not dump the issue body token or raw title.
 
-31. **Backup JSONL export**
+31. **Backup info**
+
+   - create a real issue with `@gitclaw /backup info`,
+   - assert the issue-side report lists `requested_backup_command: info`, the
+     deferred execution marker, and the concrete local info command for the
+     current issue without dumping body/title tokens,
+   - wait for the successful backup job,
+   - fetch the real `gitclaw-backups` branch,
+   - run `gitclaw backup info --root <fetched>/.gitclaw/backups --repo
+     <owner/repo> --issue <issue-number>`,
+   - assert the report is marked `backup_info_status: ok` and
+     `backup_verify_status: ok`,
+   - assert it lists the canonical payload path, payload hash, event name,
+     label/comment/transcript counts, assistant-turn/error counts, and body
+     hashes,
+   - assert it does not dump the issue body token or raw title.
+
+32. **Backup JSONL export**
 
    - create a real issue with `@gitclaw /backup export-jsonl`,
    - assert the issue-side report lists `requested_backup_command:
@@ -2738,7 +2785,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      contains the assistant backup report body, proving the command is an
      explicit raw recovery/export path rather than an issue-visible report.
 
-32. **Backup restore plan**
+33. **Backup restore plan**
 
    - create a real issue with `@gitclaw /backup restore-plan`,
    - assert the issue-side report lists `requested_backup_command:
@@ -2753,7 +2800,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      counts, assistant-turn/error counts, and body hashes,
    - assert it does not dump the issue body token or raw transcript bodies.
 
-33. **Backup retention plan**
+34. **Backup retention plan**
 
    - create a real issue with `@gitclaw /backup retention-plan`,
    - assert the issue-side report lists `requested_backup_command:
@@ -2770,7 +2817,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the just-created issue is included without dumping the issue body
      token or raw title.
 
-34. **Backup search**
+35. **Backup search**
 
    - create a real issue with `@gitclaw /backup search <query>`,
    - include a unique hidden token in the issue body,
@@ -2788,7 +2835,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert it does not dump the hidden token, raw issue body, raw issue title,
      raw comments, raw transcript messages, or raw query text.
 
-35. **Proactive init generator**
+36. **Proactive init generator**
 
    - run `gitclaw proactive init` against a temporary repo root,
    - assert it writes the expected prompt file and scheduled workflow,
@@ -3061,6 +3108,11 @@ examples/workflows/gitclaw.yml
   verifies the fetched `gitclaw-backups` branch can produce a timestamp-sorted
   indexed backup list with paths, counts, event names, and title hashes,
   without dumping raw bodies or titles.
+- A `gh`-driven backup-info E2E harness verifies
+  `@gitclaw /backup info` records the deferred issue-side command intent, then
+  verifies the fetched `gitclaw-backups` branch can produce a focused
+  single-issue backup info card with payload hashes, counts, marker totals, and
+  body hashes, without dumping raw bodies or titles.
 - A `gh`-driven backup-export-jsonl E2E harness verifies
   `@gitclaw /backup export-jsonl` records the deferred issue-side command
   intent, then verifies the fetched `gitclaw-backups` branch can be exported

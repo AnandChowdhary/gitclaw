@@ -73,3 +73,31 @@ func TestRenderBackupSearchIssueCommandHashesQueryWithoutPrintingIt(t *testing.T
 		t.Fatalf("backup search report leaked raw query:\n%s", report)
 	}
 }
+
+func TestRenderBackupInfoIssueCommandRecordsTargetIssue(t *testing.T) {
+	ev := Event{
+		Repo: "owner/repo",
+		Issue: Issue{
+			Number: 97,
+			Title:  "@gitclaw /backup info #42",
+			Body:   "BACKUP_INFO_INTENT_SECRET",
+		},
+	}
+
+	report := RenderBackupReport(ev, DefaultConfig(), nil, nil)
+	for _, want := range []string{
+		"requested_backup_command: `info`",
+		"backup_command_status: `ok`",
+		"requested_local_command: `gitclaw backup info --root .gitclaw/backups --repo owner/repo --issue 42`",
+		"run `gitclaw backup info --root .gitclaw/backups --repo owner/repo --issue 42` after fetching `gitclaw-backups`",
+		"issue_side_execution: `deferred_to_post_turn_backup_branch`",
+		"raw_bodies_included: `false`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("backup info report missing %q:\n%s", want, report)
+		}
+	}
+	if strings.Contains(report, "BACKUP_INFO_INTENT_SECRET") {
+		t.Fatalf("backup info report leaked body:\n%s", report)
+	}
+}
