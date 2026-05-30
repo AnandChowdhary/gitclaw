@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T03:27:27Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 134,
+    "title": "@gitclaw /channels verify e2e 20260530T032627Z",
+    "body": "Live channels verify E2E.\n\nHidden channels verify token: GITCLAW_CHANNELS_VERIFY_E2E_20260530T032627Z\nThis should produce the deterministic channel bridge verification report.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels verify e2e 20260530T032627Z\n\nLive channels verify E2E.\n\nHidden channels verify token: GITCLAW_CHANNELS_VERIFY_E2E_20260530T032627Z\nThis should produce the deterministic channel bridge verification report.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Verify Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#134`\n- channel_verify_status: `ok`\n- verification_scope: `workflow_dispatch_channel_bridge`\n- channel_label: `gitclaw:channel`\n- trigger_label: `gitclaw`\n- workflow_path: `.github/workflows/gitclaw-channel-ingest.yml`\n- workflow_present: `true`\n- workflow_dispatch_trigger: `true`\n- permissions_actions_write: `true`\n- permissions_issues_write: `true`\n- workflow_inputs: `5`\n- required_workflow_inputs: `5`\n- state_workflow_path: `.github/workflows/gitclaw-channel-state.yml`\n- state_workflow_present: `true`\n- state_workflow_dispatch_trigger: `true`\n- state_workflow_permissions_issues_write: `true`\n- state_workflow_inputs: `4`\n- gateway_workflow_path: `.github/workflows/gitclaw-channel-gateway.yml`\n- gateway_workflow_present: `true`\n- gateway_workflow_dispatch_trigger: `true`\n- gateway_workflow_permissions_actions_write: `true`\n- gateway_workflow_permissions_issues_write: `true`\n- gateway_workflow_inputs: `6`\n- supported_providers: `telegram, slack, generic`\n- wake_strategy: `workflow_dispatch`\n- channel_thread_issue: `false`\n- channel_message_comments_now: `0`\n- issue_title_sha256_12: `76cd3577a85b`\n- raw_bodies_included: `false`\n\nThis report verifies the GitHub-native channel bridge surface for Telegram/Slack-style ingress. It checks the workflow-dispatch bridge and permissions only; channel message bodies, issue bodies, command bodies, and workflow bodies are not included.\n\n### Verification Findings\n- none\n\n### Required Bridge Shape\n- workflow has `workflow_dispatch`\n- workflow can write Actions dispatches with `actions: write`\n- workflow can create/update GitHub issues with `issues: write`\n- workflow accepts `channel`, `thread_id`, `message_id`, `author`, and `body` inputs\n- channel state and gateway workflows are callable with `workflow_dispatch`\n- gateway workflow can dispatch its renewal with `actions: write`\n- downstream wakeup uses dispatch id `\u003cchannel\u003e-\u003cmessage_id\u003e`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4581491346,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4581491346,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26673228799\" event_id=\"issue-134\" model=\"gitclaw/channels\" idempotency_key=\"732a480a71ea9801dca9fd06c7f214ec\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26673228799\" --\u003e\n## GitClaw Channel Verify Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#134`\n- channel_verify_status: `ok`\n- verification_scope: `workflow_dispatch_channel_bridge`\n- channel_label: `gitclaw:channel`\n- trigger_label: `gitclaw`\n- workflow_path: `.github/workflows/gitclaw-channel-ingest.yml`\n- workflow_present: `true`\n- workflow_dispatch_trigger: `true`\n- permissions_actions_write: `true`\n- permissions_issues_write: `true`\n- workflow_inputs: `5`\n- required_workflow_inputs: `5`\n- state_workflow_path: `.github/workflows/gitclaw-channel-state.yml`\n- state_workflow_present: `true`\n- state_workflow_dispatch_trigger: `true`\n- state_workflow_permissions_issues_write: `true`\n- state_workflow_inputs: `4`\n- gateway_workflow_path: `.github/workflows/gitclaw-channel-gateway.yml`\n- gateway_workflow_present: `true`\n- gateway_workflow_dispatch_trigger: `true`\n- gateway_workflow_permissions_actions_write: `true`\n- gateway_workflow_permissions_issues_write: `true`\n- gateway_workflow_inputs: `6`\n- supported_providers: `telegram, slack, generic`\n- wake_strategy: `workflow_dispatch`\n- channel_thread_issue: `false`\n- channel_message_comments_now: `0`\n- issue_title_sha256_12: `76cd3577a85b`\n- raw_bodies_included: `false`\n\nThis report verifies the GitHub-native channel bridge surface for Telegram/Slack-style ingress. It checks the workflow-dispatch bridge and permissions only; channel message bodies, issue bodies, command bodies, and workflow bodies are not included.\n\n### Verification Findings\n- none\n\n### Required Bridge Shape\n- workflow has `workflow_dispatch`\n- workflow can write Actions dispatches with `actions: write`\n- workflow can create/update GitHub issues with `issues: write`\n- workflow accepts `channel`, `thread_id`, `message_id`, `author`, and `body` inputs\n- channel state and gateway workflows are callable with `workflow_dispatch`\n- gateway workflow can dispatch its renewal with `actions: write`\n- downstream wakeup uses dispatch id `\u003cchannel\u003e-\u003cmessage_id\u003e`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T03:27:06Z",
+      "updated_at": "2026-05-30T03:27:06Z"
+    }
+  ]
+}
