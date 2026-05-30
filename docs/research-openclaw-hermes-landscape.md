@@ -274,6 +274,20 @@ context set, but `@gitclaw /soul list` and `gitclaw soul list` should be
 documented aliases so operators can inspect context provenance without
 confusing inventory with validation or search.
 
+2026-05-30 soul-info follow-up: the latest OpenClaw/Hermes docs reinforce that
+SOUL and related context files are both durable behavior sources and a security
+boundary. OpenClaw's SOUL.md guide treats `SOUL.md` as git-friendly identity
+state, describes identity cascade behavior, and calls out compromised
+`SOUL.md`/`MEMORY.md` as persistent attack vectors. Hermes' feature overview
+and tips describe `SOUL.md`, `USER.md`, `MEMORY.md`, and project context files
+as prompt-shaping context that should stay focused and bounded. GitClaw should
+therefore provide a focused `@gitclaw /soul info <path>` /
+`gitclaw soul info <path>` card for one high-authority file at a time:
+normalized path, category, source, required/canonical/latest flags,
+loaded-for-this-turn state, byte/line counts, short hash, and no raw bodies.
+This gives maintainers a precise provenance check without turning identity
+files into public issue content.
+
 2026-05-30 soul-verify follow-up: OpenClaw's `SOUL.md` convention and Hermes'
 profile/memory boundary suggest a second audit surface beyond validation:
 provenance. GitClaw should add `@gitclaw /soul verify` and

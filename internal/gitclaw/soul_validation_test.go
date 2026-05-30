@@ -165,3 +165,66 @@ func TestRenderSoulSearchReportFindsContextWithoutBodies(t *testing.T) {
 		}
 	}
 }
+
+func TestRenderSoulInfoReportShowsOneContextFileWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SOUL.md", "Soul body with SOUL_INFO_BODY_SECRET.\n")
+	writeTestFile(t, root, ".gitclaw/IDENTITY.md", "Identity body.\n")
+	writeTestFile(t, root, ".gitclaw/USER.md", "User body.\n")
+	writeTestFile(t, root, ".gitclaw/TOOLS.md", "Tools body.\n")
+	writeTestFile(t, root, ".gitclaw/MEMORY.md", "Memory body.\n")
+	writeTestFile(t, root, ".gitclaw/HEARTBEAT.md", "Heartbeat body.\n")
+	writeTestFile(t, root, ".gitclaw/memory/2026-05-29.md", "Daily body.\n")
+	ctx, err := LoadRepoContext(root, []TranscriptMessage{{Role: "user", Body: "soul info soul"}})
+	if err != nil {
+		t.Fatalf("LoadRepoContext returned error: %v", err)
+	}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 132,
+			"title": "@gitclaw /soul info soul",
+			"body": "Hidden soul info issue token: SOUL_INFO_ISSUE_SECRET.",
+			"author_association": "OWNER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+
+	body := RenderSoulReport(ev, cfg, ctx)
+	for _, want := range []string{
+		"GitClaw Soul Info Report",
+		"Generated without a model call",
+		"repository: `owner/repo`",
+		"issue: `#132`",
+		"requested_soul: `soul`",
+		"normalized_soul_path: `.gitclaw/SOUL.md`",
+		"soul_info_status: `ok`",
+		"matched_soul_files: `1`",
+		"run_mode: `read-only`",
+		"raw_bodies_included: `false`",
+		"soul_writes_allowed: `false`",
+		"soul_validation_status: `ok`",
+		"soul_validation_errors: `0`",
+		"soul_validation_warnings: `0`",
+		"category=`soul` path=`.gitclaw/SOUL.md` source=`repo-local` present=`true` required=`true` canonical=`true` latest=`false` loaded_for_this_turn=`true`",
+		"sha256_12=",
+		"at_context_limit=`false`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("soul info report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SOUL_INFO_BODY_SECRET", "SOUL_INFO_ISSUE_SECRET", "Soul body"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("soul info report leaked %q:\n%s", leaked, body)
+		}
+	}
+}

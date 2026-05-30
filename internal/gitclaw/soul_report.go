@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"path/filepath"
 	"sort"
 	"strings"
 )
@@ -44,6 +45,9 @@ func RenderSoulReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isSoulValidateRequest(ev, cfg) {
 		return renderSoulValidationReport(ev, repoContext, true)
 	}
+	if path := requestedSoulInfoPath(ev, cfg); path != "" {
+		return RenderSoulInfoReport(ev, cfg, repoContext, path)
+	}
 	if query := requestedSoulSearchQuery(ev, cfg); query != "" {
 		return RenderSoulSearchReport(ev, repoContext, query, defaultSoulSearchMaxResults)
 	}
@@ -52,6 +56,10 @@ func RenderSoulReport(ev Event, cfg Config, repoContext RepoContext) string {
 
 func RenderSoulCLIReport(repoContext RepoContext) string {
 	return renderSoulListReport(Event{}, repoContext, false)
+}
+
+func RenderSoulInfoCLIReport(cfg Config, repoContext RepoContext, path string) string {
+	return renderSoulInfoReport(Event{}, cfg, repoContext, path, false)
 }
 
 func renderSoulListReport(ev Event, repoContext RepoContext, includeIssue bool) string {
@@ -124,6 +132,68 @@ func RenderSoulSearchReport(ev Event, repoContext RepoContext, query string, max
 		}
 	}
 	return strings.TrimSpace(b.String())
+}
+
+func RenderSoulInfoReport(ev Event, cfg Config, repoContext RepoContext, path string) string {
+	return renderSoulInfoReport(ev, cfg, repoContext, path, true)
+}
+
+func renderSoulInfoReport(ev Event, cfg Config, repoContext RepoContext, path string, includeIssue bool) string {
+	normalized := normalizeSoulInfoPath(path, cfg, repoContext)
+	match, ok := soulInfoMatch(cfg.Workdir, repoContext, normalized)
+	status := "not_found"
+	if ok && match.Present {
+		status = "ok"
+	} else if ok {
+		status = "missing"
+	}
+	if normalized == "" {
+		status = "missing_path"
+	}
+
+	var b strings.Builder
+	b.WriteString("## GitClaw Soul Info Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
+	fmt.Fprintf(&b, "- requested_soul: `%s`\n", inlineCode(path))
+	fmt.Fprintf(&b, "- normalized_soul_path: `%s`\n", inlineCode(normalized))
+	fmt.Fprintf(&b, "- soul_info_status: `%s`\n", status)
+	matched := 0
+	if ok {
+		matched = 1
+	}
+	fmt.Fprintf(&b, "- matched_soul_files: `%d`\n", matched)
+	fmt.Fprintf(&b, "- run_mode: `%s`\n", "read-only")
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- soul_writes_allowed: `%t`\n", false)
+	writeSoulValidationSummary(&b, ValidateSoulContext(repoContext))
+	if includeIssue {
+		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
+	}
+	b.WriteByte('\n')
+	b.WriteString("This report shows one repo-local high-authority context file's metadata. Raw soul, identity, user, memory, tools, heartbeat, issue, comment, prompt, and secret bodies are not included.\n\n")
+
+	b.WriteString("### Match\n")
+	if !ok {
+		b.WriteString("- none\n")
+	} else {
+		writeSoulInfoMatch(&b, match)
+	}
+
+	return strings.TrimSpace(b.String())
+}
+
+func requestedSoulInfoPath(ev Event, cfg Config) string {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 3 || fields[0] != "/soul" || !strings.EqualFold(fields[1], "info") {
+		return ""
+	}
+	return cleanSoulInfoPath(strings.Join(fields[2:], " "))
 }
 
 func requestedSoulSearchQuery(ev Event, cfg Config) string {
@@ -210,6 +280,132 @@ func BuildSoulSearchReport(repoContext RepoContext, query string, maxResults int
 		report.SearchStatus = "no_matches"
 	}
 	return report
+}
+
+type soulInfoMatchResult struct {
+	Path              string
+	Category          string
+	Source            string
+	Present           bool
+	Required          bool
+	Canonical         bool
+	Latest            bool
+	LoadedForThisTurn bool
+	Bytes             int
+	Lines             int
+	SHA               string
+	AtContextLimit    bool
+}
+
+func cleanSoulInfoPath(path string) string {
+	return strings.Trim(strings.TrimSpace(path), " \t\r\n,;`\"'")
+}
+
+func normalizeSoulInfoPath(raw string, cfg Config, repoContext RepoContext) string {
+	value := cleanSoulInfoPath(raw)
+	if value == "" {
+		return ""
+	}
+	value = strings.TrimPrefix(value, "./")
+	lower := strings.ToLower(value)
+	switch lower {
+	case "soul", "soul.md", ".gitclaw/soul.md":
+		return ".gitclaw/SOUL.md"
+	case "identity", "identity.md", ".gitclaw/identity.md":
+		return ".gitclaw/IDENTITY.md"
+	case "user", "user.md", ".gitclaw/user.md":
+		return ".gitclaw/USER.md"
+	case "tools", "tools.md", ".gitclaw/tools.md":
+		return ".gitclaw/TOOLS.md"
+	case "memory", "memory.md", ".gitclaw/memory.md":
+		return ".gitclaw/MEMORY.md"
+	case "heartbeat", "heartbeat.md", ".gitclaw/heartbeat.md":
+		return ".gitclaw/HEARTBEAT.md"
+	case "latest", "latest-memory", "latest-memory-note":
+		surface := inspectMemorySurface(cfg.Workdir, repoContext)
+		return latestMemoryNotePath(surface.DatedNotes)
+	}
+	if datedMemoryDatePattern.MatchString(value) {
+		return ".gitclaw/memory/" + value + ".md"
+	}
+	if datedMemoryBasenamePattern.MatchString(value) {
+		return ".gitclaw/memory/" + value
+	}
+	if strings.HasPrefix(value, "memory/") {
+		return ".gitclaw/" + value
+	}
+	return filepath.ToSlash(filepath.Clean(filepath.FromSlash(value)))
+}
+
+func soulInfoMatch(root string, repoContext RepoContext, path string) (soulInfoMatchResult, bool) {
+	if path == "" || !soulInfoAllowedPath(path) {
+		return soulInfoMatchResult{}, false
+	}
+	body, err := readRepoTextFile(rootOrDot(root), path, maxContextDocumentBytes)
+	present := err == nil
+	loaded := false
+	for _, doc := range repoContext.Documents {
+		if doc.Path == path {
+			loaded = true
+			if !present {
+				body = doc.Body
+				present = true
+			}
+			break
+		}
+	}
+	latest := latestMemoryNotePath(inspectMemorySurface(root, repoContext).DatedNotes)
+	return soulInfoMatchResult{
+		Path:              path,
+		Category:          soulDocumentCategory(path),
+		Source:            soulTrustSource(path),
+		Present:           present,
+		Required:          soulRequiredPath(path),
+		Canonical:         soulInfoCanonicalPath(path),
+		Latest:            path == latest,
+		LoadedForThisTurn: loaded,
+		Bytes:             len(body),
+		Lines:             lineCount(body),
+		SHA:               shortDocumentHash(body),
+		AtContextLimit:    len(body) >= maxContextDocumentBytes,
+	}, true
+}
+
+func soulInfoAllowedPath(path string) bool {
+	if soulRequiredPath(path) {
+		return true
+	}
+	return strings.HasPrefix(path, ".gitclaw/memory/") && strings.HasSuffix(path, ".md")
+}
+
+func soulRequiredPath(path string) bool {
+	for _, required := range requiredSoulDocumentPaths {
+		if path == required {
+			return true
+		}
+	}
+	return false
+}
+
+func soulInfoCanonicalPath(path string) bool {
+	return soulRequiredPath(path) || datedMemoryNotePattern.MatchString(path)
+}
+
+func writeSoulInfoMatch(b *strings.Builder, match soulInfoMatchResult) {
+	fmt.Fprintf(b, "- category=`%s` path=`%s` source=`%s` present=`%t` required=`%t` canonical=`%t` latest=`%t` loaded_for_this_turn=`%t` bytes=`%d` lines=`%d` sha256_12=`%s` at_context_limit=`%t`\n",
+		match.Category,
+		match.Path,
+		match.Source,
+		match.Present,
+		match.Required,
+		match.Canonical,
+		match.Latest,
+		match.LoadedForThisTurn,
+		match.Bytes,
+		match.Lines,
+		match.SHA,
+		match.AtContextLimit,
+	)
 }
 
 func soulLineSearchScore(path, line, query string, terms []string) (int, int) {

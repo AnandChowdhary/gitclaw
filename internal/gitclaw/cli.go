@@ -216,7 +216,7 @@ func runMemoryValidateCommand(args []string) error {
 
 func runSoulCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw soul verify|validate|list|search <query>")
+		return fmt.Errorf("usage: gitclaw soul verify|validate|list|info <path>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -225,6 +225,8 @@ func runSoulCommand(args []string) error {
 		return runSoulValidateCommand(args[1:])
 	case "list":
 		return runSoulListCommand(args[1:])
+	case "info":
+		return runSoulInfoCommand(args[1:])
 	case "search":
 		return runSoulSearchCommand(args[1:])
 	default:
@@ -261,6 +263,40 @@ func runSoulListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSoulCLIReport(repoContext))
+	return nil
+}
+
+func runSoulInfoCommand(args []string) error {
+	pathFlag := ""
+	var pathParts []string
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--path":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--path requires a value")
+			}
+			pathFlag = args[i+1]
+			i++
+		default:
+			pathParts = append(pathParts, args[i])
+		}
+	}
+	path := strings.TrimSpace(strings.Join(pathParts, " "))
+	if strings.TrimSpace(pathFlag) != "" {
+		path = strings.TrimSpace(pathFlag)
+	}
+	if path == "" {
+		return fmt.Errorf("usage: gitclaw soul info <path>")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "soul info " + path}}, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSoulInfoCLIReport(cfg, repoContext, path))
 	return nil
 }
 

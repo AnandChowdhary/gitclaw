@@ -638,10 +638,11 @@ GitHub issue/comment event
   `channel-ingest`, `channel-state`, `channel-gateway`, `channel-delivery`,
   `channels info`,
   `proactive enqueue`, `proactive init`, `proactive info`,
-  `memory verify`, `memory validate`, `memory list`, `memory search`,
+  `memory verify`, `memory validate`, `memory list`, `memory info`,
+  `memory search`,
   `skills validate`,
   `skills list`, `skills info`, `skills search`,
-  `soul verify`, `soul validate`, `soul list`, `soul search`,
+  `soul verify`, `soul validate`, `soul list`, `soul info`, `soul search`,
   `tools verify`, `tools validate`, `tools list`, `tools info`,
   `tools search`, `doctor`,
   `policy verify`,
@@ -1075,6 +1076,7 @@ Validation is visible in the `/soul` report and locally through:
 gitclaw soul verify
 gitclaw soul validate
 gitclaw soul list
+gitclaw soul info <path>
 gitclaw soul search <query> --max-results 10
 ```
 
@@ -1091,6 +1093,7 @@ by OpenClaw and Hermes' portable workspace files:
 @gitclaw /soul list
 @gitclaw /soul verify
 @gitclaw /soul validate
+@gitclaw /soul info soul
 @gitclaw /soul search durable state layer
 ```
 
@@ -1110,6 +1113,17 @@ It never dumps full file bodies. The hashes make the issue-visible report
 verifiable without exposing private user, memory, or policy text.
 `@gitclaw /soul list` is an explicit inventory alias for the same report,
 matching the local `gitclaw soul list` helper.
+
+When called as `@gitclaw /soul info <path>`, the command posts one focused
+high-authority context metadata card. Supported targets include `soul`,
+`identity`, `user`, `tools`, `memory`, `heartbeat`, `.gitclaw/SOUL.md`,
+`.gitclaw/IDENTITY.md`, `.gitclaw/USER.md`, `.gitclaw/TOOLS.md`,
+`.gitclaw/MEMORY.md`, `.gitclaw/HEARTBEAT.md`, `latest`, and
+`.gitclaw/memory/YYYY-MM-DD.md`. The report includes normalized path,
+category, repo-local source, present/required/canonical/latest flags,
+selected-for-this-turn state, byte count, line count, short hash, and
+at-context-limit status. It never emits raw file, issue, comment, prompt, or
+secret bodies. This mirrors `gitclaw soul info <path>` for local review.
 
 When called as `@gitclaw /soul validate`, the command posts only the
 validation report: status, error/warning totals, required-file counts,
@@ -2751,12 +2765,16 @@ assert the expected comments/labels, and close the issue in cleanup.
    - create a real issue with `@gitclaw /soul`,
    - create a second real issue with `@gitclaw /soul list`,
    - create a third real issue with `@gitclaw /soul verify`,
+   - create a fourth real issue with `@gitclaw /soul info soul`,
    - assert the reply is marked `model="gitclaw/soul"`,
    - assert the report lists loaded identity, policy, user, and memory paths
      with byte counts, line counts, and hashes,
    - assert the verify report includes repo-local source counts, required-file
      presence, soul frontmatter/description status, registry/profile export
      verification status, trust cards, and verification findings,
+   - assert the info report includes exactly one matched soul file, normalized
+     path, category, source, loaded-for-turn state, short hash, and
+     body-free/write-disabled flags,
    - assert soul validation status, required-file counts, memory-note counts,
      and noncanonical memory-note counts are present,
    - assert the report does not dump full soul or memory bodies,
@@ -3348,6 +3366,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven soul-list E2E harness verifies `@gitclaw /soul list` is an
   explicit inventory alias with the same body-free context file, memory-note,
   hash, and validation metadata.
+- A `gh`-driven soul-info E2E harness verifies `@gitclaw /soul info soul`
+  exposes one body-free high-authority context metadata card with normalized
+  path, category, repo-local source, selected-for-turn state, hashes, and
+  write-disabled metadata.
 - A `gh`-driven soul-validate E2E harness verifies
   `@gitclaw /soul validate` exposes the body-free validation report without
   falling back to the full context inventory.
