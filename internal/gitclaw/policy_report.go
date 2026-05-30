@@ -62,6 +62,9 @@ func IsPolicyReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderPolicyReport(ev Event, cfg Config, decision PreflightDecision, transcript []TranscriptMessage, repoContext RepoContext, writeRequested bool) string {
+	if isPolicyRiskRequest(ev, cfg) {
+		return renderPolicyRiskReport(ev, cfg, decision, transcript, repoContext, writeRequested, true)
+	}
 	if isPolicyVerifyRequest(ev, cfg) {
 		return renderPolicyVerifyReport(ev, cfg, repoContext, true)
 	}
@@ -74,6 +77,10 @@ func RenderPolicyCLIReport(cfg Config, repoContext RepoContext) string {
 
 func RenderPolicyVerifyCLIReport(cfg Config, repoContext RepoContext) string {
 	return renderPolicyVerifyReport(Event{}, cfg, repoContext, false)
+}
+
+func RenderPolicyRiskCLIReport(cfg Config, repoContext RepoContext) string {
+	return renderPolicyRiskReport(Event{}, cfg, PreflightDecision{}, nil, repoContext, false, false)
 }
 
 func renderPolicyReport(ev Event, cfg Config, decision PreflightDecision, transcript []TranscriptMessage, repoContext RepoContext, writeRequested bool, includeIssue bool) string {
@@ -394,6 +401,11 @@ func sortedAllowedAssociations(cfg Config) []string {
 func isPolicyVerifyRequest(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && fields[0] == "/policy" && strings.EqualFold(fields[1], "verify")
+}
+
+func isPolicyRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && fields[0] == "/policy" && (strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit"))
 }
 
 func managedPolicyLabels(cfg Config) []string {

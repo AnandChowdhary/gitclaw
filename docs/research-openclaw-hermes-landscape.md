@@ -687,6 +687,17 @@ logging, webhook/socket/daemon drift, write-mode config, risky workflow
 permissions, `pull_request_target`, raw secret echoing, and unbounded
 background loops, then require a live GitHub Models/tool-use E2E.
 
+2026-05-30 policy-risk follow-up: OpenClaw's exec approval model separates
+policy and approval review from elevated execution, and Hermes' security
+posture keeps dangerous operations behind explicit authorization. GitClaw's
+GitHub-native version should make that boundary inspectable in the repo itself:
+add `@gitclaw /policy risk` and `gitclaw policy risk` to audit trusted actor
+breadth, managed-label collisions, workflow permissions, backup concurrency,
+active policy-output hashes, and the hard no-write/no-host-exec runtime gate
+without printing workflow, issue, prompt, policy-output, or credential bodies.
+The E2E for this surface must include both the deterministic report and a real
+GitHub Models follow-up with repo-reader search/tool evidence.
+
 2026-05-30 tool-grounding follow-up: the first model-backed conversation after
 the parameter fix proved provider access but exposed prompt ambiguity: the model
 echoed the issue nonce where the harness wanted the repository search-result

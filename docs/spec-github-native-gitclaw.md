@@ -772,7 +772,7 @@ GitHub issue/comment event
   `soul edit-plan`, `soul info`, `soul search`,
   `tools verify`, `tools risk`, `tools validate`, `tools list`, `tools run-plan`,
   `tools info`, `tools search`, `doctor`,
-  `policy verify`,
+  `policy verify`, `policy risk`,
   `secrets audit`, `secrets scan`, `secrets list`,
   `commands`, `version`.
 
@@ -2098,6 +2098,7 @@ posture:
 @gitclaw /policy
 @gitclaw /policy list
 @gitclaw /policy verify
+@gitclaw /policy risk
 ```
 
 The command runs after normal preflight authorization and context assembly, but
@@ -2126,11 +2127,22 @@ grants, active `gitclaw.policy` input/output hashes, and findings. It never
 emits workflow bodies, issue/comment bodies, raw policy inputs, or policy
 output bodies.
 
+When called as `@gitclaw /policy risk`, the command keeps the same body-free
+discipline but frames the output as a control-plane risk audit. It verifies
+trusted-association breadth, managed-label collisions, the checked-in workflow
+permission contract, backup concurrency, active `gitclaw.policy` hashes, and
+the hard runtime boundary that keeps write actions, repository mutation, and
+host exec disabled. It reports severities, risk codes, counts, and hashes only.
+Any change to this risk surface requires a live GitHub issue E2E that first
+asserts the deterministic report and then performs a normal GitHub Models
+conversation with repo-reader/tool usage.
+
 Local operators can inspect static policy shape without opening an issue:
 
 ```bash
 gitclaw policy list
 gitclaw policy verify
+gitclaw policy risk
 ```
 
 The local report omits event-only fields such as repository, issue number,
@@ -2140,6 +2152,8 @@ expected workflow permissions, model/run mode, and active policy-output
 metadata if present.
 `gitclaw policy verify` additionally checks the local workflow permission
 contract and returns a non-body verification report suitable for CI.
+`gitclaw policy risk` returns the local body-free risk audit with the same
+trust, label, workflow, policy-output, and read-only runtime boundary cards.
 
 ## Secrets Audit Command
 
@@ -5161,6 +5175,12 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven policy-verify E2E harness verifies `@gitclaw /policy verify`
   checks the checked-in workflow permission contract, reports active policy
   output hashes, and avoids raw policy input/output leakage.
+- A `gh`-driven policy-risk E2E harness verifies `@gitclaw /policy risk`
+  exposes body-free trust, managed-label, workflow-permission,
+  policy-output-hash, and read-only runtime-boundary risk metadata. The same
+  harness must then run a real GitHub Models follow-up conversation that proves
+  model inference, prompt provenance, selected skills, and prompt-visible
+  repository search tool usage.
 - A `gh`-driven approvals-report E2E harness verifies
   `@gitclaw /approvals` detects real write intent, observes
   `gitclaw:approved`, reports the approval gates as read-only, applies

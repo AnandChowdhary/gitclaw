@@ -38,6 +38,7 @@ go run ./cmd/gitclaw profile risk
 go run ./cmd/gitclaw models risk
 go run ./cmd/gitclaw config risk
 go run ./cmd/gitclaw orders risk
+go run ./cmd/gitclaw policy risk
 go run ./cmd/gitclaw approvals risk
 ```
 
@@ -129,6 +130,7 @@ gitclaw config list
 gitclaw config risk
 gitclaw doctor
 gitclaw policy verify
+gitclaw policy risk
 gitclaw approvals risk
 gitclaw artifacts list
 gitclaw artifacts risk
@@ -178,6 +180,7 @@ scripts/e2e/github-memory-risk-report.sh
 scripts/e2e/github-model-risk-report.sh
 scripts/e2e/github-bundles-risk-report.sh
 scripts/e2e/github-orders-risk-report.sh
+scripts/e2e/github-policy-risk-report.sh
 scripts/e2e/github-approvals-risk-report.sh
 scripts/e2e/github-plugins-risk-report.sh
 scripts/e2e/github-profile-risk-report.sh
