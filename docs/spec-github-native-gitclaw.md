@@ -618,6 +618,7 @@ GitHub issue/comment event
   `backup info`, `backup retention-plan`,
   `heartbeat`,
   `channel-ingest`, `channel-state`, `channel-gateway`, `channel-delivery`,
+  `channels info`,
   `proactive enqueue`, `proactive init`, `proactive info`,
   `memory verify`, `memory validate`, `memory list`, `memory search`,
   `skills validate`,
@@ -1814,6 +1815,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels
 @gitclaw /channels list
 @gitclaw /channels verify
+@gitclaw /channels info telegram
 ```
 
 The command runs after normal preflight and context loading, but before model
@@ -1839,11 +1841,20 @@ channel-ingest workflow has `workflow_dispatch`, `actions: write`,
 `issues: write`, and the five normalized inputs required for channel mirroring,
 then lists body-free verification findings.
 
+`@gitclaw /channels info <provider>` is the focused provider contract card for
+`telegram`, `slack`, or `generic`. It reports `channel_info_status`, required
+secret names without values, provider offset/thread/message keys, the
+workflow-dispatch wake strategy, state issue storage, gateway runtime,
+ingest/state/gateway/delivery workflow metadata, and exact local command
+shapes for that provider. This makes the no-server Telegram/Slack strategy
+operator-visible before provider-specific pollers are implemented.
+
 Local operators can inspect the same bridge contract without opening an issue:
 
 ```bash
 gitclaw channels list
 gitclaw channels verify
+gitclaw channels info telegram
 gitclaw channel-state --channel telegram --account-id <id> --offset <offset>
 gitclaw channel-gateway --channel telegram --account-id <id> --renew
 gitclaw channel-delivery --channel telegram --account-id <id> --issue-number <issue> --comment-id <comment> --external-message-id <message>
@@ -3081,6 +3092,11 @@ examples/workflows/gitclaw.yml
   `@gitclaw /channels verify` reports the workflow-dispatch channel bridge
   health, permissions, required inputs, provider keys, and marker counts
   without a model call or body leakage.
+- A `gh`-driven channels-info E2E harness verifies
+  `@gitclaw /channels info <provider>` and local
+  `gitclaw channels info <provider>` expose one provider's secret names,
+  offset/thread/message keys, workflow metadata, gateway strategy, and command
+  shapes without a model call or body/credential leakage.
 - A `gh`-driven proactive E2E harness verifies the generic proactive enqueue
   workflow end to end.
 - A `gh`-driven proactive-init E2E harness verifies

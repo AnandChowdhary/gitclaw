@@ -302,22 +302,43 @@ func runCommandsCommand(args []string) error {
 }
 
 func runChannelsCommand(args []string) error {
-	if len(args) > 1 {
-		return fmt.Errorf("usage: gitclaw channels [list|verify]")
+	if len(args) > 2 {
+		return fmt.Errorf("usage: gitclaw channels [list|verify|info <provider>]")
 	}
 	cfg, err := LoadEffectiveConfig()
 	if err != nil {
 		return err
 	}
-	if len(args) == 0 || args[0] == "list" {
+	if len(args) == 0 {
+		fmt.Println(RenderChannelCLIReport(cfg))
+		return nil
+	}
+	if args[0] == "list" {
+		if len(args) != 1 {
+			return fmt.Errorf("unknown channels list argument %q", args[1])
+		}
 		fmt.Println(RenderChannelCLIReport(cfg))
 		return nil
 	}
 	if args[0] == "verify" {
+		if len(args) != 1 {
+			return fmt.Errorf("unknown channels verify argument %q", args[1])
+		}
 		fmt.Println(RenderChannelVerifyCLIReport(cfg))
 		return nil
 	}
-	return fmt.Errorf("usage: gitclaw channels [list|verify]")
+	if args[0] == "info" {
+		if len(args) != 2 {
+			return fmt.Errorf("usage: gitclaw channels info <provider>")
+		}
+		report := RenderChannelInfoCLIReport(cfg, args[1])
+		fmt.Println(report)
+		if _, ok := lookupChannelProvider(args[1]); !ok {
+			return fmt.Errorf("channel provider %q not supported", args[1])
+		}
+		return nil
+	}
+	return fmt.Errorf("usage: gitclaw channels [list|verify|info <provider>]")
 }
 
 func runModelsCommand(args []string) error {

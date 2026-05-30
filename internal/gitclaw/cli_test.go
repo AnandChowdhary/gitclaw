@@ -638,6 +638,102 @@ permissions:
 	}
 }
 
+func TestChannelsInfoCommandReportsProviderContractWithoutBodies(t *testing.T) {
+	dir := t.TempDir()
+	writeTestFile(t, dir, ".github/workflows/gitclaw-channel-ingest.yml", `name: GitClaw Channel Ingest
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        required: true
+      thread_id:
+        required: true
+      message_id:
+        required: true
+      author:
+        required: false
+      body:
+        required: true
+permissions:
+  actions: write
+  issues: write
+jobs:
+  ingest:
+    steps:
+      - run: echo CHANNEL_INFO_WORKFLOW_BODY_TOKEN
+`)
+	writeTestFile(t, dir, ".github/workflows/gitclaw-channel-state.yml", `name: GitClaw Channel State
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        required: true
+      account_id:
+        required: true
+      offset:
+        required: false
+      lease_run_id:
+        required: false
+permissions:
+  issues: write
+`)
+	writeTestFile(t, dir, ".github/workflows/gitclaw-channel-gateway.yml", `name: GitClaw Channel Gateway
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        required: true
+      account_id:
+        required: true
+      gateway_slot:
+        required: false
+      lease_run_id:
+        required: false
+      renew:
+        required: false
+      renew_delay_seconds:
+        required: false
+permissions:
+  actions: write
+  issues: write
+`)
+	writeTestFile(t, dir, ".github/workflows/gitclaw-channel-delivery.yml", `name: GitClaw Channel Delivery
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        required: true
+      account_id:
+        required: true
+      issue_number:
+        required: true
+      comment_id:
+        required: true
+      external_message_id:
+        required: true
+      gateway_run_id:
+        required: false
+permissions:
+  issues: write
+`)
+	t.Setenv("GITCLAW_WORKDIR", dir)
+	output := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"channels", "info", "telegram"}); err != nil {
+			t.Fatalf("channels info returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"GitClaw Channel Info Report", "scope: `local-cli`", "Generated without a model call", "requested_provider: `telegram`", "channel_info_status: `ok`", "supported_providers: `telegram, slack, generic`", "wake_strategy: `workflow_dispatch`", "state_storage: `gitclaw:channel-state issue`", "gateway_runtime: `GitHub Actions workflow_dispatch`", "raw_bodies_included: `false`", "credential_values_included: `false`", "required_secrets: `TELEGRAM_BOT_TOKEN`", "offset_key: `update_id`", "thread_key: `chat_id`", "message_key: `update_id or message_id`", "### Provider Contract", "getUpdates polling", "sendMessage then channel-delivery receipt", "required_secret_names=`TELEGRAM_BOT_TOKEN`", "### Workflow Surface", "`ingest` path=`.github/workflows/gitclaw-channel-ingest.yml` present=`true`", "`state` path=`.github/workflows/gitclaw-channel-state.yml` present=`true`", "`gateway` path=`.github/workflows/gitclaw-channel-gateway.yml` present=`true`", "`delivery` path=`.github/workflows/gitclaw-channel-delivery.yml` present=`true`", "sha256_12=", "### Commands", "gitclaw channel-ingest --channel telegram", "gitclaw channel-state --channel telegram", "gitclaw channel-gateway --channel telegram", "gitclaw channel-delivery --channel telegram", "dispatch id: `telegram-<message_id>`"} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("channels info output missing %q:\n%s", want, output)
+		}
+	}
+	for _, notWant := range []string{"repository:", "issue:", "channel_thread_issue:", "channel_message_comments_now:", "CHANNEL_INFO_WORKFLOW_BODY_TOKEN"} {
+		if strings.Contains(output, notWant) {
+			t.Fatalf("channels info output unexpectedly included %q:\n%s", notWant, output)
+		}
+	}
+}
+
 func TestModelsListCommandReportsProviderWithoutCallingModel(t *testing.T) {
 	t.Setenv("GITCLAW_WORKDIR", t.TempDir())
 	t.Setenv("GITHUB_TOKEN", "MODELS_LIST_SECRET_TOKEN")
@@ -1027,7 +1123,7 @@ func TestCommandsCommandReportsCatalog(t *testing.T) {
 			t.Fatalf("commands returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `10`", "local_cli_helpers: `48`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`/prompt` model=`gitclaw/prompt`", "aliases=`/budget, /prompt-budget`", "`/proactive` model=`gitclaw/proactive`", "aliases=`/cron`", "`gitclaw commands` command=`/help`", "`gitclaw doctor` command=`/doctor`", "`gitclaw doctor list` command=`/doctor`", "`gitclaw channels verify` command=`/channels`", "`gitclaw channels list` command=`/channels`", "`gitclaw channel-state` command=`/channels`", "`gitclaw channel-gateway` command=`/channels`", "`gitclaw channel-delivery` command=`/channels`", "`gitclaw config list` command=`/config`", "`gitclaw context list` command=`/context`", "`gitclaw prompt list` command=`/prompt`", "`gitclaw proactive list` command=`/proactive`", "`gitclaw proactive info <name>` command=`/proactive`", "`gitclaw proactive init` command=`/proactive`", "`gitclaw proactive enqueue` command=`/proactive`", "`gitclaw session list --backup <issue.json>` command=`/session`", "`gitclaw session search <query> --backup <issue.json>` command=`/session`", "`gitclaw models list` command=`/models`", "`gitclaw policy list` command=`/policy`", "`gitclaw policy verify` command=`/policy`", "`gitclaw backup verify` command=`/backup`", "`gitclaw backup manifest` command=`/backup`", "`gitclaw backup list` command=`/backup`", "`gitclaw backup info --issue <number>` command=`/backup`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup export-jsonl` command=`/backup`", "`gitclaw backup restore-plan` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory verify` command=`/memory`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul verify` command=`/soul`", "`gitclaw soul validate` command=`/soul`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills verify` command=`/skills`", "`gitclaw skills validate` command=`/skills`", "`gitclaw skills check` command=`/skills`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools verify` command=`/tools`", "`gitclaw tools validate` command=`/tools`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools info <name>` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
+	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `10`", "local_cli_helpers: `49`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`/prompt` model=`gitclaw/prompt`", "aliases=`/budget, /prompt-budget`", "`/proactive` model=`gitclaw/proactive`", "aliases=`/cron`", "`gitclaw commands` command=`/help`", "`gitclaw doctor` command=`/doctor`", "`gitclaw doctor list` command=`/doctor`", "`gitclaw channels verify` command=`/channels`", "`gitclaw channels list` command=`/channels`", "`gitclaw channels info <provider>` command=`/channels`", "`gitclaw channel-state` command=`/channels`", "`gitclaw channel-gateway` command=`/channels`", "`gitclaw channel-delivery` command=`/channels`", "`gitclaw config list` command=`/config`", "`gitclaw context list` command=`/context`", "`gitclaw prompt list` command=`/prompt`", "`gitclaw proactive list` command=`/proactive`", "`gitclaw proactive info <name>` command=`/proactive`", "`gitclaw proactive init` command=`/proactive`", "`gitclaw proactive enqueue` command=`/proactive`", "`gitclaw session list --backup <issue.json>` command=`/session`", "`gitclaw session search <query> --backup <issue.json>` command=`/session`", "`gitclaw models list` command=`/models`", "`gitclaw policy list` command=`/policy`", "`gitclaw policy verify` command=`/policy`", "`gitclaw backup verify` command=`/backup`", "`gitclaw backup manifest` command=`/backup`", "`gitclaw backup list` command=`/backup`", "`gitclaw backup info --issue <number>` command=`/backup`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup export-jsonl` command=`/backup`", "`gitclaw backup restore-plan` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory verify` command=`/memory`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul verify` command=`/soul`", "`gitclaw soul validate` command=`/soul`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills verify` command=`/skills`", "`gitclaw skills validate` command=`/skills`", "`gitclaw skills check` command=`/skills`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools verify` command=`/tools`", "`gitclaw tools validate` command=`/tools`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools info <name>` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("commands output missing %q:\n%s", want, output)
 		}

@@ -560,6 +560,12 @@ connection check: channel-ingest workflow present, `workflow_dispatch` enabled,
 and Telegram/Slack/generic provider keys visible before real pollers depend on
 them.
 
+2026-05-30 channel-info follow-up: provider-specific bridges need a narrow
+contract card before pollers land. Add `/channels info <provider>` and local
+`gitclaw channels info <provider>` to expose Telegram/Slack/generic secret
+names, offset/thread/message keys, workflow metadata, gateway strategy, and
+command shapes without leaking bodies or credential values.
+
 ### Multi-Agent Routing
 
 OpenClaw's multi-agent model treats each agent as a full isolated persona scope:

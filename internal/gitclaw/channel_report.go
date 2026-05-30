@@ -18,6 +18,50 @@ var channelReportProviders = []string{
 	"generic",
 }
 
+type channelProviderInfo struct {
+	Name             string
+	IngressStrategy  string
+	GatewayStrategy  string
+	OffsetKey        string
+	ThreadKey        string
+	MessageKey       string
+	OutboundDelivery string
+	RequiredSecrets  []string
+}
+
+var channelProviderCatalog = []channelProviderInfo{
+	{
+		Name:             "telegram",
+		IngressStrategy:  "getUpdates polling or long-running gateway lease",
+		GatewayStrategy:  "self-renewing GitHub Actions gateway with durable offset hashes",
+		OffsetKey:        "update_id",
+		ThreadKey:        "chat_id",
+		MessageKey:       "update_id or message_id",
+		OutboundDelivery: "sendMessage then channel-delivery receipt",
+		RequiredSecrets:  []string{"TELEGRAM_BOT_TOKEN"},
+	},
+	{
+		Name:             "slack",
+		IngressStrategy:  "Socket Mode gateway or low-volume conversations polling",
+		GatewayStrategy:  "self-renewing GitHub Actions gateway with durable event hashes",
+		OffsetKey:        "event_id or channel timestamp",
+		ThreadKey:        "channel_id + thread_ts",
+		MessageKey:       "event_id or message timestamp",
+		OutboundDelivery: "chat.postMessage then channel-delivery receipt",
+		RequiredSecrets:  []string{"SLACK_APP_TOKEN", "SLACK_BOT_TOKEN"},
+	},
+	{
+		Name:             "generic",
+		IngressStrategy:  "manual workflow_dispatch or tiny external dispatcher",
+		GatewayStrategy:  "optional; external caller can invoke channel-ingest directly",
+		OffsetKey:        "external offset",
+		ThreadKey:        "thread_id",
+		MessageKey:       "message_id",
+		OutboundDelivery: "external sender then channel-delivery receipt",
+		RequiredSecrets:  nil,
+	},
+}
+
 type channelSurface struct {
 	IngestWorkflow   channelWorkflow
 	StateWorkflow    channelWorkflow
@@ -43,6 +87,9 @@ func IsChannelReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderChannelReport(ev Event, cfg Config, comments []Comment) string {
+	if provider := requestedChannelInfoProvider(ev, cfg); provider != "" {
+		return renderChannelInfoReport(ev, cfg, comments, provider, true)
+	}
 	if isChannelVerifyRequest(ev, cfg) {
 		return renderChannelVerifyReport(ev, cfg, comments, true)
 	}
@@ -55,6 +102,10 @@ func RenderChannelCLIReport(cfg Config) string {
 
 func RenderChannelVerifyCLIReport(cfg Config) string {
 	return renderChannelVerifyReport(Event{}, cfg, nil, false)
+}
+
+func RenderChannelInfoCLIReport(cfg Config, provider string) string {
+	return renderChannelInfoReport(Event{}, cfg, nil, provider, false)
 }
 
 func renderChannelReport(ev Event, cfg Config, comments []Comment, includeIssue bool) string {
@@ -177,6 +228,86 @@ func renderChannelReport(ev Event, cfg Config, comments []Comment, includeIssue 
 	b.WriteString("- one mirrored comment per `channel + message_id`\n")
 	b.WriteString("- dispatch id: `<channel>-<message_id>`\n")
 
+	return strings.TrimSpace(b.String())
+}
+
+func renderChannelInfoReport(ev Event, cfg Config, comments []Comment, provider string, includeIssue bool) string {
+	provider = cleanChannelProviderName(provider)
+	surface := inspectChannelSurface(cfg.Workdir)
+	info, ok := lookupChannelProvider(provider)
+	status := "unsupported"
+	if ok {
+		status = "ok"
+	}
+	channelMessages := countChannelMessages(comments)
+
+	var b strings.Builder
+	b.WriteString("## GitClaw Channel Info Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
+	fmt.Fprintf(&b, "- requested_provider: `%s`\n", inlineCode(provider))
+	fmt.Fprintf(&b, "- channel_info_status: `%s`\n", status)
+	fmt.Fprintf(&b, "- supported_providers: `%s`\n", strings.Join(channelReportProviders, ", "))
+	fmt.Fprintf(&b, "- channel_label: `%s`\n", cfg.ChannelLabel)
+	fmt.Fprintf(&b, "- trigger_label: `%s`\n", cfg.TriggerLabel)
+	fmt.Fprintf(&b, "- wake_strategy: `%s`\n", "workflow_dispatch")
+	fmt.Fprintf(&b, "- state_storage: `%s`\n", "gitclaw:channel-state issue")
+	fmt.Fprintf(&b, "- gateway_runtime: `%s`\n", "GitHub Actions workflow_dispatch")
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- credential_values_included: `%t`\n", false)
+	if ok {
+		fmt.Fprintf(&b, "- required_secrets: `%s`\n", inlineList(info.RequiredSecrets))
+		fmt.Fprintf(&b, "- offset_key: `%s`\n", info.OffsetKey)
+		fmt.Fprintf(&b, "- thread_key: `%s`\n", info.ThreadKey)
+		fmt.Fprintf(&b, "- message_key: `%s`\n", info.MessageKey)
+	}
+	if includeIssue {
+		fmt.Fprintf(&b, "- channel_thread_issue: `%t`\n", HasChannelThreadMarker(ev.Issue.Body))
+		fmt.Fprintf(&b, "- channel_message_comments_now: `%d`\n", channelMessages)
+		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
+	}
+	b.WriteByte('\n')
+	b.WriteString("This report shows one channel provider bridge contract. Channel message bodies, issue bodies, workflow bodies, provider credentials, and secret values are not included.\n\n")
+
+	b.WriteString("### Provider Contract\n")
+	if !ok {
+		b.WriteString("- none\n")
+	} else {
+		fmt.Fprintf(&b, "- provider=`%s` ingress=`%s`\n", info.Name, info.IngressStrategy)
+		fmt.Fprintf(&b, "- gateway=`%s`\n", info.GatewayStrategy)
+		fmt.Fprintf(&b, "- outbound=`%s`\n", info.OutboundDelivery)
+		fmt.Fprintf(&b, "- offset_key=`%s` thread_key=`%s` message_key=`%s`\n", info.OffsetKey, info.ThreadKey, info.MessageKey)
+		fmt.Fprintf(&b, "- required_secret_names=`%s`\n", inlineList(info.RequiredSecrets))
+	}
+
+	b.WriteString("\n### Workflow Surface\n")
+	writeChannelWorkflowInfo(&b, "ingest", surface.IngestWorkflow)
+	writeChannelWorkflowInfo(&b, "state", surface.StateWorkflow)
+	writeChannelWorkflowInfo(&b, "gateway", surface.GatewayWorkflow)
+	writeChannelWorkflowInfo(&b, "delivery", surface.DeliveryWorkflow)
+
+	b.WriteString("\n### Commands\n")
+	if ok {
+		fmt.Fprintf(&b, "- `gitclaw channel-ingest --channel %s --thread-id <thread> --message-id <message> --body <text>`\n", info.Name)
+		fmt.Fprintf(&b, "- `gitclaw channel-state --channel %s --account-id <account> --offset <offset>`\n", info.Name)
+		fmt.Fprintf(&b, "- `gitclaw channel-gateway --channel %s --account-id <account> --renew`\n", info.Name)
+		fmt.Fprintf(&b, "- `gitclaw channel-delivery --channel %s --account-id <account> --issue-number <issue> --comment-id <comment> --external-message-id <message>`\n", info.Name)
+		fmt.Fprintf(&b, "- dispatch id: `%s-<message_id>`\n", info.Name)
+	} else {
+		b.WriteString("- none\n")
+	}
+
+	if !ok {
+		b.WriteString("\n### Available Providers\n")
+		for _, item := range channelProviderCatalog {
+			fmt.Fprintf(&b, "- `%s`\n", item.Name)
+		}
+	}
 	return strings.TrimSpace(b.String())
 }
 
@@ -325,6 +456,34 @@ func isChannelVerifyRequest(ev Event, cfg Config) bool {
 	return len(fields) >= 2 && (fields[0] == "/channel" || fields[0] == "/channels") && strings.EqualFold(fields[1], "verify")
 }
 
+func requestedChannelInfoProvider(ev Event, cfg Config) string {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 3 || (fields[0] != "/channel" && fields[0] != "/channels") || !strings.EqualFold(fields[1], "info") {
+		return ""
+	}
+	return cleanChannelProviderName(fields[2])
+}
+
+func lookupChannelProvider(provider string) (channelProviderInfo, bool) {
+	provider = cleanChannelProviderName(provider)
+	for _, item := range channelProviderCatalog {
+		if item.Name == provider {
+			return item, true
+		}
+	}
+	return channelProviderInfo{}, false
+}
+
+func cleanChannelProviderName(provider string) string {
+	provider = strings.ToLower(strings.Trim(strings.TrimSpace(provider), " \t\r\n.,:;!?`\"'"))
+	switch provider {
+	case "tg":
+		return "telegram"
+	default:
+		return provider
+	}
+}
+
 func inspectChannelSurface(root string) channelSurface {
 	if root == "" {
 		root = "."
@@ -362,6 +521,26 @@ func inspectChannelWorkflow(absRoot, rel string) channelWorkflow {
 	workflow.IssuesWrite = strings.Contains(text, "issues: write")
 	workflow.Inputs = countWorkflowInputKeys(text)
 	return workflow
+}
+
+func writeChannelWorkflowInfo(b *strings.Builder, name string, workflow channelWorkflow) {
+	if !workflow.Present {
+		fmt.Fprintf(b, "- `%s` path=`%s` present=`false`\n", name, workflow.Path)
+		return
+	}
+	fmt.Fprintf(
+		b,
+		"- `%s` path=`%s` present=`true` bytes=`%d` lines=`%d` workflow_dispatch=`%t` actions_write=`%t` issues_write=`%t` inputs=`%d` sha256_12=`%s`\n",
+		name,
+		workflow.Path,
+		workflow.Bytes,
+		workflow.Lines,
+		workflow.WorkflowDispatch,
+		workflow.ActionsWrite,
+		workflow.IssuesWrite,
+		workflow.Inputs,
+		workflow.SHA,
+	)
 }
 
 func countChannelMessages(comments []Comment) int {
