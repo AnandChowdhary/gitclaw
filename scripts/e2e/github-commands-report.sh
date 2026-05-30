@@ -136,9 +136,9 @@ for expected in \
   "GitClaw Commands Report" \
   "Generated without a model call" \
   'trigger_prefix: `@gitclaw`' \
-  'commands: `27`' \
-  'aliases: `23`' \
-  'local_cli_helpers: `83`' \
+  'commands: `28`' \
+  'aliases: `24`' \
+  'local_cli_helpers: `85`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/approvals' \
@@ -167,6 +167,8 @@ for expected in \
   '/soul' \
   '/profile' \
   '/profiles' \
+  '/tasks' \
+  '/task' \
   '/runs' \
   '/run' \
   '/ledger' \
@@ -202,6 +204,8 @@ for expected in \
   'gitclaw plugins verify' \
   'gitclaw profile show' \
   'gitclaw profile verify' \
+  'gitclaw tasks list' \
+  'gitclaw tasks verify' \
   'gitclaw runs current' \
   'gitclaw runs verify' \
   'gitclaw sandbox explain' \

@@ -677,6 +677,7 @@ GitHub issue/comment event
   `approvals list`, `approvals verify`,
   `hooks list`, `hooks verify`,
   `plugins list`, `plugins verify`,
+  `tasks list`, `tasks verify`,
   `migrate plan`,
   `orders list`, `orders verify`,
   `profile show`, `profile verify`,
@@ -844,6 +845,8 @@ AGENTS.md                    # existing coding-agent instructions, if present
 .gitclaw/hooks/*.md          # declarative hook specs, metadata-only in v1
 .gitclaw/PLUGINS.md          # declarative plugin safety policy
 .gitclaw/plugins/*.md        # declarative plugin specs, metadata-only in v1
+.gitclaw/TASKS.md            # declarative task/flow safety policy
+.gitclaw/tasks/*.md          # declarative task/flow specs, issue-native in v1
 .gitclaw/SKILLS/*.md         # optional read-only local skills, v1+
 .gitclaw/MEMORY.md           # optional curated repo memory, human-reviewed only
 .gitclaw/memory/YYYY-MM-DD.md # dated working memory notes, human-reviewed only
@@ -870,6 +873,9 @@ MVP loads:
 - `.gitclaw/PLUGINS.md`, if present, as plugin safety policy for runtime
   extension boundaries; individual `.gitclaw/plugins/*.md` specs are audited
   by metadata reports and are not installed or executed by the model runtime
+- `.gitclaw/TASKS.md`, if present, as task/flow safety policy for
+  issue-native work tracking; individual `.gitclaw/tasks/*.md` specs are
+  audited by metadata reports and do not spawn workers or open a task DB
 - `.gitclaw/SKILLS/*/SKILL.md`, if selected by the issue thread or marked
   always-on
 - bounded `@file:<repo-path>[:start-end]` context references explicitly named
@@ -2211,6 +2217,41 @@ Local operators can inspect the same surface with:
 ```bash
 gitclaw plugins list
 gitclaw plugins verify
+```
+
+### Tasks Command
+
+GitClaw supports a deterministic task-board audit inspired by OpenClaw
+background tasks, Task Flow, and Hermes Kanban:
+
+```text
+@gitclaw /tasks
+@gitclaw /task
+```
+
+The command runs after preflight and before model inference. It posts a
+`gitclaw:assistant-turn` comment with `model="gitclaw/tasks"` and summarizes:
+
+- whether `.gitclaw/TASKS.md` exists and is loaded into model context,
+- declarative task/flow specs in `.gitclaw/tasks/*.md`,
+- declared issue-native statuses and labels,
+- whether specs require approval before side effects or worker dispatch,
+- the current issue's task status derived from GitHub labels,
+- current issue comment and transcript counts,
+- body-free findings for missing task policy or unsafe-looking specs.
+
+GitClaw v1 does not create a separate task database, start a dispatcher, spawn
+detached workers, create child agents, or execute Task Flow/Kanban-style
+pipelines. GitHub issues are the task rows, issue labels are the state
+machine, and issue comments are the handoff log. The report never mutates the
+repo, calls the model, opens SQLite, or prints raw task policy, task spec,
+issue, comment, transcript, flow, or worker-output bodies.
+
+Local operators can inspect the same policy/spec surface with:
+
+```bash
+gitclaw tasks list
+gitclaw tasks verify
 ```
 
 ### Doctor Command
@@ -3955,6 +3996,12 @@ examples/workflows/gitclaw.yml
   runtime file state, MCP/plugin execution boundaries, and body-free findings
   without a model call or plugin body leakage. Each plugins feature batch must
   still run a live GitHub Models conversation E2E.
+- A `gh`-driven tasks-report E2E harness verifies `@gitclaw /tasks` reports
+  task policy metadata, model-context loading, declarative task/flow spec
+  metadata, issue-native status/label mapping, current issue task status,
+  comment/transcript counts, Task Flow/Kanban execution boundaries, and
+  body-free findings without a model call or task body leakage. Each tasks
+  feature batch must still run a live GitHub Models conversation E2E.
 - A `gh`-driven runs-report E2E harness verifies `@gitclaw /runs` reports
   current turn/run provenance, managed labels, marker counts, prompt-visible
   input hashes, and active tool-output hashes without a model call or body
@@ -4247,6 +4294,9 @@ examples/workflows/gitclaw.yml
 - OpenClaw scheduled tasks docs: https://docs.openclaw.ai/automation/cron-jobs
 - OpenClaw standing orders docs: https://docs.openclaw.ai/automation/standing-orders
 - OpenClaw hooks docs: https://docs.openclaw.ai/automation/hooks
+- OpenClaw background tasks docs: https://docs.openclaw.ai/automation/tasks
+- OpenClaw Task Flow docs: https://docs.openclaw.ai/automation/taskflow
+- OpenClaw tasks CLI docs: https://docs.openclaw.ai/cli/tasks
 - OpenClaw capabilities overview: https://docs.openclaw.ai/tools
 - OpenClaw building plugins docs: https://docs.openclaw.ai/plugins/building-plugins
 - OpenClaw memory docs: https://docs.openclaw.ai/concepts/memory
@@ -4267,6 +4317,7 @@ examples/workflows/gitclaw.yml
 - Hermes security docs: https://hermes-agent.nousresearch.com/docs/user-guide/security
 - Hermes working with skills docs: https://hermes-agent.nousresearch.com/docs/guides/work-with-skills/
 - Hermes profiles docs: https://hermes-agent.nousresearch.com/docs/user-guide/profiles
+- Hermes Kanban docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban
 - Hermes toolsets reference: https://hermes-agent.nousresearch.com/docs/reference/toolsets-reference
 - Hermes MCP docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp
 - Slack Socket Mode: https://api.slack.com/apis/connections/socket

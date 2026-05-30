@@ -446,6 +446,18 @@ declarative audit layer only. The first cut is `@gitclaw /plugins` and
 files, installers, MCP connections, and runtime hooks until reviewed workflows
 and approval gates exist.
 
+2026-05-30 tasks/kanban follow-up: OpenClaw background tasks give detached
+work durable task records and an issue/chat-visible `/tasks` board, while Task
+Flow adds durable multi-step orchestration above individual task records.
+Hermes Kanban makes the same idea explicit as a board with task statuses,
+handoff comments, parent-child links, retries, heartbeats, and named worker
+profiles. GitClaw should not copy the SQLite dispatcher or spawn workers in
+v1. Its first translation should be issue-native: GitHub issues are task rows,
+labels are the state machine, comments are the handoff log, and
+`.gitclaw/TASKS.md` plus `.gitclaw/tasks/*.md` declare reviewed task/flow
+policy. `@gitclaw /tasks` and `gitclaw tasks list|verify` can expose that
+ledger without dumping bodies, starting a dispatcher, or opening a task DB.
+
 2026-05-29 proactive implementation follow-up: the minimal GitClaw cut is a
 generic `proactive enqueue` command and dispatchable workflow. It creates one
 issue per job name and slot, stores a `gitclaw:proactive-run` marker in the

@@ -27,6 +27,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runHooksCommand(args[1:])
 	case "plugins", "plugin":
 		return runPluginsCommand(args[1:])
+	case "tasks", "task":
+		return runTasksCommand(args[1:])
 	case "channel-ingest":
 		return runChannelIngestCommand(ctx, args[1:])
 	case "channel-state":
@@ -302,6 +304,30 @@ func runPluginsListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderPluginCLIReport(cfg))
+	return nil
+}
+
+func runTasksCommand(args []string) error {
+	if len(args) == 0 {
+		return runTasksListCommand(nil)
+	}
+	switch args[0] {
+	case "list", "verify":
+		return runTasksListCommand(args[1:])
+	default:
+		return fmt.Errorf("usage: gitclaw tasks [list|verify]")
+	}
+}
+
+func runTasksListCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown tasks argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderTaskCLIReport(cfg))
 	return nil
 }
 

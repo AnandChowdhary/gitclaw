@@ -131,6 +131,8 @@ func profileDocumentCategory(path string) string {
 		return "hooks"
 	case path == pluginPolicyPath:
 		return "plugins"
+	case path == taskPolicyPath:
+		return "tasks"
 	default:
 		return "profile"
 	}

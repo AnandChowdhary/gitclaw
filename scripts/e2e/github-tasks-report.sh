@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "config-report-e2e: $*" >&2
+  echo "tasks-report-e2e: $*" >&2
 }
 
 die() {
@@ -30,29 +30,32 @@ ensure_label gitclaw:running fbca04 "GitClaw run is active"
 ensure_label gitclaw:done 0e8a16 "Latest GitClaw run completed"
 ensure_label gitclaw:error b60205 "Latest GitClaw run failed"
 ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
+ensure_label gitclaw:needs-human d29922 "GitClaw task is blocked on human input"
+ensure_label gitclaw:write-requested f9d0c4 "GitClaw write request detected"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_CONFIG_REPORT_E2E_${timestamp}"
-title="@gitclaw /config e2e ${timestamp}"
-body="Live config-report E2E.
+token="GITCLAW_TASKS_REPORT_E2E_${timestamp}"
+title="@gitclaw /tasks e2e ${timestamp}"
+body="Live tasks-report E2E.
 
-Hidden config report body token: ${token}
-This should produce a deterministic config report without a model call."
+Hidden tasks report body token: ${token}
+This should produce a deterministic tasks report without a model call."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
   --repo "$repo" \
   --title "$title" \
   --body "$body" \
-  --label gitclaw)"
+  --label gitclaw \
+  --label gitclaw:needs-human)"
 issue_number="${issue_url##*/}"
 
 cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "config-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "tasks-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -73,11 +76,11 @@ wait_for_run() {
       --json databaseId,status,conclusion,url,createdAt,displayTitle \
       --jq '. as $runs | $runs | map(select(.displayTitle == "'"${title}"'")) | sort_by(.createdAt) | reverse | .[0] // empty')"
     if [[ -n "$run_json" && "$run_json" != "null" ]]; then
-      local status conclusion url
-      status="$(jq -r '.status' <<<"$run_json")"
+      local run_status conclusion url
+      run_status="$(jq -r '.status' <<<"$run_json")"
       conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
       url="$(jq -r '.url' <<<"$run_json")"
-      if [[ "$status" == "completed" ]]; then
+      if [[ "$run_status" == "completed" ]]; then
         [[ "$conclusion" == "success" ]] || die "issues run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
@@ -128,65 +131,57 @@ wait_for_assistant_count() {
 }
 
 run_json="$(wait_for_run "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one config report comment"
+wait_for_assistant_count 1 || die "expected one tasks report comment"
 comments="$(assistant_comments)"
 
 for expected in \
-  'model="gitclaw/config"' \
-  "GitClaw Config Report" \
+  'model="gitclaw/tasks"' \
+  "GitClaw Tasks Report" \
   "Generated without a model call" \
-  'config_source: `defaults+repo+environment`' \
-  'config_file_path: `.gitclaw/config.yml`' \
-  'config_file_present: `true`' \
-  'trigger_label: `gitclaw`' \
-  'trigger_prefix: `@gitclaw`' \
-  'disabled_label: `gitclaw:disabled`' \
-  'model: `openai/gpt-5-nano`' \
-  'run_mode: `read-only`' \
-  'max_prompt_bytes: `60000`' \
-  'max_output_tokens: `4000`' \
-  'max_transcript_messages: `40`' \
-  'max_transcript_message_bytes: `8000`' \
-  'skills_allowed_configured: `0`' \
-  'skills_disabled_configured: `0`' \
-  'tools_allowed_configured: `0`' \
-  'tools_disabled_configured: `0`' \
-  'workflows_present: `7`' \
-  'slash_commands: `28`' \
-  '/approvals' \
-  '/bundles' \
-  '/checkpoints' \
-  '/secrets' \
-  '### Skill Gates' \
-  '### Tool Gates' \
-  'allowed=`none`' \
-  'disabled=`none`' \
-  'OWNER' \
-  'MEMBER' \
-  'COLLABORATOR' \
-  '/channels' \
-  '/config' \
-  '/doctor' \
-  '/help' \
-  '/memory' \
-  '/models' \
-  '/profile' \
-  '/runs' \
-  '/sandbox' \
-  '/prompt' \
-  '.github/workflows/gitclaw.yml' \
-  '.github/workflows/gitclaw-heartbeat.yml' \
-  '.github/workflows/gitclaw-proactive.yml' \
-  '.github/workflows/gitclaw-channel-ingest.yml' \
-  '.github/workflows/gitclaw-channel-state.yml' \
-  '.github/workflows/gitclaw-channel-gateway.yml' \
-  '.github/workflows/gitclaw-channel-delivery.yml'; do
-  grep -Fq "$expected" <<<"$comments" || die "config report missing ${expected}"
+  'tasks_status: `ok`' \
+  'task_policy_path: `.gitclaw/TASKS.md`' \
+  'task_policy_present: `true`' \
+  'task_policy_loaded_for_model: `true`' \
+  'task_specs_dir: `.gitclaw/tasks`' \
+  'task_specs: `1`' \
+  'task_specs_with_frontmatter: `1`' \
+  'task_statuses_declared: `6`' \
+  'task_labels_declared: `7`' \
+  'task_specs_requiring_approval: `1`' \
+  'task_specs_issue_native: `1`' \
+  'task_storage_backend: `github-issues`' \
+  'sqlite_task_db_required: `false`' \
+  'detached_worker_supported: `false`' \
+  'kanban_dispatcher_supported: `false`' \
+  'task_flow_execution_supported: `false`' \
+  'model_call_required: `false`' \
+  'repository_mutation_allowed: `false`' \
+  'raw_bodies_included: `false`' \
+  'raw_task_bodies_included: `false`' \
+  'llm_e2e_required_after_change: `true`' \
+  'current_issue_task: `true`' \
+  'current_task_status: `blocked`' \
+  'current_task_labels: `2`' \
+  'name=`issue-native-board`' \
+  'path=`.gitclaw/tasks/issue-native-board.md`' \
+  'frontmatter=`true`' \
+  'kind=`board`' \
+  'mode=`issue-native`' \
+  'statuses=`6`' \
+  'labels=`7`' \
+  'requires_approval=`true`' \
+  'needs_human_label_present=`true`' \
+  'GitHub issues are the durable task rows' \
+  '### Verification Findings' \
+  '- none'; do
+  grep -Fq -- "$expected" <<<"$comments" || die "tasks report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "config report leaked issue body token"
-fi
+for forbidden in "$token" "GITCLAW_TASKS_CONTEXT_V1" "This declarative task board"; do
+  if grep -Fq -- "$forbidden" <<<"$comments"; then
+    die "tasks report leaked ${forbidden}"
+  fi
+done
 
 url="$(jq -r '.url' <<<"$run_json")"
 log "passed for issue #${issue_number}: ${url}"
