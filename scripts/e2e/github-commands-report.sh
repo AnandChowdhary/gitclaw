@@ -136,15 +136,18 @@ for expected in \
   "GitClaw Commands Report" \
   "Generated without a model call" \
   'trigger_prefix: `@gitclaw`' \
-  'commands: `17`' \
-  'aliases: `11`' \
-  'local_cli_helpers: `57`' \
+  'commands: `18`' \
+  'aliases: `13`' \
+  'local_cli_helpers: `61`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/help' \
   '/commands' \
   '/backup' \
   '/bundles' \
+  '/checkpoints' \
+  '/checkpoint' \
+  '/rollback' \
   '/tools' \
   '/secrets' \
   '/secret' \
@@ -162,6 +165,10 @@ for expected in \
   'gitclaw channel-state' \
   'gitclaw channel-gateway' \
   'gitclaw channel-delivery' \
+  'gitclaw checkpoints status' \
+  'gitclaw checkpoints list' \
+  'gitclaw checkpoints verify' \
+  'gitclaw rollback list' \
   'gitclaw config list' \
   'gitclaw context list' \
   'gitclaw context info <path>' \

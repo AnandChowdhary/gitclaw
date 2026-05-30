@@ -33,6 +33,10 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runChannelDeliveryCommand(ctx, args[1:])
 	case "channels", "channel":
 		return runChannelsCommand(args[1:])
+	case "checkpoints", "checkpoint":
+		return runCheckpointsCommand(args[1:])
+	case "rollback":
+		return runRollbackCommand(args[1:])
 	case "proactive":
 		return runProactiveCommand(ctx, args[1:])
 	case "skills":
@@ -89,6 +93,43 @@ func runMemoryCommand(args []string) error {
 	default:
 		return fmt.Errorf("unknown memory command %q", args[0])
 	}
+}
+
+func runCheckpointsCommand(args []string) error {
+	if len(args) == 0 {
+		return runCheckpointsStatusCommand(nil)
+	}
+	switch args[0] {
+	case "status", "list", "verify":
+		return runCheckpointsStatusCommand(args[1:])
+	default:
+		return fmt.Errorf("usage: gitclaw checkpoints [status|list|verify]")
+	}
+}
+
+func runRollbackCommand(args []string) error {
+	if len(args) == 0 {
+		return runCheckpointsStatusCommand(nil)
+	}
+	switch args[0] {
+	case "list", "status":
+		return runCheckpointsStatusCommand(args[1:])
+	default:
+		return fmt.Errorf("gitclaw rollback is inspect-only; use: gitclaw rollback list")
+	}
+}
+
+func runCheckpointsStatusCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown checkpoints argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	report := BuildCheckpointReport(cfg.Workdir)
+	fmt.Println(RenderCheckpointCLIReport(report))
+	return nil
 }
 
 func runMemoryVerifyCommand(args []string) error {

@@ -1239,6 +1239,17 @@ hashes. Do not add configure/apply/reload until there is a reviewed SecretRef
 design and a live migration rollback story that never stores historical
 plaintext backups.
 
+2026-05-30 checkpoint-readiness follow-up: Hermes' checkpoint/rollback surface
+is useful because long-horizon agents need recoverable state transitions, not
+just optimistic action. OpenClaw's approval and sandboxing docs reinforce the
+same separation: preview evidence, approval, and mutation should be distinct
+steps. GitClaw's safe GitHub-native equivalent should start as a read-only
+rollback-readiness report: inspect `git status`, HEAD, recent commits, and the
+expected backup branch without printing diffs or file bodies and without
+running `reset`, `restore`, or checkout commands. This gives future write-mode
+turns a visible checkpoint gate while keeping rollback itself a reviewed human
+operation.
+
 Main attack pattern: an untrusted input enters through one surface, persists into memory/skills/cron/filesystem, then fires later through a different surface when the attacker is no longer present.
 
 Design requirements for `gitclaw`:
@@ -1386,6 +1397,7 @@ Recommended non-goals for the first spec:
 - Hermes architecture docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/developer-guide/architecture.md
 - Hermes sessions docs: https://hermes-agent.nousresearch.com/docs/user-guide/sessions
 - Hermes profiles docs: https://hermes-agent.nousresearch.com/docs/user-guide/profiles
+- Hermes checkpoints and rollback docs: https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback
 - Hermes migrate from OpenClaw docs: https://hermes-agent.nousresearch.com/docs/guides/migrate-from-openclaw
 - Hermes memory docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/memory.md
 - Hermes three-layer memory explainer: https://hermes-agent.ai/blog/hermes-agent-memory-system

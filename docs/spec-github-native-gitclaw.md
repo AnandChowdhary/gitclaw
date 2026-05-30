@@ -637,6 +637,8 @@ GitHub issue/comment event
   `heartbeat`,
   `channel-ingest`, `channel-state`, `channel-gateway`, `channel-delivery`,
   `channels info`,
+  `checkpoints status`, `checkpoints list`, `checkpoints verify`,
+  `rollback list`,
   `proactive enqueue`, `proactive init`, `proactive info`,
   `memory verify`, `memory validate`, `memory list`, `memory info`,
   `memory search`,
@@ -1563,6 +1565,49 @@ The aliases intentionally return the same body-free report in v1. GitClaw does
 not yet configure, migrate, apply, reload, or resolve secrets. The safe MVP is
 visibility first: find possible checked-in residue without giving an LLM or an
 issue comment the underlying secret material.
+
+## Checkpoints And Rollback Readiness
+
+GitClaw supports a deterministic checkpoint/rollback-readiness command inspired
+by Hermes' checkpoint/rollback feature and OpenClaw's separation between
+approval, sandboxing, and mutation:
+
+```text
+@gitclaw /checkpoints
+@gitclaw /checkpoint
+@gitclaw /rollback
+```
+
+The command runs after normal preflight authorization but before model
+inference. It posts a `gitclaw:assistant-turn` comment with
+`model="gitclaw/checkpoints"` and inspects the checked-out repository's git
+metadata:
+
+- whether `git` is available and the workdir is inside a git repository,
+- current branch or detached-HEAD state,
+- current HEAD short SHA,
+- total commit count visible in the checkout,
+- recent commit count with commit subjects represented only by hashes,
+- staged, unstaged, and untracked change counts,
+- whether a local ref for the dedicated `gitclaw-backups` branch is visible.
+
+The report never prints diffs, file bodies, commit subjects, issue bodies,
+comments, prompts, or secret values. It also never runs restore, reset,
+checkout, or branch mutation commands. `@gitclaw /rollback` is therefore a
+readiness report, not a restore command.
+
+Local operators can inspect the same checkpoint state without opening an issue:
+
+```bash
+gitclaw checkpoints status
+gitclaw checkpoints list
+gitclaw checkpoints verify
+gitclaw rollback list
+```
+
+The aliases intentionally return the same body-free report in v1. Reviewed
+recovery still happens through ordinary git history, pull requests, and fetched
+backup manifests.
 
 ## Authorization And Abuse Controls
 
@@ -3556,6 +3601,11 @@ examples/workflows/gitclaw.yml
   plaintext-like findings and GitHub Actions secret references with path, line,
   code, count, and hash metadata only, and does not leak matched values, issue
   body tokens, or referenced secret names.
+- A `gh`-driven checkpoints-report E2E harness verifies
+  `@gitclaw /rollback` inspects the real checked-out repository's git
+  checkpoint state, reports HEAD/worktree/backup-branch metadata, and does not
+  leak issue body text, diffs, file bodies, commit subjects, or perform restore
+  operations.
 - A `gh`-driven session-report E2E harness verifies `@gitclaw /session`
   reconstructs a real multi-turn GitHub issue session without a model call or
   transcript-body leakage.
@@ -3623,7 +3673,10 @@ examples/workflows/gitclaw.yml
 - OpenClaw configure docs: https://docs.openclaw.ai/cli/configure
 - OpenClaw doctor docs: https://docs.openclaw.ai/doctor
 - OpenClaw backup docs: https://docs.openclaw.ai/cli/backup
+- OpenClaw exec approvals docs: https://docs.openclaw.ai/tools/exec-approvals
+- OpenClaw sandboxing docs: https://docs.openclaw.ai/gateway/sandboxing
 - Hermes memory docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/memory.md
+- Hermes checkpoints and rollback docs: https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback
 - Hermes cron docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/cron.md
 - Hermes cron internals docs: https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals
 - Hermes security docs: https://hermes-agent.nousresearch.com/docs/user-guide/security
