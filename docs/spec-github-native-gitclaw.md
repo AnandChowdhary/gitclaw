@@ -759,7 +759,7 @@ GitHub issue/comment event
   `agents list`, `agents risk`, `agents verify`,
   `nodes list`, `nodes risk`, `nodes verify`,
   `migrate plan`,
-  `orders list`, `orders verify`,
+  `orders list`, `orders verify`, `orders risk`,
   `profile show`, `profile verify`,
   `runs current`, `runs verify`,
   `sandbox explain`, `sandbox verify`,
@@ -2524,6 +2524,7 @@ persistent authority model:
 ```text
 @gitclaw /orders
 @gitclaw /standing-orders
+@gitclaw /orders risk
 ```
 
 The command runs after preflight and before model inference. It posts a
@@ -2543,11 +2544,24 @@ calls the model, or prints raw order, issue, comment, workflow, or proactive
 prompt bodies. This keeps OpenClaw-style durable authority inspectable through
 GitHub before it becomes automation.
 
+When called as `@gitclaw /orders risk`, the command scans the repo-reviewed
+standing-order file for durable-authority risk categories: unbounded authority,
+prompt-boundary overrides, credential transfer, external delivery, hidden
+persistence, host execution, unbounded retries, skipped verification, missing
+structure, and missing proactive enforcement. The report publishes only status,
+counts, finding codes, severities, paths, title hashes, and line hashes. It
+never prints standing-order bodies, proactive prompt bodies, issue/comment
+bodies, prompts, credentials, or secret values, and it never mutates schedules
+or orders. Any change to this risk surface requires focused local tests plus a
+live GitHub Models follow-up E2E proving normal inference, selected skills, and
+prompt-visible tools still work.
+
 Local operators can inspect the same surface with:
 
 ```bash
 gitclaw orders list
 gitclaw orders verify
+gitclaw orders risk
 ```
 
 ### Hooks Command
@@ -4821,6 +4835,10 @@ examples/workflows/gitclaw.yml
   coverage, proactive enforcement metadata, and body-free findings without a
   model call or standing-order body leakage. Each standing-orders feature batch
   must still run a live GitHub Models conversation E2E.
+- A `gh`-driven orders-risk E2E harness verifies `@gitclaw /orders risk` and
+  local `gitclaw orders risk` expose body-free durable-authority risk metadata,
+  then runs a real GitHub Models follow-up conversation that proves model
+  inference, prompt provenance, selected skills, and prompt-visible tool usage.
 - A `gh`-driven hooks-report E2E harness verifies `@gitclaw /hooks` reports
   hook policy metadata, model-context loading, declarative hook spec metadata,
   approval/audit-only gates, ignored executable handler state, and body-free

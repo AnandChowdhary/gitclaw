@@ -39,11 +39,25 @@ func IsStandingOrdersReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderStandingOrdersReport(ev Event, cfg Config) string {
+	if isStandingOrdersRiskRequest(ev, cfg) {
+		return renderStandingOrdersRiskReport(ev, cfg, true)
+	}
 	return renderStandingOrdersReport(ev, cfg, true)
 }
 
 func RenderStandingOrdersCLIReport(cfg Config) string {
 	return renderStandingOrdersReport(Event{}, cfg, false)
+}
+
+func RenderStandingOrdersRiskCLIReport(cfg Config) string {
+	return renderStandingOrdersRiskReport(Event{}, cfg, false)
+}
+
+func isStandingOrdersRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 &&
+		(fields[0] == "/orders" || fields[0] == "/standing-orders") &&
+		(strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit"))
 }
 
 func renderStandingOrdersReport(ev Event, cfg Config, includeIssue bool) string {

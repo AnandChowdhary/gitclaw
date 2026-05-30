@@ -472,6 +472,17 @@ plus `@gitclaw /orders` and `gitclaw orders list|verify` reports that audit
 program clause coverage and proactive enforcement metadata without executing
 orders or printing their bodies.
 
+2026-05-30 standing-order-risk follow-up: OpenClaw's standing-order docs warn
+against broad authority, missing escalation rules, and standing orders without
+cron enforcement, while Hermes' persistent goals/cron model keeps scheduled
+work scoped, fresh, and observable. GitClaw should add `@gitclaw /orders risk`
+and `gitclaw orders risk`: scan `.gitclaw/STANDING_ORDERS.md` internally for
+unbounded authority, prompt-boundary overrides, credential transfer, external
+delivery, hidden persistence, host execution, unbounded retries, and skipped
+verification, while publishing only metadata, finding codes, severities, paths,
+program hashes, and line hashes. The E2E should pair the deterministic risk
+report with a real GitHub Models follow-up proving repo-reader/tool usage.
+
 2026-05-30 hooks follow-up: OpenClaw's hook docs split coarse file-based
 internal hooks from typed plugin hooks and webhooks. Internal hooks react to
 command, session, gateway, and message events and are inspected with
