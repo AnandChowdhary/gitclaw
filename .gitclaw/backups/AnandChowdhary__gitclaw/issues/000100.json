@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T00:47:50Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 100,
+    "title": "@gitclaw /soul validate e2e 20260530T004650Z",
+    "body": "Live soul-validate E2E.\n\nHidden soul validate body token: GITCLAW_SOUL_VALIDATE_E2E_20260530T004650Z\nThis should produce a deterministic soul validation report without calling a model or dumping context inventory.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /soul validate e2e 20260530T004650Z\n\nLive soul-validate E2E.\n\nHidden soul validate body token: GITCLAW_SOUL_VALIDATE_E2E_20260530T004650Z\nThis should produce a deterministic soul validation report without calling a model or dumping context inventory.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Soul Validate Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#100`\n- soul_validation_status: `ok`\n- soul_validation_errors: `0`\n- soul_validation_warnings: `0`\n- soul_required_files: `6`\n- soul_required_files_present: `6`\n- soul_required_files_missing: `0`\n- soul_memory_notes: `1`\n- soul_noncanonical_memory_notes: `0`\n\nThis report validates high-authority context metadata without dumping soul, identity, user, memory, tool, heartbeat, issue, comment, prompt, or secret bodies.\n\n### Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4580976330,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4580976330,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26669669549\" event_id=\"issue-100\" model=\"gitclaw/soul\" idempotency_key=\"a15d5c54b9563ebf3aa603e1f5b1a67c\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26669669549\" --\u003e\n## GitClaw Soul Validate Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#100`\n- soul_validation_status: `ok`\n- soul_validation_errors: `0`\n- soul_validation_warnings: `0`\n- soul_required_files: `6`\n- soul_required_files_present: `6`\n- soul_required_files_missing: `0`\n- soul_memory_notes: `1`\n- soul_noncanonical_memory_notes: `0`\n\nThis report validates high-authority context metadata without dumping soul, identity, user, memory, tool, heartbeat, issue, comment, prompt, or secret bodies.\n\n### Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T00:47:26Z",
+      "updated_at": "2026-05-30T00:47:26Z"
+    }
+  ]
+}
