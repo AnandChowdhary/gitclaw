@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T07:41:12Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 192,
+    "title": "@gitclaw /context references e2e 20260530T074013Z",
+    "body": "Live context-references report E2E.\n\nPlease attach @file:docs/search-fixture.md:1-1 and @folder:.gitclaw.\nHidden context references token: GITCLAW_CONTEXT_REFERENCES_REPORT_E2E_20260530T074013Z\nThis should produce a deterministic context metadata report without leaking referenced file bodies or issue text.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /context references e2e 20260530T074013Z\n\nLive context-references report E2E.\n\nPlease attach @file:docs/search-fixture.md:1-1 and @folder:.gitclaw.\nHidden context references token: GITCLAW_CONTEXT_REFERENCES_REPORT_E2E_20260530T074013Z\nThis should produce a deterministic context metadata report without leaking referenced file bodies or issue text.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Context Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#192`\n- transcript_messages: `1`\n- context_references: `2`\n- loaded_context_references: `2`\n- max_prompt_bytes: `60000`\n- max_transcript_messages: `40`\n- max_transcript_message_bytes: `8000`\n- raw_bodies_included: `false`\n- raw_inputs_included: `false`\n\nContext file bodies, context reference bodies, skill bodies, issue/comment bodies, and tool output bodies are not included.\n\n### Context Files\n- `.gitclaw/SOUL.md` bytes=`576` lines=`14` sha256_12=`0460b93e1a5c`\n- `.gitclaw/IDENTITY.md` bytes=`179` lines=`6` sha256_12=`8ba22d9e5696`\n- `.gitclaw/USER.md` bytes=`158` lines=`4` sha256_12=`29b734b95c5b`\n- `.gitclaw/TOOLS.md` bytes=`872` lines=`19` sha256_12=`523ee3c0f3e2`\n- `.gitclaw/MEMORY.md` bytes=`242` lines=`5` sha256_12=`5a8fa3488b00`\n- `.gitclaw/HEARTBEAT.md` bytes=`594` lines=`14` sha256_12=`8cf6f2724640`\n- `.gitclaw/memory/2026-05-29.md` bytes=`11965` lines=`195` sha256_12=`3fb54ed7518a`\n- `docs/search-fixture.md:1` bytes=`16` lines=`1` sha256_12=`9bf1df2f9a17`\n- `@folder:.gitclaw` bytes=`890` lines=`12` sha256_12=`aa6bec837ab8`\n\n### Context References\n- kind=`file` path=`docs/search-fixture.md` range=`1` status=`ok` bytes=`16` lines=`1` entries=`0` sha256_12=`9bf1df2f9a17`\n- kind=`folder` path=`.gitclaw` range=`none` status=`ok` bytes=`890` lines=`12` entries=`12` sha256_12=`aa6bec837ab8`\n\n### Selected Skills\n- `.gitclaw/SKILLS/repo-reader/SKILL.md` bytes=`699` lines=`18` sha256_12=`2f9e68a57bd6`\n\n### Tool Outputs\n- `gitclaw.list_files` input=`.` bytes=`6252` lines=`174` sha256_12=`5970cfc7dca7`\n- `gitclaw.skill_index` input=`.gitclaw/SKILLS` bytes=`393` lines=`1` sha256_12=`0093441f953b`\n- `gitclaw.search_files` input=`T074013Z | context-references | file:docs | search-fixture.md:1-1 | folder:.g...` bytes=`1399` lines=`16` sha256_12=`95667138c9ca`\n- `gitclaw.read_file` input=`docs/search-fixture.md` bytes=`310` lines=`7` sha256_12=`076686d0d6cc`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4582127289,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4582127289,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26678311484\" event_id=\"issue-192\" model=\"gitclaw/context\" idempotency_key=\"81ca2668b76676b73134baecc23443ae\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26678311484\" --\u003e\n## GitClaw Context Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#192`\n- transcript_messages: `1`\n- context_references: `2`\n- loaded_context_references: `2`\n- max_prompt_bytes: `60000`\n- max_transcript_messages: `40`\n- max_transcript_message_bytes: `8000`\n- raw_bodies_included: `false`\n- raw_inputs_included: `false`\n\nContext file bodies, context reference bodies, skill bodies, issue/comment bodies, and tool output bodies are not included.\n\n### Context Files\n- `.gitclaw/SOUL.md` bytes=`576` lines=`14` sha256_12=`0460b93e1a5c`\n- `.gitclaw/IDENTITY.md` bytes=`179` lines=`6` sha256_12=`8ba22d9e5696`\n- `.gitclaw/USER.md` bytes=`158` lines=`4` sha256_12=`29b734b95c5b`\n- `.gitclaw/TOOLS.md` bytes=`872` lines=`19` sha256_12=`523ee3c0f3e2`\n- `.gitclaw/MEMORY.md` bytes=`242` lines=`5` sha256_12=`5a8fa3488b00`\n- `.gitclaw/HEARTBEAT.md` bytes=`594` lines=`14` sha256_12=`8cf6f2724640`\n- `.gitclaw/memory/2026-05-29.md` bytes=`11965` lines=`195` sha256_12=`3fb54ed7518a`\n- `docs/search-fixture.md:1` bytes=`16` lines=`1` sha256_12=`9bf1df2f9a17`\n- `@folder:.gitclaw` bytes=`890` lines=`12` sha256_12=`aa6bec837ab8`\n\n### Context References\n- kind=`file` path=`docs/search-fixture.md` range=`1` status=`ok` bytes=`16` lines=`1` entries=`0` sha256_12=`9bf1df2f9a17`\n- kind=`folder` path=`.gitclaw` range=`none` status=`ok` bytes=`890` lines=`12` entries=`12` sha256_12=`aa6bec837ab8`\n\n### Selected Skills\n- `.gitclaw/SKILLS/repo-reader/SKILL.md` bytes=`699` lines=`18` sha256_12=`2f9e68a57bd6`\n\n### Tool Outputs\n- `gitclaw.list_files` input=`.` bytes=`6252` lines=`174` sha256_12=`5970cfc7dca7`\n- `gitclaw.skill_index` input=`.gitclaw/SKILLS` bytes=`393` lines=`1` sha256_12=`0093441f953b`\n- `gitclaw.search_files` input=`T074013Z | context-references | file:docs | search-fixture.md:1-1 | folder:.g...` bytes=`1399` lines=`16` sha256_12=`95667138c9ca`\n- `gitclaw.read_file` input=`docs/search-fixture.md` bytes=`310` lines=`7` sha256_12=`076686d0d6cc`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T07:40:54Z",
+      "updated_at": "2026-05-30T07:40:54Z"
+    }
+  ]
+}
