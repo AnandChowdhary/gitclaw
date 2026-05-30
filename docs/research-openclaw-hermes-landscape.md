@@ -429,7 +429,7 @@ the parameter fix proved provider access but exposed prompt ambiguity: the model
 echoed the issue nonce where the harness wanted the repository search-result
 token. GitClaw should keep tool-output token requests explicit, document that
 `gitclaw.search_files` is authoritative for search-result tokens, and use
-distinct token prefixes in live E2E checks.
+distinct token prefixes plus redacted prompt artifacts in live E2E checks.
 
 2026-05-29 workflow-runtime follow-up: GitClaw's serverless runtime is GitHub
 Actions itself, so action runtime deprecations are part of product reliability.

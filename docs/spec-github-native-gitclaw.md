@@ -2656,6 +2656,8 @@ assert the expected comments/labels, and close the issue in cleanup.
      token from `gitclaw.search_files`,
    - keep the search-result token prefix distinct from issue-thread nonce
      tokens so the test proves tool-output grounding rather than token echoing,
+   - upload a redacted prompt artifact for the live chat E2E and assert it
+     includes the `gitclaw.search_files` tool-output block and fixture token,
    - ask for a selected local skill token,
    - assert the targeted skill is loaded and irrelevant skills stay unloaded.
 
@@ -3018,7 +3020,7 @@ MVP is not complete until:
 - the live harness verifies actual conversation content, including exact
   nonce tokens across turns, repository file context from `go.mod`, and
   `gitclaw.search_files` context from the search fixture with a distinct
-  search-token prefix,
+  search-token prefix plus redacted prompt-artifact proof,
 - the heartbeat harness dispatches a real workflow, receives one heartbeat
   comment, and proves same-slot idempotency,
 - the workflow-dispatch harness dispatches the main handler against a real

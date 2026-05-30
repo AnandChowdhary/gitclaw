@@ -41,6 +41,7 @@ ensure_label gitclaw:running fbca04 "GitClaw run is active"
 ensure_label gitclaw:done 0e8a16 "Latest GitClaw run completed"
 ensure_label gitclaw:error b60205 "Latest GitClaw run failed"
 ensure_label gitclaw:disabled 5319e7 "GitClaw should ignore this issue"
+ensure_label gitclaw:e2e-prompt-artifact 1f883d "Upload GitClaw prompt artifact during E2E"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 if ! gh workflow view "$workflow_name" --repo "$GITCLAW_E2E_REPO" >/dev/null 2>&1; then
@@ -66,6 +67,7 @@ Reply with the exact token \`${token_a}\`.
 Also state the Go module path from \`go.mod\`.
 Also include the exact durable memory token from \`.gitclaw/MEMORY.md\`.
 Also include the exact skill verification token from the repo-reader skill.
+Use exactly these labels: search, conversation, module, memory, skill.
 Keep the answer under 80 words."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
@@ -73,7 +75,8 @@ issue_url="$(gh issue create \
   --repo "$GITCLAW_E2E_REPO" \
   --title "$title" \
   --body "$body" \
-  --label gitclaw)"
+  --label gitclaw \
+  --label gitclaw:e2e-prompt-artifact)"
 issue_number="${issue_url##*/}"
 
 cleanup() {
@@ -106,7 +109,7 @@ wait_for_run() {
       --jq '.[0].databaseId' \
       | head -n 1)"
     if [[ -n "$run_id" ]]; then
-      gh run watch "$run_id" --repo "$GITCLAW_E2E_REPO" --exit-status
+      gh run watch "$run_id" --repo "$GITCLAW_E2E_REPO" --exit-status >&2
       echo "$run_id"
       return 0
     fi
@@ -194,6 +197,22 @@ if errors:
 PY
 }
 
+assert_prompt_artifact() {
+  local run_id="$1"
+  local artifact_name="gitclaw-issue-${issue_number}-run-${run_id}-prompt"
+  local tmp
+  tmp="$(mktemp -d)"
+  gh run download "$run_id" \
+    --repo "$GITCLAW_E2E_REPO" \
+    --name "$artifact_name" \
+    --dir "$tmp" >/dev/null
+  grep -Fq "$search_token" "$tmp/prompt.md" ||
+    die "prompt artifact did not include search_files token ${search_token}"
+  grep -Fq "[tool_output name=gitclaw.search_files" "$tmp/prompt.md" ||
+    die "prompt artifact did not include gitclaw.search_files output"
+  rm -rf "$tmp"
+}
+
 wait_for_backup() {
   local deadline=$((SECONDS + comment_deadline_seconds))
   local tmp
@@ -223,10 +242,11 @@ wait_for_comment_count() {
   return 1
 }
 
-if ! wait_for_run issues "$issue_started_at" >/dev/null; then
+if ! issue_run_id="$(wait_for_run issues "$issue_started_at")"; then
   die "timed out waiting for issues workflow run for #${issue_number}"
 fi
 wait_for_comment_count 1 || die "expected one GitClaw assistant comment after issue open"
+assert_prompt_artifact "$issue_run_id"
 first_bodies="$(gitclaw_comment_bodies)"
 grep -Fq "$token_a" <<<"$first_bodies" || die "first assistant comment did not include expected conversation token ${token_a}"
 grep -Fq "$module_path" <<<"$first_bodies" || die "first assistant comment did not use go.mod module path ${module_path}"
