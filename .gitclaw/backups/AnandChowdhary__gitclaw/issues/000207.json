@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T08:47:38Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 207,
+    "title": "@gitclaw /approvals e2e 20260530T084645Z",
+    "body": "Live approvals-report E2E.\n\nHidden approvals report body token: GITCLAW_APPROVALS_REPORT_E2E_20260530T084645Z\nPlease implement this change and open a PR. The approval report must stay read-only and body-free.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw",
+      "gitclaw:approved"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /approvals e2e 20260530T084645Z\n\nLive approvals-report E2E.\n\nHidden approvals report body token: GITCLAW_APPROVALS_REPORT_E2E_20260530T084645Z\nPlease implement this change and open a PR. The approval report must stay read-only and body-free.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Approvals Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#207`\n- event_kind: `issue_opened`\n- preflight_allowed: `true`\n- preflight_code: `allowed`\n- actor_association: `OWNER`\n- actor_trusted: `true`\n- triggered: `true`\n- disabled_label_present: `false`\n- write_request_detected: `true`\n- write_requested_label_present: `true`\n- approved_label_present: `true`\n- needs_human_label_present: `false`\n- transcript_messages: `1`\n- issue_title_sha256_12: `d45778fc0f3d`\n- approval_status: `approved_but_write_mode_disabled`\n- approval_decision: `proposal_only_approved_label_seen`\n- approval_store: `github-issue-labels`\n- approval_scope: `per-issue`\n- approval_label: `gitclaw:approved`\n- needs_human_label: `gitclaw:needs-human`\n- write_requested_label: `gitclaw:write-requested`\n- write_actions_enabled: `false`\n- run_mode: `read-only`\n- raw_bodies_included: `false`\n- raw_approval_payloads_included: `false`\n\nThis report inspects the approval state GitClaw would require before future write-capable work. It does not enable writes, approve anything, execute commands, print issue bodies, print comments, or expose prompt text.\n\n### Approval Gates\n- gate=`trusted_actor` status=`passed` association=`OWNER`\n- gate=`write_request` status=`detected` label=`gitclaw:write-requested`\n- gate=`approval_label` status=`present` label=`gitclaw:approved`\n- gate=`write_mode` status=`blocked` detail=`read_only_v1`\n\n### Trusted Associations\n- `COLLABORATOR`\n- `MEMBER`\n- `OWNER`\n\n### Approval Labels\n- `gitclaw:write-requested`\n- `gitclaw:approved`\n- `gitclaw:needs-human`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4582313687,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4582313687,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26679595775\" event_id=\"issue-207\" model=\"gitclaw/approvals\" idempotency_key=\"c4848119989a4cc1abc649b0fca2cc94\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26679595775\" --\u003e\n## GitClaw Approvals Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#207`\n- event_kind: `issue_opened`\n- preflight_allowed: `true`\n- preflight_code: `allowed`\n- actor_association: `OWNER`\n- actor_trusted: `true`\n- triggered: `true`\n- disabled_label_present: `false`\n- write_request_detected: `true`\n- write_requested_label_present: `true`\n- approved_label_present: `true`\n- needs_human_label_present: `false`\n- transcript_messages: `1`\n- issue_title_sha256_12: `d45778fc0f3d`\n- approval_status: `approved_but_write_mode_disabled`\n- approval_decision: `proposal_only_approved_label_seen`\n- approval_store: `github-issue-labels`\n- approval_scope: `per-issue`\n- approval_label: `gitclaw:approved`\n- needs_human_label: `gitclaw:needs-human`\n- write_requested_label: `gitclaw:write-requested`\n- write_actions_enabled: `false`\n- run_mode: `read-only`\n- raw_bodies_included: `false`\n- raw_approval_payloads_included: `false`\n\nThis report inspects the approval state GitClaw would require before future write-capable work. It does not enable writes, approve anything, execute commands, print issue bodies, print comments, or expose prompt text.\n\n### Approval Gates\n- gate=`trusted_actor` status=`passed` association=`OWNER`\n- gate=`write_request` status=`detected` label=`gitclaw:write-requested`\n- gate=`approval_label` status=`present` label=`gitclaw:approved`\n- gate=`write_mode` status=`blocked` detail=`read_only_v1`\n\n### Trusted Associations\n- `COLLABORATOR`\n- `MEMBER`\n- `OWNER`\n\n### Approval Labels\n- `gitclaw:write-requested`\n- `gitclaw:approved`\n- `gitclaw:needs-human`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T08:47:21Z",
+      "updated_at": "2026-05-30T08:47:21Z"
+    }
+  ]
+}
