@@ -1440,8 +1440,10 @@ func runSecretsCommand(args []string) error {
 	switch args[0] {
 	case "audit", "scan", "list":
 		return runSecretsAuditCommand(args[1:])
+	case "risk", "risk-audit":
+		return runSecretsRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw secrets [audit|scan|list]")
+		return fmt.Errorf("usage: gitclaw secrets [audit|scan|list|risk]")
 	}
 }
 
@@ -1458,6 +1460,22 @@ func runSecretsAuditCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSecretsCLIReport(report))
+	return nil
+}
+
+func runSecretsRiskCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown secrets risk argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	report, err := BuildSecretAuditReport(cfg.Workdir)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSecretsRiskCLIReport(report))
 	return nil
 }
 

@@ -2239,6 +2239,7 @@ secret-isolation posture:
 @gitclaw /secrets
 @gitclaw /secret
 @gitclaw /secrets audit
+@gitclaw /secrets risk
 ```
 
 The command runs after normal preflight authorization but before model
@@ -2266,12 +2267,24 @@ Local operators can run the same audit without opening an issue:
 gitclaw secrets audit
 gitclaw secrets scan
 gitclaw secrets list
+gitclaw secrets risk
 ```
 
-The aliases intentionally return the same body-free report in v1. GitClaw does
-not yet configure, migrate, apply, reload, or resolve secrets. The safe MVP is
-visibility first: find possible checked-in residue without giving an LLM or an
-issue comment the underlying secret material.
+The audit/list/scan aliases intentionally return the same body-free report in
+v1. GitClaw does not yet configure, migrate, apply, reload, or resolve secrets.
+The safe MVP is visibility first: find possible checked-in residue without
+giving an LLM or an issue comment the underlying secret material.
+
+When called as `@gitclaw /secrets risk` or `gitclaw secrets risk`, GitClaw
+renders the risk-oriented view of the same bounded scan. It reports plaintext
+residue counts, known-token counts, sensitive-assignment counts, severity
+totals, GitHub Actions secret-reference counts, runtime secret-resolution
+boundaries, and configure/apply/reload non-goals. It never resolves GitHub
+Secrets, reads environment values, calls a model, mutates files, prints matched
+values, prints source lines, or prints referenced secret names. The report
+includes `llm_e2e_required_after_secrets_risk_change=true`, so any change to
+this surface must be paired with a live GitHub Models conversation E2E after
+the deterministic report.
 
 ## Checkpoints And Rollback Readiness
 
@@ -5321,6 +5334,12 @@ examples/workflows/gitclaw.yml
   plaintext-like findings and GitHub Actions secret references with path, line,
   code, count, and hash metadata only, and does not leak matched values, issue
   body tokens, or referenced secret names.
+- A `gh`-driven secrets-risk E2E harness verifies
+  `@gitclaw /secrets risk` exposes body-free plaintext-residue,
+  secret-reference, runtime-boundary, and apply-boundary risk cards. The same
+  harness then runs a real GitHub Models follow-up conversation that proves
+  inference, prompt provenance, selected skills, and prompt-visible repository
+  search tool usage.
 - A `gh`-driven checkpoints-report E2E harness verifies
   `@gitclaw /rollback` inspects the real checked-out repository's git
   checkpoint state, reports HEAD/worktree/backup-branch metadata, and does not

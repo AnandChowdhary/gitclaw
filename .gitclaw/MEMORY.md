@@ -12,3 +12,4 @@
 - Keep backup coverage checks body-free: prove one issue's indexed, canonical, readable backup payload with paths, counts, timestamps, and hashes, then use a live model follow-up for E2E coverage.
 - Keep session coverage checks strict: real E2E should prove a model-backed assistant marker, prompt provenance, selected skill names, and prompt-visible tool names from the issue thread and the fetched backup.
 - Keep doctor E2E audits body-free but strict: count live issue, cleanup, model, session, backup, and workflow-dispatch harness coverage, then run a normal model/tool follow-up in the live harness.
+- Keep secrets risk audits body-free: report plaintext residue, secret references, runtime/env resolution boundaries, and no configure/apply/reload support, then prove normal LLM/tool behavior in live E2E.

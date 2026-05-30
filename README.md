@@ -107,6 +107,15 @@ gitclaw tools info <name>
 gitclaw tools search <query>
 ```
 
+Security:
+
+```bash
+gitclaw secrets audit
+gitclaw secrets scan
+gitclaw secrets list
+gitclaw secrets risk
+```
+
 Backups, sessions, and run provenance:
 
 ```bash
@@ -199,6 +208,7 @@ scripts/e2e/github-bundles-risk-report.sh
 scripts/e2e/github-orders-risk-report.sh
 scripts/e2e/github-policy-risk-report.sh
 scripts/e2e/github-approvals-risk-report.sh
+scripts/e2e/github-secrets-risk-report.sh
 scripts/e2e/github-plugins-risk-report.sh
 scripts/e2e/github-profile-risk-report.sh
 scripts/e2e/github-proactive-risk-report.sh

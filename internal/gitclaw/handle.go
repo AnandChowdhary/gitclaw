@@ -214,13 +214,17 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		if err != nil {
 			return failStartedTurn(ctx, cfg, github, ev, status, "secrets", fmt.Errorf("build secrets audit: %w", err))
 		}
+		reportBody := RenderSecretsReport(ev, report)
+		if IsSecretsRiskRequest(ev, cfg) {
+			reportBody = RenderSecretsRiskReport(ev, report)
+		}
 		body := RenderAssistantComment(Marker{
 			RunID:          envFirst("GITHUB_RUN_ID", "local"),
 			EventID:        eventID(ev),
 			Model:          "gitclaw/secrets",
 			IdempotencyKey: key,
 			RunURL:         actionRunURL(ev),
-		}, RenderSecretsReport(ev, report))
+		}, reportBody)
 		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
 			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post secrets report comment: %w", err))
 		}

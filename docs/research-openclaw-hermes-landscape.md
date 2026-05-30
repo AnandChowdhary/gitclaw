@@ -1806,6 +1806,17 @@ hashes. Do not add configure/apply/reload until there is a reviewed SecretRef
 design and a live migration rollback story that never stores historical
 plaintext backups.
 
+2026-05-31 secrets-risk follow-up: OpenClaw's secrets docs separate
+`audit --check`, configure/apply, and runtime reload, and explicitly avoid
+side-effecting exec SecretRef checks by default; Hermes' secrets docs similarly
+load external secrets into the process environment rather than treating secret
+stores as prompt-visible memory. GitClaw should add the risk-oriented half now:
+`@gitclaw /secrets risk` and `gitclaw secrets risk` reuse the bounded repo scan
+but frame results as plaintext-residue, secret-reference, runtime-boundary, and
+apply-boundary risk cards. The report must remain body-free, no-model, and
+non-mutating, with a live GitHub Models follow-up E2E proving the normal model
+path still works.
+
 2026-05-30 checkpoint-readiness follow-up: Hermes' checkpoint/rollback surface
 is useful because long-horizon agents need recoverable state transitions, not
 just optimistic action. OpenClaw's approval and sandboxing docs reinforce the
