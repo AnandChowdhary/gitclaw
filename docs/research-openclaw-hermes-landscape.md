@@ -1399,6 +1399,17 @@ git status, numstat totals, changed paths, raw-patch suppression, and
 non-mutating boundaries without printing patch hunks or file bodies. Each diff
 feature batch should still run a real GitHub Models conversation E2E.
 
+2026-05-30 workspace-governance follow-up: OpenClaw treats the workspace as the
+agent's home for file tools and context, while Hermes recommends separate git
+worktrees so agent sessions get isolated checkouts and rollback history.
+GitClaw's serverless version should expose `@gitclaw /workspace`: report
+`.gitclaw/WORKSPACE.md`, `.gitclaw/workspaces/*.md`, git repository metadata,
+bounded repository inventory counts, context allowlist counts, and workflow
+checkout/setup-go/fetch-depth metadata without printing file bodies, workflow
+bodies, issue bodies, or treating the Actions checkout as private durable
+memory. Each workspace feature batch should pair deterministic workspace-report
+E2E coverage with a real GitHub Models conversation E2E.
+
 2026-05-29 policy-inspection follow-up: OpenClaw's security docs separate
 sandbox location, tool allow/deny policy, and elevated host execution, and
 Hermes' docs frame safety around authorization, command approval, and container

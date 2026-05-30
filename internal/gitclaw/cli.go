@@ -85,6 +85,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runContextCommand(args[1:])
 	case "diffs", "diff", "changes":
 		return runDiffsCommand(args[1:])
+	case "workspace", "workdir", "repo":
+		return runWorkspaceCommand(args[1:])
 	case "prompt", "budget", "prompt-budget":
 		return runPromptCommand(args[1:])
 	case "session":
@@ -915,6 +917,30 @@ func runDiffsSummaryCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderDiffCLIReport(cfg))
+	return nil
+}
+
+func runWorkspaceCommand(args []string) error {
+	if len(args) == 0 {
+		return runWorkspaceSummaryCommand(nil)
+	}
+	switch args[0] {
+	case "summary", "list", "verify":
+		return runWorkspaceSummaryCommand(args[1:])
+	default:
+		return fmt.Errorf("usage: gitclaw workspace [summary|verify]")
+	}
+}
+
+func runWorkspaceSummaryCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown workspace argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderWorkspaceCLIReport(cfg))
 	return nil
 }
 

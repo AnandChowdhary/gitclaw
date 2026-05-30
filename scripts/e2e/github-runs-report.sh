@@ -185,7 +185,7 @@ for expected in \
   'heartbeat_comments_before_turn: `0`' \
   'error_marker_comments_before_turn: `0`' \
   'channel_message_comments_before_turn: `0`' \
-  'context_documents: `7`' \
+  'context_documents: `16`' \
   'selected_skills: `' \
   'available_skills: `1`' \
   'skill_bundles: `1`' \
@@ -203,6 +203,7 @@ for expected in \
   'kind=`context` path=`.gitclaw/SOUL.md`' \
   'kind=`context` path=`.gitclaw/IDENTITY.md`' \
   'kind=`context` path=`.gitclaw/MEMORY.md`' \
+  'kind=`context` path=`.gitclaw/WORKSPACE.md`' \
   'kind=`context` path=`.gitclaw/memory/2026-05-29.md`' \
   "### Tool Outputs" \
   'name=`gitclaw.list_files` input_sha256_12=`' \

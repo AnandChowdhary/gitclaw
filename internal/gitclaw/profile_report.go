@@ -141,6 +141,8 @@ func profileDocumentCategory(path string) string {
 		return "artifacts"
 	case path == diffPolicyPath:
 		return "diffs"
+	case path == workspacePolicyPath:
+		return "workspace"
 	default:
 		return "profile"
 	}

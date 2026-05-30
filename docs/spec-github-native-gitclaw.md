@@ -677,6 +677,7 @@ GitHub issue/comment event
   `approvals list`, `approvals verify`,
   `artifacts list`, `artifacts verify`,
   `diffs summary`, `diffs verify`,
+  `workspace summary`, `workspace verify`,
   `hooks list`, `hooks verify`,
   `plugins list`, `plugins verify`,
   `tasks list`, `tasks verify`,
@@ -857,6 +858,8 @@ AGENTS.md                    # existing coding-agent instructions, if present
 .gitclaw/artifacts/*.md      # declarative artifact specs, metadata-only in v1
 .gitclaw/DIFFS.md            # declarative diff/reporting safety policy
 .gitclaw/diffs/*.md          # declarative diff specs, metadata-only in v1
+.gitclaw/WORKSPACE.md        # declarative workspace/checkout safety policy
+.gitclaw/workspaces/*.md     # declarative workspace specs, metadata-only in v1
 .gitclaw/SKILLS/*.md         # optional read-only local skills, v1+
 .gitclaw/MEMORY.md           # optional curated repo memory, human-reviewed only
 .gitclaw/memory/YYYY-MM-DD.md # dated working memory notes, human-reviewed only
@@ -901,6 +904,10 @@ MVP loads:
   policy; individual `.gitclaw/diffs/*.md` specs are audited by metadata
   reports and do not render raw patches, stage files, reset files, or expose
   untracked file contents
+- `.gitclaw/WORKSPACE.md`, if present, as the repo-reviewed workspace safety
+  policy; individual `.gitclaw/workspaces/*.md` specs are audited by metadata
+  reports and do not create private memory, mount external paths, write
+  workspace state, or change the Actions checkout
 - `.gitclaw/SKILLS/*/SKILL.md`, if selected by the issue thread or marked
   always-on
 - bounded `@file:<repo-path>[:start-end]` context references explicitly named
@@ -2028,6 +2035,45 @@ Local operators can inspect the same change surface without opening an issue:
 ```bash
 gitclaw diffs summary
 gitclaw diffs verify
+```
+
+## Workspace Inspection Command
+
+GitClaw supports a deterministic workspace audit inspired by OpenClaw's agent
+workspace and Hermes' git-worktree isolation model:
+
+```text
+@gitclaw /workspace
+@gitclaw /workdir
+@gitclaw /repo
+```
+
+The command runs after preflight and context loading, but before model
+inference. It posts a `gitclaw:assistant-turn` comment with
+`model="gitclaw/workspace"` and summarizes:
+
+- whether `.gitclaw/WORKSPACE.md` exists and is loaded into model context,
+- declarative workspace specs in `.gitclaw/workspaces/*.md`,
+- git availability, repository detection, branch, and HEAD short SHA,
+- bounded repository file inventory counts without path or body dumps,
+- context allowlist/document counts,
+- configured GitClaw workflow files and their checkout/setup-go action
+  versions,
+- fetch-depth configuration and the Actions runner isolation boundary,
+- body-free findings for missing policy, unsafe workspace specs, missing
+  workflow checkout, or git inspection failures.
+
+It never prints raw file bodies, issue/comment bodies, prompts, tool outputs,
+backup payloads, workflow bodies, or secrets. It also never writes files,
+cleans directories, changes refs, dispatches workflows, mounts external
+workspaces, or treats the Actions checkout as private durable memory.
+
+Local operators can inspect the same workspace surface without opening an
+issue:
+
+```bash
+gitclaw workspace summary
+gitclaw workspace verify
 ```
 
 ## Authorization And Abuse Controls
@@ -3730,7 +3776,20 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the run succeeds without requiring a model provider response,
    - run a real GitHub Models conversation E2E in the same feature batch.
 
-27. **Policy inspection**
+27. **Workspace inspection**
+
+   - create a real issue with `@gitclaw /workspace`,
+   - assert the reply is marked `model="gitclaw/workspace"`,
+   - assert the report lists `.gitclaw/WORKSPACE.md`, workspace spec metadata,
+     git repository state, repository inventory counts, context allowlist
+     counts, workflow checkout/setup-go action versions, fetch-depth metadata,
+     and private-memory/external-mount suppression,
+   - assert policy/spec body tokens, workflow bodies, file bodies, and issue
+     body tokens are not printed,
+   - assert the run succeeds without requiring a model provider response,
+   - run a real GitHub Models conversation E2E in the same feature batch.
+
+28. **Policy inspection**
 
    - create a real issue with `@gitclaw /policy` that also asks for write-mode
      work,
@@ -3747,7 +3806,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert `gitclaw:write-requested` and `gitclaw:done` are present without
      `gitclaw:running` or `gitclaw:error`.
 
-28. **Session inspection**
+29. **Session inspection**
 
    - create a real issue that gets one deterministic assistant turn,
    - post a follow-up comment with `@gitclaw /session`,
@@ -4459,6 +4518,11 @@ examples/workflows/gitclaw.yml
   the real checked-out repository's git change metadata, reports policy/spec
   state, clean/dirty state, changed-file counts, numstat totals, and raw-patch
   suppression without leaking issue body text, patch hunks, or file bodies.
+- A `gh`-driven workspace-report E2E harness verifies `@gitclaw /workspace`
+  inspects the real GitHub Actions checkout, reports policy/spec metadata,
+  git repository state, context counts, checkout/setup-go action versions,
+  fetch-depth metadata, and private-memory/external-mount suppression without
+  leaking issue body text, workflow bodies, or file bodies.
 - A `gh`-driven session-report E2E harness verifies `@gitclaw /session`
   reconstructs a real multi-turn GitHub issue session without a model call or
   transcript-body leakage.

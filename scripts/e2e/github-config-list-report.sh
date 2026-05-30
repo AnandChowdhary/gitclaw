@@ -152,7 +152,7 @@ for expected in \
   'tools_allowed_configured: `0`' \
   'tools_disabled_configured: `0`' \
   'workflows_present: `7`' \
-  'slash_commands: `32`' \
+  'slash_commands: `33`' \
   '/agents' \
   '/artifacts' \
   '/nodes' \
@@ -178,6 +178,7 @@ for expected in \
   '/runs' \
   '/sandbox' \
   '/prompt' \
+  '/workspace' \
   '.github/workflows/gitclaw.yml' \
   '.github/workflows/gitclaw-heartbeat.yml' \
   '.github/workflows/gitclaw-proactive.yml' \

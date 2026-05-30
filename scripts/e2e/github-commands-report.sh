@@ -136,9 +136,9 @@ for expected in \
   "GitClaw Commands Report" \
   "Generated without a model call" \
   'trigger_prefix: `@gitclaw`' \
-  'commands: `32`' \
-  'aliases: `29`' \
-  'local_cli_helpers: `93`' \
+  'commands: `33`' \
+  'aliases: `31`' \
+  'local_cli_helpers: `95`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/agents' \
@@ -157,6 +157,9 @@ for expected in \
   '/diffs' \
   '/diff' \
   '/changes' \
+  '/workspace' \
+  '/workdir' \
+  '/repo' \
   '/tools' \
   '/secrets' \
   '/secret' \
@@ -279,7 +282,9 @@ for expected in \
   'gitclaw tools list' \
   'gitclaw tools run-plan <name>' \
   'gitclaw tools info <name>' \
-  'gitclaw tools search <query>'; do
+  'gitclaw tools search <query>' \
+  'gitclaw workspace summary' \
+  'gitclaw workspace verify'; do
   grep -Fq "$expected" <<<"$comments" || die "commands report missing ${expected}"
 done
 

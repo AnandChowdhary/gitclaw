@@ -47,6 +47,7 @@ var commandCatalog = []commandCatalogEntry{
 	{Command: "/soul", Model: "gitclaw/soul", Category: "soul", Summary: "Audit, verify, inspect, plan edits for, or search high-authority context files and soul validation findings.", LocalCLI: []string{"gitclaw soul verify", "gitclaw soul validate", "gitclaw soul list", "gitclaw soul edit-plan <path>", "gitclaw soul info <path>", "gitclaw soul search <query>"}},
 	{Command: "/tasks", Aliases: []string{"/task"}, Model: "gitclaw/tasks", Category: "tasks", Summary: "Audit GitHub issue-native task policy, task specs, labels, and flow boundaries.", LocalCLI: []string{"gitclaw tasks list", "gitclaw tasks verify"}},
 	{Command: "/tools", Model: "gitclaw/tools", Category: "tools", Summary: "Audit, verify, inspect, plan runs for, or search deterministic tool contracts, active outputs, and validation findings.", LocalCLI: []string{"gitclaw tools verify", "gitclaw tools validate", "gitclaw tools list", "gitclaw tools run-plan <name>", "gitclaw tools info <name>", "gitclaw tools search <query>"}},
+	{Command: "/workspace", Aliases: []string{"/workdir", "/repo"}, Model: "gitclaw/workspace", Category: "workspace", Summary: "Audit the GitHub Actions repository checkout, workspace policy, specs, and isolation boundaries.", LocalCLI: []string{"gitclaw workspace summary", "gitclaw workspace verify"}},
 }
 
 func IsCommandReportRequest(ev Event, cfg Config) bool {

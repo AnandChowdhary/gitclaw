@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "profile-report-e2e: $*" >&2
+  echo "workspace-report-e2e: $*" >&2
 }
 
 die() {
@@ -33,13 +33,12 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_PROFILE_REPORT_E2E_${timestamp}"
-title="@gitclaw /profile e2e ${timestamp}"
-body="Live profile-report E2E.
+token="GITCLAW_WORKSPACE_REPORT_E2E_${timestamp}"
+title="@gitclaw /workspace e2e ${timestamp}"
+body="Live workspace-report E2E.
 
-Use repo-reader while inspecting the profile.
-Hidden profile report body token: ${token}
-This should produce a deterministic repo-local profile envelope without a model call or raw body leakage."
+Hidden workspace report body token: ${token}
+This should produce a deterministic workspace report without a model call."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -53,7 +52,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "profile-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "workspace-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -110,13 +109,6 @@ error_count() {
     --jq '[.comments[] | select(.body | contains("<!-- gitclaw:error"))] | length'
 }
 
-issue_label_names() {
-  gh issue view "$issue_number" \
-    --repo "$repo" \
-    --json labels \
-    --jq '.labels[].name'
-}
-
 wait_for_assistant_count() {
   local want="$1"
   for _ in {1..90}; do
@@ -135,84 +127,72 @@ wait_for_assistant_count() {
   return 1
 }
 
-wait_for_done_status() {
-  for _ in {1..60}; do
-    local labels
-    labels="$(issue_label_names)"
-    if grep -Fxq "gitclaw:done" <<<"$labels" &&
-      ! grep -Fxq "gitclaw:running" <<<"$labels" &&
-      ! grep -Fxq "gitclaw:error" <<<"$labels"; then
-      return 0
-    fi
-    sleep 5
-  done
-  return 1
-}
-
 run_json="$(wait_for_run "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one profile report comment"
+wait_for_assistant_count 1 || die "expected one workspace report comment"
 comments="$(assistant_comments)"
 
 for expected in \
-  'model="gitclaw/profile"' \
-  "GitClaw Profile Report" \
+  'model="gitclaw/workspace"' \
+  "GitClaw Workspace Report" \
   "Generated without a model call" \
-  'repository: `'"$repo"'`' \
-  'issue: `#'"$issue_number"'`' \
-  'profile_status: `ok`' \
-  'profile_strategy: `repo-local-git-profile`' \
-  'profile_store: `.gitclaw/`' \
-  'profile_scope: `repository`' \
-  'provider: `github-models`' \
-  'model: `openai/gpt-5-nano`' \
-  'run_mode: `read-only`' \
-  'trigger_prefix: `@gitclaw`' \
-  'trigger_label: `gitclaw`' \
-  'profile_documents_loaded: `16`' \
-  'identity_policy_files: `15`' \
-  'memory_notes: `1`' \
-  'available_skills: `1`' \
-  'selected_skills: `1`' \
-  'skill_bundles: `1`' \
-  'available_tools: `5`' \
-  'active_tool_outputs: `' \
+  'workspace_status: `ok`' \
+  'workspace_policy_path: `.gitclaw/WORKSPACE.md`' \
+  'workspace_policy_present: `true`' \
+  'workspace_policy_loaded_for_model: `true`' \
+  'workspace_specs_dir: `.gitclaw/workspaces`' \
+  'workspace_specs: `1`' \
+  'workspace_specs_with_frontmatter: `1`' \
+  'workspace_specs_requiring_approval: `1`' \
+  'git_available: `true`' \
+  'git_repository: `true`' \
+  'worktree_root: `.`' \
+  'repo_file_list_limit: `240`' \
+  'context_documents_loaded:' \
+  'context_allowlist_entries: `18`' \
+  'workspace_context_policy_loaded: `true`' \
+  'workflow_files_present: `7`' \
+  'checkout_workflows: `7`' \
+  'checkout_steps: `9`' \
+  'checkout_action_versions: `actions/checkout@v5`' \
+  'setup_go_action_versions: `actions/setup-go@v6`' \
+  'fetch_depth_configured: `true`' \
+  'sandbox_backend: `github-actions`' \
+  'durable_state_backend: `git-tracked-files-and-backup-branch`' \
+  'private_workspace_memory_supported: `false`' \
+  'external_workspace_mount_supported: `false`' \
+  'workspace_mutation_allowed: `false`' \
   'raw_bodies_included: `false`' \
-  'raw_profile_payloads_included: `false`' \
-  "### Profile Documents" \
-  '.gitclaw/SOUL.md' \
-  '.gitclaw/IDENTITY.md' \
-  '.gitclaw/USER.md' \
-  '.gitclaw/TOOLS.md' \
-  '.gitclaw/MEMORY.md' \
-  '.gitclaw/HEARTBEAT.md' \
-  '.gitclaw/WORKSPACE.md' \
-  'category=`workspace`' \
-  '.gitclaw/memory/2026-05-29.md' \
-  'category=`memory-note`' \
-  "### Skills" \
-  'name=`repo-reader`' \
-  'selected=`true`' \
-  "### Tool Surface" \
-  'gitclaw.list_files' \
-  'gitclaw.skill_index' \
-  "### Validation" \
-  'component=`soul` status=`ok` errors=`0` warnings=`0`' \
-  'component=`skills` status=`ok` errors=`0` warnings=`0`' \
-  'component=`tools` status=`ok` errors=`0` warnings=`0`'; do
-  grep -Fq -- "$expected" <<<"$comments" || die "profile report missing ${expected}"
+  'raw_file_bodies_included: `false`' \
+  'model_call_required: `false`' \
+  'repository_mutation_allowed: `false`' \
+  'llm_e2e_required_after_change: `true`' \
+  'name=`repository-checkout`' \
+  'path=`.gitclaw/workspaces/repository.md`' \
+  'frontmatter=`true`' \
+  'kind=`git-workspace`' \
+  'runtime=`github-actions`' \
+  'storage=`repository-checkout`' \
+  'mode=`metadata-only`' \
+  'root=`.`' \
+  'isolation=`ephemeral-actions-runner`' \
+  'durable_state=`git-tracked-files-and-backup-branch`' \
+  'requires_approval=`true`' \
+  '### Workflow Workspace Setup' \
+  '### Repository Inventory' \
+  'raw_paths_included=`false`' \
+  'raw_context_bodies_included=`false`' \
+  '`/workspace` is inspect-only' \
+  'future private workspace memory or external mounts require reviewed specs' \
+  '### Verification Findings' \
+  '- none'; do
+  grep -Fq -- "$expected" <<<"$comments" || die "workspace report missing ${expected}"
 done
 
-for leaked in \
-  "$token" \
-  "Hidden profile report body token" \
-  "This should produce a deterministic repo-local profile envelope" \
-  "GitClaw is a repo-native GitHub issue assistant" \
-  "GITCLAW_MEMORY_CONTEXT_V1"; do
-  if grep -Fq "$leaked" <<<"$comments"; then
-    die "profile report leaked ${leaked}"
+for forbidden in "$token" "GITCLAW_WORKSPACE_CONTEXT_V1" "This declarative workspace record"; do
+  if grep -Fq -- "$forbidden" <<<"$comments"; then
+    die "workspace report leaked ${forbidden}"
   fi
 done
 
-wait_for_done_status || die "expected gitclaw:done without running/error"
 url="$(jq -r '.url' <<<"$run_json")"
 log "passed for issue #${issue_number}: ${url}"

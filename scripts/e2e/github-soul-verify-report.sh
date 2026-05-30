@@ -160,8 +160,8 @@ for expected in \
   'issue: `#'"$issue_number"'`' \
   'soul_verify_status: `ok`' \
   'verification_scope: `repo-local-high-authority-context`' \
-  'context_documents: `7`' \
-  'repo_local_documents: `7`' \
+  'context_documents: `16`' \
+  'repo_local_documents: `16`' \
   'unknown_source_documents: `0`' \
   'required_documents: `6`' \
   'required_documents_present: `6`' \
@@ -169,9 +169,9 @@ for expected in \
   'soul_file_present: `true`' \
   'soul_frontmatter_present: `false`' \
   'soul_description_present: `false`' \
-  'identity_policy_files: `6`' \
+  'identity_policy_files: `15`' \
   'memory_notes: `1`' \
-  'files_with_hashes: `7`' \
+  'files_with_hashes: `16`' \
   'registry_verification: `not_configured`' \
   'profile_export_verification: `not_configured`' \
   'raw_bodies_included: `false`' \
@@ -179,6 +179,7 @@ for expected in \
   "### Trust Cards" \
   'path=`.gitclaw/SOUL.md`' \
   'path=`.gitclaw/HEARTBEAT.md`' \
+  'path=`.gitclaw/WORKSPACE.md`' \
   'path=`.gitclaw/memory/2026-05-29.md`' \
   'sha256_12=' \
   "### Verification Findings" \

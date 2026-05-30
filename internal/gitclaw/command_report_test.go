@@ -26,9 +26,9 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 	for _, want := range []string{
 		"GitClaw Commands Report",
 		"Generated without a model call",
-		"commands: `32`",
-		"aliases: `29`",
-		"local_cli_helpers: `93`",
+		"commands: `33`",
+		"aliases: `31`",
+		"local_cli_helpers: `95`",
 		"run_mode: `read-only`",
 		"### Slash Commands",
 		"### Local CLI Helpers",
@@ -56,6 +56,8 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"`/plugins` model=`gitclaw/plugins`",
 		"aliases=`/plugin`",
 		"`/tools` model=`gitclaw/tools`",
+		"`/workspace` model=`gitclaw/workspace`",
+		"aliases=`/workdir, /repo`",
 		"`/prompt` model=`gitclaw/prompt`",
 		"aliases=`/budget, /prompt-budget`",
 		"`/profile` model=`gitclaw/profile`",
@@ -155,6 +157,8 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"`gitclaw tools run-plan <name>` command=`/tools`",
 		"`gitclaw tools info <name>` command=`/tools`",
 		"`gitclaw tools search <query>` command=`/tools`",
+		"`gitclaw workspace summary` command=`/workspace`",
+		"`gitclaw workspace verify` command=`/workspace`",
 	} {
 		if !strings.Contains(report, want) {
 			t.Fatalf("command report missing %q:\n%s", want, report)
