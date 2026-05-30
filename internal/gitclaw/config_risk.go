@@ -28,6 +28,7 @@ type ConfigRiskReport struct {
 	WorkflowFilesExpected                int
 	WorkflowFilesPresent                 int
 	WorkflowFilesMissing                 int
+	TriggerMode                          string
 	TriggerLabel                         string
 	TriggerPrefix                        string
 	DisabledLabel                        string
@@ -226,6 +227,7 @@ func BuildConfigRiskReport(cfg Config) ConfigRiskReport {
 		WorkflowFilesExpected:                len(surface.Workflows),
 		WorkflowFilesPresent:                 countPresentConfigFiles(surface.Workflows),
 		WorkflowFilesMissing:                 len(surface.Workflows) - countPresentConfigFiles(surface.Workflows),
+		TriggerMode:                          cfg.TriggerMode,
 		TriggerLabel:                         cfg.TriggerLabel,
 		TriggerPrefix:                        cfg.TriggerPrefix,
 		DisabledLabel:                        cfg.DisabledLabel,
@@ -348,6 +350,7 @@ func writeConfigRiskSummary(b *strings.Builder, report ConfigRiskReport) {
 	fmt.Fprintf(b, "- workflow_files_expected: `%d`\n", report.WorkflowFilesExpected)
 	fmt.Fprintf(b, "- workflow_files_present: `%d`\n", report.WorkflowFilesPresent)
 	fmt.Fprintf(b, "- workflow_files_missing: `%d`\n", report.WorkflowFilesMissing)
+	fmt.Fprintf(b, "- trigger_mode: `%s`\n", report.TriggerMode)
 	fmt.Fprintf(b, "- trigger_label: `%s`\n", report.TriggerLabel)
 	fmt.Fprintf(b, "- trigger_prefix: `%s`\n", report.TriggerPrefix)
 	fmt.Fprintf(b, "- disabled_label: `%s`\n", report.DisabledLabel)
@@ -415,7 +418,8 @@ func writeConfigTriggerTrustRiskCard(b *strings.Builder, report ConfigRiskReport
 	findings := filterConfigRiskFindings(report.Findings, "trigger-trust", "config-metadata")
 	fmt.Fprintf(
 		b,
-		"- kind=`trigger-trust` trigger_label=`%s` trigger_prefix=`%s` disabled_label=`%s` trusted_associations=`%s` broad_trusted_associations=`%s` managed_labels_configured=`%d` duplicate_managed_labels=`%d` risk_findings=`%d` risk_max_severity=`%s` risk_codes=`%s` line_hashes=`%s`\n",
+		"- kind=`trigger-trust` trigger_mode=`%s` trigger_label=`%s` trigger_prefix=`%s` disabled_label=`%s` trusted_associations=`%s` broad_trusted_associations=`%s` managed_labels_configured=`%d` duplicate_managed_labels=`%d` risk_findings=`%d` risk_max_severity=`%s` risk_codes=`%s` line_hashes=`%s`\n",
+		report.TriggerMode,
 		report.TriggerLabel,
 		report.TriggerPrefix,
 		report.DisabledLabel,
@@ -477,6 +481,9 @@ func buildConfigRiskFindings(report ConfigRiskReport, cfg Config, surface config
 		if !workflow.Present {
 			findings = append(findings, configRiskMetadataFinding("warning", "workflow_file_missing", "workflow-presence", "workflow-file", workflow.Path, "present"))
 		}
+	}
+	if _, err := normalizeTriggerMode(report.TriggerMode); err != nil {
+		findings = append(findings, configRiskMetadataFinding("high", "trigger_mode_invalid", "trigger-boundary", "trigger-trust", "config-metadata", "trigger_mode"))
 	}
 	if strings.TrimSpace(report.TriggerLabel) == "" {
 		findings = append(findings, configRiskMetadataFinding("high", "trigger_label_empty", "trigger-boundary", "trigger-trust", "config-metadata", "trigger_label"))

@@ -8,6 +8,7 @@ import (
 func TestLoadConfigFromWorkdirAppliesRepoConfig(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/config.yml", `trigger:
+  mode: inbox
   label: claw
   prefix: "@claw"
   disabled_label: claw:disabled
@@ -56,7 +57,7 @@ tools:
 	if loaded.ConfigSource != "defaults+repo" {
 		t.Fatalf("ConfigSource = %q, want defaults+repo", loaded.ConfigSource)
 	}
-	if loaded.TriggerLabel != "claw" || loaded.TriggerPrefix != "@claw" || loaded.DisabledLabel != "claw:disabled" {
+	if loaded.TriggerMode != TriggerModeInbox || loaded.TriggerLabel != "claw" || loaded.TriggerPrefix != "@claw" || loaded.DisabledLabel != "claw:disabled" {
 		t.Fatalf("trigger config not applied: %#v", loaded)
 	}
 	if !loaded.AllowedAssociations["OWNER"] || !loaded.AllowedAssociations["CONTRIBUTOR"] || loaded.AllowedAssociations["MEMBER"] {
@@ -125,6 +126,22 @@ func TestEnvModelFallbacksCanDisableRepoFallbacks(t *testing.T) {
 	}
 	if len(loaded.ModelFallbacks) != 0 {
 		t.Fatalf("ModelFallbacks = %#v, want disabled", loaded.ModelFallbacks)
+	}
+}
+
+func TestLoadConfigRejectsInvalidTriggerMode(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/config.yml", `trigger:
+  mode: socket-daemon
+`)
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	_, err := LoadConfigFromWorkdir(cfg)
+	if err == nil {
+		t.Fatalf("LoadConfigFromWorkdir should reject invalid trigger mode")
+	}
+	if !strings.Contains(err.Error(), "trigger.mode") {
+		t.Fatalf("error should mention trigger.mode, got %v", err)
 	}
 }
 

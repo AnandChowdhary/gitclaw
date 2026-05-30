@@ -45,8 +45,11 @@ go run ./cmd/gitclaw policy risk
 go run ./cmd/gitclaw approvals risk
 ```
 
-The GitHub Action handles issue/comment events that mention the configured
-trigger prefix, currently `@gitclaw`.
+The GitHub Action handles issue/comment events according to `.gitclaw/config.yml`.
+The default `trigger.mode` is `label-or-prefix`, meaning an issue runs GitClaw
+when it has the `gitclaw` label or starts with the configured prefix,
+currently `@gitclaw`. Dedicated assistant inbox repos can switch to `inbox`;
+stricter shared repos can use `label-only` or `prefix-only`.
 
 ## Core Commands
 

@@ -28,6 +28,73 @@ func TestParseIssueOpenedTrustedTrigger(t *testing.T) {
 	}
 }
 
+func TestPreflightLabelOnlyRequiresTriggerLabel(t *testing.T) {
+	cfg := DefaultConfig()
+	cfg.TriggerMode = TriggerModeLabelOnly
+	ev := Event{
+		Kind: EventIssueOpened,
+		Repo: "owner/repo",
+		Issue: Issue{
+			Number:            43,
+			Title:             "@gitclaw explain auth",
+			AuthorAssociation: "MEMBER",
+			User:              User{Login: "alice", Type: "User"},
+		},
+		Sender: User{Login: "alice", Type: "User"},
+	}
+	decision := Preflight(ev, cfg)
+	if decision.Allowed {
+		t.Fatalf("label-only mode should reject prefix-only issue")
+	}
+	if decision.Code != "not_triggered" || decision.Reason != "issue is not labeled for GitClaw" {
+		t.Fatalf("unexpected decision: %+v", decision)
+	}
+}
+
+func TestPreflightPrefixOnlyRequiresTriggerPrefix(t *testing.T) {
+	cfg := DefaultConfig()
+	cfg.TriggerMode = TriggerModePrefixOnly
+	ev := Event{
+		Kind: EventIssueOpened,
+		Repo: "owner/repo",
+		Issue: Issue{
+			Number:            44,
+			Title:             "Explain auth",
+			AuthorAssociation: "MEMBER",
+			User:              User{Login: "alice", Type: "User"},
+			Labels:            []string{"gitclaw"},
+		},
+		Sender: User{Login: "alice", Type: "User"},
+	}
+	decision := Preflight(ev, cfg)
+	if decision.Allowed {
+		t.Fatalf("prefix-only mode should reject label-only issue")
+	}
+	if decision.Code != "not_triggered" || decision.Reason != "issue is not prefixed for GitClaw" {
+		t.Fatalf("unexpected decision: %+v", decision)
+	}
+}
+
+func TestPreflightInboxModeAcceptsUntriggeredTrustedIssue(t *testing.T) {
+	cfg := DefaultConfig()
+	cfg.TriggerMode = TriggerModeInbox
+	ev := Event{
+		Kind: EventIssueOpened,
+		Repo: "owner/repo",
+		Issue: Issue{
+			Number:            45,
+			Title:             "Explain auth",
+			AuthorAssociation: "MEMBER",
+			User:              User{Login: "alice", Type: "User"},
+		},
+		Sender: User{Login: "alice", Type: "User"},
+	}
+	decision := Preflight(ev, cfg)
+	if !decision.Allowed {
+		t.Fatalf("inbox mode should accept trusted issues without label or prefix: %+v", decision)
+	}
+}
+
 func TestPreflightRejectsPRComment(t *testing.T) {
 	ev, err := ParseEvent("issue_comment", []byte(`{
 		"action": "created",

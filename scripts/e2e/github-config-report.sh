@@ -138,6 +138,7 @@ for expected in \
   'config_source: `defaults+repo+environment`' \
   'config_file_path: `.gitclaw/config.yml`' \
   'config_file_present: `true`' \
+  'trigger_mode: `label-or-prefix`' \
   'trigger_label: `gitclaw`' \
   'trigger_prefix: `@gitclaw`' \
   'disabled_label: `gitclaw:disabled`' \

@@ -25,7 +25,7 @@ func Preflight(ev Event, cfg Config) PreflightDecision {
 		return PreflightDecision{Allowed: true, Code: "allowed", Reason: "allowed"}
 	}
 	if !triggered(ev, cfg) {
-		return reject("not_triggered", "issue is not labeled or prefixed for GitClaw")
+		return reject("not_triggered", triggerRejectReason(cfg))
 	}
 	if ev.Kind == EventWorkflowDispatch {
 		return PreflightDecision{Allowed: true, Code: "allowed", Reason: "allowed"}
@@ -52,11 +52,38 @@ func trustedAssociation(association string, cfg Config) bool {
 }
 
 func triggered(ev Event, cfg Config) bool {
+	label := hasLabel(ev.Issue.Labels, cfg.TriggerLabel)
+	prefix := prefixed(ev, cfg)
+	switch mode, _ := normalizeTriggerMode(cfg.TriggerMode); mode {
+	case TriggerModeInbox:
+		return true
+	case TriggerModeLabelOnly:
+		return label
+	case TriggerModePrefixOnly:
+		return prefix
+	default:
+		return label || prefix
+	}
+}
+
+func prefixed(ev Event, cfg Config) bool {
 	prefix := cfg.TriggerPrefix
-	return hasLabel(ev.Issue.Labels, cfg.TriggerLabel) ||
-		strings.HasPrefix(strings.TrimSpace(ev.Issue.Title), prefix) ||
+	return strings.HasPrefix(strings.TrimSpace(ev.Issue.Title), prefix) ||
 		strings.HasPrefix(strings.TrimSpace(ev.Issue.Body), prefix) ||
 		(ev.Comment != nil && strings.HasPrefix(strings.TrimSpace(ev.Comment.Body), prefix))
+}
+
+func triggerRejectReason(cfg Config) string {
+	switch mode, _ := normalizeTriggerMode(cfg.TriggerMode); mode {
+	case TriggerModeInbox:
+		return "inbox trigger mode should accept all issues"
+	case TriggerModeLabelOnly:
+		return "issue is not labeled for GitClaw"
+	case TriggerModePrefixOnly:
+		return "issue is not prefixed for GitClaw"
+	default:
+		return "issue is not labeled or prefixed for GitClaw"
+	}
 }
 
 func hasLabel(labels []string, want string) bool {

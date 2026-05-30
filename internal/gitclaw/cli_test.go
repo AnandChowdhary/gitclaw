@@ -1354,6 +1354,7 @@ func TestCheckpointsCommandReportsGitStateWithoutDiffs(t *testing.T) {
 func TestConfigListCommandReportsEffectiveConfigWithoutBodies(t *testing.T) {
 	dir := t.TempDir()
 	writeTestFile(t, dir, ".gitclaw/config.yml", `trigger:
+  mode: label-or-prefix
   label: gitclaw
   prefix: "@gitclaw"
 model:
@@ -1368,7 +1369,7 @@ model:
 			t.Fatalf("config list returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Config Report", "scope: `local-cli`", "Generated without a model call", "config_source: `defaults+repo+environment`", "config_file_path: `.gitclaw/config.yml`", "config_file_present: `true`", "trigger_label: `gitclaw`", "trigger_prefix: `@gitclaw`", "disabled_label: `gitclaw:disabled`", "model: `openai/gpt-5-nano`", "model_fallbacks: `none`", "model_fallbacks_configured: `0`", "run_mode: `read-only`", "max_prompt_bytes: `60000`", "max_output_tokens: `4000`", "max_transcript_messages: `40`", "max_transcript_message_bytes: `8000`", "skills_allowed_configured: `0`", "skills_disabled_configured: `0`", "tools_allowed_configured: `0`", "tools_disabled_configured: `0`", "workflows_present: `2`", "slash_commands: `33`", "### Skill Gates", "### Tool Gates", "allowed=`none`", "disabled=`none`", "OWNER", "COLLABORATOR", "gitclaw:disabled", "/agents", "/artifacts", "/approvals", "/bundles", "/channels", "/checkpoints", "/config", "/models", "/nodes", "/profile", "/tasks", "/runs", "/sandbox", "/secrets", "/workspace", ".gitclaw/config.yml", ".github/workflows/gitclaw.yml", ".github/workflows/gitclaw-heartbeat.yml", "sha256_12="} {
+	for _, want := range []string{"GitClaw Config Report", "scope: `local-cli`", "Generated without a model call", "config_source: `defaults+repo+environment`", "config_file_path: `.gitclaw/config.yml`", "config_file_present: `true`", "trigger_mode: `label-or-prefix`", "trigger_label: `gitclaw`", "trigger_prefix: `@gitclaw`", "disabled_label: `gitclaw:disabled`", "model: `openai/gpt-5-nano`", "model_fallbacks: `none`", "model_fallbacks_configured: `0`", "run_mode: `read-only`", "max_prompt_bytes: `60000`", "max_output_tokens: `4000`", "max_transcript_messages: `40`", "max_transcript_message_bytes: `8000`", "skills_allowed_configured: `0`", "skills_disabled_configured: `0`", "tools_allowed_configured: `0`", "tools_disabled_configured: `0`", "workflows_present: `2`", "slash_commands: `33`", "### Skill Gates", "### Tool Gates", "allowed=`none`", "disabled=`none`", "OWNER", "COLLABORATOR", "gitclaw:disabled", "/agents", "/artifacts", "/approvals", "/bundles", "/channels", "/checkpoints", "/config", "/models", "/nodes", "/profile", "/tasks", "/runs", "/sandbox", "/secrets", "/workspace", ".gitclaw/config.yml", ".github/workflows/gitclaw.yml", ".github/workflows/gitclaw-heartbeat.yml", "sha256_12="} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("config list output missing %q:\n%s", want, output)
 		}

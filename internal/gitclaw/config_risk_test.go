@@ -28,6 +28,7 @@ func TestConfigRiskCommandReportsCurrentSafeSurfaceWithoutBodies(t *testing.T) {
 		"workflow_files_expected: `7`",
 		"workflow_files_present: `7`",
 		"workflow_files_missing: `0`",
+		"trigger_mode: `label-or-prefix`",
 		"trigger_label: `gitclaw`",
 		"trigger_prefix: `@gitclaw`",
 		"disabled_label: `gitclaw:disabled`",
@@ -73,7 +74,7 @@ func TestConfigRiskCommandReportsCurrentSafeSurfaceWithoutBodies(t *testing.T) {
 		"### Workflow Risk Cards",
 		"kind=`workflow-file` path=`.github/workflows/gitclaw.yml` present=`true`",
 		"### Trigger And Trust Risk Card",
-		"kind=`trigger-trust` trigger_label=`gitclaw` trigger_prefix=`@gitclaw` disabled_label=`gitclaw:disabled`",
+		"kind=`trigger-trust` trigger_mode=`label-or-prefix` trigger_label=`gitclaw` trigger_prefix=`@gitclaw` disabled_label=`gitclaw:disabled`",
 		"### Model And Budget Risk Card",
 		"kind=`model-budget` model_provider=`github-models` model=`openai/gpt-5-nano`",
 		"### Gate Risk Card",
@@ -148,6 +149,7 @@ jobs:
 		"workflow_files_expected: `7`",
 		"workflow_files_present: `1`",
 		"workflow_files_missing: `6`",
+		"trigger_mode: `label-or-prefix`",
 		"trusted_associations: `FIRST_TIMER, NONE`",
 		"broad_trusted_associations: `FIRST_TIMER, NONE`",
 		"model_provider: `openai-compatible`",
@@ -187,6 +189,26 @@ jobs:
 	for _, leaked := range []string{"GITCLAW_CONFIG_RISK_SECRET", "api_key:", "webhook_url:", "permissions: write-all", "printenv", "while true"} {
 		if strings.Contains(output, leaked) {
 			t.Fatalf("config risk output leaked body text %q:\n%s", leaked, output)
+		}
+	}
+}
+
+func TestRenderConfigRiskReportFlagsInvalidTriggerMode(t *testing.T) {
+	root := t.TempDir()
+	writeSafeConfigRiskFixture(t, root)
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	cfg.TriggerMode = "socket-daemon"
+
+	output := RenderConfigRiskCLIReport(cfg)
+	for _, want := range []string{
+		"config_risk_status: `high`",
+		"trigger_mode: `socket-daemon`",
+		"code=`trigger_mode_invalid`",
+		"field=`trigger_mode`",
+	} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("config risk output missing %q:\n%s", want, output)
 		}
 	}
 }
@@ -235,6 +257,7 @@ func TestHandleConfigRiskCommandPostsReportWithoutLLM(t *testing.T) {
 		"verification_scope: `repo_local_config_control_plane`",
 		"workflow_files_present: `7`",
 		"workflow_files_missing: `0`",
+		"trigger_mode: `label-or-prefix`",
 		"trusted_associations: `COLLABORATOR, MEMBER, OWNER`",
 		"model_fallbacks: `openai/gpt-4.1-nano`",
 		"config_risk_findings: `0`",
@@ -260,6 +283,7 @@ func TestHandleConfigRiskCommandPostsReportWithoutLLM(t *testing.T) {
 func writeSafeConfigRiskFixture(t *testing.T, root string) {
 	t.Helper()
 	writeTestFile(t, root, ".gitclaw/config.yml", `trigger:
+  mode: label-or-prefix
   label: gitclaw
   prefix: "@gitclaw"
   disabled_label: gitclaw:disabled

@@ -70,6 +70,7 @@ func renderConfigReport(ev Event, cfg Config, includeIssue bool) string {
 	fmt.Fprintf(&b, "- config_source: `%s`\n", configSource(cfg))
 	fmt.Fprintf(&b, "- config_file_path: `%s`\n", gitclawConfigPath)
 	fmt.Fprintf(&b, "- config_file_present: `%t`\n", surface.ConfigFile.Present)
+	fmt.Fprintf(&b, "- trigger_mode: `%s`\n", cfg.TriggerMode)
 	fmt.Fprintf(&b, "- trigger_label: `%s`\n", cfg.TriggerLabel)
 	fmt.Fprintf(&b, "- trigger_prefix: `%s`\n", cfg.TriggerPrefix)
 	fmt.Fprintf(&b, "- disabled_label: `%s`\n", cfg.DisabledLabel)

@@ -10,7 +10,15 @@ const (
 	EventWorkflowDispatch = "workflow_dispatch"
 )
 
+const (
+	TriggerModeLabelOrPrefix = "label-or-prefix"
+	TriggerModeLabelOnly     = "label-only"
+	TriggerModePrefixOnly    = "prefix-only"
+	TriggerModeInbox         = "inbox"
+)
+
 type Config struct {
+	TriggerMode               string
 	TriggerLabel              string
 	TriggerPrefix             string
 	DisabledLabel             string
@@ -40,6 +48,7 @@ type Config struct {
 
 func DefaultConfig() Config {
 	return Config{
+		TriggerMode:         TriggerModeLabelOrPrefix,
 		TriggerLabel:        "gitclaw",
 		TriggerPrefix:       "@gitclaw",
 		DisabledLabel:       "gitclaw:disabled",

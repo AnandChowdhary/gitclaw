@@ -1,4 +1,5 @@
 trigger:
+  mode: label-or-prefix
   label: gitclaw
   prefix: "@gitclaw"
   disabled_label: gitclaw:disabled

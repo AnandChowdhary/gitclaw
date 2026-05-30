@@ -94,9 +94,12 @@ The `issue_comment` workflow runs, reconstructs the full issue thread, and GitCl
 We should support two modes:
 
 - **Inbox repo mode:** every issue in a dedicated repository is a GitClaw conversation.
-- **Per-repo assistant mode:** only issues with label `gitclaw` or title/body prefix `@gitclaw` trigger the agent.
+- **Per-repo assistant mode:** only issues with the label `gitclaw`, the title/body prefix `@gitclaw`, or both trigger the agent.
 
-Default for public repositories should be per-repo assistant mode with a required trigger label or prefix.
+Default for public repositories should be per-repo assistant mode with
+`trigger.mode: label-or-prefix`, requiring either the trigger label or prefix.
+Shared repositories that want tighter routing can choose `label-only` or
+`prefix-only`; dedicated assistant inbox repositories can choose `inbox`.
 Deterministic slash commands are recognized when the issue title, comment
 body, or a line in the issue body starts with the trigger prefix plus command,
 such as `@gitclaw /proactive`. Inline mentions inside prose are ignored.
@@ -2476,6 +2479,8 @@ load order is:
 The first supported schema is deliberately narrow:
 
 - `trigger.label`,
+- `trigger.mode`, one of `label-or-prefix`, `label-only`, `prefix-only`, or
+  `inbox`,
 - `trigger.prefix`,
 - `trigger.disabled_label`,
 - `authorization.allowed_associations`,
@@ -2513,7 +2518,7 @@ inference. It posts a `gitclaw:assistant-turn` comment with
 
 - effective config source,
 - expected `.gitclaw/config.yml` path and file presence,
-- trigger label and prefix,
+- trigger mode, label, and prefix,
 - managed status/feature labels,
 - trusted author associations,
 - selected model and prompt budget settings,
@@ -2546,7 +2551,7 @@ state. It does not call the model or rewrite config.
 The config risk report publishes:
 
 - config source, config-file presence, workflow presence, and file hashes,
-- trigger label/prefix, disabled label, trusted associations, broad
+- trigger mode, label/prefix, disabled label, trusted associations, broad
   association counts, managed-label collisions, and slash-command count,
 - model provider, primary model, fallback count, prompt/output/transcript
   budgets, and run mode,

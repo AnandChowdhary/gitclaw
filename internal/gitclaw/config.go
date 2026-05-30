@@ -21,6 +21,7 @@ type fileConfig struct {
 }
 
 type fileTriggerConfig struct {
+	Mode          string `yaml:"mode"`
 	Label         string `yaml:"label"`
 	Prefix        string `yaml:"prefix"`
 	DisabledLabel string `yaml:"disabled_label"`
@@ -146,6 +147,13 @@ func LoadEffectiveConfig() (Config, error) {
 }
 
 func applyFileConfig(cfg *Config, file fileConfig) error {
+	if value := strings.TrimSpace(file.Trigger.Mode); value != "" {
+		mode, err := normalizeTriggerMode(value)
+		if err != nil {
+			return err
+		}
+		cfg.TriggerMode = mode
+	}
 	if value := strings.TrimSpace(file.Trigger.Label); value != "" {
 		if err := validateLabelValue("trigger.label", value); err != nil {
 			return err
@@ -237,6 +245,9 @@ func applyFileConfig(cfg *Config, file fileConfig) error {
 }
 
 func validateConfig(cfg Config) error {
+	if _, err := normalizeTriggerMode(cfg.TriggerMode); err != nil {
+		return err
+	}
 	for name, value := range map[string]string{
 		"trigger.label":          cfg.TriggerLabel,
 		"trigger.disabled_label": cfg.DisabledLabel,
@@ -282,6 +293,21 @@ func validateConfig(cfg Config) error {
 		return fmt.Errorf("%s authorization.allowed_associations must not be empty", gitclawConfigPath)
 	}
 	return nil
+}
+
+func normalizeTriggerMode(value string) (string, error) {
+	switch strings.ToLower(strings.TrimSpace(value)) {
+	case "", TriggerModeLabelOrPrefix, "label_or_prefix", "label-prefix", "per-repo", "per_repo":
+		return TriggerModeLabelOrPrefix, nil
+	case TriggerModeLabelOnly, "label_only", "label":
+		return TriggerModeLabelOnly, nil
+	case TriggerModePrefixOnly, "prefix_only", "prefix":
+		return TriggerModePrefixOnly, nil
+	case TriggerModeInbox, "inbox-repo", "inbox_repo", "all":
+		return TriggerModeInbox, nil
+	default:
+		return "", fmt.Errorf("%s trigger.mode must be one of %s, %s, %s, or %s", gitclawConfigPath, TriggerModeLabelOrPrefix, TriggerModeLabelOnly, TriggerModePrefixOnly, TriggerModeInbox)
+	}
 }
 
 func envModelFallbacks() ([]string, bool) {
