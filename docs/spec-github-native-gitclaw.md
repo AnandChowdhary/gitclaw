@@ -3699,6 +3699,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven context-reference chat E2E harness verifies a normal model turn
   can answer from an explicit `@file:` reference while ignoring a hidden issue
   token.
+- A `gh`-driven search-tool chat E2E harness verifies a normal model turn can
+  recover a token from `gitclaw.search_files` output without explicit `@file`
+  or `@folder` context references. This keeps the live E2E suite honest about
+  actual tool-context usage, not just deterministic reports.
 - A `gh`-driven git-reference report E2E harness verifies
   `@gitclaw /context ... @git:1` reports body-free commit-reference metadata
   without dumping commit subjects, patches, or issue text.
