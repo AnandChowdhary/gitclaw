@@ -244,6 +244,16 @@ context set, but `@gitclaw /soul list` and `gitclaw soul list` should be
 documented aliases so operators can inspect context provenance without
 confusing inventory with validation or search.
 
+2026-05-30 soul-verify follow-up: OpenClaw's `SOUL.md` convention and Hermes'
+profile/memory boundary suggest a second audit surface beyond validation:
+provenance. GitClaw should add `@gitclaw /soul verify` and
+`gitclaw soul verify` as a body-free trust envelope that reports repo-local
+source counts, required-file coverage, soul frontmatter/description presence,
+identity/policy versus memory-note counts, short hashes, and explicit
+`registry_verification=not_configured` /
+`profile_export_verification=not_configured` findings until signed registry or
+profile-export verification exists.
+
 2026-05-29 soul-validation follow-up: the same high-authority files should have
 a local safety gate, not just an inventory. GitClaw should treat
 `.gitclaw/SOUL.md`, `.gitclaw/IDENTITY.md`, `.gitclaw/USER.md`,
@@ -484,6 +494,12 @@ also be separately addressable from inventory. Add `@gitclaw /soul validate`
 as the issue-side mirror of `gitclaw soul validate`, returning required-file,
 memory-note, status, and body-free finding counts without listing context
 files when there are no findings.
+
+2026-05-30 soul-verify follow-up: add `@gitclaw /soul verify` as the
+issue-side mirror of `gitclaw soul verify`, returning the repo-local trust
+envelope for high-authority context with trust cards and hashes while keeping
+raw soul, user, memory, tools, heartbeat, issue, and comment bodies out of the
+GitHub comment.
 
 2026-05-29 channel visibility follow-up: Slack's Events API expects either a
 server HTTP endpoint or Socket Mode, Socket Mode uses a stateful WebSocket

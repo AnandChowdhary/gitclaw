@@ -71,6 +71,65 @@ func TestValidateSoulContextAcceptsCurrentSoulShape(t *testing.T) {
 	}
 }
 
+func TestRenderSoulVerifyReportShowsTrustEnvelopeWithoutBodies(t *testing.T) {
+	repoContext := RepoContext{Documents: []ContextDocument{
+		{Path: ".gitclaw/SOUL.md", Body: "---\ndescription: Repo-local soul.\n---\nSOUL_VERIFY_BODY_TOKEN"},
+		{Path: ".gitclaw/IDENTITY.md", Body: "Identity."},
+		{Path: ".gitclaw/USER.md", Body: "USER_VERIFY_BODY_TOKEN"},
+		{Path: ".gitclaw/TOOLS.md", Body: "Tools."},
+		{Path: ".gitclaw/MEMORY.md", Body: "Memory."},
+		{Path: ".gitclaw/HEARTBEAT.md", Body: "Heartbeat."},
+		{Path: ".gitclaw/memory/2026-05-29.md", Body: "Memory note."},
+	}}
+	body := RenderSoulVerifyReport(repoContext)
+	for _, want := range []string{
+		"GitClaw Soul Verify Report",
+		"scope: `local-cli`",
+		"soul_verify_status: `ok`",
+		"verification_scope: `repo-local-high-authority-context`",
+		"context_documents: `7`",
+		"repo_local_documents: `7`",
+		"unknown_source_documents: `0`",
+		"required_documents: `6`",
+		"required_documents_present: `6`",
+		"required_documents_missing: `0`",
+		"soul_file_present: `true`",
+		"soul_frontmatter_present: `true`",
+		"soul_description_present: `true`",
+		"identity_policy_files: `6`",
+		"memory_notes: `1`",
+		"files_with_hashes: `7`",
+		"registry_verification: `not_configured`",
+		"profile_export_verification: `not_configured`",
+		"raw_bodies_included: `false`",
+		"soul_validation_status: `ok`",
+		"soul_validation_errors: `0`",
+		"soul_validation_warnings: `0`",
+		"soul_required_files_present: `6`",
+		"soul_memory_notes: `1`",
+		"### Trust Cards",
+		"path=`.gitclaw/SOUL.md`",
+		"category=`soul`",
+		"source=`repo-local`",
+		"required=`true`",
+		"frontmatter=`true`",
+		"description=`true`",
+		"sha256_12=",
+		"### Verification Findings",
+		"code=`registry_verification_not_configured`",
+		"code=`profile_export_verification_not_configured`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("soul verify report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SOUL_VERIFY_BODY_TOKEN", "USER_VERIFY_BODY_TOKEN"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("soul verify report leaked body token %q:\n%s", leaked, body)
+		}
+	}
+}
+
 func TestRenderSoulSearchReportFindsContextWithoutBodies(t *testing.T) {
 	repoContext := RepoContext{Documents: []ContextDocument{
 		{Path: ".gitclaw/SOUL.md", Body: "Repo-native operating guidance SOUL_SEARCH_BODY_TOKEN."},

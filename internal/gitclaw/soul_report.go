@@ -38,6 +38,9 @@ func IsSoulReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderSoulReport(ev Event, cfg Config, repoContext RepoContext) string {
+	if isSoulVerifyRequest(ev, cfg) {
+		return renderSoulVerifyReport(ev, repoContext, true)
+	}
 	if isSoulValidateRequest(ev, cfg) {
 		return renderSoulValidationReport(ev, repoContext, true)
 	}
@@ -134,6 +137,11 @@ func requestedSoulSearchQuery(ev Event, cfg Config) string {
 func isSoulValidateRequest(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && fields[0] == "/soul" && strings.EqualFold(fields[1], "validate")
+}
+
+func isSoulVerifyRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && fields[0] == "/soul" && strings.EqualFold(fields[1], "verify")
 }
 
 func BuildSoulSearchReport(repoContext RepoContext, query string, maxResults int) SoulSearchReport {

@@ -199,6 +199,22 @@ func TestSoulValidateCommandReportsCurrentRepoShape(t *testing.T) {
 			t.Fatalf("soul validate leaked body token %q:\n%s", leaked, output)
 		}
 	}
+
+	verifyOutput := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"soul", "verify"}); err != nil {
+			t.Fatalf("soul verify returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"GitClaw Soul Verify Report", "scope: `local-cli`", "soul_verify_status: `ok`", "verification_scope: `repo-local-high-authority-context`", "context_documents: `7`", "repo_local_documents: `7`", "unknown_source_documents: `0`", "required_documents: `6`", "required_documents_present: `6`", "required_documents_missing: `0`", "soul_file_present: `true`", "soul_frontmatter_present: `false`", "soul_description_present: `false`", "identity_policy_files: `6`", "memory_notes: `1`", "files_with_hashes: `7`", "registry_verification: `not_configured`", "profile_export_verification: `not_configured`", "raw_bodies_included: `false`", "soul_validation_status: `ok`", "### Trust Cards", "path=`.gitclaw/SOUL.md`", "source=`repo-local`", "required=`true`", "sha256_12=", "### Verification Findings", "code=`registry_verification_not_configured`", "code=`profile_export_verification_not_configured`"} {
+		if !strings.Contains(verifyOutput, want) {
+			t.Fatalf("soul verify output missing %q:\n%s", want, verifyOutput)
+		}
+	}
+	for _, leaked := range []string{"SOUL_BODY_TOKEN", "USER_BODY_TOKEN", "MEMORY_BODY_TOKEN", "DATED_MEMORY_BODY_TOKEN"} {
+		if strings.Contains(verifyOutput, leaked) {
+			t.Fatalf("soul verify leaked body token %q:\n%s", leaked, verifyOutput)
+		}
+	}
 }
 
 func TestSoulListCommandReportsInventoryWithoutBodies(t *testing.T) {
@@ -711,7 +727,7 @@ func TestCommandsCommandReportsCatalog(t *testing.T) {
 			t.Fatalf("commands returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `10`", "local_cli_helpers: `37`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`/prompt` model=`gitclaw/prompt`", "aliases=`/budget, /prompt-budget`", "`/proactive` model=`gitclaw/proactive`", "aliases=`/cron`", "`gitclaw commands` command=`/help`", "`gitclaw doctor` command=`/doctor`", "`gitclaw doctor list` command=`/doctor`", "`gitclaw channels list` command=`/channels`", "`gitclaw config list` command=`/config`", "`gitclaw context list` command=`/context`", "`gitclaw prompt list` command=`/prompt`", "`gitclaw proactive list` command=`/proactive`", "`gitclaw proactive init` command=`/proactive`", "`gitclaw proactive enqueue` command=`/proactive`", "`gitclaw session list --backup <issue.json>` command=`/session`", "`gitclaw session search <query> --backup <issue.json>` command=`/session`", "`gitclaw models list` command=`/models`", "`gitclaw policy list` command=`/policy`", "`gitclaw backup verify` command=`/backup`", "`gitclaw backup manifest` command=`/backup`", "`gitclaw backup list` command=`/backup`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup export-jsonl` command=`/backup`", "`gitclaw backup restore-plan` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul validate` command=`/soul`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills verify` command=`/skills`", "`gitclaw skills validate` command=`/skills`", "`gitclaw skills check` command=`/skills`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools validate` command=`/tools`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
+	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `10`", "local_cli_helpers: `38`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`/prompt` model=`gitclaw/prompt`", "aliases=`/budget, /prompt-budget`", "`/proactive` model=`gitclaw/proactive`", "aliases=`/cron`", "`gitclaw commands` command=`/help`", "`gitclaw doctor` command=`/doctor`", "`gitclaw doctor list` command=`/doctor`", "`gitclaw channels list` command=`/channels`", "`gitclaw config list` command=`/config`", "`gitclaw context list` command=`/context`", "`gitclaw prompt list` command=`/prompt`", "`gitclaw proactive list` command=`/proactive`", "`gitclaw proactive init` command=`/proactive`", "`gitclaw proactive enqueue` command=`/proactive`", "`gitclaw session list --backup <issue.json>` command=`/session`", "`gitclaw session search <query> --backup <issue.json>` command=`/session`", "`gitclaw models list` command=`/models`", "`gitclaw policy list` command=`/policy`", "`gitclaw backup verify` command=`/backup`", "`gitclaw backup manifest` command=`/backup`", "`gitclaw backup list` command=`/backup`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup export-jsonl` command=`/backup`", "`gitclaw backup restore-plan` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul verify` command=`/soul`", "`gitclaw soul validate` command=`/soul`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills verify` command=`/skills`", "`gitclaw skills validate` command=`/skills`", "`gitclaw skills check` command=`/skills`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools validate` command=`/tools`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("commands output missing %q:\n%s", want, output)
 		}

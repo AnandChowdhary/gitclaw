@@ -585,8 +585,9 @@ GitHub issue/comment event
   `channel-ingest`, `proactive enqueue`, `proactive init`,
   `memory validate`, `memory list`, `memory search`, `skills validate`,
   `skills list`, `skills info`, `skills search`,
-  `soul validate`, `soul list`, `soul search`, `tools validate`, `tools list`,
-  `tools search`, `doctor`, `commands`, `version`.
+  `soul verify`, `soul validate`, `soul list`, `soul search`,
+  `tools validate`, `tools list`, `tools search`, `doctor`, `commands`,
+  `version`.
 
 `internal/github`
 
@@ -971,6 +972,7 @@ agents rely on for durable identity and policy:
 Validation is visible in the `/soul` report and locally through:
 
 ```bash
+gitclaw soul verify
 gitclaw soul validate
 gitclaw soul list
 gitclaw soul search <query> --max-results 10
@@ -987,6 +989,7 @@ by OpenClaw and Hermes' portable workspace files:
 ```text
 @gitclaw /soul
 @gitclaw /soul list
+@gitclaw /soul verify
 @gitclaw /soul validate
 @gitclaw /soul search durable state layer
 ```
@@ -1013,6 +1016,15 @@ validation report: status, error/warning totals, required-file counts,
 memory-note counts, noncanonical memory-note count, and body-free findings.
 This mirrors `gitclaw soul validate` for issue-side audits without the full
 context inventory.
+
+When called as `@gitclaw /soul verify`, the command posts a body-free trust
+envelope for high-authority context. It reports repo-local versus unknown
+context sources, required-file presence, soul frontmatter and description
+presence, identity/policy and memory-note counts, short hashes for loaded
+files, and explicit `registry_verification=not_configured` and
+`profile_export_verification=not_configured` findings. This mirrors
+`gitclaw soul verify` and makes the OpenClaw/Hermes-inspired soul provenance
+audit visible in GitHub without dumping raw context.
 
 When called as `@gitclaw /soul search <query>`, the command searches only the
 loaded high-authority context files with a local lexical matcher. It reports
@@ -2367,9 +2379,13 @@ assert the expected comments/labels, and close the issue in cleanup.
 
    - create a real issue with `@gitclaw /soul`,
    - create a second real issue with `@gitclaw /soul list`,
+   - create a third real issue with `@gitclaw /soul verify`,
    - assert the reply is marked `model="gitclaw/soul"`,
    - assert the report lists loaded identity, policy, user, and memory paths
      with byte counts, line counts, and hashes,
+   - assert the verify report includes repo-local source counts, required-file
+     presence, soul frontmatter/description status, registry/profile export
+     verification status, trust cards, and verification findings,
    - assert soul validation status, required-file counts, memory-note counts,
      and noncanonical memory-note counts are present,
    - assert the report does not dump full soul or memory bodies,
@@ -2830,6 +2846,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven soul-validate E2E harness verifies
   `@gitclaw /soul validate` exposes the body-free validation report without
   falling back to the full context inventory.
+- A `gh`-driven soul-verify E2E harness verifies
+  `@gitclaw /soul verify` exposes the body-free repo-local trust envelope,
+  trust cards, hashes, required-file coverage, and explicit registry/profile
+  verification non-goals without a model call or context-body leakage.
 - A `gh`-driven tools-report E2E harness verifies `@gitclaw /tools` produces a
   deterministic tool contract and active-output audit with validation metadata,
   without a model call or output-body leakage.
