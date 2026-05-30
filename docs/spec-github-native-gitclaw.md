@@ -2147,6 +2147,12 @@ separate workflow job after a successful assistant turn, with explicit
 backup file plus a repo-scoped backup index to a dedicated `gitclaw-backups`
 branch.
 
+The backup job must use a repository-wide concurrency group such as
+`gitclaw-backups-${{ github.repository }}` with `cancel-in-progress: false`.
+Different issue conversations can finish at the same time, but the backup
+branch is one shared git ref; serializing only that job avoids non-fast-forward
+push races without slowing the read-only assistant turns.
+
 Each backup branch update also refreshes:
 
 ```text

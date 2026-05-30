@@ -96,6 +96,9 @@ jobs:
     if: needs.preflight.outputs.allowed == 'true' && needs.handle.result == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    concurrency:
+      group: gitclaw-backups-${{ github.repository }}
+      cancel-in-progress: false
     permissions:
       contents: write
       issues: read

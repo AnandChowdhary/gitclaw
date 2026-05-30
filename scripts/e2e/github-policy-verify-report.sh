@@ -169,6 +169,8 @@ for expected in \
   'permissions_present: `7`' \
   'missing_permissions: `0`' \
   'unexpected_write_permissions: `0`' \
+  'backup_concurrency_group: `true`' \
+  'backup_concurrency_cancel_safe: `true`' \
   'policy_outputs_hashed: `1`' \
   'raw_bodies_included: `false`' \
   'raw_inputs_included: `false`' \

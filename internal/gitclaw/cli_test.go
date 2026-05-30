@@ -906,6 +906,9 @@ jobs:
       issues: write
       models: read
   backup:
+    concurrency:
+      group: gitclaw-backups-${{ github.repository }}
+      cancel-in-progress: false
     permissions:
       contents: write
       issues: read
@@ -918,7 +921,7 @@ POLICY_VERIFY_WORKFLOW_BODY_TOKEN
 			t.Fatalf("policy verify returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Policy Verify Report", "scope: `local-cli`", "Generated without a model call", "policy_verify_status: `ok`", "verification_scope: `workflow-permissions-and-policy-surface`", "run_mode: `read-only`", "trusted_associations: `3`", "managed_labels: `9`", "workflow_path: `.github/workflows/gitclaw.yml`", "workflow_present: `true`", "workflow_sha256_12:", "expected_jobs: `3`", "jobs_present: `3`", "expected_permissions: `7`", "permissions_present: `7`", "missing_permissions: `0`", "unexpected_write_permissions: `0`", "policy_outputs_hashed: `0`", "raw_bodies_included: `false`", "raw_inputs_included: `false`", "### Workflow Permission Cards", "job=`handle` present=`true`", "expected=`contents:read, issues:write, models:read`", "actual=`contents:read, issues:write, models:read`", "missing=`none`", "unexpected_write=`none`", "### Active Policy Output Trust Cards", "- none", "### Verification Findings", "- none"} {
+	for _, want := range []string{"GitClaw Policy Verify Report", "scope: `local-cli`", "Generated without a model call", "policy_verify_status: `ok`", "verification_scope: `workflow-permissions-and-policy-surface`", "run_mode: `read-only`", "trusted_associations: `3`", "managed_labels: `9`", "workflow_path: `.github/workflows/gitclaw.yml`", "workflow_present: `true`", "workflow_sha256_12:", "expected_jobs: `3`", "jobs_present: `3`", "expected_permissions: `7`", "permissions_present: `7`", "missing_permissions: `0`", "unexpected_write_permissions: `0`", "backup_concurrency_group: `true`", "backup_concurrency_cancel_safe: `true`", "policy_outputs_hashed: `0`", "raw_bodies_included: `false`", "raw_inputs_included: `false`", "### Workflow Permission Cards", "job=`handle` present=`true`", "expected=`contents:read, issues:write, models:read`", "actual=`contents:read, issues:write, models:read`", "missing=`none`", "unexpected_write=`none`", "### Active Policy Output Trust Cards", "- none", "### Verification Findings", "- none"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("policy verify output missing %q:\n%s", want, output)
 		}

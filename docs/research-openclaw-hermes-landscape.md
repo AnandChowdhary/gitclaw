@@ -124,6 +124,12 @@ portable artifact. GitClaw should make its backup branch similarly inspectable:
 raw issue transcripts stay in per-issue JSON files, and a repo-scoped
 `index.json`/`README.md` summarizes coverage without exposing every raw message.
 
+2026-05-30 backup-concurrency follow-up: a git-backed backup branch is a shared
+state ref, so parallel issue runs can race on push even when each issue's
+assistant turn is correctly isolated. GitClaw should serialize the backup job
+with a repo-wide concurrency group while keeping the normal handle job
+per-issue concurrent.
+
 2026-05-29 backup-report follow-up: OpenClaw's migration and migrate CLI docs
 emphasize preview, secret redaction, and verified backups before applying
 state changes, while Hermes' OpenClaw migration keeps pre-migration restore

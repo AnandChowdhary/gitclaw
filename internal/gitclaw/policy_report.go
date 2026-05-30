@@ -14,21 +14,23 @@ type workflowPermissionContract struct {
 }
 
 type policyVerifyReport struct {
-	Status                     string
-	WorkflowPath               string
-	WorkflowPresent            bool
-	WorkflowBytes              int
-	WorkflowLines              int
-	WorkflowSHA                string
-	ExpectedJobs               int
-	JobsPresent                int
-	ExpectedPermissions        int
-	PermissionsPresent         int
-	MissingPermissions         int
-	UnexpectedWritePermissions int
-	PolicyOutputsHashed        int
-	Findings                   []policyVerifyFinding
-	Jobs                       []policyVerifyJob
+	Status                      string
+	WorkflowPath                string
+	WorkflowPresent             bool
+	WorkflowBytes               int
+	WorkflowLines               int
+	WorkflowSHA                 string
+	ExpectedJobs                int
+	JobsPresent                 int
+	ExpectedPermissions         int
+	PermissionsPresent          int
+	MissingPermissions          int
+	UnexpectedWritePermissions  int
+	BackupConcurrencyGroup      bool
+	BackupConcurrencyCancelSafe bool
+	PolicyOutputsHashed         int
+	Findings                    []policyVerifyFinding
+	Jobs                        []policyVerifyJob
 }
 
 type policyVerifyJob struct {
@@ -155,6 +157,8 @@ func renderPolicyVerifyReport(ev Event, cfg Config, repoContext RepoContext, inc
 	fmt.Fprintf(&b, "- permissions_present: `%d`\n", report.PermissionsPresent)
 	fmt.Fprintf(&b, "- missing_permissions: `%d`\n", report.MissingPermissions)
 	fmt.Fprintf(&b, "- unexpected_write_permissions: `%d`\n", report.UnexpectedWritePermissions)
+	fmt.Fprintf(&b, "- backup_concurrency_group: `%t`\n", report.BackupConcurrencyGroup)
+	fmt.Fprintf(&b, "- backup_concurrency_cancel_safe: `%t`\n", report.BackupConcurrencyCancelSafe)
 	fmt.Fprintf(&b, "- policy_outputs_hashed: `%d`\n", report.PolicyOutputsHashed)
 	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_inputs_included: `%t`\n\n", false)
@@ -237,6 +241,16 @@ func inspectPolicyWorkflowPermissions(root string) policyVerifyReport {
 			report.addPolicyVerifyFinding("error", "unexpected_write_permission", job.Name, permission, "workflow job grants an uncontracted write permission")
 		}
 	}
+	if block, ok := workflowJobBlock(text, "backup"); ok {
+		report.BackupConcurrencyGroup = workflowJobBlockContains(block, "group:", "gitclaw-backups-")
+		report.BackupConcurrencyCancelSafe = workflowJobBlockContains(block, "cancel-in-progress:", "false")
+	}
+	if !report.BackupConcurrencyGroup {
+		report.addPolicyVerifyFinding("error", "backup_concurrency_missing", "backup", "", "backup job must use a repo-wide concurrency group for the shared backup branch")
+	}
+	if !report.BackupConcurrencyCancelSafe {
+		report.addPolicyVerifyFinding("error", "backup_concurrency_cancel_unsafe", "backup", "", "backup job must keep cancel-in-progress false to avoid dropping backups")
+	}
 	sort.Slice(report.Jobs, func(i, j int) bool { return report.Jobs[i].Name < report.Jobs[j].Name })
 	sort.Slice(report.Findings, func(i, j int) bool {
 		if report.Findings[i].Severity != report.Findings[j].Severity {
@@ -290,6 +304,18 @@ func inspectPolicyWorkflowJob(text string, contract workflowPermissionContract) 
 	sort.Strings(job.Missing)
 	sort.Strings(job.UnexpectedWrites)
 	return job
+}
+
+func workflowJobBlockContains(block []string, key, value string) bool {
+	key = strings.ToLower(strings.TrimSpace(key))
+	value = strings.ToLower(strings.TrimSpace(value))
+	for _, line := range block {
+		trimmed := strings.ToLower(strings.TrimSpace(strings.SplitN(line, "#", 2)[0]))
+		if strings.Contains(trimmed, key) && strings.Contains(trimmed, value) {
+			return true
+		}
+	}
+	return false
 }
 
 func workflowJobBlock(text, jobName string) ([]string, bool) {
