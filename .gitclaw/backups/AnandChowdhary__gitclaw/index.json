@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-30T11:23:56Z",
+  "generated_at": "2026-05-30T11:25:21Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 218,
+  "count": 219,
   "issues": [
     {
       "number": 3,
@@ -2658,6 +2658,18 @@
       "title": "@gitclaw /memory promote-plan long-term e2e 20260530T112259Z",
       "path": "issues/000249.json",
       "backup_generated_at": "2026-05-30T11:23:56Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
+    },
+    {
+      "number": 250,
+      "title": "@gitclaw /help e2e 20260530T112422Z",
+      "path": "issues/000250.json",
+      "backup_generated_at": "2026-05-30T11:25:21Z",
       "event_name": "issues",
       "labels": [
         "gitclaw"
