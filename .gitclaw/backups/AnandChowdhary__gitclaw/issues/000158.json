@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T05:15:29Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "workflow_dispatch",
+  "issue": {
+    "number": 158,
+    "title": "GitClaw proactive proactive-init-e2e-20260530t051413z slot-20260530T051413Z",
+    "body": "\u003c!-- gitclaw:proactive-run name=\"proactive-init-e2e-20260530t051413z\" slot=\"slot-20260530T051413Z\" --\u003e\nGitClaw proactive run.\n\n- name: proactive-init-e2e-20260530t051413z\n- slot: slot-20260530T051413Z\n\nProactive instruction:\n\nProactive init E2E instruction.\n\n@gitclaw /proactive\n\nHidden prompt token: GITCLAW_PROACTIVE_INIT_E2E_20260530T051413Z\nThe deterministic proactive report must not leak this token.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw",
+      "gitclaw:disabled",
+      "gitclaw:e2e",
+      "gitclaw:done",
+      "gitclaw:proactive"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw proactive proactive-init-e2e-20260530t051413z slot-20260530T051413Z\n\n\u003c!-- gitclaw:proactive-run name=\"proactive-init-e2e-20260530t051413z\" slot=\"slot-20260530T051413Z\" --\u003e\nGitClaw proactive run.\n\n- name: proactive-init-e2e-20260530t051413z\n- slot: slot-20260530T051413Z\n\nProactive instruction:\n\nProactive init E2E instruction.\n\n@gitclaw /proactive\n\nHidden prompt token: GITCLAW_PROACTIVE_INIT_E2E_20260530T051413Z\nThe deterministic proactive report must not leak this token.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Proactive Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#158`\n- proactive_label: `gitclaw:proactive`\n- trigger_label: `gitclaw`\n- workflow_path: `.github/workflows/gitclaw-proactive.yml`\n- workflow_present: `true`\n- workflow_dispatch_trigger: `true`\n- schedule_trigger: `true`\n- prompt_files: `1`\n- prompt_skill_hints: `1`\n- proactive_run_issue: `true`\n- issue_title_sha256_12: `c3a0872a723b`\n\nProactive jobs create or reuse visible GitHub issues, then wake the normal issue handler with `workflow_dispatch`. Prompt bodies and issue bodies are not included in this report.\n\n### Workflow\n- `.github/workflows/gitclaw-proactive.yml` bytes=`2683` lines=`76` workflow_dispatch=`true` schedule=`true` sha256_12=`91d1e5f4b023`\n\n### Prompt Files\n- `.gitclaw/proactive/repo-hygiene.md` bytes=`702` lines=`16` skill_hints=`1` sha256_12=`13ff11d7e50c`\n\n### Enqueue Contract\n- `gitclaw proactive enqueue --name \u003cname\u003e --slot \u003cslot\u003e --prompt-file .gitclaw/proactive/\u003cname\u003e.md [--not-before \u003crfc3339-or-date\u003e]`\n- `--not-before` skips issue creation until the due gate has passed, which supports reminder-style scheduled jobs\n- one issue per `name + slot`\n- dispatch id: `proactive-\u003cname\u003e-\u003cslot\u003e`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4581772826,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "proactive-init e2e cleanup",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4581773343,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4581772826,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26675429277\" event_id=\"dispatch-proactive-proactive-init-e2e-20260530t051413z-slot-20260530T051413Z\" model=\"gitclaw/proactive\" idempotency_key=\"ca4c7aaeaaf7f1dfb195c0c24daddcaf\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26675429277\" --\u003e\n## GitClaw Proactive Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#158`\n- proactive_label: `gitclaw:proactive`\n- trigger_label: `gitclaw`\n- workflow_path: `.github/workflows/gitclaw-proactive.yml`\n- workflow_present: `true`\n- workflow_dispatch_trigger: `true`\n- schedule_trigger: `true`\n- prompt_files: `1`\n- prompt_skill_hints: `1`\n- proactive_run_issue: `true`\n- issue_title_sha256_12: `c3a0872a723b`\n\nProactive jobs create or reuse visible GitHub issues, then wake the normal issue handler with `workflow_dispatch`. Prompt bodies and issue bodies are not included in this report.\n\n### Workflow\n- `.github/workflows/gitclaw-proactive.yml` bytes=`2683` lines=`76` workflow_dispatch=`true` schedule=`true` sha256_12=`91d1e5f4b023`\n\n### Prompt Files\n- `.gitclaw/proactive/repo-hygiene.md` bytes=`702` lines=`16` skill_hints=`1` sha256_12=`13ff11d7e50c`\n\n### Enqueue Contract\n- `gitclaw proactive enqueue --name \u003cname\u003e --slot \u003cslot\u003e --prompt-file .gitclaw/proactive/\u003cname\u003e.md [--not-before \u003crfc3339-or-date\u003e]`\n- `--not-before` skips issue creation until the due gate has passed, which supports reminder-style scheduled jobs\n- one issue per `name + slot`\n- dispatch id: `proactive-\u003cname\u003e-\u003cslot\u003e`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T05:15:09Z",
+      "updated_at": "2026-05-30T05:15:09Z"
+    },
+    {
+      "id": 4581773343,
+      "body": "proactive-init e2e cleanup",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-05-30T05:15:20Z",
+      "updated_at": "2026-05-30T05:15:20Z"
+    }
+  ]
+}
