@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T10:22:27Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 237,
+    "title": "@gitclaw /soul edit-plan soul e2e 20260530T102122Z",
+    "body": "Live soul-edit-plan E2E.\n\nHidden soul edit plan body token: GITCLAW_SOUL_EDIT_PLAN_E2E_20260530T102122Z\nThis should produce a deterministic dry-run plan without modifying high-authority context or dumping context bodies.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /soul edit-plan soul e2e 20260530T102122Z\n\nLive soul-edit-plan E2E.\n\nHidden soul edit plan body token: GITCLAW_SOUL_EDIT_PLAN_E2E_20260530T102122Z\nThis should produce a deterministic dry-run plan without modifying high-authority context or dumping context bodies.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Soul Edit Plan Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#237`\n- soul_edit_plan_status: `needs_review`\n- target_sha256_12: `ae0facccf0a3`\n- target_terms: `1`\n- target_allowed: `true`\n- normalized_soul_path: `.gitclaw/SOUL.md`\n- target_category: `soul`\n- target_present: `true`\n- target_required: `true`\n- target_canonical: `true`\n- target_loaded_for_this_turn: `true`\n- matched_soul_files: `1`\n- run_mode: `read-only`\n- edit_operations_allowed: `false`\n- repository_mutation_allowed: `false`\n- branch_creation_allowed: `false`\n- commit_push_allowed: `false`\n- model_self_modification_allowed: `false`\n- manual_review_required: `true`\n- llm_e2e_required_after_change: `true`\n- raw_target_included: `false`\n- raw_requested_change_included: `false`\n- raw_bodies_included: `false`\n- soul_writes_allowed: `false`\n- soul_validation_status: `ok`\n- soul_validation_errors: `0`\n- soul_validation_warnings: `0`\n- soul_required_files: `6`\n- soul_required_files_present: `6`\n- soul_required_files_missing: `0`\n- soul_memory_notes: `1`\n- soul_noncanonical_memory_notes: `0`\n- issue_title_sha256_12: `38492d7695af`\n\nThis is a dry-run planner only. It identifies the high-authority context file that would be reviewed, but it does not write files, create branches, commit, push, apply patches, call a model, or include raw requested changes or context bodies.\n\n### Current File Metadata\n- category=`soul` path=`.gitclaw/SOUL.md` source=`repo-local` present=`true` required=`true` canonical=`true` latest=`false` loaded_for_this_turn=`true` bytes=`576` lines=`14` sha256_12=`0460b93e1a5c` at_context_limit=`false`\n\n### Review Steps\n1. Review the proposed change outside the Actions job and keep `.gitclaw/SOUL.md` as reviewed repository code.\n2. Make the edit on a branch with a human-readable diff.\n3. Run `gitclaw soul validate`, `gitclaw soul verify`, and `gitclaw profile verify` before merging.\n4. Run a live GitHub Models conversation E2E after the soul change, not only deterministic report tests.\n\n### Findings\n- severity=`info` code=`manual_review_required` detail=`high-authority context changes must be reviewed as repository code before the...`\n- severity=`info` code=`repository_mutation_disabled` detail=`edit planning does not create, update, delete, commit, push, or apply files`\n- severity=`info` code=`model_self_modification_disabled` detail=`the model is not allowed to rewrite its own soul, identity, memory, tools, or...`\n- severity=`warning` code=`high_authority_context_change` detail=`soul edits change prompt-visible identity or policy context and require a rev...`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4582526580,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4582526580,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26681394461\" event_id=\"issue-237\" model=\"gitclaw/soul\" idempotency_key=\"b2f18787b00985c7f80bbafab558c050\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26681394461\" --\u003e\n## GitClaw Soul Edit Plan Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#237`\n- soul_edit_plan_status: `needs_review`\n- target_sha256_12: `ae0facccf0a3`\n- target_terms: `1`\n- target_allowed: `true`\n- normalized_soul_path: `.gitclaw/SOUL.md`\n- target_category: `soul`\n- target_present: `true`\n- target_required: `true`\n- target_canonical: `true`\n- target_loaded_for_this_turn: `true`\n- matched_soul_files: `1`\n- run_mode: `read-only`\n- edit_operations_allowed: `false`\n- repository_mutation_allowed: `false`\n- branch_creation_allowed: `false`\n- commit_push_allowed: `false`\n- model_self_modification_allowed: `false`\n- manual_review_required: `true`\n- llm_e2e_required_after_change: `true`\n- raw_target_included: `false`\n- raw_requested_change_included: `false`\n- raw_bodies_included: `false`\n- soul_writes_allowed: `false`\n- soul_validation_status: `ok`\n- soul_validation_errors: `0`\n- soul_validation_warnings: `0`\n- soul_required_files: `6`\n- soul_required_files_present: `6`\n- soul_required_files_missing: `0`\n- soul_memory_notes: `1`\n- soul_noncanonical_memory_notes: `0`\n- issue_title_sha256_12: `38492d7695af`\n\nThis is a dry-run planner only. It identifies the high-authority context file that would be reviewed, but it does not write files, create branches, commit, push, apply patches, call a model, or include raw requested changes or context bodies.\n\n### Current File Metadata\n- category=`soul` path=`.gitclaw/SOUL.md` source=`repo-local` present=`true` required=`true` canonical=`true` latest=`false` loaded_for_this_turn=`true` bytes=`576` lines=`14` sha256_12=`0460b93e1a5c` at_context_limit=`false`\n\n### Review Steps\n1. Review the proposed change outside the Actions job and keep `.gitclaw/SOUL.md` as reviewed repository code.\n2. Make the edit on a branch with a human-readable diff.\n3. Run `gitclaw soul validate`, `gitclaw soul verify`, and `gitclaw profile verify` before merging.\n4. Run a live GitHub Models conversation E2E after the soul change, not only deterministic report tests.\n\n### Findings\n- severity=`info` code=`manual_review_required` detail=`high-authority context changes must be reviewed as repository code before the...`\n- severity=`info` code=`repository_mutation_disabled` detail=`edit planning does not create, update, delete, commit, push, or apply files`\n- severity=`info` code=`model_self_modification_disabled` detail=`the model is not allowed to rewrite its own soul, identity, memory, tools, or...`\n- severity=`warning` code=`high_authority_context_change` detail=`soul edits change prompt-visible identity or policy context and require a rev...`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T10:22:02Z",
+      "updated_at": "2026-05-30T10:22:02Z"
+    }
+  ]
+}
