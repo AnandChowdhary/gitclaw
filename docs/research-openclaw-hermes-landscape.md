@@ -231,6 +231,14 @@ this boundary issue-visible with `@gitclaw /memory`: report long-term memory
 presence, dated-note counts, loaded/omitted notes, canonical date filenames,
 and hashes without dumping memory bodies or allowing hidden memory writes.
 
+2026-05-30 memory-verify follow-up: OpenClaw's memory model is git-portable
+Markdown, and Hermes keeps compact memory distinct from session search and
+procedural skills. GitClaw should add `@gitclaw /memory verify` and
+`gitclaw memory verify` as a body-free trust envelope that reports repo-local
+memory provenance, loaded state, canonical dated-note coverage, hashes,
+read-only write status, and explicit external-provider/session-index/background
+promotion non-goals.
+
 2026-05-29 soul-inspection follow-up: because OpenClaw and Hermes treat
 `SOUL.md`, `IDENTITY.md`, `USER.md`, `MEMORY.md`, and dated memory notes as
 high-authority portable context, GitClaw should make that load set auditable
@@ -434,6 +442,11 @@ not just the fallback behavior of `/memory`. Add `@gitclaw /memory list` and
 `gitclaw memory list` as documented aliases for the body-free memory surface:
 long-term memory, dated note counts, loaded/omitted notes, latest note,
 hashes, and validation rollups.
+
+2026-05-30 memory-verify follow-up: add `@gitclaw /memory verify` as the
+issue-side mirror of `gitclaw memory verify`, returning memory-file trust
+cards, repo-local provenance, loaded/omitted state, hashes, hygiene rollup, and
+external memory-provider/indexing non-goals without exposing raw memory text.
 
 2026-05-29 memory-search follow-up: OpenClaw's memory search accepts positional
 or `--query` input plus `--max-results`, and its memory-search concept combines

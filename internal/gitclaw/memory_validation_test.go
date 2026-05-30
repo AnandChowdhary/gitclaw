@@ -62,6 +62,64 @@ func TestValidateMemoryAcceptsCanonicalMemoryShape(t *testing.T) {
 	}
 }
 
+func TestRenderMemoryVerifyReportShowsTrustEnvelopeWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/MEMORY.md", "Durable facts only. MEMORY_VERIFY_LONG_TERM_SECRET\n")
+	writeTestFile(t, root, ".gitclaw/memory/2026-05-29.md", "Daily note with MEMORY_VERIFY_DATED_SECRET.\n")
+	ctx, err := LoadRepoContext(root, nil)
+	if err != nil {
+		t.Fatalf("LoadRepoContext returned error: %v", err)
+	}
+	cfg := Config{Workdir: root}
+	report := RenderMemoryVerifyReport(Event{}, cfg, ctx)
+	for _, want := range []string{
+		"GitClaw Memory Verify Report",
+		"scope: `local-cli`",
+		"memory_verify_status: `ok`",
+		"verification_scope: `repo-local-memory-provenance`",
+		"memory_files: `2`",
+		"repo_local_memory_files: `2`",
+		"unknown_memory_files: `0`",
+		"long_term_memory_present: `true`",
+		"long_term_memory_loaded: `true`",
+		"dated_memory_notes: `1`",
+		"canonical_dated_memory_notes: `1`",
+		"noncanonical_dated_memory_notes: `0`",
+		"loaded_memory_notes: `1`",
+		"omitted_memory_notes: `0`",
+		"max_loaded_memory_notes: `3`",
+		"latest_memory_note: `.gitclaw/memory/2026-05-29.md`",
+		"memory_files_hashed: `2`",
+		"memory_files_at_limit: `0`",
+		"potential_secret_findings: `0`",
+		"external_provider_verification: `not_configured`",
+		"session_search_index_verification: `not_configured`",
+		"background_promotion_verification: `not_configured`",
+		"memory_writes_allowed: `false`",
+		"raw_bodies_included: `false`",
+		"memory_validation_status: `ok`",
+		"memory_validation_errors: `0`",
+		"memory_validation_warnings: `0`",
+		"### Trust Cards",
+		"kind=`long-term` path=`.gitclaw/MEMORY.md` source=`repo-local` present=`true` canonical=`true`",
+		"kind=`dated-note` path=`.gitclaw/memory/2026-05-29.md` source=`repo-local` present=`true` canonical=`true` latest=`true` loaded_for_this_turn=`true`",
+		"sha256_12=",
+		"### Verification Findings",
+		"code=`external_memory_provider_verification_not_configured`",
+		"code=`session_search_index_verification_not_configured`",
+		"code=`background_promotion_verification_not_configured`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("memory verify report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"MEMORY_VERIFY_LONG_TERM_SECRET", "MEMORY_VERIFY_DATED_SECRET", "Durable facts only", "Daily note with"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("memory verify report leaked body token %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestRenderMemorySearchReportFindsMemoryWithoutBodies(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/MEMORY.md", "Durable deployment preference with MEMORY_SEARCH_LONG_TERM_SECRET.\n")

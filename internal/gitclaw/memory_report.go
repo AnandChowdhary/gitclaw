@@ -49,6 +49,9 @@ func IsMemoryReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderMemoryReport(ev Event, cfg Config, repoContext RepoContext) string {
+	if isMemoryVerifyRequest(ev, cfg) {
+		return RenderMemoryVerifyReport(ev, cfg, repoContext)
+	}
 	if isMemoryValidateRequest(ev, cfg) {
 		return RenderMemoryValidationReport(ev, cfg, repoContext)
 	}
@@ -153,6 +156,11 @@ func RenderMemorySearchReport(ev Event, cfg Config, repoContext RepoContext, que
 func isMemoryValidateRequest(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && (fields[0] == "/memory" || fields[0] == "/memories") && strings.EqualFold(fields[1], "validate")
+}
+
+func isMemoryVerifyRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && (fields[0] == "/memory" || fields[0] == "/memories") && strings.EqualFold(fields[1], "verify")
 }
 
 func requestedMemorySearchQuery(ev Event, cfg Config) string {

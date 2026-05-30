@@ -583,7 +583,8 @@ GitHub issue/comment event
   `backup retention-plan`,
   `heartbeat`,
   `channel-ingest`, `proactive enqueue`, `proactive init`,
-  `memory validate`, `memory list`, `memory search`, `skills validate`,
+  `memory verify`, `memory validate`, `memory list`, `memory search`,
+  `skills validate`,
   `skills list`, `skills info`, `skills search`,
   `soul verify`, `soul validate`, `soul list`, `soul search`,
   `tools verify`, `tools validate`, `tools list`, `tools search`, `doctor`,
@@ -768,6 +769,7 @@ larger session recall:
 ```text
 @gitclaw /memory
 @gitclaw /memory list
+@gitclaw /memory verify
 @gitclaw /memory validate
 @gitclaw /memory search backup branch
 ```
@@ -798,10 +800,18 @@ term count, scanned file count, matched file/line counts, paths, line numbers,
 scores, loaded-for-this-turn state, and file/line hashes. It does not echo the
 raw query because query text comes from issues and may contain secrets.
 
+When called as `@gitclaw /memory verify`, the command posts a body-free trust
+envelope for repo-local memory provenance. It reports memory-file counts,
+repo-local source counts, long-term memory presence/loading, dated-note
+canonicality, loaded/omitted note counts, latest note path, memory hashes,
+hygiene rollups, read-only write status, and explicit external-memory-provider,
+session-index, and background-promotion verification non-goals.
+
 When called as `@gitclaw /memory validate`, the command renders only the
 memory-hygiene report. Local operators can run the same validation with:
 
 ```bash
+gitclaw memory verify
 gitclaw memory validate
 gitclaw memory list
 gitclaw memory search <query> --max-results 10
@@ -2344,9 +2354,13 @@ assert the expected comments/labels, and close the issue in cleanup.
 
    - create a real issue with `@gitclaw /memory`,
    - create a second real issue with `@gitclaw /memory list`,
+   - create a third real issue with `@gitclaw /memory verify`,
    - assert the reply is marked `model="gitclaw/memory"`,
    - assert the report lists `.gitclaw/MEMORY.md`, dated memory note counts,
      loaded/omitted note counts, and memory file hashes,
+   - assert the verify report includes repo-local provenance, loaded state,
+     external-provider/session-index/background-promotion non-goals, and
+     body-free trust cards,
    - assert the report does not dump memory file bodies or issue body tokens,
    - assert the run succeeds without requiring a model provider response.
 
@@ -2832,6 +2846,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven memory-validate E2E harness verifies
   `@gitclaw /memory validate` reports memory hygiene without a model call or
   memory-body leakage.
+- A `gh`-driven memory-verify E2E harness verifies
+  `@gitclaw /memory verify` reports the body-free repo-local memory trust
+  envelope, loaded-state metadata, hashes, and explicit external memory
+  verification non-goals without a model call.
 - A `gh`-driven skills-report E2E harness verifies `@gitclaw /skills`
   produces a deterministic local skill inventory with provenance and
   requirement and validation metadata, without a model call.
