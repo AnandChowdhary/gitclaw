@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T02:28:47Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 116,
+    "title": "@gitclaw /backup manifest e2e 20260530T022752Z",
+    "body": "Live backup manifest E2E.\n\nHidden backup manifest token: GITCLAW_BACKUP_MANIFEST_E2E_20260530T022752Z\nThis should produce a deterministic backup report, then the fetched backup branch should render a file-level manifest without leaking this token.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /backup manifest e2e 20260530T022752Z\n\nLive backup manifest E2E.\n\nHidden backup manifest token: GITCLAW_BACKUP_MANIFEST_E2E_20260530T022752Z\nThis should produce a deterministic backup report, then the fetched backup branch should render a file-level manifest without leaking this token.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Backup Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#116`\n- requested_backup_command: `manifest`\n- backup_command_status: `ok`\n- backup_branch: `gitclaw-backups`\n- backup_root: `.gitclaw/backups`\n- repo_backup_dir: `.gitclaw/backups/AnandChowdhary__gitclaw`\n- issue_backup_path: `.gitclaw/backups/AnandChowdhary__gitclaw/issues/000116.json`\n- index_path: `.gitclaw/backups/AnandChowdhary__gitclaw/index.json`\n- readme_path: `.gitclaw/backups/AnandChowdhary__gitclaw/README.md`\n- backup_schema_version: `1`\n- raw_comments_now: `0`\n- transcript_messages_now: `1`\n- assistant_turn_comments_now: `0`\n- issue_title_sha256_12: `ce0e67810369`\n- issue_side_execution: `deferred_to_post_turn_backup_branch`\n- raw_bodies_included: `false`\n- requested_local_command: `gitclaw backup manifest --root .gitclaw/backups --repo AnandChowdhary/gitclaw --issue 116`\n\nThe backup job runs after a successful assistant turn and writes the raw transcript backup plus repo-scoped index to the dedicated backup branch.\n\nIssue and comment bodies are not included in this report; the raw backup JSON is the canonical transcript copy. Requested backup subcommands are recorded here as issue-visible intent, then run locally against a fetched `gitclaw-backups` branch.\n\n### Backup Contents\n- issue metadata\n- raw issue comments\n- reconstructed transcript with GitClaw assistant markers stripped\n- generation timestamp\n- schema version\n\n### Requested Command\n- `manifest` requested from the issue thread\n- run `gitclaw backup manifest --root .gitclaw/backups --repo AnandChowdhary/gitclaw --issue 116` after fetching `gitclaw-backups`\n- issue-side execution is metadata-only because the backup branch is written after this assistant turn\n\n### Verification\n- `gitclaw backup verify --root .gitclaw/backups --repo \u003cowner/repo\u003e`\n- `gitclaw backup search --root .gitclaw/backups --repo \u003cowner/repo\u003e \u003cquery\u003e`\n- `gitclaw backup retention-plan --root .gitclaw/backups --repo \u003cowner/repo\u003e --keep-latest 50`\n- validates the repo-scoped index, README, canonical issue paths, JSON schema version, counts, timestamps, and traversal-safe payload paths; search reports hashes and metadata without printing raw backup bodies",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4581352697,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4581352697,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26671988524\" event_id=\"issue-116\" model=\"gitclaw/backup\" idempotency_key=\"d0fac89b6a5335ffbf68984a0fb2da1e\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26671988524\" --\u003e\n## GitClaw Backup Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#116`\n- requested_backup_command: `manifest`\n- backup_command_status: `ok`\n- backup_branch: `gitclaw-backups`\n- backup_root: `.gitclaw/backups`\n- repo_backup_dir: `.gitclaw/backups/AnandChowdhary__gitclaw`\n- issue_backup_path: `.gitclaw/backups/AnandChowdhary__gitclaw/issues/000116.json`\n- index_path: `.gitclaw/backups/AnandChowdhary__gitclaw/index.json`\n- readme_path: `.gitclaw/backups/AnandChowdhary__gitclaw/README.md`\n- backup_schema_version: `1`\n- raw_comments_now: `0`\n- transcript_messages_now: `1`\n- assistant_turn_comments_now: `0`\n- issue_title_sha256_12: `ce0e67810369`\n- issue_side_execution: `deferred_to_post_turn_backup_branch`\n- raw_bodies_included: `false`\n- requested_local_command: `gitclaw backup manifest --root .gitclaw/backups --repo AnandChowdhary/gitclaw --issue 116`\n\nThe backup job runs after a successful assistant turn and writes the raw transcript backup plus repo-scoped index to the dedicated backup branch.\n\nIssue and comment bodies are not included in this report; the raw backup JSON is the canonical transcript copy. Requested backup subcommands are recorded here as issue-visible intent, then run locally against a fetched `gitclaw-backups` branch.\n\n### Backup Contents\n- issue metadata\n- raw issue comments\n- reconstructed transcript with GitClaw assistant markers stripped\n- generation timestamp\n- schema version\n\n### Requested Command\n- `manifest` requested from the issue thread\n- run `gitclaw backup manifest --root .gitclaw/backups --repo AnandChowdhary/gitclaw --issue 116` after fetching `gitclaw-backups`\n- issue-side execution is metadata-only because the backup branch is written after this assistant turn\n\n### Verification\n- `gitclaw backup verify --root .gitclaw/backups --repo \u003cowner/repo\u003e`\n- `gitclaw backup search --root .gitclaw/backups --repo \u003cowner/repo\u003e \u003cquery\u003e`\n- `gitclaw backup retention-plan --root .gitclaw/backups --repo \u003cowner/repo\u003e --keep-latest 50`\n- validates the repo-scoped index, README, canonical issue paths, JSON schema version, counts, timestamps, and traversal-safe payload paths; search reports hashes and metadata without printing raw backup bodies",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T02:28:27Z",
+      "updated_at": "2026-05-30T02:28:27Z"
+    }
+  ]
+}
