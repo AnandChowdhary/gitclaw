@@ -144,6 +144,8 @@ for expected in \
   'permissions_actions_write: `true`' \
   'permissions_issues_write: `true`' \
   'workflow_inputs: `5`' \
+  'state_workflow_present: `true`' \
+  'state_workflow_inputs: `4`' \
   'channel_thread_issue: `false`' \
   'channel_message_comments_now: `0`' \
   'supported_providers: `telegram, slack, generic`' \

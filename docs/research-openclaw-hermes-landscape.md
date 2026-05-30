@@ -810,6 +810,12 @@ new offsets. Account IDs and offsets should appear only as short hashes so the
 state issue stays auditable without becoming a plaintext credential or cursor
 store.
 
+2026-05-30 channel state workflow follow-up: the no-server version should expose
+channel offset writes through a `workflow_dispatch` wrapper as well as the local
+CLI. Provider pollers, manual bridge experiments, and future self-renewing
+gateway jobs can then update state with the repository `GITHUB_TOKEN`, keeping
+the bridge architecture GitHub-native rather than webhook/socket-hosted.
+
 Hermes' session docs also expose a practical backup primitive:
 `hermes sessions export backup.jsonl` writes conversation metadata and messages
 as durable JSONL. GitClaw should preserve the same principle, but use GitHub

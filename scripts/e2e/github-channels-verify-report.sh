@@ -147,6 +147,11 @@ for expected in \
   'permissions_issues_write: `true`' \
   'workflow_inputs: `5`' \
   'required_workflow_inputs: `5`' \
+  'state_workflow_path: `.github/workflows/gitclaw-channel-state.yml`' \
+  'state_workflow_present: `true`' \
+  'state_workflow_dispatch_trigger: `true`' \
+  'state_workflow_permissions_issues_write: `true`' \
+  'state_workflow_inputs: `4`' \
   'supported_providers: `telegram, slack, generic`' \
   'wake_strategy: `workflow_dispatch`' \
   'channel_thread_issue: `false`' \

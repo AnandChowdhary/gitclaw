@@ -1,0 +1,50 @@
+name: GitClaw Channel State
+
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: External channel name, such as telegram or slack
+        required: true
+      account_id:
+        description: External channel account, bot, or workspace id
+        required: true
+      offset:
+        description: Provider offset, update id, cursor, or event id
+        required: false
+      lease_run_id:
+        description: Optional bridge run id for audit
+        required: false
+
+concurrency:
+  group: gitclaw-channel-state-${{ inputs.channel }}-${{ inputs.account_id }}
+  cancel-in-progress: false
+
+jobs:
+  state:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: stable
+
+      - id: state
+        run: |
+          set -euo pipefail
+          lease_run_id="${GITCLAW_CHANNEL_LEASE_RUN_ID:-$GITHUB_RUN_ID}"
+          go run ./cmd/gitclaw channel-state --lease-run-id "$lease_run_id"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
+          GITCLAW_CHANNEL: ${{ inputs.channel }}
+          GITCLAW_CHANNEL_ACCOUNT_ID: ${{ inputs.account_id }}
+          GITCLAW_CHANNEL_OFFSET: ${{ inputs.offset }}
+          GITCLAW_CHANNEL_LEASE_RUN_ID: ${{ inputs.lease_run_id }}

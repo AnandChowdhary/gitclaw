@@ -8,6 +8,7 @@ import (
 )
 
 const channelIngestWorkflowPath = ".github/workflows/gitclaw-channel-ingest.yml"
+const channelStateWorkflowPath = ".github/workflows/gitclaw-channel-state.yml"
 
 var channelReportProviders = []string{
 	"telegram",
@@ -16,7 +17,8 @@ var channelReportProviders = []string{
 }
 
 type channelSurface struct {
-	Workflow channelWorkflow
+	IngestWorkflow channelWorkflow
+	StateWorkflow  channelWorkflow
 }
 
 type channelWorkflow struct {
@@ -66,11 +68,16 @@ func renderChannelReport(ev Event, cfg Config, comments []Comment, includeIssue 
 	fmt.Fprintf(&b, "- channel_label: `%s`\n", cfg.ChannelLabel)
 	fmt.Fprintf(&b, "- trigger_label: `%s`\n", cfg.TriggerLabel)
 	fmt.Fprintf(&b, "- workflow_path: `%s`\n", channelIngestWorkflowPath)
-	fmt.Fprintf(&b, "- workflow_present: `%t`\n", surface.Workflow.Present)
-	fmt.Fprintf(&b, "- workflow_dispatch_trigger: `%t`\n", surface.Workflow.WorkflowDispatch)
-	fmt.Fprintf(&b, "- permissions_actions_write: `%t`\n", surface.Workflow.ActionsWrite)
-	fmt.Fprintf(&b, "- permissions_issues_write: `%t`\n", surface.Workflow.IssuesWrite)
-	fmt.Fprintf(&b, "- workflow_inputs: `%d`\n", surface.Workflow.Inputs)
+	fmt.Fprintf(&b, "- workflow_present: `%t`\n", surface.IngestWorkflow.Present)
+	fmt.Fprintf(&b, "- workflow_dispatch_trigger: `%t`\n", surface.IngestWorkflow.WorkflowDispatch)
+	fmt.Fprintf(&b, "- permissions_actions_write: `%t`\n", surface.IngestWorkflow.ActionsWrite)
+	fmt.Fprintf(&b, "- permissions_issues_write: `%t`\n", surface.IngestWorkflow.IssuesWrite)
+	fmt.Fprintf(&b, "- workflow_inputs: `%d`\n", surface.IngestWorkflow.Inputs)
+	fmt.Fprintf(&b, "- state_workflow_path: `%s`\n", channelStateWorkflowPath)
+	fmt.Fprintf(&b, "- state_workflow_present: `%t`\n", surface.StateWorkflow.Present)
+	fmt.Fprintf(&b, "- state_workflow_dispatch_trigger: `%t`\n", surface.StateWorkflow.WorkflowDispatch)
+	fmt.Fprintf(&b, "- state_workflow_permissions_issues_write: `%t`\n", surface.StateWorkflow.IssuesWrite)
+	fmt.Fprintf(&b, "- state_workflow_inputs: `%d`\n", surface.StateWorkflow.Inputs)
 	if includeIssue {
 		fmt.Fprintf(&b, "- channel_thread_issue: `%t`\n", HasChannelThreadMarker(ev.Issue.Body))
 		fmt.Fprintf(&b, "- channel_message_comments_now: `%d`\n", channelMessages)
@@ -84,20 +91,33 @@ func renderChannelReport(ev Event, cfg Config, comments []Comment, includeIssue 
 	b.WriteString("Channel ingress mirrors external messages into canonical GitHub issues, then wakes the normal handler with `workflow_dispatch`. Channel message bodies, issue bodies, and tokens are not included in this report.\n\n")
 
 	b.WriteString("### Workflow\n")
-	if !surface.Workflow.Present {
+	if !surface.IngestWorkflow.Present {
 		b.WriteString("- none\n")
 	} else {
 		fmt.Fprintf(
 			&b,
 			"- `%s` bytes=`%d` lines=`%d` workflow_dispatch=`%t` actions_write=`%t` issues_write=`%t` inputs=`%d` sha256_12=`%s`\n",
-			surface.Workflow.Path,
-			surface.Workflow.Bytes,
-			surface.Workflow.Lines,
-			surface.Workflow.WorkflowDispatch,
-			surface.Workflow.ActionsWrite,
-			surface.Workflow.IssuesWrite,
-			surface.Workflow.Inputs,
-			surface.Workflow.SHA,
+			surface.IngestWorkflow.Path,
+			surface.IngestWorkflow.Bytes,
+			surface.IngestWorkflow.Lines,
+			surface.IngestWorkflow.WorkflowDispatch,
+			surface.IngestWorkflow.ActionsWrite,
+			surface.IngestWorkflow.IssuesWrite,
+			surface.IngestWorkflow.Inputs,
+			surface.IngestWorkflow.SHA,
+		)
+	}
+	if surface.StateWorkflow.Present {
+		fmt.Fprintf(
+			&b,
+			"- `%s` bytes=`%d` lines=`%d` workflow_dispatch=`%t` issues_write=`%t` inputs=`%d` sha256_12=`%s`\n",
+			surface.StateWorkflow.Path,
+			surface.StateWorkflow.Bytes,
+			surface.StateWorkflow.Lines,
+			surface.StateWorkflow.WorkflowDispatch,
+			surface.StateWorkflow.IssuesWrite,
+			surface.StateWorkflow.Inputs,
+			surface.StateWorkflow.SHA,
 		)
 	}
 
@@ -139,12 +159,17 @@ func renderChannelVerifyReport(ev Event, cfg Config, comments []Comment, include
 	fmt.Fprintf(&b, "- channel_label: `%s`\n", cfg.ChannelLabel)
 	fmt.Fprintf(&b, "- trigger_label: `%s`\n", cfg.TriggerLabel)
 	fmt.Fprintf(&b, "- workflow_path: `%s`\n", channelIngestWorkflowPath)
-	fmt.Fprintf(&b, "- workflow_present: `%t`\n", surface.Workflow.Present)
-	fmt.Fprintf(&b, "- workflow_dispatch_trigger: `%t`\n", surface.Workflow.WorkflowDispatch)
-	fmt.Fprintf(&b, "- permissions_actions_write: `%t`\n", surface.Workflow.ActionsWrite)
-	fmt.Fprintf(&b, "- permissions_issues_write: `%t`\n", surface.Workflow.IssuesWrite)
-	fmt.Fprintf(&b, "- workflow_inputs: `%d`\n", surface.Workflow.Inputs)
+	fmt.Fprintf(&b, "- workflow_present: `%t`\n", surface.IngestWorkflow.Present)
+	fmt.Fprintf(&b, "- workflow_dispatch_trigger: `%t`\n", surface.IngestWorkflow.WorkflowDispatch)
+	fmt.Fprintf(&b, "- permissions_actions_write: `%t`\n", surface.IngestWorkflow.ActionsWrite)
+	fmt.Fprintf(&b, "- permissions_issues_write: `%t`\n", surface.IngestWorkflow.IssuesWrite)
+	fmt.Fprintf(&b, "- workflow_inputs: `%d`\n", surface.IngestWorkflow.Inputs)
 	fmt.Fprintf(&b, "- required_workflow_inputs: `%d`\n", 5)
+	fmt.Fprintf(&b, "- state_workflow_path: `%s`\n", channelStateWorkflowPath)
+	fmt.Fprintf(&b, "- state_workflow_present: `%t`\n", surface.StateWorkflow.Present)
+	fmt.Fprintf(&b, "- state_workflow_dispatch_trigger: `%t`\n", surface.StateWorkflow.WorkflowDispatch)
+	fmt.Fprintf(&b, "- state_workflow_permissions_issues_write: `%t`\n", surface.StateWorkflow.IssuesWrite)
+	fmt.Fprintf(&b, "- state_workflow_inputs: `%d`\n", surface.StateWorkflow.Inputs)
 	fmt.Fprintf(&b, "- supported_providers: `%s`\n", strings.Join(channelReportProviders, ", "))
 	fmt.Fprintf(&b, "- wake_strategy: `%s`\n", "workflow_dispatch")
 	if includeIssue {
@@ -177,19 +202,19 @@ func renderChannelVerifyReport(ev Event, cfg Config, comments []Comment, include
 
 func channelVerifyFindings(surface channelSurface) []string {
 	var findings []string
-	if !surface.Workflow.Present {
+	if !surface.IngestWorkflow.Present {
 		return []string{"channel_ingest_workflow_missing"}
 	}
-	if !surface.Workflow.WorkflowDispatch {
+	if !surface.IngestWorkflow.WorkflowDispatch {
 		findings = append(findings, "workflow_dispatch_missing")
 	}
-	if !surface.Workflow.ActionsWrite {
+	if !surface.IngestWorkflow.ActionsWrite {
 		findings = append(findings, "actions_write_permission_missing")
 	}
-	if !surface.Workflow.IssuesWrite {
+	if !surface.IngestWorkflow.IssuesWrite {
 		findings = append(findings, "issues_write_permission_missing")
 	}
-	if surface.Workflow.Inputs < 5 {
+	if surface.IngestWorkflow.Inputs < 5 {
 		findings = append(findings, "required_workflow_inputs_missing")
 	}
 	return findings
@@ -205,26 +230,34 @@ func inspectChannelSurface(root string) channelSurface {
 		root = "."
 	}
 	surface := channelSurface{
-		Workflow: channelWorkflow{Path: channelIngestWorkflowPath},
+		IngestWorkflow: channelWorkflow{Path: channelIngestWorkflowPath},
+		StateWorkflow:  channelWorkflow{Path: channelStateWorkflowPath},
 	}
 	absRoot, err := filepath.Abs(root)
 	if err != nil {
 		return surface
 	}
-	body, err := os.ReadFile(filepath.Join(absRoot, filepath.FromSlash(channelIngestWorkflowPath)))
+	surface.IngestWorkflow = inspectChannelWorkflow(absRoot, channelIngestWorkflowPath)
+	surface.StateWorkflow = inspectChannelWorkflow(absRoot, channelStateWorkflowPath)
+	return surface
+}
+
+func inspectChannelWorkflow(absRoot, rel string) channelWorkflow {
+	workflow := channelWorkflow{Path: rel}
+	body, err := os.ReadFile(filepath.Join(absRoot, filepath.FromSlash(rel)))
 	if err != nil {
-		return surface
+		return workflow
 	}
 	text := string(body)
-	surface.Workflow.Present = true
-	surface.Workflow.Bytes = len(body)
-	surface.Workflow.Lines = lineCount(text)
-	surface.Workflow.SHA = shortDocumentHash(text)
-	surface.Workflow.WorkflowDispatch = strings.Contains(text, "workflow_dispatch:")
-	surface.Workflow.ActionsWrite = strings.Contains(text, "actions: write")
-	surface.Workflow.IssuesWrite = strings.Contains(text, "issues: write")
-	surface.Workflow.Inputs = countWorkflowInputKeys(text)
-	return surface
+	workflow.Present = true
+	workflow.Bytes = len(body)
+	workflow.Lines = lineCount(text)
+	workflow.SHA = shortDocumentHash(text)
+	workflow.WorkflowDispatch = strings.Contains(text, "workflow_dispatch:")
+	workflow.ActionsWrite = strings.Contains(text, "actions: write")
+	workflow.IssuesWrite = strings.Contains(text, "issues: write")
+	workflow.Inputs = countWorkflowInputKeys(text)
+	return workflow
 }
 
 func countChannelMessages(comments []Comment) int {

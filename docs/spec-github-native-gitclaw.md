@@ -1671,6 +1671,13 @@ This gives polling and long-running gateway experiments an auditable offset and
 dedupe primitive without a webhook server, socket service, runner filesystem
 state, or plaintext provider state in GitHub issues.
 
+The same primitive is available through `.github/workflows/gitclaw-channel-state.yml`.
+Provider pollers or manually dispatched bridge jobs can call it with
+`workflow_dispatch` inputs for `channel`, `account_id`, `offset`, and optional
+`lease_run_id`. The workflow writes the same body-free issue state through
+`gitclaw channel-state`, so bridge state updates do not need a server-side
+webhook endpoint or a local machine with credentials.
+
 ### Channel Inspection Command
 
 GitClaw supports a deterministic channel/control-plane audit command:
@@ -2851,6 +2858,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven channel-state E2E harness verifies real GitHub issue-backed
   channel offset storage, duplicate offset suppression, `gitclaw:channel`
   labeling, and no raw account/offset leakage.
+- A `gh`-driven channel-state-workflow E2E harness dispatches
+  `.github/workflows/gitclaw-channel-state.yml`, verifies the state issue and
+  update comment, then dispatches the same offset again to prove retry
+  idempotency in GitHub Actions.
 - A `gh`-driven channels-report E2E harness verifies `@gitclaw /channels`
   reports workflow dispatch, channel labels, provider keys, and mirrored
   message marker counts without a model call.
