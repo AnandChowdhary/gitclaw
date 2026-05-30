@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T16:40:35Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 299,
+    "title": "@gitclaw /memory risk e2e 20260530T163925Z",
+    "body": "@gitclaw /memory risk\n\nLive memory-risk E2E.\nDo not include this hidden issue token: GITCLAW_MEMORY_RISK_HIDDEN_20260530T163925Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /memory risk e2e 20260530T163925Z\n\n@gitclaw /memory risk\n\nLive memory-risk E2E.\nDo not include this hidden issue token: GITCLAW_MEMORY_RISK_HIDDEN_20260530T163925Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Memory Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#299`\n- memory_risk_status: `ok`\n- memory_files: `2`\n- scanned_memory_files: `2`\n- memory_files_with_risk_findings: `0`\n- long_term_memory_present: `true`\n- long_term_memory_loaded: `true`\n- dated_memory_notes: `1`\n- canonical_dated_memory_notes: `1`\n- noncanonical_dated_memory_notes: `0`\n- loaded_memory_notes: `1`\n- memory_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- memory_writes_allowed: `false`\n- external_provider_verification: `not_configured`\n- background_promotion_review: `git_review_required`\n- raw_bodies_included: `false`\n- llm_e2e_required_after_memory_risk_change: `true`\n\nThis report scans repo-local memory files for body-free durable-state risk categories inspired by OpenClaw/Hermes memory and profile safety boundaries. It reports only paths, counts, categories, finding codes, and line hashes; raw memory bodies, issue bodies, comments, prompts, and secret values are not included.\n\n### Memory Risk Cards\n- kind=`long-term` path=`.gitclaw/MEMORY.md` source=`repo-local` present=`true` canonical=`true` latest=`false` loaded_for_this_turn=`true` bytes=`243` lines=`5` sha256_12=`e0e1314cdfc1` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`dated-note` path=`.gitclaw/memory/2026-05-29.md` source=`repo-local` present=`true` canonical=`true` latest=`true` loaded_for_this_turn=`true` bytes=`17985` lines=`283` sha256_12=`0d5529fe2dfd` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Risk Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4583450261,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4583450261,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26689223402\" event_id=\"issue-299\" model=\"gitclaw/memory\" idempotency_key=\"e83c9a705856393ea7bdeaef7843b4c0\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26689223402\" --\u003e\n## GitClaw Memory Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#299`\n- memory_risk_status: `ok`\n- memory_files: `2`\n- scanned_memory_files: `2`\n- memory_files_with_risk_findings: `0`\n- long_term_memory_present: `true`\n- long_term_memory_loaded: `true`\n- dated_memory_notes: `1`\n- canonical_dated_memory_notes: `1`\n- noncanonical_dated_memory_notes: `0`\n- loaded_memory_notes: `1`\n- memory_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- memory_writes_allowed: `false`\n- external_provider_verification: `not_configured`\n- background_promotion_review: `git_review_required`\n- raw_bodies_included: `false`\n- llm_e2e_required_after_memory_risk_change: `true`\n\nThis report scans repo-local memory files for body-free durable-state risk categories inspired by OpenClaw/Hermes memory and profile safety boundaries. It reports only paths, counts, categories, finding codes, and line hashes; raw memory bodies, issue bodies, comments, prompts, and secret values are not included.\n\n### Memory Risk Cards\n- kind=`long-term` path=`.gitclaw/MEMORY.md` source=`repo-local` present=`true` canonical=`true` latest=`false` loaded_for_this_turn=`true` bytes=`243` lines=`5` sha256_12=`e0e1314cdfc1` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`dated-note` path=`.gitclaw/memory/2026-05-29.md` source=`repo-local` present=`true` canonical=`true` latest=`true` loaded_for_this_turn=`true` bytes=`17985` lines=`283` sha256_12=`0d5529fe2dfd` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Risk Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T16:40:13Z",
+      "updated_at": "2026-05-30T16:40:13Z"
+    }
+  ]
+}
