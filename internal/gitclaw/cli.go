@@ -1009,15 +1009,29 @@ func runModelsCommand(args []string) error {
 }
 
 func runConfigCommand(args []string) error {
-	if len(args) > 1 || (len(args) == 1 && args[0] != "list") {
-		return fmt.Errorf("usage: gitclaw config [list]")
+	if len(args) == 0 || args[0] == "list" {
+		if len(args) > 1 {
+			return fmt.Errorf("unknown config list argument %q", args[1])
+		}
+		cfg, err := LoadEffectiveConfig()
+		if err != nil {
+			return err
+		}
+		fmt.Println(RenderConfigCLIReport(cfg))
+		return nil
 	}
-	cfg, err := LoadEffectiveConfig()
-	if err != nil {
-		return err
+	if args[0] == "risk" || args[0] == "risk-audit" {
+		if len(args) > 1 {
+			return fmt.Errorf("unknown config risk argument %q", args[1])
+		}
+		cfg, err := LoadEffectiveConfig()
+		if err != nil {
+			return err
+		}
+		fmt.Println(RenderConfigRiskCLIReport(cfg))
+		return nil
 	}
-	fmt.Println(RenderConfigCLIReport(cfg))
-	return nil
+	return fmt.Errorf("usage: gitclaw config [list|risk]")
 }
 
 func runPolicyCommand(args []string) error {

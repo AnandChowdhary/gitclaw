@@ -36,6 +36,7 @@ go run ./cmd/gitclaw artifacts risk
 go run ./cmd/gitclaw diffs risk
 go run ./cmd/gitclaw profile risk
 go run ./cmd/gitclaw models risk
+go run ./cmd/gitclaw config risk
 ```
 
 The GitHub Action handles issue/comment events that mention the configured
@@ -122,6 +123,7 @@ Operational surfaces:
 gitclaw models list
 gitclaw models risk
 gitclaw config list
+gitclaw config risk
 gitclaw doctor
 gitclaw policy verify
 gitclaw artifacts list
@@ -177,6 +179,7 @@ scripts/e2e/github-tasks-risk-report.sh
 scripts/e2e/github-tools-risk-report.sh
 scripts/e2e/github-workspace-risk-report.sh
 scripts/e2e/github-channels-risk-report.sh
+scripts/e2e/github-config-risk-report.sh
 ```
 
 Live E2E scripts create a real GitHub issue, wait for the GitHub Actions run,

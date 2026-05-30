@@ -41,11 +41,19 @@ func IsConfigReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderConfigReport(ev Event, cfg Config) string {
+	if isConfigRiskRequest(ev, cfg) {
+		return renderConfigRiskReport(ev, cfg, true)
+	}
 	return renderConfigReport(ev, cfg, true)
 }
 
 func RenderConfigCLIReport(cfg Config) string {
 	return renderConfigReport(Event{}, cfg, false)
+}
+
+func isConfigRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && (fields[0] == "/config" || fields[0] == "/configuration") && (strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit"))
 }
 
 func renderConfigReport(ev Event, cfg Config, includeIssue bool) string {

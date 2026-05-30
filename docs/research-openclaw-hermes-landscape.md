@@ -663,6 +663,19 @@ The report should expose only counts, finding codes, sources, and hashes, then
 prove the surface with a live E2E that first performs a real GitHub Models
 conversation and then audits that session metadata deterministically.
 
+2026-05-30 config-risk follow-up: OpenClaw's config/status surface and Hermes'
+profile config model both make configuration a high-authority operational
+boundary rather than ordinary prompt text. GitClaw should add `@gitclaw
+/config risk` and `gitclaw config risk` as the body-free risk audit for that
+boundary: inspect `.gitclaw/config.yml`, workflow presence, trigger labels,
+trusted actor scope, model/fallback/budget settings, skill/tool gates, and
+workflow risk patterns without printing config or workflow bodies. The report
+should flag broad trusted associations, label collisions, missing workflows,
+unsafe budgets, missing fallback coverage, credential material, raw prompt
+logging, webhook/socket/daemon drift, write-mode config, risky workflow
+permissions, `pull_request_target`, raw secret echoing, and unbounded
+background loops, then require a live GitHub Models/tool-use E2E.
+
 2026-05-30 tool-grounding follow-up: the first model-backed conversation after
 the parameter fix proved provider access but exposed prompt ambiguity: the model
 echoed the issue nonce where the harness wanted the repository search-result

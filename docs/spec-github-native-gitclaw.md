@@ -2413,6 +2413,7 @@ GitClaw supports a deterministic config/control-plane audit command:
 ```text
 @gitclaw /config
 @gitclaw /config list
+@gitclaw /config risk
 ```
 
 The command runs after normal preflight and context loading, but before model
@@ -2438,11 +2439,37 @@ issue:
 
 ```bash
 gitclaw config list
+gitclaw config risk
 ```
 
 The local report omits repository, issue number, and issue-title hash while
 retaining effective config source, labels, trusted associations, prompt
 budgets, deterministic slash commands, and config/workflow file metadata.
+
+`@gitclaw /config risk` and `gitclaw config risk` provide the stricter
+body-free config/control-plane audit. The report follows OpenClaw's
+config/schema discipline and Hermes' profile boundary by treating
+`.gitclaw/config.yml` and GitHub workflow files as high-authority reviewed
+state. It does not call the model or rewrite config.
+
+The config risk report publishes:
+
+- config source, config-file presence, workflow presence, and file hashes,
+- trigger label/prefix, disabled label, trusted associations, broad
+  association counts, managed-label collisions, and slash-command count,
+- model provider, primary model, fallback count, prompt/output/transcript
+  budgets, and run mode,
+- skill/tool gate counts and allow/deny conflicts,
+- finding codes, severities, paths, fields, and line hashes for missing config
+  or workflow files, broad actor trust, label collisions, unsafe model budgets,
+  missing fallback coverage, credential material, raw prompt logging, external
+  webhook/socket/daemon config, write-mode config, risky workflow permissions,
+  `pull_request_target`, raw secret echoing, and unbounded background loops.
+
+It never prints config bodies, workflow bodies, issue/comment bodies, prompts,
+provider errors, API keys, tokens, credentials, or secret values. Any change to
+this surface requires local tests plus a live GitHub issue E2E that includes a
+normal GitHub Models follow-up turn with repo-reader/tool usage.
 
 ### Command Catalog Command
 
