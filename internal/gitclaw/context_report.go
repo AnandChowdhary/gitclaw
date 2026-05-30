@@ -59,13 +59,20 @@ func renderContextReport(ev Event, cfg Config, transcript []TranscriptMessage, r
 		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
 	}
 	fmt.Fprintf(&b, "- transcript_messages: `%d`\n", len(transcript))
+	fmt.Fprintf(&b, "- context_references: `%d`\n", len(repoContext.ContextReferences))
+	fmt.Fprintf(&b, "- loaded_context_references: `%d`\n", loadedContextReferenceCount(repoContext.ContextReferences))
 	fmt.Fprintf(&b, "- max_prompt_bytes: `%d`\n", cfg.MaxPromptBytes)
 	fmt.Fprintf(&b, "- max_transcript_messages: `%d`\n", cfg.MaxTranscriptMessages)
-	fmt.Fprintf(&b, "- max_transcript_message_bytes: `%d`\n\n", cfg.MaxTranscriptMessageBytes)
-	b.WriteString("Context file bodies, skill bodies, issue/comment bodies, and tool output bodies are not included.\n\n")
+	fmt.Fprintf(&b, "- max_transcript_message_bytes: `%d`\n", cfg.MaxTranscriptMessageBytes)
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_inputs_included: `%t`\n\n", false)
+	b.WriteString("Context file bodies, context reference bodies, skill bodies, issue/comment bodies, and tool output bodies are not included.\n\n")
 
 	b.WriteString("### Context Files\n")
 	writeContextDocumentList(&b, repoContext.Documents)
+
+	b.WriteString("\n### Context References\n")
+	writeContextReferenceList(&b, repoContext.ContextReferences)
 
 	b.WriteString("\n### Selected Skills\n")
 	writeContextDocumentList(&b, repoContext.Skills)
@@ -107,6 +114,8 @@ func renderContextInfoReport(ev Event, cfg Config, repoContext RepoContext, path
 	fmt.Fprintf(&b, "- context_info_status: `%s`\n", status)
 	fmt.Fprintf(&b, "- matched_context_items: `%d`\n", len(matches))
 	fmt.Fprintf(&b, "- context_files_loaded: `%d`\n", len(repoContext.Documents))
+	fmt.Fprintf(&b, "- context_references: `%d`\n", len(repoContext.ContextReferences))
+	fmt.Fprintf(&b, "- loaded_context_references: `%d`\n", loadedContextReferenceCount(repoContext.ContextReferences))
 	fmt.Fprintf(&b, "- selected_skills: `%d`\n", len(repoContext.Skills))
 	fmt.Fprintf(&b, "- active_tool_outputs: `%d`\n", len(repoContext.ToolOutputs))
 	fmt.Fprintf(&b, "- max_prompt_bytes: `%d`\n", cfg.MaxPromptBytes)
@@ -138,6 +147,29 @@ func writeContextDocumentList(b *strings.Builder, docs []ContextDocument) {
 	}
 	for _, doc := range docs {
 		fmt.Fprintf(b, "- `%s` bytes=`%d` lines=`%d` sha256_12=`%s`\n", doc.Path, len(doc.Body), lineCount(doc.Body), shortDocumentHash(doc.Body))
+	}
+}
+
+func writeContextReferenceList(b *strings.Builder, refs []ContextReferenceSummary) {
+	if len(refs) == 0 {
+		b.WriteString("- none\n")
+		return
+	}
+	for _, ref := range refs {
+		fmt.Fprintf(b, "- kind=`%s` path=`%s` range=`%s` status=`%s` bytes=`%d` lines=`%d` entries=`%d` sha256_12=`%s`",
+			ref.Kind,
+			ref.Path,
+			inlineCode(ref.LineRange),
+			ref.Status,
+			ref.Bytes,
+			ref.Lines,
+			ref.Entries,
+			ref.SHA,
+		)
+		if ref.Reason != "" {
+			fmt.Fprintf(b, " reason=`%s`", inlineCode(ref.Reason))
+		}
+		b.WriteByte('\n')
 	}
 }
 
@@ -244,7 +276,7 @@ func BuildContextInfoMatches(repoContext RepoContext, path string) []ContextInfo
 }
 
 func contextPathMatches(candidate, requested string) bool {
-	candidate = cleanContextLookupPath(candidate)
+	candidate = cleanContextMatchPath(candidate)
 	requested = cleanContextLookupPath(requested)
 	if candidate == "" || requested == "" {
 		return false
@@ -256,6 +288,26 @@ func contextPathMatches(candidate, requested string) bool {
 		return true
 	}
 	return false
+}
+
+func cleanContextMatchPath(path string) string {
+	path = cleanContextLookupPath(path)
+	path = strings.TrimPrefix(path, "@file:")
+	path = strings.TrimPrefix(path, "@folder:")
+	if matches := contextLineRangePattern.FindStringSubmatch(path); len(matches) > 0 {
+		path = matches[1]
+	}
+	return cleanContextLookupPath(path)
+}
+
+func loadedContextReferenceCount(refs []ContextReferenceSummary) int {
+	count := 0
+	for _, ref := range refs {
+		if ref.Status == "ok" {
+			count++
+		}
+	}
+	return count
 }
 
 func contextToolMatches(name, requested string) bool {

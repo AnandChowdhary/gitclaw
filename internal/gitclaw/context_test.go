@@ -109,6 +109,88 @@ Use read-only files.`)
 	}
 }
 
+func TestLoadRepoContextExpandsContextReferences(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SOUL.md", "Be concise.")
+	writeTestFile(t, root, "docs/ref.md", "first line\nsecond line token GITCLAW_CONTEXT_REF_V1\nthird line\n")
+	writeTestFile(t, root, "docs/nested/other.md", "folder-visible body should not be copied into reports\n")
+	writeTestFile(t, root, ".env", "GITCLAW_CONTEXT_REF_SECRET=do-not-load\n")
+
+	ctx, err := LoadRepoContext(root, []TranscriptMessage{{
+		Role: "user",
+		Body: "Please attach @file:docs/ref.md:2-2, inspect @folder:docs, and ignore @file:.env.",
+	}})
+	if err != nil {
+		t.Fatalf("LoadRepoContext returned error: %v", err)
+	}
+	if !hasContextDoc(ctx.Documents, "docs/ref.md:2", "GITCLAW_CONTEXT_REF_V1") {
+		t.Fatalf("file context reference was not loaded: %#v", ctx.Documents)
+	}
+	if hasContextDoc(ctx.Documents, "docs/ref.md:2", "first line") || hasContextDoc(ctx.Documents, "docs/ref.md:2", "third line") {
+		t.Fatalf("file context reference did not honor line range: %#v", ctx.Documents)
+	}
+	if !hasContextDoc(ctx.Documents, "@folder:docs", "path=docs/ref.md") || !hasContextDoc(ctx.Documents, "@folder:docs", "sha256_12=") {
+		t.Fatalf("folder context reference was not loaded as metadata: %#v", ctx.Documents)
+	}
+	if hasContextDoc(ctx.Documents, "@folder:docs", "folder-visible body") {
+		t.Fatalf("folder reference leaked file body: %#v", ctx.Documents)
+	}
+	if hasContextDoc(ctx.Documents, ".env", "do-not-load") {
+		t.Fatalf("sensitive file reference should not be loaded: %#v", ctx.Documents)
+	}
+	if len(ctx.ContextReferences) != 3 {
+		t.Fatalf("len(ContextReferences) = %d, want 3: %#v", len(ctx.ContextReferences), ctx.ContextReferences)
+	}
+	got := contextReferenceStatusMap(ctx.ContextReferences)
+	if got["file:docs/ref.md"] != "ok" {
+		t.Fatalf("file reference status = %q, want ok: %#v", got["file:docs/ref.md"], ctx.ContextReferences)
+	}
+	if got["folder:docs"] != "ok" {
+		t.Fatalf("folder reference status = %q, want ok: %#v", got["folder:docs"], ctx.ContextReferences)
+	}
+	if got["file:.env"] != "blocked" {
+		t.Fatalf("sensitive reference status = %q, want blocked: %#v", got["file:.env"], ctx.ContextReferences)
+	}
+}
+
+func TestRenderContextReportShowsContextReferenceMetadataWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SOUL.md", "Be concise.")
+	writeTestFile(t, root, "docs/ref.md", "first line\nsecond line token GITCLAW_CONTEXT_REF_REPORT_V1\nthird line\n")
+
+	transcript := []TranscriptMessage{{
+		Role: "user",
+		Body: "@gitclaw /context references @file:docs/ref.md:2-2\nHidden issue token: GITCLAW_CONTEXT_REF_ISSUE_SECRET.",
+	}}
+	ctx, err := LoadRepoContext(root, transcript)
+	if err != nil {
+		t.Fatalf("LoadRepoContext returned error: %v", err)
+	}
+	report := RenderContextReport(Event{
+		Repo:  "owner/repo",
+		Issue: Issue{Number: 7, Title: "@gitclaw /context references"},
+	}, DefaultConfig(), transcript, ctx)
+	for _, want := range []string{
+		"GitClaw Context Report",
+		"context_references: `1`",
+		"loaded_context_references: `1`",
+		"raw_bodies_included: `false`",
+		"raw_inputs_included: `false`",
+		"### Context References",
+		"kind=`file` path=`docs/ref.md` range=`2` status=`ok`",
+		"sha256_12=",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("context report missing %q:\n%s", want, report)
+		}
+	}
+	for _, notWant := range []string{"GITCLAW_CONTEXT_REF_REPORT_V1", "GITCLAW_CONTEXT_REF_ISSUE_SECRET", "second line token"} {
+		if strings.Contains(report, notWant) {
+			t.Fatalf("context report leaked %q:\n%s", notWant, report)
+		}
+	}
+}
+
 func TestLoadSkillContextSelectsRequestedAndAlwaysSkills(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
@@ -435,4 +517,12 @@ func contextDocPaths(docs []ContextDocument) string {
 		paths = append(paths, doc.Path)
 	}
 	return strings.Join(paths, "\n")
+}
+
+func contextReferenceStatusMap(refs []ContextReferenceSummary) map[string]string {
+	out := map[string]string{}
+	for _, ref := range refs {
+		out[ref.Kind+":"+ref.Path] = ref.Status
+	}
+	return out
 }

@@ -215,18 +215,31 @@ type LLMRequest struct {
 }
 
 type RepoContext struct {
-	Documents      []ContextDocument
-	Skills         []ContextDocument
-	SkillSummaries []SkillSummary
-	SkillBundles   []SkillBundleSummary
-	ToolOutputs    []ToolOutput
-	AllowedTools   map[string]bool
-	DisabledTools  map[string]bool
+	Documents         []ContextDocument
+	ContextReferences []ContextReferenceSummary
+	Skills            []ContextDocument
+	SkillSummaries    []SkillSummary
+	SkillBundles      []SkillBundleSummary
+	ToolOutputs       []ToolOutput
+	AllowedTools      map[string]bool
+	DisabledTools     map[string]bool
 }
 
 type ContextDocument struct {
 	Path string
 	Body string
+}
+
+type ContextReferenceSummary struct {
+	Kind      string
+	Path      string
+	LineRange string
+	Status    string
+	Reason    string
+	Bytes     int
+	Lines     int
+	Entries   int
+	SHA       string
 }
 
 type SkillSummary struct {

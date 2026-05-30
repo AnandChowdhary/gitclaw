@@ -142,6 +142,12 @@ func TestHandleContextCommandPostsReportWithoutLLM(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(root, "go.mod"), []byte("module github.com/AnandChowdhary/gitclaw\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
+	if err := os.MkdirAll(filepath.Join(root, "docs"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(root, "docs", "ref.md"), []byte("first\nsecond CONTEXT_REFERENCE_HANDLE_TOKEN\nthird\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
 	if err := os.MkdirAll(filepath.Join(root, ".gitclaw", "SKILLS", "repo-reader"), 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -163,7 +169,7 @@ Skill token.
 		"issue": {
 			"number": 90,
 			"title": "@gitclaw /context",
-			"body": "Please inspect go.mod with the repo-reader skill.",
+			"body": "Please inspect go.mod with the repo-reader skill and attach @file:docs/ref.md:2-2.",
 			"author_association": "MEMBER",
 			"user": {"login": "alice", "type": "User"},
 			"labels": [{"name": "gitclaw"}]
@@ -187,10 +193,13 @@ Skill token.
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Context Report", "Generated without a model call", ".gitclaw/SOUL.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", "gitclaw.list_files", "gitclaw.read_file", "model=\"gitclaw/context\""} {
+	for _, want := range []string{"GitClaw Context Report", "Generated without a model call", ".gitclaw/SOUL.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", "context_references: `1`", "loaded_context_references: `1`", "kind=`file` path=`docs/ref.md` range=`2` status=`ok`", "gitclaw.list_files", "gitclaw.read_file", "model=\"gitclaw/context\""} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("context report missing %q:\n%s", want, body)
 		}
+	}
+	if strings.Contains(body, "CONTEXT_REFERENCE_HANDLE_TOKEN") {
+		t.Fatalf("context report leaked referenced file body:\n%s", body)
 	}
 	if !hasLabel(github.IssueLabels[90], "gitclaw:done") || hasLabel(github.IssueLabels[90], "gitclaw:running") || hasLabel(github.IssueLabels[90], "gitclaw:error") {
 		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[90])

@@ -16,6 +16,8 @@ import (
 
 const (
 	maxContextDocumentBytes  = 12000
+	maxContextReferenceBytes = 12000
+	maxContextFolderEntries  = 120
 	maxToolReadBytes         = 8000
 	maxRepoFilesListed       = 240
 	maxToolFilesRead         = 5
@@ -67,14 +69,17 @@ func LoadRepoContextWithConfig(root string, transcript []TranscriptMessage, cfg 
 	}
 	documents := loadContextDocuments(absRoot, contextDocumentPaths)
 	documents = append(documents, loadMemoryDocuments(absRoot)...)
+	referenceDocs, referenceSummaries := loadContextReferences(absRoot, transcript)
+	documents = append(documents, referenceDocs...)
 	skillSummaries, skillBundles, skills := loadSkillContext(absRoot, transcript, cfg)
 	ctx := RepoContext{
-		Documents:      documents,
-		Skills:         skills,
-		SkillSummaries: skillSummaries,
-		SkillBundles:   skillBundles,
-		AllowedTools:   cfg.AllowedTools,
-		DisabledTools:  cfg.DisabledTools,
+		Documents:         documents,
+		ContextReferences: referenceSummaries,
+		Skills:            skills,
+		SkillSummaries:    skillSummaries,
+		SkillBundles:      skillBundles,
+		AllowedTools:      cfg.AllowedTools,
+		DisabledTools:     cfg.DisabledTools,
 	}
 	if toolEnabled, _, _ := toolEnabledByConfig("gitclaw.list_files", cfg); toolEnabled {
 		ctx.ToolOutputs = append(ctx.ToolOutputs, ToolOutput{Name: "gitclaw.list_files", Input: ".", Output: strings.Join(files, "\n")})
@@ -147,6 +152,308 @@ func loadContextDocuments(root string, paths []string) []ContextDocument {
 		docs = append(docs, ContextDocument{Path: path, Body: body})
 	}
 	return docs
+}
+
+type parsedContextReference struct {
+	Kind      string
+	Path      string
+	LineRange string
+	StartLine int
+	EndLine   int
+}
+
+func loadContextReferences(root string, transcript []TranscriptMessage) ([]ContextDocument, []ContextReferenceSummary) {
+	tokens := contextReferenceTokens(transcriptText(transcript))
+	if len(tokens) == 0 {
+		return nil, nil
+	}
+	docs := make([]ContextDocument, 0, len(tokens))
+	summaries := make([]ContextReferenceSummary, 0, len(tokens))
+	for _, token := range tokens {
+		ref, ok := parseContextReference(token)
+		if !ok {
+			continue
+		}
+		switch ref.Kind {
+		case "file":
+			doc, summary := loadFileContextReference(root, ref)
+			if summary.Status == "ok" {
+				docs = append(docs, doc)
+			}
+			summaries = append(summaries, summary)
+		case "folder":
+			doc, summary := loadFolderContextReference(root, ref)
+			if summary.Status == "ok" {
+				docs = append(docs, doc)
+			}
+			summaries = append(summaries, summary)
+		}
+	}
+	return docs, summaries
+}
+
+func contextReferenceTokens(text string) []string {
+	var tokens []string
+	seen := map[string]bool{}
+	for _, field := range strings.Fields(text) {
+		token := cleanContextReferenceToken(field)
+		if token == "" {
+			continue
+		}
+		lower := strings.ToLower(token)
+		if seen[lower] {
+			continue
+		}
+		seen[lower] = true
+		tokens = append(tokens, token)
+	}
+	return tokens
+}
+
+func cleanContextReferenceToken(token string) string {
+	token = strings.TrimSpace(token)
+	token = strings.Trim(token, "`\"'()[]{}<>")
+	token = strings.TrimRight(token, ".,;!?")
+	if strings.HasPrefix(token, "@file:") || strings.HasPrefix(token, "@folder:") {
+		return token
+	}
+	return ""
+}
+
+var contextLineRangePattern = regexp.MustCompile(`^(.+):([0-9]+)(?:-([0-9]+))?$`)
+
+func parseContextReference(token string) (parsedContextReference, bool) {
+	token = cleanContextReferenceToken(token)
+	if strings.HasPrefix(token, "@file:") {
+		path := strings.TrimSpace(strings.TrimPrefix(token, "@file:"))
+		ref := parsedContextReference{Kind: "file"}
+		if matches := contextLineRangePattern.FindStringSubmatch(path); len(matches) > 0 {
+			start, end := atoiPositive(matches[2]), atoiPositive(matches[3])
+			if end == 0 {
+				end = start
+			}
+			if start > 0 && end >= start {
+				path = matches[1]
+				ref.StartLine = start
+				ref.EndLine = end
+				if start == end {
+					ref.LineRange = fmt.Sprintf("%d", start)
+				} else {
+					ref.LineRange = fmt.Sprintf("%d-%d", start, end)
+				}
+			}
+		}
+		ref.Path = cleanContextLookupPath(path)
+		return ref, ref.Path != ""
+	}
+	if strings.HasPrefix(token, "@folder:") {
+		path := cleanContextLookupPath(strings.TrimSpace(strings.TrimPrefix(token, "@folder:")))
+		return parsedContextReference{Kind: "folder", Path: path}, path != ""
+	}
+	return parsedContextReference{}, false
+}
+
+func atoiPositive(value string) int {
+	value = strings.TrimSpace(value)
+	if value == "" {
+		return 0
+	}
+	n := 0
+	for _, r := range value {
+		if r < '0' || r > '9' {
+			return 0
+		}
+		n = n*10 + int(r-'0')
+	}
+	return n
+}
+
+func loadFileContextReference(root string, ref parsedContextReference) (ContextDocument, ContextReferenceSummary) {
+	summary := ContextReferenceSummary{
+		Kind:      "file",
+		Path:      ref.Path,
+		LineRange: lineRangeOrNone(ref.LineRange),
+		Status:    "not_found",
+	}
+	if contextReferencePathBlocked(ref.Path) {
+		summary.Status = "blocked"
+		summary.Reason = "sensitive_path"
+		return ContextDocument{}, summary
+	}
+	body, err := readRepoTextFile(root, ref.Path, maxContextReferenceBytes)
+	if err != nil {
+		summary.Reason = contextReferenceErrorReason(err)
+		if summary.Reason == "path_outside_repository" {
+			summary.Status = "blocked"
+		}
+		return ContextDocument{}, summary
+	}
+	if ref.StartLine > 0 {
+		ranged, ok := fileLineRange(body, ref.StartLine, ref.EndLine)
+		if ok {
+			body = ranged
+		}
+	}
+	docPath := ref.Path
+	if ref.LineRange != "" {
+		docPath += ":" + ref.LineRange
+	}
+	summary.Status = "ok"
+	summary.Bytes = len(body)
+	summary.Lines = lineCount(body)
+	summary.SHA = shortDocumentHash(body)
+	return ContextDocument{Path: docPath, Body: body}, summary
+}
+
+func loadFolderContextReference(root string, ref parsedContextReference) (ContextDocument, ContextReferenceSummary) {
+	summary := ContextReferenceSummary{
+		Kind:      "folder",
+		Path:      ref.Path,
+		LineRange: "none",
+		Status:    "not_found",
+	}
+	if contextReferencePathBlocked(ref.Path) {
+		summary.Status = "blocked"
+		summary.Reason = "sensitive_path"
+		return ContextDocument{}, summary
+	}
+	path, err := safeRepoPath(root, ref.Path)
+	if err != nil {
+		summary.Status = "blocked"
+		summary.Reason = "path_outside_repository"
+		return ContextDocument{}, summary
+	}
+	info, err := os.Lstat(path)
+	if err != nil {
+		summary.Reason = contextReferenceErrorReason(err)
+		return ContextDocument{}, summary
+	}
+	if !info.IsDir() || info.Mode()&os.ModeSymlink != 0 {
+		summary.Status = "not_folder"
+		summary.Reason = "not_directory"
+		return ContextDocument{}, summary
+	}
+	body, entries := renderFolderContextReference(root, ref.Path)
+	if body == "" {
+		summary.Status = "empty"
+		summary.Reason = "no_text_files"
+		return ContextDocument{}, summary
+	}
+	docPath := "@folder:" + ref.Path
+	summary.Status = "ok"
+	summary.Bytes = len(body)
+	summary.Lines = lineCount(body)
+	summary.Entries = entries
+	summary.SHA = shortDocumentHash(body)
+	return ContextDocument{Path: docPath, Body: body}, summary
+}
+
+func renderFolderContextReference(root, rel string) (string, int) {
+	dir, err := safeRepoPath(root, rel)
+	if err != nil {
+		return "", 0
+	}
+	var b strings.Builder
+	entries := 0
+	_ = filepath.WalkDir(dir, func(path string, entry fs.DirEntry, err error) error {
+		if err != nil {
+			return nil
+		}
+		name := entry.Name()
+		if entry.IsDir() && shouldSkipDir(name) {
+			return filepath.SkipDir
+		}
+		if entry.IsDir() {
+			return nil
+		}
+		if entries >= maxContextFolderEntries {
+			return filepath.SkipDir
+		}
+		if shouldSkipFile(name) {
+			return nil
+		}
+		childRel, err := filepath.Rel(root, path)
+		if err != nil {
+			return nil
+		}
+		childRel = filepath.ToSlash(childRel)
+		if contextReferencePathBlocked(childRel) {
+			return nil
+		}
+		body, err := readRepoTextFile(root, childRel, maxSearchFileBytes)
+		if err != nil {
+			return nil
+		}
+		fmt.Fprintf(&b, "- path=%s bytes=%d lines=%d sha256_12=%s\n", childRel, len(body), lineCount(body), shortDocumentHash(body))
+		entries++
+		return nil
+	})
+	if entries >= maxContextFolderEntries {
+		b.WriteString("- ...\n")
+	}
+	return strings.TrimSpace(b.String()), entries
+}
+
+func lineRangeOrNone(value string) string {
+	if strings.TrimSpace(value) == "" {
+		return "none"
+	}
+	return value
+}
+
+func fileLineRange(body string, start, end int) (string, bool) {
+	if start <= 0 || end < start {
+		return "", false
+	}
+	lines := strings.Split(body, "\n")
+	if start > len(lines) {
+		return "", false
+	}
+	if end > len(lines) {
+		end = len(lines)
+	}
+	return strings.TrimSpace(strings.Join(lines[start-1:end], "\n")), true
+}
+
+func contextReferencePathBlocked(rel string) bool {
+	clean := strings.ToLower(cleanContextLookupPath(rel))
+	clean = strings.Trim(clean, "/")
+	if clean == "" {
+		return true
+	}
+	if clean == ".git" || strings.HasPrefix(clean, ".git/") {
+		return true
+	}
+	blockedDirs := []string{".ssh", ".aws", ".gnupg", ".kube", ".gitclaw/skills/.hub"}
+	for _, dir := range blockedDirs {
+		if clean == dir || strings.HasPrefix(clean, dir+"/") {
+			return true
+		}
+	}
+	base := filepath.Base(filepath.FromSlash(clean))
+	switch base {
+	case ".env", ".env.local", ".envrc", ".netrc", ".pgpass", ".npmrc", ".pypirc", "id_rsa", "id_ed25519", "authorized_keys", "config":
+		return true
+	default:
+		return false
+	}
+}
+
+func contextReferenceErrorReason(err error) string {
+	if err == nil {
+		return ""
+	}
+	msg := strings.ToLower(err.Error())
+	switch {
+	case strings.Contains(msg, "escapes repository"):
+		return "path_outside_repository"
+	case strings.Contains(msg, "binary file"):
+		return "binary_file"
+	case strings.Contains(msg, "not a regular file"):
+		return "not_regular_file"
+	default:
+		return "not_found"
+	}
 }
 
 func loadSkillContext(root string, transcript []TranscriptMessage, cfg Config) ([]SkillSummary, []SkillBundleSummary, []ContextDocument) {

@@ -671,10 +671,12 @@ GitHub issue/comment event
   git-tracked files.
 - Builds a skill index from `SKILL.md` frontmatter and loads full skill bodies
   only when selected or marked always-on.
+- Expands repo-bounded `@file:<path>[:line-range]` and `@folder:<path>`
+  context references from issue text into bounded read-only prompt context.
 - Runs bounded read-only repository tools before the model turn.
 - Supports deterministic `@gitclaw /context` reports so maintainers can inspect
-  which context files, skills, and tool outputs were assembled without making a
-  model call.
+  which context files, context references, skills, and tool outputs were
+  assembled without making a model call.
 
 `internal/agent`
 
@@ -810,10 +812,33 @@ MVP loads:
   issue context
 - `.gitclaw/SKILLS/*/SKILL.md`, if selected by the issue thread or marked
   always-on
+- bounded `@file:<repo-path>[:start-end]` context references explicitly named
+  in issue text
+- bounded `@folder:<repo-path>` references rendered as file metadata, not file
+  bodies
 - issue thread transcript
 - small repository summary from a read-only file listing
 - bounded `gitclaw.read_file` output for files explicitly mentioned in the
   issue thread
+
+GitClaw's repo-bounded context references are inspired by Hermes' context
+reference UX, but intentionally narrower:
+
+```text
+@file:docs/search-fixture.md
+@file:docs/search-fixture.md:1-20
+@folder:.gitclaw
+```
+
+`@file` loads the referenced text file, optionally reduced to a 1-indexed
+inclusive line range. `@folder` loads only a bounded metadata listing with file
+paths, byte counts, line counts, and hashes. References that escape the repo,
+point at symlinks/binary files, or target common credential locations such as
+`.env`, `.git/`, `.ssh/`, `.aws/`, `.gnupg/`, `.kube/`, `.npmrc`, `.netrc`,
+or private-key filenames are skipped and reported as body-free metadata. The
+`@gitclaw /context` report shows reference kind, normalized path, range, status,
+counts, and hashes without dumping referenced content, issue text, comments, or
+tool outputs.
 
 Do not let the agent write these files in MVP. Skills, soul, tools notes, and
 memory are git-backed source files: edits happen through normal human-reviewed
@@ -2723,9 +2748,15 @@ assert the expected comments/labels, and close the issue in cleanup.
 15. **Context inspection**
 
    - create a real issue with `@gitclaw /context`,
+   - create a real issue with `@gitclaw /context references` plus explicit
+     `@file:` and `@folder:` references,
    - assert the reply is marked `model="gitclaw/context"`,
    - assert the report lists repo context files, selected skills, and read-only
      tool output names,
+   - assert context reference metadata includes kind, path, line range, status,
+     byte/line counts, folder-entry counts, and hashes,
+   - assert referenced file bodies and issue body tokens are not dumped in the
+     report,
    - assert the run succeeds without requiring a model provider response.
 
 16. **Prompt inspection**
@@ -3350,6 +3381,12 @@ examples/workflows/gitclaw.yml
   .gitclaw/SOUL.md` returns exactly one focused, body-free context card, while
   local `gitclaw context info <path>` covers both loaded context documents and
   repo files surfaced through deterministic `gitclaw.read_file` metadata.
+- A `gh`-driven context-references E2E harness verifies
+  `@gitclaw /context references` reports `@file:` line ranges and `@folder:`
+  metadata without dumping referenced bodies, issue text, or fixture tokens.
+- A `gh`-driven context-reference chat E2E harness verifies a normal model turn
+  can answer from an explicit `@file:` reference while ignoring a hidden issue
+  token.
 - A `gh`-driven prompt-report E2E harness verifies `@gitclaw /prompt`
   produces a deterministic prompt budget, hash, truncation, context, and tool
   metadata report without a model call or prompt/body leakage.

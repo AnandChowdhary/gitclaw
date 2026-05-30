@@ -511,6 +511,18 @@ the bundle slash command is invoked. This preserves Hermes' ergonomic workflow
 packs while keeping OpenClaw-style supply-chain caution: bundles do not install
 skills, execute scripts, contact registries, or mutate the system prompt.
 
+2026-05-30 context-references follow-up: Hermes' context reference docs expose
+`@file:path`, `@file:path:10-25`, and `@folder:path` as inline context
+attachments, alongside broader `@diff`, `@staged`, `@git:N`, and `@url:`
+references. The same docs emphasize 1-indexed inclusive line ranges, bounded
+folder listings, trailing punctuation stripping, path traversal protection,
+binary rejection, and sensitive credential-path blocking. GitClaw should copy
+the ergonomic local-file subset first: expand `@file:` and `@folder:` from
+GitHub issue text against the checked-out repo, keep folder references as
+metadata listings only, block credential-ish paths, and surface body-free
+reference metadata in `@gitclaw /context` reports. Leave `@diff`, `@git`, and
+`@url` for later because they expand the runtime and policy surface.
+
 2026-05-29 memory-validation follow-up: OpenClaw's memory CLI exposes
 status/index/search/promotion surfaces and treats deep writes to `MEMORY.md` as
 special, while Hermes' memory guidance separates durable facts from procedural
