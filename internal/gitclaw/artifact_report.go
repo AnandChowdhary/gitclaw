@@ -77,11 +77,18 @@ func IsArtifactReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderArtifactReport(ev Event, cfg Config) string {
+	if isArtifactRiskRequest(ev, cfg) {
+		return renderArtifactRiskReport(ev, cfg, true)
+	}
 	return renderArtifactReport(ev, cfg, true)
 }
 
 func RenderArtifactCLIReport(cfg Config) string {
 	return renderArtifactReport(Event{}, cfg, false)
+}
+
+func RenderArtifactRiskCLIReport(cfg Config) string {
+	return renderArtifactRiskReport(Event{}, cfg, false)
 }
 
 func renderArtifactReport(ev Event, cfg Config, includeIssue bool) string {
@@ -517,4 +524,16 @@ func joinInts(values []int) string {
 		parts = append(parts, strconv.Itoa(value))
 	}
 	return strings.Join(parts, ", ")
+}
+
+func isArtifactRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 {
+		return false
+	}
+	command := fields[0]
+	if command != "/artifacts" && command != "/artifact" {
+		return false
+	}
+	return strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit")
 }

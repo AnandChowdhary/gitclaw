@@ -468,8 +468,10 @@ func runArtifactsCommand(args []string) error {
 	switch args[0] {
 	case "list", "verify":
 		return runArtifactsListCommand(args[1:])
+	case "risk", "risk-audit":
+		return runArtifactsRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw artifacts [list|verify]")
+		return fmt.Errorf("usage: gitclaw artifacts [list|risk|verify]")
 	}
 }
 
@@ -482,6 +484,18 @@ func runArtifactsListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderArtifactCLIReport(cfg))
+	return nil
+}
+
+func runArtifactsRiskCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown artifacts risk argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderArtifactRiskCLIReport(cfg))
 	return nil
 }
 

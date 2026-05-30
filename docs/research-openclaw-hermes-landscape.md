@@ -1574,6 +1574,16 @@ metadata without reading or printing uploaded artifact bodies. Each artifact
 feature batch should pair deterministic artifact-report E2E coverage with a
 real GitHub Models conversation E2E.
 
+2026-05-30 artifact-risk follow-up: OpenClaw's backup/export affordances and
+Hermes' session/checkpoint evidence both create pressure to store rich run
+artifacts. GitClaw should keep that power narrow: `@gitclaw /artifacts risk`
+should scan artifact policy, prompt-artifact specs, and upload workflows for
+prompt-boundary overrides, credential material, unredacted prompts, raw payload
+logging, hidden state, external storage, retention, label-gate, missing-file,
+approval/redaction, repository mutation, and unbounded-collection risks while
+only reporting metadata, codes, severities, and line hashes. Acceptance needs a
+deterministic body-free report plus a live GitHub Models follow-up E2E.
+
 2026-05-30 diff-governance follow-up: OpenClaw's diffs plugin treats change
 content as a read-only diff artifact, while Hermes recommends previewing
 checkpoint changes with `/rollback diff` before restoring. GitClaw's issue-safe

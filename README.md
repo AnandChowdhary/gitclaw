@@ -32,6 +32,7 @@ Run a local deterministic report:
 go run ./cmd/gitclaw commands
 go run ./cmd/gitclaw soul verify
 go run ./cmd/gitclaw tools risk
+go run ./cmd/gitclaw artifacts risk
 ```
 
 The GitHub Action handles issue/comment events that mention the configured
@@ -118,6 +119,9 @@ gitclaw models list
 gitclaw config list
 gitclaw doctor
 gitclaw policy verify
+gitclaw artifacts list
+gitclaw artifacts risk
+gitclaw artifacts verify
 gitclaw agents risk
 gitclaw nodes risk
 gitclaw hooks risk
@@ -147,6 +151,7 @@ Run a live E2E harness against the current GitHub repository:
 scripts/e2e/github-backup-risk-report.sh
 scripts/e2e/github-agents-risk-report.sh
 scripts/e2e/github-nodes-risk-report.sh
+scripts/e2e/github-artifacts-risk-report.sh
 scripts/e2e/github-hooks-risk-report.sh
 scripts/e2e/github-memory-risk-report.sh
 scripts/e2e/github-plugins-risk-report.sh

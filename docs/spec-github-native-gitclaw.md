@@ -720,7 +720,7 @@ GitHub issue/comment event
   `rollback list`,
   `proactive enqueue`, `proactive init`, `proactive info`, `proactive risk`,
   `approvals list`, `approvals verify`,
-  `artifacts list`, `artifacts verify`,
+  `artifacts list`, `artifacts risk`, `artifacts verify`,
   `diffs summary`, `diffs verify`,
   `workspace summary`, `workspace verify`,
   `hooks list`, `hooks risk`, `hooks verify`,
@@ -2683,6 +2683,8 @@ GitHub Actions artifacts:
 ```text
 @gitclaw /artifacts
 @gitclaw /artifact
+@gitclaw /artifacts risk
+@gitclaw /artifact risk
 ```
 
 The command runs after preflight and before model inference. It posts a
@@ -2708,10 +2710,24 @@ require reviewed workflows, explicit retention, redaction rules when needed,
 body-free audit cards, and a live GitHub Models conversation E2E in the same
 implementation batch.
 
+When called as `@gitclaw /artifacts risk` or
+`@gitclaw /artifacts risk-audit`, the command posts a `GitClaw Artifact Risk
+Report`. It scans artifact policy, artifact specs, and workflow upload metadata
+for prompt-boundary overrides, credential material, unredacted prompt artifacts,
+raw artifact payload logging, hidden-state use, external storage, unreviewed
+repository mutation, unbounded artifact collection, long retention, missing
+label gates, missing `if-no-files-found: error`, and missing approval/redaction
+metadata. The report only exposes paths, counts, codes, severities, line hashes,
+and metadata; it does not print artifact bodies, issue bodies, comments,
+uploaded files, prompt bodies, tool outputs, credentials, or secret values.
+Changes to this surface must include deterministic tests plus a live GitHub
+Models follow-up E2E.
+
 Local operators can inspect the same policy/spec/upload surface with:
 
 ```bash
 gitclaw artifacts list
+gitclaw artifacts risk
 gitclaw artifacts verify
 ```
 
@@ -3290,6 +3306,12 @@ Prompt artifacts must:
 reports the artifact policy, artifact spec metadata, `actions/upload-artifact`
 version, retention settings, and prompt-artifact label gate without reading or
 printing any uploaded artifact body.
+
+`@gitclaw /artifacts risk` is the stricter body-free risk audit. It treats
+GitHub Actions artifacts as ephemeral evidence, the git backup branch as the
+durable transcript backend, and flags any artifact path that tries to smuggle
+conversation state, raw prompts, tool outputs, secrets, or external storage into
+the agent loop.
 
 ## Git-Backed Backups
 
@@ -4657,6 +4679,11 @@ examples/workflows/gitclaw.yml
   metadata, then runs a real GitHub Models follow-up conversation that proves
   model inference, prompt provenance, selected skills, and prompt-visible tool
   usage.
+- A `gh`-driven artifacts-risk E2E harness verifies
+  `@gitclaw /artifacts risk` and local `gitclaw artifacts risk` expose
+  body-free artifact policy/spec/workflow risk metadata, then runs a real
+  GitHub Models follow-up conversation that proves model inference, prompt
+  provenance, selected skills, and prompt-visible tool usage.
 - A `gh`-driven agents-report E2E harness verifies `@gitclaw /agents` reports
   agent policy metadata, model-context loading, declarative agent spec
   metadata, single-assistant GitHub Actions runtime boundaries, no-delegation
