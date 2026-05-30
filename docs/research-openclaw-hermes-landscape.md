@@ -1613,6 +1613,19 @@ bodies, issue bodies, or treating the Actions checkout as private durable
 memory. Each workspace feature batch should pair deterministic workspace-report
 E2E coverage with a real GitHub Models conversation E2E.
 
+2026-05-30 workspace-risk follow-up: The OpenClaw workspace/file-tool model and
+Hermes worktree isolation docs point to the same risk boundary: workspace state
+is powerful context, but it should not silently become private memory, an
+external mount, a daemon, or a raw body dump. GitClaw should add
+`@gitclaw /workspace risk` and `gitclaw workspace risk`: scan workspace policy,
+workspace specs, and workflow metadata for prompt-boundary overrides,
+credential material, private workspace memory, external mounts, destructive
+mutation, long-running services, raw body leakage, checkout/setup/fetch-depth
+drift, missing approval gates, and unbounded repository inventory while
+publishing only metadata, paths, counts, codes, severities, and line hashes.
+Acceptance requires deterministic body-free coverage plus a live GitHub Models
+follow-up E2E that proves actual model inference and tool visibility.
+
 2026-05-29 policy-inspection follow-up: OpenClaw's security docs separate
 sandbox location, tool allow/deny policy, and elevated host execution, and
 Hermes' docs frame safety around authorization, command approval, and container

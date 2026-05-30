@@ -722,7 +722,7 @@ GitHub issue/comment event
   `approvals list`, `approvals verify`,
   `artifacts list`, `artifacts risk`, `artifacts verify`,
   `diffs summary`, `diffs risk`, `diffs verify`,
-  `workspace summary`, `workspace verify`,
+  `workspace summary`, `workspace risk`, `workspace verify`,
   `hooks list`, `hooks risk`, `hooks verify`,
   `plugins list`, `plugins risk`, `plugins verify`,
   `tasks list`, `tasks risk`, `tasks verify`,
@@ -2188,6 +2188,9 @@ workspace and Hermes' git-worktree isolation model:
 @gitclaw /workspace
 @gitclaw /workdir
 @gitclaw /repo
+@gitclaw /workspace risk
+@gitclaw /workdir risk
+@gitclaw /repo risk
 ```
 
 The command runs after preflight and context loading, but before model
@@ -2210,11 +2213,24 @@ backup payloads, workflow bodies, or secrets. It also never writes files,
 cleans directories, changes refs, dispatches workflows, mounts external
 workspaces, or treats the Actions checkout as private durable memory.
 
+When called as `@gitclaw /workspace risk` or `@gitclaw /workspace risk-audit`,
+the command posts a `GitClaw Workspace Risk Report`. It scans workspace policy,
+workspace specs, and workflow checkout metadata for prompt-boundary overrides,
+credential material, private workspace memory, external mounts, destructive
+workspace mutation, long-running services, raw body leakage, checkout/setup
+version drift, missing approval gates, and unbounded repository inventory. The
+report only exposes metadata, paths, counts, codes, severities, and line hashes;
+it does not print policy/spec bodies, workflow bodies, file bodies, issue bodies,
+comments, prompts, tool outputs, credentials, or secret values. Changes to this
+surface must include deterministic tests plus a live GitHub Models follow-up E2E
+that makes an actual model call.
+
 Local operators can inspect the same workspace surface without opening an
 issue:
 
 ```bash
 gitclaw workspace summary
+gitclaw workspace risk
 gitclaw workspace verify
 ```
 
@@ -4146,7 +4162,21 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the run succeeds without requiring a model provider response,
    - run a real GitHub Models conversation E2E in the same feature batch.
 
-30. **Policy inspection**
+30. **Workspace risk inspection**
+
+   - create a real issue with `@gitclaw /workspace risk`,
+   - assert the reply is marked `model="gitclaw/workspace"`,
+   - assert the risk report lists policy, spec, workflow, git, repository
+     inventory, and current-request risk cards,
+   - assert the report lists prompt-boundary, credential, private-memory,
+     external-mount, destructive-mutation, long-running-service, raw-body,
+     checkout/setup/fetch-depth, approval, and unbounded-inventory boundaries,
+   - assert policy/spec body tokens, workflow bodies, file bodies, issue body
+     tokens, prompts, tool outputs, and secret values are not printed,
+   - assert the run succeeds without requiring a model provider response,
+   - run a real GitHub Models conversation E2E in the same feature batch.
+
+31. **Policy inspection**
 
    - create a real issue with `@gitclaw /policy` that also asks for write-mode
      work,
@@ -4989,6 +5019,11 @@ examples/workflows/gitclaw.yml
   git repository state, context counts, checkout/setup-go action versions,
   fetch-depth metadata, and private-memory/external-mount suppression without
   leaking issue body text, workflow bodies, or file bodies.
+- A `gh`-driven workspace-risk E2E harness verifies
+  `@gitclaw /workspace risk` and local `gitclaw workspace risk` expose
+  body-free workspace policy/spec/workflow risk metadata, then runs a real
+  GitHub Models follow-up conversation that proves model inference, prompt
+  provenance, selected skills, and prompt-visible tool usage.
 - A `gh`-driven session-report E2E harness verifies `@gitclaw /session`
   reconstructs a real multi-turn GitHub issue session without a model call or
   transcript-body leakage.

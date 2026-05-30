@@ -135,6 +135,7 @@ gitclaw channels verify
 gitclaw channels risk
 gitclaw proactive list
 gitclaw proactive risk
+gitclaw workspace risk
 gitclaw workspace verify
 gitclaw sandbox verify
 ```
@@ -163,6 +164,7 @@ scripts/e2e/github-plugins-risk-report.sh
 scripts/e2e/github-proactive-risk-report.sh
 scripts/e2e/github-tasks-risk-report.sh
 scripts/e2e/github-tools-risk-report.sh
+scripts/e2e/github-workspace-risk-report.sh
 scripts/e2e/github-channels-risk-report.sh
 ```
 

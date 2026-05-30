@@ -93,11 +93,18 @@ func IsWorkspaceReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderWorkspaceReport(ev Event, cfg Config) string {
+	if isWorkspaceRiskRequest(ev, cfg) {
+		return renderWorkspaceRiskReport(ev, cfg, true)
+	}
 	return renderWorkspaceReport(ev, cfg, true)
 }
 
 func RenderWorkspaceCLIReport(cfg Config) string {
 	return renderWorkspaceReport(Event{}, cfg, false)
+}
+
+func RenderWorkspaceRiskCLIReport(cfg Config) string {
+	return renderWorkspaceRiskReport(Event{}, cfg, false)
 }
 
 func renderWorkspaceReport(ev Event, cfg Config, includeIssue bool) string {
@@ -548,6 +555,26 @@ func workspaceFetchDepthConfigured(workflows []workspaceWorkflowCard) bool {
 		}
 	}
 	return false
+}
+
+func workspaceSetupGoSteps(workflows []workspaceWorkflowCard) int {
+	count := 0
+	for _, workflow := range workflows {
+		count += workflow.SetupGoSteps
+	}
+	return count
+}
+
+func isWorkspaceRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 {
+		return false
+	}
+	command := fields[0]
+	if command != "/workspace" && command != "/workdir" && command != "/repo" {
+		return false
+	}
+	return strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit")
 }
 
 func workspaceActionMatches(text, action string) []string {

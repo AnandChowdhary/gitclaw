@@ -1068,8 +1068,10 @@ func runWorkspaceCommand(args []string) error {
 	switch args[0] {
 	case "summary", "list", "verify":
 		return runWorkspaceSummaryCommand(args[1:])
+	case "risk", "risk-audit":
+		return runWorkspaceRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw workspace [summary|verify]")
+		return fmt.Errorf("usage: gitclaw workspace [summary|risk|verify]")
 	}
 }
 
@@ -1082,6 +1084,18 @@ func runWorkspaceSummaryCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderWorkspaceCLIReport(cfg))
+	return nil
+}
+
+func runWorkspaceRiskCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown workspace risk argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderWorkspaceRiskCLIReport(cfg))
 	return nil
 }
 

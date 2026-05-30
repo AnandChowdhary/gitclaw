@@ -138,7 +138,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `33`' \
   'aliases: `31`' \
-  'local_cli_helpers: `109`' \
+  'local_cli_helpers: `110`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/agents' \
@@ -298,6 +298,7 @@ for expected in \
   'gitclaw tools info <name>' \
   'gitclaw tools search <query>' \
   'gitclaw workspace summary' \
+  'gitclaw workspace risk' \
   'gitclaw workspace verify'; do
   grep -Fq "$expected" <<<"$comments" || die "commands report missing ${expected}"
 done
