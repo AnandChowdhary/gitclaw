@@ -2714,6 +2714,14 @@ lives in GitHub's event, permission, and workflow runtime semantics.
    Every meaningful implementation step should include at least one live E2E
    check before being considered complete.
 
+   Live E2E coverage must not drift into deterministic reports only. Each
+   implementation batch should include at least one LLM-backed conversation E2E
+   through GitHub Models, such as `github-issue-chat.sh`,
+   `github-context-reference-chat.sh`, or `github-git-reference-chat.sh`,
+   unless the change is provably unrelated to assistant turns. Report-only
+   E2Es validate command surfaces; they do not prove inference, prompt assembly,
+   transcript reconstruction, or GitHub Models permissions still work.
+
 ### Live E2E Harness
 
 The E2E harness should be a script, not a manual checklist:
