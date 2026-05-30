@@ -43,6 +43,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runMemoryCommand(args[1:])
 	case "soul":
 		return runSoulCommand(args[1:])
+	case "secrets", "secret":
+		return runSecretsCommand(args[1:])
 	case "tools":
 		return runToolsCommand(args[1:])
 	case "models", "model":
@@ -602,6 +604,34 @@ func runToolsCommand(args []string) error {
 	default:
 		return fmt.Errorf("unknown tools command %q", args[0])
 	}
+}
+
+func runSecretsCommand(args []string) error {
+	if len(args) == 0 {
+		return runSecretsAuditCommand(nil)
+	}
+	switch args[0] {
+	case "audit", "scan", "list":
+		return runSecretsAuditCommand(args[1:])
+	default:
+		return fmt.Errorf("usage: gitclaw secrets [audit|scan|list]")
+	}
+}
+
+func runSecretsAuditCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown secrets audit argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	report, err := BuildSecretAuditReport(cfg.Workdir)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSecretsCLIReport(report))
+	return nil
 }
 
 func runToolsVerifyCommand(args []string) error {

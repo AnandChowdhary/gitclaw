@@ -110,6 +110,24 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		status.SetDone()
 		return nil
 	}
+	if IsSecretsReportRequest(ev, cfg) {
+		report, err := BuildSecretAuditReport(cfg.Workdir)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "secrets", fmt.Errorf("build secrets audit: %w", err))
+		}
+		body := RenderAssistantComment(Marker{
+			RunID:          envFirst("GITHUB_RUN_ID", "local"),
+			EventID:        eventID(ev),
+			Model:          "gitclaw/secrets",
+			IdempotencyKey: key,
+			RunURL:         actionRunURL(ev),
+		}, RenderSecretsReport(ev, report))
+		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post secrets report comment: %w", err))
+		}
+		status.SetDone()
+		return nil
+	}
 	if IsPolicyReportRequest(ev, cfg) {
 		body := RenderAssistantComment(Marker{
 			RunID:          envFirst("GITHUB_RUN_ID", "local"),

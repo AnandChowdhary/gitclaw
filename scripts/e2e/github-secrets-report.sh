@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "commands-report-e2e: $*" >&2
+  echo "secrets-report-e2e: $*" >&2
 }
 
 die() {
@@ -33,12 +33,12 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_COMMANDS_REPORT_E2E_${timestamp}"
-title="@gitclaw /help e2e ${timestamp}"
-body="Live commands-report E2E.
+token="GITCLAW_SECRETS_REPORT_E2E_${timestamp}"
+title="@gitclaw /secrets audit e2e ${timestamp}"
+body="Live secrets-report E2E.
 
-Hidden commands report body token: ${token}
-This should produce a deterministic command catalog report without a model call."
+Hidden secrets report body token: ${token}
+This should produce a deterministic repo secret audit without a model call or raw secret leakage."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -52,7 +52,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "commands-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "secrets-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -73,11 +73,11 @@ wait_for_run() {
       --json databaseId,status,conclusion,url,createdAt,displayTitle \
       --jq '. as $runs | $runs | map(select(.displayTitle == "'"${title}"'")) | sort_by(.createdAt) | reverse | .[0] // empty')"
     if [[ -n "$run_json" && "$run_json" != "null" ]]; then
-      local run_status conclusion url
-      run_status="$(jq -r '.status' <<<"$run_json")"
+      local status conclusion url
+      status="$(jq -r '.status' <<<"$run_json")"
       conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
       url="$(jq -r '.url' <<<"$run_json")"
-      if [[ "$run_status" == "completed" ]]; then
+      if [[ "$status" == "completed" ]]; then
         [[ "$conclusion" == "success" ]] || die "issues run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
@@ -109,13 +109,20 @@ error_count() {
     --jq '[.comments[] | select(.body | contains("<!-- gitclaw:error"))] | length'
 }
 
+issue_label_names() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json labels \
+    --jq '.labels[].name'
+}
+
 wait_for_assistant_count() {
   local want="$1"
   for _ in {1..90}; do
     local errors
     errors="$(error_count)"
     if [[ "$errors" != "0" ]]; then
-      die "assistant run posted ${errors} error marker comment(s)"
+      die "assistant run posted ${errors} error comment(s)"
     fi
     local got
     got="$(assistant_count)"
@@ -127,96 +134,61 @@ wait_for_assistant_count() {
   return 1
 }
 
+wait_for_done_status() {
+  for _ in {1..60}; do
+    local labels
+    labels="$(issue_label_names)"
+    if grep -Fxq "gitclaw:done" <<<"$labels" &&
+      ! grep -Fxq "gitclaw:running" <<<"$labels" &&
+      ! grep -Fxq "gitclaw:error" <<<"$labels"; then
+      return 0
+    fi
+    sleep 5
+  done
+  return 1
+}
+
 run_json="$(wait_for_run "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one commands report comment"
+wait_for_assistant_count 1 || die "expected one secrets report comment"
 comments="$(assistant_comments)"
 
 for expected in \
-  'model="gitclaw/commands"' \
-  "GitClaw Commands Report" \
+  'model="gitclaw/secrets"' \
+  "GitClaw Secrets Audit Report" \
   "Generated without a model call" \
-  'trigger_prefix: `@gitclaw`' \
-  'commands: `17`' \
-  'aliases: `11`' \
-  'local_cli_helpers: `57`' \
+  'repository: `'"$repo"'`' \
+  'issue: `#'"$issue_number"'`' \
+  'secrets_audit_status: `findings`' \
+  'files_scanned: `' \
+  'files_skipped: `' \
+  'findings_total: `' \
+  'findings_returned: `' \
+  'secret_references: `' \
+  'references_returned: `' \
+  'raw_values_included: `false`' \
+  'raw_lines_included: `false`' \
   'run_mode: `read-only`' \
-  "### Slash Commands" \
-  '/help' \
-  '/commands' \
-  '/backup' \
-  '/bundles' \
-  '/tools' \
-  '/secrets' \
-  '/secret' \
-  '/doctor' \
-  '/skills' \
-  '/soul' \
-  '/budget' \
-  '/prompt-budget' \
-  '/cron' \
-  'gitclaw bundles list' \
-  'gitclaw bundles info <name>' \
-  'gitclaw channels verify' \
-  'gitclaw channels list' \
-  'gitclaw channels info <provider>' \
-  'gitclaw channel-state' \
-  'gitclaw channel-gateway' \
-  'gitclaw channel-delivery' \
-  'gitclaw config list' \
-  'gitclaw context list' \
-  'gitclaw context info <path>' \
-  'gitclaw doctor' \
-  'gitclaw doctor list' \
-  'gitclaw prompt list' \
-  'gitclaw proactive list' \
-  'gitclaw proactive info <name>' \
-  'gitclaw proactive init' \
-  'gitclaw proactive enqueue' \
-  'gitclaw session list --backup <issue.json>' \
-  'gitclaw session search <query> --backup <issue.json>' \
-  'gitclaw secrets audit' \
-  'gitclaw secrets scan' \
-  'gitclaw secrets list' \
-  'gitclaw models list' \
-  'gitclaw policy list' \
-  'gitclaw policy verify' \
-  'gitclaw backup verify' \
-  'gitclaw backup manifest' \
-  'gitclaw backup list' \
-  'gitclaw backup info --issue <number>' \
-  'gitclaw backup stats' \
-  'gitclaw backup search <query>' \
-  'gitclaw backup export-jsonl' \
-  'gitclaw backup restore-plan' \
-  'gitclaw backup retention-plan' \
-  'gitclaw commands' \
-  'gitclaw memory verify' \
-  'gitclaw memory validate' \
-  'gitclaw memory list' \
-  'gitclaw memory info <path>' \
-  'gitclaw memory search <query>' \
-  'gitclaw soul verify' \
-  'gitclaw soul validate' \
-  'gitclaw soul list' \
-  'gitclaw soul info <path>' \
-  'gitclaw soul search <query>' \
-  'gitclaw skills verify' \
-  'gitclaw skills validate' \
-  'gitclaw skills check' \
-  'gitclaw skills list' \
-  'gitclaw skills info <name>' \
-  'gitclaw skills search <query>' \
-  'gitclaw tools verify' \
-  'gitclaw tools validate' \
-  'gitclaw tools list' \
-  'gitclaw tools info <name>' \
-  'gitclaw tools search <query>'; do
-  grep -Fq "$expected" <<<"$comments" || die "commands report missing ${expected}"
+  "### Findings" \
+  "### Secret References" \
+  'value_sha256_12=' \
+  'line_sha256_12=' \
+  'name_sha256_12='; do
+  grep -Fq -- "$expected" <<<"$comments" || die "secrets report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "commands report leaked issue body token"
-fi
+for leaked in \
+  "$token" \
+  "Hidden secrets report body token" \
+  "ghp_abcdefghijklmnopqrstuvwxyz123456" \
+  "sk-abcdefghijklmnopqrstuvwxyz123456" \
+  "GITHUB_TOKEN=" \
+  "OPENAI_API_KEY=" \
+  "MY_API_TOKEN"; do
+  if grep -Fq "$leaked" <<<"$comments"; then
+    die "secrets report leaked ${leaked}"
+  fi
+done
 
+wait_for_done_status || die "expected gitclaw:done without running/error"
 url="$(jq -r '.url' <<<"$run_json")"
 log "passed for issue #${issue_number}: ${url}"

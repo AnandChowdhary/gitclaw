@@ -647,6 +647,7 @@ GitHub issue/comment event
   `tools verify`, `tools validate`, `tools list`, `tools info`,
   `tools search`, `doctor`,
   `policy verify`,
+  `secrets audit`, `secrets scan`, `secrets list`,
   `commands`, `version`.
 
 `internal/github`
@@ -1518,6 +1519,50 @@ expected workflow permissions, model/run mode, and active policy-output
 metadata if present.
 `gitclaw policy verify` additionally checks the local workflow permission
 contract and returns a non-body verification report suitable for CI.
+
+## Secrets Audit Command
+
+GitClaw supports a deterministic repo secrets audit command inspired by
+OpenClaw's `openclaw secrets audit --check` operator loop and Hermes' default
+secret-isolation posture:
+
+```text
+@gitclaw /secrets
+@gitclaw /secret
+@gitclaw /secrets audit
+```
+
+The command runs after normal preflight authorization but before model
+inference. It posts a `gitclaw:assistant-turn` comment with
+`model="gitclaw/secrets"` and performs a bounded, read-only scan of the checked
+out repository for:
+
+- known token shapes such as GitHub PATs, OpenAI-style keys, Slack tokens, and
+  Telegram bot tokens,
+- heuristic sensitive assignments using key names such as `token`, `secret`,
+  `password`, `credential`, `authorization`, and `api_key`,
+- GitHub Actions secret references such as `${{ secrets.NAME }}`.
+
+The report includes file counts, skipped-file counts, finding counts, reference
+counts, path, line number, severity, finding code, and short hashes of matched
+values, source lines, and referenced secret names. It never prints matched
+values, source lines, secret names, issue bodies, comments, prompts, or
+environment values. Secret references are reported separately from plaintext
+findings because `${{ secrets.NAME }}` is usually expected config, while
+plaintext residues are actionable.
+
+Local operators can run the same audit without opening an issue:
+
+```bash
+gitclaw secrets audit
+gitclaw secrets scan
+gitclaw secrets list
+```
+
+The aliases intentionally return the same body-free report in v1. GitClaw does
+not yet configure, migrate, apply, reload, or resolve secrets. The safe MVP is
+visibility first: find possible checked-in residue without giving an LLM or an
+issue comment the underlying secret material.
 
 ## Authorization And Abuse Controls
 
@@ -3506,6 +3551,11 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven policy-verify E2E harness verifies `@gitclaw /policy verify`
   checks the checked-in workflow permission contract, reports active policy
   output hashes, and avoids raw policy input/output leakage.
+- A `gh`-driven secrets-report E2E harness verifies
+  `@gitclaw /secrets audit` scans the real checked-out repository, reports
+  plaintext-like findings and GitHub Actions secret references with path, line,
+  code, count, and hash metadata only, and does not leak matched values, issue
+  body tokens, or referenced secret names.
 - A `gh`-driven session-report E2E harness verifies `@gitclaw /session`
   reconstructs a real multi-turn GitHub issue session without a model call or
   transcript-body leakage.
@@ -3559,6 +3609,8 @@ examples/workflows/gitclaw.yml
 - GitHub Models for Actions issue summaries: https://docs.github.com/en/github-models/github-models-at-scale/use-models-at-scale
 - GitHub Models billing and rate-limit notes: https://docs.github.com/en/billing/concepts/product-billing/github-models
 - GitHub Models `models:read` changelog: https://github.blog/changelog/2025-05-15-modelsread-now-required-for-github-models-access/
+- OpenClaw secrets CLI docs: https://docs.openclaw.ai/cli/secrets
+- OpenClaw secrets management docs: https://docs.openclaw.ai/gateway/secrets
 - OpenClaw heartbeat docs: https://openclawlab.com/en/docs/agent/heartbeat/
 - OpenClaw automation docs: https://docs.openclaw.ai/automation/index
 - OpenClaw scheduled tasks docs: https://docs.openclaw.ai/automation/cron-jobs
@@ -3574,6 +3626,7 @@ examples/workflows/gitclaw.yml
 - Hermes memory docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/memory.md
 - Hermes cron docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/cron.md
 - Hermes cron internals docs: https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals
+- Hermes security docs: https://hermes-agent.nousresearch.com/docs/user-guide/security
 - Hermes working with skills docs: https://hermes-agent.nousresearch.com/docs/guides/work-with-skills/
 - Hermes profiles docs: https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 - Slack Socket Mode: https://api.slack.com/apis/connections/socket

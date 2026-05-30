@@ -1223,6 +1223,22 @@ policy mirror: trusted associations, managed labels, expected workflow
 permissions, model/run mode, and any policy-output metadata, while omitting
 event labels, actor state, preflight results, and write-intent state.
 
+2026-05-30 secrets-audit follow-up: OpenClaw's current secrets docs make
+`openclaw secrets audit --check` part of the normal operator loop, scanning for
+plaintext residues, unresolved refs, precedence drift, legacy residues, and
+name-heuristic sensitive provider headers before secrets are considered
+migrated. Its gateway docs are explicit that SecretRefs are not a process
+isolation boundary if plaintext credentials remain readable by the agent.
+Hermes' current security docs similarly treat environment-variable isolation,
+container isolation, context-file scanning, and cross-session isolation as
+separate layers rather than one magic secret boundary. GitClaw should copy the
+safe read-only half first: `@gitclaw /secrets` and `gitclaw secrets audit`
+scan the checked-out repo for obvious plaintext residue and GitHub Actions
+secret references, but report only paths, line numbers, codes, counts, and
+hashes. Do not add configure/apply/reload until there is a reviewed SecretRef
+design and a live migration rollback story that never stores historical
+plaintext backups.
+
 Main attack pattern: an untrusted input enters through one surface, persists into memory/skills/cron/filesystem, then fires later through a different surface when the attacker is no longer present.
 
 Design requirements for `gitclaw`:
@@ -1363,6 +1379,8 @@ Recommended non-goals for the first spec:
 - OpenClaw migrating from Hermes: https://docs.openclaw.ai/install/migrating-hermes
 - OpenClaw migrate CLI docs: https://docs.openclaw.ai/cli/migrate
 - OpenClaw models CLI docs: https://docs.openclaw.ai/cli/models
+- OpenClaw secrets CLI docs: https://docs.openclaw.ai/cli/secrets
+- OpenClaw secrets management docs: https://docs.openclaw.ai/gateway/secrets
 - Hermes docs index: https://hermes-agent.nousresearch.com/docs/llms.txt
 - Hermes GitHub and README: https://github.com/NousResearch/hermes-agent
 - Hermes architecture docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/developer-guide/architecture.md
