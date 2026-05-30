@@ -918,6 +918,13 @@ repo-local `.gitclaw/TOOLS.md` provenance, known versus unknown active outputs,
 input/output hashes, and explicit external-registry/runtime-attestation
 non-goals without printing raw tool inputs or output bodies.
 
+2026-05-30 turn-provenance follow-up: OpenClaw/Hermes-style tool registries are
+useful only when an operator can prove what the model actually saw. GitClaw
+should therefore add body-free provenance to normal assistant-turn markers:
+prompt-context hash, context document count, selected skill count/names, and
+tool output count/names. This gives live E2E tests a stronger oracle for real
+tool/skill visibility without exposing prompt bodies or raw tool outputs.
+
 2026-05-29 tool-validation follow-up: OpenClaw's exec approval docs treat tool
 execution as a stacked policy/allowlist/approval decision, and Hermes separates
 toolsets such as terminal, file, web, cron, memory, and messaging by platform

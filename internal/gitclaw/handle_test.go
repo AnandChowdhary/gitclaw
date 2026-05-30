@@ -166,6 +166,15 @@ func TestHandlePassesRepoContextToLLM(t *testing.T) {
 	if !hasToolOutput(llm.LastRequest.Context.ToolOutputs, "gitclaw.read_file", "go.mod", "module github.com/AnandChowdhary/gitclaw") {
 		t.Fatalf("LLM request missing read_file tool output: %#v", llm.LastRequest.Context.ToolOutputs)
 	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{`prompt_context_sha256_12="`, `context_documents="`, `selected_skills="0"`, `tool_outputs="`, `tools="`, `gitclaw.read_file`} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("assistant marker missing prompt provenance %q:\n%s", want, body)
+		}
+	}
 }
 
 func TestHandleContextCommandPostsReportWithoutLLM(t *testing.T) {

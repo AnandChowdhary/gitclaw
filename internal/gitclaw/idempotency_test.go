@@ -1,6 +1,9 @@
 package gitclaw
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestIdempotencyKeyUsesStableTriggerIdentity(t *testing.T) {
 	ev := Event{
@@ -55,11 +58,17 @@ func TestIdempotencyKeyUsesWorkflowDispatchID(t *testing.T) {
 
 func TestRenderAssistantCommentIncludesMarker(t *testing.T) {
 	marker := Marker{
-		RunID:          "123",
-		EventID:        "456",
-		Model:          "fake",
-		IdempotencyKey: "abc",
-		RunURL:         "https://github.com/owner/repo/actions/runs/123",
+		RunID:               "123",
+		EventID:             "456",
+		Model:               "fake",
+		IdempotencyKey:      "abc",
+		RunURL:              "https://github.com/owner/repo/actions/runs/123",
+		PromptContextSHA:    "abc123def456",
+		ContextDocuments:    2,
+		SelectedSkills:      1,
+		ToolOutputs:         1,
+		PromptVisibleSkills: []string{"repo-reader"},
+		PromptVisibleTools:  []string{"gitclaw.search_files"},
 	}
 	body := RenderAssistantComment(marker, "Hello.")
 	if !HasGitClawMarker(body) {
@@ -67,6 +76,11 @@ func TestRenderAssistantCommentIncludesMarker(t *testing.T) {
 	}
 	if !ContainsIdempotencyKey(body, "abc") {
 		t.Fatalf("rendered comment does not contain idempotency key: %s", body)
+	}
+	for _, want := range []string{`prompt_context_sha256_12="abc123def456"`, `context_documents="2"`, `selected_skills="1"`, `tool_outputs="1"`, `skills="repo-reader"`, `tools="gitclaw.search_files"`} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("rendered comment missing %q: %s", want, body)
+		}
 	}
 }
 

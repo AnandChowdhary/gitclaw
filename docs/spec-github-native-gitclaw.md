@@ -792,6 +792,19 @@ Hidden assistant marker:
 <!-- gitclaw:assistant-turn run_id=123 event_id=456 model=openai/gpt-5-nano -->
 ```
 
+For real model-backed assistant turns, the marker also includes body-free
+prompt provenance:
+
+```html
+<!-- gitclaw:assistant-turn run_id="123" event_id="456" model="openai/gpt-5-nano" idempotency_key="..." prompt_context_sha256_12="..." context_documents="7" selected_skills="1" tool_outputs="3" skills="repo-reader" tools="gitclaw.list_files,gitclaw.search_files" -->
+```
+
+The provenance hash is computed from prompt-visible context paths, selected
+skill paths, tool names, sizes, and body hashes. It never includes raw issue
+text, comments, context bodies, skill bodies, tool inputs, or tool outputs. E2E
+tests that claim tool usage should assert these marker fields in addition to
+the assistant's answer text.
+
 Hidden status marker:
 
 ```html

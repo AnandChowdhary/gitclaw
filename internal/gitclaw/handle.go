@@ -504,13 +504,13 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		return failStartedTurn(ctx, cfg, github, ev, status, "model", fmt.Errorf("complete LLM response: %w", err))
 	}
 
-	body := RenderAssistantComment(Marker{
+	body := RenderAssistantComment(withPromptProvenance(Marker{
 		RunID:          envFirst("GITHUB_RUN_ID", "local"),
 		EventID:        eventID(ev),
 		Model:          selectedLLMModel(cfg, llm),
 		IdempotencyKey: key,
 		RunURL:         actionRunURL(ev),
-	}, response)
+	}, repoContext), response)
 	if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
 		return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post issue comment: %w", err))
 	}

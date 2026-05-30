@@ -126,11 +126,17 @@ type TranscriptMessage struct {
 }
 
 type Marker struct {
-	RunID          string
-	EventID        string
-	Model          string
-	IdempotencyKey string
-	RunURL         string
+	RunID               string
+	EventID             string
+	Model               string
+	IdempotencyKey      string
+	RunURL              string
+	PromptContextSHA    string
+	ContextDocuments    int
+	SelectedSkills      int
+	ToolOutputs         int
+	PromptVisibleSkills []string
+	PromptVisibleTools  []string
 }
 
 type HeartbeatMarker struct {

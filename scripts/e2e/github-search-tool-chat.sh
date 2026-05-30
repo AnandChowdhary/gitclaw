@@ -153,6 +153,9 @@ grep -Fq "$expected_token" <<<"$comments" || die "assistant did not include sear
 if ! grep -Fq 'model="openai/gpt-5-nano"' <<<"$comments" && ! grep -Fq 'model="openai/gpt-4.1-nano"' <<<"$comments"; then
   die "assistant marker did not use configured GitHub Models primary or fallback"
 fi
+grep -Fq 'prompt_context_sha256_12="' <<<"$comments" || die "assistant marker missing prompt context hash"
+grep -Fq 'tools="' <<<"$comments" || die "assistant marker missing prompt-visible tool list"
+grep -Fq 'gitclaw.search_files' <<<"$comments" || die "assistant marker did not prove search_files was prompt-visible"
 
 if grep -Fq "$hidden_token" <<<"$comments"; then
   die "assistant leaked hidden issue token"
