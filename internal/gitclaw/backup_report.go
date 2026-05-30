@@ -105,13 +105,9 @@ func requestedBackupIssueCommand(ev Event, cfg Config) backupIssueCommand {
 		issueNumber := ev.Issue.Number
 		if len(fields) >= 3 {
 			parsed, ok := parseBackupIssueNumber(fields[2])
-			if !ok {
-				return backupIssueCommand{
-					Name:   "coverage",
-					Status: "invalid_issue",
-				}
+			if ok {
+				issueNumber = parsed
 			}
-			issueNumber = parsed
 		}
 		return backupIssueCommand{
 			Name:         "coverage",

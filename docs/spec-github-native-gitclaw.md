@@ -3708,6 +3708,11 @@ count, timestamp, and hash metadata. It exits non-zero when the backup is
 missing or the backup tree is not cleanly verified, making it useful in E2E and
 disaster-recovery runbooks.
 
+Issue-side `@gitclaw /backup coverage` defaults to the current issue. If a
+numeric issue argument such as `#123` is present, GitClaw records that target;
+otherwise trailing prose in an issue title is ignored so E2E labels and run
+descriptions do not turn into invalid issue numbers.
+
 ## Backup Risk Command
 
 GitClaw also supports a local backup risk audit for fetched backup branches:
