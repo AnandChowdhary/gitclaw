@@ -296,15 +296,22 @@ func runCommandsCommand(args []string) error {
 }
 
 func runChannelsCommand(args []string) error {
-	if len(args) > 1 || (len(args) == 1 && args[0] != "list") {
-		return fmt.Errorf("usage: gitclaw channels [list]")
+	if len(args) > 1 {
+		return fmt.Errorf("usage: gitclaw channels [list|verify]")
 	}
 	cfg, err := LoadEffectiveConfig()
 	if err != nil {
 		return err
 	}
-	fmt.Println(RenderChannelCLIReport(cfg))
-	return nil
+	if len(args) == 0 || args[0] == "list" {
+		fmt.Println(RenderChannelCLIReport(cfg))
+		return nil
+	}
+	if args[0] == "verify" {
+		fmt.Println(RenderChannelVerifyCLIReport(cfg))
+		return nil
+	}
+	return fmt.Errorf("usage: gitclaw channels [list|verify]")
 }
 
 func runModelsCommand(args []string) error {

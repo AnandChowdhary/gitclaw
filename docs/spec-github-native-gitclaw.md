@@ -1648,6 +1648,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 ```text
 @gitclaw /channels
 @gitclaw /channels list
+@gitclaw /channels verify
 ```
 
 The command runs after normal preflight and context loading, but before model
@@ -1667,10 +1668,17 @@ It never dumps channel message, issue, command, or workflow bodies. This keeps
 Slack/Telegram bridge debugging GitHub-native and auditable without making the
 channel bridge itself a privileged hidden conversation store.
 
+`@gitclaw /channels verify` uses the same data surface but switches from
+inventory to health posture. It reports `channel_verify_status`, confirms the
+channel-ingest workflow has `workflow_dispatch`, `actions: write`,
+`issues: write`, and the five normalized inputs required for channel mirroring,
+then lists body-free verification findings.
+
 Local operators can inspect the same bridge contract without opening an issue:
 
 ```bash
 gitclaw channels list
+gitclaw channels verify
 ```
 
 The local report omits issue-only fields such as repository, issue number,
@@ -2815,6 +2823,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven channels-list E2E harness verifies `@gitclaw /channels list`
   is an explicit report alias, while local `gitclaw channels list` exposes the
   same bridge contract without issue-only fields.
+- A `gh`-driven channels-verify E2E harness verifies
+  `@gitclaw /channels verify` reports the workflow-dispatch channel bridge
+  health, permissions, required inputs, provider keys, and marker counts
+  without a model call or body leakage.
 - A `gh`-driven proactive E2E harness verifies the generic proactive enqueue
   workflow end to end.
 - A `gh`-driven proactive-init E2E harness verifies
