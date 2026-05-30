@@ -656,6 +656,7 @@ GitClaw supports a deterministic model/provider audit command:
 ```text
 @gitclaw /models
 @gitclaw /models list
+@gitclaw /models risk
 ```
 
 The command runs after normal preflight and context loading, but before model
@@ -685,11 +686,40 @@ Local operators can inspect the same model wiring without opening an issue:
 
 ```bash
 gitclaw models list
+gitclaw models risk
 ```
 
 The local report omits repository, issue number, and issue-title hash while
 retaining provider family, model ID, endpoint host, token-source name, timeout,
 retry settings, prompt-artifact status, and environment knob names.
+
+`@gitclaw /models risk` and `gitclaw models risk` provide the stricter
+body-free model/provider risk audit. The report follows OpenClaw's separation
+between model status and quota-spending probes: it does not call the GitHub
+Models catalog or inference endpoint. It also follows Hermes' profile boundary
+by treating model config as high-authority profile state, not as something the
+agent can silently rewrite.
+
+The model risk report publishes:
+
+- provider family, endpoint host, token-source name, and output-token
+  parameter,
+- primary model, fallback models, known GitHub Models catalog snapshot matches,
+  and whether the primary matches the repo's small-model default,
+- retry timeout, attempts, delay, retryable status categories, and fallback
+  enablement,
+- config-file metadata and prompt-artifact state,
+- explicit `model_catalog_probe_performed=false` and
+  `live_inference_probe_performed=false`,
+- finding codes, severities, paths, fields, and hashes for unsafe provider
+  boundaries, insecure model endpoints, missing/unsafe budgets, duplicated or
+  unknown fallback models, credential material in model config, raw prompt
+  logging, live-probe requirements, and raw provider-error leakage.
+
+It never prints config bodies, issue/comment bodies, prompts, raw provider
+errors, API keys, tokens, or secret values. Any change to this surface requires
+local tests plus a live GitHub issue E2E that includes a normal GitHub Models
+follow-up turn with repo-reader/tool usage.
 
 ## Runtime Architecture
 

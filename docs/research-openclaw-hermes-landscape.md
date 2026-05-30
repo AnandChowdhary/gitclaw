@@ -640,6 +640,18 @@ repo-configured fallback models for retryable provider statuses. Invalid-model
 negative tests should disable fallback so they still verify the safe failure
 path.
 
+2026-05-30 model-risk follow-up: OpenClaw's model CLI separates read-only model
+listing/status from live probes, and Hermes keeps provider/model wiring inside
+profile config alongside credentials and model roles. GitClaw should add
+`@gitclaw /models risk` and `gitclaw models risk` as the body-free version of
+that operational check: verify provider family, endpoint host, token-source
+name, fallback coverage, retry budget, prompt-artifact state, and config-file
+metadata without calling catalog or inference endpoints. The report should
+flag non-GitHub endpoints, insecure HTTP, missing budgets, duplicated or
+unknown fallbacks, credential material in `.gitclaw/config.yml`, raw prompt
+logging, live-probe requirements, and raw provider-error leakage, then pair the
+deterministic audit with a real GitHub Models follow-up conversation E2E.
+
 2026-05-30 tool-grounding follow-up: the first model-backed conversation after
 the parameter fix proved provider access but exposed prompt ambiguity: the model
 echoed the issue nonce where the harness wanted the repository search-result

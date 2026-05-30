@@ -16,11 +16,18 @@ func IsModelReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderModelReport(ev Event, cfg Config) string {
+	if isModelRiskRequest(ev, cfg) {
+		return renderModelRiskReport(ev, cfg, true)
+	}
 	return renderModelReport(ev, cfg, true)
 }
 
 func RenderModelCLIReport(cfg Config) string {
 	return renderModelReport(Event{}, cfg, false)
+}
+
+func RenderModelRiskCLIReport(cfg Config) string {
+	return renderModelRiskReport(Event{}, cfg, false)
 }
 
 func renderModelReport(ev Event, cfg Config, includeIssue bool) string {
@@ -114,4 +121,15 @@ func llmTokenSource(baseURL string) string {
 		return "GITCLAW_LLM_API_KEY"
 	}
 	return "none"
+}
+
+func isModelRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 {
+		return false
+	}
+	if fields[0] != "/model" && fields[0] != "/models" {
+		return false
+	}
+	return strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit")
 }
