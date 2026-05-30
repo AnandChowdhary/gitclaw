@@ -34,6 +34,7 @@ go run ./cmd/gitclaw soul verify
 go run ./cmd/gitclaw tools risk
 go run ./cmd/gitclaw artifacts risk
 go run ./cmd/gitclaw diffs risk
+go run ./cmd/gitclaw profile risk
 ```
 
 The GitHub Action handles issue/comment events that mention the configured
@@ -139,6 +140,7 @@ gitclaw proactive list
 gitclaw proactive risk
 gitclaw workspace risk
 gitclaw workspace verify
+gitclaw profile risk
 gitclaw sandbox verify
 ```
 
@@ -164,6 +166,7 @@ scripts/e2e/github-diffs-risk-report.sh
 scripts/e2e/github-hooks-risk-report.sh
 scripts/e2e/github-memory-risk-report.sh
 scripts/e2e/github-plugins-risk-report.sh
+scripts/e2e/github-profile-risk-report.sh
 scripts/e2e/github-proactive-risk-report.sh
 scripts/e2e/github-tasks-risk-report.sh
 scripts/e2e/github-tools-risk-report.sh

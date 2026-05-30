@@ -675,6 +675,18 @@ validation state summarized by counts and hashes only. This gives operators a
 single "which agent am I talking to?" view without adding profile mutation,
 export, installer, or multi-profile switching semantics.
 
+2026-05-30 profile-risk follow-up: Hermes profiles make isolation concrete by
+separating config, `.env`, memory, sessions, skills, cron jobs, and state
+databases into per-profile homes; OpenClaw's workspace docs make
+`SOUL.md`/`USER.md`/`IDENTITY.md`/`TOOLS.md`/`HEARTBEAT.md`/memory the agent's
+durable identity surface. GitClaw should keep the convenience but audit the
+dangerous edges: profile export/import, named-profile switching, profile
+installers, profile mutation, credential storage, external profile state, and
+confusing profile-as-sandbox claims. Add `@gitclaw /profile risk` and
+`gitclaw profile risk` as body-free metadata reports with finding codes and line
+hashes only, followed by a live GitHub Models E2E that proves normal
+conversation/tool behavior still works.
+
 2026-05-30 config-list follow-up: config inspection should also exist outside
 issue chat. Add `gitclaw config list` as the local mirror of `/config`: report
 effective config source, labels, trusted associations, model/prompt budgets,

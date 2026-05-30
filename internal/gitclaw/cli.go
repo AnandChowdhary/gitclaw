@@ -134,8 +134,10 @@ func runProfileCommand(args []string) error {
 	switch args[0] {
 	case "show", "verify", "list":
 		return runProfileShowCommand(args[1:])
+	case "risk", "risk-audit":
+		return runProfileRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw profile [show|verify|list]")
+		return fmt.Errorf("usage: gitclaw profile [show|verify|list|risk]")
 	}
 }
 
@@ -152,6 +154,22 @@ func runProfileShowCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderProfileCLIReport(cfg, repoContext))
+	return nil
+}
+
+func runProfileRiskCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown profile risk argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderProfileRiskCLIReport(cfg, repoContext))
 	return nil
 }
 

@@ -11,11 +11,18 @@ func IsProfileReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderProfileReport(ev Event, cfg Config, repoContext RepoContext) string {
+	if isProfileRiskRequest(ev, cfg) {
+		return renderProfileRiskReport(ev, cfg, repoContext, true)
+	}
 	return renderProfileReport(ev, cfg, repoContext, true)
 }
 
 func RenderProfileCLIReport(cfg Config, repoContext RepoContext) string {
 	return renderProfileReport(Event{}, cfg, repoContext, false)
+}
+
+func RenderProfileRiskCLIReport(cfg Config, repoContext RepoContext) string {
+	return renderProfileRiskReport(Event{}, cfg, repoContext, false)
 }
 
 func renderProfileReport(ev Event, cfg Config, repoContext RepoContext, includeIssue bool) string {
@@ -164,4 +171,16 @@ func writeProfileSkillList(b *strings.Builder, repoContext RepoContext) {
 	for _, skill := range repoContext.SkillSummaries {
 		fmt.Fprintf(b, "- name=`%s` enabled=`%t` selected=`%t` always=`%t` path=`%s` sha256_12=`%s`\n", skill.Name, skill.Enabled, selected[skill.Name], skill.Always, skill.Path, skill.SHA)
 	}
+}
+
+func isProfileRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 {
+		return false
+	}
+	command := fields[0]
+	if command != "/profile" && command != "/profiles" {
+		return false
+	}
+	return strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit")
 }

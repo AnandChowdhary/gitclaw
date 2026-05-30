@@ -1377,6 +1377,7 @@ Hermes profiles and OpenClaw workspace files:
 ```text
 @gitclaw /profile
 @gitclaw /profiles
+@gitclaw /profile risk
 ```
 
 Hermes profiles isolate config, memory, sessions, skills, cron jobs, and other
@@ -1406,9 +1407,35 @@ Local operators can inspect the same profile envelope without opening an issue:
 ```bash
 gitclaw profile show
 gitclaw profile verify
+gitclaw profile risk
 ```
 
 The aliases intentionally return the same body-free report in v1.
+
+`@gitclaw /profile risk` and `gitclaw profile risk` add a deterministic
+profile-isolation audit on top of the visibility report. The audit is inspired
+by Hermes' profile separation and OpenClaw's workspace-as-memory model, but
+keeps GitClaw's v1 boundary stricter: a repository is one reviewed profile, and
+GitClaw does not support profile import/export, profile switching, profile
+installation, profile credential storage, or profile mutation commands.
+
+The risk report scans only repo-local profile metadata and bounded file bodies
+already loaded into the GitClaw context plus `.gitclaw/config.yml` metadata. It
+publishes:
+
+- required profile document coverage,
+- profile/config/skill card metadata,
+- profile isolation flags for import/export, switching, mutation, credential
+  storage, and sandbox-boundary claims,
+- finding codes, severities, paths, fields, and line hashes for prompt
+  boundary overrides, credential material, external profile state, unsafe
+  profile portability, switching, mutation, sandbox-boundary confusion, and raw
+  body leakage.
+
+It never prints profile file bodies, config bodies, skill bodies, tool outputs,
+issue/comment bodies, prompts, credentials, or secret values. Any change to
+this surface requires both local unit coverage and a live GitHub issue E2E that
+includes a normal GitHub Models follow-up turn with repo-reader/tool usage.
 
 ## Migration Plan Command
 
