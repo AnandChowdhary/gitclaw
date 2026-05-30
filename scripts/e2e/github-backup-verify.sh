@@ -140,8 +140,13 @@ for expected in \
   'model="gitclaw/backup"' \
   "GitClaw Backup Report" \
   "Generated without a model call" \
+  'requested_backup_command: `verify`' \
+  'backup_command_status: `ok`' \
+  'issue_side_execution: `deferred_to_post_turn_backup_branch`' \
+  'raw_bodies_included: `false`' \
   'backup_branch: `gitclaw-backups`' \
   'backup_schema_version: `1`' \
+  "requested_local_command: \`gitclaw backup verify --root .gitclaw/backups --repo ${repo}\`" \
   'gitclaw backup verify --root .gitclaw/backups --repo <owner/repo>' \
   'traversal-safe payload paths'; do
   grep -Fq "$expected" <<<"$comments" || die "backup report missing ${expected}"

@@ -1906,7 +1906,14 @@ The command runs after normal preflight authorization and transcript
 reconstruction, but before model inference. It posts a `gitclaw:assistant-turn`
 comment with `model="gitclaw/backup"` and summarizes:
 
+- requested backup command intent (`summary`, `verify`, `manifest`, `list`,
+  `stats`, `search`, `export-jsonl`, `restore-plan`, or `retention-plan`),
+- the matching local `gitclaw backup ...` command to run against a fetched
+  `gitclaw-backups` branch,
+- that issue-side execution is metadata-only because the backup branch is
+  written after the assistant turn,
 - dedicated backup branch name,
+- backup root and repo-scoped backup directory,
 - expected issue backup JSON path,
 - repo-scoped `index.json` and `README.md` paths,
 - backup schema version,
@@ -1916,6 +1923,15 @@ comment with `model="gitclaw/backup"` and summarizes:
 It never dumps issue/comment bodies. The report is navigational metadata; the
 raw transcript copy remains the canonical backup JSON written by the post-turn
 backup job.
+
+Issue-side backup subcommands intentionally mirror OpenClaw's manifest-oriented
+backup verification and Hermes' exportable session artifacts without pretending
+the issue handler can verify a branch that has not been written yet. For
+example, `@gitclaw /backup verify` records the exact local verification command
+and the backup paths, then the post-turn backup job commits the raw issue JSON
+and index to `gitclaw-backups`. `@gitclaw /backup search <query>` records only
+a query hash and term count; raw search terms and raw backup bodies stay out of
+the issue-visible comment.
 
 ## Backup Verification Command
 
@@ -2478,7 +2494,10 @@ assert the expected comments/labels, and close the issue in cleanup.
 
 27. **Backup verification**
 
-   - create a real issue with `@gitclaw /backup`,
+   - create a real issue with `@gitclaw /backup verify`,
+   - assert the issue-side report lists `requested_backup_command: verify`,
+     `issue_side_execution: deferred_to_post_turn_backup_branch`, and the
+     concrete local verify command without dumping body tokens,
    - wait for the successful backup job,
    - fetch the real `gitclaw-backups` branch,
    - run `gitclaw backup verify --root <fetched>/.gitclaw/backups --repo
@@ -2798,9 +2817,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven backup-report E2E harness verifies `@gitclaw /backup`
   publishes deterministic backup paths without a model call and that the
   backup branch receives the corresponding issue JSON and index entry.
-- A `gh`-driven backup-verify E2E harness verifies the fetched
-  `gitclaw-backups` branch with `gitclaw backup verify` after a real issue
-  backup job succeeds.
+- A `gh`-driven backup-verify E2E harness verifies `@gitclaw /backup verify`
+  records the deferred issue-side command intent, then verifies the fetched
+  `gitclaw-backups` branch with `gitclaw backup verify` after the real backup
+  job succeeds.
 - A `gh`-driven backup-manifest E2E harness verifies the fetched
   `gitclaw-backups` branch can produce a file-level manifest with control-file
   and issue-payload hashes for one real issue, without dumping raw bodies.

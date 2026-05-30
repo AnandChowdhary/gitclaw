@@ -173,7 +173,7 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 			Model:          "gitclaw/backup",
 			IdempotencyKey: key,
 			RunURL:         actionRunURL(ev),
-		}, RenderBackupReport(ev, comments, transcript))
+		}, RenderBackupReport(ev, cfg, comments, transcript))
 		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
 			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post backup report comment: %w", err))
 		}

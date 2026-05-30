@@ -140,6 +140,14 @@ repo-scoped `index.json`, `README.md`, canonical `issues/000000.json` paths,
 schema version, counts, timestamps, and absence of unindexed issue backups
 before treating the branch as restorable.
 
+2026-05-30 backup-command follow-up: OpenClaw exposes backup verification as a
+local command over an archive, while Hermes exposes session export as a local
+JSONL artifact. GitClaw's issue handler runs before the backup branch update,
+so issue-visible `/backup verify`, `/backup manifest`, `/backup search`, and
+related subcommands should be treated as deterministic command intents: record
+the exact branch paths, local command, privacy boundary, and hashes, then let
+the post-turn backup job and fetched-branch CLI command perform the real audit.
+
 2026-05-29 backup-manifest follow-up: OpenClaw's manifest-centered backup
 verification and Hermes' portable session export both point to a compact
 provenance view. GitClaw should expose a local `backup manifest` command over
