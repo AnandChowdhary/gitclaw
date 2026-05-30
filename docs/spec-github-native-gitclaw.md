@@ -671,8 +671,9 @@ GitHub issue/comment event
   git-tracked files.
 - Builds a skill index from `SKILL.md` frontmatter and loads full skill bodies
   only when selected or marked always-on.
-- Expands repo-bounded `@file:<path>[:line-range]` and `@folder:<path>`
-  context references from issue text into bounded read-only prompt context.
+- Expands repo-bounded `@file:<path>[:line-range]`, `@folder:<path>`,
+  `@diff`, `@staged`, and `@git:N` context references from issue text into
+  bounded read-only prompt context.
 - Runs bounded read-only repository tools before the model turn.
 - Supports deterministic `@gitclaw /context` reports so maintainers can inspect
   which context files, context references, skills, and tool outputs were
@@ -816,6 +817,8 @@ MVP loads:
   in issue text
 - bounded `@folder:<repo-path>` references rendered as file metadata, not file
   bodies
+- bounded Git references: `@diff`, `@staged`, and `@git:N`, clamped to the
+  latest 10 commits
 - issue thread transcript
 - small repository summary from a read-only file listing
 - bounded `gitclaw.read_file` output for files explicitly mentioned in the
@@ -828,6 +831,9 @@ reference UX, but intentionally narrower:
 @file:docs/search-fixture.md
 @file:docs/search-fixture.md:1-20
 @folder:.gitclaw
+@diff
+@staged
+@git:1
 ```
 
 `@file` loads the referenced text file, optionally reduced to a 1-indexed
@@ -839,6 +845,15 @@ or private-key filenames are skipped and reported as body-free metadata. The
 `@gitclaw /context` report shows reference kind, normalized path, range, status,
 counts, and hashes without dumping referenced content, issue text, comments, or
 tool outputs.
+
+`@diff` and `@staged` run read-only `git diff` commands against the checked-out
+workspace and include bounded patch text only in model prompt context. Empty
+working-tree or staged diffs are reported as `empty` context references and are
+not loaded. `@git:N` runs a bounded read-only log/patch view for the latest N
+commits, clamps N to 10, and includes commit hashes, subjects, stats, and
+patches in prompt context. The `/context` report remains body-free for all Git
+references: it shows kind, path/ref, requested count, status, byte/line counts,
+and hashes, but never dumps commit patches or diff hunks.
 
 Do not let the agent write these files in MVP. Skills, soul, tools notes, and
 memory are git-backed source files: edits happen through normal human-reviewed
@@ -2750,11 +2765,14 @@ assert the expected comments/labels, and close the issue in cleanup.
    - create a real issue with `@gitclaw /context`,
    - create a real issue with `@gitclaw /context references` plus explicit
      `@file:` and `@folder:` references,
+   - create a real issue with `@gitclaw /context ... @git:1`,
    - assert the reply is marked `model="gitclaw/context"`,
    - assert the report lists repo context files, selected skills, and read-only
      tool output names,
    - assert context reference metadata includes kind, path, line range, status,
      byte/line counts, folder-entry counts, and hashes,
+   - assert Git reference metadata includes requested commit count, status,
+     byte/line counts, and hashes,
    - assert referenced file bodies and issue body tokens are not dumped in the
      report,
    - assert the run succeeds without requiring a model provider response.
@@ -3387,6 +3405,11 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven context-reference chat E2E harness verifies a normal model turn
   can answer from an explicit `@file:` reference while ignoring a hidden issue
   token.
+- A `gh`-driven git-reference report E2E harness verifies
+  `@gitclaw /context ... @git:1` reports body-free commit-reference metadata
+  without dumping commit subjects, patches, or issue text.
+- A `gh`-driven git-reference chat E2E harness verifies a normal model turn can
+  answer from an explicit `@git:1` reference by copying the latest commit hash.
 - A `gh`-driven prompt-report E2E harness verifies `@gitclaw /prompt`
   produces a deterministic prompt budget, hash, truncation, context, and tool
   metadata report without a model call or prompt/body leakage.

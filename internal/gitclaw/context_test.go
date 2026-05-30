@@ -2,6 +2,7 @@ package gitclaw
 
 import (
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -177,7 +178,7 @@ func TestRenderContextReportShowsContextReferenceMetadataWithoutBodies(t *testin
 		"raw_bodies_included: `false`",
 		"raw_inputs_included: `false`",
 		"### Context References",
-		"kind=`file` path=`docs/ref.md` range=`2` status=`ok`",
+		"kind=`file` path=`docs/ref.md` range=`2` count=`0` status=`ok`",
 		"sha256_12=",
 	} {
 		if !strings.Contains(report, want) {
@@ -185,6 +186,95 @@ func TestRenderContextReportShowsContextReferenceMetadataWithoutBodies(t *testin
 		}
 	}
 	for _, notWant := range []string{"GITCLAW_CONTEXT_REF_REPORT_V1", "GITCLAW_CONTEXT_REF_ISSUE_SECRET", "second line token"} {
+		if strings.Contains(report, notWant) {
+			t.Fatalf("context report leaked %q:\n%s", notWant, report)
+		}
+	}
+}
+
+func TestLoadRepoContextExpandsGitContextReferences(t *testing.T) {
+	root := t.TempDir()
+	runTestGit(t, root, "init")
+	runTestGit(t, root, "config", "user.email", "gitclaw@example.test")
+	runTestGit(t, root, "config", "user.name", "GitClaw Test")
+	runTestGit(t, root, "config", "commit.gpgsign", "false")
+	writeTestFile(t, root, ".gitclaw/SOUL.md", "Be concise.")
+	writeTestFile(t, root, "tracked.txt", "initial\n")
+	runTestGit(t, root, "add", ".")
+	runTestGit(t, root, "-c", "commit.gpgsign=false", "commit", "-m", "initial git reference fixture")
+	writeTestFile(t, root, "tracked.txt", "initial\nGITCLAW_DIFF_CONTEXT_V1\n")
+	writeTestFile(t, root, "staged.txt", "GITCLAW_STAGED_CONTEXT_V1\n")
+	runTestGit(t, root, "add", "staged.txt")
+
+	ctx, err := LoadRepoContext(root, []TranscriptMessage{{
+		Role: "user",
+		Body: "Please review @git:1, @diff, and @staged.",
+	}})
+	if err != nil {
+		t.Fatalf("LoadRepoContext returned error: %v", err)
+	}
+	if !hasContextDoc(ctx.Documents, "@git:1", "commit=") || !hasContextDoc(ctx.Documents, "@git:1", "initial git reference fixture") {
+		t.Fatalf("git reference was not loaded: %#v", ctx.Documents)
+	}
+	if !hasContextDoc(ctx.Documents, "@diff", "GITCLAW_DIFF_CONTEXT_V1") {
+		t.Fatalf("diff reference was not loaded: %#v", ctx.Documents)
+	}
+	if !hasContextDoc(ctx.Documents, "@staged", "GITCLAW_STAGED_CONTEXT_V1") {
+		t.Fatalf("staged reference was not loaded: %#v", ctx.Documents)
+	}
+	if len(ctx.ContextReferences) != 3 {
+		t.Fatalf("len(ContextReferences) = %d, want 3: %#v", len(ctx.ContextReferences), ctx.ContextReferences)
+	}
+	got := contextReferenceStatusMap(ctx.ContextReferences)
+	for _, key := range []string{"git:HEAD", "diff:.", "staged:."} {
+		if got[key] != "ok" {
+			t.Fatalf("%s status = %q, want ok: %#v", key, got[key], ctx.ContextReferences)
+		}
+	}
+	for _, ref := range ctx.ContextReferences {
+		if ref.Kind == "git" && ref.Count != 1 {
+			t.Fatalf("git reference count = %d, want 1: %#v", ref.Count, ref)
+		}
+	}
+}
+
+func TestRenderContextReportShowsGitReferenceMetadataWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	runTestGit(t, root, "init")
+	runTestGit(t, root, "config", "user.email", "gitclaw@example.test")
+	runTestGit(t, root, "config", "user.name", "GitClaw Test")
+	runTestGit(t, root, "config", "commit.gpgsign", "false")
+	writeTestFile(t, root, ".gitclaw/SOUL.md", "Be concise.")
+	writeTestFile(t, root, "tracked.txt", "initial\n")
+	runTestGit(t, root, "add", ".")
+	runTestGit(t, root, "-c", "commit.gpgsign=false", "commit", "-m", "git metadata should not leak")
+	writeTestFile(t, root, "tracked.txt", "initial\nGITCLAW_DIFF_REPORT_CONTEXT_V1\n")
+
+	transcript := []TranscriptMessage{{
+		Role: "user",
+		Body: "@gitclaw /context references @git:1 @diff\nHidden issue token: GITCLAW_GIT_REF_ISSUE_SECRET.",
+	}}
+	ctx, err := LoadRepoContext(root, transcript)
+	if err != nil {
+		t.Fatalf("LoadRepoContext returned error: %v", err)
+	}
+	report := RenderContextReport(Event{
+		Repo:  "owner/repo",
+		Issue: Issue{Number: 8, Title: "@gitclaw /context references"},
+	}, DefaultConfig(), transcript, ctx)
+	for _, want := range []string{
+		"context_references: `2`",
+		"loaded_context_references: `2`",
+		"kind=`git` path=`HEAD` range=`none` count=`1` status=`ok`",
+		"kind=`diff` path=`.` range=`none` count=`0` status=`ok`",
+		"raw_bodies_included: `false`",
+		"sha256_12=",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("context report missing %q:\n%s", want, report)
+		}
+	}
+	for _, notWant := range []string{"GITCLAW_DIFF_REPORT_CONTEXT_V1", "GITCLAW_GIT_REF_ISSUE_SECRET", "git metadata should not leak"} {
 		if strings.Contains(report, notWant) {
 			t.Fatalf("context report leaked %q:\n%s", notWant, report)
 		}
@@ -482,6 +572,17 @@ func writeTestFile(t *testing.T, root, rel, body string) {
 	if err := os.WriteFile(path, []byte(body), 0o600); err != nil {
 		t.Fatal(err)
 	}
+}
+
+func runTestGit(t *testing.T, root string, args ...string) string {
+	t.Helper()
+	cmd := exec.Command("git", append([]string{"-C", root}, args...)...)
+	cmd.Env = append(os.Environ(), "GIT_CONFIG_NOSYSTEM=1")
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("git %s failed: %v\n%s", strings.Join(args, " "), err, out)
+	}
+	return string(out)
 }
 
 func hasContextDoc(docs []ContextDocument, path, bodyPart string) bool {

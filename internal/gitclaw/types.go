@@ -234,6 +234,7 @@ type ContextReferenceSummary struct {
 	Kind      string
 	Path      string
 	LineRange string
+	Count     int
 	Status    string
 	Reason    string
 	Bytes     int

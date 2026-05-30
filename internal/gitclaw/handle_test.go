@@ -193,7 +193,7 @@ Skill token.
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Context Report", "Generated without a model call", ".gitclaw/SOUL.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", "context_references: `1`", "loaded_context_references: `1`", "kind=`file` path=`docs/ref.md` range=`2` status=`ok`", "gitclaw.list_files", "gitclaw.read_file", "model=\"gitclaw/context\""} {
+	for _, want := range []string{"GitClaw Context Report", "Generated without a model call", ".gitclaw/SOUL.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", "context_references: `1`", "loaded_context_references: `1`", "kind=`file` path=`docs/ref.md` range=`2` count=`0` status=`ok`", "gitclaw.list_files", "gitclaw.read_file", "model=\"gitclaw/context\""} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("context report missing %q:\n%s", want, body)
 		}

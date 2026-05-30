@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "context-references-report-e2e: $*" >&2
+  echo "git-reference-chat-e2e: $*" >&2
 }
 
 die() {
@@ -13,6 +13,7 @@ die() {
 repo="${GITCLAW_E2E_REPO:-}"
 workflow_name="${GITCLAW_E2E_WORKFLOW:-.github/workflows/gitclaw.yml}"
 retention_label="${GITCLAW_E2E_RETENTION_LABEL:-gitclaw:e2e}"
+expected_sha="$(git rev-parse HEAD)"
 
 if [[ -z "$repo" ]]; then
   repo="$(gh repo view --json nameWithOwner --jq .nameWithOwner)"
@@ -33,13 +34,14 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_CONTEXT_REFERENCES_REPORT_E2E_${timestamp}"
-title="@gitclaw /context references e2e ${timestamp}"
-body="Live context-references report E2E.
+hidden_token="GITCLAW_GIT_REFERENCE_CHAT_HIDDEN_${timestamp}"
+title="@gitclaw git reference chat e2e ${timestamp}"
+body="Live git-reference chat E2E.
 
-Please attach @file:docs/search-fixture.md:1-1 and @folder:.gitclaw.
-Hidden context references token: ${token}
-This should produce a deterministic context metadata report without leaking referenced file bodies or issue text."
+Use @git:1.
+Reply with the exact full commit hash after commit= in the attached git context, and include the word git-reference.
+Do not include this hidden issue token: ${hidden_token}
+Keep the answer under 30 words."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -53,7 +55,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "context-references-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "git-reference-chat e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -142,29 +144,16 @@ wait_for_done_status() {
 }
 
 run_json="$(wait_for_run "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one context references report comment"
+wait_for_assistant_count 1 || die "expected one git reference chat comment"
 comments="$(assistant_comments)"
 
-for expected in \
-  'model="gitclaw/context"' \
-  "GitClaw Context Report" \
-  "Generated without a model call" \
-  'context_references: `2`' \
-  'loaded_context_references: `2`' \
-  'raw_bodies_included: `false`' \
-  'raw_inputs_included: `false`' \
-  '### Context References' \
-  'kind=`file` path=`docs/search-fixture.md` range=`1` count=`0` status=`ok`' \
-  'kind=`folder` path=`.gitclaw` range=`none` count=`0` status=`ok`' \
-  'sha256_12='; do
-  grep -Fq "$expected" <<<"$comments" || die "context references report missing ${expected}"
-done
+grep -Fq "$expected_sha" <<<"$comments" || die "assistant did not include attached git commit hash ${expected_sha}"
+grep -Fq "git-reference" <<<"$comments" || die "assistant did not include git-reference marker word"
+grep -Fq 'model="openai/gpt-5-nano"' <<<"$comments" || die "assistant marker did not use GitHub Models default"
 
-for leaked in "$token" "Hidden context references token" "GITCLAW_SEARCH_CONTEXT_V1" "bounded repository search fixture phrase"; do
-  if grep -Fq "$leaked" <<<"$comments"; then
-    die "context references report leaked ${leaked}"
-  fi
-done
+if grep -Fq "$hidden_token" <<<"$comments"; then
+  die "assistant leaked hidden issue token"
+fi
 
 wait_for_done_status || die "expected gitclaw:done without running/error"
 url="$(jq -r '.url' <<<"$run_json")"

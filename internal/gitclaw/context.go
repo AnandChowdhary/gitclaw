@@ -18,6 +18,7 @@ const (
 	maxContextDocumentBytes  = 12000
 	maxContextReferenceBytes = 12000
 	maxContextFolderEntries  = 120
+	maxContextGitCommits     = 10
 	maxToolReadBytes         = 8000
 	maxRepoFilesListed       = 240
 	maxToolFilesRead         = 5
@@ -158,6 +159,7 @@ type parsedContextReference struct {
 	Kind      string
 	Path      string
 	LineRange string
+	Count     int
 	StartLine int
 	EndLine   int
 }
@@ -183,6 +185,12 @@ func loadContextReferences(root string, transcript []TranscriptMessage) ([]Conte
 			summaries = append(summaries, summary)
 		case "folder":
 			doc, summary := loadFolderContextReference(root, ref)
+			if summary.Status == "ok" {
+				docs = append(docs, doc)
+			}
+			summaries = append(summaries, summary)
+		case "diff", "staged", "git":
+			doc, summary := loadGitContextReference(root, ref)
 			if summary.Status == "ok" {
 				docs = append(docs, doc)
 			}
@@ -214,7 +222,7 @@ func cleanContextReferenceToken(token string) string {
 	token = strings.TrimSpace(token)
 	token = strings.Trim(token, "`\"'()[]{}<>")
 	token = strings.TrimRight(token, ".,;!?")
-	if strings.HasPrefix(token, "@file:") || strings.HasPrefix(token, "@folder:") {
+	if token == "@diff" || token == "@staged" || strings.HasPrefix(token, "@git:") || strings.HasPrefix(token, "@file:") || strings.HasPrefix(token, "@folder:") {
 		return token
 	}
 	return ""
@@ -249,6 +257,22 @@ func parseContextReference(token string) (parsedContextReference, bool) {
 	if strings.HasPrefix(token, "@folder:") {
 		path := cleanContextLookupPath(strings.TrimSpace(strings.TrimPrefix(token, "@folder:")))
 		return parsedContextReference{Kind: "folder", Path: path}, path != ""
+	}
+	if token == "@diff" {
+		return parsedContextReference{Kind: "diff", Path: ".", LineRange: "none"}, true
+	}
+	if token == "@staged" {
+		return parsedContextReference{Kind: "staged", Path: ".", LineRange: "none"}, true
+	}
+	if strings.HasPrefix(token, "@git:") {
+		count := atoiPositive(strings.TrimSpace(strings.TrimPrefix(token, "@git:")))
+		if count <= 0 {
+			return parsedContextReference{}, false
+		}
+		if count > maxContextGitCommits {
+			count = maxContextGitCommits
+		}
+		return parsedContextReference{Kind: "git", Path: "HEAD", LineRange: "none", Count: count}, true
 	}
 	return parsedContextReference{}, false
 }
@@ -346,6 +370,119 @@ func loadFolderContextReference(root string, ref parsedContextReference) (Contex
 	summary.Entries = entries
 	summary.SHA = shortDocumentHash(body)
 	return ContextDocument{Path: docPath, Body: body}, summary
+}
+
+func loadGitContextReference(root string, ref parsedContextReference) (ContextDocument, ContextReferenceSummary) {
+	summary := ContextReferenceSummary{
+		Kind:      ref.Kind,
+		Path:      ref.Path,
+		LineRange: lineRangeOrNone(ref.LineRange),
+		Count:     ref.Count,
+		Status:    "not_found",
+	}
+	args := gitReferenceArgs(ref)
+	if len(args) == 0 {
+		summary.Status = "invalid"
+		summary.Reason = "unsupported_reference"
+		return ContextDocument{}, summary
+	}
+	body, err := runGitReferenceCommand(root, args)
+	if err != nil {
+		summary.Status = "error"
+		summary.Reason = gitReferenceErrorReason(err)
+		return ContextDocument{}, summary
+	}
+	if strings.TrimSpace(body) == "" {
+		summary.Status = "empty"
+		summary.Reason = gitReferenceEmptyReason(ref.Kind)
+		return ContextDocument{}, summary
+	}
+	body = truncateContextReferenceText(body, maxContextReferenceBytes)
+	docPath := "@" + ref.Kind
+	if ref.Kind == "git" {
+		docPath = fmt.Sprintf("@git:%d", ref.Count)
+	}
+	summary.Status = "ok"
+	summary.Bytes = len(body)
+	summary.Lines = lineCount(body)
+	summary.SHA = shortDocumentHash(body)
+	return ContextDocument{Path: docPath, Body: body}, summary
+}
+
+func gitReferenceArgs(ref parsedContextReference) []string {
+	switch ref.Kind {
+	case "diff":
+		return []string{"diff", "--no-color", "--no-ext-diff", "--"}
+	case "staged":
+		return []string{"diff", "--cached", "--no-color", "--no-ext-diff", "--"}
+	case "git":
+		count := ref.Count
+		if count <= 0 {
+			count = 1
+		}
+		if count > maxContextGitCommits {
+			count = maxContextGitCommits
+		}
+		return []string{"log", fmt.Sprintf("-n%d", count), "--patch", "--stat", "--no-color", "--no-ext-diff", "--date=iso-strict", "--format=format:commit=%H%nshort=%h%nauthor=%an <%ae>%ndate=%ad%nsubject=%s%n"}
+	default:
+		return nil
+	}
+}
+
+func runGitReferenceCommand(root string, args []string) (string, error) {
+	if _, err := exec.LookPath("git"); err != nil {
+		return "", fmt.Errorf("git_not_found: %w", err)
+	}
+	cmdArgs := append([]string{"-C", root}, args...)
+	cmd := exec.Command("git", cmdArgs...)
+	data, err := cmd.CombinedOutput()
+	if err != nil {
+		return "", fmt.Errorf("%w: %s", err, strings.TrimSpace(string(data)))
+	}
+	return strings.TrimSpace(string(data)), nil
+}
+
+func truncateContextReferenceText(body string, limit int) string {
+	body = strings.TrimSpace(body)
+	if limit <= 0 || len(body) <= limit {
+		return body
+	}
+	marker := fmt.Sprintf("\n...[gitclaw:context_reference_truncated omitted_bytes=%d]...\n", len(body)-limit)
+	if limit <= len(marker)+20 {
+		return body[:limit]
+	}
+	keep := limit - len(marker)
+	head := keep / 2
+	tail := keep - head
+	return strings.TrimSpace(body[:head] + marker + body[len(body)-tail:])
+}
+
+func gitReferenceEmptyReason(kind string) string {
+	switch kind {
+	case "diff":
+		return "no_working_tree_changes"
+	case "staged":
+		return "no_staged_changes"
+	case "git":
+		return "no_commits"
+	default:
+		return "empty_output"
+	}
+}
+
+func gitReferenceErrorReason(err error) string {
+	if err == nil {
+		return ""
+	}
+	msg := strings.ToLower(err.Error())
+	switch {
+	case strings.Contains(msg, "git_not_found"):
+		return "git_not_found"
+	case strings.Contains(msg, "not a git repository"):
+		return "not_git_repository"
+	default:
+		return "git_command_failed"
+	}
 }
 
 func renderFolderContextReference(root, rel string) (string, int) {

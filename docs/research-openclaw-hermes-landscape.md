@@ -520,8 +520,18 @@ binary rejection, and sensitive credential-path blocking. GitClaw should copy
 the ergonomic local-file subset first: expand `@file:` and `@folder:` from
 GitHub issue text against the checked-out repo, keep folder references as
 metadata listings only, block credential-ish paths, and surface body-free
-reference metadata in `@gitclaw /context` reports. Leave `@diff`, `@git`, and
-`@url` for later because they expand the runtime and policy surface.
+reference metadata in `@gitclaw /context` reports. Leave `@url` for later
+because fetching web content expands the network and prompt-injection surface.
+
+2026-05-30 git-context follow-up: Hermes' reference surface also makes current
+git state first-class through `@diff`, `@staged`, and `@git:N`; OpenClaw's
+diffs plugin frames patches as read-only artifacts that agents can inspect or
+render without mutating the workspace. GitClaw can safely adopt the Git-native
+subset now because GitHub Actions already checks out a repo: `@diff` and
+`@staged` should run bounded read-only `git diff` commands, and `@git:N`
+should expose a bounded recent commit log with patches, clamped to 10 commits.
+The issue-visible `/context` report should remain body-free and show only kind,
+count, status, sizes, and hashes.
 
 2026-05-29 memory-validation follow-up: OpenClaw's memory CLI exposes
 status/index/search/promotion surfaces and treats deep writes to `MEMORY.md` as

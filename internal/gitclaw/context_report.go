@@ -156,10 +156,11 @@ func writeContextReferenceList(b *strings.Builder, refs []ContextReferenceSummar
 		return
 	}
 	for _, ref := range refs {
-		fmt.Fprintf(b, "- kind=`%s` path=`%s` range=`%s` status=`%s` bytes=`%d` lines=`%d` entries=`%d` sha256_12=`%s`",
+		fmt.Fprintf(b, "- kind=`%s` path=`%s` range=`%s` count=`%d` status=`%s` bytes=`%d` lines=`%d` entries=`%d` sha256_12=`%s`",
 			ref.Kind,
 			ref.Path,
 			inlineCode(ref.LineRange),
+			ref.Count,
 			ref.Status,
 			ref.Bytes,
 			ref.Lines,
@@ -294,6 +295,7 @@ func cleanContextMatchPath(path string) string {
 	path = cleanContextLookupPath(path)
 	path = strings.TrimPrefix(path, "@file:")
 	path = strings.TrimPrefix(path, "@folder:")
+	path = strings.TrimPrefix(path, "@git:")
 	if matches := contextLineRangePattern.FindStringSubmatch(path); len(matches) > 0 {
 		path = matches[1]
 	}
