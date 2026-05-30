@@ -304,6 +304,7 @@ and the local equivalent:
 
 ```bash
 gitclaw heartbeat status
+gitclaw heartbeat risk
 ```
 
 This report is intentionally not the heartbeat runner. It runs after preflight
@@ -323,6 +324,19 @@ It never scans heartbeat issues, calls the model, mutates repository contents,
 or prints issue/comment/workflow/heartbeat context bodies. The report carries
 `model_call_required: false` and `runner_model_call_required: true` so E2E can
 distinguish the operator report from the real scheduled model-backed runner.
+
+When called as `@gitclaw /heartbeat risk` or `gitclaw heartbeat risk`, GitClaw
+posts a body-free risk audit for the scheduled heartbeat surface. It scans the
+heartbeat workflow and `.gitclaw/HEARTBEAT.md` for schedule-amplification,
+top-of-hour reliability, missing `workflow_dispatch`, missing `schedule`,
+missing or excessive permissions, missing concurrency/idempotency guards,
+prompt-boundary overrides, credential exfiltration, unreviewed persistent-state
+mutation, workflow self-dispatch loops, and raw-input/body leakage. The report
+emits only metadata, counts, hashes, risk codes, severities, and runtime gates;
+it never prints workflow bodies, heartbeat context bodies, issue bodies,
+comments, raw inputs, credentials, or secret values. Any implementation batch
+touching this risk surface must also run a live GitHub Models follow-up that
+proves normal LLM inference and repository tool use still work.
 
 ## Proactive Usefulness
 
@@ -743,7 +757,7 @@ GitHub issue/comment event
 - CLI entry point.
 - Subcommands: `preflight`, `handle`, `backup`, `backup search`,
   `backup info`, `backup retention-plan`,
-  `heartbeat`, `heartbeat status`,
+  `heartbeat`, `heartbeat status`, `heartbeat risk`,
   `channel-ingest`, `channel-state`, `channel-gateway`, `channel-delivery`,
   `channels list`, `channels verify`, `channels risk`, `channels info`,
   `checkpoints status`, `checkpoints list`, `checkpoints risk`,
@@ -4800,6 +4814,11 @@ examples/workflows/gitclaw.yml
   state, marker counts, and the runner/model-call contract without a model call
   or body leakage. Each heartbeat-report implementation batch must still run a
   live GitHub Models conversation E2E that makes an actual LLM call.
+- A `gh`-driven heartbeat-risk E2E harness verifies
+  `@gitclaw /heartbeat risk` reports body-free workflow schedule, permission,
+  idempotency, heartbeat context, and runtime-gate risk metadata, then runs a
+  real GitHub Models follow-up conversation that proves repo-reader selection
+  and prompt-visible repository search tool usage.
 - A `gh`-driven workflow-dispatch E2E harness verifies the main handler can be
   woken for a specific issue and deduped by dispatch ID.
 - A `gh`-driven channel-message E2E harness verifies a mirrored channel

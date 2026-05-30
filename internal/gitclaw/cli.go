@@ -2339,6 +2339,8 @@ func runHeartbeatCommand(ctx context.Context, args []string) error {
 		switch args[0] {
 		case "status", "list", "verify":
 			return runHeartbeatStatusCommand(args[1:])
+		case "risk", "risk-audit":
+			return runHeartbeatRiskCommand(args[1:])
 		}
 	}
 	cfg, err := LoadEffectiveConfig()
@@ -2417,6 +2419,18 @@ func runHeartbeatStatusCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderHeartbeatCLIReport(cfg))
+	return nil
+}
+
+func runHeartbeatRiskCommand(args []string) error {
+	if len(args) != 0 {
+		return fmt.Errorf("usage: gitclaw heartbeat risk")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderHeartbeatRiskCLIReport(cfg))
 	return nil
 }
 

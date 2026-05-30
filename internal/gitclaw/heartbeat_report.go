@@ -16,18 +16,23 @@ type heartbeatSurface struct {
 }
 
 type heartbeatWorkflow struct {
-	Path             string
-	Present          bool
-	Bytes            int
-	Lines            int
-	SHA              string
-	WorkflowDispatch bool
-	Schedule         bool
-	ScheduleEntries  int
-	ContentsRead     bool
-	IssuesWrite      bool
-	ModelsRead       bool
-	Inputs           int
+	Path                  string
+	Present               bool
+	Bytes                 int
+	Lines                 int
+	SHA                   string
+	WorkflowDispatch      bool
+	Schedule              bool
+	ScheduleEntries       int
+	CronExpressions       []string
+	ContentsRead          bool
+	IssuesWrite           bool
+	ModelsRead            bool
+	ContentsWrite         bool
+	ActionsWrite          bool
+	ConcurrencyGroup      bool
+	ConcurrencyCancelSafe bool
+	Inputs                int
 }
 
 type heartbeatFinding struct {
@@ -38,7 +43,11 @@ type heartbeatFinding struct {
 }
 
 func IsHeartbeatReportRequest(ev Event, cfg Config) bool {
-	return activeSlashCommand(ev, cfg) == "/heartbeat"
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) == 0 || fields[0] != "/heartbeat" {
+		return false
+	}
+	return len(fields) < 2 || (!strings.EqualFold(fields[1], "risk") && !strings.EqualFold(fields[1], "risk-audit"))
 }
 
 func RenderHeartbeatReport(ev Event, cfg Config, comments []Comment) string {
@@ -152,10 +161,15 @@ func inspectHeartbeatWorkflow(absRoot, rel string) heartbeatWorkflow {
 	workflow.SHA = shortDocumentHash(text)
 	workflow.WorkflowDispatch = strings.Contains(text, "workflow_dispatch:")
 	workflow.Schedule = strings.Contains(text, "schedule:")
-	workflow.ScheduleEntries = strings.Count(text, "cron:")
+	workflow.CronExpressions = extractCronExpressions(text)
+	workflow.ScheduleEntries = len(workflow.CronExpressions)
 	workflow.ContentsRead = strings.Contains(text, "contents: read")
 	workflow.IssuesWrite = strings.Contains(text, "issues: write")
 	workflow.ModelsRead = strings.Contains(text, "models: read")
+	workflow.ContentsWrite = strings.Contains(text, "contents: write")
+	workflow.ActionsWrite = strings.Contains(text, "actions: write")
+	workflow.ConcurrencyGroup = strings.Contains(text, "group: gitclaw-heartbeat")
+	workflow.ConcurrencyCancelSafe = strings.Contains(text, "cancel-in-progress: false")
 	workflow.Inputs = countWorkflowInputKeys(text)
 	return workflow
 }

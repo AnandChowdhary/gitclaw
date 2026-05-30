@@ -37,6 +37,7 @@ go run ./cmd/gitclaw context risk
 go run ./cmd/gitclaw diffs risk
 go run ./cmd/gitclaw profile risk
 go run ./cmd/gitclaw models risk
+go run ./cmd/gitclaw heartbeat risk
 go run ./cmd/gitclaw config risk
 go run ./cmd/gitclaw orders risk
 go run ./cmd/gitclaw policy risk
@@ -127,6 +128,7 @@ Operational surfaces:
 ```bash
 gitclaw models list
 gitclaw models risk
+gitclaw heartbeat risk
 gitclaw config list
 gitclaw config risk
 gitclaw doctor
@@ -178,6 +180,7 @@ scripts/e2e/github-artifacts-risk-report.sh
 scripts/e2e/github-checkpoints-risk-report.sh
 scripts/e2e/github-context-risk-report.sh
 scripts/e2e/github-diffs-risk-report.sh
+scripts/e2e/github-heartbeat-risk-report.sh
 scripts/e2e/github-hooks-risk-report.sh
 scripts/e2e/github-memory-risk-report.sh
 scripts/e2e/github-model-risk-report.sh

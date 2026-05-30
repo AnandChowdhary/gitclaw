@@ -447,6 +447,22 @@ permissions, context-file metadata, labels, idempotency, and the
 bodies. That keeps routine heartbeat debugging cheap while still requiring
 live GitHub Models E2E for any feature batch that touches heartbeat behavior.
 
+2026-05-30 heartbeat-risk follow-up: Current OpenClaw heartbeat docs frame
+heartbeat as scheduled proactive awareness, `HEARTBEAT.md` context, and
+`HEARTBEAT_OK` quiet suppression, while Hermes cron docs emphasize fresh
+scheduled sessions, optional attached skills, no-agent watchdogs, and explicit
+delivery suppression. GitHub Actions' `schedule` docs add an important
+serverless reliability constraint: scheduled workflows can be delayed or
+dropped under load, especially at the top of the hour, and only run from the
+default branch. GitClaw should therefore add `@gitclaw /heartbeat risk` and
+`gitclaw heartbeat risk`: a body-free audit that checks the heartbeat workflow
+for dispatch/schedule presence, off-hour cron timing, minimal permissions,
+concurrency/idempotency, self-dispatch loops, raw-input logging, and
+credential leakage; checks `.gitclaw/HEARTBEAT.md` for prompt-boundary,
+exfiltration, unreviewed persistent-state, and unbounded-scope instructions;
+and pairs the deterministic audit with a real GitHub Models follow-up that
+proves ordinary repo-reader/tool usage still works.
+
 2026-05-29 workflow-dispatch follow-up: GitClaw needs a second fresh-run
 boundary in addition to heartbeat. A channel poller that mirrors Telegram or
 Slack messages using `GITHUB_TOKEN` cannot depend on those generated comments to
@@ -1966,6 +1982,7 @@ Recommended non-goals for the first spec:
 - Hermes security overview: https://hermes-agent.nousresearch.com/docs/
 - Hermes cron docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/cron.md
 - Hermes cron internals docs: https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals
+- GitHub Actions schedule event docs: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule
 - Hermes security docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/security.md
 - NanoClaw: https://github.com/nanocoai/nanoclaw
 - LightClaw: https://github.com/OthmaneBlial/lightclaw
