@@ -1642,10 +1642,13 @@ func runDoctorCommand(args []string) error {
 
 func runMigrateCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw migrate plan <source>")
+		return fmt.Errorf("usage: gitclaw migrate [plan|risk] <source>")
+	}
+	if args[0] == "risk" || args[0] == "risk-audit" {
+		return runMigrateRiskCommand(args[1:])
 	}
 	if args[0] != "plan" && args[0] != "dry-run" {
-		return fmt.Errorf("usage: gitclaw migrate plan <source>")
+		return fmt.Errorf("usage: gitclaw migrate [plan|risk] <source>")
 	}
 	if len(args) != 2 {
 		return fmt.Errorf("usage: gitclaw migrate plan <source>")
@@ -1659,6 +1662,22 @@ func runMigrateCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderMigrationCLIReport(repoContext, args[1]))
+	return nil
+}
+
+func runMigrateRiskCommand(args []string) error {
+	if len(args) != 1 {
+		return fmt.Errorf("usage: gitclaw migrate risk <source>")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "migrate risk " + args[0]}}, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderMigrationRiskCLIReport(repoContext, args[0]))
 	return nil
 }
 

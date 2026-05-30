@@ -17,6 +17,9 @@ func IsMigrationReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderMigrationReport(ev Event, cfg Config, repoContext RepoContext) string {
+	if IsMigrationRiskRequest(ev, cfg) {
+		return RenderMigrationRiskReport(ev, cfg, repoContext)
+	}
 	source := requestedMigrationPlanSource(ev, cfg)
 	if source == "__missing__" {
 		source = ""
@@ -221,6 +224,7 @@ func migrationImportMap(source string) [][4]string {
 			{"memories/MEMORY.md", ".gitclaw/MEMORY.md", "reviewed-append", "long-term memory"},
 			{"memories/USER.md", ".gitclaw/USER.md", "reviewed-append", "user profile"},
 			{"skills/<name>/SKILL.md", ".gitclaw/SKILLS/<name>/SKILL.md", "manual-copy", "repo-local skills"},
+			{"mcp_servers", ".gitclaw/TOOLS.md", "manual-review", "MCP server definitions require explicit tool review"},
 			{"cron jobs", ".gitclaw/proactive/*.md", "manual-rewrite", "scheduled prompts only"},
 			{"sessions/state.db", "gitclaw-backups archive", "archive-only", "raw sessions stay out of prompt context"},
 			{"auth.json/.env", "manual secret setup", "skip", "credential import disabled"},

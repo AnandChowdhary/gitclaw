@@ -138,7 +138,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `33`' \
   'aliases: `31`' \
-  'local_cli_helpers: `126`' \
+  'local_cli_helpers: `127`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/agents' \
@@ -289,6 +289,7 @@ for expected in \
   'gitclaw memory info <path>' \
   'gitclaw memory search <query>' \
   'gitclaw migrate plan <source>' \
+  'gitclaw migrate risk <source>' \
   'gitclaw soul verify' \
   'gitclaw soul risk' \
   'gitclaw soul validate' \

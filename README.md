@@ -95,6 +95,13 @@ gitclaw bundles risk
 gitclaw bundles info <name>
 ```
 
+Migration:
+
+```bash
+gitclaw migrate plan <source>
+gitclaw migrate risk <source>
+```
+
 Tools:
 
 ```bash
@@ -203,6 +210,7 @@ scripts/e2e/github-diffs-risk-report.sh
 scripts/e2e/github-heartbeat-risk-report.sh
 scripts/e2e/github-hooks-risk-report.sh
 scripts/e2e/github-memory-risk-report.sh
+scripts/e2e/github-migration-risk-report.sh
 scripts/e2e/github-model-risk-report.sh
 scripts/e2e/github-bundles-risk-report.sh
 scripts/e2e/github-orders-risk-report.sh

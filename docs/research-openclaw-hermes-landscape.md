@@ -1265,6 +1265,23 @@ servers/installers, mutate the repository, or call a model. Any implementation
 batch for migration behavior must pair the deterministic migration E2E with a
 live GitHub Models conversation E2E that performs an actual LLM call.
 
+2026-05-31 migration-risk follow-up: OpenClaw's current migrate CLI documents
+provider-owned migrations with `--dry-run`, redacted itemized plans,
+backup-before-apply, conflict refusal, archive/manual-review state, and opt-in
+credential import flags such as `--include-secrets`/`--no-auth-credentials`.
+Its Hermes provider imports config/providers, MCP server definitions, `SOUL.md`,
+`AGENTS.md`, memory files, skills, skill config, supported auth credentials, and
+API keys only when credential migration is accepted; plugins, sessions, logs,
+cron, MCP token material, and `state.db` are archive-only/manual-review state.
+Hermes' checkpoint docs separately reinforce the preview-before-restore pattern:
+`/rollback diff <N>` previews changes, and restore takes a pre-rollback
+snapshot. GitClaw's GitHub-native migration risk audit should therefore
+classify import-map rows before any migration is implemented: credentials are
+skipped, MCP/plugins/hooks/cron are executable-state quarantine, skills and
+memory require human review, raw sessions stay archive-only, and the report
+must prove no source home reads, no installer execution, no MCP autoload, no
+credential import, no mutation, and no raw body/secret leakage.
+
 2026-05-29 prompt-budget follow-up: OpenClaw's context docs expose per-file and
 total prompt caps plus visible truncation markers, while Hermes' memory/context
 docs treat character limits as a core defense against context bloat. GitClaw

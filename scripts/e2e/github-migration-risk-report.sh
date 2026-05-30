@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "doctor-report-e2e: $*" >&2
+  echo "migration-risk-report-e2e: $*" >&2
 }
 
 die() {
@@ -33,15 +33,16 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_DOCTOR_REPORT_E2E_${timestamp}"
-followup_hidden_token="GITCLAW_DOCTOR_REPORT_FOLLOWUP_E2E_${timestamp}"
+token="GITCLAW_MIGRATION_RISK_E2E_${timestamp}"
+followup_hidden_token="GITCLAW_MIGRATION_RISK_FOLLOWUP_E2E_${timestamp}"
 expected_token="GITCLAW_SEARCH_CONTEXT_V1"
 search_phrase="bounded repository search fixture phrase"
-title="@gitclaw /doctor e2e ${timestamp}"
-body="Live doctor-report E2E.
+title="@gitclaw /migrate risk hermes e2e ${timestamp}"
+body="@gitclaw /migrate risk hermes
 
-Hidden doctor body token: ${token}
-This should produce a deterministic health report without a model call."
+Live migration-risk E2E.
+Hidden migration risk body token: ${token}
+This should produce a deterministic migration boundary risk report without source-home reads, credential import, installer execution, repository mutation, or raw body leakage."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -55,7 +56,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "doctor-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "migration-risk-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -77,11 +78,11 @@ wait_for_run() {
       --json databaseId,status,conclusion,url,createdAt,displayTitle \
       --jq '. as $runs | $runs | map(select(.displayTitle == "'"${title}"'")) | sort_by(.createdAt) | reverse | .[0] // empty')"
     if [[ -n "$run_json" && "$run_json" != "null" ]]; then
-      local run_status conclusion url
-      run_status="$(jq -r '.status' <<<"$run_json")"
+      local status conclusion url
+      status="$(jq -r '.status' <<<"$run_json")"
       conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
       url="$(jq -r '.url' <<<"$run_json")"
-      if [[ "$run_status" == "completed" ]]; then
+      if [[ "$status" == "completed" ]]; then
         [[ "$conclusion" == "success" ]] || die "${event_name} run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
@@ -159,78 +160,77 @@ wait_for_done_status() {
   return 1
 }
 
-run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one doctor report comment"
-comments="$(assistant_comments)"
+risk_run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
+wait_for_assistant_count 1 || die "expected one migration risk report comment"
+risk_comment="$(assistant_comments)"
 
 for expected in \
-  'model="gitclaw/doctor"' \
-  "GitClaw Doctor Report" \
+  'model="gitclaw/migration"' \
+  "GitClaw Migration Risk Report" \
   "Generated without a model call" \
-  'health_status: `ok`' \
-  'config_source: `defaults+repo+environment`' \
-  'config_valid: `true`' \
-  'config_file_present: `true`' \
-  'model: `openai/gpt-5-nano`' \
-  'run_mode: `read-only`' \
-  'workflows_present: `7`' \
-  'context_files_present: `6`' \
-  'memory_notes: `1`' \
-  'skill_files: `1`' \
-  'e2e_scripts: `137`' \
-  'e2e_live_issue_scripts: `130`' \
-  'e2e_cleanup_scripts: `137`' \
-  'e2e_model_coverage_scripts: `48`' \
-  'e2e_session_coverage_scripts: `2`' \
-  'e2e_backup_gate_scripts: `21`' \
-  'e2e_workflow_dispatch_scripts: `21`' \
-  'enabled_skills: `1`' \
-  'disabled_skills: `0`' \
-  'allowlist_blocked_skills: `0`' \
-  'enabled_tools: `5`' \
-  'disabled_tools: `0`' \
-  'allowlist_blocked_tools: `0`' \
-  'proactive_prompt_files: `1`' \
-  'managed_labels: `9`' \
-  'validation_errors: `0`' \
-  'validation_warnings: `0`' \
-  'skill_validation_status: `ok`' \
-  'skill_validation_errors: `0`' \
-  'skill_validation_warnings: `0`' \
+  'repository: `'"$repo"'`' \
+  'issue: `#'"$issue_number"'`' \
+  'migration_risk_status: `needs_review`' \
+  'verification_scope: `agent_state_migration_boundary`' \
+  'normalized_source: `hermes`' \
+  'supported_source: `true`' \
+  'provider_import_items: `10`' \
+  'manual_review_items: `1`' \
+  'archive_only_items: `1`' \
+  'skipped_items: `1`' \
+  'credential_items: `1`' \
+  'executable_state_items: `2`' \
+  'memory_items: `2`' \
+  'skill_items: `1`' \
+  'session_archive_items: `1`' \
+  'source_scan_allowed: `false`' \
+  'source_home_read: `false`' \
+  'source_paths_printed: `false`' \
+  'apply_supported: `false`' \
+  'model_call_required: `false`' \
+  'repository_mutation_allowed: `false`' \
+  'credentials_import_allowed: `false`' \
+  'executable_state_import_allowed: `false`' \
+  'installer_execution_allowed: `false`' \
+  'mcp_autoload_allowed: `false`' \
+  'raw_source_body_included: `false`' \
+  'raw_issue_bodies_included: `false`' \
+  'raw_comment_bodies_included: `false`' \
+  'raw_secret_values_included: `false`' \
+  'backup_required_before_apply: `true`' \
+  'human_review_required: `true`' \
+  'quarantine_required: `true`' \
   'soul_validation_status: `ok`' \
-  'soul_validation_errors: `0`' \
-  'soul_validation_warnings: `0`' \
-  'memory_validation_status: `ok`' \
-  'memory_validation_errors: `0`' \
-  'memory_validation_warnings: `0`' \
+  'skill_validation_status: `ok`' \
   'tool_validation_status: `ok`' \
-  'tool_validation_errors: `0`' \
-  'tool_validation_warnings: `0`' \
-  '`config_validation`: `ok`' \
-  '`workflow_set`: `ok`' \
-  '`identity_context`: `ok`' \
-  '`local_skills`: `ok`' \
-  '`e2e_harnesses`: `ok`' \
-  '`skill_validation`: `ok`' \
-  '`soul_validation`: `ok`' \
-  '`memory_validation`: `ok`' \
-  '`tool_validation`: `ok`' \
-  '.gitclaw/config.yml' \
-  '.github/workflows/gitclaw.yml' \
-  '.gitclaw/SOUL.md' \
-  '.gitclaw/SKILLS/repo-reader/SKILL.md' \
-  '.gitclaw/proactive/repo-hygiene.md' \
-  "### E2E Harnesses" \
-  'e2e_coverage_status=`ok`' \
-  'path=`scripts/e2e/github-doctor-report.sh`' \
-  'model_coverage=`true`' \
-  'sha256_12='; do
-  grep -Fq "$expected" <<<"$comments" || die "doctor report missing ${expected}"
+  'llm_e2e_required_after_migration_risk_change: `true`' \
+  "### Source Boundary Risk Card" \
+  "### Apply Boundary Risk Card" \
+  "### Current Target Validation Cards" \
+  "### Provider Import Risk Cards" \
+  'source_kind=`mcp_servers` target=`.gitclaw/TOOLS.md` action=`manual-review`' \
+  'source_kind=`auth.json/.env` target=`manual secret setup` action=`skip`' \
+  'source_kind=`sessions/state.db` target=`gitclaw-backups archive` action=`archive-only`' \
+  "### Risk Findings" \
+  'code=`credential_import_disabled`' \
+  'code=`executable_state_quarantined`' \
+  'code=`raw_state_archive_only`' \
+  'code=`skill_manual_review_required`' \
+  'code=`memory_review_required`' \
+  'code=`manual_review_required`' \
+  'item_sha256_12='; do
+  grep -Fq -- "$expected" <<<"$risk_comment" || die "migration risk report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "doctor report leaked issue body token"
-fi
+for leaked in \
+  "$token" \
+  "$title" \
+  "Hidden migration risk body token" \
+  "deterministic migration boundary risk report"; do
+  if grep -Fq "$leaked" <<<"$risk_comment"; then
+    die "migration risk report leaked ${leaked}"
+  fi
+done
 
 comment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \
@@ -261,6 +261,6 @@ for leaked in "$token" "$followup_hidden_token"; do
 done
 
 wait_for_done_status || die "expected gitclaw:done without running/error"
-url="$(jq -r '.url' <<<"$run_json")"
+risk_url="$(jq -r '.url' <<<"$risk_run_json")"
 model_url="$(jq -r '.url' <<<"$model_run_json")"
-log "passed for issue #${issue_number}: ${url} (model follow-up: ${model_url})"
+log "passed for issue #${issue_number}: ${risk_url} (model follow-up: ${model_url})"

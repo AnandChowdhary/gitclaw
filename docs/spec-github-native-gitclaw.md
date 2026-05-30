@@ -776,7 +776,7 @@ GitHub issue/comment event
   `tasks list`, `tasks risk`, `tasks verify`,
   `agents list`, `agents risk`, `agents verify`,
   `nodes list`, `nodes risk`, `nodes verify`,
-  `migrate plan`,
+  `migrate plan`, `migrate risk`,
   `orders list`, `orders verify`, `orders risk`,
   `profile show`, `profile verify`,
   `context list`, `context risk`, `context info`,
@@ -1550,11 +1550,13 @@ preview-first migration model and Hermes' isolated profile directories:
 ```text
 @gitclaw /migrate plan hermes
 @gitclaw /migration openclaw
+@gitclaw /migrate risk hermes
 ```
 
 ```bash
 gitclaw migrate plan hermes
 gitclaw migrate plan openclaw
+gitclaw migrate risk hermes
 ```
 
 OpenClaw's migration CLI previews a plan before apply, redacts secrets, and
@@ -1579,6 +1581,21 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 - soul, skill, and tool validation rollups,
 - source-specific import-map rows for reviewed manual copy, reviewed merge,
   archive-only, manual review, or skipped-secret state.
+
+When called as `@gitclaw /migrate risk <source>` or
+`gitclaw migrate risk <source>`, the command posts a
+`GitClaw Migration Risk Report`. It keeps the same no-source-read boundary but
+classifies the provider import map into credential, executable-state, memory,
+skill, session-archive, identity, config, and declarative-state risk cards. The
+report emits counts for manual-copy, reviewed-merge, reviewed-append,
+manual-rewrite, manual-review, archive-only, skipped, credential, executable,
+memory, skill, and session-archive items; it also reports disabled apply,
+repository mutation, credential import, installer execution, MCP autoload, raw
+source-body, raw issue-body, raw comment-body, and raw secret-value flags. Risk
+findings are code-and-hash metadata only, such as
+`credential_import_disabled`, `executable_state_quarantined`,
+`raw_state_archive_only`, `skill_manual_review_required`,
+`memory_review_required`, and `manual_review_required`.
 
 It never scans `~/.hermes`, `~/.openclaw`, `~/.codex`, or `~/.claude` from an
 issue command; never imports secrets; never executes hooks, installers, MCP
@@ -5241,6 +5258,13 @@ examples/workflows/gitclaw.yml
   calls disabled. This deterministic check must be paired in the same
   implementation batch with a live GitHub Models conversation E2E that makes
   an actual LLM call, such as `github-search-tool-chat.sh`.
+- A `gh`-driven migration-risk E2E harness verifies
+  `@gitclaw /migrate risk hermes` produces a body-free import-boundary risk
+  report for OpenClaw/Hermes/Codex/Claude-style state, including credential,
+  MCP/plugin/hook, skill, memory, and session-archive classifications. The
+  harness also posts a normal follow-up on the same issue and requires a real
+  GitHub Models response with repo-reader skill provenance and
+  `gitclaw.search_files` tool-output metadata.
 - A `gh`-driven soul-report E2E harness verifies `@gitclaw /soul` produces a
   deterministic high-authority context file audit with validation metadata,
   without a model call or body leakage.
