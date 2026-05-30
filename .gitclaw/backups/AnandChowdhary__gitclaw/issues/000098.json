@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T00:37:46Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 98,
+    "title": "@gitclaw /tools validate e2e 20260530T003650Z",
+    "body": "Live tools-validate E2E.\n\nPlease inspect `go.mod`.\nHidden tools validate body token: GITCLAW_TOOLS_VALIDATE_E2E_20260530T003650Z\nThis should produce a deterministic tools validation report without calling a model.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /tools validate e2e 20260530T003650Z\n\nLive tools-validate E2E.\n\nPlease inspect `go.mod`.\nHidden tools validate body token: GITCLAW_TOOLS_VALIDATE_E2E_20260530T003650Z\nThis should produce a deterministic tools validation report without calling a model.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Tools Validate Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#98`\n- tool_validation_status: `ok`\n- tool_validation_errors: `0`\n- tool_validation_warnings: `0`\n- tool_contracts: `5`\n- tool_active_outputs: `4`\n- tool_guidance_files: `1`\n- tool_unknown_outputs: `0`\n- tool_unsafe_contracts: `0`\n- tool_over_limit_outputs: `0`\n- tool_missing_guidance: `0`\n- tool_duplicate_contracts: `0`\n\nThis report validates deterministic tool contracts and active output metadata without dumping tool outputs, tool inputs, file bodies, issue bodies, comments, prompts, or secret values.\n\n### Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4580934600,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4580934600,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26669404280\" event_id=\"issue-98\" model=\"gitclaw/tools\" idempotency_key=\"c49619c123e31e0a7a2fc7d3198765b3\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26669404280\" --\u003e\n## GitClaw Tools Validate Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#98`\n- tool_validation_status: `ok`\n- tool_validation_errors: `0`\n- tool_validation_warnings: `0`\n- tool_contracts: `5`\n- tool_active_outputs: `4`\n- tool_guidance_files: `1`\n- tool_unknown_outputs: `0`\n- tool_unsafe_contracts: `0`\n- tool_over_limit_outputs: `0`\n- tool_missing_guidance: `0`\n- tool_duplicate_contracts: `0`\n\nThis report validates deterministic tool contracts and active output metadata without dumping tool outputs, tool inputs, file bodies, issue bodies, comments, prompts, or secret values.\n\n### Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T00:37:27Z",
+      "updated_at": "2026-05-30T00:37:27Z"
+    }
+  ]
+}
