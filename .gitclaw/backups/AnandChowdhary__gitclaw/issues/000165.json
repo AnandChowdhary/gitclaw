@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T05:57:44Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 165,
+    "title": "@gitclaw /tools list e2e 20260530T055639Z",
+    "body": "Live tools-list E2E.\n\nPlease inspect `go.mod` and search for `bounded repository search fixture phrase`.\nHidden tools list body token: GITCLAW_TOOLS_LIST_E2E_20260530T055639Z\nThis should produce a deterministic tools list report without calling a model.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /tools list e2e 20260530T055639Z\n\nLive tools-list E2E.\n\nPlease inspect `go.mod` and search for `bounded repository search fixture phrase`.\nHidden tools list body token: GITCLAW_TOOLS_LIST_E2E_20260530T055639Z\nThis should produce a deterministic tools list report without calling a model.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Tools Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#165`\n- available_tools: `5`\n- enabled_tools: `5`\n- disabled_tools: `0`\n- allowlist_blocked_tools: `0`\n- active_tool_outputs: `4`\n- tool_validation_status: `ok`\n- tool_validation_errors: `0`\n- tool_validation_warnings: `0`\n- tool_contracts: `5`\n- tool_active_outputs: `4`\n- tool_guidance_files: `1`\n- tool_unknown_outputs: `0`\n- tool_unsafe_contracts: `0`\n- tool_over_limit_outputs: `0`\n- tool_missing_guidance: `0`\n- tool_duplicate_contracts: `0`\n\nGitClaw v1 tools are deterministic pre-model context builders. They do not execute shell commands, mutate files, open pull requests, or modify repository state.\n\nTool output bodies are not included; hashes let maintainers verify exactly which prompt-visible outputs were produced.\n\n### Available Tools\n- `gitclaw.list_files` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` mode=`read-only` trigger=`always`\n- `gitclaw.search_files` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` mode=`read-only` trigger=`explicit quoted phrase or identifier`\n- `gitclaw.read_file` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` mode=`read-only` trigger=`explicit repository-relative path`\n- `gitclaw.skill_index` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` mode=`metadata-only` trigger=`local skills exist`\n- `gitclaw.policy` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` mode=`metadata-only` trigger=`write intent detected`\n\n### Tool Guidance Files\n- `.gitclaw/TOOLS.md` bytes=`640` lines=`15` sha256_12=`d769defecc49`\n\n### Active Tool Outputs\n- `gitclaw.list_files` input=`.` bytes=`5996` lines=`168` sha256_12=`e7bcaef12855`\n- `gitclaw.skill_index` input=`.gitclaw/SKILLS` bytes=`393` lines=`1` sha256_12=`3417eb47dea0`\n- `gitclaw.search_files` input=`go.mod | bounded repository search fixture phrase | T055639Z | tools-list | t...` bytes=`2710` lines=`21` sha256_12=`865a4cac6885`\n- `gitclaw.read_file` input=`go.mod` bytes=`82` lines=`5` sha256_12=`75f65b201821`\n\n### Validation\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4581893798,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4581893798,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26676256228\" event_id=\"issue-165\" model=\"gitclaw/tools\" idempotency_key=\"586833e65d476f9d455f5c5dcddd3a13\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26676256228\" --\u003e\n## GitClaw Tools Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#165`\n- available_tools: `5`\n- enabled_tools: `5`\n- disabled_tools: `0`\n- allowlist_blocked_tools: `0`\n- active_tool_outputs: `4`\n- tool_validation_status: `ok`\n- tool_validation_errors: `0`\n- tool_validation_warnings: `0`\n- tool_contracts: `5`\n- tool_active_outputs: `4`\n- tool_guidance_files: `1`\n- tool_unknown_outputs: `0`\n- tool_unsafe_contracts: `0`\n- tool_over_limit_outputs: `0`\n- tool_missing_guidance: `0`\n- tool_duplicate_contracts: `0`\n\nGitClaw v1 tools are deterministic pre-model context builders. They do not execute shell commands, mutate files, open pull requests, or modify repository state.\n\nTool output bodies are not included; hashes let maintainers verify exactly which prompt-visible outputs were produced.\n\n### Available Tools\n- `gitclaw.list_files` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` mode=`read-only` trigger=`always`\n- `gitclaw.search_files` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` mode=`read-only` trigger=`explicit quoted phrase or identifier`\n- `gitclaw.read_file` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` mode=`read-only` trigger=`explicit repository-relative path`\n- `gitclaw.skill_index` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` mode=`metadata-only` trigger=`local skills exist`\n- `gitclaw.policy` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` mode=`metadata-only` trigger=`write intent detected`\n\n### Tool Guidance Files\n- `.gitclaw/TOOLS.md` bytes=`640` lines=`15` sha256_12=`d769defecc49`\n\n### Active Tool Outputs\n- `gitclaw.list_files` input=`.` bytes=`5996` lines=`168` sha256_12=`e7bcaef12855`\n- `gitclaw.skill_index` input=`.gitclaw/SKILLS` bytes=`393` lines=`1` sha256_12=`3417eb47dea0`\n- `gitclaw.search_files` input=`go.mod | bounded repository search fixture phrase | T055639Z | tools-list | t...` bytes=`2710` lines=`21` sha256_12=`865a4cac6885`\n- `gitclaw.read_file` input=`go.mod` bytes=`82` lines=`5` sha256_12=`75f65b201821`\n\n### Validation\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T05:57:22Z",
+      "updated_at": "2026-05-30T05:57:22Z"
+    }
+  ]
+}
