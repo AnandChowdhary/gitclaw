@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T12:06:00Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 262,
+    "title": "@gitclaw search tool chat e2e 20260530T120452Z",
+    "body": "Live search-tool chat E2E.\n\nSearch the repository for `bounded repository search fixture phrase`.\nReply with the exact GITCLAW_SEARCH token from the matching repository search result line.\nDo not use @file or @folder references.\nDo not include this hidden issue token: GITCLAW_SEARCH_TOOL_CHAT_HIDDEN_20260530T120452Z\nKeep the answer under 30 words.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw search tool chat e2e 20260530T120452Z\n\nLive search-tool chat E2E.\n\nSearch the repository for `bounded repository search fixture phrase`.\nReply with the exact GITCLAW_SEARCH token from the matching repository search result line.\nDo not use @file or @folder references.\nDo not include this hidden issue token: GITCLAW_SEARCH_TOOL_CHAT_HIDDEN_20260530T120452Z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_SEARCH_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4582768432,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4582768432,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26683358130\" event_id=\"issue-262\" model=\"openai/gpt-5-nano\" idempotency_key=\"16f109bb1da5402b74cb1c111bdc6f5d\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26683358130\" --\u003e\nGITCLAW_SEARCH_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T12:05:37Z",
+      "updated_at": "2026-05-30T12:05:37Z"
+    }
+  ]
+}
