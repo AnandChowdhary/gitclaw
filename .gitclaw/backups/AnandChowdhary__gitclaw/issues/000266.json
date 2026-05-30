@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T12:29:15Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 266,
+    "title": "@gitclaw /tasks e2e 20260530T122818Z",
+    "body": "Live tasks-report E2E.\n\nHidden tasks report body token: GITCLAW_TASKS_REPORT_E2E_20260530T122818Z\nThis should produce a deterministic tasks report without a model call.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw",
+      "gitclaw:needs-human"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /tasks e2e 20260530T122818Z\n\nLive tasks-report E2E.\n\nHidden tasks report body token: GITCLAW_TASKS_REPORT_E2E_20260530T122818Z\nThis should produce a deterministic tasks report without a model call.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Tasks Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#266`\n- tasks_status: `ok`\n- task_policy_path: `.gitclaw/TASKS.md`\n- task_policy_present: `true`\n- task_policy_loaded_for_model: `true`\n- task_specs_dir: `.gitclaw/tasks`\n- task_specs: `1`\n- task_specs_with_frontmatter: `1`\n- task_statuses_declared: `6`\n- task_labels_declared: `7`\n- task_specs_requiring_approval: `1`\n- task_specs_issue_native: `1`\n- task_storage_backend: `github-issues`\n- sqlite_task_db_required: `false`\n- detached_worker_supported: `false`\n- kanban_dispatcher_supported: `false`\n- task_flow_execution_supported: `false`\n- model_call_required: `false`\n- repository_mutation_allowed: `false`\n- raw_bodies_included: `false`\n- raw_task_bodies_included: `false`\n- llm_e2e_required_after_change: `true`\n- current_issue_task: `true`\n- current_task_status: `blocked`\n- current_task_labels: `2`\n- current_task_comments: `0`\n- current_task_transcript_messages: `1`\n- channel_thread_issue: `false`\n- proactive_run_issue: `false`\n- issue_title_sha256_12: `4135e11dbf51`\n\nTasks describe durable work tracking. GitClaw treats GitHub issues as the task ledger and task specs as reviewed metadata only: no detached worker is spawned, no Kanban dispatcher is started, no SQLite task board is opened, and no issue, comment, task, flow, or worker output body is printed by this report.\n\n### Task Policy\n- `.gitclaw/TASKS.md` present=`true` bytes=`956` lines=`25` sha256_12=`ba1daa62e414`\n- `.gitclaw/TASKS.md` loaded=`true` source=`contextDocumentPaths`\n\n### Task Specs\n- name=`issue-native-board` path=`.gitclaw/tasks/issue-native-board.md` bytes=`508` lines=`27` frontmatter=`true` kind=`board` mode=`issue-native` statuses=`6` labels=`7` requires_approval=`true` sha256_12=`4ef70f79df51`\n\n### Current Issue Task\n- status=`blocked` labels=`2` comments=`0` transcript_messages=`1`\n- trigger_label_present=`true` running_label_present=`false` done_label_present=`false` error_label_present=`false` disabled_label_present=`false`\n- needs_human_label_present=`true` write_requested_label_present=`false`\n\n### Runtime Boundary\n- GitHub issues are the durable task rows for GitClaw v1\n- labels are the issue-native state machine; comments are the handoff log\n- task flow specs are audited as metadata and do not start background workers\n- future workers require reviewed workflows, explicit permissions, approval gates, and body-free audit cards\n\n### Verification Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4582815892,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4582815892,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26683809894\" event_id=\"issue-266\" model=\"gitclaw/tasks\" idempotency_key=\"cd8d491b8b56cc6c549fce81a68eeb26\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26683809894\" --\u003e\n## GitClaw Tasks Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#266`\n- tasks_status: `ok`\n- task_policy_path: `.gitclaw/TASKS.md`\n- task_policy_present: `true`\n- task_policy_loaded_for_model: `true`\n- task_specs_dir: `.gitclaw/tasks`\n- task_specs: `1`\n- task_specs_with_frontmatter: `1`\n- task_statuses_declared: `6`\n- task_labels_declared: `7`\n- task_specs_requiring_approval: `1`\n- task_specs_issue_native: `1`\n- task_storage_backend: `github-issues`\n- sqlite_task_db_required: `false`\n- detached_worker_supported: `false`\n- kanban_dispatcher_supported: `false`\n- task_flow_execution_supported: `false`\n- model_call_required: `false`\n- repository_mutation_allowed: `false`\n- raw_bodies_included: `false`\n- raw_task_bodies_included: `false`\n- llm_e2e_required_after_change: `true`\n- current_issue_task: `true`\n- current_task_status: `blocked`\n- current_task_labels: `2`\n- current_task_comments: `0`\n- current_task_transcript_messages: `1`\n- channel_thread_issue: `false`\n- proactive_run_issue: `false`\n- issue_title_sha256_12: `4135e11dbf51`\n\nTasks describe durable work tracking. GitClaw treats GitHub issues as the task ledger and task specs as reviewed metadata only: no detached worker is spawned, no Kanban dispatcher is started, no SQLite task board is opened, and no issue, comment, task, flow, or worker output body is printed by this report.\n\n### Task Policy\n- `.gitclaw/TASKS.md` present=`true` bytes=`956` lines=`25` sha256_12=`ba1daa62e414`\n- `.gitclaw/TASKS.md` loaded=`true` source=`contextDocumentPaths`\n\n### Task Specs\n- name=`issue-native-board` path=`.gitclaw/tasks/issue-native-board.md` bytes=`508` lines=`27` frontmatter=`true` kind=`board` mode=`issue-native` statuses=`6` labels=`7` requires_approval=`true` sha256_12=`4ef70f79df51`\n\n### Current Issue Task\n- status=`blocked` labels=`2` comments=`0` transcript_messages=`1`\n- trigger_label_present=`true` running_label_present=`false` done_label_present=`false` error_label_present=`false` disabled_label_present=`false`\n- needs_human_label_present=`true` write_requested_label_present=`false`\n\n### Runtime Boundary\n- GitHub issues are the durable task rows for GitClaw v1\n- labels are the issue-native state machine; comments are the handoff log\n- task flow specs are audited as metadata and do not start background workers\n- future workers require reviewed workflows, explicit permissions, approval gates, and body-free audit cards\n\n### Verification Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T12:28:54Z",
+      "updated_at": "2026-05-30T12:28:54Z"
+    }
+  ]
+}
