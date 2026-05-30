@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T18:12:26Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 306,
+    "title": "@gitclaw /artifacts risk e2e 20260530T181122Z",
+    "body": "@gitclaw /artifacts risk\n\nLive artifacts-risk E2E.\nDo not include this hidden issue token: GITCLAW_ARTIFACTS_RISK_HIDDEN_20260530T181122Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /artifacts risk e2e 20260530T181122Z\n\n@gitclaw /artifacts risk\n\nLive artifacts-risk E2E.\nDo not include this hidden issue token: GITCLAW_ARTIFACTS_RISK_HIDDEN_20260530T181122Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Artifact Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#306`\n- artifact_risk_status: `ok`\n- verification_scope: `github_actions_artifact_metadata`\n- artifact_policy_present: `true`\n- artifact_policy_loaded_for_model: `true`\n- artifact_specs: `1`\n- scanned_artifact_specs: `1`\n- workflow_artifact_uploaders: `1`\n- scanned_workflow_artifact_uploaders: `1`\n- artifact_specs_requiring_approval: `1`\n- artifact_specs_requiring_redaction: `1`\n- artifact_retention_days_declared: `7`\n- prompt_artifact_default_enabled: `false`\n- prompt_artifact_label: `gitclaw:e2e-prompt-artifact`\n- prompt_artifact_env_path_configured: `false`\n- artifact_storage_backend: `github-actions-artifacts`\n- durable_backup_backend: `git-backup-branch`\n- surfaces_with_risk_findings: `0`\n- artifact_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- artifact_body_printing_allowed: `false`\n- raw_artifact_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- credential_values_included: `false`\n- artifact_as_hidden_state_allowed: `false`\n- external_artifact_storage_allowed: `false`\n- repository_mutation_allowed: `false`\n- llm_e2e_required_after_artifact_risk_change: `true`\n- issue_title_sha256_12: `793160063d4d`\n\nThis report scans artifact policy, artifact specs, and workflow upload metadata for prompt-boundary, credential, unredacted prompt, raw payload logging, hidden-state, external storage, repository mutation, retention, label-gate, missing-file, and unbounded-collection risks. It reports metadata, paths, risk codes, severities, and hashes only; artifact bodies, issue bodies, comments, uploaded files, prompt bodies, tool outputs, credentials, and secret values are not included.\n\n### Artifact Policy Risk Card\n- kind=`artifact-policy` path=`.gitclaw/ARTIFACTS.md` present=`true` loaded_for_model=`true` bytes=`1400` lines=`31` sha256_12=`914d272395b6` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Artifact Spec Risk Cards\n- kind=`artifact-spec` name=`prompt-artifact` path=`.gitclaw/artifacts/prompt-artifact.md` frontmatter=`true` artifact_kind=`prompt` storage=`github-actions-artifact` filename=`prompt.md` workflow=`.github/workflows/gitclaw.yml` label=`gitclaw:e2e-prompt-artifact` retention_days=`7` redaction_required=`true` requires_approval=`true` bytes=`541` lines=`18` sha256_12=`a06774f0a5c4` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Workflow Artifact Risk Cards\n- kind=`artifact-workflow` path=`.github/workflows/gitclaw.yml` upload_artifact_actions=`actions/upload-artifact@v6` retention_days=`7` if_no_files_found_error=`true` prompt_artifact_label_gate=`true` prompt_artifact_path_env=`true` bytes=`5674` lines=`170` sha256_12=`3891a6df3a1b` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Current Artifact Request Risk Card\n- kind=`current-artifact-request` current_issue_artifact_request=`true` issue_body_scanned=`false` comment_bodies_scanned=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Risk Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4583655367,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4583655367,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26691221249\" event_id=\"issue-306\" model=\"gitclaw/artifacts\" idempotency_key=\"3ca795c2ffd831db159c1755490f398b\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26691221249\" --\u003e\n## GitClaw Artifact Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#306`\n- artifact_risk_status: `ok`\n- verification_scope: `github_actions_artifact_metadata`\n- artifact_policy_present: `true`\n- artifact_policy_loaded_for_model: `true`\n- artifact_specs: `1`\n- scanned_artifact_specs: `1`\n- workflow_artifact_uploaders: `1`\n- scanned_workflow_artifact_uploaders: `1`\n- artifact_specs_requiring_approval: `1`\n- artifact_specs_requiring_redaction: `1`\n- artifact_retention_days_declared: `7`\n- prompt_artifact_default_enabled: `false`\n- prompt_artifact_label: `gitclaw:e2e-prompt-artifact`\n- prompt_artifact_env_path_configured: `false`\n- artifact_storage_backend: `github-actions-artifacts`\n- durable_backup_backend: `git-backup-branch`\n- surfaces_with_risk_findings: `0`\n- artifact_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- artifact_body_printing_allowed: `false`\n- raw_artifact_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- credential_values_included: `false`\n- artifact_as_hidden_state_allowed: `false`\n- external_artifact_storage_allowed: `false`\n- repository_mutation_allowed: `false`\n- llm_e2e_required_after_artifact_risk_change: `true`\n- issue_title_sha256_12: `793160063d4d`\n\nThis report scans artifact policy, artifact specs, and workflow upload metadata for prompt-boundary, credential, unredacted prompt, raw payload logging, hidden-state, external storage, repository mutation, retention, label-gate, missing-file, and unbounded-collection risks. It reports metadata, paths, risk codes, severities, and hashes only; artifact bodies, issue bodies, comments, uploaded files, prompt bodies, tool outputs, credentials, and secret values are not included.\n\n### Artifact Policy Risk Card\n- kind=`artifact-policy` path=`.gitclaw/ARTIFACTS.md` present=`true` loaded_for_model=`true` bytes=`1400` lines=`31` sha256_12=`914d272395b6` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Artifact Spec Risk Cards\n- kind=`artifact-spec` name=`prompt-artifact` path=`.gitclaw/artifacts/prompt-artifact.md` frontmatter=`true` artifact_kind=`prompt` storage=`github-actions-artifact` filename=`prompt.md` workflow=`.github/workflows/gitclaw.yml` label=`gitclaw:e2e-prompt-artifact` retention_days=`7` redaction_required=`true` requires_approval=`true` bytes=`541` lines=`18` sha256_12=`a06774f0a5c4` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Workflow Artifact Risk Cards\n- kind=`artifact-workflow` path=`.github/workflows/gitclaw.yml` upload_artifact_actions=`actions/upload-artifact@v6` retention_days=`7` if_no_files_found_error=`true` prompt_artifact_label_gate=`true` prompt_artifact_path_env=`true` bytes=`5674` lines=`170` sha256_12=`3891a6df3a1b` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Current Artifact Request Risk Card\n- kind=`current-artifact-request` current_issue_artifact_request=`true` issue_body_scanned=`false` comment_bodies_scanned=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Risk Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T18:12:07Z",
+      "updated_at": "2026-05-30T18:12:07Z"
+    }
+  ]
+}
