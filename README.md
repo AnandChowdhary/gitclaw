@@ -118,6 +118,7 @@ gitclaw models list
 gitclaw config list
 gitclaw doctor
 gitclaw policy verify
+gitclaw agents risk
 gitclaw hooks risk
 gitclaw plugins risk
 gitclaw tasks risk
@@ -143,6 +144,7 @@ Run a live E2E harness against the current GitHub repository:
 
 ```bash
 scripts/e2e/github-backup-risk-report.sh
+scripts/e2e/github-agents-risk-report.sh
 scripts/e2e/github-hooks-risk-report.sh
 scripts/e2e/github-memory-risk-report.sh
 scripts/e2e/github-plugins-risk-report.sh

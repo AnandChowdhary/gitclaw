@@ -726,6 +726,7 @@ GitHub issue/comment event
   `hooks list`, `hooks risk`, `hooks verify`,
   `plugins list`, `plugins risk`, `plugins verify`,
   `tasks list`, `tasks risk`, `tasks verify`,
+  `agents list`, `agents risk`, `agents verify`,
   `migrate plan`,
   `orders list`, `orders verify`,
   `profile show`, `profile verify`,
@@ -2561,6 +2562,7 @@ workers:
 
 ```text
 @gitclaw /agents
+@gitclaw /agents risk
 @gitclaw /agent
 ```
 
@@ -2583,10 +2585,30 @@ bodies. Future multi-agent support requires reviewed workflows, explicit
 permissions, approval gates, body-free audit cards, and a live GitHub Models
 conversation E2E in the same implementation batch.
 
+The risk form:
+
+```text
+@gitclaw /agents risk
+@gitclaw /agent risk
+```
+
+posts a `GitClaw Agent Risk Report` without model inference. It scans
+`.gitclaw/AGENTS.md` and `.gitclaw/agents/*.md` for prompt-boundary overrides,
+credential material, untrusted issue-body execution, subagent/delegation
+enablement, external agent processes, shared credential/session/memory state,
+raw agent payload logging, webhook bridges, repository mutation, missing
+approval/single-assistant boundaries, and unbounded loops. It reports paths,
+metadata, counts, risk codes, severities, and line hashes only; agent bodies,
+issue bodies, comments, transcript messages, channel payloads, worker outputs,
+credentials, and secret values are not included. Changes to this risk surface
+must include a live GitHub Models follow-up E2E so agent safety is tested
+against actual inference and prompt-visible tools.
+
 Local operators can inspect the same policy/spec surface with:
 
 ```bash
 gitclaw agents list
+gitclaw agents risk
 gitclaw agents verify
 ```
 
@@ -4599,6 +4621,11 @@ examples/workflows/gitclaw.yml
   feature batch must still run a live GitHub Models conversation E2E.
 - A `gh`-driven tasks-risk E2E harness verifies `@gitclaw /tasks risk` and
   local `gitclaw tasks risk` expose body-free task policy/spec/thread risk
+  metadata, then runs a real GitHub Models follow-up conversation that proves
+  model inference, prompt provenance, selected skills, and prompt-visible tool
+  usage.
+- A `gh`-driven agents-risk E2E harness verifies `@gitclaw /agents risk` and
+  local `gitclaw agents risk` expose body-free agent policy/spec/request risk
   metadata, then runs a real GitHub Models follow-up conversation that proves
   model inference, prompt provenance, selected skills, and prompt-visible tool
   usage.

@@ -24,6 +24,7 @@ requires_approval: true
 
 # Repo Assistant
 
+This assistant does not spawn subagents.
 AGENT_SPEC_BODY_SECRET
 `
 

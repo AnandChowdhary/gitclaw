@@ -912,6 +912,22 @@ single-assistant policy, active runtime is `github-actions`, and reports make
 explicit. Any future routing/delegation batch must be paired with a live GitHub
 Models conversation E2E, not just a deterministic report.
 
+2026-05-30 agents-risk follow-up: OpenClaw sub-agents are background runs
+spawned from an existing agent with their own sessions, optional forked
+context, `sessions_spawn`, `sessions_yield`, delegation-mode prompt guidance,
+and ACP/native runtime options. Hermes exposes the adjacent shape through
+delegation patterns, named profiles with their own state directories and
+gateways, and Kanban workers. GitClaw should keep v1 narrower: agent files are
+reviewed metadata for the single GitHub Actions assistant, not process,
+profile, or worker definitions. Add an `agents risk` report that scans
+`.gitclaw/AGENTS.md` and `.gitclaw/agents/*.md` for prompt-boundary overrides,
+credentials, untrusted issue-body execution, subagent/delegation enablement,
+external agent processes, shared credential/session/memory state, raw payload
+logging, webhook bridges, repository mutation, missing approval or
+single-assistant boundaries, and unbounded loops. Acceptance should include the
+deterministic body-free audit plus a real GitHub Models follow-up proving
+inference and repo-search tool exposure.
+
 2026-05-30 nodes-runtime follow-up: OpenClaw's node host docs expose a separate
 execution plane: a headless node service connects to the Gateway WebSocket,
 pairs as `role: node`, advertises capabilities, and can run approved

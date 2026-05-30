@@ -392,8 +392,10 @@ func runAgentsCommand(args []string) error {
 	switch args[0] {
 	case "list", "verify":
 		return runAgentsListCommand(args[1:])
+	case "risk", "risk-audit":
+		return runAgentsRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw agents [list|verify]")
+		return fmt.Errorf("usage: gitclaw agents [list|risk|verify]")
 	}
 }
 
@@ -406,6 +408,18 @@ func runAgentsListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderAgentCLIReport(cfg))
+	return nil
+}
+
+func runAgentsRiskCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown agents risk argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderAgentRiskCLIReport(cfg))
 	return nil
 }
 

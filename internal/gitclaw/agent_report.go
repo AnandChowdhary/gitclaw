@@ -56,11 +56,18 @@ func IsAgentReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderAgentReport(ev Event, cfg Config) string {
+	if isAgentRiskRequest(ev, cfg) {
+		return renderAgentRiskReport(ev, cfg, true)
+	}
 	return renderAgentReport(ev, cfg, true)
 }
 
 func RenderAgentCLIReport(cfg Config) string {
 	return renderAgentReport(Event{}, cfg, false)
+}
+
+func RenderAgentRiskCLIReport(cfg Config) string {
+	return renderAgentRiskReport(Event{}, cfg, false)
 }
 
 func renderAgentReport(ev Event, cfg Config, includeIssue bool) string {
@@ -348,4 +355,16 @@ func agentSpecsSingleAssistant(specs []agentSpecCard) int {
 		}
 	}
 	return count
+}
+
+func isAgentRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 {
+		return false
+	}
+	command := fields[0]
+	if command != "/agents" && command != "/agent" {
+		return false
+	}
+	return strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit")
 }

@@ -15,7 +15,7 @@ type commandCatalogEntry struct {
 }
 
 var commandCatalog = []commandCatalogEntry{
-	{Command: "/agents", Aliases: []string{"/agent"}, Model: "gitclaw/agents", Category: "agents", Summary: "Audit repo-local agent policy, agent specs, and single-assistant runtime boundaries.", LocalCLI: []string{"gitclaw agents list", "gitclaw agents verify"}},
+	{Command: "/agents", Aliases: []string{"/agent"}, Model: "gitclaw/agents", Category: "agents", Summary: "Audit repo-local agent policy, agent specs, single-assistant runtime boundaries, and agent risk posture.", LocalCLI: []string{"gitclaw agents list", "gitclaw agents risk", "gitclaw agents verify"}},
 	{Command: "/approvals", Aliases: []string{"/approval"}, Model: "gitclaw/approvals", Category: "approval", Summary: "Inspect write-request approval gates without enabling write actions.", LocalCLI: []string{"gitclaw approvals list", "gitclaw approvals verify"}},
 	{Command: "/artifacts", Aliases: []string{"/artifact"}, Model: "gitclaw/artifacts", Category: "artifacts", Summary: "Audit Actions artifact policy, artifact specs, upload workflow metadata, and body-safe retention boundaries.", LocalCLI: []string{"gitclaw artifacts list", "gitclaw artifacts verify"}},
 	{Command: "/backup", Aliases: []string{"/backups"}, Model: "gitclaw/backup", Category: "backup", Summary: "Show expected backup branch paths and inspect fetched backups, risk posture, manifests, retention, restore plans, and search metadata.", LocalCLI: []string{"gitclaw backup verify", "gitclaw backup risk", "gitclaw backup manifest", "gitclaw backup list", "gitclaw backup info --issue <number>", "gitclaw backup stats", "gitclaw backup search <query>", "gitclaw backup export-jsonl", "gitclaw backup restore-plan", "gitclaw backup retention-plan"}},
