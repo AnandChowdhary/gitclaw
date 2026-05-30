@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T07:08:18Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 186,
+    "title": "@gitclaw /soul info soul",
+    "body": "Live soul-info E2E.\n\nHidden soul info body token: GITCLAW_SOUL_INFO_E2E_20260530T070708Z\nThis should produce one focused body-free soul metadata card without a model call.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /soul info soul\n\nLive soul-info E2E.\n\nHidden soul info body token: GITCLAW_SOUL_INFO_E2E_20260530T070708Z\nThis should produce one focused body-free soul metadata card without a model call.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Soul Info Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#186`\n- requested_soul: `soul`\n- normalized_soul_path: `.gitclaw/SOUL.md`\n- soul_info_status: `ok`\n- matched_soul_files: `1`\n- run_mode: `read-only`\n- raw_bodies_included: `false`\n- soul_writes_allowed: `false`\n- soul_validation_status: `ok`\n- soul_validation_errors: `0`\n- soul_validation_warnings: `0`\n- soul_required_files: `6`\n- soul_required_files_present: `6`\n- soul_required_files_missing: `0`\n- soul_memory_notes: `1`\n- soul_noncanonical_memory_notes: `0`\n- issue_title_sha256_12: `260fda8d5a18`\n\nThis report shows one repo-local high-authority context file's metadata. Raw soul, identity, user, memory, tools, heartbeat, issue, comment, prompt, and secret bodies are not included.\n\n### Match\n- category=`soul` path=`.gitclaw/SOUL.md` source=`repo-local` present=`true` required=`true` canonical=`true` latest=`false` loaded_for_this_turn=`true` bytes=`576` lines=`14` sha256_12=`0460b93e1a5c` at_context_limit=`false`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4582038819,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4582038819,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26677655215\" event_id=\"issue-186\" model=\"gitclaw/soul\" idempotency_key=\"b09f1f4e8475e3356f056dfe6a4a6208\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26677655215\" --\u003e\n## GitClaw Soul Info Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#186`\n- requested_soul: `soul`\n- normalized_soul_path: `.gitclaw/SOUL.md`\n- soul_info_status: `ok`\n- matched_soul_files: `1`\n- run_mode: `read-only`\n- raw_bodies_included: `false`\n- soul_writes_allowed: `false`\n- soul_validation_status: `ok`\n- soul_validation_errors: `0`\n- soul_validation_warnings: `0`\n- soul_required_files: `6`\n- soul_required_files_present: `6`\n- soul_required_files_missing: `0`\n- soul_memory_notes: `1`\n- soul_noncanonical_memory_notes: `0`\n- issue_title_sha256_12: `260fda8d5a18`\n\nThis report shows one repo-local high-authority context file's metadata. Raw soul, identity, user, memory, tools, heartbeat, issue, comment, prompt, and secret bodies are not included.\n\n### Match\n- category=`soul` path=`.gitclaw/SOUL.md` source=`repo-local` present=`true` required=`true` canonical=`true` latest=`false` loaded_for_this_turn=`true` bytes=`576` lines=`14` sha256_12=`0460b93e1a5c` at_context_limit=`false`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T07:07:54Z",
+      "updated_at": "2026-05-30T07:07:54Z"
+    }
+  ]
+}
