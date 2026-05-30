@@ -868,6 +868,7 @@ Validation is visible in the `/skills` report and locally through:
 
 ```bash
 gitclaw skills validate
+gitclaw skills check
 gitclaw skills list
 gitclaw skills info <name>
 gitclaw skills search <query>
@@ -886,6 +887,7 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills
 @gitclaw /skills list
 @gitclaw /skills validate
+@gitclaw /skills check
 @gitclaw /skills info repo-reader
 @gitclaw /skills search repository context
 ```
@@ -911,7 +913,8 @@ When called as `@gitclaw /skills validate`, the command posts only the
 validation report: status, error/warning totals, duplicate-name count,
 invalid-name count, folder/name mismatch count, and body-free findings. This
 mirrors `gitclaw skills validate` for issue-side audits without the full skill
-inventory.
+inventory. `@gitclaw /skills check` and `gitclaw skills check` are OpenClaw
+compatibility aliases for the same validation-only report.
 
 When called as `@gitclaw /skills info <name>`, the same deterministic command
 switches from inventory mode to focused skill-info mode. The info report shows
@@ -2778,8 +2781,9 @@ examples/workflows/gitclaw.yml
   is an explicit inventory alias with the same body-free skill metadata and
   selected-skill provenance.
 - A `gh`-driven skills-validate E2E harness verifies
-  `@gitclaw /skills validate` exposes the body-free validation report without
-  falling back to the full inventory.
+  `@gitclaw /skills validate` and the OpenClaw-style
+  `@gitclaw /skills check` alias expose the body-free validation report
+  without falling back to the full inventory.
 - A `gh`-driven skills-info E2E harness verifies
   `@gitclaw /skills info repo-reader` produces focused skill metadata without
   a model call or full `SKILL.md` body leakage.

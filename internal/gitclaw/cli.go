@@ -531,10 +531,10 @@ func runDoctorCommand(args []string) error {
 
 func runSkillsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw skills validate|list|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw skills validate|check|list|info <name>|search <query>")
 	}
 	switch args[0] {
-	case "validate":
+	case "validate", "check":
 		return runSkillsValidateCommand(args[1:])
 	case "list":
 		return runSkillsListCommand(args[1:])

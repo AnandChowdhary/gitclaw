@@ -253,7 +253,7 @@ func requestedSkillSearchQuery(ev Event, cfg Config) string {
 
 func isSkillsValidateRequest(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
-	return len(fields) >= 2 && fields[0] == "/skills" && strings.EqualFold(fields[1], "validate")
+	return len(fields) >= 2 && fields[0] == "/skills" && (strings.EqualFold(fields[1], "validate") || strings.EqualFold(fields[1], "check"))
 }
 
 func cleanSkillLookupName(name string) string {

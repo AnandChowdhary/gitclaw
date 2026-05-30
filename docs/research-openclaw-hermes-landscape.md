@@ -473,6 +473,12 @@ their validation deserves a dedicated issue command. Add
 `gitclaw skills validate`, returning only validation counts and findings
 without dumping full `SKILL.md` bodies or inventory sections.
 
+2026-05-30 skills-check compatibility follow-up: OpenClaw's CLI uses
+`skills check` language for local skill health. GitClaw should accept
+`gitclaw skills check` and `@gitclaw /skills check` as aliases for the same
+validation-only report as `skills validate`, preserving body-free output while
+making migration muscle memory work.
+
 2026-05-30 soul-validate follow-up: high-authority context validation should
 also be separately addressable from inventory. Add `@gitclaw /soul validate`
 as the issue-side mirror of `gitclaw soul validate`, returning required-file,
