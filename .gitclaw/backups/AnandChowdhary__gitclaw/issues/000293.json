@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T15:23:16Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 293,
+    "title": "@gitclaw /skills risk e2e 20260530T152215Z",
+    "body": "@gitclaw /skills risk\n\nLive skills-risk E2E.\nDo not include this hidden issue token: GITCLAW_SKILLS_RISK_HIDDEN_20260530T152215Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /skills risk e2e 20260530T152215Z\n\n@gitclaw /skills risk\n\nLive skills-risk E2E.\nDo not include this hidden issue token: GITCLAW_SKILLS_RISK_HIDDEN_20260530T152215Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Skills Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#293`\n- skill_risk_status: `ok`\n- available_skills: `1`\n- scanned_skills: `1`\n- skills_with_risk_findings: `0`\n- skill_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- registry_verification: `not_configured`\n- installer_scripts_run: `false`\n- raw_bodies_included: `false`\n- llm_e2e_required_after_skill_risk_change: `true`\n\nThis report scans repo-local skill instruction text for body-free risk categories inspired by OpenClaw/Hermes skill and toolset safety boundaries. It reports only paths, counts, finding codes, and line hashes; full `SKILL.md` bodies, issue bodies, comments, prompts, and secret values are not included.\n\n### Skill Risk Cards\n- name=`repo-reader` path=`.gitclaw/SKILLS/repo-reader/SKILL.md` enabled=`true` sha256_12=`2f9e68a57bd6` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Risk Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4583244054,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4583244054,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26687491256\" event_id=\"issue-293\" model=\"gitclaw/skills\" idempotency_key=\"48e36a8c138fd1f6e9a19b377cffae5b\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26687491256\" --\u003e\n## GitClaw Skills Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#293`\n- skill_risk_status: `ok`\n- available_skills: `1`\n- scanned_skills: `1`\n- skills_with_risk_findings: `0`\n- skill_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- registry_verification: `not_configured`\n- installer_scripts_run: `false`\n- raw_bodies_included: `false`\n- llm_e2e_required_after_skill_risk_change: `true`\n\nThis report scans repo-local skill instruction text for body-free risk categories inspired by OpenClaw/Hermes skill and toolset safety boundaries. It reports only paths, counts, finding codes, and line hashes; full `SKILL.md` bodies, issue bodies, comments, prompts, and secret values are not included.\n\n### Skill Risk Cards\n- name=`repo-reader` path=`.gitclaw/SKILLS/repo-reader/SKILL.md` enabled=`true` sha256_12=`2f9e68a57bd6` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Risk Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T15:22:54Z",
+      "updated_at": "2026-05-30T15:22:54Z"
+    }
+  ]
+}
