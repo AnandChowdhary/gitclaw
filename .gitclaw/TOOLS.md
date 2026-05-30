@@ -8,6 +8,10 @@ The v1 tool surface is read-only:
 - `gitclaw.read_file`: reads a small bounded text file when the conversation
   explicitly mentions that path.
 
+For search requests, prefer the provided `gitclaw.search_files` output over
+guessing. If a matching line contains an exact verification token, copy that
+token verbatim and do not substitute a different token from the issue thread.
+
 Do not claim to write files, run shell commands, open pull requests, or modify
 repository state from the assistant reply.
 

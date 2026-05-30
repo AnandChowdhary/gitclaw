@@ -424,6 +424,13 @@ conversation failed because GitHub Models rejected `max_tokens` and requested
 `max_completion_tokens`. GitClaw should select the output-token request
 parameter from the model family and include that choice in `/models` diagnostics.
 
+2026-05-30 tool-grounding follow-up: the first model-backed conversation after
+the parameter fix proved provider access but exposed prompt ambiguity: the model
+echoed the issue nonce where the harness wanted the repository search-result
+token. GitClaw should keep tool-output token requests explicit, document that
+`gitclaw.search_files` is authoritative for search-result tokens, and use
+distinct token prefixes in live E2E checks.
+
 2026-05-29 workflow-runtime follow-up: GitClaw's serverless runtime is GitHub
 Actions itself, so action runtime deprecations are part of product reliability.
 Checked-in workflows and spec snippets should track Node 24-compatible

@@ -61,6 +61,7 @@ body="Live E2E conversation check.
 Please use the repository file \`go.mod\`.
 Please use the repo-reader skill.
 Search the repository for \`${search_phrase}\` and include the associated token from the matching line.
+The repository search token starts with \`GITCLAW_SEARCH_\`; it is different from the conversation tokens below.
 Reply with the exact token \`${token_a}\`.
 Also state the Go module path from \`go.mod\`.
 Also include the exact durable memory token from \`.gitclaw/MEMORY.md\`.
