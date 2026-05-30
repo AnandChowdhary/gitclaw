@@ -1203,8 +1203,8 @@ func runWorkspaceRiskCommand(args []string) error {
 }
 
 func runPromptCommand(args []string) error {
-	if len(args) > 1 || (len(args) == 1 && args[0] != "list") {
-		return fmt.Errorf("usage: gitclaw prompt [list]")
+	if len(args) > 1 || (len(args) == 1 && args[0] != "list" && args[0] != "risk" && args[0] != "risk-audit") {
+		return fmt.Errorf("usage: gitclaw prompt [list|risk]")
 	}
 	cfg, err := LoadEffectiveConfig()
 	if err != nil {
@@ -1213,6 +1213,10 @@ func runPromptCommand(args []string) error {
 	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
 	if err != nil {
 		return err
+	}
+	if len(args) == 1 && (args[0] == "risk" || args[0] == "risk-audit") {
+		fmt.Println(RenderPromptRiskCLIReport(cfg, repoContext))
+		return nil
 	}
 	fmt.Println(RenderPromptCLIReport(cfg, repoContext))
 	return nil

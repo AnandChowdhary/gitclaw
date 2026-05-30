@@ -1306,6 +1306,18 @@ transcript counts, context files, selected always-on skills, and deterministic
 tool-output input/size/hash metadata, with no prompt, file, skill, issue, or
 tool-output bodies.
 
+2026-05-30 prompt-risk follow-up: OpenClaw's token-use docs make the current
+context window auditable by separating prompt snapshots from broader provider
+usage, and Hermes' prompt guidance keeps secrets, long runbooks, and temporary
+task context out of the durable system prompt. GitClaw should make that
+boundary testable with `@gitclaw /prompt risk` and `gitclaw prompt risk`:
+scan prompt-visible transcript text, context files, selected skills, and tool
+outputs for prompt-boundary override, credential exfiltration, hidden
+instruction, host-exec, and unbounded-context patterns, but emit only counts,
+paths/names, hashes, risk codes, severities, prompt budget metadata, prompt
+artifact gates, and no-write runtime gates. Pair the deterministic audit with a
+live GitHub Models follow-up that proves repo-reader/tool context still works.
+
 ### Skills
 
 Hermes skills are on-demand knowledge documents, also compatible with AgentSkills. The default local source of truth is `~/.hermes/skills/`, with optional external directories.
@@ -1933,6 +1945,7 @@ Recommended non-goals for the first spec:
 - OpenClaw heartbeat docs: https://openclawlab.com/en/docs/agent/heartbeat/
 - OpenClaw memory docs: https://docs.openclaw.ai/concepts/memory
 - OpenClaw tools overview: https://docs.openclaw.ai/tools
+- OpenClaw token use and cost diagnostics: https://docs.openclaw.ai/reference/token-use
 - OpenClaw automation hooks docs: https://docs.openclaw.ai/automation/hooks
 - OpenClaw plugin hooks docs: https://docs.openclaw.ai/plugins/hooks
 - OpenClaw plugins docs: https://docs.openclaw.ai/plugins
@@ -1972,6 +1985,7 @@ Recommended non-goals for the first spec:
 - Hermes migrate from OpenClaw docs: https://hermes-agent.nousresearch.com/docs/guides/migrate-from-openclaw
 - Hermes memory docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/memory.md
 - Hermes three-layer memory explainer: https://hermes-agent.ai/blog/hermes-agent-memory-system
+- Hermes system prompt guidance: https://hermes-agent.ai/blog/hermes-agent-system-prompt
 - Hermes skills docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/skills.md
 - Hermes working with skills docs: https://hermes-agent.nousresearch.com/docs/guides/work-with-skills/
 - Hermes tools docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/tools/

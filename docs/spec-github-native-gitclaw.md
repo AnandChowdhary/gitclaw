@@ -776,6 +776,7 @@ GitHub issue/comment event
   `orders list`, `orders verify`, `orders risk`,
   `profile show`, `profile verify`,
   `context list`, `context risk`, `context info`,
+  `prompt list`, `prompt risk`,
   `runs current`, `runs verify`,
   `sandbox explain`, `sandbox verify`,
   `memory verify`, `memory risk`, `memory validate`, `memory list`,
@@ -2004,14 +2005,16 @@ ordinary repository files can be inspected through the same body-free
 The local `context risk` variant performs the same body-free risk audit without
 repository or issue metadata.
 
-## Prompt Inspection Command
+## Prompt Inspection And Risk Commands
 
-GitClaw supports a deterministic prompt-budget audit command inspired by
-OpenClaw's context diagnostics and Hermes' bounded memory/context posture:
+GitClaw supports deterministic prompt-budget inspection and prompt-risk audit
+commands inspired by OpenClaw's context diagnostics and Hermes' bounded
+memory/context posture:
 
 ```text
 @gitclaw /prompt
 @gitclaw /prompt list
+@gitclaw /prompt risk
 ```
 
 `@gitclaw /budget` and `@gitclaw /prompt-budget` are accepted aliases, but the
@@ -2035,17 +2038,31 @@ skill bodies, or tool output bodies into the issue. This gives maintainers a
 low-cost way to debug prompt bloat, missing context, and truncation behavior
 without leaking the exact prompt into a public or long-lived GitHub comment.
 
+When called as `@gitclaw /prompt risk`, the command posts a body-free risk
+audit for the same prompt envelope. It scans the prompt-visible transcript,
+loaded context files, selected skills, and deterministic tool outputs for
+prompt-boundary overrides, credential exfiltration instructions, hidden
+instructions, host-execution requests, and unbounded-context requests, then
+reports only metadata, counts, hashes, risk codes, and severities. The prompt
+risk report also records prompt budget pressure, transcript omission/truncation
+state, prompt artifact gates, no-write runtime boundaries, and an explicit
+`llm_e2e_required_after_prompt_risk_change` flag. It must never print raw
+prompt text, raw issue/comment bodies, context bodies, skill bodies, raw tool
+inputs, tool-output bodies, credentials, or secret values.
+
 Local operators can inspect the same prompt-budget and prompt-input surface
 without opening an issue:
 
 ```bash
 gitclaw prompt list
+gitclaw prompt risk
 ```
 
 The local report omits repository and issue metadata, reports zero transcript
 messages, and still summarizes provider/model, prompt hash/size, prompt
-budgets, context file metadata, selected always-on skills, and deterministic
-tool-output metadata without dumping prompt text or any loaded bodies.
+budgets, context file metadata, selected always-on skills, deterministic
+tool-output metadata, and prompt-risk posture without dumping prompt text or
+any loaded bodies.
 
 ## Labels
 
@@ -5060,6 +5077,12 @@ examples/workflows/gitclaw.yml
   explicit report alias, while local `gitclaw prompt list` exposes the same
   body-free prompt-budget, prompt-input, context, skill, and tool metadata
   without issue-only fields.
+- A `gh`-driven prompt-risk E2E harness verifies `@gitclaw /prompt risk`
+  reports body-free prompt budget, transcript, context contributor, selected
+  skill, deterministic tool-output, prompt artifact, and runtime-boundary risk
+  metadata. The same harness must then run a real GitHub Models follow-up
+  conversation that proves model inference, prompt provenance, selected skills,
+  and prompt-visible repository search tool usage.
 - A `gh`-driven memory-report E2E harness verifies `@gitclaw /memory`
   produces a deterministic memory inventory without a model call or body
   leakage.

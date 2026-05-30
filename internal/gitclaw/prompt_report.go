@@ -16,8 +16,21 @@ type promptReportProfile struct {
 }
 
 func IsPromptReportRequest(ev Event, cfg Config) bool {
-	command := activeSlashCommand(ev, cfg)
-	return command == "/prompt" || command == "/budget" || command == "/prompt-budget"
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) == 0 {
+		return false
+	}
+	if fields[0] != "/prompt" && fields[0] != "/budget" && fields[0] != "/prompt-budget" {
+		return false
+	}
+	return len(fields) < 2 || (!strings.EqualFold(fields[1], "risk") && !strings.EqualFold(fields[1], "risk-audit"))
+}
+
+func IsPromptRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 &&
+		(fields[0] == "/prompt" || fields[0] == "/budget" || fields[0] == "/prompt-budget") &&
+		(strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit"))
 }
 
 func RenderPromptReport(ev Event, cfg Config, transcript []TranscriptMessage, repoContext RepoContext) string {
