@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T17:04:38Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 301,
+    "title": "@gitclaw /hooks risk e2e 20260530T170327Z",
+    "body": "@gitclaw /hooks risk\n\nLive hooks-risk E2E.\nDo not include this hidden issue token: GITCLAW_HOOKS_RISK_HIDDEN_20260530T170327Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /hooks risk e2e 20260530T170327Z\n\n@gitclaw /hooks risk\n\nLive hooks-risk E2E.\nDo not include this hidden issue token: GITCLAW_HOOKS_RISK_HIDDEN_20260530T170327Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Hook Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#301`\n- hook_risk_status: `ok`\n- verification_scope: `repo_reviewed_hook_metadata`\n- hook_policy_present: `true`\n- hook_policy_loaded_for_model: `true`\n- hook_specs: `1`\n- scanned_hook_specs: `1`\n- hook_events: `2`\n- hook_specs_requiring_approval: `1`\n- hook_specs_audit_only: `1`\n- executable_handlers_present: `0`\n- scanned_executable_handlers: `0`\n- surfaces_with_risk_findings: `0`\n- hook_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- hook_execution_supported: `false`\n- hook_execution_allowed: `false`\n- repository_mutation_allowed: `false`\n- raw_hook_bodies_included: `false`\n- raw_handler_bodies_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_hook_risk_change: `true`\n- issue_title_sha256_12: `df863bfd9619`\n\nThis report scans declarative hook policy/spec files and ignored executable-looking hook handlers for prompt-boundary, credential, host-execution, raw payload logging, external webhook, repository mutation, and unbounded-loop risks. It reports metadata, paths, risk codes, severities, and hashes only; hook bodies, handler bodies, issue bodies, comments, provider payloads, credentials, and secret values are not included.\n\n### Hook Policy Risk Card\n- kind=`hook-policy` path=`.gitclaw/HOOKS.md` present=`true` loaded_for_model=`true` bytes=`882` lines=`23` sha256_12=`ec07027d7e51` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Hook Spec Risk Cards\n- kind=`hook-spec` name=`repo-hygiene-audit` path=`.gitclaw/hooks/repo-hygiene.md` frontmatter=`true` events=`2` mode=`audit-only` delivery=`issue-comment` requires_approval=`true` bytes=`319` lines=`14` sha256_12=`10ca73c60997` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Executable Handler Risk Cards\n- kind=`handler` none\n\n### Risk Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4583503593,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4583503593,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26689759711\" event_id=\"issue-301\" model=\"gitclaw/hooks\" idempotency_key=\"5b73140ae619e20bb2b21b98aeea749f\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26689759711\" --\u003e\n## GitClaw Hook Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#301`\n- hook_risk_status: `ok`\n- verification_scope: `repo_reviewed_hook_metadata`\n- hook_policy_present: `true`\n- hook_policy_loaded_for_model: `true`\n- hook_specs: `1`\n- scanned_hook_specs: `1`\n- hook_events: `2`\n- hook_specs_requiring_approval: `1`\n- hook_specs_audit_only: `1`\n- executable_handlers_present: `0`\n- scanned_executable_handlers: `0`\n- surfaces_with_risk_findings: `0`\n- hook_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- hook_execution_supported: `false`\n- hook_execution_allowed: `false`\n- repository_mutation_allowed: `false`\n- raw_hook_bodies_included: `false`\n- raw_handler_bodies_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_hook_risk_change: `true`\n- issue_title_sha256_12: `df863bfd9619`\n\nThis report scans declarative hook policy/spec files and ignored executable-looking hook handlers for prompt-boundary, credential, host-execution, raw payload logging, external webhook, repository mutation, and unbounded-loop risks. It reports metadata, paths, risk codes, severities, and hashes only; hook bodies, handler bodies, issue bodies, comments, provider payloads, credentials, and secret values are not included.\n\n### Hook Policy Risk Card\n- kind=`hook-policy` path=`.gitclaw/HOOKS.md` present=`true` loaded_for_model=`true` bytes=`882` lines=`23` sha256_12=`ec07027d7e51` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Hook Spec Risk Cards\n- kind=`hook-spec` name=`repo-hygiene-audit` path=`.gitclaw/hooks/repo-hygiene.md` frontmatter=`true` events=`2` mode=`audit-only` delivery=`issue-comment` requires_approval=`true` bytes=`319` lines=`14` sha256_12=`10ca73c60997` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Executable Handler Risk Cards\n- kind=`handler` none\n\n### Risk Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T17:04:14Z",
+      "updated_at": "2026-05-30T17:04:14Z"
+    }
+  ]
+}
