@@ -26,6 +26,7 @@ type proactiveWorkflow struct {
 }
 
 type proactivePrompt struct {
+	Name  string
 	Path  string
 	Bytes int
 	Lines int
@@ -33,16 +34,22 @@ type proactivePrompt struct {
 }
 
 func IsProactiveReportRequest(ev Event, cfg Config) bool {
-	command := activeSlashCommand(ev, cfg)
-	return command == "/proactive" || command == "/cron"
+	return isProactiveCommand(activeSlashCommand(ev, cfg))
 }
 
 func RenderProactiveReport(ev Event, cfg Config) string {
+	if name := requestedProactiveInfoName(ev, cfg); name != "" {
+		return renderProactiveInfoReport(ev, cfg, name, true)
+	}
 	return renderProactiveReport(ev, cfg, true)
 }
 
 func RenderProactiveCLIReport(cfg Config) string {
 	return renderProactiveReport(Event{}, cfg, false)
+}
+
+func RenderProactiveInfoCLIReport(cfg Config, name string) string {
+	return renderProactiveInfoReport(Event{}, cfg, name, false)
 }
 
 func renderProactiveReport(ev Event, cfg Config, includeIssue bool) string {
@@ -104,6 +111,80 @@ func renderProactiveReport(ev Event, cfg Config, includeIssue bool) string {
 	return strings.TrimSpace(b.String())
 }
 
+func renderProactiveInfoReport(ev Event, cfg Config, name string, includeIssue bool) string {
+	name = cleanProactiveLookupName(name)
+	surface := inspectProactiveSurface(cfg.Workdir)
+	matches := matchingProactivePrompts(surface.Prompts, name)
+	generatedWorkflow := inspectProactiveWorkflow(cfg.Workdir, proactiveGeneratedWorkflowPath(name))
+	status := "not_found"
+	if len(matches) == 1 {
+		status = "ok"
+	} else if len(matches) > 1 {
+		status = "ambiguous"
+	}
+
+	promptPath := ".gitclaw/proactive/" + name + ".md"
+	if len(matches) == 1 {
+		promptPath = matches[0].Path
+	}
+
+	var b strings.Builder
+	b.WriteString("## GitClaw Proactive Info Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
+	fmt.Fprintf(&b, "- requested_proactive: `%s`\n", inlineCode(name))
+	fmt.Fprintf(&b, "- proactive_info_status: `%s`\n", status)
+	fmt.Fprintf(&b, "- prompt_matches: `%d`\n", len(matches))
+	fmt.Fprintf(&b, "- generic_workflow_path: `%s`\n", proactiveWorkflowPath)
+	fmt.Fprintf(&b, "- generic_workflow_present: `%t`\n", surface.Workflow.Present)
+	fmt.Fprintf(&b, "- generic_workflow_dispatch_trigger: `%t`\n", surface.Workflow.WorkflowDispatch)
+	fmt.Fprintf(&b, "- generic_schedule_trigger: `%t`\n", surface.Workflow.Schedule)
+	fmt.Fprintf(&b, "- generated_workflow_path: `%s`\n", generatedWorkflow.Path)
+	fmt.Fprintf(&b, "- generated_workflow_present: `%t`\n", generatedWorkflow.Present)
+	fmt.Fprintf(&b, "- generated_workflow_dispatch_trigger: `%t`\n", generatedWorkflow.WorkflowDispatch)
+	fmt.Fprintf(&b, "- generated_schedule_trigger: `%t`\n", generatedWorkflow.Schedule)
+	fmt.Fprintf(&b, "- run_mode: `%s`\n", "read-only")
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", false)
+	if includeIssue {
+		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
+	}
+	b.WriteByte('\n')
+	b.WriteString("This report shows metadata for one proactive job definition. Prompt bodies, workflow bodies, issue bodies, comments, and secret values are not included.\n\n")
+
+	b.WriteString("### Prompt Match\n")
+	if len(matches) == 0 {
+		b.WriteString("- none\n")
+	} else {
+		for _, prompt := range matches {
+			fmt.Fprintf(&b, "- `%s` name=`%s` bytes=`%d` lines=`%d` sha256_12=`%s`\n", prompt.Path, prompt.Name, prompt.Bytes, prompt.Lines, prompt.SHA)
+		}
+	}
+
+	b.WriteString("\n### Generic Workflow\n")
+	writeProactiveWorkflowInfo(&b, surface.Workflow)
+
+	b.WriteString("\n### Generated Workflow Candidate\n")
+	writeProactiveWorkflowInfo(&b, generatedWorkflow)
+
+	b.WriteString("\n### Enqueue Contract\n")
+	fmt.Fprintf(&b, "- `gitclaw proactive enqueue --name %s --slot <slot> --prompt-file %s [--not-before <rfc3339-or-date>]`\n", name, promptPath)
+	fmt.Fprintf(&b, "- dispatch id: `proactive-%s-<slot>`\n", name)
+	b.WriteString("- scheduled workflows should dispatch `.github/workflows/gitclaw.yml` only after enqueue returns a nonzero issue number\n")
+
+	if len(matches) == 0 && len(surface.Prompts) > 0 {
+		b.WriteString("\n### Available Proactive Jobs\n")
+		for _, prompt := range surface.Prompts {
+			fmt.Fprintf(&b, "- `%s` path=`%s`\n", prompt.Name, prompt.Path)
+		}
+	}
+	return strings.TrimSpace(b.String())
+}
+
 func inspectProactiveSurface(root string) proactiveSurface {
 	if root == "" {
 		root = "."
@@ -116,15 +197,7 @@ func inspectProactiveSurface(root string) proactiveSurface {
 		return surface
 	}
 
-	if body, err := os.ReadFile(filepath.Join(absRoot, filepath.FromSlash(proactiveWorkflowPath))); err == nil {
-		text := string(body)
-		surface.Workflow.Present = true
-		surface.Workflow.Bytes = len(body)
-		surface.Workflow.Lines = lineCount(text)
-		surface.Workflow.SHA = shortDocumentHash(text)
-		surface.Workflow.WorkflowDispatch = strings.Contains(text, "workflow_dispatch:")
-		surface.Workflow.Schedule = strings.Contains(text, "schedule:")
-	}
+	surface.Workflow = inspectProactiveWorkflowAt(absRoot, proactiveWorkflowPath)
 
 	matches, _ := filepath.Glob(filepath.Join(absRoot, ".gitclaw", "proactive", "*.md"))
 	sort.Strings(matches)
@@ -138,12 +211,97 @@ func inspectProactiveSurface(root string) proactiveSurface {
 			continue
 		}
 		text := string(body)
+		relPath := filepath.ToSlash(rel)
 		surface.Prompts = append(surface.Prompts, proactivePrompt{
-			Path:  filepath.ToSlash(rel),
+			Name:  proactivePromptName(relPath),
+			Path:  relPath,
 			Bytes: len(body),
 			Lines: lineCount(text),
 			SHA:   shortDocumentHash(text),
 		})
 	}
 	return surface
+}
+
+func inspectProactiveWorkflow(root, relPath string) proactiveWorkflow {
+	if root == "" {
+		root = "."
+	}
+	absRoot, err := filepath.Abs(root)
+	if err != nil {
+		return proactiveWorkflow{Path: relPath}
+	}
+	return inspectProactiveWorkflowAt(absRoot, relPath)
+}
+
+func inspectProactiveWorkflowAt(absRoot, relPath string) proactiveWorkflow {
+	workflow := proactiveWorkflow{Path: relPath}
+	body, err := os.ReadFile(filepath.Join(absRoot, filepath.FromSlash(relPath)))
+	if err != nil {
+		return workflow
+	}
+	text := string(body)
+	workflow.Present = true
+	workflow.Bytes = len(body)
+	workflow.Lines = lineCount(text)
+	workflow.SHA = shortDocumentHash(text)
+	workflow.WorkflowDispatch = strings.Contains(text, "workflow_dispatch:")
+	workflow.Schedule = strings.Contains(text, "schedule:")
+	return workflow
+}
+
+func writeProactiveWorkflowInfo(b *strings.Builder, workflow proactiveWorkflow) {
+	if !workflow.Present {
+		fmt.Fprintf(b, "- `%s` present=`false`\n", workflow.Path)
+		return
+	}
+	fmt.Fprintf(
+		b,
+		"- `%s` present=`true` bytes=`%d` lines=`%d` workflow_dispatch=`%t` schedule=`%t` sha256_12=`%s`\n",
+		workflow.Path,
+		workflow.Bytes,
+		workflow.Lines,
+		workflow.WorkflowDispatch,
+		workflow.Schedule,
+		workflow.SHA,
+	)
+}
+
+func requestedProactiveInfoName(ev Event, cfg Config) string {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 3 || !isProactiveCommand(fields[0]) || !strings.EqualFold(fields[1], "info") {
+		return ""
+	}
+	return cleanProactiveLookupName(fields[2])
+}
+
+func matchingProactivePrompts(prompts []proactivePrompt, name string) []proactivePrompt {
+	name = cleanProactiveLookupName(name)
+	if name == "" {
+		return nil
+	}
+	var matches []proactivePrompt
+	for _, prompt := range prompts {
+		if prompt.Name == name || cleanProactiveLookupName(prompt.Path) == name {
+			matches = append(matches, prompt)
+		}
+	}
+	return matches
+}
+
+func cleanProactiveLookupName(name string) string {
+	return normalizeProactiveName(strings.Trim(strings.TrimSpace(name), " \t\r\n.,:;!?`\"'"))
+}
+
+func proactivePromptName(path string) string {
+	base := filepath.Base(filepath.FromSlash(path))
+	return cleanProactiveLookupName(strings.TrimSuffix(base, filepath.Ext(base)))
+}
+
+func proactiveGeneratedWorkflowPath(name string) string {
+	return ".github/workflows/gitclaw-proactive-" + cleanProactiveLookupName(name) + ".yml"
+}
+
+func isProactiveCommand(command string) bool {
+	return command == "/proactive" || command == "/cron"
 }

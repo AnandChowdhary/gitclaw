@@ -1633,11 +1633,13 @@ func runChannelDeliveryCommand(ctx context.Context, args []string) error {
 
 func runProactiveCommand(ctx context.Context, args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw proactive <list|enqueue|init>")
+		return fmt.Errorf("usage: gitclaw proactive <list|info|enqueue|init>")
 	}
 	switch args[0] {
 	case "list":
 		return runProactiveListCommand(args[1:])
+	case "info":
+		return runProactiveInfoCommand(args[1:])
 	case "enqueue":
 		return runProactiveEnqueueCommand(ctx, args[1:])
 	case "init":
@@ -1656,6 +1658,26 @@ func runProactiveListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderProactiveCLIReport(cfg))
+	return nil
+}
+
+func runProactiveInfoCommand(args []string) error {
+	if len(args) != 1 {
+		return fmt.Errorf("usage: gitclaw proactive info <name>")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	report := RenderProactiveInfoCLIReport(cfg, args[0])
+	fmt.Println(report)
+	matches := matchingProactivePrompts(inspectProactiveSurface(cfg.Workdir).Prompts, args[0])
+	if len(matches) == 0 {
+		return fmt.Errorf("proactive job %q not found", args[0])
+	}
+	if len(matches) > 1 {
+		return fmt.Errorf("proactive job %q is ambiguous", args[0])
+	}
 	return nil
 }
 

@@ -368,6 +368,12 @@ of `/proactive`: workflow presence, workflow_dispatch/schedule trigger state,
 prompt file metadata, labels, and enqueue contract, with no prompt bodies and
 no issue-only metadata.
 
+2026-05-30 proactive-info follow-up: OpenClaw/Hermes-style scheduled jobs need
+operator visibility at the individual-job level, not only a global list. Add a
+focused `proactive info <name>` report that names the prompt file, generic
+workflow, generated workflow candidate, trigger metadata, hashes, and enqueue
+contract while keeping prompt/workflow/issue bodies out of comments.
+
 2026-05-29 proactive-init follow-up: the reviewed-file boundary matters as much
 as the scheduler. GitClaw should make new cron-like jobs easy through a local
 generator that writes `.gitclaw/proactive/<name>.md` and

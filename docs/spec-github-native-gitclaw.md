@@ -425,6 +425,7 @@ GitClaw supports a deterministic proactive audit command:
 ```text
 @gitclaw /proactive
 @gitclaw /proactive list
+@gitclaw /proactive info repo-hygiene
 @gitclaw /cron
 ```
 
@@ -442,15 +443,31 @@ inference. It posts a `gitclaw:assistant-turn` comment with
 It never dumps prompt, issue, or comment bodies. The command is for safe
 operator visibility before adding or editing scheduled jobs.
 
+The focused info form:
+
+```text
+@gitclaw /proactive info <name>
+@gitclaw /cron info <name>
+```
+
+posts a `GitClaw Proactive Info Report` for one job name. It reports the
+matched prompt file path, size, line count, and hash; the generic proactive
+workflow trigger metadata; the generated workflow candidate path
+`.github/workflows/gitclaw-proactive-<name>.yml`; whether that generated
+workflow exists and has `workflow_dispatch`/`schedule`; and the exact enqueue
+command shape. It includes `proactive_info_status` as `ok`, `not_found`, or
+`ambiguous`, plus `raw_bodies_included=false`.
+
 Local operators can inspect the same proactive surface without opening an
 issue:
 
 ```bash
 gitclaw proactive list
+gitclaw proactive info repo-hygiene
 ```
 
-The local report omits repository and issue metadata, reports workflow and
-prompt-file metadata with short hashes, and does not include proactive prompt
+The local reports omit repository and issue metadata, report workflow and
+prompt-file metadata with short hashes, and do not include proactive prompt
 bodies.
 
 Idempotency rules:
@@ -601,7 +618,7 @@ GitHub issue/comment event
   `backup info`, `backup retention-plan`,
   `heartbeat`,
   `channel-ingest`, `channel-state`, `channel-gateway`, `channel-delivery`,
-  `proactive enqueue`, `proactive init`,
+  `proactive enqueue`, `proactive init`, `proactive info`,
   `memory verify`, `memory validate`, `memory list`, `memory search`,
   `skills validate`,
   `skills list`, `skills info`, `skills search`,
@@ -2847,6 +2864,17 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert it creates a real proactive issue and receives one deterministic
      proactive report without leaking the hidden prompt token.
 
+37. **Proactive info report**
+
+   - create a real issue with `@gitclaw /proactive info repo-hygiene`,
+   - include a unique hidden token in the issue body,
+   - wait for the issue-opened workflow,
+   - assert the assistant posts exactly one `GitClaw Proactive Info Report`
+     with `proactive_info_status: ok`,
+   - assert the report lists prompt, generic workflow, generated workflow
+     candidate, trigger metadata, and enqueue command hashes/paths,
+   - assert no issue body, prompt body, or workflow body content is leaked.
+
 ### Example Live Commands
 
 The script can use commands in this shape:
@@ -3063,6 +3091,11 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven proactive-list E2E harness verifies `@gitclaw /proactive list`
   is an explicit report alias, while local `gitclaw proactive list` exposes
   workflow and prompt-file metadata without issue-only fields or prompt bodies.
+- A `gh`-driven proactive-info E2E harness verifies
+  `@gitclaw /proactive info <name>` and local `gitclaw proactive info <name>`
+  expose one proactive job definition, generic workflow metadata, generated
+  workflow candidate metadata, and enqueue command shape without a model call
+  or body leakage.
 - A `gh`-driven model-report E2E harness verifies `@gitclaw /models` reports
   GitHub Models provider and retry settings without a model call.
 - A `gh`-driven models-list E2E harness verifies `@gitclaw /models list` is
