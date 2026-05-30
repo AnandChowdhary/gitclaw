@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "proactive-init-e2e: $*" >&2
+  echo "proactive-not-before-e2e: $*" >&2
 }
 
 die() {
@@ -11,13 +11,12 @@ die() {
 }
 
 repo="${GITCLAW_E2E_REPO:-}"
-proactive_workflow="${GITCLAW_E2E_PROACTIVE_WORKFLOW:-.github/workflows/gitclaw-proactive.yml}"
-lock_dir="/tmp/gitclaw-proactive-init-e2e.lock"
-tmp_dir="$(mktemp -d)"
+workflow="${GITCLAW_E2E_PROACTIVE_WORKFLOW:-.github/workflows/gitclaw-proactive.yml}"
+lock_dir="/tmp/gitclaw-proactive-not-before-e2e.lock"
 cleanup_success=0
 
 if ! mkdir "$lock_dir" 2>/dev/null; then
-  die "another proactive-init E2E appears to be running: ${lock_dir}"
+  die "another proactive not-before E2E appears to be running: ${lock_dir}"
 fi
 
 cleanup() {
@@ -25,12 +24,12 @@ cleanup() {
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:e2e >/dev/null 2>&1 || true
     if [[ "$cleanup_success" == "1" ]]; then
       gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled >/dev/null 2>&1 || true
-      gh issue close "$issue_number" --repo "$repo" --comment "proactive-init e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "proactive not-before e2e cleanup" >/dev/null 2>&1 || true
     else
       log "leaving issue #${issue_number} open for inspection after unsuccessful run"
     fi
   fi
-  rm -rf "$tmp_dir" "$lock_dir"
+  rm -rf "$lock_dir"
 }
 trap cleanup EXIT
 
@@ -52,73 +51,16 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
 normalized_timestamp="$(printf "%s" "$timestamp" | tr '[:upper:]' '[:lower:]')"
-name="proactive-init-e2e-${normalized_timestamp}"
-slot="slot-${timestamp}"
-dispatch_id="proactive-${name}-${slot}"
-token="GITCLAW_PROACTIVE_INIT_E2E_${timestamp}"
-prompt_body="Proactive init E2E instruction.
-
-@gitclaw /proactive
-
-Hidden prompt token: ${token}
-The deterministic proactive report must not leak this token."
-prompt_path=".gitclaw/proactive/${name}.md"
-workflow_path=".github/workflows/gitclaw-proactive-${name}.yml"
-
-init_output="$(go run ./cmd/gitclaw proactive init \
-  --root "$tmp_dir" \
-  --name "$name" \
-  --cron "17 8 * * 1" \
-  --prompt-body "$prompt_body")"
-
-for expected in \
-  'GitClaw Proactive Init Report' \
-  'mode: `apply`' \
-  "name: \`${name}\`" \
-  "prompt_file: \`${prompt_path}\`" \
-  "workflow_file: \`${workflow_path}\`" \
-  'prompt_written: `true`' \
-  'workflow_written: `true`' \
-  'prompt_body_sha256_12:' \
-  'workflow_body_sha256_12:'; do
-  grep -Fq "$expected" <<<"$init_output" || die "init report missing ${expected}"
-done
-
-if grep -Fq "$token" <<<"$init_output"; then
-  die "init report leaked prompt body token"
-fi
-
-generated_prompt="${tmp_dir}/${prompt_path}"
-generated_workflow="${tmp_dir}/${workflow_path}"
-grep -Fq "$token" "$generated_prompt" || die "generated prompt missing token"
-for expected in \
-  "name: GitClaw Proactive Proactive Init E2e ${normalized_timestamp}" \
-  "workflow_dispatch:" \
-  "not_before:" \
-  "- cron: '17 8 * * 1'" \
-  "actions/checkout@v5" \
-  "actions/setup-go@v6" \
-  "go run ./cmd/gitclaw proactive enqueue" \
-  "--name '${name}'" \
-  "--prompt-file '${prompt_path}'" \
-  "steps.enqueue.outputs.issue_number != '' && steps.enqueue.outputs.issue_number != '0'" \
-  "GITCLAW_PROACTIVE_NOT_BEFORE" \
-  "gh workflow run .github/workflows/gitclaw.yml"; do
-  grep -Fq -- "$expected" "$generated_workflow" || die "generated workflow missing ${expected}"
-done
-
-if command -v actionlint >/dev/null 2>&1; then
-  actionlint "$generated_workflow"
-elif [[ -x /tmp/gitclaw-bin/actionlint ]]; then
-  /tmp/gitclaw-bin/actionlint "$generated_workflow"
-else
-  log "actionlint not found; skipping generated workflow lint"
-fi
+name="proactive-not-before-e2e-${normalized_timestamp}"
+future_slot="future-${timestamp}"
+due_slot="due-${timestamp}"
+future_token="GITCLAW_PROACTIVE_NOT_BEFORE_FUTURE_${timestamp}"
+due_token="GITCLAW_PROACTIVE_NOT_BEFORE_DUE_${timestamp}"
 
 run_list_json() {
   gh run list \
     --repo "$repo" \
-    --workflow "$proactive_workflow" \
+    --workflow "$workflow" \
     --event workflow_dispatch \
     --limit 10 \
     --json databaseId,status,conclusion,createdAt,url \
@@ -136,7 +78,7 @@ wait_for_run() {
       conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
       url="$(jq -r '.url' <<<"$run_json")"
       if [[ "$status" == "completed" ]]; then
-        [[ "$conclusion" == "success" ]] || die "${proactive_workflow} run failed with conclusion ${conclusion}: ${url}"
+        [[ "$conclusion" == "success" ]] || die "${workflow} run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
       fi
@@ -147,19 +89,21 @@ wait_for_run() {
 }
 
 find_issue_numbers() {
+  local slot="$1"
   gh issue list \
     --repo "$repo" \
     --state all \
     --label gitclaw:proactive \
     --limit 100 \
     --json number,title,body \
-    | jq -r --arg name "$name" --arg slot "$slot" '.[] | select((.title | contains($name)) or ((.body | contains($name)) and (.body | contains($slot)))) | .number'
+    | jq -r --arg name "$name" --arg slot "$slot" '.[] | select((.title | contains($name)) and (.title | contains($slot)) or ((.body | contains($name)) and (.body | contains($slot)))) | .number'
 }
 
 wait_for_issue_number() {
+  local slot="$1"
   for _ in {1..30}; do
     local numbers
-    numbers="$(find_issue_numbers)"
+    numbers="$(find_issue_numbers "$slot")"
     if [[ -n "$numbers" ]]; then
       echo "$numbers" | head -n 1
       return 0
@@ -208,29 +152,61 @@ wait_for_assistant_count() {
   return 1
 }
 
+future_prompt="Proactive not-before future E2E instruction.
+
+@gitclaw /proactive
+
+Hidden future prompt token: ${future_token}
+This issue must not be created before the due gate."
+
 started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-gh workflow run "$proactive_workflow" \
+gh workflow run "$workflow" \
   --repo "$repo" \
   -f name="$name" \
-  -f slot="$slot" \
-  -f prompt="$prompt_body"
-wait_for_run "$started_at" >/dev/null || die "timed out waiting for proactive workflow"
+  -f slot="$future_slot" \
+  -f prompt="$future_prompt" \
+  -f not_before="2099-01-01T00:00:00Z"
+wait_for_run "$started_at" >/dev/null || die "timed out waiting for future not-before proactive workflow"
 
-issue_number="$(wait_for_issue_number)" || die "timed out finding proactive issue for ${name}/${slot}"
-log "proactive workflow created issue #${issue_number}"
-wait_for_assistant_count 1 || die "timed out waiting for proactive assistant response"
+sleep 5
+if [[ -n "$(find_issue_numbers "$future_slot")" ]]; then
+  die "future not-before gate unexpectedly created an issue"
+fi
+log "future not-before gate skipped issue creation"
+
+due_prompt="Proactive not-before due E2E instruction.
+
+@gitclaw /proactive
+
+Hidden due prompt token: ${due_token}
+The deterministic proactive report must not leak this token."
+
+started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+gh workflow run "$workflow" \
+  --repo "$repo" \
+  -f name="$name" \
+  -f slot="$due_slot" \
+  -f prompt="$due_prompt" \
+  -f not_before="2000-01-01T00:00:00Z"
+wait_for_run "$started_at" >/dev/null || die "timed out waiting for due proactive workflow"
+
+issue_number="$(wait_for_issue_number "$due_slot")" || die "timed out finding due proactive issue for ${name}/${due_slot}"
+log "due proactive workflow created issue #${issue_number}"
+wait_for_assistant_count 1 || die "timed out waiting for due proactive assistant response"
 
 issue_json="$(gh issue view "$issue_number" --repo "$repo" --json body,labels,comments)"
 grep -Fq "gitclaw:proactive-run" <<<"$(jq -r '.body' <<<"$issue_json")" || die "issue body missing proactive marker"
-grep -Fq "$token" <<<"$(jq -r '.body' <<<"$issue_json")" || die "issue body missing prompt token"
+grep -Fq "$due_token" <<<"$(jq -r '.body' <<<"$issue_json")" || die "issue body missing due prompt token"
+
 comments="$(assistant_comments)"
 grep -Fq 'model="gitclaw/proactive"' <<<"$comments" || die "assistant marker missing proactive report model"
 grep -Fq "GitClaw Proactive Report" <<<"$comments" || die "assistant comment missing proactive report"
 grep -Fq 'proactive_run_issue: `true`' <<<"$comments" || die "assistant comment did not detect proactive issue"
-if grep -Fq "$token" <<<"$comments"; then
-  die "assistant proactive report leaked prompt token ${token}"
+if grep -Fq "$due_token" <<<"$comments"; then
+  die "assistant proactive report leaked due prompt token ${due_token}"
 fi
-grep -Fq "dispatch-${dispatch_id}" <<<"$comments" || die "assistant marker missing dispatch event id"
+grep -Fq "dispatch-proactive-${name}-${due_slot}" <<<"$comments" || die "assistant marker missing proactive dispatch event id"
+
 labels="$(jq -r '.labels[].name' <<<"$issue_json")"
 grep -Fxq "gitclaw:proactive" <<<"$labels" || die "issue missing gitclaw:proactive label"
 grep -Fxq "gitclaw:done" <<<"$labels" || die "issue missing gitclaw:done label"

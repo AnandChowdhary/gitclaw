@@ -194,6 +194,9 @@ on:
       slot:
         description: Optional idempotency slot, defaults to current UTC date
         required: false
+      not_before:
+        description: Optional RFC3339 or YYYY-MM-DD due gate for reminder-style jobs
+        required: false
   schedule:
     - cron: '%s'
 
@@ -230,8 +233,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
           GITCLAW_PROACTIVE_SLOT: ${{ github.event.inputs.slot }}
+          GITCLAW_PROACTIVE_NOT_BEFORE: ${{ github.event.inputs.not_before }}
 
-      - run: |
+      - if: ${{ steps.enqueue.outputs.issue_number != '' && steps.enqueue.outputs.issue_number != '0' }}
+        run: |
           set -euo pipefail
           gh workflow run .github/workflows/gitclaw.yml \
             --repo "$GITHUB_REPOSITORY" \

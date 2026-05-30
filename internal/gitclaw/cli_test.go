@@ -778,6 +778,25 @@ PROACTIVE_LIST_WORKFLOW_BODY
 	}
 }
 
+func TestProactiveEnqueueCommandSkipsFutureNotBeforeWithoutToken(t *testing.T) {
+	t.Setenv("GH_TOKEN", "")
+	t.Setenv("GITHUB_TOKEN", "")
+	t.Setenv("GITHUB_REPOSITORY", "owner/repo")
+	t.Setenv("GITCLAW_PROACTIVE_NAME", "Reminder")
+	t.Setenv("GITCLAW_PROACTIVE_SLOT", "future-slot")
+	t.Setenv("GITCLAW_PROACTIVE_NOT_BEFORE", "2099-01-01T00:00:00Z")
+	output := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"proactive", "enqueue"}); err != nil {
+			t.Fatalf("proactive enqueue returned error before due gate: %v", err)
+		}
+	})
+	for _, want := range []string{"proactive_enqueue", "issue=0", "name=reminder", "slot=future-slot", "created=false", "due=false", "skipped=true", "not_before=2099-01-01T00:00:00Z"} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("proactive enqueue output missing %q:\n%s", want, output)
+		}
+	}
+}
+
 func TestDoctorListCommandReportsHealthWithoutBodies(t *testing.T) {
 	dir := t.TempDir()
 	writeTestFile(t, dir, ".gitclaw/config.yml", `model:

@@ -14,6 +14,7 @@ type ProactiveEnqueueOptions struct {
 	Slot       string
 	Prompt     string
 	PromptFile string
+	NotBefore  string
 }
 
 type ProactiveEnqueueResult struct {
@@ -22,10 +23,29 @@ type ProactiveEnqueueResult struct {
 	Name        string
 	Slot        string
 	Created     bool
+	Due         bool
+	Skipped     bool
+	NotBefore   string
 }
 
 func RunProactiveEnqueue(ctx context.Context, cfg Config, github ProactiveGitHubClient, opts ProactiveEnqueueOptions, now time.Time) (ProactiveEnqueueResult, error) {
 	opts = normalizeProactiveOptions(opts, now)
+	if err := validateProactiveEnvelopeOptions(opts); err != nil {
+		return ProactiveEnqueueResult{}, err
+	}
+	due, err := proactiveDueReached(opts.NotBefore, now)
+	if err != nil {
+		return ProactiveEnqueueResult{}, err
+	}
+	if !due {
+		return ProactiveEnqueueResult{
+			Name:      opts.Name,
+			Slot:      opts.Slot,
+			Due:       false,
+			Skipped:   true,
+			NotBefore: opts.NotBefore,
+		}, nil
+	}
 	if opts.Prompt == "" && opts.PromptFile != "" {
 		data, err := os.ReadFile(opts.PromptFile)
 		if err != nil {
@@ -50,6 +70,8 @@ func RunProactiveEnqueue(ctx context.Context, cfg Config, github ProactiveGitHub
 		Name:        opts.Name,
 		Slot:        opts.Slot,
 		Created:     created,
+		Due:         true,
+		NotBefore:   opts.NotBefore,
 	}, nil
 }
 
@@ -59,6 +81,7 @@ func normalizeProactiveOptions(opts ProactiveEnqueueOptions, now time.Time) Proa
 	opts.Slot = strings.TrimSpace(opts.Slot)
 	opts.Prompt = strings.TrimSpace(opts.Prompt)
 	opts.PromptFile = strings.TrimSpace(opts.PromptFile)
+	opts.NotBefore = strings.TrimSpace(opts.NotBefore)
 	if opts.Slot == "" {
 		if now.IsZero() {
 			now = time.Now().UTC()
@@ -87,6 +110,16 @@ func normalizeProactiveName(name string) string {
 }
 
 func validateProactiveOptions(opts ProactiveEnqueueOptions) error {
+	if err := validateProactiveEnvelopeOptions(opts); err != nil {
+		return err
+	}
+	if opts.Prompt == "" {
+		return fmt.Errorf("missing proactive prompt")
+	}
+	return nil
+}
+
+func validateProactiveEnvelopeOptions(opts ProactiveEnqueueOptions) error {
 	if err := validateRepoName(opts.Repo); err != nil {
 		return err
 	}
@@ -96,10 +129,37 @@ func validateProactiveOptions(opts ProactiveEnqueueOptions) error {
 	if opts.Slot == "" {
 		return fmt.Errorf("missing proactive slot")
 	}
-	if opts.Prompt == "" {
-		return fmt.Errorf("missing proactive prompt")
-	}
 	return nil
+}
+
+func proactiveDueReached(notBefore string, now time.Time) (bool, error) {
+	if strings.TrimSpace(notBefore) == "" {
+		return true, nil
+	}
+	dueAt, err := parseProactiveNotBefore(notBefore)
+	if err != nil {
+		return false, err
+	}
+	if now.IsZero() {
+		now = time.Now().UTC()
+	}
+	return !now.UTC().Before(dueAt), nil
+}
+
+func parseProactiveNotBefore(value string) (time.Time, error) {
+	value = strings.TrimSpace(value)
+	if value == "" {
+		return time.Time{}, fmt.Errorf("missing proactive not-before time")
+	}
+	for _, layout := range []string{time.RFC3339Nano, time.RFC3339} {
+		if parsed, err := time.Parse(layout, value); err == nil {
+			return parsed.UTC(), nil
+		}
+	}
+	if parsed, err := time.Parse("2006-01-02", value); err == nil {
+		return parsed.UTC(), nil
+	}
+	return time.Time{}, fmt.Errorf("invalid proactive not-before time %q: use RFC3339 or YYYY-MM-DD", value)
 }
 
 func findOrCreateProactiveIssue(ctx context.Context, cfg Config, github ProactiveGitHubClient, opts ProactiveEnqueueOptions) (Issue, bool, error) {
@@ -157,5 +217,8 @@ func writeProactiveOutputs(result ProactiveEnqueueResult) error {
 	fmt.Fprintf(file, "name=%s\n", result.Name)
 	fmt.Fprintf(file, "slot=%s\n", result.Slot)
 	fmt.Fprintf(file, "created=%t\n", result.Created)
+	fmt.Fprintf(file, "due=%t\n", result.Due)
+	fmt.Fprintf(file, "skipped=%t\n", result.Skipped)
+	fmt.Fprintf(file, "not_before=%s\n", result.NotBefore)
 	return nil
 }

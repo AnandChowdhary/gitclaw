@@ -322,7 +322,8 @@ agent. The enqueue primitive is:
 gitclaw proactive enqueue \
   --name email-triage \
   --slot 2026-05-29 \
-  --prompt-file .gitclaw/proactive/email-triage.md
+  --prompt-file .gitclaw/proactive/email-triage.md \
+  --not-before 2026-05-29T08:17:00Z
 ```
 
 It is exposed through `.github/workflows/gitclaw-proactive.yml` for manual
@@ -353,6 +354,16 @@ status, byte counts, and hashes. Generated files are:
 .gitclaw/proactive/email-triage.md
 ```
 
+`--not-before` is optional. When present, it accepts RFC3339 or `YYYY-MM-DD`
+UTC dates and turns the enqueue primitive into a reminder due gate. If the
+current Actions run is before the due gate, the command writes
+`due=false`, `skipped=true`, and `issue_number=0` to `GITHUB_OUTPUT`, performs
+no GitHub issue writes, and does not dispatch the main agent workflow. When
+the same scheduled workflow runs at or after the due gate, it creates or
+reuses the normal proactive issue and dispatches GitClaw with the usual
+`proactive-<name>-<slot>` idempotency key. This keeps reminders serverless and
+auditable while accepting GitHub Actions' best-effort schedule timing.
+
 Reference proactive workflow shape:
 
 ```yaml
@@ -360,6 +371,10 @@ name: GitClaw Proactive Email Triage
 
 on:
   workflow_dispatch:
+    inputs:
+      not_before:
+        description: Optional RFC3339 or YYYY-MM-DD due gate
+        required: false
   schedule:
     - cron: "17 8 * * 1-5"
 
@@ -387,7 +402,10 @@ jobs:
           --name email-triage
           --slot "$(date -u +%Y-%m-%d)"
           --prompt-file .gitclaw/proactive/email-triage.md
-      - run: >
+        env:
+          GITCLAW_PROACTIVE_NOT_BEFORE: ${{ github.event.inputs.not_before }}
+      - if: ${{ steps.enqueue.outputs.issue_number != '' && steps.enqueue.outputs.issue_number != '0' }}
+        run: >
           gh workflow run .github/workflows/gitclaw.yml
           -f issue_number="${{ steps.enqueue.outputs.issue_number }}"
           -f dispatch_id="proactive-email-triage-${{ steps.enqueue.outputs.slot }}"

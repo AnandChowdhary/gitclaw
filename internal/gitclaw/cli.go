@@ -1641,6 +1641,7 @@ func runProactiveEnqueueCommand(ctx context.Context, args []string) error {
 		Slot:       os.Getenv("GITCLAW_PROACTIVE_SLOT"),
 		Prompt:     os.Getenv("GITCLAW_PROACTIVE_PROMPT"),
 		PromptFile: os.Getenv("GITCLAW_PROACTIVE_PROMPT_FILE"),
+		NotBefore:  os.Getenv("GITCLAW_PROACTIVE_NOT_BEFORE"),
 	}
 	for i := 0; i < len(args); i++ {
 		switch args[i] {
@@ -1674,14 +1675,17 @@ func runProactiveEnqueueCommand(ctx context.Context, args []string) error {
 			}
 			opts.PromptFile = args[i+1]
 			i++
+		case "--not-before", "--due":
+			if i+1 >= len(args) {
+				return fmt.Errorf("%s requires a value", args[i])
+			}
+			opts.NotBefore = args[i+1]
+			i++
 		default:
 			return fmt.Errorf("unknown proactive enqueue argument %q", args[i])
 		}
 	}
 	token := githubTokenFromEnv()
-	if token == "" {
-		return fmt.Errorf("missing GH_TOKEN or GITHUB_TOKEN")
-	}
 	result, err := RunProactiveEnqueue(ctx, cfg, NewRESTGitHubClient(token), opts, time.Now())
 	if err != nil {
 		return err
@@ -1689,7 +1693,7 @@ func runProactiveEnqueueCommand(ctx context.Context, args []string) error {
 	if err := writeProactiveOutputs(result); err != nil {
 		return err
 	}
-	fmt.Printf("proactive_enqueue issue=%d name=%s slot=%s created=%t url=%s\n", result.IssueNumber, result.Name, result.Slot, result.Created, result.IssueURL)
+	fmt.Printf("proactive_enqueue issue=%d name=%s slot=%s created=%t due=%t skipped=%t not_before=%s url=%s\n", result.IssueNumber, result.Name, result.Slot, result.Created, result.Due, result.Skipped, result.NotBefore, result.IssueURL)
 	return nil
 }
 

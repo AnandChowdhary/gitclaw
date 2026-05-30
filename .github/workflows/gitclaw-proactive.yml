@@ -17,6 +17,9 @@ on:
         description: Optional prompt file path in the repository
         required: false
         default: .gitclaw/proactive/repo-hygiene.md
+      not_before:
+        description: Optional RFC3339 or YYYY-MM-DD due gate for reminder-style jobs
+        required: false
   schedule:
     - cron: "23 8 * * 1"
 
@@ -54,8 +57,10 @@ jobs:
           GITCLAW_PROACTIVE_SLOT: ${{ github.event.inputs.slot }}
           GITCLAW_PROACTIVE_PROMPT: ${{ github.event.inputs.prompt }}
           GITCLAW_PROACTIVE_PROMPT_FILE: ${{ github.event.inputs.prompt_file }}
+          GITCLAW_PROACTIVE_NOT_BEFORE: ${{ github.event.inputs.not_before }}
 
-      - run: |
+      - if: ${{ steps.enqueue.outputs.issue_number != '' && steps.enqueue.outputs.issue_number != '0' }}
+        run: |
           set -euo pipefail
           dispatch_id="proactive-${GITCLAW_PROACTIVE_NAME}-${GITCLAW_PROACTIVE_SLOT}"
           gh workflow run .github/workflows/gitclaw.yml \

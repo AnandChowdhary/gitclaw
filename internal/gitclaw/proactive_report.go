@@ -96,7 +96,8 @@ func renderProactiveReport(ev Event, cfg Config, includeIssue bool) string {
 	}
 
 	b.WriteString("\n### Enqueue Contract\n")
-	b.WriteString("- `gitclaw proactive enqueue --name <name> --slot <slot> --prompt-file .gitclaw/proactive/<name>.md`\n")
+	b.WriteString("- `gitclaw proactive enqueue --name <name> --slot <slot> --prompt-file .gitclaw/proactive/<name>.md [--not-before <rfc3339-or-date>]`\n")
+	b.WriteString("- `--not-before` skips issue creation until the due gate has passed, which supports reminder-style scheduled jobs\n")
 	b.WriteString("- one issue per `name + slot`\n")
 	b.WriteString("- dispatch id: `proactive-<name>-<slot>`\n")
 

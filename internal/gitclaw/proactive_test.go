@@ -76,6 +76,59 @@ func TestProactiveEnqueueDefaultsSlotToUTCDate(t *testing.T) {
 	}
 }
 
+func TestProactiveEnqueueSkipsBeforeNotBefore(t *testing.T) {
+	github := &FakeGitHub{}
+	result, err := RunProactiveEnqueue(context.Background(), DefaultConfig(), github, ProactiveEnqueueOptions{
+		Repo:       "owner/repo",
+		Name:       "Reminder",
+		Slot:       "due-2026-05-30",
+		PromptFile: filepath.Join(t.TempDir(), "missing.md"),
+		NotBefore:  "2026-05-30T10:00:00Z",
+	}, time.Date(2026, 5, 30, 9, 59, 0, 0, time.UTC))
+	if err != nil {
+		t.Fatalf("RunProactiveEnqueue returned error before due gate: %v", err)
+	}
+	if !result.Skipped || result.Due || result.IssueNumber != 0 || result.Name != "reminder" {
+		t.Fatalf("unexpected skipped result: %#v", result)
+	}
+	if len(github.Issues) != 0 {
+		t.Fatalf("not-before skip should not touch GitHub: %#v", github.Issues)
+	}
+}
+
+func TestProactiveEnqueueCreatesAfterNotBefore(t *testing.T) {
+	github := &FakeGitHub{}
+	result, err := RunProactiveEnqueue(context.Background(), DefaultConfig(), github, ProactiveEnqueueOptions{
+		Repo:      "owner/repo",
+		Name:      "Reminder",
+		Slot:      "due-2026-05-30",
+		Prompt:    "Remind me to review the release checklist.",
+		NotBefore: "2026-05-30",
+	}, time.Date(2026, 5, 30, 0, 0, 1, 0, time.UTC))
+	if err != nil {
+		t.Fatalf("RunProactiveEnqueue returned error after due gate: %v", err)
+	}
+	if !result.Due || result.Skipped || !result.Created || result.IssueNumber == 0 {
+		t.Fatalf("unexpected due result: %#v", result)
+	}
+	if len(github.Issues) != 1 || !strings.Contains(github.Issues[0].Body, "Remind me to review") {
+		t.Fatalf("due enqueue did not create reminder issue: %#v", github.Issues)
+	}
+}
+
+func TestProactiveEnqueueRejectsInvalidNotBefore(t *testing.T) {
+	_, err := RunProactiveEnqueue(context.Background(), DefaultConfig(), &FakeGitHub{}, ProactiveEnqueueOptions{
+		Repo:      "owner/repo",
+		Name:      "Reminder",
+		Slot:      "due-2026-05-30",
+		Prompt:    "Review release checklist.",
+		NotBefore: "tomorrow morning",
+	}, time.Date(2026, 5, 30, 0, 0, 0, 0, time.UTC))
+	if err == nil || !strings.Contains(err.Error(), "invalid proactive not-before time") {
+		t.Fatalf("expected invalid not-before error, got %v", err)
+	}
+}
+
 func TestProactiveInitWritesWorkflowAndPrompt(t *testing.T) {
 	dir := t.TempDir()
 	result, err := RunProactiveInit(ProactiveInitOptions{
@@ -100,11 +153,14 @@ func TestProactiveInitWritesWorkflowAndPrompt(t *testing.T) {
 		"name: GitClaw Proactive Email Triage",
 		"workflow_dispatch:",
 		"- cron: '17 8 * * 1-5'",
+		"not_before:",
 		"actions/checkout@v5",
 		"actions/setup-go@v6",
 		"go run ./cmd/gitclaw proactive enqueue",
 		"--name 'email-triage'",
 		"--prompt-file '.gitclaw/proactive/email-triage.md'",
+		"steps.enqueue.outputs.issue_number != '' && steps.enqueue.outputs.issue_number != '0'",
+		"GITCLAW_PROACTIVE_NOT_BEFORE",
 		"gh workflow run .github/workflows/gitclaw.yml",
 		`dispatch_id="proactive-email-triage-${GITCLAW_PROACTIVE_SLOT}"`,
 	} {
