@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T02:09:05Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 112,
+    "title": "@gitclaw /memory verify e2e 20260530T020808Z",
+    "body": "Live memory-verify E2E.\n\nHidden memory verify body token: GITCLAW_MEMORY_VERIFY_E2E_20260530T020808Z\nThis should produce a deterministic memory trust envelope without dumping memory or issue bodies.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /memory verify e2e 20260530T020808Z\n\nLive memory-verify E2E.\n\nHidden memory verify body token: GITCLAW_MEMORY_VERIFY_E2E_20260530T020808Z\nThis should produce a deterministic memory trust envelope without dumping memory or issue bodies.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Memory Verify Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#112`\n- memory_verify_status: `ok`\n- verification_scope: `repo-local-memory-provenance`\n- memory_files: `2`\n- repo_local_memory_files: `2`\n- unknown_memory_files: `0`\n- long_term_memory_present: `true`\n- long_term_memory_loaded: `true`\n- dated_memory_notes: `1`\n- canonical_dated_memory_notes: `1`\n- noncanonical_dated_memory_notes: `0`\n- loaded_memory_notes: `1`\n- omitted_memory_notes: `0`\n- max_loaded_memory_notes: `3`\n- latest_memory_note: `.gitclaw/memory/2026-05-29.md`\n- memory_files_hashed: `2`\n- memory_files_at_limit: `0`\n- potential_secret_findings: `0`\n- external_provider_verification: `not_configured`\n- session_search_index_verification: `not_configured`\n- background_promotion_verification: `not_configured`\n- memory_writes_allowed: `false`\n- raw_bodies_included: `false`\n- memory_validation_status: `ok`\n- memory_validation_errors: `0`\n- memory_validation_warnings: `0`\n- long_term_memory_present: `true`\n- long_term_memory_loaded: `true`\n- dated_memory_notes: `1`\n- canonical_dated_memory_notes: `1`\n- noncanonical_dated_memory_notes: `0`\n- loaded_memory_notes: `1`\n- max_loaded_memory_notes: `3`\n- empty_memory_files: `0`\n- memory_files_at_limit: `0`\n- potential_secret_findings: `0`\n\nThis report verifies GitClaw's repo-local memory provenance. It reports long-term memory, dated memory-note presence, load state, hashes, hygiene findings, and explicit non-goals only; raw memory, issue, comment, prompt, and secret bodies are not included.\n\n### Trust Cards\n- kind=`long-term` path=`.gitclaw/MEMORY.md` source=`repo-local` present=`true` canonical=`true` latest=`true` loaded_for_this_turn=`true` bytes=`243` lines=`5` sha256_12=`e0e1314cdfc1`\n- kind=`dated-note` path=`.gitclaw/memory/2026-05-29.md` source=`repo-local` present=`true` canonical=`true` latest=`true` loaded_for_this_turn=`true` bytes=`11564` lines=`190` sha256_12=`90c2189691b0`\n\n### Verification Findings\n- severity=`info` code=`external_memory_provider_verification_not_configured` detail=`GitClaw v1 verifies repo-local Markdown memory files, not external memory providers`\n- severity=`info` code=`session_search_index_verification_not_configured` detail=`GitClaw uses GitHub issues and backup JSON for sessions; no separate SQLite/FTS memory index is verified`\n- severity=`info` code=`background_promotion_verification_not_configured` detail=`GitClaw does not auto-promote daily notes into long-term memory during assistant turns`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4581304119,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4581304119,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26671573381\" event_id=\"issue-112\" model=\"gitclaw/memory\" idempotency_key=\"405a4cd2d9096a6d43d6325a47f3e104\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26671573381\" --\u003e\n## GitClaw Memory Verify Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#112`\n- memory_verify_status: `ok`\n- verification_scope: `repo-local-memory-provenance`\n- memory_files: `2`\n- repo_local_memory_files: `2`\n- unknown_memory_files: `0`\n- long_term_memory_present: `true`\n- long_term_memory_loaded: `true`\n- dated_memory_notes: `1`\n- canonical_dated_memory_notes: `1`\n- noncanonical_dated_memory_notes: `0`\n- loaded_memory_notes: `1`\n- omitted_memory_notes: `0`\n- max_loaded_memory_notes: `3`\n- latest_memory_note: `.gitclaw/memory/2026-05-29.md`\n- memory_files_hashed: `2`\n- memory_files_at_limit: `0`\n- potential_secret_findings: `0`\n- external_provider_verification: `not_configured`\n- session_search_index_verification: `not_configured`\n- background_promotion_verification: `not_configured`\n- memory_writes_allowed: `false`\n- raw_bodies_included: `false`\n- memory_validation_status: `ok`\n- memory_validation_errors: `0`\n- memory_validation_warnings: `0`\n- long_term_memory_present: `true`\n- long_term_memory_loaded: `true`\n- dated_memory_notes: `1`\n- canonical_dated_memory_notes: `1`\n- noncanonical_dated_memory_notes: `0`\n- loaded_memory_notes: `1`\n- max_loaded_memory_notes: `3`\n- empty_memory_files: `0`\n- memory_files_at_limit: `0`\n- potential_secret_findings: `0`\n\nThis report verifies GitClaw's repo-local memory provenance. It reports long-term memory, dated memory-note presence, load state, hashes, hygiene findings, and explicit non-goals only; raw memory, issue, comment, prompt, and secret bodies are not included.\n\n### Trust Cards\n- kind=`long-term` path=`.gitclaw/MEMORY.md` source=`repo-local` present=`true` canonical=`true` latest=`true` loaded_for_this_turn=`true` bytes=`243` lines=`5` sha256_12=`e0e1314cdfc1`\n- kind=`dated-note` path=`.gitclaw/memory/2026-05-29.md` source=`repo-local` present=`true` canonical=`true` latest=`true` loaded_for_this_turn=`true` bytes=`11564` lines=`190` sha256_12=`90c2189691b0`\n\n### Verification Findings\n- severity=`info` code=`external_memory_provider_verification_not_configured` detail=`GitClaw v1 verifies repo-local Markdown memory files, not external memory providers`\n- severity=`info` code=`session_search_index_verification_not_configured` detail=`GitClaw uses GitHub issues and backup JSON for sessions; no separate SQLite/FTS memory index is verified`\n- severity=`info` code=`background_promotion_verification_not_configured` detail=`GitClaw does not auto-promote daily notes into long-term memory during assistant turns`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T02:08:48Z",
+      "updated_at": "2026-05-30T02:08:48Z"
+    }
+  ]
+}
