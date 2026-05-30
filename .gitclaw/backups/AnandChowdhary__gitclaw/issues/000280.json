@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T13:32:23Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 280,
+    "title": "@gitclaw /diffs e2e 20260530T133118Z",
+    "body": "Live diffs-report E2E.\n\nHidden diffs report body token: GITCLAW_DIFFS_REPORT_E2E_20260530T133118Z\nThis should produce a deterministic diffs report without a model call.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /diffs e2e 20260530T133118Z\n\nLive diffs-report E2E.\n\nHidden diffs report body token: GITCLAW_DIFFS_REPORT_E2E_20260530T133118Z\nThis should produce a deterministic diffs report without a model call.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Diffs Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#280`\n- diff_status: `clean`\n- diff_policy_path: `.gitclaw/DIFFS.md`\n- diff_policy_present: `true`\n- diff_policy_loaded_for_model: `true`\n- diff_specs_dir: `.gitclaw/diffs`\n- diff_specs: `1`\n- diff_specs_with_frontmatter: `1`\n- diff_specs_requiring_approval: `1`\n- diff_specs_disallowing_raw_patch: `1`\n- git_available: `true`\n- git_repository: `true`\n- worktree_root: `.`\n- branch: `main`\n- head_commit: `4aaded611430`\n- worktree_clean: `true`\n- changed_files: `0`\n- staged_files: `0`\n- unstaged_files: `0`\n- untracked_files: `0`\n- renamed_files: `0`\n- deleted_files: `0`\n- staged_insertions: `0`\n- staged_deletions: `0`\n- unstaged_insertions: `0`\n- unstaged_deletions: `0`\n- binary_diff_files: `0`\n- diff_file_limit: `200`\n- diff_files_returned: `0`\n- raw_diffs_included: `false`\n- raw_file_bodies_included: `false`\n- model_call_required: `false`\n- repository_mutation_allowed: `false`\n- llm_e2e_required_after_change: `true`\n- issue_title_sha256_12: `b7f1aaa37178`\n\nDiffs are reported as git metadata only. Raw patch hunks, file bodies, issue/comment bodies, prompts, tool outputs, backup payloads, and secrets are not printed by this report.\n\n### Diff Policy\n- `.gitclaw/DIFFS.md` present=`true` bytes=`1232` lines=`27` sha256_12=`35cad03b80ca`\n- `.gitclaw/DIFFS.md` loaded=`true` source=`contextDocumentPaths`\n\n### Diff Specs\n- name=`working-tree` path=`.gitclaw/diffs/working-tree.md` bytes=`443` lines=`16` frontmatter=`true` kind=`git-diff` source=`git-worktree` mode=`metadata-only` max_files=`200` raw_patch_allowed=`false` requires_approval=`true` sha256_12=`72cc66b6a787`\n\n### Changed Files\n- none\n\n### Runtime Boundary\n- `/diffs` is inspect-only and never stages, resets, restores, commits, or opens pull requests\n- raw patches belong in explicit artifacts, pull requests, or local export commands, not issue-visible status reports\n- future diff rendering needs reviewed workflows, body-free audit cards, retention/redaction decisions, and live GitHub Models E2E coverage\n\n### Verification Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4582966014,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4582966014,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26685081754\" event_id=\"issue-280\" model=\"gitclaw/diffs\" idempotency_key=\"f45afb6b1447ac22799956c6f44703ef\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26685081754\" --\u003e\n## GitClaw Diffs Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#280`\n- diff_status: `clean`\n- diff_policy_path: `.gitclaw/DIFFS.md`\n- diff_policy_present: `true`\n- diff_policy_loaded_for_model: `true`\n- diff_specs_dir: `.gitclaw/diffs`\n- diff_specs: `1`\n- diff_specs_with_frontmatter: `1`\n- diff_specs_requiring_approval: `1`\n- diff_specs_disallowing_raw_patch: `1`\n- git_available: `true`\n- git_repository: `true`\n- worktree_root: `.`\n- branch: `main`\n- head_commit: `4aaded611430`\n- worktree_clean: `true`\n- changed_files: `0`\n- staged_files: `0`\n- unstaged_files: `0`\n- untracked_files: `0`\n- renamed_files: `0`\n- deleted_files: `0`\n- staged_insertions: `0`\n- staged_deletions: `0`\n- unstaged_insertions: `0`\n- unstaged_deletions: `0`\n- binary_diff_files: `0`\n- diff_file_limit: `200`\n- diff_files_returned: `0`\n- raw_diffs_included: `false`\n- raw_file_bodies_included: `false`\n- model_call_required: `false`\n- repository_mutation_allowed: `false`\n- llm_e2e_required_after_change: `true`\n- issue_title_sha256_12: `b7f1aaa37178`\n\nDiffs are reported as git metadata only. Raw patch hunks, file bodies, issue/comment bodies, prompts, tool outputs, backup payloads, and secrets are not printed by this report.\n\n### Diff Policy\n- `.gitclaw/DIFFS.md` present=`true` bytes=`1232` lines=`27` sha256_12=`35cad03b80ca`\n- `.gitclaw/DIFFS.md` loaded=`true` source=`contextDocumentPaths`\n\n### Diff Specs\n- name=`working-tree` path=`.gitclaw/diffs/working-tree.md` bytes=`443` lines=`16` frontmatter=`true` kind=`git-diff` source=`git-worktree` mode=`metadata-only` max_files=`200` raw_patch_allowed=`false` requires_approval=`true` sha256_12=`72cc66b6a787`\n\n### Changed Files\n- none\n\n### Runtime Boundary\n- `/diffs` is inspect-only and never stages, resets, restores, commits, or opens pull requests\n- raw patches belong in explicit artifacts, pull requests, or local export commands, not issue-visible status reports\n- future diff rendering needs reviewed workflows, body-free audit cards, retention/redaction decisions, and live GitHub Models E2E coverage\n\n### Verification Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T13:32:01Z",
+      "updated_at": "2026-05-30T13:32:01Z"
+    }
+  ]
+}
