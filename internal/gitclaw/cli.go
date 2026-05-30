@@ -41,6 +41,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runRollbackCommand(args[1:])
 	case "proactive":
 		return runProactiveCommand(ctx, args[1:])
+	case "profile", "profiles":
+		return runProfileCommand(args[1:])
 	case "skills":
 		return runSkillsCommand(args[1:])
 	case "bundles", "bundle":
@@ -95,6 +97,34 @@ func runMemoryCommand(args []string) error {
 	default:
 		return fmt.Errorf("unknown memory command %q", args[0])
 	}
+}
+
+func runProfileCommand(args []string) error {
+	if len(args) == 0 {
+		return runProfileShowCommand(nil)
+	}
+	switch args[0] {
+	case "show", "verify", "list":
+		return runProfileShowCommand(args[1:])
+	default:
+		return fmt.Errorf("usage: gitclaw profile [show|verify|list]")
+	}
+}
+
+func runProfileShowCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown profile argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderProfileCLIReport(cfg, repoContext))
+	return nil
 }
 
 func runCheckpointsCommand(args []string) error {

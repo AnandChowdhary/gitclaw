@@ -464,6 +464,15 @@ labels, trusted associations, prompt budgets, command surface, and workflow file
 hashes without dumping config or workflow bodies and without allowing the agent
 to mutate its own configuration.
 
+2026-05-30 profile-visibility follow-up: Hermes profiles are the unit of
+agent isolation, while OpenClaw workspace files are the portable profile
+surface. GitClaw's repo-native equivalent should be a body-free
+`@gitclaw /profile` report: one repository equals one reviewed git profile,
+with `.gitclaw/` identity, user, soul, memory, skills, tools, model, and
+validation state summarized by counts and hashes only. This gives operators a
+single "which agent am I talking to?" view without adding profile mutation,
+export, installer, or multi-profile switching semantics.
+
 2026-05-30 config-list follow-up: config inspection should also exist outside
 issue chat. Add `gitclaw config list` as the local mirror of `/config`: report
 effective config source, labels, trusted associations, model/prompt budgets,
@@ -1396,6 +1405,7 @@ Recommended non-goals for the first spec:
 - OpenClaw sandbox vs tool policy vs elevated: https://docs.openclaw.ai/gateway/sandbox-vs-tool-policy-vs-elevated
 - OpenClaw exec approvals: https://docs.openclaw.ai/tools/exec-approvals
 - OpenClaw sandboxing docs: https://docs.openclaw.ai/gateway/sandboxing
+- OpenClaw agent workspace docs: https://docs.openclaw.ai/agent-workspace
 - OpenClaw migrating from Hermes: https://docs.openclaw.ai/install/migrating-hermes
 - OpenClaw migrate CLI docs: https://docs.openclaw.ai/cli/migrate
 - OpenClaw models CLI docs: https://docs.openclaw.ai/cli/models

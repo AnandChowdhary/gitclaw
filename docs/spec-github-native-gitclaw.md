@@ -641,6 +641,7 @@ GitHub issue/comment event
   `rollback list`,
   `proactive enqueue`, `proactive init`, `proactive info`,
   `approvals list`, `approvals verify`,
+  `profile show`, `profile verify`,
   `memory verify`, `memory validate`, `memory list`, `memory info`,
   `memory search`,
   `skills validate`,
@@ -1132,6 +1133,47 @@ state, configured gate state, hashes, sizes, and requirement counts. The raw
 search query is
 represented only by a short hash and term count because the query itself comes
 from issue text and may contain secrets.
+
+## Profile Inspection Command
+
+GitClaw supports a deterministic repo-local profile envelope inspired by
+Hermes profiles and OpenClaw workspace files:
+
+```text
+@gitclaw /profile
+@gitclaw /profiles
+```
+
+Hermes profiles isolate config, memory, sessions, skills, cron jobs, and other
+agent state per named agent. OpenClaw's equivalent durable shape is its
+workspace folder: `SOUL.md`, `IDENTITY.md`, `USER.md`, `TOOLS.md`,
+`MEMORY.md`, memory notes, and skills. GitClaw's GitHub-native version is one
+profile per repository, stored under `.gitclaw/` and reviewed like code.
+
+The command runs after normal preflight authorization and context assembly, but
+before model inference. It posts a `gitclaw:assistant-turn` comment with
+`model="gitclaw/profile"` and summarizes:
+
+- repo-local profile strategy and store,
+- model provider, model, run mode, trigger label, and trigger prefix,
+- loaded profile document counts, identity/policy file counts, and memory-note
+  counts,
+- available and selected skills plus skill bundle count,
+- deterministic tool contract and active-output counts,
+- soul, skill, and tool validation rollups.
+
+It never dumps profile file bodies, skill bodies, tool outputs, issue/comment
+bodies, prompts, or secrets. It is an operator confidence surface, not a
+profile export or profile mutation command.
+
+Local operators can inspect the same profile envelope without opening an issue:
+
+```bash
+gitclaw profile show
+gitclaw profile verify
+```
+
+The aliases intentionally return the same body-free report in v1.
 
 ## Soul Validation
 
@@ -3597,6 +3639,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven skills-search E2E harness verifies
   `@gitclaw /skills search repository context` searches local skill metadata
   without a model call, raw query leakage, or full `SKILL.md` body leakage.
+- A `gh`-driven profile-report E2E harness verifies `@gitclaw /profile`
+  produces a deterministic repo-local profile envelope across identity,
+  memory, skills, tools, model, and validation state without a model call or
+  profile-body leakage.
 - A `gh`-driven soul-report E2E harness verifies `@gitclaw /soul` produces a
   deterministic high-authority context file audit with validation metadata,
   without a model call or body leakage.
@@ -3716,6 +3762,7 @@ examples/workflows/gitclaw.yml
 - OpenClaw scheduled tasks docs: https://docs.openclaw.ai/automation/cron-jobs
 - OpenClaw standing orders docs: https://docs.openclaw.ai/automation/standing-orders
 - OpenClaw memory docs: https://docs.openclaw.ai/concepts/memory
+- OpenClaw agent workspace docs: https://docs.openclaw.ai/agent-workspace
 - OpenClaw creating skills docs: https://docs.openclaw.ai/tools/creating-skills
 - OpenClaw skill format docs: https://docs.openclaw.ai/clawhub/skill-format
 - OpenClaw models CLI docs: https://docs.openclaw.ai/cli/models

@@ -136,9 +136,9 @@ for expected in \
   "GitClaw Commands Report" \
   "Generated without a model call" \
   'trigger_prefix: `@gitclaw`' \
-  'commands: `19`' \
-  'aliases: `14`' \
-  'local_cli_helpers: `63`' \
+  'commands: `20`' \
+  'aliases: `15`' \
+  'local_cli_helpers: `65`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/approvals' \
@@ -156,6 +156,8 @@ for expected in \
   '/doctor' \
   '/skills' \
   '/soul' \
+  '/profile' \
+  '/profiles' \
   '/budget' \
   '/prompt-budget' \
   '/cron' \
@@ -178,6 +180,8 @@ for expected in \
   'gitclaw context info <path>' \
   'gitclaw doctor' \
   'gitclaw doctor list' \
+  'gitclaw profile show' \
+  'gitclaw profile verify' \
   'gitclaw prompt list' \
   'gitclaw proactive list' \
   'gitclaw proactive info <name>' \
