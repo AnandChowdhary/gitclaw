@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T17:15:31Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 302,
+    "title": "@gitclaw /plugins risk e2e 20260530T171429Z",
+    "body": "@gitclaw /plugins risk\n\nLive plugins-risk E2E.\nDo not include this hidden issue token: GITCLAW_PLUGINS_RISK_HIDDEN_20260530T171429Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /plugins risk e2e 20260530T171429Z\n\n@gitclaw /plugins risk\n\nLive plugins-risk E2E.\nDo not include this hidden issue token: GITCLAW_PLUGINS_RISK_HIDDEN_20260530T171429Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Plugin Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#302`\n- plugin_risk_status: `ok`\n- verification_scope: `repo_reviewed_plugin_metadata`\n- plugin_policy_present: `true`\n- plugin_policy_loaded_for_model: `true`\n- plugin_specs: `1`\n- scanned_plugin_specs: `1`\n- plugin_capabilities: `3`\n- plugin_optional_capabilities: `1`\n- plugin_specs_requiring_approval: `1`\n- plugin_specs_metadata_only: `1`\n- package_files_present: `0`\n- scanned_package_files: `0`\n- surfaces_with_risk_findings: `0`\n- plugin_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- plugin_install_supported: `false`\n- plugin_execution_supported: `false`\n- plugin_execution_allowed: `false`\n- mcp_connection_allowed: `false`\n- repository_mutation_allowed: `false`\n- raw_plugin_bodies_included: `false`\n- raw_package_bodies_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_plugin_risk_change: `true`\n- issue_title_sha256_12: `2737a2a3112c`\n\nThis report scans declarative plugin policy/spec files and ignored package/runtime files for prompt-boundary, credential, supply-chain install, MCP/runtime connection, host-execution, raw payload logging, external webhook, repository mutation, and unbounded-loop risks. It reports metadata, paths, risk codes, severities, and hashes only; plugin bodies, package bodies, issue bodies, comments, provider payloads, credentials, and secret values are not included.\n\n### Plugin Policy Risk Card\n- kind=`plugin-policy` path=`.gitclaw/PLUGINS.md` present=`true` loaded_for_model=`true` bytes=`1053` lines=`23` sha256_12=`213d52b6f44a` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Plugin Spec Risk Cards\n- kind=`plugin-spec` name=`github-models-provider` path=`.gitclaw/plugins/github-models-provider.md` frontmatter=`true` kind_field=`provider` source=`repo-reviewed` activation=`metadata-only` capabilities=`3` optional_capabilities=`1` requires_approval=`true` bytes=`641` lines=`22` sha256_12=`98649b329dc8` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Package Runtime Risk Cards\n- kind=`package-runtime` none\n\n### Risk Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4583527192,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4583527192,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26689998085\" event_id=\"issue-302\" model=\"gitclaw/plugins\" idempotency_key=\"7573b72f9b8628f053362a4f86d8bb38\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26689998085\" --\u003e\n## GitClaw Plugin Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#302`\n- plugin_risk_status: `ok`\n- verification_scope: `repo_reviewed_plugin_metadata`\n- plugin_policy_present: `true`\n- plugin_policy_loaded_for_model: `true`\n- plugin_specs: `1`\n- scanned_plugin_specs: `1`\n- plugin_capabilities: `3`\n- plugin_optional_capabilities: `1`\n- plugin_specs_requiring_approval: `1`\n- plugin_specs_metadata_only: `1`\n- package_files_present: `0`\n- scanned_package_files: `0`\n- surfaces_with_risk_findings: `0`\n- plugin_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- plugin_install_supported: `false`\n- plugin_execution_supported: `false`\n- plugin_execution_allowed: `false`\n- mcp_connection_allowed: `false`\n- repository_mutation_allowed: `false`\n- raw_plugin_bodies_included: `false`\n- raw_package_bodies_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_plugin_risk_change: `true`\n- issue_title_sha256_12: `2737a2a3112c`\n\nThis report scans declarative plugin policy/spec files and ignored package/runtime files for prompt-boundary, credential, supply-chain install, MCP/runtime connection, host-execution, raw payload logging, external webhook, repository mutation, and unbounded-loop risks. It reports metadata, paths, risk codes, severities, and hashes only; plugin bodies, package bodies, issue bodies, comments, provider payloads, credentials, and secret values are not included.\n\n### Plugin Policy Risk Card\n- kind=`plugin-policy` path=`.gitclaw/PLUGINS.md` present=`true` loaded_for_model=`true` bytes=`1053` lines=`23` sha256_12=`213d52b6f44a` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Plugin Spec Risk Cards\n- kind=`plugin-spec` name=`github-models-provider` path=`.gitclaw/plugins/github-models-provider.md` frontmatter=`true` kind_field=`provider` source=`repo-reviewed` activation=`metadata-only` capabilities=`3` optional_capabilities=`1` requires_approval=`true` bytes=`641` lines=`22` sha256_12=`98649b329dc8` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Package Runtime Risk Cards\n- kind=`package-runtime` none\n\n### Risk Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T17:15:13Z",
+      "updated_at": "2026-05-30T17:15:13Z"
+    }
+  ]
+}
