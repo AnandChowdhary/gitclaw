@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T12:56:39Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 273,
+    "title": "@gitclaw /nodes e2e 20260530T125537Z",
+    "body": "Live nodes-report E2E.\n\nHidden nodes report body token: GITCLAW_NODES_REPORT_E2E_20260530T125537Z\nThis should produce a deterministic nodes report without a model call.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /nodes e2e 20260530T125537Z\n\nLive nodes-report E2E.\n\nHidden nodes report body token: GITCLAW_NODES_REPORT_E2E_20260530T125537Z\nThis should produce a deterministic nodes report without a model call.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Nodes Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#273`\n- nodes_status: `ok`\n- node_policy_path: `.gitclaw/NODES.md`\n- node_policy_present: `true`\n- node_policy_loaded_for_model: `true`\n- node_specs_dir: `.gitclaw/nodes`\n- node_specs: `1`\n- node_specs_with_frontmatter: `1`\n- node_roles: `1`\n- node_capabilities_declared: `3`\n- node_specs_requiring_approval: `1`\n- node_specs_ephemeral_jobs: `1`\n- active_node_runtime: `github-actions-ephemeral-job`\n- node_inventory_source: `git-reviewed-metadata`\n- gateway_websocket_required: `false`\n- headless_node_host_supported: `false`\n- node_pairing_supported: `false`\n- node_rpc_supported: `false`\n- node_command_invocation_supported: `false`\n- remote_node_exec_supported: `false`\n- browser_proxy_supported: `false`\n- media_device_capabilities_supported: `false`\n- long_running_node_service_supported: `false`\n- model_call_required: `false`\n- repository_mutation_allowed: `false`\n- raw_bodies_included: `false`\n- raw_node_bodies_included: `false`\n- llm_e2e_required_after_change: `true`\n- issue_title_sha256_12: `7ac9d8fedfe1`\n\nNodes describe reviewed execution-host intent. GitClaw treats node specs as metadata only: no node host is started, no Gateway WebSocket is opened, no device is paired, no remote command is invoked, and no node, issue, comment, channel, credential, or provider payload body is printed by this report.\n\n### Node Policy\n- `.gitclaw/NODES.md` present=`true` bytes=`1120` lines=`24` sha256_12=`6e6e2650fcb2`\n- `.gitclaw/NODES.md` loaded=`true` source=`contextDocumentPaths`\n\n### Node Specs\n- name=`github-actions-runner` path=`.gitclaw/nodes/github-actions-runner.md` bytes=`478` lines=`18` frontmatter=`true` role=`primary-runtime` runtime=`github-actions` mode=`ephemeral-job` capabilities=`3` requires_approval=`true` sha256_12=`afd82f63d401`\n\n### Runtime Boundary\n- GitHub Actions jobs are the only active execution nodes in v1\n- workflow dispatch and scheduled workflows are the GitHub-native wake paths\n- node specs are not service definitions and do not create paired devices\n- future remote-node execution requires reviewed workflows, explicit permissions, approval gates, body-free audit cards, and live GitHub Models E2E coverage\n\n### Verification Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4582884553,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4582884553,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26684364196\" event_id=\"issue-273\" model=\"gitclaw/nodes\" idempotency_key=\"108795f1079164b6fe8b0f00bc6adc75\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26684364196\" --\u003e\n## GitClaw Nodes Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#273`\n- nodes_status: `ok`\n- node_policy_path: `.gitclaw/NODES.md`\n- node_policy_present: `true`\n- node_policy_loaded_for_model: `true`\n- node_specs_dir: `.gitclaw/nodes`\n- node_specs: `1`\n- node_specs_with_frontmatter: `1`\n- node_roles: `1`\n- node_capabilities_declared: `3`\n- node_specs_requiring_approval: `1`\n- node_specs_ephemeral_jobs: `1`\n- active_node_runtime: `github-actions-ephemeral-job`\n- node_inventory_source: `git-reviewed-metadata`\n- gateway_websocket_required: `false`\n- headless_node_host_supported: `false`\n- node_pairing_supported: `false`\n- node_rpc_supported: `false`\n- node_command_invocation_supported: `false`\n- remote_node_exec_supported: `false`\n- browser_proxy_supported: `false`\n- media_device_capabilities_supported: `false`\n- long_running_node_service_supported: `false`\n- model_call_required: `false`\n- repository_mutation_allowed: `false`\n- raw_bodies_included: `false`\n- raw_node_bodies_included: `false`\n- llm_e2e_required_after_change: `true`\n- issue_title_sha256_12: `7ac9d8fedfe1`\n\nNodes describe reviewed execution-host intent. GitClaw treats node specs as metadata only: no node host is started, no Gateway WebSocket is opened, no device is paired, no remote command is invoked, and no node, issue, comment, channel, credential, or provider payload body is printed by this report.\n\n### Node Policy\n- `.gitclaw/NODES.md` present=`true` bytes=`1120` lines=`24` sha256_12=`6e6e2650fcb2`\n- `.gitclaw/NODES.md` loaded=`true` source=`contextDocumentPaths`\n\n### Node Specs\n- name=`github-actions-runner` path=`.gitclaw/nodes/github-actions-runner.md` bytes=`478` lines=`18` frontmatter=`true` role=`primary-runtime` runtime=`github-actions` mode=`ephemeral-job` capabilities=`3` requires_approval=`true` sha256_12=`afd82f63d401`\n\n### Runtime Boundary\n- GitHub Actions jobs are the only active execution nodes in v1\n- workflow dispatch and scheduled workflows are the GitHub-native wake paths\n- node specs are not service definitions and do not create paired devices\n- future remote-node execution requires reviewed workflows, explicit permissions, approval gates, body-free audit cards, and live GitHub Models E2E coverage\n\n### Verification Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T12:56:19Z",
+      "updated_at": "2026-05-30T12:56:19Z"
+    }
+  ]
+}
