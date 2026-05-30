@@ -218,6 +218,7 @@ type RepoContext struct {
 	Documents      []ContextDocument
 	Skills         []ContextDocument
 	SkillSummaries []SkillSummary
+	SkillBundles   []SkillBundleSummary
 	ToolOutputs    []ToolOutput
 	AllowedTools   map[string]bool
 	DisabledTools  map[string]bool
@@ -244,6 +245,20 @@ type SkillSummary struct {
 	RequiredBins       []string
 	MissingEnv         []string
 	MissingBins        []string
+}
+
+type SkillBundleSummary struct {
+	Name               string
+	Description        string
+	Path               string
+	Skills             []string
+	ResolvedSkills     []string
+	MissingSkills      []string
+	Selected           bool
+	InstructionPresent bool
+	Bytes              int
+	Lines              int
+	SHA                string
 }
 
 type ToolOutput struct {

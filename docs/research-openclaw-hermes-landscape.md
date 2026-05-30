@@ -500,6 +500,17 @@ GitClaw should keep search local and git-native: `@gitclaw /skills search
 already present in the repo, report match fields and hashes, and represent the
 raw query by hash/term count because issue text may contain secrets.
 
+2026-05-30 skill-bundles follow-up: Hermes' current skills documentation adds
+"Skill Bundles": small YAML files under `~/.hermes/skill-bundles/` that map a
+single slash command to several already-installed skills plus optional
+instruction text. The useful GitClaw analogue is repo-local and reviewable:
+`.gitclaw/skill-bundles/<name>.yaml` should group existing
+`.gitclaw/SKILLS/*/SKILL.md` files, expose `@gitclaw /bundles` and
+`gitclaw bundles` body-free metadata reports, and select referenced skills when
+the bundle slash command is invoked. This preserves Hermes' ergonomic workflow
+packs while keeping OpenClaw-style supply-chain caution: bundles do not install
+skills, execute scripts, contact registries, or mutate the system prompt.
+
 2026-05-29 memory-validation follow-up: OpenClaw's memory CLI exposes
 status/index/search/promotion surfaces and treats deep writes to `MEMORY.md` as
 special, while Hermes' memory guidance separates durable facts from procedural

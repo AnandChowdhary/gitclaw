@@ -1,6 +1,7 @@
 package gitclaw
 
 import (
+	"bytes"
 	"fmt"
 	"io/fs"
 	"os"
@@ -9,6 +10,8 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+
+	"gopkg.in/yaml.v3"
 )
 
 const (
@@ -64,11 +67,12 @@ func LoadRepoContextWithConfig(root string, transcript []TranscriptMessage, cfg 
 	}
 	documents := loadContextDocuments(absRoot, contextDocumentPaths)
 	documents = append(documents, loadMemoryDocuments(absRoot)...)
-	skillSummaries, skills := loadSkillContext(absRoot, transcript, cfg)
+	skillSummaries, skillBundles, skills := loadSkillContext(absRoot, transcript, cfg)
 	ctx := RepoContext{
 		Documents:      documents,
 		Skills:         skills,
 		SkillSummaries: skillSummaries,
+		SkillBundles:   skillBundles,
 		AllowedTools:   cfg.AllowedTools,
 		DisabledTools:  cfg.DisabledTools,
 	}
@@ -145,14 +149,31 @@ func loadContextDocuments(root string, paths []string) []ContextDocument {
 	return docs
 }
 
-func loadSkillContext(root string, transcript []TranscriptMessage, cfg Config) ([]SkillSummary, []ContextDocument) {
+func loadSkillContext(root string, transcript []TranscriptMessage, cfg Config) ([]SkillSummary, []SkillBundleSummary, []ContextDocument) {
 	available := discoverSkills(root)
-	if len(available) == 0 {
-		return nil, nil
+	bundles := discoverSkillBundles(root)
+	if len(available) == 0 && len(bundles) == 0 {
+		return nil, nil, nil
 	}
 	query := strings.ToLower(transcriptText(transcript))
 	summaries := make([]SkillSummary, 0, len(available))
 	selected := make([]ContextDocument, 0, len(available))
+	selectedBundles := selectedSkillBundleSet(bundles, transcript, cfg)
+	bundleSelectedSkills := map[string]bool{}
+	for _, bundle := range bundles {
+		if !selectedBundles[bundle.Name] {
+			continue
+		}
+		for _, skill := range bundle.Skills {
+			bundleSelectedSkills[strings.ToLower(strings.TrimSpace(skill))] = true
+		}
+		if strings.TrimSpace(bundle.Instruction) != "" {
+			selected = append(selected, ContextDocument{
+				Path: bundle.Path + "#instruction",
+				Body: strings.TrimSpace(bundle.Instruction),
+			})
+		}
+	}
 	for _, skill := range available {
 		enabled, disabledByConfig, blockedByAllowlist := skillEnabledByConfig(skill, cfg)
 		summaries = append(summaries, SkillSummary{
@@ -172,11 +193,12 @@ func loadSkillContext(root string, transcript []TranscriptMessage, cfg Config) (
 			MissingEnv:         missingEnvVars(skill.RequiredEnv),
 			MissingBins:        missingBins(skill.RequiredBins),
 		})
-		if enabled && (skill.Always || skillMatchesQuery(skill, query)) {
+		if enabled && (skill.Always || skillMatchesQuery(skill, query) || skillSelectedByBundle(skill, bundleSelectedSkills)) {
 			selected = append(selected, ContextDocument{Path: skill.Path, Body: skill.Body})
 		}
 	}
-	return summaries, selected
+	bundleSummaries := summarizeSkillBundles(bundles, summaries, selectedBundles)
+	return summaries, bundleSummaries, selected
 }
 
 func skillEnabledByConfig(skill skillDocument, cfg Config) (enabled bool, disabledByConfig bool, blockedByAllowlist bool) {
@@ -215,6 +237,16 @@ type skillDocument struct {
 	RequiredBins       []string
 }
 
+type skillBundleDocument struct {
+	Name        string
+	Description string
+	Path        string
+	Body        string
+	Skills      []string
+	Instruction string
+	ParseError  string
+}
+
 func discoverSkills(root string) []skillDocument {
 	var skills []skillDocument
 	seen := map[string]bool{}
@@ -245,6 +277,74 @@ func discoverSkills(root string) []skillDocument {
 	}
 	sort.Slice(skills, func(i, j int) bool { return skills[i].Path < skills[j].Path })
 	return skills
+}
+
+func discoverSkillBundles(root string) []skillBundleDocument {
+	var bundles []skillBundleDocument
+	seen := map[string]bool{}
+	for _, pattern := range []string{".gitclaw/skill-bundles/*.yml", ".gitclaw/skill-bundles/*.yaml"} {
+		matches, _ := filepath.Glob(filepath.Join(root, filepath.FromSlash(pattern)))
+		for _, match := range matches {
+			realPath, err := filepath.EvalSymlinks(match)
+			if err != nil {
+				realPath = match
+			}
+			seenKey := strings.ToLower(realPath)
+			if seen[seenKey] {
+				continue
+			}
+			seen[seenKey] = true
+			rel, err := filepath.Rel(root, match)
+			if err != nil {
+				continue
+			}
+			rel = filepath.ToSlash(rel)
+			body, err := readRepoTextFile(root, rel, maxContextDocumentBytes)
+			if err != nil {
+				continue
+			}
+			bundles = append(bundles, parseSkillBundleDocument(rel, body))
+		}
+	}
+	sort.Slice(bundles, func(i, j int) bool { return bundles[i].Path < bundles[j].Path })
+	return bundles
+}
+
+func parseSkillBundleDocument(path, body string) skillBundleDocument {
+	name := skillBundleNameFromPath(path)
+	var file struct {
+		Name        string   `yaml:"name"`
+		Description string   `yaml:"description"`
+		Skills      []string `yaml:"skills"`
+		Instruction string   `yaml:"instruction"`
+	}
+	decoder := yaml.NewDecoder(bytes.NewReader([]byte(body)))
+	decoder.KnownFields(true)
+	parseError := ""
+	if err := decoder.Decode(&file); err != nil {
+		parseError = err.Error()
+	}
+	if value := normalizeSkillBundleName(file.Name); value != "" {
+		name = value
+	}
+	return skillBundleDocument{
+		Name:        name,
+		Description: strings.TrimSpace(file.Description),
+		Path:        path,
+		Body:        body,
+		Skills:      normalizeSkillBundleSkills(file.Skills),
+		Instruction: strings.TrimSpace(file.Instruction),
+		ParseError:  parseError,
+	}
+}
+
+func skillBundleNameFromPath(path string) string {
+	base := filepath.Base(filepath.FromSlash(path))
+	ext := filepath.Ext(base)
+	if ext != "" {
+		base = strings.TrimSuffix(base, ext)
+	}
+	return normalizeSkillBundleName(base)
 }
 
 func parseSkillDocument(path, body string) skillDocument {
@@ -435,6 +535,108 @@ func skillMatchesQuery(skill skillDocument, query string) bool {
 		}
 	}
 	return false
+}
+
+func selectedSkillBundleSet(bundles []skillBundleDocument, transcript []TranscriptMessage, cfg Config) map[string]bool {
+	selected := map[string]bool{}
+	if len(bundles) == 0 {
+		return selected
+	}
+	byName := map[string]bool{}
+	for _, bundle := range bundles {
+		byName[bundle.Name] = true
+	}
+	for _, msg := range transcript {
+		if msg.Role != "user" {
+			continue
+		}
+		for _, line := range strings.Split(msg.Body, "\n") {
+			fields := slashCommandFieldsFromLine(line, cfg.TriggerPrefix)
+			if len(fields) == 0 {
+				continue
+			}
+			name := normalizeSkillBundleName(strings.TrimPrefix(fields[0], "/"))
+			if byName[name] {
+				selected[name] = true
+			}
+		}
+	}
+	return selected
+}
+
+func skillSelectedByBundle(skill skillDocument, selected map[string]bool) bool {
+	if len(selected) == 0 {
+		return false
+	}
+	return selected[strings.ToLower(strings.TrimSpace(skill.Name))] || selected[strings.ToLower(skillFolderName(skill.Path))]
+}
+
+func summarizeSkillBundles(bundles []skillBundleDocument, skills []SkillSummary, selected map[string]bool) []SkillBundleSummary {
+	skillNames := map[string]bool{}
+	for _, skill := range skills {
+		skillNames[strings.ToLower(strings.TrimSpace(skill.Name))] = true
+		skillNames[strings.ToLower(skillFolderName(skill.Path))] = true
+	}
+	summaries := make([]SkillBundleSummary, 0, len(bundles))
+	for _, bundle := range bundles {
+		var resolved []string
+		var missing []string
+		for _, skill := range bundle.Skills {
+			normalized := strings.ToLower(strings.TrimSpace(skill))
+			if skillNames[normalized] {
+				resolved = append(resolved, normalized)
+			} else {
+				missing = append(missing, normalized)
+			}
+		}
+		summaries = append(summaries, SkillBundleSummary{
+			Name:               bundle.Name,
+			Description:        bundle.Description,
+			Path:               bundle.Path,
+			Skills:             append([]string(nil), bundle.Skills...),
+			ResolvedSkills:     uniqueSortedStrings(resolved),
+			MissingSkills:      uniqueSortedStrings(missing),
+			Selected:           selected[bundle.Name],
+			InstructionPresent: strings.TrimSpace(bundle.Instruction) != "",
+			Bytes:              len(bundle.Body),
+			Lines:              lineCount(bundle.Body),
+			SHA:                shortDocumentHash(bundle.Body),
+		})
+	}
+	return summaries
+}
+
+func normalizeSkillBundleSkills(values []string) []string {
+	var out []string
+	for _, value := range values {
+		normalized := normalizeSkillBundleName(value)
+		if normalized != "" {
+			out = append(out, normalized)
+		}
+	}
+	return uniqueSortedStrings(out)
+}
+
+func normalizeSkillBundleName(value string) string {
+	value = strings.ToLower(strings.TrimSpace(value))
+	if value == "" {
+		return ""
+	}
+	var b strings.Builder
+	lastHyphen := false
+	for _, r := range value {
+		allowed := (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9')
+		if allowed {
+			b.WriteRune(r)
+			lastHyphen = false
+			continue
+		}
+		if !lastHyphen {
+			b.WriteByte('-')
+			lastHyphen = true
+		}
+	}
+	return strings.Trim(b.String(), "-")
 }
 
 func searchableWords(value string) []string {

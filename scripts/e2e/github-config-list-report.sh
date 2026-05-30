@@ -152,7 +152,8 @@ for expected in \
   'tools_allowed_configured: `0`' \
   'tools_disabled_configured: `0`' \
   'workflows_present: `7`' \
-  'slash_commands: `15`' \
+  'slash_commands: `16`' \
+  '/bundles' \
   '### Skill Gates' \
   '### Tool Gates' \
   'allowed=`none`' \

@@ -140,9 +140,12 @@ description: Handle unrelated calendar work.
 # Unrelated
 Should not be selected.`)
 
-	summaries, skills := loadSkillContext(root, []TranscriptMessage{{Role: "user", Body: "Use the repo-reader skill for go.mod."}}, Config{})
+	summaries, bundles, skills := loadSkillContext(root, []TranscriptMessage{{Role: "user", Body: "Use the repo-reader skill for go.mod."}}, Config{})
 	if len(summaries) != 3 {
 		t.Fatalf("len(summaries) = %d, want 3: %#v", len(summaries), summaries)
+	}
+	if len(bundles) != 0 {
+		t.Fatalf("len(bundles) = %d, want 0: %#v", len(bundles), bundles)
 	}
 	if !hasContextDoc(skills, ".gitclaw/SKILLS/repo-reader/SKILL.md", "GITCLAW_SKILL_CONTEXT_V1") {
 		t.Fatalf("requested repo-reader skill was not selected: %#v", skills)
@@ -191,7 +194,7 @@ Skill token: GITCLAW_BLOCKED_BY_ALLOWLIST.`)
 		AllowedSkills:  map[string]bool{"repo-reader": true, "always-on": true},
 		DisabledSkills: map[string]bool{"always-on": true},
 	}
-	summaries, skills := loadSkillContext(root, []TranscriptMessage{{Role: "user", Body: "Use repo-reader and blocked."}}, cfg)
+	summaries, _, skills := loadSkillContext(root, []TranscriptMessage{{Role: "user", Body: "Use repo-reader and blocked."}}, cfg)
 	if len(summaries) != 3 {
 		t.Fatalf("len(summaries) = %d, want 3: %#v", len(summaries), summaries)
 	}
@@ -212,6 +215,53 @@ Skill token: GITCLAW_BLOCKED_BY_ALLOWLIST.`)
 		if !strings.Contains(index, want) {
 			t.Fatalf("skill index missing %q: %s", want, index)
 		}
+	}
+}
+
+func TestLoadSkillContextSelectsBundleSkillsFromSlashCommand(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Read repository files.
+---
+
+# Repo Reader
+Skill token: GITCLAW_BUNDLE_REPO_READER.`)
+	writeTestFile(t, root, ".gitclaw/SKILLS/deploy-helper/SKILL.md", `---
+name: deploy-helper
+description: Deployment helper.
+---
+
+# Deploy Helper
+Skill token: GITCLAW_BUNDLE_DEPLOY_HELPER.`)
+	writeTestFile(t, root, ".gitclaw/skill-bundles/repo-context.yaml", `name: repo-context
+description: Repository context workflow.
+skills:
+  - repo-reader
+  - missing-skill
+instruction: |
+  Use repo evidence before answering.
+`)
+
+	summaries, bundles, skills := loadSkillContext(root, []TranscriptMessage{{Role: "user", Body: "@gitclaw /repo-context explain go.mod"}}, DefaultConfig())
+	if len(summaries) != 2 {
+		t.Fatalf("len(summaries) = %d, want 2: %#v", len(summaries), summaries)
+	}
+	if len(bundles) != 1 {
+		t.Fatalf("len(bundles) = %d, want 1: %#v", len(bundles), bundles)
+	}
+	bundle := bundles[0]
+	if bundle.Name != "repo-context" || !bundle.Selected || len(bundle.ResolvedSkills) != 1 || bundle.ResolvedSkills[0] != "repo-reader" || len(bundle.MissingSkills) != 1 || bundle.MissingSkills[0] != "missing-skill" || !bundle.InstructionPresent {
+		t.Fatalf("unexpected bundle summary: %#v", bundle)
+	}
+	if !hasContextDoc(skills, ".gitclaw/SKILLS/repo-reader/SKILL.md", "GITCLAW_BUNDLE_REPO_READER") {
+		t.Fatalf("bundle skill was not selected: %#v", skills)
+	}
+	if !hasContextDoc(skills, ".gitclaw/skill-bundles/repo-context.yaml#instruction", "Use repo evidence before answering.") {
+		t.Fatalf("bundle instruction was not selected: %#v", skills)
+	}
+	if hasContextDoc(skills, ".gitclaw/SKILLS/deploy-helper/SKILL.md", "GITCLAW_BUNDLE_DEPLOY_HELPER") {
+		t.Fatalf("unbundled skill should not be selected: %#v", skills)
 	}
 }
 

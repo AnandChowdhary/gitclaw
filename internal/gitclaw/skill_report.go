@@ -13,7 +13,8 @@ type SkillSearchResult struct {
 }
 
 func IsSkillsReportRequest(ev Event, cfg Config) bool {
-	return activeSlashCommand(ev, cfg) == "/skills"
+	command := activeSlashCommand(ev, cfg)
+	return command == "/skills" || command == "/bundles"
 }
 
 func activeSlashCommand(ev Event, cfg Config) string {
@@ -67,6 +68,12 @@ func slashCommandFieldsFromLine(line, triggerPrefix string) []string {
 }
 
 func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
+	if isSkillBundlesListRequest(ev, cfg) {
+		return renderSkillBundlesReport(ev, repoContext, true)
+	}
+	if bundleName := requestedSkillBundleInfoName(ev, cfg); bundleName != "" {
+		return renderSkillBundleInfoReport(ev, repoContext, bundleName, true)
+	}
 	if isSkillsVerifyRequest(ev, cfg) {
 		return renderSkillsVerifyReport(ev, repoContext, true)
 	}
@@ -141,6 +148,99 @@ func RenderSkillInfoCLIReport(repoContext RepoContext, name string) string {
 
 func RenderSkillSearchCLIReport(repoContext RepoContext, query string) string {
 	return renderSkillSearchReport(Event{}, repoContext, query, false)
+}
+
+func RenderSkillBundlesCLIReport(repoContext RepoContext) string {
+	return renderSkillBundlesReport(Event{}, repoContext, false)
+}
+
+func RenderSkillBundleInfoCLIReport(repoContext RepoContext, name string) string {
+	return renderSkillBundleInfoReport(Event{}, repoContext, name, false)
+}
+
+func renderSkillBundlesReport(ev Event, repoContext RepoContext, includeIssue bool) string {
+	var b strings.Builder
+	b.WriteString("## GitClaw Skill Bundles Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
+	fmt.Fprintf(&b, "- available_bundles: `%d`\n", len(repoContext.SkillBundles))
+	fmt.Fprintf(&b, "- selected_bundles: `%d`\n", selectedSkillBundleCount(repoContext.SkillBundles))
+	fmt.Fprintf(&b, "- available_skills: `%d`\n", availableSkillCount(repoContext))
+	fmt.Fprintf(&b, "- bundle_skill_refs: `%d`\n", bundleSkillRefCount(repoContext.SkillBundles))
+	fmt.Fprintf(&b, "- resolved_bundle_skills: `%d`\n", resolvedBundleSkillCount(repoContext.SkillBundles))
+	fmt.Fprintf(&b, "- missing_bundle_skills: `%d`\n", missingBundleSkillCount(repoContext.SkillBundles))
+	fmt.Fprintf(&b, "- bundles_with_instruction: `%d`\n", bundlesWithInstructionCount(repoContext.SkillBundles))
+	fmt.Fprintf(&b, "- run_mode: `%s`\n", "read-only")
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", false)
+	if includeIssue {
+		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
+	}
+	b.WriteByte('\n')
+	b.WriteString("Skill bundles are repo-local YAML task profiles. They group existing skills under a slash command without installing skills, mutating the system prompt, or dumping bundle instructions.\n\n")
+
+	b.WriteString("### Bundles\n")
+	if len(repoContext.SkillBundles) == 0 {
+		b.WriteString("- none\n")
+	} else {
+		for _, bundle := range repoContext.SkillBundles {
+			writeSkillBundleSummary(&b, bundle)
+		}
+	}
+	return strings.TrimSpace(b.String())
+}
+
+func renderSkillBundleInfoReport(ev Event, repoContext RepoContext, name string, includeIssue bool) string {
+	name = cleanSkillLookupName(name)
+	matches := matchingSkillBundleSummaries(repoContext.SkillBundles, name)
+	status := "not_found"
+	if len(matches) == 1 {
+		status = "ok"
+	} else if len(matches) > 1 {
+		status = "ambiguous"
+	}
+
+	var b strings.Builder
+	b.WriteString("## GitClaw Skill Bundle Info Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
+	fmt.Fprintf(&b, "- requested_bundle: `%s`\n", inlineCode(name))
+	fmt.Fprintf(&b, "- skill_bundle_info_status: `%s`\n", status)
+	fmt.Fprintf(&b, "- available_bundles: `%d`\n", len(repoContext.SkillBundles))
+	fmt.Fprintf(&b, "- matched_bundles: `%d`\n", len(matches))
+	fmt.Fprintf(&b, "- available_skills: `%d`\n", availableSkillCount(repoContext))
+	fmt.Fprintf(&b, "- run_mode: `%s`\n", "read-only")
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", false)
+	if includeIssue {
+		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
+	}
+	b.WriteByte('\n')
+	b.WriteString("This report shows one repo-local skill bundle by metadata only. Bundle YAML bodies, bundle instructions, skill bodies, issue bodies, comments, prompts, and secret values are not included.\n\n")
+
+	b.WriteString("### Matches\n")
+	if len(matches) == 0 {
+		b.WriteString("- none\n")
+	} else {
+		for _, bundle := range matches {
+			writeSkillBundleSummary(&b, bundle)
+		}
+	}
+	if len(matches) == 0 && len(repoContext.SkillBundles) > 0 {
+		b.WriteString("\n### Available Bundles\n")
+		for _, bundle := range repoContext.SkillBundles {
+			fmt.Fprintf(&b, "- `%s` path=`%s`\n", inlineCode(bundle.Name), bundle.Path)
+		}
+	}
+	return strings.TrimSpace(b.String())
 }
 
 func renderSkillInfoReport(ev Event, repoContext RepoContext, name string, includeIssue bool) string {
@@ -251,6 +351,23 @@ func requestedSkillInfoName(ev Event, cfg Config) string {
 	return cleanSkillLookupName(fields[2])
 }
 
+func requestedSkillBundleInfoName(ev Event, cfg Config) string {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 {
+		return ""
+	}
+	if fields[0] == "/bundles" {
+		if len(fields) >= 3 && (strings.EqualFold(fields[1], "info") || strings.EqualFold(fields[1], "show")) {
+			return cleanSkillLookupName(fields[2])
+		}
+		return ""
+	}
+	if fields[0] == "/skills" && len(fields) >= 3 && (strings.EqualFold(fields[1], "bundle") || strings.EqualFold(fields[1], "bundle-info")) {
+		return cleanSkillLookupName(fields[2])
+	}
+	return ""
+}
+
 func requestedSkillSearchQuery(ev Event, cfg Config) string {
 	fields := activeSlashCommandFields(ev, cfg)
 	if len(fields) < 3 || fields[0] != "/skills" || !strings.EqualFold(fields[1], "search") {
@@ -267,6 +384,17 @@ func isSkillsValidateRequest(ev Event, cfg Config) bool {
 func isSkillsVerifyRequest(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && fields[0] == "/skills" && strings.EqualFold(fields[1], "verify")
+}
+
+func isSkillBundlesListRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) == 0 {
+		return false
+	}
+	if fields[0] == "/bundles" {
+		return len(fields) == 1 || strings.EqualFold(fields[1], "list")
+	}
+	return len(fields) >= 2 && fields[0] == "/skills" && (strings.EqualFold(fields[1], "bundles") || strings.EqualFold(fields[1], "bundle-list"))
 }
 
 func cleanSkillLookupName(name string) string {
@@ -286,6 +414,20 @@ func matchingSkillSummaries(skills []SkillSummary, name string) []SkillSummary {
 	for _, skill := range skills {
 		if strings.EqualFold(skill.Name, name) || strings.EqualFold(skillFolderName(skill.Path), name) {
 			matches = append(matches, skill)
+		}
+	}
+	return matches
+}
+
+func matchingSkillBundleSummaries(bundles []SkillBundleSummary, name string) []SkillBundleSummary {
+	name = normalizeSkillBundleName(cleanSkillLookupName(name))
+	if name == "" {
+		return nil
+	}
+	matches := make([]SkillBundleSummary, 0, 1)
+	for _, bundle := range bundles {
+		if strings.EqualFold(bundle.Name, name) || strings.EqualFold(skillBundleNameFromPath(bundle.Path), name) {
+			matches = append(matches, bundle)
 		}
 	}
 	return matches
@@ -499,6 +641,25 @@ func writeSkillSummary(b *strings.Builder, skill SkillSummary) {
 	b.WriteByte('\n')
 }
 
+func writeSkillBundleSummary(b *strings.Builder, bundle SkillBundleSummary) {
+	fmt.Fprintf(b, "- bundle_name=`%s` path=`%s` skills=`%s` resolved_skills=`%s` missing_skills=`%s` selected_for_this_turn=`%t` instruction=`%t` bytes=`%d` lines=`%d` sha256_12=`%s`",
+		inlineCode(bundle.Name),
+		bundle.Path,
+		inlineList(bundle.Skills),
+		inlineList(bundle.ResolvedSkills),
+		inlineList(bundle.MissingSkills),
+		bundle.Selected,
+		bundle.InstructionPresent,
+		bundle.Bytes,
+		bundle.Lines,
+		bundle.SHA,
+	)
+	if bundle.Description != "" {
+		fmt.Fprintf(b, " description=`%s`", inlineCode(bundle.Description))
+	}
+	b.WriteByte('\n')
+}
+
 func writeSelectedSkillList(b *strings.Builder, docs []ContextDocument) {
 	if len(docs) == 0 {
 		b.WriteString("- none\n")
@@ -597,6 +758,50 @@ func skillsMissingRequirements(skills []SkillSummary) int {
 	count := 0
 	for _, skill := range skills {
 		if skillIsEnabled(skill) && (len(skill.MissingEnv) > 0 || len(skill.MissingBins) > 0) {
+			count++
+		}
+	}
+	return count
+}
+
+func selectedSkillBundleCount(bundles []SkillBundleSummary) int {
+	count := 0
+	for _, bundle := range bundles {
+		if bundle.Selected {
+			count++
+		}
+	}
+	return count
+}
+
+func bundleSkillRefCount(bundles []SkillBundleSummary) int {
+	count := 0
+	for _, bundle := range bundles {
+		count += len(bundle.Skills)
+	}
+	return count
+}
+
+func resolvedBundleSkillCount(bundles []SkillBundleSummary) int {
+	count := 0
+	for _, bundle := range bundles {
+		count += len(bundle.ResolvedSkills)
+	}
+	return count
+}
+
+func missingBundleSkillCount(bundles []SkillBundleSummary) int {
+	count := 0
+	for _, bundle := range bundles {
+		count += len(bundle.MissingSkills)
+	}
+	return count
+}
+
+func bundlesWithInstructionCount(bundles []SkillBundleSummary) int {
+	count := 0
+	for _, bundle := range bundles {
+		if bundle.InstructionPresent {
 			count++
 		}
 	}

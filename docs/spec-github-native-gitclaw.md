@@ -642,6 +642,7 @@ GitHub issue/comment event
   `memory search`,
   `skills validate`,
   `skills list`, `skills info`, `skills search`,
+  `bundles list`, `bundles info`,
   `soul verify`, `soul validate`, `soul list`, `soul info`, `soul search`,
   `tools verify`, `tools validate`, `tools list`, `tools info`,
   `tools search`, `doctor`,
@@ -927,6 +928,7 @@ loaded only when:
 
 - the skill is enabled by repo config,
 - the user mentions the skill name, folder, path, or relevant description terms;
+- a selected skill bundle references the skill;
 - the skill declares `always: true` or `metadata.openclaw.always: true`.
 
 Repo owners can gate skill loading without deleting reviewed skill files:
@@ -968,6 +970,8 @@ gitclaw skills verify
 gitclaw skills validate
 gitclaw skills check
 gitclaw skills list
+gitclaw bundles list
+gitclaw bundles info <name>
 gitclaw skills info <name>
 gitclaw skills search <query>
 ```
@@ -992,6 +996,8 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills verify
 @gitclaw /skills validate
 @gitclaw /skills check
+@gitclaw /bundles
+@gitclaw /bundles info repo-context
 @gitclaw /skills info repo-reader
 @gitclaw /skills search repository context
 ```
@@ -1014,6 +1020,34 @@ It does not dump full skill bodies. Full `SKILL.md` content remains a prompt
 input only when selected by the normal progressive-disclosure rules.
 `@gitclaw /skills list` is an explicit inventory alias for the same report,
 matching the local `gitclaw skills list` helper.
+
+Skill bundles are repo-local YAML task profiles inspired by Hermes' skill
+bundle feature. GitClaw reads `.gitclaw/skill-bundles/*.yaml` and
+`.gitclaw/skill-bundles/*.yml` files with this schema:
+
+```yaml
+name: repo-context
+description: Repository context questions using repo-reader.
+skills:
+  - repo-reader
+instruction: |
+  Prefer repository context and deterministic tool outputs before answering.
+```
+
+`@gitclaw /bundles` and `gitclaw bundles list` produce a body-free inventory:
+bundle path, normalized bundle name, referenced skills, resolved and missing
+skill refs, selected-for-this-turn status, instruction presence, byte/line
+counts, and short hash. `@gitclaw /bundles info <name>` and
+`gitclaw bundles info <name>` show one focused bundle card. Bundle YAML bodies,
+bundle instructions, skill bodies, issue bodies, comments, prompts, and secret
+values are never printed in reports.
+
+When a user invokes a repo-local bundle slash command such as
+`@gitclaw /repo-context explain go.mod`, GitClaw selects every enabled,
+resolved skill referenced by that bundle for the model turn and includes the
+bundle instruction as bounded prompt context. Missing skills are reported as
+metadata and skipped, not treated as fatal. Bundles do not install skills,
+execute scripts, or change the system prompt.
 
 When called as `@gitclaw /skills validate`, the command posts only the
 validation report: status, error/warning totals, duplicate-name count,
@@ -2740,8 +2774,11 @@ assert the expected comments/labels, and close the issue in cleanup.
 
    - create a real issue with `@gitclaw /skills`,
    - create a second real issue with `@gitclaw /skills list`,
+   - create a third real issue with `@gitclaw /bundles info repo-context`,
    - assert the reply is marked `model="gitclaw/skills"`,
    - assert the report lists available skill metadata and selected skill paths,
+   - assert the bundle info report lists bundle path, referenced/resolved
+     skills, selected-for-turn state, instruction presence, and hashes,
    - assert hashes, frontmatter/description presence, and requirement counts
      are present,
    - assert skill validation status, duplicate-name count, invalid-name count,
@@ -3357,6 +3394,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven skills-info E2E harness verifies
   `@gitclaw /skills info repo-reader` produces focused skill metadata without
   a model call or full `SKILL.md` body leakage.
+- A `gh`-driven skill-bundle info E2E harness verifies
+  `@gitclaw /bundles info repo-context` produces focused repo-local bundle
+  metadata, resolved/missing skill refs, instruction presence, hashes, and no
+  bundle instruction or skill body leakage.
 - A `gh`-driven skills-search E2E harness verifies
   `@gitclaw /skills search repository context` searches local skill metadata
   without a model call, raw query leakage, or full `SKILL.md` body leakage.

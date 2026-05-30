@@ -1,0 +1,7 @@
+name: repo-context
+description: Repository context questions using the repo-reader skill.
+skills:
+  - repo-reader
+instruction: |
+  Prefer repository context and deterministic tool outputs before answering.
+  If the requested file or search result is not present, say so instead of guessing.

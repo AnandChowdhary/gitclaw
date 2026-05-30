@@ -37,6 +37,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runProactiveCommand(ctx, args[1:])
 	case "skills":
 		return runSkillsCommand(args[1:])
+	case "bundles", "bundle":
+		return runBundlesCommand(args[1:])
 	case "memory":
 		return runMemoryCommand(args[1:])
 	case "soul":
@@ -733,7 +735,7 @@ func runDoctorCommand(args []string) error {
 
 func runSkillsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw skills verify|validate|check|list|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw skills verify|validate|check|list|bundles|bundle <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -742,12 +744,30 @@ func runSkillsCommand(args []string) error {
 		return runSkillsValidateCommand(args[1:])
 	case "list":
 		return runSkillsListCommand(args[1:])
+	case "bundles", "bundle-list":
+		return runBundlesListCommand(args[1:])
+	case "bundle", "bundle-info":
+		return runBundlesInfoCommand(args[1:])
 	case "info":
 		return runSkillsInfoCommand(args[1:])
 	case "search":
 		return runSkillsSearchCommand(args[1:])
 	default:
 		return fmt.Errorf("unknown skills command %q", args[0])
+	}
+}
+
+func runBundlesCommand(args []string) error {
+	if len(args) == 0 {
+		return runBundlesListCommand(nil)
+	}
+	switch args[0] {
+	case "list":
+		return runBundlesListCommand(args[1:])
+	case "info", "show":
+		return runBundlesInfoCommand(args[1:])
+	default:
+		return fmt.Errorf("usage: gitclaw bundles [list|info <name>]")
 	}
 }
 
@@ -780,6 +800,42 @@ func runSkillsListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSkillsCLIReport(repoContext))
+	return nil
+}
+
+func runBundlesListCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown bundles list argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSkillBundlesCLIReport(repoContext))
+	return nil
+}
+
+func runBundlesInfoCommand(args []string) error {
+	if len(args) != 1 {
+		return fmt.Errorf("usage: gitclaw bundles info <name>")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "bundles info " + args[0]}}, cfg)
+	if err != nil {
+		return err
+	}
+	report := RenderSkillBundleInfoCLIReport(repoContext, args[0])
+	fmt.Println(report)
+	if len(matchingSkillBundleSummaries(repoContext.SkillBundles, args[0])) == 0 {
+		return fmt.Errorf("skill bundle %q not found", args[0])
+	}
 	return nil
 }
 
