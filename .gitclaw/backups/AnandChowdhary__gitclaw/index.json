@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-30T11:40:15Z",
+  "generated_at": "2026-05-30T11:49:58Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 223,
+  "count": 224,
   "issues": [
     {
       "number": 3,
@@ -2722,6 +2722,18 @@
       "labels": [
         "gitclaw",
         "gitclaw:heartbeat"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
+    },
+    {
+      "number": 258,
+      "title": "@gitclaw /orders e2e 20260530T114858Z",
+      "path": "issues/000258.json",
+      "backup_generated_at": "2026-05-30T11:49:57Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
       ],
       "comment_count": 1,
       "transcript_messages": 2
