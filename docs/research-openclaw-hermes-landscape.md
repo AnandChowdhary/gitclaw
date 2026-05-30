@@ -299,6 +299,17 @@ loaded-for-this-turn state, byte/line counts, short hash, and no raw bodies.
 This gives maintainers a precise provenance check without turning identity
 files into public issue content.
 
+2026-05-30 soul-edit-plan follow-up: OpenClaw's git-friendly `SOUL.md` and
+Hermes' high-authority profile/memory files should remain human-reviewed
+behavior sources, not model-authored side effects. GitClaw should mirror the
+skill install-plan safety posture with `@gitclaw /soul edit-plan <path>` and
+`gitclaw soul edit-plan <path>`: normalize one supported soul target, report
+only metadata and validation rollups, refuse unsupported paths, and explicitly
+disable file writes, branch creation, commits, pushes, raw requested-change
+echoing, and model self-modification. Any real soul edit should happen as a
+reviewed git diff and be followed by both deterministic soul verification and
+a live GitHub Models conversation E2E.
+
 2026-05-30 soul-verify follow-up: OpenClaw's `SOUL.md` convention and Hermes'
 profile/memory boundary suggest a second audit surface beyond validation:
 provenance. GitClaw should add `@gitclaw /soul verify` and

@@ -45,6 +45,12 @@ func RenderSoulReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isSoulValidateRequest(ev, cfg) {
 		return renderSoulValidationReport(ev, repoContext, true)
 	}
+	if target := requestedSoulEditPlanPath(ev, cfg); target != "" {
+		if target == "__missing__" {
+			target = ""
+		}
+		return renderSoulEditPlanReport(ev, cfg, repoContext, target, true)
+	}
 	if path := requestedSoulInfoPath(ev, cfg); path != "" {
 		return RenderSoulInfoReport(ev, cfg, repoContext, path)
 	}

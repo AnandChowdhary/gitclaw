@@ -228,3 +228,86 @@ func TestRenderSoulInfoReportShowsOneContextFileWithoutBodies(t *testing.T) {
 		}
 	}
 }
+
+func TestRenderSoulEditPlanReportPlansHighAuthorityEditWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SOUL.md", "Soul body with SOUL_EDIT_PLAN_BODY_SECRET.\n")
+	writeTestFile(t, root, ".gitclaw/IDENTITY.md", "Identity body.\n")
+	writeTestFile(t, root, ".gitclaw/USER.md", "User body.\n")
+	writeTestFile(t, root, ".gitclaw/TOOLS.md", "Tools body.\n")
+	writeTestFile(t, root, ".gitclaw/MEMORY.md", "Memory body.\n")
+	writeTestFile(t, root, ".gitclaw/HEARTBEAT.md", "Heartbeat body.\n")
+	writeTestFile(t, root, ".gitclaw/memory/2026-05-29.md", "Daily body.\n")
+	ctx, err := LoadRepoContext(root, []TranscriptMessage{{Role: "user", Body: "soul edit-plan soul"}})
+	if err != nil {
+		t.Fatalf("LoadRepoContext returned error: %v", err)
+	}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 138,
+			"title": "@gitclaw /soul edit-plan soul",
+			"body": "Hidden soul edit plan issue token: SOUL_EDIT_PLAN_ISSUE_SECRET.",
+			"author_association": "OWNER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+
+	body := RenderSoulReport(ev, cfg, ctx)
+	for _, want := range []string{
+		"GitClaw Soul Edit Plan Report",
+		"Generated without a model call",
+		"repository: `owner/repo`",
+		"issue: `#138`",
+		"soul_edit_plan_status: `needs_review`",
+		"target_sha256_12:",
+		"target_allowed: `true`",
+		"normalized_soul_path: `.gitclaw/SOUL.md`",
+		"target_category: `soul`",
+		"target_present: `true`",
+		"target_required: `true`",
+		"target_canonical: `true`",
+		"target_loaded_for_this_turn: `true`",
+		"matched_soul_files: `1`",
+		"run_mode: `read-only`",
+		"edit_operations_allowed: `false`",
+		"repository_mutation_allowed: `false`",
+		"branch_creation_allowed: `false`",
+		"commit_push_allowed: `false`",
+		"model_self_modification_allowed: `false`",
+		"manual_review_required: `true`",
+		"llm_e2e_required_after_change: `true`",
+		"raw_target_included: `false`",
+		"raw_requested_change_included: `false`",
+		"raw_bodies_included: `false`",
+		"soul_writes_allowed: `false`",
+		"soul_validation_status: `ok`",
+		"### Current File Metadata",
+		"category=`soul` path=`.gitclaw/SOUL.md`",
+		"sha256_12=",
+		"### Review Steps",
+		"Run a live GitHub Models conversation E2E",
+		"### Findings",
+		"code=`manual_review_required`",
+		"code=`repository_mutation_disabled`",
+		"code=`model_self_modification_disabled`",
+		"code=`high_authority_context_change`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("soul edit plan report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SOUL_EDIT_PLAN_BODY_SECRET", "SOUL_EDIT_PLAN_ISSUE_SECRET", "Soul body"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("soul edit plan report leaked %q:\n%s", leaked, body)
+		}
+	}
+}

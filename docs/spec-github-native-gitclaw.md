@@ -649,7 +649,8 @@ GitHub issue/comment event
   `skills validate`,
   `skills list`, `skills info`, `skills search`,
   `bundles list`, `bundles info`,
-  `soul verify`, `soul validate`, `soul list`, `soul info`, `soul search`,
+  `soul verify`, `soul validate`, `soul list`, `soul edit-plan`, `soul info`,
+  `soul search`,
   `tools verify`, `tools validate`, `tools list`, `tools info`,
   `tools search`, `doctor`,
   `policy verify`,
@@ -1267,6 +1268,7 @@ Validation is visible in the `/soul` report and locally through:
 gitclaw soul verify
 gitclaw soul validate
 gitclaw soul list
+gitclaw soul edit-plan <path>
 gitclaw soul info <path>
 gitclaw soul search <query> --max-results 10
 ```
@@ -1284,6 +1286,7 @@ by OpenClaw and Hermes' portable workspace files:
 @gitclaw /soul list
 @gitclaw /soul verify
 @gitclaw /soul validate
+@gitclaw /soul edit-plan soul
 @gitclaw /soul info soul
 @gitclaw /soul search durable state layer
 ```
@@ -1299,6 +1302,7 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 - byte counts, line counts, and short hashes for each file,
 - soul validation status, error/warning counts, required-file counts,
   memory-note counts, noncanonical memory-note counts, and body-free findings.
+- high-authority edit planning metadata when explicitly requested.
 
 It never dumps full file bodies. The hashes make the issue-visible report
 verifiable without exposing private user, memory, or policy text.
@@ -1315,6 +1319,23 @@ category, repo-local source, present/required/canonical/latest flags,
 selected-for-this-turn state, byte count, line count, short hash, and
 at-context-limit status. It never emits raw file, issue, comment, prompt, or
 secret bodies. This mirrors `gitclaw soul info <path>` for local review.
+
+When called as `@gitclaw /soul edit-plan <path>` or
+`@gitclaw /soul plan <path>`, the command switches to a dry-run edit planner
+for high-authority context. Supported targets use the same aliases as
+`/soul info`: `soul`, `identity`, `user`, `tools`, `memory`, `heartbeat`,
+`latest`, and `.gitclaw/memory/YYYY-MM-DD.md`. The planner reports only
+target hash, target term count, normalized path, category, present/required/
+canonical/loaded flags, validation rollup, and findings. It never emits the
+raw requested change, raw target text, raw context bodies, issue bodies,
+comments, prompts, or secret values.
+
+The soul edit planner never writes `.gitclaw/` files, creates branches,
+applies patches, commits, pushes, or lets the model rewrite its own identity,
+memory, tools, heartbeat, or policy context. The report includes
+`llm_e2e_required_after_change=true` to make the release rule explicit: after
+a soul file is actually changed, maintainers must run a live GitHub Models
+conversation E2E in addition to deterministic soul-report tests.
 
 When called as `@gitclaw /soul validate`, the command posts only the
 validation report: status, error/warning totals, required-file counts,
@@ -3779,6 +3800,12 @@ examples/workflows/gitclaw.yml
   exposes one body-free high-authority context metadata card with normalized
   path, category, repo-local source, selected-for-turn state, hashes, and
   write-disabled metadata.
+- A `gh`-driven soul-edit-plan E2E harness verifies
+  `@gitclaw /soul edit-plan soul` produces a body-free, non-mutating plan for
+  a high-authority context change with edit operations, branch creation,
+  commits, pushes, model self-modification, raw targets, raw requested changes,
+  and raw context bodies disabled. This deterministic check must be paired in
+  the same implementation batch with a live GitHub Models conversation E2E.
 - A `gh`-driven soul-validate E2E harness verifies
   `@gitclaw /soul validate` exposes the body-free validation report without
   falling back to the full context inventory.
