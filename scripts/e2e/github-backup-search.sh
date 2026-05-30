@@ -140,14 +140,24 @@ for expected in \
   'model="gitclaw/backup"' \
   "GitClaw Backup Report" \
   "Generated without a model call" \
+  'requested_backup_command: `search`' \
+  'backup_command_status: `ok`' \
+  'issue_side_execution: `deferred_to_post_turn_backup_branch`' \
+  'raw_bodies_included: `false`' \
+  "requested_local_command: \`gitclaw backup search --root .gitclaw/backups --repo ${repo} <query>\`" \
+  'query_sha256_12:' \
+  'query_terms: `2`' \
+  'raw search query is not printed' \
   'backup_branch: `gitclaw-backups`' \
   'backup_schema_version: `1`'; do
   grep -Fq "$expected" <<<"$comments" || die "backup report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "backup report leaked issue body token"
-fi
+for leaked in "$token" "$timestamp" "$title"; do
+  if grep -Fq "$leaked" <<<"$comments"; then
+    die "backup report leaked issue-side search input ${leaked}"
+  fi
+done
 
 repo_key="${repo//\//__}"
 issue_padded="$(printf "%06d" "$issue_number")"

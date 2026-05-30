@@ -2570,8 +2570,11 @@ assert the expected comments/labels, and close the issue in cleanup.
 
 33. **Backup search**
 
-   - create a real issue with `@gitclaw /backup`,
+   - create a real issue with `@gitclaw /backup search <query>`,
    - include a unique hidden token in the issue body,
+   - assert the issue-side report lists `requested_backup_command: search`,
+     the concrete local search command with `<query>`, a query hash, a query
+     term count, and no raw query text,
    - wait for the successful backup job,
    - fetch the real `gitclaw-backups` branch,
    - run `gitclaw backup search --root <fetched>/.gitclaw/backups --repo
