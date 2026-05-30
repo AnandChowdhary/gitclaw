@@ -514,14 +514,18 @@ func runToolsValidateCommand(args []string) error {
 }
 
 func runDoctorCommand(args []string) error {
-	if len(args) > 0 {
-		return fmt.Errorf("unknown doctor argument %q", args[0])
+	if len(args) > 1 || (len(args) == 1 && args[0] != "list") {
+		return fmt.Errorf("usage: gitclaw doctor [list]")
 	}
 	cfg, err := LoadEffectiveConfig()
 	if err != nil {
 		return err
 	}
-	PrintDoctorReport(cfg)
+	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderDoctorCLIReport(cfg, repoContext))
 	return nil
 }
 

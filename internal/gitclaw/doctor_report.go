@@ -43,16 +43,26 @@ func IsDoctorReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderDoctorReport(ev Event, cfg Config, repoContext RepoContext) string {
+	return renderDoctorReport(ev, cfg, repoContext, true)
+}
+
+func RenderDoctorCLIReport(cfg Config, repoContext RepoContext) string {
+	return renderDoctorReport(Event{}, cfg, repoContext, false)
+}
+
+func renderDoctorReport(ev Event, cfg Config, repoContext RepoContext, includeIssue bool) string {
 	surface := inspectDoctorSurface(cfg, repoContext)
 	checks := doctorChecks(surface)
 	var b strings.Builder
 	b.WriteString("## GitClaw Doctor Report\n\n")
 	b.WriteString("Generated without a model call.\n\n")
-	if ev.Repo != "" {
+	if includeIssue && ev.Repo != "" {
 		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
 	}
-	if ev.Issue.Number != 0 {
+	if includeIssue && ev.Issue.Number != 0 {
 		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else if !includeIssue {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
 	}
 	fmt.Fprintf(&b, "- health_status: `%s`\n", doctorHealthStatus(checks))
 	fmt.Fprintf(&b, "- config_source: `%s`\n", surface.ConfigSource)
@@ -82,7 +92,7 @@ func RenderDoctorReport(ev Event, cfg Config, repoContext RepoContext) string {
 	fmt.Fprintf(&b, "- tool_validation_status: `%s`\n", surface.ToolValidation.Status)
 	fmt.Fprintf(&b, "- tool_validation_errors: `%d`\n", surface.ToolValidation.Errors)
 	fmt.Fprintf(&b, "- tool_validation_warnings: `%d`\n", surface.ToolValidation.Warnings)
-	if ev.Issue.Title != "" {
+	if includeIssue && ev.Issue.Title != "" {
 		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
 	}
 	b.WriteString("\nThis report checks the GitClaw control plane from the checked-out repository. File bodies, issue bodies, comments, prompts, and secrets are not included.\n\n")
@@ -311,7 +321,10 @@ func writeDoctorFileList(b *strings.Builder, files []configSurfaceFile) {
 }
 
 func PrintDoctorReport(cfg Config) {
-	repo := os.Getenv("GITHUB_REPOSITORY")
 	repoContext, _ := LoadRepoContext(cfg.Workdir, nil)
-	fmt.Println(RenderDoctorReport(Event{Repo: repo}, cfg, repoContext))
+	if repo := os.Getenv("GITHUB_REPOSITORY"); repo != "" {
+		fmt.Println(RenderDoctorReport(Event{Repo: repo}, cfg, repoContext))
+		return
+	}
+	fmt.Println(RenderDoctorCLIReport(cfg, repoContext))
 }

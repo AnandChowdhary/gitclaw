@@ -1354,6 +1354,8 @@ GitClaw supports a deterministic doctor/health audit command:
 
 ```text
 @gitclaw /doctor
+@gitclaw /doctor list
+@gitclaw /health
 ```
 
 The command runs after preflight and context loading, but before model
@@ -1376,6 +1378,16 @@ It never dumps file bodies, issue bodies, comments, prompts, or secrets. This
 is the GitHub-native equivalent of `openclaw config validate` plus the cold,
 read-only parts of `openclaw doctor`: useful health diagnostics inside the
 canonical issue log without introducing an auto-repair mode.
+
+Local operators can run the same body-free health check before opening an
+issue:
+
+```bash
+gitclaw doctor list
+```
+
+`gitclaw doctor` remains the short form. The local report uses
+`scope: local-cli` and omits repository, issue, and issue-title metadata.
 
 ## Prompt Budgeting
 
@@ -2683,6 +2695,9 @@ examples/workflows/gitclaw.yml
   config validation, workflow presence, context files, skills, memory notes,
   proactive prompts, and skill/soul/tool validation rollups without a model
   call.
+- A `gh`-driven doctor-list E2E harness verifies `@gitclaw /doctor list` is an
+  explicit report alias, while local `gitclaw doctor list` exposes the same
+  body-free health metadata without issue-only fields.
 - A `gh`-driven backup-index E2E harness verifies the dedicated backup branch
   contains issue JSON plus a repo-scoped `index.json` and `README.md`.
 - A `gh`-driven backup-report E2E harness verifies `@gitclaw /backup`

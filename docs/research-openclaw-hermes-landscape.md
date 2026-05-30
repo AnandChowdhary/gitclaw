@@ -456,6 +456,11 @@ status surfaces: `/doctor` should report validation error/warning totals plus
 skill, soul, and tool validation statuses without listing body-level findings
 or exposing private context.
 
+2026-05-30 doctor-list follow-up: health visibility should be usable before an
+issue exists. Add `gitclaw doctor list` as the local mirror of `/doctor`: the
+same config/workflow/context/skill/memory/proactive/validation rollup, but with
+`scope: local-cli` and no repository, issue, or issue-title metadata.
+
 2026-05-29 channel visibility follow-up: Slack's Events API expects either a
 server HTTP endpoint or Socket Mode, Socket Mode uses a stateful WebSocket
 instead of a static public URL, Telegram's `getUpdates` provides long polling

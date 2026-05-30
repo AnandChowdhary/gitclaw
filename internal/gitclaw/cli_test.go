@@ -556,6 +556,48 @@ PROACTIVE_LIST_WORKFLOW_BODY
 	}
 }
 
+func TestDoctorListCommandReportsHealthWithoutBodies(t *testing.T) {
+	dir := t.TempDir()
+	writeTestFile(t, dir, ".gitclaw/config.yml", `model:
+  model: openai/gpt-5-mini
+`)
+	writeTestFile(t, dir, ".github/workflows/gitclaw.yml", "name: GitClaw\n")
+	writeTestFile(t, dir, ".github/workflows/gitclaw-heartbeat.yml", "name: GitClaw Heartbeat\n")
+	writeTestFile(t, dir, ".github/workflows/gitclaw-proactive.yml", "name: GitClaw Proactive\non:\n  workflow_dispatch:\n  schedule:\n")
+	writeTestFile(t, dir, ".github/workflows/gitclaw-channel-ingest.yml", "name: GitClaw Channel Ingest\n")
+	writeTestFile(t, dir, ".gitclaw/SOUL.md", "SOUL_DOCTOR_LIST_SECRET")
+	writeTestFile(t, dir, ".gitclaw/IDENTITY.md", "IDENTITY_DOCTOR_LIST_SECRET")
+	writeTestFile(t, dir, ".gitclaw/USER.md", "USER_DOCTOR_LIST_SECRET")
+	writeTestFile(t, dir, ".gitclaw/TOOLS.md", "TOOLS_DOCTOR_LIST_SECRET")
+	writeTestFile(t, dir, ".gitclaw/MEMORY.md", "MEMORY_DOCTOR_LIST_SECRET")
+	writeTestFile(t, dir, ".gitclaw/HEARTBEAT.md", "HEARTBEAT_DOCTOR_LIST_SECRET")
+	writeTestFile(t, dir, ".gitclaw/memory/2026-05-29.md", "MEMORY_NOTE_DOCTOR_LIST_SECRET")
+	writeTestFile(t, dir, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Use read-only repository context.
+---
+
+SKILL_DOCTOR_LIST_SECRET
+`)
+	writeTestFile(t, dir, ".gitclaw/proactive/repo-hygiene.md", "PROACTIVE_DOCTOR_LIST_SECRET")
+	t.Setenv("GITCLAW_WORKDIR", dir)
+	output := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"doctor", "list"}); err != nil {
+			t.Fatalf("doctor list returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"GitClaw Doctor Report", "scope: `local-cli`", "Generated without a model call", "health_status: `ok`", "config_source: `defaults+repo+environment`", "config_valid: `true`", "config_file_present: `true`", "model: `openai/gpt-5-mini`", "run_mode: `read-only`", "workflows_present: `4`", "context_files_present: `6`", "memory_notes: `1`", "skill_files: `1`", "proactive_prompt_files: `1`", "managed_labels: `9`", "validation_errors: `0`", "validation_warnings: `0`", "skill_validation_status: `ok`", "soul_validation_status: `ok`", "memory_validation_status: `ok`", "tool_validation_status: `ok`", "`config_validation`: `ok`", "`workflow_set`: `ok`", "`identity_context`: `ok`", "`local_skills`: `ok`", "`proactive_prompt`: `ok`", ".gitclaw/config.yml", ".github/workflows/gitclaw.yml", ".gitclaw/SOUL.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", ".gitclaw/proactive/repo-hygiene.md", "sha256_12="} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("doctor list output missing %q:\n%s", want, output)
+		}
+	}
+	for _, notWant := range []string{"repository:", "issue:", "issue_title_sha256_12", "SOUL_DOCTOR_LIST_SECRET", "IDENTITY_DOCTOR_LIST_SECRET", "SKILL_DOCTOR_LIST_SECRET", "PROACTIVE_DOCTOR_LIST_SECRET"} {
+		if strings.Contains(output, notWant) {
+			t.Fatalf("doctor list output unexpectedly included %q:\n%s", notWant, output)
+		}
+	}
+}
+
 func TestSessionListCommandReportsBackupTranscriptWithoutBodies(t *testing.T) {
 	dir := t.TempDir()
 	backup := IssueBackup{
@@ -643,7 +685,7 @@ func TestCommandsCommandReportsCatalog(t *testing.T) {
 			t.Fatalf("commands returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `10`", "local_cli_helpers: `34`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`/prompt` model=`gitclaw/prompt`", "aliases=`/budget, /prompt-budget`", "`/proactive` model=`gitclaw/proactive`", "aliases=`/cron`", "`gitclaw commands` command=`/help`", "`gitclaw channels list` command=`/channels`", "`gitclaw config list` command=`/config`", "`gitclaw context list` command=`/context`", "`gitclaw prompt list` command=`/prompt`", "`gitclaw proactive list` command=`/proactive`", "`gitclaw session list --backup <issue.json>` command=`/session`", "`gitclaw session search <query> --backup <issue.json>` command=`/session`", "`gitclaw models list` command=`/models`", "`gitclaw policy list` command=`/policy`", "`gitclaw backup list` command=`/backup`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
+	for _, want := range []string{"GitClaw Commands Report", "scope: `local-cli`", "commands: `15`", "aliases: `10`", "local_cli_helpers: `35`", "`/help` model=`gitclaw/commands`", "aliases=`/commands`", "`/prompt` model=`gitclaw/prompt`", "aliases=`/budget, /prompt-budget`", "`/proactive` model=`gitclaw/proactive`", "aliases=`/cron`", "`gitclaw commands` command=`/help`", "`gitclaw doctor` command=`/doctor`", "`gitclaw doctor list` command=`/doctor`", "`gitclaw channels list` command=`/channels`", "`gitclaw config list` command=`/config`", "`gitclaw context list` command=`/context`", "`gitclaw prompt list` command=`/prompt`", "`gitclaw proactive list` command=`/proactive`", "`gitclaw session list --backup <issue.json>` command=`/session`", "`gitclaw session search <query> --backup <issue.json>` command=`/session`", "`gitclaw models list` command=`/models`", "`gitclaw policy list` command=`/policy`", "`gitclaw backup list` command=`/backup`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("commands output missing %q:\n%s", want, output)
 		}
