@@ -31,14 +31,15 @@ type fileAuthorizationConfig struct {
 }
 
 type fileModelConfig struct {
-	Provider                  string `yaml:"provider"`
-	Model                     string `yaml:"model"`
-	BaseURL                   string `yaml:"base_url"`
-	MaxPromptBytes            int    `yaml:"max_prompt_bytes"`
-	MaxInputTokens            int    `yaml:"max_input_tokens"`
-	MaxOutputTokens           int    `yaml:"max_output_tokens"`
-	MaxTranscriptMessages     int    `yaml:"max_transcript_messages"`
-	MaxTranscriptMessageBytes int    `yaml:"max_transcript_message_bytes"`
+	Provider                  string   `yaml:"provider"`
+	Model                     string   `yaml:"model"`
+	Fallbacks                 []string `yaml:"fallbacks"`
+	BaseURL                   string   `yaml:"base_url"`
+	MaxPromptBytes            int      `yaml:"max_prompt_bytes"`
+	MaxInputTokens            int      `yaml:"max_input_tokens"`
+	MaxOutputTokens           int      `yaml:"max_output_tokens"`
+	MaxTranscriptMessages     int      `yaml:"max_transcript_messages"`
+	MaxTranscriptMessageBytes int      `yaml:"max_transcript_message_bytes"`
 }
 
 type fileActionsConfig struct {
@@ -105,6 +106,10 @@ func ApplyEnvConfig(cfg Config) Config {
 		cfg.Model = model
 		cfg.ConfigSource = appendConfigSource(cfg.ConfigSource, "environment")
 	}
+	if fallbacks, ok := envModelFallbacks(); ok {
+		cfg.ModelFallbacks = fallbacks
+		cfg.ConfigSource = appendConfigSource(cfg.ConfigSource, "environment")
+	}
 	if baseURL := os.Getenv("GITCLAW_LLM_BASE_URL"); baseURL != "" {
 		cfg.LLMBaseURL = baseURL
 		cfg.ConfigSource = appendConfigSource(cfg.ConfigSource, "environment")
@@ -127,6 +132,10 @@ func LoadEffectiveConfig() (Config, error) {
 	}
 	if model := os.Getenv("GITCLAW_MODEL"); model != "" {
 		loaded.Model = model
+		loaded.ConfigSource = appendConfigSource(loaded.ConfigSource, "environment")
+	}
+	if fallbacks, ok := envModelFallbacks(); ok {
+		loaded.ModelFallbacks = fallbacks
 		loaded.ConfigSource = appendConfigSource(loaded.ConfigSource, "environment")
 	}
 	if baseURL := os.Getenv("GITCLAW_LLM_BASE_URL"); baseURL != "" {
@@ -171,6 +180,9 @@ func applyFileConfig(cfg *Config, file fileConfig) error {
 	}
 	if value := strings.TrimSpace(file.Model.Model); value != "" {
 		cfg.Model = value
+	}
+	if len(file.Model.Fallbacks) > 0 {
+		cfg.ModelFallbacks = normalizeModelFallbacks(file.Model.Fallbacks)
 	}
 	if value := strings.TrimSpace(file.Model.BaseURL); value != "" {
 		cfg.LLMBaseURL = value
@@ -246,6 +258,11 @@ func validateConfig(cfg Config) error {
 	if strings.TrimSpace(cfg.Model) == "" {
 		return fmt.Errorf("%s model.model must not be empty", gitclawConfigPath)
 	}
+	for _, fallback := range cfg.ModelFallbacks {
+		if strings.TrimSpace(fallback) == "" {
+			return fmt.Errorf("%s model.fallbacks must not contain empty model ids", gitclawConfigPath)
+		}
+	}
 	if strings.TrimSpace(cfg.LLMBaseURL) == "" {
 		return fmt.Errorf("%s model.base_url must not be empty", gitclawConfigPath)
 	}
@@ -265,6 +282,35 @@ func validateConfig(cfg Config) error {
 		return fmt.Errorf("%s authorization.allowed_associations must not be empty", gitclawConfigPath)
 	}
 	return nil
+}
+
+func envModelFallbacks() ([]string, bool) {
+	raw, ok := os.LookupEnv("GITCLAW_MODEL_FALLBACKS")
+	if !ok {
+		return nil, false
+	}
+	raw = strings.TrimSpace(raw)
+	if raw == "" || strings.EqualFold(raw, "none") || strings.EqualFold(raw, "false") || raw == "[]" {
+		return nil, true
+	}
+	parts := strings.FieldsFunc(raw, func(r rune) bool {
+		return r == ',' || r == '\n' || r == '\t' || r == ' '
+	})
+	return normalizeModelFallbacks(parts), true
+}
+
+func normalizeModelFallbacks(values []string) []string {
+	seen := map[string]bool{}
+	out := make([]string, 0, len(values))
+	for _, value := range values {
+		value = strings.TrimSpace(value)
+		if value == "" || seen[value] {
+			continue
+		}
+		seen[value] = true
+		out = append(out, value)
+	}
+	return out
 }
 
 func normalizeConfiguredSkillSet(field string, values []string) (map[string]bool, error) {

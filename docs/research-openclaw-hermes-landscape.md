@@ -529,6 +529,18 @@ conversation failed because GitHub Models rejected `max_tokens` and requested
 `max_completion_tokens`. GitClaw should select the output-token request
 parameter from the model family and include that choice in `/models` diagnostics.
 
+2026-05-30 fallback follow-up: repeated live GitHub Models conversation E2Es
+started failing with `429` responses for `openai/gpt-5-nano`, while direct
+local probes with the same GitHub identity returned successful tiny completions
+from `openai/gpt-4.1-nano` and `openai/gpt-4o-mini`. GitHub's own billing docs
+describe free GitHub Models access as rate-limited, and the REST catalog docs
+make the authenticated catalog the source of available model IDs. GitClaw should
+therefore keep `openai/gpt-5-nano` as the primary smallest GPT-5-family default,
+record the actual selected model in the assistant marker, and support explicit
+repo-configured fallback models for retryable provider statuses. Invalid-model
+negative tests should disable fallback so they still verify the safe failure
+path.
+
 2026-05-30 tool-grounding follow-up: the first model-backed conversation after
 the parameter fix proved provider access but exposed prompt ambiguity: the model
 echoed the issue nonce where the harness wanted the repository search-result
@@ -1609,6 +1621,10 @@ Recommended non-goals for the first spec:
 - OpenClaw secrets management docs: https://docs.openclaw.ai/gateway/secrets
 - GitHub Actions artifact storage docs: https://docs.github.com/en/actions/how-tos/writing-workflows/choosing-what-your-workflow-does/storing-and-sharing-data-from-a-workflow
 - `actions/upload-artifact` action: https://github.com/actions/upload-artifact
+- GitHub Models quickstart: https://docs.github.com/en/github-models/quickstart
+- GitHub Models catalog REST API: https://docs.github.com/en/rest/models/catalog
+- GitHub Models REST inference API: https://docs.github.com/en/rest/models/inference
+- GitHub Models billing and rate-limit notes: https://docs.github.com/en/billing/concepts/product-billing/github-models
 - Hermes docs index: https://hermes-agent.nousresearch.com/docs/llms.txt
 - Hermes GitHub and README: https://github.com/NousResearch/hermes-agent
 - Hermes architecture docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/developer-guide/architecture.md

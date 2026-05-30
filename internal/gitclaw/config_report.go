@@ -66,6 +66,8 @@ func renderConfigReport(ev Event, cfg Config, includeIssue bool) string {
 	fmt.Fprintf(&b, "- trigger_prefix: `%s`\n", cfg.TriggerPrefix)
 	fmt.Fprintf(&b, "- disabled_label: `%s`\n", cfg.DisabledLabel)
 	fmt.Fprintf(&b, "- model: `%s`\n", cfg.Model)
+	fmt.Fprintf(&b, "- model_fallbacks: `%s`\n", inlineListOrNone(cfg.ModelFallbacks))
+	fmt.Fprintf(&b, "- model_fallbacks_configured: `%d`\n", len(cfg.ModelFallbacks))
 	fmt.Fprintf(&b, "- run_mode: `%s`\n", "read-only")
 	fmt.Fprintf(&b, "- workdir: `%s`\n", inlineCode(cfg.Workdir))
 	fmt.Fprintf(&b, "- max_prompt_bytes: `%d`\n", cfg.MaxPromptBytes)

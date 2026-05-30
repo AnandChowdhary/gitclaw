@@ -20,6 +20,10 @@ authorization:
 model:
   provider: github-models
   model: openai/gpt-5-nano
+  fallbacks:
+    - openai/gpt-4.1-nano
+    - openai/gpt-5-nano
+    - openai/gpt-4.1-nano
   base_url: https://models.github.ai/inference/chat/completions
   max_prompt_bytes: 12345
   max_output_tokens: 678
@@ -61,6 +65,9 @@ tools:
 	if loaded.ModelProvider != "github-models" || loaded.LLMBaseURL != defaultGitHubModelsBaseURL {
 		t.Fatalf("model provider/base_url config not applied: %#v", loaded)
 	}
+	if len(loaded.ModelFallbacks) != 2 || loaded.ModelFallbacks[0] != "openai/gpt-4.1-nano" || loaded.ModelFallbacks[1] != "openai/gpt-5-nano" {
+		t.Fatalf("model fallbacks not normalized: %#v", loaded.ModelFallbacks)
+	}
 	if loaded.MaxPromptBytes != 12345 || loaded.MaxOutputTokens != 678 || loaded.MaxTranscriptMessages != 12 || loaded.MaxTranscriptMessageBytes != 3456 {
 		t.Fatalf("prompt budget config not applied: %#v", loaded)
 	}
@@ -85,6 +92,7 @@ func TestLoadEffectiveConfigAppliesEnvironmentAfterRepoConfig(t *testing.T) {
 `)
 	t.Setenv("GITCLAW_WORKDIR", root)
 	t.Setenv("GITCLAW_MODEL", "openai/env-model")
+	t.Setenv("GITCLAW_MODEL_FALLBACKS", "openai/env-fallback, openai/env-fallback-2")
 
 	loaded, err := LoadEffectiveConfig()
 	if err != nil {
@@ -95,6 +103,28 @@ func TestLoadEffectiveConfigAppliesEnvironmentAfterRepoConfig(t *testing.T) {
 	}
 	if loaded.Model != "openai/env-model" {
 		t.Fatalf("Model = %q, want env override", loaded.Model)
+	}
+	if len(loaded.ModelFallbacks) != 2 || loaded.ModelFallbacks[0] != "openai/env-fallback" || loaded.ModelFallbacks[1] != "openai/env-fallback-2" {
+		t.Fatalf("ModelFallbacks = %#v, want env override", loaded.ModelFallbacks)
+	}
+}
+
+func TestEnvModelFallbacksCanDisableRepoFallbacks(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/config.yml", `model:
+  model: openai/repo-model
+  fallbacks:
+    - openai/repo-fallback
+`)
+	t.Setenv("GITCLAW_WORKDIR", root)
+	t.Setenv("GITCLAW_MODEL_FALLBACKS", "none")
+
+	loaded, err := LoadEffectiveConfig()
+	if err != nil {
+		t.Fatalf("LoadEffectiveConfig returned error: %v", err)
+	}
+	if len(loaded.ModelFallbacks) != 0 {
+		t.Fatalf("ModelFallbacks = %#v, want disabled", loaded.ModelFallbacks)
 	}
 }
 

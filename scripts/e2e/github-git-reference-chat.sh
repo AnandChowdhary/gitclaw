@@ -149,7 +149,9 @@ comments="$(assistant_comments)"
 
 grep -Fq "$expected_sha" <<<"$comments" || die "assistant did not include attached git commit hash ${expected_sha}"
 grep -Fq "git-reference" <<<"$comments" || die "assistant did not include git-reference marker word"
-grep -Fq 'model="openai/gpt-5-nano"' <<<"$comments" || die "assistant marker did not use GitHub Models default"
+if ! grep -Fq 'model="openai/gpt-5-nano"' <<<"$comments" && ! grep -Fq 'model="openai/gpt-4.1-nano"' <<<"$comments"; then
+  die "assistant marker did not use configured GitHub Models primary or fallback"
+fi
 
 if grep -Fq "$hidden_token" <<<"$comments"; then
   die "assistant leaked hidden issue token"

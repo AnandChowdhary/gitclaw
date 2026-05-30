@@ -47,6 +47,9 @@ func TestNewLLMFromEnvDefaultsToGitHubModelsWithActionsToken(t *testing.T) {
 	if client.Model != "openai/gpt-5-nano" {
 		t.Fatalf("Model = %q, want openai/gpt-5-nano", client.Model)
 	}
+	if len(client.FallbackModels) != 0 {
+		t.Fatalf("FallbackModels = %#v, want none", client.FallbackModels)
+	}
 	if client.Client.Timeout != time.Minute {
 		t.Fatalf("client timeout = %s, want 1m0s", client.Client.Timeout)
 	}
@@ -82,6 +85,47 @@ func TestNewLLMFromEnvSupportsOpenAICompatibleOverride(t *testing.T) {
 	}
 }
 
+func TestNewLLMFromEnvIncludesConfiguredFallbacks(t *testing.T) {
+	t.Setenv("GITCLAW_FAKE_LLM_RESPONSE", "")
+	t.Setenv("GITHUB_TOKEN", "github-token")
+	t.Setenv("GH_TOKEN", "")
+	t.Setenv("GITCLAW_LLM_API_KEY", "")
+	t.Setenv("GITCLAW_LLM_BASE_URL", "")
+	t.Setenv("GITCLAW_MODEL", "")
+	cfg := DefaultConfig()
+	cfg.ModelFallbacks = []string{"openai/gpt-4.1-nano", "openai/gpt-4.1-nano"}
+
+	llm, err := NewLLMFromEnv(cfg)
+	if err != nil {
+		t.Fatalf("NewLLMFromEnv returned error: %v", err)
+	}
+	client := llm.(*OpenAICompatibleLLM)
+	if len(client.FallbackModels) != 1 || client.FallbackModels[0] != "openai/gpt-4.1-nano" {
+		t.Fatalf("FallbackModels = %#v, want normalized configured fallback", client.FallbackModels)
+	}
+}
+
+func TestNewLLMFromEnvAllowsFallbackEnvOverride(t *testing.T) {
+	t.Setenv("GITCLAW_FAKE_LLM_RESPONSE", "")
+	t.Setenv("GITHUB_TOKEN", "github-token")
+	t.Setenv("GH_TOKEN", "")
+	t.Setenv("GITCLAW_LLM_API_KEY", "")
+	t.Setenv("GITCLAW_LLM_BASE_URL", "")
+	t.Setenv("GITCLAW_MODEL", "")
+	t.Setenv("GITCLAW_MODEL_FALLBACKS", "none")
+	cfg := DefaultConfig()
+	cfg.ModelFallbacks = []string{"openai/gpt-4.1-nano"}
+
+	llm, err := NewLLMFromEnv(cfg)
+	if err != nil {
+		t.Fatalf("NewLLMFromEnv returned error: %v", err)
+	}
+	client := llm.(*OpenAICompatibleLLM)
+	if len(client.FallbackModels) != 0 {
+		t.Fatalf("FallbackModels = %#v, want env disabled fallback", client.FallbackModels)
+	}
+}
+
 func TestOpenAICompatibleLLMRetriesRateLimit(t *testing.T) {
 	t.Setenv("GITCLAW_LLM_MAX_ATTEMPTS", "2")
 	calls := 0
@@ -114,6 +158,86 @@ func TestOpenAICompatibleLLMRetriesRateLimit(t *testing.T) {
 	}
 	if calls != 2 {
 		t.Fatalf("server calls = %d, want 2", calls)
+	}
+}
+
+func TestOpenAICompatibleLLMFallsBackAfterRetryablePrimaryFailure(t *testing.T) {
+	t.Setenv("GITCLAW_LLM_MAX_ATTEMPTS", "3")
+	t.Setenv("GITCLAW_LLM_PRIMARY_ATTEMPTS_BEFORE_FALLBACK", "1")
+	var models []string
+	var fallbackPayload map[string]any
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var payload map[string]any
+		if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+			t.Fatalf("decode request body: %v", err)
+		}
+		model, _ := payload["model"].(string)
+		models = append(models, model)
+		if model == "openai/gpt-5-nano" {
+			w.Header().Set("Retry-After", "0")
+			http.Error(w, "Too many requests", http.StatusTooManyRequests)
+			return
+		}
+		fallbackPayload = payload
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"choices":[{"message":{"content":"fallback ok"}}]}`))
+	}))
+	defer server.Close()
+
+	llm := &OpenAICompatibleLLM{
+		APIKey:         "token",
+		BaseURL:        server.URL,
+		Model:          "openai/gpt-5-nano",
+		FallbackModels: []string{"openai/gpt-4.1-nano"},
+		Client:         server.Client(),
+	}
+	got, err := llm.Complete(context.Background(), LLMRequest{
+		Event:  Event{Repo: "owner/repo", Issue: Issue{Number: 1, Title: "fallback"}},
+		Config: Config{MaxOutputTokens: 123},
+	})
+	if err != nil {
+		t.Fatalf("Complete returned error: %v", err)
+	}
+	if got != "fallback ok" {
+		t.Fatalf("Complete = %q, want fallback ok", got)
+	}
+	if strings.Join(models, ",") != "openai/gpt-5-nano,openai/gpt-4.1-nano" {
+		t.Fatalf("models called = %#v, want primary then fallback", models)
+	}
+	if llm.SelectedModel() != "openai/gpt-4.1-nano" {
+		t.Fatalf("SelectedModel = %q, want fallback", llm.SelectedModel())
+	}
+	if got := fallbackPayload["max_tokens"]; got != float64(123) {
+		t.Fatalf("fallback max_tokens = %#v, want 123", got)
+	}
+	if _, ok := fallbackPayload["max_completion_tokens"]; ok {
+		t.Fatalf("fallback payload unexpectedly included max_completion_tokens: %#v", fallbackPayload)
+	}
+}
+
+func TestOpenAICompatibleLLMDoesNotFallbackForNonRetryablePrimaryFailure(t *testing.T) {
+	calls := 0
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		calls++
+		http.Error(w, "bad model", http.StatusBadRequest)
+	}))
+	defer server.Close()
+
+	llm := &OpenAICompatibleLLM{
+		APIKey:         "token",
+		BaseURL:        server.URL,
+		Model:          "openai/not-real",
+		FallbackModels: []string{"openai/gpt-4.1-nano"},
+		Client:         server.Client(),
+	}
+	_, err := llm.Complete(context.Background(), LLMRequest{
+		Event: Event{Repo: "owner/repo", Issue: Issue{Number: 1, Title: "no fallback"}},
+	})
+	if err == nil {
+		t.Fatalf("Complete should return non-retryable error")
+	}
+	if calls != 1 {
+		t.Fatalf("server calls = %d, want one primary call only", calls)
 	}
 }
 
@@ -211,6 +335,21 @@ func TestLLMRetryDelayUsesBoundedExponentialBackoff(t *testing.T) {
 		if got := llmRetryDelay(nil, tc.attempt); got != tc.want {
 			t.Fatalf("attempt %d delay = %s, want %s", tc.attempt, got, tc.want)
 		}
+	}
+}
+
+func TestLLMPrimaryAttemptsBeforeFallbackIsBounded(t *testing.T) {
+	t.Setenv("GITCLAW_LLM_PRIMARY_ATTEMPTS_BEFORE_FALLBACK", "")
+	if got := llmPrimaryAttemptsBeforeFallback(6); got != 1 {
+		t.Fatalf("default primary attempts = %d, want 1", got)
+	}
+	t.Setenv("GITCLAW_LLM_PRIMARY_ATTEMPTS_BEFORE_FALLBACK", "99")
+	if got := llmPrimaryAttemptsBeforeFallback(6); got != 6 {
+		t.Fatalf("bounded primary attempts = %d, want 6", got)
+	}
+	t.Setenv("GITCLAW_LLM_PRIMARY_ATTEMPTS_BEFORE_FALLBACK", "0")
+	if got := llmPrimaryAttemptsBeforeFallback(6); got != 1 {
+		t.Fatalf("invalid primary attempts = %d, want 1", got)
 	}
 }
 

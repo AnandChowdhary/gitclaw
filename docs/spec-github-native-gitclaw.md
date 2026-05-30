@@ -561,19 +561,37 @@ Default MVP behavior:
   `GITCLAW_LLM_API_KEY` for local/manual runs
 - output token parameter: `max_completion_tokens` for GPT-5-family model IDs,
   `max_tokens` otherwise
+- fallback models: `openai/gpt-4.1-nano` by default in the repository
+  template config
 - base URL override: `GITCLAW_LLM_BASE_URL`
 - model override: `GITCLAW_MODEL`
+- fallback override: `GITCLAW_MODEL_FALLBACKS`, comma/space/newline-separated;
+  set to `none`, `false`, or `[]` to disable fallback for negative tests or
+  provider migrations
+- fallback retry policy: try the primary once by default on retryable provider
+  statuses, then try configured fallbacks with the normal bounded retry budget;
+  tune with `GITCLAW_LLM_PRIMARY_ATTEMPTS_BEFORE_FALLBACK`
 
 2026-05-30 catalog check: GitHub's authenticated Models catalog API documents
 `https://models.github.ai/catalog/models`, and the live catalog for this repo
-currently lists `openai/gpt-5`, `openai/gpt-5-chat`, `openai/gpt-5-mini`, and
-`openai/gpt-5-nano`, but not `openai/gpt-5.4-mini`. `openai/gpt-5-nano` is
-therefore the default because it is the smallest OpenAI model currently exposed
-through the GitHub Models path usable with the Actions token. The first
-assistant version is issue-thread chat plus repository context summarization,
-where latency and cost matter more than maximum reasoning depth. Repositories
-can override to `openai/gpt-5.4-mini`, `openai/gpt-4o`, or another GitHub
-Models catalog model when that model is available to the repository.
+currently shows OpenAI entries including `openai/gpt-4.1`,
+`openai/gpt-4.1-mini`, `openai/gpt-4.1-nano`, `openai/gpt-4o-mini`,
+`openai/gpt-5`, `openai/gpt-5-mini`, and `openai/gpt-5-nano`, but not
+`openai/gpt-5.4-mini`. `openai/gpt-5-nano` is therefore the default because it
+is the smallest OpenAI GPT-5-family model currently exposed through the GitHub
+Models path usable with the Actions token. The first assistant version is
+issue-thread chat plus repository context summarization, where latency and cost
+matter more than maximum reasoning depth. Repositories can override to
+`openai/gpt-5.4-mini`, a newer small model, or another GitHub Models catalog
+model when that model is available to the repository.
+
+2026-05-30 reliability check: real local GitHub Models probes with the same
+GitHub identity returned `429` for `openai/gpt-5-nano` while
+`openai/gpt-4.1-nano` and `openai/gpt-4o-mini` returned successful tiny
+responses. The runtime should therefore record the actual selected model in
+the assistant marker, keep `openai/gpt-5-nano` as the configured primary, and
+allow a repo-reviewed fallback to preserve end-to-end conversation behavior
+when the hosted preview service rate-limits one model.
 
 Fallback provider rule:
 
@@ -605,6 +623,10 @@ Security and operational notes:
   60 second maximum delay. The checked-in Actions workflow is more patient for
   live model-backed runs: six attempts, a 75 second request timeout, a
   10 second base delay, and a 90 second maximum delay.
+- If the primary GitHub Models request receives a retryable provider response,
+  the runtime can switch to configured fallback models. Non-retryable provider
+  errors, including invalid model IDs, fail safely without fallback so negative
+  E2E tests still prove the error path.
 
 ### Model Inspection Command
 
@@ -621,6 +643,7 @@ inference. It posts a `gitclaw:assistant-turn` comment with
 
 - provider family,
 - selected model,
+- fallback models,
 - default model policy and catalog endpoint host,
 - endpoint host without URL credentials,
 - token source name without token value,
@@ -629,6 +652,7 @@ inference. It posts a `gitclaw:assistant-turn` comment with
 - retry attempts,
 - retry base and maximum delay,
 - retryable status categories,
+- fallback enablement and primary attempts before fallback,
 - prompt-artifact enablement.
 
 It never dumps issue/comment bodies, API keys, full prompts, or raw provider
@@ -2109,6 +2133,8 @@ authorization:
 model:
   provider: github-models
   model: openai/gpt-5-nano
+  fallbacks:
+    - openai/gpt-4.1-nano
   base_url: https://models.github.ai/inference/chat/completions
   max_input_tokens: 60000
   max_output_tokens: 4000
@@ -3410,10 +3436,13 @@ lives in GitHub's event, permission, and workflow runtime semantics.
    `github-search-tool-chat.sh`, `github-context-reference-chat.sh`, or
    `github-git-reference-chat.sh`, unless the change is provably unrelated to
    assistant turns. That test must exercise an actual model call and assert the
-   assistant marker/model plus a real answer. Report-only E2Es validate command
+   assistant marker/model plus a real answer. If the primary model is
+   rate-limited and the configured fallback answers, the test still counts as
+   LLM-backed because it exercised GitHub Models inference; the assistant
+   marker must record the actual model used. Report-only E2Es validate command
    surfaces; they do not prove inference, prompt assembly, transcript
-   reconstruction, tool-output injection, or GitHub Models permissions still
-   work.
+   reconstruction, tool-output injection, fallback behavior, or GitHub Models
+   permissions still work.
 
    Release rule: a feature batch is not done when only deterministic commands
    pass. The final validation set must include the feature-specific report E2E

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 )
 
 func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm LLMClient) error {
@@ -506,7 +507,7 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 	body := RenderAssistantComment(Marker{
 		RunID:          envFirst("GITHUB_RUN_ID", "local"),
 		EventID:        eventID(ev),
-		Model:          cfg.Model,
+		Model:          selectedLLMModel(cfg, llm),
 		IdempotencyKey: key,
 		RunURL:         actionRunURL(ev),
 	}, response)
@@ -515,6 +516,19 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 	}
 	status.SetDone()
 	return nil
+}
+
+type selectedModelReporter interface {
+	SelectedModel() string
+}
+
+func selectedLLMModel(cfg Config, llm LLMClient) string {
+	if reporter, ok := llm.(selectedModelReporter); ok {
+		if model := strings.TrimSpace(reporter.SelectedModel()); model != "" {
+			return model
+		}
+	}
+	return cfg.Model
 }
 
 func failStartedTurn(ctx context.Context, cfg Config, github GitHubClient, ev Event, status issueStatusUpdater, phase string, cause error) error {

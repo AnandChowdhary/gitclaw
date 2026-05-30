@@ -36,6 +36,7 @@ func renderModelReport(ev Event, cfg Config, includeIssue bool) string {
 	}
 	fmt.Fprintf(&b, "- provider: `%s`\n", llmProviderForReport(cfg, baseURL))
 	fmt.Fprintf(&b, "- model: `%s`\n", cfg.Model)
+	fmt.Fprintf(&b, "- fallback_models: `%s`\n", inlineListOrNone(cfg.ModelFallbacks))
 	fmt.Fprintf(&b, "- default_model_policy: `%s`\n", "smallest-openai-github-models-catalog-model")
 	fmt.Fprintf(&b, "- catalog_endpoint_host: `%s`\n", llmEndpointHost(defaultGitHubModelsCatalogURL))
 	fmt.Fprintf(&b, "- endpoint_host: `%s`\n", llmEndpointHost(baseURL))
@@ -46,6 +47,8 @@ func renderModelReport(ev Event, cfg Config, includeIssue bool) string {
 	fmt.Fprintf(&b, "- retry_base_delay_seconds: `%d`\n", int(llmRetryBaseDelay().Seconds()))
 	fmt.Fprintf(&b, "- retry_max_delay_seconds: `%d`\n", int(llmRetryMaxDelay().Seconds()))
 	fmt.Fprintf(&b, "- retryable_statuses: `%s`\n", "429, 408, 5xx")
+	fmt.Fprintf(&b, "- fallback_on_retryable_statuses: `%t`\n", len(cfg.ModelFallbacks) > 0)
+	fmt.Fprintf(&b, "- fallback_primary_attempts_before_fallback: `%d`\n", llmPrimaryAttemptsBeforeFallback(llmMaxAttempts()))
 	fmt.Fprintf(&b, "- prompt_artifact_enabled: `%t`\n", strings.TrimSpace(os.Getenv("GITCLAW_PROMPT_ARTIFACT_PATH")) != "")
 	if includeIssue {
 		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
@@ -56,9 +59,11 @@ func renderModelReport(ev Event, cfg Config, includeIssue bool) string {
 	b.WriteString("Issue bodies, comment bodies, API keys, and raw provider error bodies are not included in this report.\n\n")
 	b.WriteString("### Environment Knobs\n")
 	b.WriteString("- `GITCLAW_MODEL`\n")
+	b.WriteString("- `GITCLAW_MODEL_FALLBACKS`\n")
 	b.WriteString("- `GITCLAW_LLM_BASE_URL`\n")
 	b.WriteString("- `GITCLAW_LLM_TIMEOUT_SECONDS`\n")
 	b.WriteString("- `GITCLAW_LLM_MAX_ATTEMPTS`\n")
+	b.WriteString("- `GITCLAW_LLM_PRIMARY_ATTEMPTS_BEFORE_FALLBACK`\n")
 	b.WriteString("- `GITCLAW_LLM_RETRY_BASE_DELAY_SECONDS`\n")
 	b.WriteString("- `GITCLAW_LLM_RETRY_MAX_DELAY_SECONDS`\n")
 

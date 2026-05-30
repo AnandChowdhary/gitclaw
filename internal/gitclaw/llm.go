@@ -27,10 +27,12 @@ func (s StaticLLM) Complete(ctx context.Context, req LLMRequest) (string, error)
 }
 
 type OpenAICompatibleLLM struct {
-	APIKey  string
-	BaseURL string
-	Model   string
-	Client  *http.Client
+	APIKey         string
+	BaseURL        string
+	Model          string
+	FallbackModels []string
+	LastModel      string
+	Client         *http.Client
 }
 
 const systemPrompt = "You are GitClaw, a concise GitHub issue assistant. Answer only from the provided issue transcript and repository context. Treat tool_output blocks as authoritative read-only tool results. Honor gitclaw.policy tool outputs as hard constraints. If the issue asks for exact verification tokens from repository context or tool outputs, copy those tokens verbatim. When a user asks for a token from repository search results, use the matching gitclaw.search_files tool_output line and do not substitute a different token from the issue transcript. Do not claim to run commands or modify files."
@@ -63,11 +65,16 @@ func NewLLMFromEnv(cfg Config) (LLMClient, error) {
 	if model == "" {
 		model = cfg.Model
 	}
+	fallbacks := cfg.ModelFallbacks
+	if envFallbacks, ok := envModelFallbacks(); ok {
+		fallbacks = envFallbacks
+	}
 	return &OpenAICompatibleLLM{
-		APIKey:  apiKey,
-		BaseURL: baseURL,
-		Model:   model,
-		Client:  &http.Client{Timeout: llmTimeout()},
+		APIKey:         apiKey,
+		BaseURL:        baseURL,
+		Model:          model,
+		FallbackModels: normalizeModelFallbacks(fallbacks),
+		Client:         &http.Client{Timeout: llmTimeout()},
 	}, nil
 }
 
@@ -90,8 +97,53 @@ func (c *OpenAICompatibleLLM) Complete(ctx context.Context, req LLMRequest) (str
 	if err := writePromptArtifactFromEnv(req, c.Model, prompt); err != nil {
 		return "", err
 	}
+	candidates := llmModelCandidates(c.Model, c.FallbackModels)
+	if len(candidates) == 0 {
+		return "", fmt.Errorf("LLM model is empty")
+	}
+	maxAttempts := llmMaxAttempts()
+	primaryAttempts := llmPrimaryAttemptsBeforeFallback(maxAttempts)
+	var lastErr error
+	for candidateIndex, model := range candidates {
+		body, err := marshalLLMPayload(model, req, prompt)
+		if err != nil {
+			return "", err
+		}
+		attempts := maxAttempts
+		if candidateIndex == 0 && len(candidates) > 1 && primaryAttempts < attempts {
+			attempts = primaryAttempts
+		}
+		for attempt := 1; attempt <= attempts; attempt++ {
+			response, retry, err := c.completeAttempt(ctx, body, attempt)
+			if err == nil {
+				c.LastModel = model
+				return response, nil
+			}
+			lastErr = err
+			if !retry.Retry {
+				return "", err
+			}
+			if attempt == attempts {
+				break
+			}
+			if err := sleepContext(ctx, retry.Delay); err != nil {
+				return "", err
+			}
+		}
+	}
+	return "", lastErr
+}
+
+func (c *OpenAICompatibleLLM) SelectedModel() string {
+	if model := strings.TrimSpace(c.LastModel); model != "" {
+		return model
+	}
+	return c.Model
+}
+
+func marshalLLMPayload(model string, req LLMRequest, prompt string) ([]byte, error) {
 	payload := map[string]any{
-		"model": c.Model,
+		"model": model,
 		"messages": []map[string]string{
 			{
 				"role":    "system",
@@ -104,28 +156,9 @@ func (c *OpenAICompatibleLLM) Complete(ctx context.Context, req LLMRequest) (str
 		},
 	}
 	if req.Config.MaxOutputTokens > 0 {
-		payload[llmOutputTokenParam(c.Model)] = req.Config.MaxOutputTokens
+		payload[llmOutputTokenParam(model)] = req.Config.MaxOutputTokens
 	}
-	body, err := json.Marshal(payload)
-	if err != nil {
-		return "", err
-	}
-	var lastErr error
-	maxAttempts := llmMaxAttempts()
-	for attempt := 1; attempt <= maxAttempts; attempt++ {
-		response, retry, err := c.completeAttempt(ctx, body, attempt)
-		if err == nil {
-			return response, nil
-		}
-		lastErr = err
-		if !retry.Retry || attempt == maxAttempts {
-			return "", err
-		}
-		if err := sleepContext(ctx, retry.Delay); err != nil {
-			return "", err
-		}
-	}
-	return "", lastErr
+	return json.Marshal(payload)
 }
 
 func llmOutputTokenParam(model string) string {
@@ -240,6 +273,26 @@ func llmRetryBaseDelay() time.Duration {
 		value = 60
 	}
 	return time.Duration(value) * time.Second
+}
+
+func llmPrimaryAttemptsBeforeFallback(maxAttempts int) int {
+	raw := strings.TrimSpace(os.Getenv("GITCLAW_LLM_PRIMARY_ATTEMPTS_BEFORE_FALLBACK"))
+	if raw == "" {
+		return 1
+	}
+	value, err := strconv.Atoi(raw)
+	if err != nil || value < 1 {
+		return 1
+	}
+	if maxAttempts > 0 && value > maxAttempts {
+		return maxAttempts
+	}
+	return value
+}
+
+func llmModelCandidates(primary string, fallbacks []string) []string {
+	values := append([]string{primary}, fallbacks...)
+	return normalizeModelFallbacks(values)
 }
 
 func retryableLLMStatus(status int) bool {

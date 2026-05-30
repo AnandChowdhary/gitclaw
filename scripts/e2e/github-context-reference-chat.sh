@@ -148,7 +148,9 @@ wait_for_assistant_count 1 || die "expected one context reference chat comment"
 comments="$(assistant_comments)"
 
 grep -Fq "$expected_token" <<<"$comments" || die "assistant did not include referenced file token ${expected_token}"
-grep -Fq 'model="openai/gpt-5-nano"' <<<"$comments" || die "assistant marker did not use GitHub Models default"
+if ! grep -Fq 'model="openai/gpt-5-nano"' <<<"$comments" && ! grep -Fq 'model="openai/gpt-4.1-nano"' <<<"$comments"; then
+  die "assistant marker did not use configured GitHub Models primary or fallback"
+fi
 
 if grep -Fq "$hidden_token" <<<"$comments"; then
   die "assistant leaked hidden issue token"

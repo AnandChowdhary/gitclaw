@@ -58,6 +58,37 @@ func TestHandleDryRunPostsExactlyOneIdempotentComment(t *testing.T) {
 	}
 }
 
+func TestHandleUsesSelectedLLMModelInAssistantMarker(t *testing.T) {
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 43,
+			"title": "@gitclaw explain fallback",
+			"body": "Which model answered?",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": []
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{43: nil}}
+	llm := &FakeLLM{Response: "Answered through fallback.", SelectedModelName: "openai/gpt-4.1-nano"}
+	err = Handle(context.Background(), ev, DefaultConfig(), github, llm)
+	if err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	if !strings.Contains(github.Posted[0].Body, `model="openai/gpt-4.1-nano"`) {
+		t.Fatalf("assistant marker did not use selected model:\n%s", github.Posted[0].Body)
+	}
+}
+
 func TestHandleSkipsUntrustedBeforeLLM(t *testing.T) {
 	ev, err := ParseEvent("issue_comment", []byte(`{
 		"action": "created",
@@ -491,7 +522,7 @@ func TestHandleModelsCommandPostsReportWithoutLLM(t *testing.T) {
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Model Report", "Generated without a model call", "model=\"gitclaw/models\"", "provider: `github-models`", "model: `openai/gpt-5-nano`", "default_model_policy: `smallest-openai-github-models-catalog-model`", "catalog_endpoint_host: `models.github.ai`", "endpoint_host: `models.github.ai`", "token_source: `GITHUB_TOKEN`", "output_token_parameter: `max_completion_tokens`", "request_timeout_seconds: `75`", "retry_max_attempts: `6`", "retry_base_delay_seconds: `10`", "retry_max_delay_seconds: `90`", "retryable_statuses: `429, 408, 5xx`"} {
+	for _, want := range []string{"GitClaw Model Report", "Generated without a model call", "model=\"gitclaw/models\"", "provider: `github-models`", "model: `openai/gpt-5-nano`", "fallback_models: `none`", "default_model_policy: `smallest-openai-github-models-catalog-model`", "catalog_endpoint_host: `models.github.ai`", "endpoint_host: `models.github.ai`", "token_source: `GITHUB_TOKEN`", "output_token_parameter: `max_completion_tokens`", "request_timeout_seconds: `75`", "retry_max_attempts: `6`", "retry_base_delay_seconds: `10`", "retry_max_delay_seconds: `90`", "retryable_statuses: `429, 408, 5xx`", "fallback_on_retryable_statuses: `false`", "fallback_primary_attempts_before_fallback: `1`"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("model report missing %q:\n%s", want, body)
 		}
@@ -549,7 +580,7 @@ model:
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Config Report", "Generated without a model call", "model=\"gitclaw/config\"", "config_source: `defaults+repo`", "config_file_path: `.gitclaw/config.yml`", "config_file_present: `true`", "trigger_label: `gitclaw`", "trigger_prefix: `@gitclaw`", "run_mode: `read-only`", "max_prompt_bytes: `60000`", "max_output_tokens: `4000`", "skills_allowed_configured: `0`", "skills_disabled_configured: `0`", "tools_allowed_configured: `0`", "tools_disabled_configured: `0`", "workflows_present: `2`", "slash_commands: `33`", "### Tool Gates", "OWNER", "COLLABORATOR", "gitclaw:disabled", "/agents", "/artifacts", "/approvals", "/bundles", "/channels", "/checkpoints", "/diffs", "/doctor", "/help", "/memory", "/models", "/nodes", "/profile", "/tasks", "/runs", "/sandbox", "/prompt", "/config", "/secrets", "/workspace", ".github/workflows/gitclaw.yml", ".github/workflows/gitclaw-heartbeat.yml", "sha256_12="} {
+	for _, want := range []string{"GitClaw Config Report", "Generated without a model call", "model=\"gitclaw/config\"", "config_source: `defaults+repo`", "config_file_path: `.gitclaw/config.yml`", "config_file_present: `true`", "trigger_label: `gitclaw`", "trigger_prefix: `@gitclaw`", "model_fallbacks: `none`", "model_fallbacks_configured: `0`", "run_mode: `read-only`", "max_prompt_bytes: `60000`", "max_output_tokens: `4000`", "skills_allowed_configured: `0`", "skills_disabled_configured: `0`", "tools_allowed_configured: `0`", "tools_disabled_configured: `0`", "workflows_present: `2`", "slash_commands: `33`", "### Tool Gates", "OWNER", "COLLABORATOR", "gitclaw:disabled", "/agents", "/artifacts", "/approvals", "/bundles", "/channels", "/checkpoints", "/diffs", "/doctor", "/help", "/memory", "/models", "/nodes", "/profile", "/tasks", "/runs", "/sandbox", "/prompt", "/config", "/secrets", "/workspace", ".github/workflows/gitclaw.yml", ".github/workflows/gitclaw-heartbeat.yml", "sha256_12="} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("config report missing %q:\n%s", want, body)
 		}
@@ -3444,10 +3475,11 @@ func (f *FakeGitHub) ensureIssueLabels() {
 }
 
 type FakeLLM struct {
-	Response    string
-	Err         error
-	Calls       int
-	LastRequest LLMRequest
+	Response          string
+	Err               error
+	SelectedModelName string
+	Calls             int
+	LastRequest       LLMRequest
 }
 
 func (f *FakeLLM) Complete(ctx context.Context, req LLMRequest) (string, error) {
@@ -3457,6 +3489,10 @@ func (f *FakeLLM) Complete(ctx context.Context, req LLMRequest) (string, error) 
 		return "", f.Err
 	}
 	return f.Response, nil
+}
+
+func (f *FakeLLM) SelectedModel() string {
+	return f.SelectedModelName
 }
 
 func issueHasAllLabels(issue Issue, labels []string) bool {

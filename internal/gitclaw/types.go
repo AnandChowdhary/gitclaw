@@ -24,6 +24,7 @@ type Config struct {
 	AllowedAssociations       map[string]bool
 	ModelProvider             string
 	Model                     string
+	ModelFallbacks            []string
 	LLMBaseURL                string
 	Workdir                   string
 	ConfigSource              string

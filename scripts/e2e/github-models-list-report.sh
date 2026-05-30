@@ -137,6 +137,7 @@ for expected in \
   "Generated without a model call" \
   'provider: `github-models`' \
   'model: `openai/gpt-5-nano`' \
+  'fallback_models: `openai/gpt-4.1-nano`' \
   'default_model_policy: `smallest-openai-github-models-catalog-model`' \
   'catalog_endpoint_host: `models.github.ai`' \
   'endpoint_host: `models.github.ai`' \
@@ -147,6 +148,8 @@ for expected in \
   'retry_base_delay_seconds: `10`' \
   'retry_max_delay_seconds: `90`' \
   'retryable_statuses: `429, 408, 5xx`' \
+  'fallback_on_retryable_statuses: `true`' \
+  'fallback_primary_attempts_before_fallback: `1`' \
   'prompt_artifact_enabled: `false`'; do
   grep -Fq "$expected" <<<"$comments" || die "models list report missing ${expected}"
 done

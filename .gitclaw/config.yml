@@ -12,6 +12,8 @@ authorization:
 model:
   provider: github-models
   model: openai/gpt-5-nano
+  fallbacks:
+    - openai/gpt-4.1-nano
   base_url: https://models.github.ai/inference/chat/completions
   max_prompt_bytes: 60000
   max_output_tokens: 4000
