@@ -142,7 +142,7 @@ for expected in \
   'plugin_specs_dir: `.gitclaw/plugins`' \
   'plugin_specs: `1`' \
   'plugin_specs_with_frontmatter: `1`' \
-  'plugin_capabilities: `2`' \
+  'plugin_capabilities: `3`' \
   'plugin_optional_capabilities: `1`' \
   'plugin_specs_requiring_approval: `1`' \
   'plugin_specs_metadata_only: `1`' \
@@ -162,7 +162,7 @@ for expected in \
   'kind=`provider`' \
   'source=`repo-reviewed`' \
   'activation=`metadata-only`' \
-  'capabilities=`2`' \
+  'capabilities=`3`' \
   'optional_capabilities=`1`' \
   'requires_approval=`true`' \
   'plugin packages are not installed' \

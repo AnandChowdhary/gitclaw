@@ -558,6 +558,19 @@ boundaries, and unbounded loops. As with proactive risk, live acceptance must
 pair the deterministic report with a GitHub Models follow-up that proves real
 inference and prompt-visible repo search.
 
+2026-05-30 plugin-risk follow-up: OpenClaw plugins can arrive through
+managed sources such as ClawHub, npm, git, local paths, or hook packs, while
+Hermes-style tool/MCP integrations can add new runtime channels and
+credential-bearing servers. GitClaw's v1 answer should remain deliberately
+boring: plugin specs are repo-reviewed metadata only. Add a `plugins risk`
+report that scans plugin policy/spec files and ignored package/runtime files
+for supply-chain install instructions, MCP/runtime connections, prompt
+boundary overrides, credential material, raw payload logging, untrusted
+issue-body execution, external webhooks, repository mutation, missing
+approval/metadata-only gates, and unbounded loops. Acceptance should mirror the
+other risk reports: deterministic body-free audit plus a real GitHub Models
+follow-up proving inference and repo-search tool exposure.
+
 2026-05-30 skill-backed proactive follow-up: Hermes cron jobs run in fresh
 sessions and can attach skills in execution order, while OpenClaw standing
 orders keep durable authority in reviewed workspace files. GitClaw should keep

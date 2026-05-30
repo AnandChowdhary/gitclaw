@@ -59,11 +59,18 @@ func IsPluginReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderPluginReport(ev Event, cfg Config) string {
+	if isPluginRiskRequest(ev, cfg) {
+		return renderPluginRiskReport(ev, cfg, true)
+	}
 	return renderPluginReport(ev, cfg, true)
 }
 
 func RenderPluginCLIReport(cfg Config) string {
 	return renderPluginReport(Event{}, cfg, false)
+}
+
+func RenderPluginRiskCLIReport(cfg Config) string {
+	return renderPluginRiskReport(Event{}, cfg, false)
 }
 
 func renderPluginReport(ev Event, cfg Config, includeIssue bool) string {
@@ -392,4 +399,16 @@ func pluginSpecsMetadataOnly(specs []pluginSpecCard) int {
 		}
 	}
 	return count
+}
+
+func isPluginRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 {
+		return false
+	}
+	command := fields[0]
+	if command != "/plugins" && command != "/plugin" {
+		return false
+	}
+	return strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit")
 }

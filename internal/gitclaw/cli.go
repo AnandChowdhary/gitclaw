@@ -316,8 +316,10 @@ func runPluginsCommand(args []string) error {
 	switch args[0] {
 	case "list", "verify":
 		return runPluginsListCommand(args[1:])
+	case "risk", "risk-audit":
+		return runPluginsRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw plugins [list|verify]")
+		return fmt.Errorf("usage: gitclaw plugins [list|risk|verify]")
 	}
 }
 
@@ -330,6 +332,18 @@ func runPluginsListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderPluginCLIReport(cfg))
+	return nil
+}
+
+func runPluginsRiskCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown plugins risk argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderPluginRiskCLIReport(cfg))
 	return nil
 }
 

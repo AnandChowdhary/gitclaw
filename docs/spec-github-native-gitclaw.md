@@ -723,8 +723,8 @@ GitHub issue/comment event
   `artifacts list`, `artifacts verify`,
   `diffs summary`, `diffs verify`,
   `workspace summary`, `workspace verify`,
-  `hooks list`, `hooks verify`,
-  `plugins list`, `plugins verify`,
+  `hooks list`, `hooks risk`, `hooks verify`,
+  `plugins list`, `plugins risk`, `plugins verify`,
   `tasks list`, `tasks verify`,
   `migrate plan`,
   `orders list`, `orders verify`,
@@ -2447,6 +2447,7 @@ runtime extension model, and by Hermes' toolset/MCP filtering:
 
 ```text
 @gitclaw /plugins
+@gitclaw /plugins risk
 @gitclaw /plugin
 ```
 
@@ -2469,10 +2470,30 @@ issue, comment, config, credential, or provider payload bodies. Future
 executable plugins require reviewed workflows, explicit permissions, approval
 gates, and audit cards before any runtime can activate.
 
+The risk form:
+
+```text
+@gitclaw /plugins risk
+@gitclaw /plugin risk
+```
+
+posts a `GitClaw Plugin Risk Report` without model inference. It scans
+`.gitclaw/PLUGINS.md`, `.gitclaw/plugins/*.md`, and ignored package/runtime
+files for prompt-boundary overrides, credential material, automatic package or
+ClawHub installs, MCP/runtime connections, untrusted issue-body execution, raw
+payload logging, external webhook bridges, repository mutation, missing
+approval/metadata-only boundaries, and unbounded loops. It reports paths,
+metadata, risk counts, codes, severities, and line hashes only; plugin bodies,
+package bodies, issue bodies, comments, provider payloads, credentials, and
+secret values are not included. Changes to this risk surface must include a
+live GitHub Models follow-up E2E so plugin safety remains tested against actual
+inference and prompt-visible tools.
+
 Local operators can inspect the same surface with:
 
 ```bash
 gitclaw plugins list
+gitclaw plugins risk
 gitclaw plugins verify
 ```
 
@@ -4544,6 +4565,11 @@ examples/workflows/gitclaw.yml
   runtime file state, MCP/plugin execution boundaries, and body-free findings
   without a model call or plugin body leakage. Each plugins feature batch must
   still run a live GitHub Models conversation E2E.
+- A `gh`-driven plugins-risk E2E harness verifies `@gitclaw /plugins risk`
+  and local `gitclaw plugins risk` expose body-free plugin policy/spec/package
+  risk metadata, then runs a real GitHub Models follow-up conversation that
+  proves model inference, prompt provenance, selected skills, and
+  prompt-visible tool usage.
 - A `gh`-driven tasks-report E2E harness verifies `@gitclaw /tasks` reports
   task policy metadata, model-context loading, declarative task/flow spec
   metadata, issue-native status/label mapping, current issue task status,
