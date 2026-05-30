@@ -688,6 +688,15 @@ the same safety bar without installing or executing skills: `/skills` and
 names, folder/name mismatches, and missing declared requirements without
 dumping full skill bodies.
 
+2026-05-30 skill-verify follow-up: current OpenClaw docs expose
+`openclaw skills verify` for registry trust envelopes and warn that third-party
+skills are untrusted code; Hermes documents skill lifecycle/provenance as a
+background system. GitClaw should keep the MVP narrower but still expose an
+explicit `@gitclaw /skills verify` and `gitclaw skills verify` report:
+repo-local source roots, body hashes, requirement status, validation rollup,
+and `registry_verification=not_configured` without installing, executing, or
+dumping skill bodies.
+
 ### Cron And Long-Horizon Work
 
 Hermes cron jobs are first-class agent tasks, not just shell tasks. They can:

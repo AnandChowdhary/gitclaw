@@ -867,6 +867,7 @@ OpenClaw/AgentSkills:
 Validation is visible in the `/skills` report and locally through:
 
 ```bash
+gitclaw skills verify
 gitclaw skills validate
 gitclaw skills check
 gitclaw skills list
@@ -877,6 +878,11 @@ gitclaw skills search <query>
 The validation output includes only paths, counts, hashes, and short finding
 details. It never dumps full `SKILL.md` bodies.
 
+`gitclaw skills verify` is a stronger body-free trust envelope for the same
+local skills. It does not contact an external registry or execute installers.
+It reports repo-local source roots, content hashes, requirement status, and the
+validation rollup so reviewers can audit skill influence as code.
+
 ## Skills Inspection Command
 
 GitClaw supports a deterministic skill inventory command inspired by
@@ -886,6 +892,7 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 ```text
 @gitclaw /skills
 @gitclaw /skills list
+@gitclaw /skills verify
 @gitclaw /skills validate
 @gitclaw /skills check
 @gitclaw /skills info repo-reader
@@ -915,6 +922,14 @@ invalid-name count, folder/name mismatch count, and body-free findings. This
 mirrors `gitclaw skills validate` for issue-side audits without the full skill
 inventory. `@gitclaw /skills check` and `gitclaw skills check` are OpenClaw
 compatibility aliases for the same validation-only report.
+
+When called as `@gitclaw /skills verify`, the command posts the repo-local
+skill trust envelope. It includes `verification_scope=repo-local-metadata`,
+source-root counts, per-skill trust cards with short body hashes, declared and
+missing requirement counts, and an explicit
+`registry_verification=not_configured` field. This mirrors OpenClaw's
+verification posture while preserving GitClaw's no-registry, no-installer MVP
+boundary.
 
 When called as `@gitclaw /skills info <name>`, the same deterministic command
 switches from inventory mode to focused skill-info mode. The info report shows
@@ -2793,6 +2808,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven skills-list E2E harness verifies `@gitclaw /skills list`
   is an explicit inventory alias with the same body-free skill metadata and
   selected-skill provenance.
+- A `gh`-driven skills-verify E2E harness verifies
+  `@gitclaw /skills verify` exposes the repo-local skill trust envelope,
+  hashes, requirement status, and no-registry boundary without body leakage.
 - A `gh`-driven skills-validate E2E harness verifies
   `@gitclaw /skills validate` and the OpenClaw-style
   `@gitclaw /skills check` alias expose the body-free validation report

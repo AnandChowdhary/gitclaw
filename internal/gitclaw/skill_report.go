@@ -67,6 +67,9 @@ func slashCommandFieldsFromLine(line, triggerPrefix string) []string {
 }
 
 func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
+	if isSkillsVerifyRequest(ev, cfg) {
+		return renderSkillsVerifyReport(ev, repoContext, true)
+	}
 	if isSkillsValidateRequest(ev, cfg) {
 		return renderSkillsValidationReport(ev, repoContext, true)
 	}
@@ -254,6 +257,11 @@ func requestedSkillSearchQuery(ev Event, cfg Config) string {
 func isSkillsValidateRequest(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && fields[0] == "/skills" && (strings.EqualFold(fields[1], "validate") || strings.EqualFold(fields[1], "check"))
+}
+
+func isSkillsVerifyRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && fields[0] == "/skills" && strings.EqualFold(fields[1], "verify")
 }
 
 func cleanSkillLookupName(name string) string {
