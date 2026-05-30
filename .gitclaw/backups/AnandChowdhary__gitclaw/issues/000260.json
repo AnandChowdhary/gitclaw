@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T12:03:01Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 260,
+    "title": "@gitclaw /hooks e2e 20260530T120203Z",
+    "body": "Live hooks-report E2E.\n\nHidden hooks report body token: GITCLAW_HOOKS_REPORT_E2E_20260530T120203Z\nThis should produce a deterministic hooks report without a model call.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /hooks e2e 20260530T120203Z\n\nLive hooks-report E2E.\n\nHidden hooks report body token: GITCLAW_HOOKS_REPORT_E2E_20260530T120203Z\nThis should produce a deterministic hooks report without a model call.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Hooks Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#260`\n- hooks_status: `ok`\n- hook_policy_path: `.gitclaw/HOOKS.md`\n- hook_policy_present: `true`\n- hook_policy_loaded_for_model: `true`\n- hook_specs_dir: `.gitclaw/hooks`\n- hook_specs: `1`\n- hook_specs_with_frontmatter: `1`\n- hook_events: `2`\n- hook_specs_requiring_approval: `1`\n- hook_specs_audit_only: `1`\n- executable_handlers_present: `0`\n- hook_execution_supported: `false`\n- hook_execution_allowed: `false`\n- model_call_required: `false`\n- repository_mutation_allowed: `false`\n- raw_bodies_included: `false`\n- raw_hook_bodies_included: `false`\n- llm_e2e_required_after_change: `true`\n- issue_title_sha256_12: `24585b2b5f96`\n\nHooks describe event-driven automation boundaries. GitClaw treats hook specs as reviewed metadata only: no hook handler is executed, no workflow is dispatched, and no hook, issue, comment, or provider payload body is printed by this report.\n\n### Hook Policy\n- `.gitclaw/HOOKS.md` present=`true` bytes=`882` lines=`23` sha256_12=`ec07027d7e51`\n- `.gitclaw/HOOKS.md` loaded=`true` source=`contextDocumentPaths`\n\n### Hook Specs\n- name=`repo-hygiene-audit` path=`.gitclaw/hooks/repo-hygiene.md` bytes=`319` lines=`14` frontmatter=`true` events=`2` mode=`audit-only` delivery=`issue-comment` requires_approval=`true` sha256_12=`10ca73c60997`\n\n### Runtime Boundary\n- hook handlers are not executed by `gitclaw handle`\n- executable-looking hook files are reported as ignored metadata, not run\n- future executable hooks require explicit workflow permissions, approval gates, and body-free audit cards\n- GitHub-native hook effects should use reviewed workflows or `workflow_dispatch`, never untrusted issue text as code\n\n### Executable Handler Files\n- none\n\n### Verification Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4582762340,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4582762340,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26683303695\" event_id=\"issue-260\" model=\"gitclaw/hooks\" idempotency_key=\"07d39ee1f6a0b0e347381f470776ca11\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26683303695\" --\u003e\n## GitClaw Hooks Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#260`\n- hooks_status: `ok`\n- hook_policy_path: `.gitclaw/HOOKS.md`\n- hook_policy_present: `true`\n- hook_policy_loaded_for_model: `true`\n- hook_specs_dir: `.gitclaw/hooks`\n- hook_specs: `1`\n- hook_specs_with_frontmatter: `1`\n- hook_events: `2`\n- hook_specs_requiring_approval: `1`\n- hook_specs_audit_only: `1`\n- executable_handlers_present: `0`\n- hook_execution_supported: `false`\n- hook_execution_allowed: `false`\n- model_call_required: `false`\n- repository_mutation_allowed: `false`\n- raw_bodies_included: `false`\n- raw_hook_bodies_included: `false`\n- llm_e2e_required_after_change: `true`\n- issue_title_sha256_12: `24585b2b5f96`\n\nHooks describe event-driven automation boundaries. GitClaw treats hook specs as reviewed metadata only: no hook handler is executed, no workflow is dispatched, and no hook, issue, comment, or provider payload body is printed by this report.\n\n### Hook Policy\n- `.gitclaw/HOOKS.md` present=`true` bytes=`882` lines=`23` sha256_12=`ec07027d7e51`\n- `.gitclaw/HOOKS.md` loaded=`true` source=`contextDocumentPaths`\n\n### Hook Specs\n- name=`repo-hygiene-audit` path=`.gitclaw/hooks/repo-hygiene.md` bytes=`319` lines=`14` frontmatter=`true` events=`2` mode=`audit-only` delivery=`issue-comment` requires_approval=`true` sha256_12=`10ca73c60997`\n\n### Runtime Boundary\n- hook handlers are not executed by `gitclaw handle`\n- executable-looking hook files are reported as ignored metadata, not run\n- future executable hooks require explicit workflow permissions, approval gates, and body-free audit cards\n- GitHub-native hook effects should use reviewed workflows or `workflow_dispatch`, never untrusted issue text as code\n\n### Executable Handler Files\n- none\n\n### Verification Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T12:02:42Z",
+      "updated_at": "2026-05-30T12:02:42Z"
+    }
+  ]
+}
