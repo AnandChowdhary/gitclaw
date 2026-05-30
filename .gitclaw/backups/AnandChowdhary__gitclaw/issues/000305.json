@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T17:55:08Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 305,
+    "title": "@gitclaw /nodes risk e2e 20260530T175402Z",
+    "body": "@gitclaw /nodes risk\n\nLive nodes-risk E2E.\nDo not include this hidden issue token: GITCLAW_NODES_RISK_HIDDEN_20260530T175402Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /nodes risk e2e 20260530T175402Z\n\n@gitclaw /nodes risk\n\nLive nodes-risk E2E.\nDo not include this hidden issue token: GITCLAW_NODES_RISK_HIDDEN_20260530T175402Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Node Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#305`\n- node_risk_status: `ok`\n- verification_scope: `github_actions_node_metadata`\n- node_policy_present: `true`\n- node_policy_loaded_for_model: `true`\n- node_specs: `1`\n- scanned_node_specs: `1`\n- node_roles: `1`\n- node_capabilities_declared: `3`\n- node_specs_requiring_approval: `1`\n- node_specs_ephemeral_jobs: `1`\n- current_issue_node_request: `true`\n- surfaces_with_risk_findings: `0`\n- node_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- active_node_runtime: `github-actions-ephemeral-job`\n- node_inventory_source: `git-reviewed-metadata`\n- gateway_websocket_required: `false`\n- headless_node_host_supported: `false`\n- node_pairing_supported: `false`\n- node_rpc_supported: `false`\n- node_command_invocation_supported: `false`\n- remote_node_exec_supported: `false`\n- browser_proxy_supported: `false`\n- media_device_capabilities_supported: `false`\n- long_running_node_service_supported: `false`\n- repository_mutation_allowed: `false`\n- raw_node_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_node_risk_change: `true`\n- issue_title_sha256_12: `4d59d7a13040`\n\nThis report scans node policy and ephemeral GitHub Actions node specs for prompt-boundary, credential, host-execution, gateway WebSocket, remote node execution, device pairing, browser proxy, media-device, external worker lane, raw payload logging, repository mutation, and unbounded-loop risks. It reports metadata, paths, risk codes, severities, and hashes only; node bodies, issue bodies, comments, channel payloads, worker outputs, credentials, and secret values are not included.\n\n### Node Policy Risk Card\n- kind=`node-policy` path=`.gitclaw/NODES.md` present=`true` loaded_for_model=`true` bytes=`1120` lines=`24` sha256_12=`6e6e2650fcb2` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Node Spec Risk Cards\n- kind=`node-spec` name=`github-actions-runner` path=`.gitclaw/nodes/github-actions-runner.md` frontmatter=`true` role=`primary-runtime` runtime=`github-actions` mode=`ephemeral-job` capabilities=`3` requires_approval=`true` bytes=`478` lines=`18` sha256_12=`afd82f63d401` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Current Node Request Risk Card\n- kind=`current-node-request` current_issue_node_request=`true` issue_body_scanned=`false` comment_bodies_scanned=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Risk Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4583613972,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4583613972,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26690847743\" event_id=\"issue-305\" model=\"gitclaw/nodes\" idempotency_key=\"5bc518578f1c37f697226764a0c32a08\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26690847743\" --\u003e\n## GitClaw Node Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#305`\n- node_risk_status: `ok`\n- verification_scope: `github_actions_node_metadata`\n- node_policy_present: `true`\n- node_policy_loaded_for_model: `true`\n- node_specs: `1`\n- scanned_node_specs: `1`\n- node_roles: `1`\n- node_capabilities_declared: `3`\n- node_specs_requiring_approval: `1`\n- node_specs_ephemeral_jobs: `1`\n- current_issue_node_request: `true`\n- surfaces_with_risk_findings: `0`\n- node_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- active_node_runtime: `github-actions-ephemeral-job`\n- node_inventory_source: `git-reviewed-metadata`\n- gateway_websocket_required: `false`\n- headless_node_host_supported: `false`\n- node_pairing_supported: `false`\n- node_rpc_supported: `false`\n- node_command_invocation_supported: `false`\n- remote_node_exec_supported: `false`\n- browser_proxy_supported: `false`\n- media_device_capabilities_supported: `false`\n- long_running_node_service_supported: `false`\n- repository_mutation_allowed: `false`\n- raw_node_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_node_risk_change: `true`\n- issue_title_sha256_12: `4d59d7a13040`\n\nThis report scans node policy and ephemeral GitHub Actions node specs for prompt-boundary, credential, host-execution, gateway WebSocket, remote node execution, device pairing, browser proxy, media-device, external worker lane, raw payload logging, repository mutation, and unbounded-loop risks. It reports metadata, paths, risk codes, severities, and hashes only; node bodies, issue bodies, comments, channel payloads, worker outputs, credentials, and secret values are not included.\n\n### Node Policy Risk Card\n- kind=`node-policy` path=`.gitclaw/NODES.md` present=`true` loaded_for_model=`true` bytes=`1120` lines=`24` sha256_12=`6e6e2650fcb2` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Node Spec Risk Cards\n- kind=`node-spec` name=`github-actions-runner` path=`.gitclaw/nodes/github-actions-runner.md` frontmatter=`true` role=`primary-runtime` runtime=`github-actions` mode=`ephemeral-job` capabilities=`3` requires_approval=`true` bytes=`478` lines=`18` sha256_12=`afd82f63d401` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Current Node Request Risk Card\n- kind=`current-node-request` current_issue_node_request=`true` issue_body_scanned=`false` comment_bodies_scanned=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Risk Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T17:54:47Z",
+      "updated_at": "2026-05-30T17:54:47Z"
+    }
+  ]
+}
