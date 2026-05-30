@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T09:27:18Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 220,
+    "title": "@gitclaw /runs e2e 20260530T092624Z",
+    "body": "Live runs-report E2E.\n\nHidden runs report body token: GITCLAW_RUNS_REPORT_E2E_20260530T092624Z\nShow the deterministic current-turn ledger report without a model call or raw body leakage.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /runs e2e 20260530T092624Z\n\nLive runs-report E2E.\n\nHidden runs report body token: GITCLAW_RUNS_REPORT_E2E_20260530T092624Z\nShow the deterministic current-turn ledger report without a model call or raw body leakage.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Run Ledger Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#220`\n- event_kind: `issue_opened`\n- event_name: `issues`\n- event_action: `opened`\n- event_id: `issue-220`\n- active_command: `/runs`\n- idempotency_key: `e689bf804b444a43a528f773a61a2688`\n- run_id: `26680357528`\n- run_attempt: `1`\n- run_environment_sha256_12: `4c5948fd3957`\n- run_url_present: `true`\n- run_url_sha256_12: `5c82b41a8b95`\n- event_sha256_12: `a28798644058`\n- preflight_allowed: `true`\n- preflight_code: `allowed`\n- actor_association: `OWNER`\n- actor_trusted: `true`\n- triggered: `true`\n- disabled_label_present: `false`\n- write_request_detected: `false`\n- raw_comments_before_turn: `0`\n- transcript_messages: `1`\n- user_messages: `1`\n- assistant_messages: `0`\n- assistant_turn_comments_before_turn: `0`\n- heartbeat_comments_before_turn: `0`\n- error_marker_comments_before_turn: `0`\n- channel_message_comments_before_turn: `0`\n- context_documents: `7`\n- selected_skills: `1`\n- available_skills: `1`\n- skill_bundles: `1`\n- active_tool_outputs: `3`\n- run_ledger_store: `github-issue-comments+actions-run`\n- backup_branch: `gitclaw-backups`\n- run_ledger_writes_allowed: `false`\n- raw_bodies_included: `false`\n- raw_run_payloads_included: `false`\n- issue_title_sha256_12: `03ca2f560645`\n\nThis report summarizes the current GitHub issue turn and Actions run provenance. It does not print issue bodies, comments, prompts, tool outputs, context file bodies, workflow payloads, or secrets.\n\n### Label State\n- `gitclaw` present=`true`\n- `gitclaw:running` present=`false`\n- `gitclaw:done` present=`false`\n- `gitclaw:error` present=`false`\n- `gitclaw:disabled` present=`false`\n- `gitclaw:write-requested` present=`false`\n- `gitclaw:heartbeat` present=`false`\n- `gitclaw:channel` present=`false`\n- `gitclaw:proactive` present=`false`\n\n### Prompt-Visible Inputs\n- kind=`context` path=`.gitclaw/SOUL.md` bytes=`576` lines=`14` sha256_12=`0460b93e1a5c`\n- kind=`context` path=`.gitclaw/IDENTITY.md` bytes=`179` lines=`6` sha256_12=`8ba22d9e5696`\n- kind=`context` path=`.gitclaw/USER.md` bytes=`158` lines=`4` sha256_12=`29b734b95c5b`\n- kind=`context` path=`.gitclaw/TOOLS.md` bytes=`872` lines=`19` sha256_12=`523ee3c0f3e2`\n- kind=`context` path=`.gitclaw/MEMORY.md` bytes=`242` lines=`5` sha256_12=`5a8fa3488b00`\n- kind=`context` path=`.gitclaw/HEARTBEAT.md` bytes=`594` lines=`14` sha256_12=`8cf6f2724640`\n- kind=`context` path=`.gitclaw/memory/2026-05-29.md` bytes=`11965` lines=`195` sha256_12=`3fb54ed7518a`\n- kind=`skill` path=`.gitclaw/SKILLS/repo-reader/SKILL.md` bytes=`699` lines=`18` sha256_12=`2f9e68a57bd6`\n\n### Tool Outputs\n- name=`gitclaw.list_files` input_sha256_12=`cdb4ee2aea69` bytes=`6897` lines=`191` output_sha256_12=`f4e2e69f0fe5`\n- name=`gitclaw.skill_index` input_sha256_12=`79798d7bfe09` bytes=`393` lines=`1` output_sha256_12=`0093441f953b`\n- name=`gitclaw.search_files` input_sha256_12=`fb163b094bd6` bytes=`1112` lines=`14` output_sha256_12=`602d7a0c7820`\n\n### Ledger Notes\n- issue comments remain the canonical conversation log\n- GitHub Actions remains the canonical execution trace\n- gitclaw-backups remains the canonical post-turn backup branch when enabled",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4582414182,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4582414182,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26680357528\" event_id=\"issue-220\" model=\"gitclaw/runs\" idempotency_key=\"e689bf804b444a43a528f773a61a2688\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26680357528\" --\u003e\n## GitClaw Run Ledger Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#220`\n- event_kind: `issue_opened`\n- event_name: `issues`\n- event_action: `opened`\n- event_id: `issue-220`\n- active_command: `/runs`\n- idempotency_key: `e689bf804b444a43a528f773a61a2688`\n- run_id: `26680357528`\n- run_attempt: `1`\n- run_environment_sha256_12: `4c5948fd3957`\n- run_url_present: `true`\n- run_url_sha256_12: `5c82b41a8b95`\n- event_sha256_12: `a28798644058`\n- preflight_allowed: `true`\n- preflight_code: `allowed`\n- actor_association: `OWNER`\n- actor_trusted: `true`\n- triggered: `true`\n- disabled_label_present: `false`\n- write_request_detected: `false`\n- raw_comments_before_turn: `0`\n- transcript_messages: `1`\n- user_messages: `1`\n- assistant_messages: `0`\n- assistant_turn_comments_before_turn: `0`\n- heartbeat_comments_before_turn: `0`\n- error_marker_comments_before_turn: `0`\n- channel_message_comments_before_turn: `0`\n- context_documents: `7`\n- selected_skills: `1`\n- available_skills: `1`\n- skill_bundles: `1`\n- active_tool_outputs: `3`\n- run_ledger_store: `github-issue-comments+actions-run`\n- backup_branch: `gitclaw-backups`\n- run_ledger_writes_allowed: `false`\n- raw_bodies_included: `false`\n- raw_run_payloads_included: `false`\n- issue_title_sha256_12: `03ca2f560645`\n\nThis report summarizes the current GitHub issue turn and Actions run provenance. It does not print issue bodies, comments, prompts, tool outputs, context file bodies, workflow payloads, or secrets.\n\n### Label State\n- `gitclaw` present=`true`\n- `gitclaw:running` present=`false`\n- `gitclaw:done` present=`false`\n- `gitclaw:error` present=`false`\n- `gitclaw:disabled` present=`false`\n- `gitclaw:write-requested` present=`false`\n- `gitclaw:heartbeat` present=`false`\n- `gitclaw:channel` present=`false`\n- `gitclaw:proactive` present=`false`\n\n### Prompt-Visible Inputs\n- kind=`context` path=`.gitclaw/SOUL.md` bytes=`576` lines=`14` sha256_12=`0460b93e1a5c`\n- kind=`context` path=`.gitclaw/IDENTITY.md` bytes=`179` lines=`6` sha256_12=`8ba22d9e5696`\n- kind=`context` path=`.gitclaw/USER.md` bytes=`158` lines=`4` sha256_12=`29b734b95c5b`\n- kind=`context` path=`.gitclaw/TOOLS.md` bytes=`872` lines=`19` sha256_12=`523ee3c0f3e2`\n- kind=`context` path=`.gitclaw/MEMORY.md` bytes=`242` lines=`5` sha256_12=`5a8fa3488b00`\n- kind=`context` path=`.gitclaw/HEARTBEAT.md` bytes=`594` lines=`14` sha256_12=`8cf6f2724640`\n- kind=`context` path=`.gitclaw/memory/2026-05-29.md` bytes=`11965` lines=`195` sha256_12=`3fb54ed7518a`\n- kind=`skill` path=`.gitclaw/SKILLS/repo-reader/SKILL.md` bytes=`699` lines=`18` sha256_12=`2f9e68a57bd6`\n\n### Tool Outputs\n- name=`gitclaw.list_files` input_sha256_12=`cdb4ee2aea69` bytes=`6897` lines=`191` output_sha256_12=`f4e2e69f0fe5`\n- name=`gitclaw.skill_index` input_sha256_12=`79798d7bfe09` bytes=`393` lines=`1` output_sha256_12=`0093441f953b`\n- name=`gitclaw.search_files` input_sha256_12=`fb163b094bd6` bytes=`1112` lines=`14` output_sha256_12=`602d7a0c7820`\n\n### Ledger Notes\n- issue comments remain the canonical conversation log\n- GitHub Actions remains the canonical execution trace\n- gitclaw-backups remains the canonical post-turn backup branch when enabled",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T09:27:01Z",
+      "updated_at": "2026-05-30T09:27:01Z"
+    }
+  ]
+}
