@@ -547,6 +547,17 @@ only paths, counts, risk codes, severities, and line hashes. E2E acceptance
 must include both the deterministic audit and a real GitHub Models follow-up
 conversation that proves model inference and tool-visible repo search.
 
+2026-05-30 hook-risk follow-up: OpenClaw's file-based hooks are powerful
+because they bind user-visible events to automation, but that also makes them a
+prompt-injection and host-execution choke point. GitClaw should keep hook v1
+metadata-only while adding a `hooks risk` report that scans hook policy/spec
+files and ignored executable-looking handlers for prompt-boundary overrides,
+credential material, raw payload logging, untrusted issue-body execution,
+external webhook bridges, repository mutation, missing approval/audit-only
+boundaries, and unbounded loops. As with proactive risk, live acceptance must
+pair the deterministic report with a GitHub Models follow-up that proves real
+inference and prompt-visible repo search.
+
 2026-05-30 skill-backed proactive follow-up: Hermes cron jobs run in fresh
 sessions and can attach skills in execution order, while OpenClaw standing
 orders keep durable authority in reviewed workspace files. GitClaw should keep

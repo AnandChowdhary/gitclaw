@@ -55,11 +55,18 @@ func IsHookReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderHookReport(ev Event, cfg Config) string {
+	if isHookRiskRequest(ev, cfg) {
+		return renderHookRiskReport(ev, cfg, true)
+	}
 	return renderHookReport(ev, cfg, true)
 }
 
 func RenderHookCLIReport(cfg Config) string {
 	return renderHookReport(Event{}, cfg, false)
+}
+
+func RenderHookRiskCLIReport(cfg Config) string {
+	return renderHookRiskReport(Event{}, cfg, false)
 }
 
 func renderHookReport(ev Event, cfg Config, includeIssue bool) string {
@@ -365,4 +372,16 @@ func hookSpecsAuditOnly(specs []hookSpecCard) int {
 		}
 	}
 	return count
+}
+
+func isHookRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 {
+		return false
+	}
+	command := fields[0]
+	if command != "/hooks" && command != "/hook" {
+		return false
+	}
+	return strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit")
 }

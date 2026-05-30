@@ -2393,6 +2393,7 @@ surface:
 
 ```text
 @gitclaw /hooks
+@gitclaw /hooks risk
 @gitclaw /hook
 ```
 
@@ -2413,10 +2414,29 @@ repo, calls the model, or prints raw hook policy, hook spec, issue, comment, or
 provider payload bodies. Future executable hooks require explicit workflow
 permissions, approval gates, and audit cards before any handler can run.
 
+The risk form:
+
+```text
+@gitclaw /hooks risk
+@gitclaw /hook risk
+```
+
+posts a `GitClaw Hook Risk Report` without model inference. It scans
+`.gitclaw/HOOKS.md`, `.gitclaw/hooks/*.md`, and ignored executable-looking
+hook handler files for prompt-boundary overrides, credential material,
+untrusted issue-body execution, raw payload logging, external webhook bridges,
+repository mutation, missing approval/audit-only boundaries, and unbounded
+loops. It reports paths, metadata, risk counts, codes, severities, and line
+hashes only; hook bodies, handler bodies, issue bodies, comments, provider
+payloads, credentials, and secret values are not included. Changes to this risk
+surface must include a live GitHub Models follow-up E2E so deterministic
+coverage does not accidentally replace actual inference coverage.
+
 Local operators can inspect the same surface with:
 
 ```bash
 gitclaw hooks list
+gitclaw hooks risk
 gitclaw hooks verify
 ```
 
@@ -4514,6 +4534,10 @@ examples/workflows/gitclaw.yml
   approval/audit-only gates, ignored executable handler state, and body-free
   findings without a model call or hook body leakage. Each hooks feature batch
   must still run a live GitHub Models conversation E2E.
+- A `gh`-driven hooks-risk E2E harness verifies `@gitclaw /hooks risk` and
+  local `gitclaw hooks risk` expose body-free hook risk metadata, then runs a
+  real GitHub Models follow-up conversation that proves model inference,
+  prompt provenance, selected skills, and prompt-visible tool usage.
 - A `gh`-driven plugins-report E2E harness verifies `@gitclaw /plugins`
   reports plugin policy metadata, model-context loading, declarative plugin
   spec metadata, metadata-only activation, approval gates, ignored package or

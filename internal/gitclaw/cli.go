@@ -278,8 +278,10 @@ func runHooksCommand(args []string) error {
 	switch args[0] {
 	case "list", "verify":
 		return runHooksListCommand(args[1:])
+	case "risk", "risk-audit":
+		return runHooksRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw hooks [list|verify]")
+		return fmt.Errorf("usage: gitclaw hooks [list|risk|verify]")
 	}
 }
 
@@ -292,6 +294,18 @@ func runHooksListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderHookCLIReport(cfg))
+	return nil
+}
+
+func runHooksRiskCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown hooks risk argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderHookRiskCLIReport(cfg))
 	return nil
 }
 
