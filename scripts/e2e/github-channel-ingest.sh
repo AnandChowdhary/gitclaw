@@ -13,6 +13,12 @@ die() {
 repo="${GITCLAW_E2E_REPO:-}"
 ingest_workflow="${GITCLAW_E2E_INGEST_WORKFLOW:-.github/workflows/gitclaw-channel-ingest.yml}"
 main_workflow="${GITCLAW_E2E_WORKFLOW:-.github/workflows/gitclaw.yml}"
+lock_dir="/tmp/gitclaw-channel-ingest-e2e.lock"
+
+if ! mkdir "$lock_dir" 2>/dev/null; then
+  die "another channel-ingest E2E appears to be running: ${lock_dir}"
+fi
+trap 'rm -rf "$lock_dir"' EXIT
 
 if [[ -z "$repo" ]]; then
   repo="$(gh repo view --json nameWithOwner --jq .nameWithOwner)"
@@ -74,15 +80,18 @@ wait_for_run() {
   return 1
 }
 
-find_issue_number() {
+find_issue_numbers() {
   gh issue list \
     --repo "$repo" \
     --state all \
     --label gitclaw:channel \
     --limit 100 \
     --json number,title,body \
-    | jq -r --arg thread "$thread_id" '.[] | select((.title | contains($thread)) or (.body | contains($thread))) | .number' \
-    | head -n 1
+    | jq -r --arg thread "$thread_id" '.[] | select((.title | contains($thread)) or (.body | contains($thread))) | .number'
+}
+
+find_issue_number() {
+  find_issue_numbers | head -n 1
 }
 
 wait_for_issue_number() {
@@ -105,11 +114,52 @@ assistant_comments() {
     --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | join("\n---GITCLAW-COMMENT---\n")'
 }
 
+assistant_count() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json comments \
+    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length'
+}
+
+channel_message_count() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json comments \
+    --jq '[.comments[] | select(.body | contains("gitclaw:channel-message"))] | length'
+}
+
+main_dispatch_count_since() {
+  local started_at="$1"
+  gh run list \
+    --repo "$repo" \
+    --workflow "$main_workflow" \
+    --event workflow_dispatch \
+    --created ">=$started_at" \
+    --limit 20 \
+    --json databaseId \
+    --jq 'length'
+}
+
+wait_for_no_additional_main_dispatch() {
+  local started_at="$1"
+  local baseline="$2"
+  for _ in {1..9}; do
+    local count
+    count="$(main_dispatch_count_since "$started_at")"
+    if [[ "$count" != "$baseline" ]]; then
+      die "duplicate ingest unexpectedly changed main workflow dispatch count from ${baseline} to ${count}"
+    fi
+    sleep 5
+  done
+}
+
 cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
+    gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:e2e >/dev/null 2>&1 || true
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled >/dev/null 2>&1 || true
     gh issue close "$issue_number" --repo "$repo" --comment "channel ingest e2e cleanup" >/dev/null 2>&1 || true
   fi
+  rm -rf "$lock_dir"
 }
 trap cleanup EXIT
 
@@ -137,5 +187,23 @@ grep -Fq "dispatch-${dispatch_id}" <<<"$comments" || die "assistant marker missi
 labels="$(jq -r '.labels[].name' <<<"$issue_json")"
 grep -Fxq "gitclaw:channel" <<<"$labels" || die "issue missing gitclaw:channel label"
 grep -Fxq "gitclaw:done" <<<"$labels" || die "issue missing gitclaw:done label"
+
+baseline_main_dispatches="$(main_dispatch_count_since "$ingest_started_at")"
+duplicate_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+gh workflow run "$ingest_workflow" \
+  --repo "$repo" \
+  -f channel="$channel" \
+  -f thread_id="$thread_id" \
+  -f message_id="$message_id" \
+  -f author="telegram:e2e" \
+  -f body="$body"
+
+wait_for_run "$ingest_workflow" "$duplicate_started_at" >/dev/null || die "timed out waiting for duplicate channel ingest workflow"
+wait_for_no_additional_main_dispatch "$ingest_started_at" "$baseline_main_dispatches"
+issue_count="$(find_issue_numbers | wc -l | tr -d ' ')"
+[[ "$issue_count" == "1" ]] || die "duplicate ingest created ${issue_count} channel issues"
+[[ "$(channel_message_count)" == "1" ]] || die "duplicate ingest created another channel-message comment"
+[[ "$(assistant_count)" == "1" ]] || die "duplicate ingest created another assistant comment"
+log "duplicate retry verified"
 
 log "passed for issue #${issue_number}"

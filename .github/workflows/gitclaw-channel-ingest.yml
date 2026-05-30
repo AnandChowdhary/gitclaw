@@ -59,9 +59,13 @@ jobs:
             -f issue_number="${GITCLAW_ISSUE_NUMBER}" \
             -f dispatch_id="$dispatch_id" \
             -f reason="channel-ingest:${GITCLAW_CHANNEL}"
+        if: steps.ingest.outputs.duplicate != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
           GITCLAW_CHANNEL: ${{ inputs.channel }}
           GITCLAW_CHANNEL_MESSAGE_ID: ${{ inputs.message_id }}
           GITCLAW_ISSUE_NUMBER: ${{ steps.ingest.outputs.issue_number }}
+
+      - run: echo "Duplicate channel message; GitClaw issue workflow dispatch skipped."
+        if: steps.ingest.outputs.duplicate == 'true'

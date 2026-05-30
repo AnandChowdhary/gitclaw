@@ -726,6 +726,12 @@ accepts normalized channel/thread/message fields, writes the canonical issue
 state, and dispatches the normal handler. This mirrors the gateway boundary in
 OpenClaw while staying serverless and testable with GitHub Actions alone.
 
+2026-05-30 channel dedupe follow-up: real Telegram/Slack bridges must tolerate
+provider retries. A repeated `channel + message_id` should be visible as a
+deduped ingest result, not another mirrored comment or agent wakeup. The
+serverless workflow can skip the downstream `workflow_dispatch` when
+`gitclaw channel-ingest` reports `duplicate=true`.
+
 Hermes' session docs also expose a practical backup primitive:
 `hermes sessions export backup.jsonl` writes conversation metadata and messages
 as durable JSONL. GitClaw should preserve the same principle, but use GitHub

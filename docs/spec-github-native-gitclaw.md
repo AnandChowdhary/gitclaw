@@ -1581,6 +1581,9 @@ Behavior:
 - apply `gitclaw` and `gitclaw:channel` labels,
 - dispatch `.github/workflows/gitclaw.yml` with `issue_number` and
   `dispatch_id=<channel>-<message_id>`.
+- if the same `channel + message_id` has already been mirrored, do not post a
+  second `gitclaw:channel-message` comment and skip the downstream main
+  workflow dispatch.
 
 This workflow is useful for E2E, manual bridge experiments, and tiny external
 dispatchers. Provider-specific pollers can later call the same CLI path after
@@ -2249,6 +2252,10 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert it posts a `gitclaw:channel-message` comment,
    - assert it dispatches the main workflow,
    - assert the assistant replies with the exact nonce from the ingested body.
+   - dispatch the same channel message again,
+   - assert it reuses the same issue, creates no duplicate channel-message
+     comment, creates no duplicate assistant reply, and skips the redundant
+     main workflow dispatch.
 
 13. **Proactive enqueue workflow**
 
@@ -2683,7 +2690,7 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven channel-message E2E harness verifies a mirrored channel
   comment is included in the dispatched conversation transcript.
 - A `gh`-driven channel-ingest E2E harness verifies the generic channel ingress
-  workflow end to end.
+  workflow end to end, including duplicate provider-message retries.
 - A `gh`-driven channels-report E2E harness verifies `@gitclaw /channels`
   reports workflow dispatch, channel labels, provider keys, and mirrored
   message marker counts without a model call.
