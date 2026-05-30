@@ -829,9 +829,13 @@ comment with `model="gitclaw/session"` and summarizes:
 - raw comment count and reconstructed transcript message count,
 - user/assistant and trusted/untrusted message counts,
 - GitClaw assistant, heartbeat, error, and channel-message marker counts,
+- assistant-turn prompt provenance counts, unique prompt-context hashes,
+  prompt-visible skill names, and prompt-visible tool names,
 - whether the issue is a channel-thread or proactive-run issue,
 - per-transcript-message source, actor, trust state, size, line count, and
-  short hash.
+  short hash,
+- per-assistant-turn prompt provenance cards without raw prompt, skill, or tool
+  bodies.
 
 It never dumps issue/comment bodies. The hashes make session reconstruction
 debuggable without turning the issue-visible report into another raw transcript

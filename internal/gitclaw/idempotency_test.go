@@ -98,3 +98,13 @@ func TestRenderErrorCommentIncludesMarkerWithoutIdempotencyKey(t *testing.T) {
 		t.Fatalf("error comment should not look like a completed assistant turn: %s", body)
 	}
 }
+
+func TestMarkerAttributeRequiresExactAttributeName(t *testing.T) {
+	attrs := `selected_skills="1" skills="repo-reader" tool_outputs="2" tools="gitclaw.search_files"`
+	if got := markerAttribute(attrs, "skills"); got != "repo-reader" {
+		t.Fatalf("markerAttribute(skills) = %q, want repo-reader", got)
+	}
+	if got := markerAttribute(attrs, "tool_outputs"); got != "2" {
+		t.Fatalf("markerAttribute(tool_outputs) = %q, want 2", got)
+	}
+}

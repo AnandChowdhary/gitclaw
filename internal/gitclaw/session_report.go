@@ -73,6 +73,7 @@ func RenderSessionCLIReport(backupPath string, backup IssueBackup) string {
 
 func renderSessionReport(ev Event, comments []Comment, transcript []TranscriptMessage, includeIssue bool, backupPath string) string {
 	counts := countSessionMarkers(comments)
+	provenance := buildSessionPromptProvenanceReport(comments)
 	var b strings.Builder
 	b.WriteString("## GitClaw Session Report\n\n")
 	b.WriteString("Generated without a model call.\n\n")
@@ -93,6 +94,11 @@ func renderSessionReport(ev Event, comments []Comment, transcript []TranscriptMe
 	fmt.Fprintf(&b, "- trusted_messages: `%d`\n", countTrustedTranscriptMessages(transcript, true))
 	fmt.Fprintf(&b, "- untrusted_messages: `%d`\n", countTrustedTranscriptMessages(transcript, false))
 	fmt.Fprintf(&b, "- assistant_turn_comments: `%d`\n", counts.AssistantTurns)
+	fmt.Fprintf(&b, "- assistant_turns_with_prompt_provenance: `%d`\n", provenance.TurnsWithProvenance)
+	fmt.Fprintf(&b, "- assistant_turns_missing_prompt_provenance: `%d`\n", provenance.PromptContextHashMissing)
+	fmt.Fprintf(&b, "- unique_prompt_context_hashes: `%d`\n", provenance.UniquePromptContextSHAs)
+	fmt.Fprintf(&b, "- prompt_visible_skill_names: `%s`\n", inlineListOrNone(provenance.PromptVisibleSkillNames))
+	fmt.Fprintf(&b, "- prompt_visible_tool_names: `%s`\n", inlineListOrNone(provenance.PromptVisibleToolNames))
 	fmt.Fprintf(&b, "- heartbeat_comments: `%d`\n", counts.Heartbeats)
 	fmt.Fprintf(&b, "- error_marker_comments: `%d`\n", counts.Errors)
 	fmt.Fprintf(&b, "- channel_message_comments: `%d`\n", counts.ChannelMessages)
@@ -102,6 +108,9 @@ func renderSessionReport(ev Event, comments []Comment, transcript []TranscriptMe
 
 	b.WriteString("### Transcript Messages\n")
 	writeTranscriptMessageList(&b, transcript)
+
+	b.WriteString("\n### Assistant Turn Provenance\n")
+	writeSessionPromptProvenanceList(&b, provenance.Turns)
 
 	return strings.TrimSpace(b.String())
 }
@@ -334,6 +343,31 @@ func writeTranscriptMessageList(b *strings.Builder, transcript []TranscriptMessa
 			len(msg.Body),
 			lineCount(msg.Body),
 			shortDocumentHash(msg.Body),
+		)
+	}
+}
+
+func writeSessionPromptProvenanceList(b *strings.Builder, turns []sessionPromptProvenanceTurn) {
+	if len(turns) == 0 {
+		b.WriteString("- none\n")
+		return
+	}
+	for _, turn := range turns {
+		promptHash := turn.PromptContextSHA
+		if promptHash == "" {
+			promptHash = "none"
+		}
+		fmt.Fprintf(
+			b,
+			"- source=`%s` model=`%s` prompt_context_sha256_12=`%s` context_documents=`%d` selected_skills=`%d` tool_outputs=`%d` skills=`%s` tools=`%s`\n",
+			turn.Source,
+			inlineCode(turn.Model),
+			promptHash,
+			turn.ContextDocuments,
+			turn.SelectedSkills,
+			turn.ToolOutputs,
+			inlineListOrNone(turn.Skills),
+			inlineListOrNone(turn.Tools),
 		)
 	}
 }

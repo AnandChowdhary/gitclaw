@@ -3213,7 +3213,7 @@ func TestHandleSessionCommandPostsReportWithoutLLM(t *testing.T) {
 	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{95: {
 		{
 			ID:                21,
-			Body:              "<!-- gitclaw:assistant-turn idempotency_key=old -->\nAssistant body token: ASSISTANT_SECRET_SESSION_TOKEN.",
+			Body:              "<!-- gitclaw:assistant-turn idempotency_key=\"old\" model=\"openai/gpt-4.1-nano\" prompt_context_sha256_12=\"abcdef123456\" context_documents=\"7\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.search_files\" -->\nAssistant body token: ASSISTANT_SECRET_SESSION_TOKEN.",
 			User:              User{Login: "github-actions[bot]", Type: "Bot"},
 			AuthorAssociation: "MEMBER",
 		},
@@ -3237,7 +3237,7 @@ func TestHandleSessionCommandPostsReportWithoutLLM(t *testing.T) {
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Session Report", "Generated without a model call", "model=\"gitclaw/session\"", "raw_comments: `2`", "transcript_messages: `3`", "user_messages: `2`", "assistant_messages: `1`", "assistant_turn_comments: `1`", "source=`comment:21`", "source=`comment:22`", "sha256_12="} {
+	for _, want := range []string{"GitClaw Session Report", "Generated without a model call", "model=\"gitclaw/session\"", "raw_comments: `2`", "transcript_messages: `3`", "user_messages: `2`", "assistant_messages: `1`", "assistant_turn_comments: `1`", "assistant_turns_with_prompt_provenance: `1`", "assistant_turns_missing_prompt_provenance: `0`", "unique_prompt_context_hashes: `1`", "prompt_visible_skill_names: `repo-reader`", "prompt_visible_tool_names: `gitclaw.list_files, gitclaw.search_files`", "source=`comment:21`", "source=`comment:22`", "model=`openai/gpt-4.1-nano`", "prompt_context_sha256_12=`abcdef123456`", "context_documents=`7`", "selected_skills=`1`", "tool_outputs=`3`", "skills=`repo-reader`", "tools=`gitclaw.list_files, gitclaw.search_files`", "sha256_12="} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("session report missing %q:\n%s", want, body)
 		}

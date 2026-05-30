@@ -53,3 +53,53 @@ func TestRenderSessionSearchReportFindsTranscriptWithoutBodies(t *testing.T) {
 		}
 	}
 }
+
+func TestRenderSessionReportShowsAssistantTurnProvenanceWithoutBodies(t *testing.T) {
+	comments := []Comment{{
+		ID:                51,
+		Body:              "<!-- gitclaw:assistant-turn run_id=\"run-1\" model=\"openai/gpt-4.1-nano\" prompt_context_sha256_12=\"abc123abc123\" context_documents=\"2\" selected_skills=\"1\" tool_outputs=\"2\" skills=\"repo-reader\" tools=\"gitclaw.search_files,gitclaw.read_file\" -->\nSESSION_PROVENANCE_ASSISTANT_SECRET",
+		User:              User{Login: "github-actions[bot]", Type: "Bot"},
+		AuthorAssociation: "NONE",
+	}}
+	transcript := []TranscriptMessage{{
+		Role:      "assistant",
+		Body:      "SESSION_PROVENANCE_ASSISTANT_SECRET",
+		Actor:     "github-actions[bot]",
+		CommentID: 51,
+		Trusted:   true,
+	}}
+	body := renderSessionReport(Event{Repo: "owner/repo", Issue: Issue{Number: 5}}, comments, transcript, true, "")
+	for _, want := range []string{
+		"assistant_turns_with_prompt_provenance: `1`",
+		"assistant_turns_missing_prompt_provenance: `0`",
+		"unique_prompt_context_hashes: `1`",
+		"prompt_visible_skill_names: `repo-reader`",
+		"prompt_visible_tool_names: `gitclaw.search_files, gitclaw.read_file`",
+		"### Assistant Turn Provenance",
+		"source=`comment:51`",
+		"model=`openai/gpt-4.1-nano`",
+		"prompt_context_sha256_12=`abc123abc123`",
+		"context_documents=`2`",
+		"selected_skills=`1`",
+		"tool_outputs=`2`",
+		"skills=`repo-reader`",
+		"tools=`gitclaw.search_files, gitclaw.read_file`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("session report missing %q:\n%s", want, body)
+		}
+	}
+	if strings.Contains(body, "SESSION_PROVENANCE_ASSISTANT_SECRET") {
+		t.Fatalf("session report leaked assistant body:\n%s", body)
+	}
+}
+
+func TestBuildSessionPromptProvenanceReportCountsMissingMarkers(t *testing.T) {
+	report := buildSessionPromptProvenanceReport([]Comment{{
+		ID:   52,
+		Body: "<!-- gitclaw:assistant-turn model=\"gitclaw/context\" -->\nold deterministic report",
+	}})
+	if report.TurnsWithProvenance != 0 || report.PromptContextHashMissing != 1 || len(report.Turns) != 1 {
+		t.Fatalf("unexpected provenance report: %#v", report)
+	}
+}

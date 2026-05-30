@@ -239,6 +239,15 @@ message/line hashes without raw transcript snippets or raw query text.
 Local `gitclaw session search <query> --backup <issue.json>` should use the
 same matcher over canonical backup JSON for offline triage.
 
+2026-05-30 session-provenance follow-up: OpenClaw transcript artifacts and
+Hermes saved sessions are useful because they make execution history
+inspectable after the turn. GitClaw should fold its assistant-turn prompt
+provenance marker into `@gitclaw /session`: count assistant turns with prompt
+evidence, list unique prompt-context hashes, and show body-free skill/tool names
+per assistant turn. This lets a later issue comment verify that a previous
+model answer actually saw `gitclaw.search_files` or a selected skill without
+replaying raw prompts.
+
 2026-05-30 run-ledger follow-up: OpenClaw's gateway/runtime docs make
 execution provenance visible through workspace, session, and run surfaces,
 while Hermes' checkpoint/session model treats runs as replayable, auditable

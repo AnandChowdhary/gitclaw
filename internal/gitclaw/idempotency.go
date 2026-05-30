@@ -178,16 +178,18 @@ func channelMessageDispatchID(body string) string {
 
 func markerAttribute(attrs, key string) string {
 	needle := key + `="`
-	start := strings.Index(attrs, needle)
-	if start < 0 {
-		return ""
+	for _, field := range strings.Fields(attrs) {
+		if !strings.HasPrefix(field, needle) {
+			continue
+		}
+		value := strings.TrimPrefix(field, needle)
+		end := strings.Index(value, `"`)
+		if end < 0 {
+			return ""
+		}
+		return value[:end]
 	}
-	start += len(needle)
-	end := strings.Index(attrs[start:], `"`)
-	if end < 0 {
-		return ""
-	}
-	return attrs[start : start+end]
+	return ""
 }
 
 func escapeMarkerValue(value string) string {
