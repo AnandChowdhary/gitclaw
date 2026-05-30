@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T04:09:02Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 145,
+    "title": "GitClaw tools info e2e 20260530T040804Z",
+    "body": "@gitclaw /tools info read_file\n\nLive tools-info E2E 20260530T040804Z.\n\nMention go.mod so the read_file active-output metadata exists.\nHidden tools info token: GITCLAW_TOOLS_INFO_BODY_20260530T040804Z\nThis should produce a focused deterministic tool info report without dumping raw tool inputs, tool outputs, issue bodies, or comments.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw tools info e2e 20260530T040804Z\n\n@gitclaw /tools info read_file\n\nLive tools-info E2E 20260530T040804Z.\n\nMention go.mod so the read_file active-output metadata exists.\nHidden tools info token: GITCLAW_TOOLS_INFO_BODY_20260530T040804Z\nThis should produce a focused deterministic tool info report without dumping raw tool inputs, tool outputs, issue bodies, or comments.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Tool Info Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#145`\n- requested_tool: `read_file`\n- tool_info_status: `ok`\n- available_tools: `5`\n- matched_tools: `1`\n- active_outputs_for_tool: `1`\n- run_mode: `read-only`\n- raw_bodies_included: `false`\n- raw_inputs_included: `false`\n\nThis report shows one deterministic tool contract plus active-output hashes for that tool. Raw tool inputs, tool output bodies, file bodies, issue bodies, comments, prompts, and secret values are not included.\n\n### Matches\n- name=`gitclaw.read_file` source=`builtin-gitclaw` mode=`read-only` mutating=`false` trigger=`explicit repository-relative path` active_outputs=`1`\n\n### Active Outputs For Tool\n- name=`gitclaw.read_file` contract_known=`true` input_sha256_12=`33ef32bf6c23` output_bytes=`82` output_lines=`5` output_sha256_12=`75f65b201821`\n\n### Validation For Matches\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4581605351,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4581605351,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26674082294\" event_id=\"issue-145\" model=\"gitclaw/tools\" idempotency_key=\"bf70ac8ad81f53f6bdbb8ed856f9b7ac\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26674082294\" --\u003e\n## GitClaw Tool Info Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#145`\n- requested_tool: `read_file`\n- tool_info_status: `ok`\n- available_tools: `5`\n- matched_tools: `1`\n- active_outputs_for_tool: `1`\n- run_mode: `read-only`\n- raw_bodies_included: `false`\n- raw_inputs_included: `false`\n\nThis report shows one deterministic tool contract plus active-output hashes for that tool. Raw tool inputs, tool output bodies, file bodies, issue bodies, comments, prompts, and secret values are not included.\n\n### Matches\n- name=`gitclaw.read_file` source=`builtin-gitclaw` mode=`read-only` mutating=`false` trigger=`explicit repository-relative path` active_outputs=`1`\n\n### Active Outputs For Tool\n- name=`gitclaw.read_file` contract_known=`true` input_sha256_12=`33ef32bf6c23` output_bytes=`82` output_lines=`5` output_sha256_12=`75f65b201821`\n\n### Validation For Matches\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T04:08:43Z",
+      "updated_at": "2026-05-30T04:08:43Z"
+    }
+  ]
+}
