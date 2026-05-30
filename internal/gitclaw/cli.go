@@ -29,6 +29,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runPluginsCommand(args[1:])
 	case "tasks", "task":
 		return runTasksCommand(args[1:])
+	case "agents", "agent":
+		return runAgentsCommand(args[1:])
 	case "channel-ingest":
 		return runChannelIngestCommand(ctx, args[1:])
 	case "channel-state":
@@ -328,6 +330,30 @@ func runTasksListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderTaskCLIReport(cfg))
+	return nil
+}
+
+func runAgentsCommand(args []string) error {
+	if len(args) == 0 {
+		return runAgentsListCommand(nil)
+	}
+	switch args[0] {
+	case "list", "verify":
+		return runAgentsListCommand(args[1:])
+	default:
+		return fmt.Errorf("usage: gitclaw agents [list|verify]")
+	}
+}
+
+func runAgentsListCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown agents argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderAgentCLIReport(cfg))
 	return nil
 }
 

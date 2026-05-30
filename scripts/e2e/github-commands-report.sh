@@ -136,11 +136,13 @@ for expected in \
   "GitClaw Commands Report" \
   "Generated without a model call" \
   'trigger_prefix: `@gitclaw`' \
-  'commands: `28`' \
-  'aliases: `24`' \
-  'local_cli_helpers: `85`' \
+  'commands: `29`' \
+  'aliases: `25`' \
+  'local_cli_helpers: `87`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
+  '/agents' \
+  '/agent' \
   '/approvals' \
   '/approval' \
   '/help' \
@@ -178,6 +180,8 @@ for expected in \
   '/budget' \
   '/prompt-budget' \
   '/cron' \
+  'gitclaw agents list' \
+  'gitclaw agents verify' \
   'gitclaw approvals list' \
   'gitclaw approvals verify' \
   'gitclaw bundles list' \

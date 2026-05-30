@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "config-report-e2e: $*" >&2
+  echo "agents-report-e2e: $*" >&2
 }
 
 die() {
@@ -33,12 +33,12 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_CONFIG_REPORT_E2E_${timestamp}"
-title="@gitclaw /config e2e ${timestamp}"
-body="Live config-report E2E.
+token="GITCLAW_AGENTS_REPORT_E2E_${timestamp}"
+title="@gitclaw /agents e2e ${timestamp}"
+body="Live agents-report E2E.
 
-Hidden config report body token: ${token}
-This should produce a deterministic config report without a model call."
+Hidden agents report body token: ${token}
+This should produce a deterministic agents report without a model call."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -52,7 +52,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "config-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "agents-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -73,11 +73,11 @@ wait_for_run() {
       --json databaseId,status,conclusion,url,createdAt,displayTitle \
       --jq '. as $runs | $runs | map(select(.displayTitle == "'"${title}"'")) | sort_by(.createdAt) | reverse | .[0] // empty')"
     if [[ -n "$run_json" && "$run_json" != "null" ]]; then
-      local status conclusion url
-      status="$(jq -r '.status' <<<"$run_json")"
+      local run_status conclusion url
+      run_status="$(jq -r '.status' <<<"$run_json")"
       conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
       url="$(jq -r '.url' <<<"$run_json")"
-      if [[ "$status" == "completed" ]]; then
+      if [[ "$run_status" == "completed" ]]; then
         [[ "$conclusion" == "success" ]] || die "issues run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
@@ -128,66 +128,56 @@ wait_for_assistant_count() {
 }
 
 run_json="$(wait_for_run "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one config report comment"
+wait_for_assistant_count 1 || die "expected one agents report comment"
 comments="$(assistant_comments)"
 
 for expected in \
-  'model="gitclaw/config"' \
-  "GitClaw Config Report" \
+  'model="gitclaw/agents"' \
+  "GitClaw Agents Report" \
   "Generated without a model call" \
-  'config_source: `defaults+repo+environment`' \
-  'config_file_path: `.gitclaw/config.yml`' \
-  'config_file_present: `true`' \
-  'trigger_label: `gitclaw`' \
-  'trigger_prefix: `@gitclaw`' \
-  'disabled_label: `gitclaw:disabled`' \
-  'model: `openai/gpt-5-nano`' \
-  'run_mode: `read-only`' \
-  'max_prompt_bytes: `60000`' \
-  'max_output_tokens: `4000`' \
-  'max_transcript_messages: `40`' \
-  'max_transcript_message_bytes: `8000`' \
-  'skills_allowed_configured: `0`' \
-  'skills_disabled_configured: `0`' \
-  'tools_allowed_configured: `0`' \
-  'tools_disabled_configured: `0`' \
-  'workflows_present: `7`' \
-  'slash_commands: `29`' \
-  '/agents' \
-  '/approvals' \
-  '/bundles' \
-  '/checkpoints' \
-  '/secrets' \
-  '### Skill Gates' \
-  '### Tool Gates' \
-  'allowed=`none`' \
-  'disabled=`none`' \
-  'OWNER' \
-  'MEMBER' \
-  'COLLABORATOR' \
-  '/channels' \
-  '/config' \
-  '/doctor' \
-  '/help' \
-  '/memory' \
-  '/models' \
-  '/profile' \
-  '/runs' \
-  '/sandbox' \
-  '/prompt' \
-  '.github/workflows/gitclaw.yml' \
-  '.github/workflows/gitclaw-heartbeat.yml' \
-  '.github/workflows/gitclaw-proactive.yml' \
-  '.github/workflows/gitclaw-channel-ingest.yml' \
-  '.github/workflows/gitclaw-channel-state.yml' \
-  '.github/workflows/gitclaw-channel-gateway.yml' \
-  '.github/workflows/gitclaw-channel-delivery.yml'; do
-  grep -Fq "$expected" <<<"$comments" || die "config report missing ${expected}"
+  'agents_status: `ok`' \
+  'agent_policy_path: `.gitclaw/AGENTS.md`' \
+  'agent_policy_present: `true`' \
+  'agent_policy_loaded_for_model: `true`' \
+  'agent_specs_dir: `.gitclaw/agents`' \
+  'agent_specs: `1`' \
+  'agent_specs_with_frontmatter: `1`' \
+  'agent_roles: `1`' \
+  'agent_tools_requested: `2`' \
+  'agent_specs_requiring_approval: `1`' \
+  'agent_specs_single_assistant: `1`' \
+  'active_agent_runtime: `github-actions`' \
+  'multi_agent_routing_supported: `false`' \
+  'multi_agent_delegation_supported: `false`' \
+  'subagent_execution_supported: `false`' \
+  'delegate_task_supported: `false`' \
+  'remote_agent_process_allowed: `false`' \
+  'agent_to_agent_messaging_allowed: `false`' \
+  'model_call_required: `false`' \
+  'repository_mutation_allowed: `false`' \
+  'raw_bodies_included: `false`' \
+  'raw_agent_bodies_included: `false`' \
+  'llm_e2e_required_after_change: `true`' \
+  'name=`repo-assistant`' \
+  'path=`.gitclaw/agents/repo-assistant.md`' \
+  'frontmatter=`true`' \
+  'role=`primary`' \
+  'runtime=`github-actions`' \
+  'mode=`single-assistant`' \
+  'tools=`2`' \
+  'requires_approval=`true`' \
+  'GitHub Actions is the only active assistant runtime in v1' \
+  'future multi-agent routing or delegation requires reviewed workflows' \
+  '### Verification Findings' \
+  '- none'; do
+  grep -Fq -- "$expected" <<<"$comments" || die "agents report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "config report leaked issue body token"
-fi
+for forbidden in "$token" "GITCLAW_AGENTS_CONTEXT_V1" "This declarative agent record"; do
+  if grep -Fq -- "$forbidden" <<<"$comments"; then
+    die "agents report leaked ${forbidden}"
+  fi
+done
 
 url="$(jq -r '.url' <<<"$run_json")"
 log "passed for issue #${issue_number}: ${url}"

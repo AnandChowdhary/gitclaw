@@ -768,6 +768,20 @@ OpenClaw's multi-agent model treats each agent as a full isolated persona scope:
 
 This lets one Gateway serve several people/personas, but also makes routing, auth, and memory boundaries load-bearing.
 
+2026-05-30 agents-surface follow-up: current OpenClaw multi-agent docs frame an
+agent as a full isolated workspace, state directory, session store, auth
+profile set, and deterministic channel/account binding. Hermes splits the
+adjacent idea into short-lived `delegate_task` subagents with fresh isolated
+context and durable Kanban workers with named profiles, task rows, comments,
+heartbeats, retries, and handoff metadata. GitClaw should not implement either
+runtime primitive in v1. The GitHub-native slice is a body-free `/agents`
+audit: `.gitclaw/AGENTS.md` plus `.gitclaw/agents/*.md` declare reviewed
+single-assistant policy, active runtime is `github-actions`, and reports make
+`multi_agent_delegation_supported=false`, `subagent_execution_supported=false`,
+`delegate_task_supported=false`, and `remote_agent_process_allowed=false`
+explicit. Any future routing/delegation batch must be paired with a live GitHub
+Models conversation E2E, not just a deterministic report.
+
 ### Sandboxing
 
 OpenClaw can run tool execution in sandbox backends. The Gateway remains on the host; tools can run in Docker, SSH, or OpenShell-backed sandboxes. Sandboxing is optional and configurable by mode and scope.
@@ -1541,6 +1555,8 @@ Recommended non-goals for the first spec:
 - OpenClaw migrating from Hermes: https://docs.openclaw.ai/install/migrating-hermes
 - OpenClaw migrate CLI docs: https://docs.openclaw.ai/cli/migrate
 - OpenClaw models CLI docs: https://docs.openclaw.ai/cli/models
+- OpenClaw multi-agent routing docs: https://docs.openclaw.ai/concepts/multi-agent
+- OpenClaw nodes CLI docs: https://docs.openclaw.ai/cli/nodes
 - OpenClaw secrets CLI docs: https://docs.openclaw.ai/cli/secrets
 - OpenClaw secrets management docs: https://docs.openclaw.ai/gateway/secrets
 - Hermes docs index: https://hermes-agent.nousresearch.com/docs/llms.txt
@@ -1556,6 +1572,8 @@ Recommended non-goals for the first spec:
 - Hermes working with skills docs: https://hermes-agent.nousresearch.com/docs/guides/work-with-skills/
 - Hermes tools docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/tools/
 - Hermes tools reference: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/reference/tools-reference.md
+- Hermes subagent delegation docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation
+- Hermes Kanban docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban
 - Hermes security overview: https://hermes-agent.nousresearch.com/docs/
 - Hermes cron docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/cron.md
 - Hermes cron internals docs: https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals

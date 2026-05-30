@@ -847,6 +847,8 @@ AGENTS.md                    # existing coding-agent instructions, if present
 .gitclaw/plugins/*.md        # declarative plugin specs, metadata-only in v1
 .gitclaw/TASKS.md            # declarative task/flow safety policy
 .gitclaw/tasks/*.md          # declarative task/flow specs, issue-native in v1
+.gitclaw/AGENTS.md           # declarative agent/routing safety policy
+.gitclaw/agents/*.md         # declarative agent specs, metadata-only in v1
 .gitclaw/SKILLS/*.md         # optional read-only local skills, v1+
 .gitclaw/MEMORY.md           # optional curated repo memory, human-reviewed only
 .gitclaw/memory/YYYY-MM-DD.md # dated working memory notes, human-reviewed only
@@ -876,6 +878,9 @@ MVP loads:
 - `.gitclaw/TASKS.md`, if present, as task/flow safety policy for
   issue-native work tracking; individual `.gitclaw/tasks/*.md` specs are
   audited by metadata reports and do not spawn workers or open a task DB
+- `.gitclaw/AGENTS.md`, if present, as the repo-reviewed agent/routing safety
+  policy; individual `.gitclaw/agents/*.md` specs are audited by metadata
+  reports and do not spawn child agents, gateways, nodes, or remote workers
 - `.gitclaw/SKILLS/*/SKILL.md`, if selected by the issue thread or marked
   always-on
 - bounded `@file:<repo-path>[:start-end]` context references explicitly named
@@ -2252,6 +2257,43 @@ Local operators can inspect the same policy/spec surface with:
 ```bash
 gitclaw tasks list
 gitclaw tasks verify
+```
+
+### Agents Command
+
+GitClaw supports a deterministic agent-surface audit inspired by OpenClaw
+multi-agent routing, OpenClaw nodes, Hermes `delegate_task`, and Hermes Kanban
+workers:
+
+```text
+@gitclaw /agents
+@gitclaw /agent
+```
+
+The command runs after preflight and before model inference. It posts a
+`gitclaw:assistant-turn` comment with `model="gitclaw/agents"` and summarizes:
+
+- whether `.gitclaw/AGENTS.md` exists and is loaded into model context,
+- declarative agent specs in `.gitclaw/agents/*.md`,
+- declared agent roles, runtime, mode, and requested tool names,
+- whether specs require approval before delegation, routing, or side effects,
+- the active runtime boundary: one GitHub Actions repo assistant in v1,
+- body-free findings for missing policy or unsafe-looking specs.
+
+GitClaw v1 does not run OpenClaw-style multi-agent routing, start node hosts,
+spawn Hermes-style subagents, create Kanban workers, or send agent-to-agent
+messages. Agent specs are reviewed repo metadata, not process definitions. The
+report never mutates the repo, calls the model, starts a gateway, or prints raw
+agent policy, agent spec, issue, comment, channel, credential, or tool-output
+bodies. Future multi-agent support requires reviewed workflows, explicit
+permissions, approval gates, body-free audit cards, and a live GitHub Models
+conversation E2E in the same implementation batch.
+
+Local operators can inspect the same policy/spec surface with:
+
+```bash
+gitclaw agents list
+gitclaw agents verify
 ```
 
 ### Doctor Command
@@ -4002,6 +4044,12 @@ examples/workflows/gitclaw.yml
   comment/transcript counts, Task Flow/Kanban execution boundaries, and
   body-free findings without a model call or task body leakage. Each tasks
   feature batch must still run a live GitHub Models conversation E2E.
+- A `gh`-driven agents-report E2E harness verifies `@gitclaw /agents` reports
+  agent policy metadata, model-context loading, declarative agent spec
+  metadata, single-assistant GitHub Actions runtime boundaries, no-delegation
+  gates, and body-free findings without a model call or agent body leakage.
+  Each agents feature batch must still run a live GitHub Models conversation
+  E2E that makes an actual LLM call; report-only coverage is not enough.
 - A `gh`-driven runs-report E2E harness verifies `@gitclaw /runs` reports
   current turn/run provenance, managed labels, marker counts, prompt-visible
   input hashes, and active tool-output hashes without a model call or body
@@ -4304,6 +4352,8 @@ examples/workflows/gitclaw.yml
 - OpenClaw creating skills docs: https://docs.openclaw.ai/tools/creating-skills
 - OpenClaw skill format docs: https://docs.openclaw.ai/clawhub/skill-format
 - OpenClaw models CLI docs: https://docs.openclaw.ai/cli/models
+- OpenClaw multi-agent routing docs: https://docs.openclaw.ai/concepts/multi-agent
+- OpenClaw nodes CLI docs: https://docs.openclaw.ai/cli/nodes
 - OpenClaw config CLI docs: https://docs.openclaw.ai/cli/config
 - OpenClaw configure docs: https://docs.openclaw.ai/cli/configure
 - OpenClaw doctor docs: https://docs.openclaw.ai/doctor
@@ -4318,6 +4368,7 @@ examples/workflows/gitclaw.yml
 - Hermes working with skills docs: https://hermes-agent.nousresearch.com/docs/guides/work-with-skills/
 - Hermes profiles docs: https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 - Hermes Kanban docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban
+- Hermes subagent delegation docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation
 - Hermes toolsets reference: https://hermes-agent.nousresearch.com/docs/reference/toolsets-reference
 - Hermes MCP docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp
 - Slack Socket Mode: https://api.slack.com/apis/connections/socket
