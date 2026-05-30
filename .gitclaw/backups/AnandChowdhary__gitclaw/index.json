@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-30T23:21:00Z",
+  "generated_at": "2026-05-30T23:35:40Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 290,
+  "count": 291,
   "issues": [
     {
       "number": 3,
@@ -3569,6 +3569,18 @@
       ],
       "comment_count": 3,
       "transcript_messages": 4
+    },
+    {
+      "number": 328,
+      "title": "@gitclaw /migrate risk hermes e2e 20260530T233436Z",
+      "path": "issues/000328.json",
+      "backup_generated_at": "2026-05-30T23:35:39Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }
