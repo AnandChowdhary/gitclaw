@@ -749,7 +749,7 @@ GitHub issue/comment event
   `checkpoints status`, `checkpoints list`, `checkpoints risk`,
   `checkpoints verify`, `rollback list`, `rollback risk`,
   `proactive enqueue`, `proactive init`, `proactive info`, `proactive risk`,
-  `approvals list`, `approvals verify`,
+  `approvals list`, `approvals verify`, `approvals risk`,
   `artifacts list`, `artifacts risk`, `artifacts verify`,
   `diffs summary`, `diffs risk`, `diffs verify`,
   `workspace summary`, `workspace risk`, `workspace verify`,
@@ -2069,11 +2069,24 @@ Local operators can inspect the static approval shape without opening an issue:
 ```bash
 gitclaw approvals list
 gitclaw approvals verify
+gitclaw approvals risk
 ```
 
 The local report omits repository, issue, actor, trigger, and write-intent
 state. It still reports the approval label names, trusted association source,
 per-issue GitHub-label approval store, and read-only write-mode gate.
+
+`@gitclaw /approvals risk` and local `gitclaw approvals risk` switch from
+readiness inventory to the approval-boundary risk audit. The risk report checks
+trusted association breadth, approval-label collisions, managed-label
+collisions, the per-issue approval store/scope, write-request detection, and
+the hard runtime gate that keeps write actions, repository mutation, host exec,
+approval payload dumping, and raw body output disabled. It includes
+`llm_e2e_required_after_approval_risk_change=true`; every change to this
+approval-risk surface must be tested with a live deterministic approvals-risk
+issue and a follow-up GitHub Models conversation that proves inference, prompt
+context hashing, selected skill metadata, and prompt-visible repository search
+tool usage.
 
 ## Policy Inspection Command
 
@@ -5152,6 +5165,12 @@ examples/workflows/gitclaw.yml
   `@gitclaw /approvals` detects real write intent, observes
   `gitclaw:approved`, reports the approval gates as read-only, applies
   `gitclaw:write-requested`, and avoids issue body leakage.
+- A `gh`-driven approvals-risk E2E harness verifies
+  `@gitclaw /approvals risk` exposes body-free approval-boundary risk metadata,
+  approval/managed-label collision counts, trusted association breadth, and the
+  hard read-only runtime gate. The same harness must then run a real GitHub
+  Models follow-up conversation that proves model inference, prompt provenance,
+  selected skills, and prompt-visible repository search tool usage.
 - A `gh`-driven secrets-report E2E harness verifies
   `@gitclaw /secrets audit` scans the real checked-out repository, reports
   plaintext-like findings and GitHub Actions secret references with path, line,

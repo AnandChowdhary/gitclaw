@@ -38,6 +38,7 @@ go run ./cmd/gitclaw profile risk
 go run ./cmd/gitclaw models risk
 go run ./cmd/gitclaw config risk
 go run ./cmd/gitclaw orders risk
+go run ./cmd/gitclaw approvals risk
 ```
 
 The GitHub Action handles issue/comment events that mention the configured
@@ -128,6 +129,7 @@ gitclaw config list
 gitclaw config risk
 gitclaw doctor
 gitclaw policy verify
+gitclaw approvals risk
 gitclaw artifacts list
 gitclaw artifacts risk
 gitclaw artifacts verify
@@ -176,6 +178,7 @@ scripts/e2e/github-memory-risk-report.sh
 scripts/e2e/github-model-risk-report.sh
 scripts/e2e/github-bundles-risk-report.sh
 scripts/e2e/github-orders-risk-report.sh
+scripts/e2e/github-approvals-risk-report.sh
 scripts/e2e/github-plugins-risk-report.sh
 scripts/e2e/github-profile-risk-report.sh
 scripts/e2e/github-proactive-risk-report.sh

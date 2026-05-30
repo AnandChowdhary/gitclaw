@@ -1756,6 +1756,17 @@ read-only write-mode block, but never approves, mutates, executes, or prints raw
 issue/comment/prompt text. Local `gitclaw approvals list|verify` should mirror
 the static approval shape without issue-only state.
 
+2026-05-30 approval-risk follow-up: OpenClaw's current exec approval docs make
+approval a stacked policy, allowlist, and user-decision boundary with timeout
+denial, while its approvals CLI exposes host/node approval state as an
+operator-inspectable surface. GitClaw should keep the same inspectability
+without copying host-exec complexity yet: `@gitclaw /approvals risk` and local
+`gitclaw approvals risk` should audit trusted association breadth,
+approval-label collisions, managed-label collisions, per-issue approval store
+metadata, and hard write/host-exec denial. Acceptance requires a deterministic
+body-free report plus a live GitHub Models follow-up that proves the normal
+LLM/tool path still works after the risk audit.
+
 Main attack pattern: an untrusted input enters through one surface, persists into memory/skills/cron/filesystem, then fires later through a different surface when the attacker is no longer present.
 
 Design requirements for `gitclaw`:
