@@ -72,6 +72,7 @@ type channelSurface struct {
 type channelWorkflow struct {
 	Path             string
 	Present          bool
+	Body             string
 	Bytes            int
 	Lines            int
 	SHA              string
@@ -90,6 +91,9 @@ func RenderChannelReport(ev Event, cfg Config, comments []Comment) string {
 	if provider := requestedChannelInfoProvider(ev, cfg); provider != "" {
 		return renderChannelInfoReport(ev, cfg, comments, provider, true)
 	}
+	if isChannelRiskRequest(ev, cfg) {
+		return renderChannelRiskReport(ev, cfg, comments, true)
+	}
 	if isChannelVerifyRequest(ev, cfg) {
 		return renderChannelVerifyReport(ev, cfg, comments, true)
 	}
@@ -102,6 +106,10 @@ func RenderChannelCLIReport(cfg Config) string {
 
 func RenderChannelVerifyCLIReport(cfg Config) string {
 	return renderChannelVerifyReport(Event{}, cfg, nil, false)
+}
+
+func RenderChannelRiskCLIReport(cfg Config) string {
+	return renderChannelRiskReport(Event{}, cfg, nil, false)
 }
 
 func RenderChannelInfoCLIReport(cfg Config, provider string) string {
@@ -456,6 +464,11 @@ func isChannelVerifyRequest(ev Event, cfg Config) bool {
 	return len(fields) >= 2 && (fields[0] == "/channel" || fields[0] == "/channels") && strings.EqualFold(fields[1], "verify")
 }
 
+func isChannelRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && (fields[0] == "/channel" || fields[0] == "/channels") && (strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit"))
+}
+
 func requestedChannelInfoProvider(ev Event, cfg Config) string {
 	fields := activeSlashCommandFields(ev, cfg)
 	if len(fields) < 3 || (fields[0] != "/channel" && fields[0] != "/channels") || !strings.EqualFold(fields[1], "info") {
@@ -513,6 +526,7 @@ func inspectChannelWorkflow(absRoot, rel string) channelWorkflow {
 	}
 	text := string(body)
 	workflow.Present = true
+	workflow.Body = text
 	workflow.Bytes = len(body)
 	workflow.Lines = lineCount(text)
 	workflow.SHA = shortDocumentHash(text)

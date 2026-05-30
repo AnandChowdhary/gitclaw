@@ -106,6 +106,7 @@ gitclaw config list
 gitclaw doctor
 gitclaw policy verify
 gitclaw channels verify
+gitclaw channels risk
 gitclaw proactive list
 gitclaw workspace verify
 gitclaw sandbox verify
@@ -125,6 +126,7 @@ Run a live E2E harness against the current GitHub repository:
 
 ```bash
 scripts/e2e/github-tools-risk-report.sh
+scripts/e2e/github-channels-risk-report.sh
 ```
 
 Live E2E scripts create a real GitHub issue, wait for the GitHub Actions run,

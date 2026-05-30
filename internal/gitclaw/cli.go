@@ -800,7 +800,7 @@ func runCommandsCommand(args []string) error {
 
 func runChannelsCommand(args []string) error {
 	if len(args) > 2 {
-		return fmt.Errorf("usage: gitclaw channels [list|verify|info <provider>]")
+		return fmt.Errorf("usage: gitclaw channels [list|verify|risk|info <provider>]")
 	}
 	cfg, err := LoadEffectiveConfig()
 	if err != nil {
@@ -824,6 +824,13 @@ func runChannelsCommand(args []string) error {
 		fmt.Println(RenderChannelVerifyCLIReport(cfg))
 		return nil
 	}
+	if args[0] == "risk" || args[0] == "risk-audit" {
+		if len(args) != 1 {
+			return fmt.Errorf("unknown channels risk argument %q", args[1])
+		}
+		fmt.Println(RenderChannelRiskCLIReport(cfg))
+		return nil
+	}
 	if args[0] == "info" {
 		if len(args) != 2 {
 			return fmt.Errorf("usage: gitclaw channels info <provider>")
@@ -835,7 +842,7 @@ func runChannelsCommand(args []string) error {
 		}
 		return nil
 	}
-	return fmt.Errorf("usage: gitclaw channels [list|verify|info <provider>]")
+	return fmt.Errorf("usage: gitclaw channels [list|verify|risk|info <provider>]")
 }
 
 func runModelsCommand(args []string) error {

@@ -807,6 +807,18 @@ contract card before pollers land. Add `/channels info <provider>` and local
 names, offset/thread/message keys, workflow metadata, gateway strategy, and
 command shapes without leaking bodies or credential values.
 
+2026-05-30 channel-risk follow-up: OpenClaw and Hermes both assume a gateway
+can see untrusted external chat messages before handing them to an agent.
+GitClaw's GitHub-native equivalent should make that boundary inspectable with
+`@gitclaw /channels risk` and `gitclaw channels risk`: scan provider contracts,
+workflow-dispatch bridge workflows, and prompt-visible `gitclaw:channel-message`
+comments for prompt-boundary overrides, secret exfiltration, credential
+exposure, raw body logging, channel-body execution, webhook exposure, and
+unbounded gateway loops. Keep the report body-free by publishing only provider
+names, workflow paths, comment IDs, counts, codes, severities, and hashes, and
+pair every implementation batch with a real GitHub Models E2E after the
+deterministic report.
+
 ### Multi-Agent Routing
 
 OpenClaw's multi-agent model treats each agent as a full isolated persona scope:

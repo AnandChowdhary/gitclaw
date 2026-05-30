@@ -694,7 +694,7 @@ GitHub issue/comment event
   `backup info`, `backup retention-plan`,
   `heartbeat`, `heartbeat status`,
   `channel-ingest`, `channel-state`, `channel-gateway`, `channel-delivery`,
-  `channels info`,
+  `channels list`, `channels verify`, `channels risk`, `channels info`,
   `checkpoints status`, `checkpoints list`, `checkpoints verify`,
   `rollback list`,
   `proactive enqueue`, `proactive init`, `proactive info`,
@@ -2907,6 +2907,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels
 @gitclaw /channels list
 @gitclaw /channels verify
+@gitclaw /channels risk
 @gitclaw /channels info telegram
 ```
 
@@ -2933,6 +2934,20 @@ channel-ingest workflow has `workflow_dispatch`, `actions: write`,
 `issues: write`, and the five normalized inputs required for channel mirroring,
 then lists body-free verification findings.
 
+`@gitclaw /channels risk` and `@gitclaw /channels risk-audit` post a
+body-free risk audit for the Slack/Telegram workflow-dispatch bridge. They scan
+provider contracts, channel bridge workflows, and prompt-visible
+`gitclaw:channel-message` comments for prompt-boundary overrides, secret
+exfiltration instructions, credential exposure, raw channel-body logging,
+channel-body execution, external webhook exposure, and unbounded gateway loops.
+The report emits only provider names, workflow paths, comment IDs, hashes,
+counts, finding codes, categories, and severities. It never emits channel
+message bodies, issue bodies, workflow bodies, prompts, provider credentials, or
+secret values. The report includes
+`llm_e2e_required_after_channel_risk_change=true`; every channel-risk
+implementation batch must also run a real GitHub Models conversation E2E after
+the deterministic report.
+
 `@gitclaw /channels info <provider>` is the focused provider contract card for
 `telegram`, `slack`, or `generic`. It reports `channel_info_status`, required
 secret names without values, provider offset/thread/message keys, the
@@ -2946,6 +2961,7 @@ Local operators can inspect the same bridge contract without opening an issue:
 ```bash
 gitclaw channels list
 gitclaw channels verify
+gitclaw channels risk
 gitclaw channels info telegram
 gitclaw channel-state --channel telegram --account-id <id> --offset <offset>
 gitclaw channel-gateway --channel telegram --account-id <id> --renew
@@ -4334,6 +4350,11 @@ examples/workflows/gitclaw.yml
   `@gitclaw /channels verify` reports the workflow-dispatch channel bridge
   health, permissions, required inputs, provider keys, and marker counts
   without a model call or body leakage.
+- A `gh`-driven channels-risk E2E harness verifies
+  `@gitclaw /channels risk` reports provider, workflow, and channel-message
+  risk cards with only counts, hashes, codes, and severities, then posts a
+  normal follow-up that requires repo-reader search so GitHub Models performs a
+  real LLM call with prompt context and prompt-visible tool provenance.
 - A `gh`-driven channels-info E2E harness verifies
   `@gitclaw /channels info <provider>` and local
   `gitclaw channels info <provider>` expose one provider's secret names,
