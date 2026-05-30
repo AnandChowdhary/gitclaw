@@ -715,8 +715,8 @@ GitHub issue/comment event
   `skills validate`,
   `skills list`, `skills select-plan`, `skills info`, `skills search`,
   `bundles list`, `bundles info`,
-  `soul verify`, `soul validate`, `soul list`, `soul edit-plan`, `soul info`,
-  `soul search`,
+  `soul verify`, `soul risk`, `soul validate`, `soul list`,
+  `soul edit-plan`, `soul info`, `soul search`,
   `tools verify`, `tools validate`, `tools list`, `tools run-plan`,
   `tools info`, `tools search`, `doctor`,
   `policy verify`,
@@ -1486,6 +1486,7 @@ Validation is visible in the `/soul` report and locally through:
 
 ```bash
 gitclaw soul verify
+gitclaw soul risk
 gitclaw soul validate
 gitclaw soul list
 gitclaw soul edit-plan <path>
@@ -1505,6 +1506,7 @@ by OpenClaw and Hermes' portable workspace files:
 @gitclaw /soul
 @gitclaw /soul list
 @gitclaw /soul verify
+@gitclaw /soul risk
 @gitclaw /soul validate
 @gitclaw /soul edit-plan soul
 @gitclaw /soul info soul
@@ -1522,6 +1524,9 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 - byte counts, line counts, and short hashes for each file,
 - soul validation status, error/warning counts, required-file counts,
   memory-note counts, noncanonical memory-note counts, and body-free findings.
+- soul risk status, risk finding counts, risk codes, and line hashes for
+  prompt-boundary, secret exfiltration, persistent-state, channel-control,
+  automation-amplification, host-execution, and credential persistence risks.
 - high-authority edit planning metadata when explicitly requested.
 
 It never dumps full file bodies. The hashes make the issue-visible report
@@ -1571,6 +1576,19 @@ files, and explicit `registry_verification=not_configured` and
 `profile_export_verification=not_configured` findings. This mirrors
 `gitclaw soul verify` and makes the OpenClaw/Hermes-inspired soul provenance
 audit visible in GitHub without dumping raw context.
+
+When called as `@gitclaw /soul risk` or `@gitclaw /soul risk-audit`, the
+command posts a body-free high-authority context risk audit. It scans loaded
+SOUL, identity, user, tool, memory, heartbeat, and dated memory files for
+prompt-boundary override language, secret exfiltration instructions,
+persistent-state backdoors, attacker-controlled channel setup, unbounded
+automation loops, unreviewed host execution, and credential persistence
+instructions. It reports only status, counts, paths, categories, finding
+codes, max severity, and short line hashes. It never emits raw soul, user,
+memory, tools, heartbeat, issue, comment, prompt, or secret bodies. The report
+includes `llm_e2e_required_after_soul_risk_change=true`; every change to this
+risk surface must ship with a live GitHub Models conversation E2E that makes an
+actual model call after the deterministic risk report.
 
 When called as `@gitclaw /soul search <query>`, the command searches only the
 loaded high-authority context files with a local lexical matcher. It reports
@@ -3799,13 +3817,16 @@ assert the expected comments/labels, and close the issue in cleanup.
    - create a real issue with `@gitclaw /soul`,
    - create a second real issue with `@gitclaw /soul list`,
    - create a third real issue with `@gitclaw /soul verify`,
-   - create a fourth real issue with `@gitclaw /soul info soul`,
+   - create a fourth real issue with `@gitclaw /soul risk`,
+   - create a fifth real issue with `@gitclaw /soul info soul`,
    - assert the reply is marked `model="gitclaw/soul"`,
    - assert the report lists loaded identity, policy, user, and memory paths
      with byte counts, line counts, and hashes,
    - assert the verify report includes repo-local source counts, required-file
      presence, soul frontmatter/description status, registry/profile export
      verification status, trust cards, and verification findings,
+   - assert the risk report includes status/counts, risk cards, risk codes,
+     line hashes, and `llm_e2e_required_after_soul_risk_change=true`,
    - assert the info report includes exactly one matched soul file, normalized
      path, category, source, loaded-for-turn state, short hash, and
      body-free/write-disabled flags,
@@ -4543,6 +4564,12 @@ examples/workflows/gitclaw.yml
   `@gitclaw /soul verify` exposes the body-free repo-local trust envelope,
   trust cards, hashes, required-file coverage, and explicit registry/profile
   verification non-goals without a model call or context-body leakage.
+- A `gh`-driven soul-risk E2E harness verifies `@gitclaw /soul risk` exposes
+  body-free persistent-state risk status, risk cards, codes, line hashes, and
+  the live-LLM E2E requirement. The same harness must then post a normal
+  follow-up comment that requires repo-reader search so GitHub Models performs
+  a real LLM call with prompt context, skill selection, and prompt-visible tool
+  provenance in the assistant marker.
 - A `gh`-driven tools-report E2E harness verifies `@gitclaw /tools` produces a
   deterministic tool contract and active-output audit with validation metadata,
   repo-reviewed tool-gate metadata, without a model call or output-body

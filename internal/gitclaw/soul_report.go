@@ -42,6 +42,9 @@ func RenderSoulReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isSoulVerifyRequest(ev, cfg) {
 		return renderSoulVerifyReport(ev, repoContext, true)
 	}
+	if isSoulRiskRequest(ev, cfg) {
+		return renderSoulRiskReport(ev, repoContext, true)
+	}
 	if isSoulValidateRequest(ev, cfg) {
 		return renderSoulValidationReport(ev, repoContext, true)
 	}
@@ -70,6 +73,7 @@ func RenderSoulInfoCLIReport(cfg Config, repoContext RepoContext, path string) s
 
 func renderSoulListReport(ev Event, repoContext RepoContext, includeIssue bool) string {
 	validation := ValidateSoulContext(repoContext)
+	risk := BuildSoulRiskReport(repoContext)
 	var b strings.Builder
 	b.WriteString("## GitClaw Soul Report\n\n")
 	b.WriteString("Generated without a model call.\n\n")
@@ -82,6 +86,7 @@ func renderSoulListReport(ev Event, repoContext RepoContext, includeIssue bool) 
 	fmt.Fprintf(&b, "- identity_policy_files: `%d`\n", soulIdentityDocumentCount(repoContext.Documents))
 	fmt.Fprintf(&b, "- memory_notes: `%d`\n\n", soulMemoryDocumentCount(repoContext.Documents))
 	writeSoulValidationSummary(&b, validation)
+	writeSoulRiskSummary(&b, risk)
 	b.WriteString("\n")
 	b.WriteString("File bodies are not included; hashes let maintainers verify exactly which git-backed context was loaded.\n\n")
 
@@ -218,6 +223,11 @@ func isSoulValidateRequest(ev Event, cfg Config) bool {
 func isSoulVerifyRequest(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && fields[0] == "/soul" && strings.EqualFold(fields[1], "verify")
+}
+
+func isSoulRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && fields[0] == "/soul" && (strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit"))
 }
 
 func BuildSoulSearchReport(repoContext RepoContext, query string, maxResults int) SoulSearchReport {

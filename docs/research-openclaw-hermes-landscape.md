@@ -354,6 +354,18 @@ identity/policy versus memory-note counts, short hashes, and explicit
 `profile_export_verification=not_configured` findings until signed registry or
 profile-export verification exists.
 
+2026-05-30 soul-risk follow-up: because OpenClaw treats compromised
+`SOUL.md`/`MEMORY.md` as persistent attack vectors and Hermes loads
+SOUL/USER/MEMORY/profile context as high-authority prompt-shaping state,
+GitClaw should add `@gitclaw /soul risk` and `gitclaw soul risk`. The report
+should scan only loaded high-authority context and emit body-free risk metadata
+for prompt-boundary overrides, secret exfiltration instructions,
+persistent-state backdoors, attacker-controlled channels, unbounded automation,
+unreviewed host execution, and credential persistence. It should report only
+counts, paths, categories, codes, severities, and line hashes, and every change
+to that risk surface should be paired with a live GitHub Models conversation
+E2E after the deterministic report.
+
 2026-05-29 soul-validation follow-up: the same high-authority files should have
 a local safety gate, not just an inventory. GitClaw should treat
 `.gitclaw/SOUL.md`, `.gitclaw/IDENTITY.md`, `.gitclaw/USER.md`,
@@ -757,6 +769,13 @@ issue-side mirror of `gitclaw soul verify`, returning the repo-local trust
 envelope for high-authority context with trust cards and hashes while keeping
 raw soul, user, memory, tools, heartbeat, issue, and comment bodies out of the
 GitHub comment.
+
+2026-05-30 soul-risk follow-up: add `@gitclaw /soul risk` as the issue-side
+mirror of `gitclaw soul risk`, returning only persistent-state risk counts,
+codes, paths, severities, and line hashes for high-authority context. This
+surface must include a real GitHub Models follow-up E2E in the same batch so
+deterministic leakage checks are paired with actual inference and tool-grounded
+conversation testing.
 
 2026-05-29 channel visibility follow-up: Slack's Events API expects either a
 server HTTP endpoint or Socket Mode, Socket Mode uses a stateful WebSocket

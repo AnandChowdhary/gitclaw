@@ -8,6 +8,7 @@ import (
 type SoulVerifyReport struct {
 	Status                    string
 	Validation                SoulValidationReport
+	Risk                      SoulRiskReport
 	Documents                 int
 	RepoLocalDocuments        int
 	UnknownSourceDocuments    int
@@ -27,9 +28,11 @@ type SoulVerifyReport struct {
 
 func BuildSoulVerifyReport(repoContext RepoContext) SoulVerifyReport {
 	validation := ValidateSoulContext(repoContext)
+	risk := BuildSoulRiskReport(repoContext)
 	report := SoulVerifyReport{
 		Status:                    validation.Status,
 		Validation:                validation,
+		Risk:                      risk,
 		Documents:                 len(repoContext.Documents),
 		RequiredDocuments:         validation.RequiredFiles,
 		RequiredDocumentsPresent:  validation.PresentRequiredFiles,
@@ -62,6 +65,16 @@ func BuildSoulVerifyReport(repoContext RepoContext) SoulVerifyReport {
 	}
 	if report.UnknownSourceDocuments > 0 && report.Status == "ok" {
 		report.Status = "warn"
+	}
+	if report.Status != "error" {
+		switch risk.Status {
+		case "high":
+			report.Status = "high"
+		case "warn":
+			if report.Status == "ok" {
+				report.Status = "warn"
+			}
+		}
 	}
 	return report
 }
@@ -99,6 +112,7 @@ func renderSoulVerifyReport(ev Event, repoContext RepoContext, includeIssue bool
 	fmt.Fprintf(&b, "- profile_export_verification: `%s`\n", report.ProfileExportVerification)
 	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", report.RawBodiesIncluded)
 	writeSoulValidationSummary(&b, report.Validation)
+	writeSoulRiskSummary(&b, report.Risk)
 	b.WriteByte('\n')
 	b.WriteString("This report is GitClaw's local trust envelope for high-authority context. It verifies repo-local soul, identity, user, memory, tool, heartbeat, and dated memory-note metadata. It does not contact an external soul registry, export a Hermes/OpenClaw profile, or include raw context, issue, comment, prompt, or secret bodies.\n\n")
 
@@ -119,11 +133,12 @@ func renderSoulVerifyReport(ev Event, repoContext RepoContext, includeIssue bool
 func writeSoulTrustCard(b *strings.Builder, doc ContextDocument) {
 	frontmatterPresent := false
 	descriptionPresent := false
+	riskFindings := scanSoulRiskFindings(doc.Path, doc.Body)
 	if fm, ok := frontmatter(doc.Body); ok {
 		frontmatterPresent = true
 		descriptionPresent = strings.TrimSpace(frontmatterValue(fm, "description")) != ""
 	}
-	fmt.Fprintf(b, "- path=`%s` category=`%s` source=`%s` required=`%t` frontmatter=`%t` description=`%t` bytes=`%d` lines=`%d` sha256_12=`%s`\n",
+	fmt.Fprintf(b, "- path=`%s` category=`%s` source=`%s` required=`%t` frontmatter=`%t` description=`%t` bytes=`%d` lines=`%d` sha256_12=`%s` risk_findings=`%d` risk_max_severity=`%s` risk_codes=`%s`\n",
 		doc.Path,
 		soulDocumentCategory(doc.Path),
 		soulTrustSource(doc.Path),
@@ -133,6 +148,9 @@ func writeSoulTrustCard(b *strings.Builder, doc ContextDocument) {
 		len(doc.Body),
 		lineCount(doc.Body),
 		shortDocumentHash(doc.Body),
+		len(riskFindings),
+		soulRiskMaxSeverity(riskFindings),
+		inlineListOrNone(soulRiskCodes(riskFindings)),
 	)
 }
 
@@ -152,6 +170,10 @@ func writeSoulVerifyFindings(b *strings.Builder, report SoulVerifyReport) {
 	}
 	for _, finding := range report.Validation.Findings {
 		fmt.Fprintf(b, "- severity=`%s` code=`%s` path=`%s` detail=`%s`\n", finding.Severity, finding.Code, finding.Path, inlineCode(finding.Detail))
+		wrote = true
+	}
+	for _, finding := range report.Risk.Findings {
+		fmt.Fprintf(b, "- severity=`%s` code=`%s` category=`%s` path=`%s` line=`%d` line_sha256_12=`%s`\n", finding.Severity, finding.Code, finding.Category, finding.Path, finding.Line, finding.LineSHA)
 		wrote = true
 	}
 	if !wrote {
