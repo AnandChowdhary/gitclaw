@@ -23,6 +23,7 @@ type doctorSurface struct {
 	ContextFiles       []configSurfaceFile
 	MemoryNotes        []configSurfaceFile
 	SkillFiles         []configSurfaceFile
+	E2E                doctorE2ESurface
 	Proactive          proactiveSurface
 	SkillValidation    SkillValidationReport
 	SoulValidation     SoulValidationReport
@@ -35,6 +36,30 @@ type doctorSurface struct {
 	ManagedLabels      []string
 	ValidationErrors   int
 	ValidationWarnings int
+}
+
+type doctorE2ESurface struct {
+	Scripts                 []doctorE2EScript
+	ScriptCount             int
+	LiveIssueScripts        int
+	CleanupScripts          int
+	ModelCoverageScripts    int
+	SessionCoverageScripts  int
+	BackupGateScripts       int
+	WorkflowDispatchScripts int
+}
+
+type doctorE2EScript struct {
+	Path             string
+	Bytes            int
+	Lines            int
+	SHA              string
+	CreatesIssue     bool
+	HasCleanup       bool
+	ModelCoverage    bool
+	SessionCoverage  bool
+	BackupGate       bool
+	WorkflowDispatch bool
 }
 
 func IsDoctorReportRequest(ev Event, cfg Config) bool {
@@ -76,6 +101,13 @@ func renderDoctorReport(ev Event, cfg Config, repoContext RepoContext, includeIs
 	fmt.Fprintf(&b, "- context_files_present: `%d`\n", countPresentConfigFiles(surface.ContextFiles))
 	fmt.Fprintf(&b, "- memory_notes: `%d`\n", len(surface.MemoryNotes))
 	fmt.Fprintf(&b, "- skill_files: `%d`\n", len(surface.SkillFiles))
+	fmt.Fprintf(&b, "- e2e_scripts: `%d`\n", surface.E2E.ScriptCount)
+	fmt.Fprintf(&b, "- e2e_live_issue_scripts: `%d`\n", surface.E2E.LiveIssueScripts)
+	fmt.Fprintf(&b, "- e2e_cleanup_scripts: `%d`\n", surface.E2E.CleanupScripts)
+	fmt.Fprintf(&b, "- e2e_model_coverage_scripts: `%d`\n", surface.E2E.ModelCoverageScripts)
+	fmt.Fprintf(&b, "- e2e_session_coverage_scripts: `%d`\n", surface.E2E.SessionCoverageScripts)
+	fmt.Fprintf(&b, "- e2e_backup_gate_scripts: `%d`\n", surface.E2E.BackupGateScripts)
+	fmt.Fprintf(&b, "- e2e_workflow_dispatch_scripts: `%d`\n", surface.E2E.WorkflowDispatchScripts)
 	fmt.Fprintf(&b, "- enabled_skills: `%d`\n", enabledSkillCount(repoContext.SkillSummaries))
 	fmt.Fprintf(&b, "- disabled_skills: `%d`\n", disabledByConfigCount(repoContext.SkillSummaries))
 	fmt.Fprintf(&b, "- allowlist_blocked_skills: `%d`\n", blockedByAllowlistCount(repoContext.SkillSummaries))
@@ -134,6 +166,9 @@ func renderDoctorReport(ev Event, cfg Config, repoContext RepoContext, includeIs
 	b.WriteString("\n### Skills\n")
 	writeDoctorFileList(&b, surface.SkillFiles)
 
+	b.WriteString("\n### E2E Harnesses\n")
+	writeDoctorE2ESurface(&b, surface.E2E)
+
 	b.WriteString("\n### Proactive Prompts\n")
 	if len(surface.Proactive.Prompts) == 0 {
 		b.WriteString("- none\n")
@@ -165,6 +200,7 @@ func inspectDoctorSurface(cfg Config, repoContext RepoContext) doctorSurface {
 		Config:             inspectConfigSurfaceFile(root, gitclawConfigPath),
 		Workflows:          make([]configSurfaceFile, 0, len(configWorkflowPaths)),
 		ContextFiles:       make([]configSurfaceFile, 0, len(doctorContextPaths)),
+		E2E:                inspectDoctorE2ESurface(root),
 		Proactive:          inspectProactiveSurface(root),
 		SkillValidation:    skillValidation,
 		SoulValidation:     soulValidation,
@@ -196,6 +232,79 @@ func inspectDoctorSurface(cfg Config, repoContext RepoContext) doctorSurface {
 	surface.MemoryNotes = inspectDoctorGlob(root, ".gitclaw/memory/*.md")
 	surface.SkillFiles = inspectDoctorGlob(root, ".gitclaw/SKILLS/*/SKILL.md")
 	return surface
+}
+
+func inspectDoctorE2ESurface(root string) doctorE2ESurface {
+	absRoot, err := filepath.Abs(root)
+	if err != nil {
+		return doctorE2ESurface{}
+	}
+	matches, _ := filepath.Glob(filepath.Join(absRoot, "scripts", "e2e", "*.sh"))
+	sort.Strings(matches)
+	surface := doctorE2ESurface{Scripts: make([]doctorE2EScript, 0, len(matches))}
+	for _, match := range matches {
+		rel, err := filepath.Rel(absRoot, match)
+		if err != nil {
+			continue
+		}
+		body, err := os.ReadFile(match)
+		if err != nil {
+			continue
+		}
+		text := string(body)
+		lower := strings.ToLower(text)
+		script := doctorE2EScript{
+			Path:             filepath.ToSlash(rel),
+			Bytes:            len(body),
+			Lines:            lineCount(text),
+			SHA:              shortDocumentHash(text),
+			CreatesIssue:     strings.Contains(text, "gh issue create"),
+			HasCleanup:       strings.Contains(text, "trap cleanup EXIT") && strings.Contains(text, "gh issue close"),
+			ModelCoverage:    strings.Contains(text, "prompt_context_sha256_12") || strings.Contains(text, `model="openai/`) || strings.Contains(text, "GitHub Models") || strings.Contains(text, "gitclaw.search_files"),
+			SessionCoverage:  strings.Contains(lower, "session coverage") || strings.Contains(text, "gitclaw session coverage"),
+			BackupGate:       strings.Contains(text, "gitclaw-backups") || strings.Contains(text, "backup_checkout") || strings.Contains(text, "gitclaw backup coverage"),
+			WorkflowDispatch: doctorScriptHasWorkflowDispatchCoverage(text),
+		}
+		surface.Scripts = append(surface.Scripts, script)
+		surface.ScriptCount++
+		if script.CreatesIssue {
+			surface.LiveIssueScripts++
+		}
+		if script.HasCleanup {
+			surface.CleanupScripts++
+		}
+		if script.ModelCoverage {
+			surface.ModelCoverageScripts++
+		}
+		if script.SessionCoverage {
+			surface.SessionCoverageScripts++
+		}
+		if script.BackupGate {
+			surface.BackupGateScripts++
+		}
+		if script.WorkflowDispatch {
+			surface.WorkflowDispatchScripts++
+		}
+	}
+	return surface
+}
+
+func doctorScriptHasWorkflowDispatchCoverage(text string) bool {
+	for _, marker := range []string{
+		"--event workflow_dispatch",
+		"gh workflow run",
+		"workflow_dispatch_trigger",
+		"workflow_dispatch_channel_bridge",
+		"wake_strategy: `workflow_dispatch",
+		"workflow has `workflow_dispatch`",
+		"workflow_dispatch run",
+		"GitHub Actions workflow_dispatch",
+	} {
+		if strings.Contains(text, marker) {
+			return true
+		}
+	}
+	return false
 }
 
 func inspectDoctorGlob(root, pattern string) []configSurfaceFile {
@@ -254,6 +363,11 @@ func doctorChecks(surface doctorSurface) []doctorCheck {
 			Detail: fmt.Sprintf("%d prompt file(s)", len(surface.Proactive.Prompts)),
 		},
 		{
+			Name:   "e2e_harnesses",
+			Status: doctorStatus(doctorE2EHealthy(surface.E2E)),
+			Detail: fmt.Sprintf("%d script(s), %d model coverage, %d session coverage, %d backup gates", surface.E2E.ScriptCount, surface.E2E.ModelCoverageScripts, surface.E2E.SessionCoverageScripts, surface.E2E.BackupGateScripts),
+		},
+		{
 			Name:   "skill_validation",
 			Status: surface.SkillValidation.Status,
 			Detail: doctorValidationDetail(surface.SkillValidation.Errors, surface.SkillValidation.Warnings),
@@ -274,6 +388,16 @@ func doctorChecks(surface doctorSurface) []doctorCheck {
 			Detail: doctorValidationDetail(surface.ToolValidation.Errors, surface.ToolValidation.Warnings),
 		},
 	}
+}
+
+func doctorE2EHealthy(surface doctorE2ESurface) bool {
+	if surface.ScriptCount == 0 || surface.LiveIssueScripts == 0 {
+		return false
+	}
+	if surface.CleanupScripts != surface.ScriptCount {
+		return false
+	}
+	return surface.ModelCoverageScripts > 0 && surface.SessionCoverageScripts > 0 && surface.BackupGateScripts > 0
 }
 
 func doctorHealthStatus(checks []doctorCheck) string {
@@ -323,6 +447,41 @@ func writeDoctorFileList(b *strings.Builder, files []configSurfaceFile) {
 	}
 	for _, file := range files {
 		writeConfigSurfaceFile(b, file)
+	}
+}
+
+func writeDoctorE2ESurface(b *strings.Builder, surface doctorE2ESurface) {
+	fmt.Fprintf(b, "- e2e_coverage_status=`%s` scripts=`%d` live_issue_scripts=`%d` cleanup_scripts=`%d` model_coverage_scripts=`%d` session_coverage_scripts=`%d` backup_gate_scripts=`%d` workflow_dispatch_scripts=`%d`\n",
+		doctorStatus(doctorE2EHealthy(surface)),
+		surface.ScriptCount,
+		surface.LiveIssueScripts,
+		surface.CleanupScripts,
+		surface.ModelCoverageScripts,
+		surface.SessionCoverageScripts,
+		surface.BackupGateScripts,
+		surface.WorkflowDispatchScripts,
+	)
+	wrote := false
+	for _, script := range surface.Scripts {
+		if !script.ModelCoverage && !script.SessionCoverage && !script.BackupGate && !script.WorkflowDispatch {
+			continue
+		}
+		fmt.Fprintf(b, "- path=`%s` bytes=`%d` lines=`%d` sha256_12=`%s` live_issue=`%t` cleanup=`%t` model_coverage=`%t` session_coverage=`%t` backup_gate=`%t` workflow_dispatch=`%t`\n",
+			script.Path,
+			script.Bytes,
+			script.Lines,
+			script.SHA,
+			script.CreatesIssue,
+			script.HasCleanup,
+			script.ModelCoverage,
+			script.SessionCoverage,
+			script.BackupGate,
+			script.WorkflowDispatch,
+		)
+		wrote = true
+	}
+	if !wrote {
+		b.WriteString("- coverage_evidence_scripts=`none`\n")
 	}
 }
 

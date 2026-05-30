@@ -3030,16 +3030,25 @@ inference. It posts a `gitclaw:assistant-turn` comment with
 - context file presence for soul, identity, user, tools, memory, and heartbeat,
 - dated memory note count,
 - local skill count,
+- E2E harness counts for checked-in scripts, live issue scripts, cleanup
+  coverage, model-backed coverage, session coverage, backup gates, and
+  workflow-dispatch coverage,
 - proactive prompt count,
 - managed label count,
 - validation error/warning totals,
-- skill, soul, and tool validation statuses plus error/warning counts,
+- skill, soul, memory, and tool validation statuses plus error/warning counts,
 - pass/warn checks for the core control plane and validation rollups.
 
 It never dumps file bodies, issue bodies, comments, prompts, or secrets. This
 is the GitHub-native equivalent of `openclaw config validate` plus the cold,
 read-only parts of `openclaw doctor`: useful health diagnostics inside the
 canonical issue log without introducing an auto-repair mode.
+
+The E2E harness check is intentionally conservative. It warns if the repository
+has no harness scripts, no live issue harnesses, any harness without cleanup, or
+no evidence of model-backed, session-coverage, or backup-gate tests. The report
+lists only harness paths, byte/line counts, short hashes, and boolean coverage
+flags; it never prints script bodies or test prompt text.
 
 Local operators can run the same body-free health check before opening an
 issue:
@@ -5033,11 +5042,14 @@ examples/workflows/gitclaw.yml
   report.
 - A `gh`-driven doctor-report E2E harness verifies `@gitclaw /doctor` reports
   config validation, workflow presence, context files, skills, memory notes,
-  proactive prompts, and skill/soul/tool validation rollups without a model
-  call.
+  E2E harness inventory, proactive prompts, and skill/soul/memory/tool
+  validation rollups without a model call. The same harness then posts a normal
+  follow-up that requires repo-reader search so the batch proves a real GitHub
+  Models turn, prompt provenance, selected skill names, and prompt-visible tool
+  names.
 - A `gh`-driven doctor-list E2E harness verifies `@gitclaw /doctor list` is an
   explicit report alias, while local `gitclaw doctor list` exposes the same
-  body-free health metadata without issue-only fields.
+  body-free health and E2E-harness metadata without issue-only fields.
 - A `gh`-driven backup-index E2E harness verifies the dedicated backup branch
   contains issue JSON plus a repo-scoped `index.json` and `README.md`.
 - A `gh`-driven backup-report E2E harness verifies `@gitclaw /backup`

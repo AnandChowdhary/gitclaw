@@ -166,6 +166,13 @@ for expected in \
   'context_files_present: `6`' \
   'memory_notes: `1`' \
   'skill_files: `1`' \
+  'e2e_scripts: `135`' \
+  'e2e_live_issue_scripts: `128`' \
+  'e2e_cleanup_scripts: `135`' \
+  'e2e_model_coverage_scripts: `46`' \
+  'e2e_session_coverage_scripts: `2`' \
+  'e2e_backup_gate_scripts: `20`' \
+  'e2e_workflow_dispatch_scripts: `21`' \
   'enabled_skills: `1`' \
   'disabled_skills: `0`' \
   'allowlist_blocked_skills: `0`' \
@@ -184,12 +191,17 @@ for expected in \
   '`workflow_set`: `ok`' \
   '`identity_context`: `ok`' \
   '`local_skills`: `ok`' \
+  '`e2e_harnesses`: `ok`' \
   '`proactive_prompt`: `ok`' \
   '.gitclaw/config.yml' \
   '.github/workflows/gitclaw.yml' \
   '.gitclaw/SOUL.md' \
   '.gitclaw/SKILLS/repo-reader/SKILL.md' \
   '.gitclaw/proactive/repo-hygiene.md' \
+  "### E2E Harnesses" \
+  'e2e_coverage_status=`ok`' \
+  'path=`scripts/e2e/github-doctor-report.sh`' \
+  'model_coverage=`true`' \
   'sha256_12='; do
   grep -Fq "$expected" <<<"$comments" || die "doctor list report missing ${expected}"
 done

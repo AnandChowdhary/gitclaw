@@ -924,6 +924,15 @@ issue exists. Add `gitclaw doctor list` as the local mirror of `/doctor`: the
 same config/workflow/context/skill/memory/proactive/validation rollup, but with
 `scope: local-cli` and no repository, issue, or issue-title metadata.
 
+2026-05-31 doctor-e2e follow-up: OpenClaw-style doctor output is most useful
+when it can prove the test harness itself has not drifted. Add an E2E harness
+inventory to `/doctor` and `gitclaw doctor list`: script counts, live issue
+coverage, cleanup coverage, model-backed coverage, session coverage, backup
+gates, workflow-dispatch coverage, and path/hash evidence. The doctor command
+must remain body-free and no-model; the live doctor harness should pair that
+deterministic report with a normal GitHub Models repo-reader follow-up so the
+feature batch still proves inference and prompt-visible tool grounding.
+
 2026-05-30 tools-validate follow-up: validation should be addressable as its
 own issue command, not only embedded inside `/tools`. Add
 `@gitclaw /tools validate` as the issue-side mirror of

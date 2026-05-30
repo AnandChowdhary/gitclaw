@@ -3419,6 +3419,17 @@ description: Use read-only repository context.
 SKILL_DOCTOR_SECRET
 `)
 	writeTestFile(t, root, ".gitclaw/proactive/repo-hygiene.md", "PROACTIVE_DOCTOR_SECRET")
+	writeTestFile(t, root, "scripts/e2e/github-session-coverage.sh", `#!/usr/bin/env bash
+trap cleanup EXIT
+gh issue create
+gh issue close
+prompt_context_sha256_12
+gitclaw.search_files
+gitclaw session coverage
+gitclaw-backups
+gh workflow run .github/workflows/gitclaw.yml
+E2E_DOCTOR_SECRET
+`)
 	ev, err := ParseEvent("issues", []byte(`{
 		"action": "opened",
 		"repository": {"full_name": "owner/repo", "default_branch": "main"},
@@ -3453,12 +3464,12 @@ SKILL_DOCTOR_SECRET
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Doctor Report", "Generated without a model call", "model=\"gitclaw/doctor\"", "health_status: `ok`", "config_source: `defaults+repo`", "config_valid: `true`", "config_file_present: `true`", "workflows_present: `7`", "context_files_present: `6`", "memory_notes: `1`", "skill_files: `1`", "enabled_skills: `1`", "disabled_skills: `0`", "allowlist_blocked_skills: `0`", "enabled_tools: `5`", "disabled_tools: `0`", "allowlist_blocked_tools: `0`", "proactive_prompt_files: `1`", "validation_errors: `0`", "validation_warnings: `0`", "skill_validation_status: `ok`", "skill_validation_errors: `0`", "skill_validation_warnings: `0`", "soul_validation_status: `ok`", "soul_validation_errors: `0`", "soul_validation_warnings: `0`", "memory_validation_status: `ok`", "memory_validation_errors: `0`", "memory_validation_warnings: `0`", "tool_validation_status: `ok`", "tool_validation_errors: `0`", "tool_validation_warnings: `0`", "`config_validation`: `ok`", "`main_workflow`: `ok`", "`local_skills`: `ok`", "`skill_validation`: `ok`", "`soul_validation`: `ok`", "`memory_validation`: `ok`", "`tool_validation`: `ok`", ".gitclaw/SOUL.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", "sha256_12="} {
+	for _, want := range []string{"GitClaw Doctor Report", "Generated without a model call", "model=\"gitclaw/doctor\"", "health_status: `ok`", "config_source: `defaults+repo`", "config_valid: `true`", "config_file_present: `true`", "workflows_present: `7`", "context_files_present: `6`", "memory_notes: `1`", "skill_files: `1`", "e2e_scripts: `1`", "e2e_live_issue_scripts: `1`", "e2e_cleanup_scripts: `1`", "e2e_model_coverage_scripts: `1`", "e2e_session_coverage_scripts: `1`", "e2e_backup_gate_scripts: `1`", "e2e_workflow_dispatch_scripts: `1`", "enabled_skills: `1`", "disabled_skills: `0`", "allowlist_blocked_skills: `0`", "enabled_tools: `5`", "disabled_tools: `0`", "allowlist_blocked_tools: `0`", "proactive_prompt_files: `1`", "validation_errors: `0`", "validation_warnings: `0`", "skill_validation_status: `ok`", "skill_validation_errors: `0`", "skill_validation_warnings: `0`", "soul_validation_status: `ok`", "soul_validation_errors: `0`", "soul_validation_warnings: `0`", "memory_validation_status: `ok`", "memory_validation_errors: `0`", "memory_validation_warnings: `0`", "tool_validation_status: `ok`", "tool_validation_errors: `0`", "tool_validation_warnings: `0`", "`config_validation`: `ok`", "`main_workflow`: `ok`", "`local_skills`: `ok`", "`e2e_harnesses`: `ok`", "`skill_validation`: `ok`", "`soul_validation`: `ok`", "`memory_validation`: `ok`", "`tool_validation`: `ok`", "e2e_coverage_status=`ok`", "path=`scripts/e2e/github-session-coverage.sh`", "live_issue=`true`", "cleanup=`true`", "model_coverage=`true`", "session_coverage=`true`", "backup_gate=`true`", "workflow_dispatch=`true`", ".gitclaw/SOUL.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", "sha256_12="} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("doctor report missing %q:\n%s", want, body)
 		}
 	}
-	for _, leaked := range []string{"DOCTOR_BODY_SECRET", "SOUL_DOCTOR_SECRET", "IDENTITY_DOCTOR_SECRET", "SKILL_DOCTOR_SECRET", "PROACTIVE_DOCTOR_SECRET"} {
+	for _, leaked := range []string{"DOCTOR_BODY_SECRET", "SOUL_DOCTOR_SECRET", "IDENTITY_DOCTOR_SECRET", "SKILL_DOCTOR_SECRET", "PROACTIVE_DOCTOR_SECRET", "E2E_DOCTOR_SECRET"} {
 		if strings.Contains(body, leaked) {
 			t.Fatalf("doctor report leaked body token %q:\n%s", leaked, body)
 		}
