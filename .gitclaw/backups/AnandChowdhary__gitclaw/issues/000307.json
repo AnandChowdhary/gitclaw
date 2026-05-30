@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T18:25:39Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 307,
+    "title": "@gitclaw /diffs risk e2e 20260530T182440Z",
+    "body": "@gitclaw /diffs risk\n\nLive diffs-risk E2E.\nDo not include this hidden issue token: GITCLAW_DIFFS_RISK_HIDDEN_20260530T182440Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /diffs risk e2e 20260530T182440Z\n\n@gitclaw /diffs risk\n\nLive diffs-risk E2E.\nDo not include this hidden issue token: GITCLAW_DIFFS_RISK_HIDDEN_20260530T182440Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Diff Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#307`\n- diff_risk_status: `ok`\n- verification_scope: `git_worktree_diff_metadata`\n- diff_policy_present: `true`\n- diff_policy_loaded_for_model: `true`\n- diff_specs: `1`\n- scanned_diff_specs: `1`\n- diff_specs_requiring_approval: `1`\n- diff_specs_disallowing_raw_patch: `1`\n- diff_max_files_declared: `200`\n- git_available: `true`\n- git_repository: `true`\n- worktree_clean: `true`\n- changed_files: `0`\n- staged_files: `0`\n- unstaged_files: `0`\n- untracked_files: `0`\n- renamed_files: `0`\n- deleted_files: `0`\n- binary_diff_files: `0`\n- diff_file_limit: `200`\n- diff_files_returned: `0`\n- surfaces_with_risk_findings: `0`\n- diff_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- raw_diffs_included: `false`\n- raw_file_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- credential_values_included: `false`\n- patch_application_allowed: `false`\n- repository_mutation_allowed: `false`\n- diff_as_hidden_state_allowed: `false`\n- external_diff_storage_allowed: `false`\n- llm_e2e_required_after_diff_risk_change: `true`\n- issue_title_sha256_12: `477778047f78`\n\nThis report scans diff policy, diff specs, and git worktree metadata for prompt-boundary, credential, raw patch leakage, destructive git action, hidden-state, untracked-file body, external storage, approval, and unbounded-collection risks. It reports metadata, paths, risk codes, severities, and hashes only; raw patches, file bodies, issue bodies, comments, prompts, tool outputs, credentials, and secret values are not included.\n\n### Diff Policy Risk Card\n- kind=`diff-policy` path=`.gitclaw/DIFFS.md` present=`true` loaded_for_model=`true` bytes=`1232` lines=`27` sha256_12=`35cad03b80ca` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Diff Spec Risk Cards\n- kind=`diff-spec` name=`working-tree` path=`.gitclaw/diffs/working-tree.md` frontmatter=`true` diff_kind=`git-diff` source=`git-worktree` mode=`metadata-only` max_files=`200` raw_patch_allowed=`false` requires_approval=`true` bytes=`443` lines=`16` sha256_12=`72cc66b6a787` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Git Worktree Risk Card\n- kind=`git-worktree` root=`.` git_available=`true` git_repository=`true` branch=`main` head_commit=`1bd9ea4eabe4` worktree_clean=`true` changed_files=`0` staged_files=`0` unstaged_files=`0` untracked_files=`0` renamed_files=`0` deleted_files=`0` binary_diff_files=`0` diff_file_limit=`200` diff_files_returned=`0` raw_diffs_included=`false` raw_file_bodies_included=`false` error_reason=`` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Changed File Risk Cards\n- kind=`changed-file` none\n\n### Current Diff Request Risk Card\n- kind=`current-diff-request` current_issue_diff_request=`true` issue_body_scanned=`false` comment_bodies_scanned=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Risk Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4583704899,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4583704899,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26691501505\" event_id=\"issue-307\" model=\"gitclaw/diffs\" idempotency_key=\"075e289f007240413969ef31d07a5f8c\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26691501505\" --\u003e\n## GitClaw Diff Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#307`\n- diff_risk_status: `ok`\n- verification_scope: `git_worktree_diff_metadata`\n- diff_policy_present: `true`\n- diff_policy_loaded_for_model: `true`\n- diff_specs: `1`\n- scanned_diff_specs: `1`\n- diff_specs_requiring_approval: `1`\n- diff_specs_disallowing_raw_patch: `1`\n- diff_max_files_declared: `200`\n- git_available: `true`\n- git_repository: `true`\n- worktree_clean: `true`\n- changed_files: `0`\n- staged_files: `0`\n- unstaged_files: `0`\n- untracked_files: `0`\n- renamed_files: `0`\n- deleted_files: `0`\n- binary_diff_files: `0`\n- diff_file_limit: `200`\n- diff_files_returned: `0`\n- surfaces_with_risk_findings: `0`\n- diff_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- raw_diffs_included: `false`\n- raw_file_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- credential_values_included: `false`\n- patch_application_allowed: `false`\n- repository_mutation_allowed: `false`\n- diff_as_hidden_state_allowed: `false`\n- external_diff_storage_allowed: `false`\n- llm_e2e_required_after_diff_risk_change: `true`\n- issue_title_sha256_12: `477778047f78`\n\nThis report scans diff policy, diff specs, and git worktree metadata for prompt-boundary, credential, raw patch leakage, destructive git action, hidden-state, untracked-file body, external storage, approval, and unbounded-collection risks. It reports metadata, paths, risk codes, severities, and hashes only; raw patches, file bodies, issue bodies, comments, prompts, tool outputs, credentials, and secret values are not included.\n\n### Diff Policy Risk Card\n- kind=`diff-policy` path=`.gitclaw/DIFFS.md` present=`true` loaded_for_model=`true` bytes=`1232` lines=`27` sha256_12=`35cad03b80ca` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Diff Spec Risk Cards\n- kind=`diff-spec` name=`working-tree` path=`.gitclaw/diffs/working-tree.md` frontmatter=`true` diff_kind=`git-diff` source=`git-worktree` mode=`metadata-only` max_files=`200` raw_patch_allowed=`false` requires_approval=`true` bytes=`443` lines=`16` sha256_12=`72cc66b6a787` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Git Worktree Risk Card\n- kind=`git-worktree` root=`.` git_available=`true` git_repository=`true` branch=`main` head_commit=`1bd9ea4eabe4` worktree_clean=`true` changed_files=`0` staged_files=`0` unstaged_files=`0` untracked_files=`0` renamed_files=`0` deleted_files=`0` binary_diff_files=`0` diff_file_limit=`200` diff_files_returned=`0` raw_diffs_included=`false` raw_file_bodies_included=`false` error_reason=`` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Changed File Risk Cards\n- kind=`changed-file` none\n\n### Current Diff Request Risk Card\n- kind=`current-diff-request` current_issue_diff_request=`true` issue_body_scanned=`false` comment_bodies_scanned=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Risk Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T18:25:21Z",
+      "updated_at": "2026-05-30T18:25:21Z"
+    }
+  ]
+}
