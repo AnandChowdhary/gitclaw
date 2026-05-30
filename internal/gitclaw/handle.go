@@ -37,7 +37,7 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 	if err != nil {
 		return failStartedTurn(ctx, cfg, github, ev, status, "context", fmt.Errorf("load repo context: %w", err))
 	}
-	if writeRequested {
+	if toolEnabled, _, _ := toolEnabledByConfig("gitclaw.policy", cfg); writeRequested && toolEnabled {
 		repoContext.ToolOutputs = append(repoContext.ToolOutputs, WriteRequestPolicyOutput())
 	}
 	if IsContextReportRequest(ev, cfg) {

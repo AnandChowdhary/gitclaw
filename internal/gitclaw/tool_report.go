@@ -36,6 +36,9 @@ type ToolSearchResult struct {
 	Score       int
 	Mode        string
 	Trigger     string
+	Enabled     bool
+	Disabled    bool
+	Blocked     bool
 	InputSHA    string
 	OutputBytes int
 	OutputLines int
@@ -90,6 +93,9 @@ func renderToolsListReport(ev Event, repoContext RepoContext, includeIssue bool)
 		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
 	}
 	fmt.Fprintf(&b, "- available_tools: `%d`\n", len(toolReportContracts))
+	fmt.Fprintf(&b, "- enabled_tools: `%d`\n", enabledToolCount(repoContext))
+	fmt.Fprintf(&b, "- disabled_tools: `%d`\n", disabledToolCount(repoContext))
+	fmt.Fprintf(&b, "- allowlist_blocked_tools: `%d`\n", allowlistBlockedToolCount(repoContext))
 	fmt.Fprintf(&b, "- active_tool_outputs: `%d`\n", len(repoContext.ToolOutputs))
 	writeToolsValidationSummary(&b, validation)
 	b.WriteString("\n")
@@ -98,7 +104,8 @@ func renderToolsListReport(ev Event, repoContext RepoContext, includeIssue bool)
 
 	b.WriteString("### Available Tools\n")
 	for _, contract := range toolReportContracts {
-		fmt.Fprintf(&b, "- `%s` mode=`%s` trigger=`%s`\n", contract.Name, contract.Mode, contract.Trigger)
+		enabled, disabled, blocked := toolEnabledInRepoContext(contract.Name, repoContext)
+		fmt.Fprintf(&b, "- `%s` enabled=`%t` disabled_by_config=`%t` blocked_by_allowlist=`%t` mode=`%s` trigger=`%s`\n", contract.Name, enabled, disabled, blocked, contract.Mode, contract.Trigger)
 	}
 
 	b.WriteString("\n### Tool Guidance Files\n")
@@ -187,7 +194,7 @@ func renderToolInfoReport(ev Event, repoContext RepoContext, name string, includ
 	} else {
 		activeCounts := toolActiveOutputCounts(repoContext.ToolOutputs)
 		for _, contract := range matches {
-			writeToolInfoContract(&b, contract, activeCounts[contract.Name])
+			writeToolInfoContract(&b, contract, activeCounts[contract.Name], repoContext)
 		}
 	}
 
@@ -236,16 +243,26 @@ func cleanToolLookupName(name string) string {
 	return strings.Trim(strings.TrimSpace(name), " \t\r\n.,:;!?`\"'")
 }
 
-func matchingToolContracts(contracts []toolContract, name string) []toolContract {
+func normalizeToolLookupName(name string) string {
 	name = strings.ToLower(cleanToolLookupName(name))
+	if name == "" {
+		return ""
+	}
+	if !strings.Contains(name, ".") {
+		name = "gitclaw." + name
+	}
+	return name
+}
+
+func matchingToolContracts(contracts []toolContract, name string) []toolContract {
+	name = normalizeToolLookupName(name)
 	if name == "" {
 		return nil
 	}
 	matches := make([]toolContract, 0, 1)
 	for _, contract := range contracts {
 		contractName := strings.ToLower(contract.Name)
-		shortName := strings.TrimPrefix(contractName, "gitclaw.")
-		if contractName == name || shortName == name {
+		if contractName == name {
 			matches = append(matches, contract)
 		}
 	}
@@ -307,6 +324,7 @@ func BuildToolSearchReport(repoContext RepoContext, query string, maxResults int
 		}
 		report.MatchedContracts++
 		score += activeOutputCounts[contract.Name] * 2
+		enabled, disabled, blocked := toolEnabledInRepoContext(contract.Name, repoContext)
 		results = append(results, ToolSearchResult{
 			Kind:        "contract",
 			Name:        contract.Name,
@@ -314,6 +332,9 @@ func BuildToolSearchReport(repoContext RepoContext, query string, maxResults int
 			Score:       score,
 			Mode:        contract.Mode,
 			Trigger:     contract.Trigger,
+			Enabled:     enabled,
+			Disabled:    disabled,
+			Blocked:     blocked,
 		})
 	}
 	for _, output := range repoContext.ToolOutputs {
@@ -429,11 +450,14 @@ func scoreSearchFields(fields map[string]string, weights map[string]int, query s
 func writeToolSearchResult(b *strings.Builder, result ToolSearchResult) {
 	switch result.Kind {
 	case "contract":
-		fmt.Fprintf(b, "- kind=`%s` name=`%s` match_fields=`%s` score=`%d` mode=`%s` trigger=`%s`\n",
+		fmt.Fprintf(b, "- kind=`%s` name=`%s` match_fields=`%s` score=`%d` enabled=`%t` disabled_by_config=`%t` blocked_by_allowlist=`%t` mode=`%s` trigger=`%s`\n",
 			result.Kind,
 			result.Name,
 			inlineList(result.MatchFields),
 			result.Score,
+			result.Enabled,
+			result.Disabled,
+			result.Blocked,
 			result.Mode,
 			inlineCode(result.Trigger),
 		)
@@ -465,9 +489,13 @@ func writeToolGuidanceDocumentList(b *strings.Builder, docs []ContextDocument) {
 	}
 }
 
-func writeToolInfoContract(b *strings.Builder, contract toolContract, activeOutputs int) {
-	fmt.Fprintf(b, "- name=`%s` source=`builtin-gitclaw` mode=`%s` mutating=`%t` trigger=`%s` active_outputs=`%d`\n",
+func writeToolInfoContract(b *strings.Builder, contract toolContract, activeOutputs int, repoContext RepoContext) {
+	enabled, disabled, blocked := toolEnabledInRepoContext(contract.Name, repoContext)
+	fmt.Fprintf(b, "- name=`%s` source=`builtin-gitclaw` enabled=`%t` disabled_by_config=`%t` blocked_by_allowlist=`%t` mode=`%s` mutating=`%t` trigger=`%s` active_outputs=`%d`\n",
 		contract.Name,
+		enabled,
+		disabled,
+		blocked,
 		contract.Mode,
 		isMutatingToolContract(contract),
 		inlineCode(contract.Trigger),
@@ -491,6 +519,61 @@ func writeToolInfoActiveOutputs(b *strings.Builder, outputs []ToolOutput) {
 			shortDocumentHash(output.Output),
 		)
 	}
+}
+
+func toolEnabledByConfig(name string, cfg Config) (enabled bool, disabledByConfig bool, blockedByAllowlist bool) {
+	return toolEnabledByMaps(name, cfg.AllowedTools, cfg.DisabledTools)
+}
+
+func toolEnabledInRepoContext(name string, repoContext RepoContext) (enabled bool, disabledByConfig bool, blockedByAllowlist bool) {
+	return toolEnabledByMaps(name, repoContext.AllowedTools, repoContext.DisabledTools)
+}
+
+func toolEnabledByMaps(name string, allowed, disabled map[string]bool) (enabled bool, disabledByConfig bool, blockedByAllowlist bool) {
+	name = normalizeToolLookupName(name)
+	if name == "" {
+		return true, false, false
+	}
+	if disabled[name] {
+		return false, true, false
+	}
+	if len(allowed) > 0 && !allowed[name] {
+		return false, false, true
+	}
+	return true, false, false
+}
+
+func enabledToolCount(repoContext RepoContext) int {
+	count := 0
+	for _, contract := range toolReportContracts {
+		enabled, _, _ := toolEnabledInRepoContext(contract.Name, repoContext)
+		if enabled {
+			count++
+		}
+	}
+	return count
+}
+
+func disabledToolCount(repoContext RepoContext) int {
+	count := 0
+	for _, contract := range toolReportContracts {
+		_, disabled, _ := toolEnabledInRepoContext(contract.Name, repoContext)
+		if disabled {
+			count++
+		}
+	}
+	return count
+}
+
+func allowlistBlockedToolCount(repoContext RepoContext) int {
+	count := 0
+	for _, contract := range toolReportContracts {
+		_, _, blocked := toolEnabledInRepoContext(contract.Name, repoContext)
+		if blocked {
+			count++
+		}
+	}
+	return count
 }
 
 func writeToolInfoValidationFindings(b *strings.Builder, validation ToolValidationReport, matches []toolContract) {

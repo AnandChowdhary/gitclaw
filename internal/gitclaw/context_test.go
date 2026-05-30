@@ -73,6 +73,42 @@ Use read-only files.`)
 	}
 }
 
+func TestLoadRepoContextHonorsConfiguredToolGates(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SOUL.md", "Be concise.")
+	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Use read-only repository files.
+---
+
+# Repo Reader
+Use read-only files.`)
+	writeTestFile(t, root, "go.mod", "module github.com/AnandChowdhary/gitclaw\n")
+	writeTestFile(t, root, "docs/search-fixture.md", "bounded repository search fixture phrase => GITCLAW_SEARCH_CONTEXT_V1\n")
+
+	ctx, err := LoadRepoContextWithConfig(root, []TranscriptMessage{{
+		Role: "user",
+		Body: "Use repo-reader, inspect `go.mod`, and search for `bounded repository search fixture phrase`.",
+	}}, Config{
+		AllowedTools:  map[string]bool{"gitclaw.list_files": true, "gitclaw.skill_index": true},
+		DisabledTools: map[string]bool{"gitclaw.skill_index": true},
+	})
+	if err != nil {
+		t.Fatalf("LoadRepoContextWithConfig returned error: %v", err)
+	}
+	if !hasToolOutput(ctx.ToolOutputs, "gitclaw.list_files", ".", "go.mod") {
+		t.Fatalf("list_files should remain active: %#v", ctx.ToolOutputs)
+	}
+	for _, blocked := range []string{"gitclaw.skill_index", "gitclaw.search_files", "gitclaw.read_file"} {
+		if hasToolOutputBody(ctx.ToolOutputs, blocked, "") {
+			t.Fatalf("%s should not be active: %#v", blocked, ctx.ToolOutputs)
+		}
+	}
+	if enabledToolCount(ctx) != 1 || disabledToolCount(ctx) != 1 || allowlistBlockedToolCount(ctx) != 3 {
+		t.Fatalf("unexpected tool gate counts: %#v", ctx)
+	}
+}
+
 func TestLoadSkillContextSelectsRequestedAndAlwaysSkills(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---

@@ -745,6 +745,12 @@ availability as policy, not only discovery. Add repo-reviewed
 and hashable, but disabled or allowlist-blocked skill bodies never load into
 prompt context even when mentioned or marked always-on.
 
+2026-05-30 tool-gating follow-up: Hermes/OpenClaw toolsets are useful partly
+because the operator can see and constrain what the agent may call. GitClaw
+should mirror that with repo-reviewed `tools.allowed` and `tools.disabled`
+config for deterministic built-ins: disabled tools remain visible in reports,
+but prompt-visible outputs are not generated.
+
 2026-05-30 prompt-list follow-up: prompt-budget visibility should also be
 available before opening an issue. Add `gitclaw prompt list` as the local
 mirror of `/prompt`: provider/model, prompt size/hash, configured budgets,

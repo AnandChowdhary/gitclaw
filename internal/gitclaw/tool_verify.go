@@ -9,6 +9,9 @@ type ToolVerifyReport struct {
 	Status                        string
 	Validation                    ToolValidationReport
 	AvailableTools                int
+	EnabledTools                  int
+	DisabledTools                 int
+	AllowlistBlockedTools         int
 	ReadOnlyContracts             int
 	MetadataOnlyContracts         int
 	MutatingContracts             int
@@ -34,6 +37,9 @@ func BuildToolVerifyReport(repoContext RepoContext) ToolVerifyReport {
 		Status:                        validation.Status,
 		Validation:                    validation,
 		AvailableTools:                len(toolReportContracts),
+		EnabledTools:                  enabledToolCount(repoContext),
+		DisabledTools:                 disabledToolCount(repoContext),
+		AllowlistBlockedTools:         allowlistBlockedToolCount(repoContext),
 		ActiveOutputs:                 len(repoContext.ToolOutputs),
 		KnownToolOutputs:              len(repoContext.ToolOutputs) - validation.UnknownOutputs,
 		UnknownToolOutputs:            validation.UnknownOutputs,
@@ -98,6 +104,9 @@ func renderToolVerifyReport(ev Event, repoContext RepoContext, includeIssue bool
 	fmt.Fprintf(&b, "- tool_verify_status: `%s`\n", report.Status)
 	fmt.Fprintf(&b, "- verification_scope: `%s`\n", "deterministic-tool-contracts")
 	fmt.Fprintf(&b, "- available_tools: `%d`\n", report.AvailableTools)
+	fmt.Fprintf(&b, "- enabled_tools: `%d`\n", report.EnabledTools)
+	fmt.Fprintf(&b, "- disabled_tools: `%d`\n", report.DisabledTools)
+	fmt.Fprintf(&b, "- allowlist_blocked_tools: `%d`\n", report.AllowlistBlockedTools)
 	fmt.Fprintf(&b, "- read_only_contracts: `%d`\n", report.ReadOnlyContracts)
 	fmt.Fprintf(&b, "- metadata_only_contracts: `%d`\n", report.MetadataOnlyContracts)
 	fmt.Fprintf(&b, "- mutating_contracts: `%d`\n", report.MutatingContracts)
@@ -120,7 +129,7 @@ func renderToolVerifyReport(ev Event, repoContext RepoContext, includeIssue bool
 	b.WriteString("This report verifies GitClaw's deterministic v1 tool contracts and active tool-output metadata. It reports built-in contract modes, guidance-file hashes, and active-output hashes only; raw tool outputs, tool inputs, file bodies, issue bodies, comments, prompts, and secret values are not included.\n\n")
 
 	b.WriteString("### Trust Cards\n")
-	writeToolContractTrustCards(&b, repoContext.ToolOutputs)
+	writeToolContractTrustCards(&b, repoContext)
 	writeToolGuidanceTrustCards(&b, repoContext.Documents)
 	writeToolOutputTrustCards(&b, repoContext.ToolOutputs)
 
@@ -129,14 +138,18 @@ func renderToolVerifyReport(ev Event, repoContext RepoContext, includeIssue bool
 	return strings.TrimSpace(b.String())
 }
 
-func writeToolContractTrustCards(b *strings.Builder, outputs []ToolOutput) {
+func writeToolContractTrustCards(b *strings.Builder, repoContext RepoContext) {
 	activeCounts := map[string]int{}
-	for _, output := range outputs {
+	for _, output := range repoContext.ToolOutputs {
 		activeCounts[output.Name]++
 	}
 	for _, contract := range toolReportContracts {
-		fmt.Fprintf(b, "- kind=`contract` name=`%s` source=`builtin-gitclaw` mode=`%s` mutating=`%t` trigger=`%s` active_outputs=`%d`\n",
+		enabled, disabled, blocked := toolEnabledInRepoContext(contract.Name, repoContext)
+		fmt.Fprintf(b, "- kind=`contract` name=`%s` source=`builtin-gitclaw` enabled=`%t` disabled_by_config=`%t` blocked_by_allowlist=`%t` mode=`%s` mutating=`%t` trigger=`%s` active_outputs=`%d`\n",
 			contract.Name,
+			enabled,
+			disabled,
+			blocked,
 			contract.Mode,
 			isMutatingToolContract(contract),
 			inlineCode(contract.Trigger),

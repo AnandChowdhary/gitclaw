@@ -145,6 +145,12 @@ for expected in \
   'context_files_present: `6`' \
   'memory_notes: `1`' \
   'skill_files: `1`' \
+  'enabled_skills: `1`' \
+  'disabled_skills: `0`' \
+  'allowlist_blocked_skills: `0`' \
+  'enabled_tools: `5`' \
+  'disabled_tools: `0`' \
+  'allowlist_blocked_tools: `0`' \
   'proactive_prompt_files: `1`' \
   'managed_labels: `9`' \
   'validation_errors: `0`' \

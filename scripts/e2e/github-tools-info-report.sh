@@ -170,6 +170,9 @@ for expected in \
   "### Matches" \
   'name=`gitclaw.read_file`' \
   'source=`builtin-gitclaw`' \
+  'enabled=`true`' \
+  'disabled_by_config=`false`' \
+  'blocked_by_allowlist=`false`' \
   'mode=`read-only`' \
   'mutating=`false`' \
   'trigger=`explicit repository-relative path`' \

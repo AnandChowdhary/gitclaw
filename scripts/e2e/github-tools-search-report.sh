@@ -174,6 +174,9 @@ for expected in \
   "searches deterministic tool contracts and active tool-output metadata" \
   "### Results" \
   'kind=`contract` name=`gitclaw.read_file`' \
+  'enabled=`true`' \
+  'disabled_by_config=`false`' \
+  'blocked_by_allowlist=`false`' \
   'kind=`active-output` name=`gitclaw.read_file`' \
   'input_sha256_12=' \
   'output_sha256_12='; do

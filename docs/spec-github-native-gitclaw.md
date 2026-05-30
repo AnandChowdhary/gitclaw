@@ -1129,6 +1129,24 @@ GitClaw v1 adds a small deterministic tool layer before the model call:
 Tool outputs are inserted into the prompt as auditable context blocks. They are
 not autonomous shell execution, and they do not mutate the repository.
 
+Repo owners can gate deterministic tool outputs from reviewed config:
+
+```yaml
+tools:
+  allowed:
+    - list_files
+    - read_file
+  disabled:
+    - search_files
+```
+
+`tools.allowed` is an optional allowlist; if present, only those tool names can
+emit prompt-visible tool outputs. `tools.disabled` is an optional denylist and
+wins over `tools.allowed`. Both lists accept the full `gitclaw.read_file` form
+or the short `read_file` suffix, and unknown names are rejected at config load
+time. Disabled or allowlist-blocked tools remain visible in deterministic tool
+reports, but their output bodies are not generated for model context.
+
 ## Tool Validation
 
 GitClaw validates the deterministic tool surface against the OpenClaw/Hermes
@@ -1179,8 +1197,8 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 - each active output's input, byte count, line count, and short hash,
 - tool validation status, error/warning counts, contract counts, active-output
   counts, unknown-output counts, unsafe-contract counts, over-limit output
-  counts, missing-guidance count, duplicate-contract count, and body-free
-  findings.
+  counts, missing-guidance count, duplicate-contract count, enabled/disabled/
+  allowlist-blocked tool counts, per-tool gate state, and body-free findings.
 
 It never dumps full tool output bodies. Tool output bodies remain prompt inputs
 only; the issue-visible report exposes enough metadata to debug whether
@@ -1196,8 +1214,9 @@ error/warning totals, and body-free findings. This mirrors
 
 When called as `@gitclaw /tools verify`, the command posts a stricter
 body-free trust envelope for deterministic tool contracts. It reports built-in
-contract modes, read-only/metadata-only/mutating counts, active output counts,
-known versus unknown outputs, `.gitclaw/TOOLS.md` provenance and hash metadata,
+contract modes, enabled/disabled/allowlist-blocked gate state,
+read-only/metadata-only/mutating counts, active output counts, known versus
+unknown outputs, `.gitclaw/TOOLS.md` provenance and hash metadata,
 active-output input/output hashes, and explicit external-registry and runtime
 permission verification status. Unlike the inventory report, it does not print
 raw tool input values such as file paths or search phrases.
@@ -1462,6 +1481,8 @@ The first supported schema is deliberately narrow:
 - `model.max_transcript_message_bytes`,
 - `skills.allowed`, optional lower hyphen-case skill allowlist,
 - `skills.disabled`, optional lower hyphen-case skill denylist,
+- `tools.allowed`, optional `gitclaw.` tool allowlist,
+- `tools.disabled`, optional `gitclaw.` tool denylist,
 - `actions.mode`, which must currently be `read_only`.
 
 Unknown YAML fields are rejected. This mirrors OpenClaw's schema/validate
@@ -3297,17 +3318,19 @@ examples/workflows/gitclaw.yml
   verification non-goals without a model call or context-body leakage.
 - A `gh`-driven tools-report E2E harness verifies `@gitclaw /tools` produces a
   deterministic tool contract and active-output audit with validation metadata,
-  without a model call or output-body leakage.
+  repo-reviewed tool-gate metadata, without a model call or output-body
+  leakage.
 - A `gh`-driven tools-list E2E harness verifies `@gitclaw /tools list`
   is an explicit inventory alias with the same body-free tool contract,
-  active-output, guidance, and validation metadata.
+  active-output, guidance, gate-state, and validation metadata.
 - A `gh`-driven tools-validate E2E harness verifies
   `@gitclaw /tools validate` exposes the body-free validation report without
   falling back to the full inventory.
 - A `gh`-driven tools-verify E2E harness verifies
   `@gitclaw /tools verify` exposes the body-free deterministic tool trust
-  envelope, contract modes, guidance provenance, active-output hashes, raw
-  input suppression, and verification findings without a model call.
+  envelope, contract modes, gate-state metadata, guidance provenance,
+  active-output hashes, raw input suppression, and verification findings
+  without a model call.
 - A `gh`-driven tools-info E2E harness verifies
   `@gitclaw /tools info read_file` exposes one body-free tool contract card,
   active-output hashes, and match-scoped validation without raw inputs or

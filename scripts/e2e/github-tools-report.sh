@@ -155,6 +155,9 @@ for expected in \
   "GitClaw Tools Report" \
   "Generated without a model call" \
   'available_tools: `5`' \
+  'enabled_tools: `5`' \
+  'disabled_tools: `0`' \
+  'allowlist_blocked_tools: `0`' \
   'active_tool_outputs: `4`' \
   'tool_validation_status: `ok`' \
   'tool_validation_errors: `0`' \
@@ -174,6 +177,9 @@ for expected in \
   "gitclaw.skill_index" \
   "gitclaw.search_files" \
   "gitclaw.read_file" \
+  'enabled=`true`' \
+  'disabled_by_config=`false`' \
+  'blocked_by_allowlist=`false`' \
   'input=`go.mod`' \
   "sha256_12="; do
   grep -Fq -- "$expected" <<<"$comments" || die "tools report missing ${expected}"

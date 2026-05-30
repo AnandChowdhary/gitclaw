@@ -33,6 +33,8 @@ type Config struct {
 	MaxTranscriptMessageBytes int
 	AllowedSkills             map[string]bool
 	DisabledSkills            map[string]bool
+	AllowedTools              map[string]bool
+	DisabledTools             map[string]bool
 }
 
 func DefaultConfig() Config {
@@ -217,6 +219,8 @@ type RepoContext struct {
 	Skills         []ContextDocument
 	SkillSummaries []SkillSummary
 	ToolOutputs    []ToolOutput
+	AllowedTools   map[string]bool
+	DisabledTools  map[string]bool
 }
 
 type ContextDocument struct {

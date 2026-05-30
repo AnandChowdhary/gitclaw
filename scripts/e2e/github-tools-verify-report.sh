@@ -162,6 +162,9 @@ for expected in \
   'tool_verify_status: `ok`' \
   'verification_scope: `deterministic-tool-contracts`' \
   'available_tools: `5`' \
+  'enabled_tools: `5`' \
+  'disabled_tools: `0`' \
+  'allowlist_blocked_tools: `0`' \
   'read_only_contracts: `3`' \
   'metadata_only_contracts: `2`' \
   'mutating_contracts: `0`' \
@@ -193,6 +196,9 @@ for expected in \
   "### Trust Cards" \
   'kind=`contract` name=`gitclaw.list_files`' \
   'kind=`contract` name=`gitclaw.read_file`' \
+  'enabled=`true`' \
+  'disabled_by_config=`false`' \
+  'blocked_by_allowlist=`false`' \
   'kind=`guidance` path=`.gitclaw/TOOLS.md` source=`repo-local`' \
   'kind=`active-output` name=`gitclaw.read_file` contract_known=`true`' \
   'kind=`active-output` name=`gitclaw.search_files` contract_known=`true`' \

@@ -68,9 +68,13 @@ func LoadRepoContextWithConfig(root string, transcript []TranscriptMessage, cfg 
 		Documents:      documents,
 		Skills:         skills,
 		SkillSummaries: skillSummaries,
-		ToolOutputs:    []ToolOutput{{Name: "gitclaw.list_files", Input: ".", Output: strings.Join(files, "\n")}},
+		AllowedTools:   cfg.AllowedTools,
+		DisabledTools:  cfg.DisabledTools,
 	}
-	if len(skillSummaries) > 0 {
+	if toolEnabled, _, _ := toolEnabledByConfig("gitclaw.list_files", cfg); toolEnabled {
+		ctx.ToolOutputs = append(ctx.ToolOutputs, ToolOutput{Name: "gitclaw.list_files", Input: ".", Output: strings.Join(files, "\n")})
+	}
+	if toolEnabled, _, _ := toolEnabledByConfig("gitclaw.skill_index", cfg); toolEnabled && len(skillSummaries) > 0 {
 		ctx.ToolOutputs = append(ctx.ToolOutputs, ToolOutput{
 			Name:   "gitclaw.skill_index",
 			Input:  ".gitclaw/SKILLS",
@@ -78,7 +82,7 @@ func LoadRepoContextWithConfig(root string, transcript []TranscriptMessage, cfg 
 		})
 	}
 	searchQueries := searchQueriesFromTranscript(transcript)
-	if len(searchQueries) > 0 {
+	if toolEnabled, _, _ := toolEnabledByConfig("gitclaw.search_files", cfg); toolEnabled && len(searchQueries) > 0 {
 		if output := searchRepoFiles(absRoot, files, searchQueries); output != "" {
 			ctx.ToolOutputs = append(ctx.ToolOutputs, ToolOutput{
 				Name:   "gitclaw.search_files",
@@ -87,16 +91,18 @@ func LoadRepoContextWithConfig(root string, transcript []TranscriptMessage, cfg 
 			})
 		}
 	}
-	for _, file := range mentionedRepoFiles(files, transcript) {
-		body, err := readRepoTextFile(absRoot, file, maxToolReadBytes)
-		if err != nil {
-			continue
+	if toolEnabled, _, _ := toolEnabledByConfig("gitclaw.read_file", cfg); toolEnabled {
+		for _, file := range mentionedRepoFiles(files, transcript) {
+			body, err := readRepoTextFile(absRoot, file, maxToolReadBytes)
+			if err != nil {
+				continue
+			}
+			ctx.ToolOutputs = append(ctx.ToolOutputs, ToolOutput{
+				Name:   "gitclaw.read_file",
+				Input:  file,
+				Output: body,
+			})
 		}
-		ctx.ToolOutputs = append(ctx.ToolOutputs, ToolOutput{
-			Name:   "gitclaw.read_file",
-			Input:  file,
-			Output: body,
-		})
 	}
 	return ctx, nil
 }

@@ -35,6 +35,13 @@ skills:
     - deploy-helper
   disabled:
     - deploy-helper
+
+tools:
+  allowed:
+    - list_files
+    - gitclaw.read_file
+  disabled:
+    - search_files
 `)
 	cfg := DefaultConfig()
 	cfg.Workdir = root
@@ -62,6 +69,12 @@ skills:
 	}
 	if !loaded.DisabledSkills["deploy-helper"] || len(loaded.DisabledSkills) != 1 {
 		t.Fatalf("skills.disabled config not applied: %#v", loaded.DisabledSkills)
+	}
+	if !loaded.AllowedTools["gitclaw.list_files"] || !loaded.AllowedTools["gitclaw.read_file"] || len(loaded.AllowedTools) != 2 {
+		t.Fatalf("tools.allowed config not applied: %#v", loaded.AllowedTools)
+	}
+	if !loaded.DisabledTools["gitclaw.search_files"] || len(loaded.DisabledTools) != 1 {
+		t.Fatalf("tools.disabled config not applied: %#v", loaded.DisabledTools)
 	}
 }
 
@@ -116,5 +129,22 @@ func TestLoadConfigRejectsInvalidSkillGateNames(t *testing.T) {
 	}
 	if !strings.Contains(err.Error(), "skills.allowed") {
 		t.Fatalf("error should mention skills.allowed, got %v", err)
+	}
+}
+
+func TestLoadConfigRejectsUnknownToolGateNames(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/config.yml", `tools:
+  disabled:
+    - shell_exec
+`)
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	_, err := LoadConfigFromWorkdir(cfg)
+	if err == nil {
+		t.Fatalf("LoadConfigFromWorkdir should reject unknown tool names")
+	}
+	if !strings.Contains(err.Error(), "tools.disabled") {
+		t.Fatalf("error should mention tools.disabled, got %v", err)
 	}
 }

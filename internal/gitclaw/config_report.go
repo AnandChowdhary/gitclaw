@@ -74,6 +74,8 @@ func renderConfigReport(ev Event, cfg Config, includeIssue bool) string {
 	fmt.Fprintf(&b, "- max_transcript_message_bytes: `%d`\n", cfg.MaxTranscriptMessageBytes)
 	fmt.Fprintf(&b, "- skills_allowed_configured: `%d`\n", len(cfg.AllowedSkills))
 	fmt.Fprintf(&b, "- skills_disabled_configured: `%d`\n", len(cfg.DisabledSkills))
+	fmt.Fprintf(&b, "- tools_allowed_configured: `%d`\n", len(cfg.AllowedTools))
+	fmt.Fprintf(&b, "- tools_disabled_configured: `%d`\n", len(cfg.DisabledTools))
 	fmt.Fprintf(&b, "- workflows_present: `%d`\n", countPresentConfigFiles(surface.Workflows))
 	fmt.Fprintf(&b, "- slash_commands: `%d`\n", len(configSlashCommands))
 	if includeIssue {
@@ -101,6 +103,10 @@ func renderConfigReport(ev Event, cfg Config, includeIssue bool) string {
 	writeConfigSkillGateList(&b, "allowed", cfg.AllowedSkills)
 	writeConfigSkillGateList(&b, "disabled", cfg.DisabledSkills)
 
+	b.WriteString("\n### Tool Gates\n")
+	writeConfigToolGateList(&b, "allowed", cfg.AllowedTools)
+	writeConfigToolGateList(&b, "disabled", cfg.DisabledTools)
+
 	b.WriteString("\n### Config File\n")
 	writeConfigSurfaceFile(&b, surface.ConfigFile)
 
@@ -110,6 +116,19 @@ func renderConfigReport(ev Event, cfg Config, includeIssue bool) string {
 	}
 
 	return strings.TrimSpace(b.String())
+}
+
+func writeConfigToolGateList(b *strings.Builder, label string, values map[string]bool) {
+	if len(values) == 0 {
+		fmt.Fprintf(b, "- %s=`none`\n", label)
+		return
+	}
+	names := make([]string, 0, len(values))
+	for name := range values {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	fmt.Fprintf(b, "- %s=`%s`\n", label, inlineList(names))
 }
 
 func writeConfigSkillGateList(b *strings.Builder, label string, values map[string]bool) {

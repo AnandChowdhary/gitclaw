@@ -149,9 +149,12 @@ for expected in \
   'max_transcript_message_bytes: `8000`' \
   'skills_allowed_configured: `0`' \
   'skills_disabled_configured: `0`' \
+  'tools_allowed_configured: `0`' \
+  'tools_disabled_configured: `0`' \
   'workflows_present: `7`' \
   'slash_commands: `15`' \
   '### Skill Gates' \
+  '### Tool Gates' \
   'allowed=`none`' \
   'disabled=`none`' \
   'OWNER' \

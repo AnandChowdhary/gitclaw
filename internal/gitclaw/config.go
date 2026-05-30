@@ -17,6 +17,7 @@ type fileConfig struct {
 	Model         fileModelConfig         `yaml:"model"`
 	Actions       fileActionsConfig       `yaml:"actions"`
 	Skills        fileSkillsConfig        `yaml:"skills"`
+	Tools         fileToolsConfig         `yaml:"tools"`
 }
 
 type fileTriggerConfig struct {
@@ -45,6 +46,11 @@ type fileActionsConfig struct {
 }
 
 type fileSkillsConfig struct {
+	Allowed  []string `yaml:"allowed"`
+	Disabled []string `yaml:"disabled"`
+}
+
+type fileToolsConfig struct {
 	Allowed  []string `yaml:"allowed"`
 	Disabled []string `yaml:"disabled"`
 }
@@ -201,6 +207,20 @@ func applyFileConfig(cfg *Config, file fileConfig) error {
 		}
 		cfg.DisabledSkills = disabled
 	}
+	if len(file.Tools.Allowed) > 0 {
+		allowed, err := normalizeConfiguredToolSet("tools.allowed", file.Tools.Allowed)
+		if err != nil {
+			return err
+		}
+		cfg.AllowedTools = allowed
+	}
+	if len(file.Tools.Disabled) > 0 {
+		disabled, err := normalizeConfiguredToolSet("tools.disabled", file.Tools.Disabled)
+		if err != nil {
+			return err
+		}
+		cfg.DisabledTools = disabled
+	}
 	return validateConfig(*cfg)
 }
 
@@ -256,6 +276,21 @@ func normalizeConfiguredSkillSet(field string, values []string) (map[string]bool
 		}
 		if !skillNamePattern.MatchString(name) {
 			return nil, fmt.Errorf("%s %s contains invalid skill name %q", gitclawConfigPath, field, value)
+		}
+		out[name] = true
+	}
+	return out, nil
+}
+
+func normalizeConfiguredToolSet(field string, values []string) (map[string]bool, error) {
+	out := map[string]bool{}
+	for _, value := range values {
+		name := normalizeToolLookupName(value)
+		if name == "" {
+			continue
+		}
+		if len(matchingToolContracts(toolReportContracts, name)) != 1 {
+			return nil, fmt.Errorf("%s %s contains unknown tool %q", gitclawConfigPath, field, value)
 		}
 		out[name] = true
 	}
