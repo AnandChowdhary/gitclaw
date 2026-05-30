@@ -111,6 +111,7 @@ Backups, sessions, and run provenance:
 
 ```bash
 gitclaw backup verify
+gitclaw backup coverage --issue <number>
 gitclaw backup risk
 gitclaw backup manifest
 gitclaw backup list
@@ -180,6 +181,7 @@ Run a live E2E harness against the current GitHub repository:
 
 ```bash
 scripts/e2e/github-backup-risk-report.sh
+scripts/e2e/github-backup-coverage.sh
 scripts/e2e/github-agents-risk-report.sh
 scripts/e2e/github-nodes-risk-report.sh
 scripts/e2e/github-artifacts-risk-report.sh

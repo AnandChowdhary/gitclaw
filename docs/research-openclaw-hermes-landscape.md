@@ -244,6 +244,16 @@ paths, sources, trust metadata, scores, and body/line hashes only. Raw backup
 JSON remains available through explicit local recovery/export commands, but the
 default search report should be body-free and query-free.
 
+2026-05-31 backup-coverage follow-up: OpenClaw's official ecosystem exposes
+backup/verification as operator-facing control-plane work, while Hermes'
+session-memory posture makes cross-session state useful only if the operator
+can prove it exists. GitClaw should add a narrower git-native check:
+`gitclaw backup coverage --issue <number>` verifies one conversation's
+indexed, canonical, readable backup payload in a fetched `gitclaw-backups`
+branch and emits only metadata, counts, timestamps, and hashes. The issue-side
+`@gitclaw /backup coverage` command should record that local command before
+the post-turn backup job writes the raw payload.
+
 2026-05-29 session-inspection follow-up: OpenClaw exposes transcript and
 session CLIs around JSONL transcript directories, while Hermes automatically
 saves conversations as sessions and can export them to JSONL. GitClaw should

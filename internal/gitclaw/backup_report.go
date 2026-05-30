@@ -75,6 +75,7 @@ func RenderBackupReport(ev Event, cfg Config, comments []Comment, transcript []T
 	writeBackupIssueCommandSummary(&b, request)
 	b.WriteString("\n### Verification\n")
 	b.WriteString("- `gitclaw backup verify --root .gitclaw/backups --repo <owner/repo>`\n")
+	b.WriteString("- `gitclaw backup coverage --root .gitclaw/backups --repo <owner/repo> --issue <number>`\n")
 	b.WriteString("- `gitclaw backup risk --root .gitclaw/backups --repo <owner/repo>`\n")
 	b.WriteString("- `gitclaw backup search --root .gitclaw/backups --repo <owner/repo> <query>`\n")
 	b.WriteString("- `gitclaw backup retention-plan --root .gitclaw/backups --repo <owner/repo> --keep-latest 50`\n")
@@ -99,6 +100,23 @@ func requestedBackupIssueCommand(ev Event, cfg Config) backupIssueCommand {
 			Name:         "verify",
 			Status:       "ok",
 			LocalCommand: fmt.Sprintf("gitclaw backup verify --root %s --repo %s", defaultBackupRoot, backupReportRepo(ev.Repo)),
+		}
+	case "coverage", "covered", "check":
+		issueNumber := ev.Issue.Number
+		if len(fields) >= 3 {
+			parsed, ok := parseBackupIssueNumber(fields[2])
+			if !ok {
+				return backupIssueCommand{
+					Name:   "coverage",
+					Status: "invalid_issue",
+				}
+			}
+			issueNumber = parsed
+		}
+		return backupIssueCommand{
+			Name:         "coverage",
+			Status:       "ok",
+			LocalCommand: fmt.Sprintf("gitclaw backup coverage --root %s --repo %s --issue %d", defaultBackupRoot, backupReportRepo(ev.Repo), issueNumber),
 		}
 	case "risk", "risk-audit":
 		return backupIssueCommand{
@@ -187,9 +205,9 @@ func writeBackupIssueCommandSummary(b *strings.Builder, request backupIssueComma
 			b.WriteString("- raw search query is not printed; only query hash and term count are shown\n")
 		}
 	case "unknown":
-		b.WriteString("- unknown backup subcommand; supported issue intents are `verify`, `risk`, `manifest`, `list`, `info`, `stats`, `search`, `export-jsonl`, `restore-plan`, and `retention-plan`\n")
+		b.WriteString("- unknown backup subcommand; supported issue intents are `verify`, `coverage`, `risk`, `manifest`, `list`, `info`, `stats`, `search`, `export-jsonl`, `restore-plan`, and `retention-plan`\n")
 	case "invalid_issue":
-		b.WriteString("- invalid backup issue number; use `@gitclaw /backup info <issue-number>` or inspect the current issue with `@gitclaw /backup info`\n")
+		b.WriteString("- invalid backup issue number; use `@gitclaw /backup info <issue-number>`, `@gitclaw /backup coverage <issue-number>`, or inspect the current issue without an explicit issue number\n")
 	default:
 		b.WriteString("- summary report requested\n")
 	}

@@ -758,8 +758,8 @@ GitHub issue/comment event
 `cmd/gitclaw`
 
 - CLI entry point.
-- Subcommands: `preflight`, `handle`, `backup`, `backup search`,
-  `backup info`, `backup retention-plan`,
+- Subcommands: `preflight`, `handle`, `backup`, `backup coverage`,
+  `backup search`, `backup info`, `backup retention-plan`,
   `heartbeat`, `heartbeat status`, `heartbeat risk`,
   `channel-ingest`, `channel-state`, `channel-gateway`, `channel-delivery`,
   `channels list`, `channels verify`, `channels risk`, `channels info`,
@@ -3635,7 +3635,7 @@ The command runs after normal preflight authorization and transcript
 reconstruction, but before model inference. It posts a `gitclaw:assistant-turn`
 comment with `model="gitclaw/backup"` and summarizes:
 
-- requested backup command intent (`summary`, `verify`, `manifest`, `list`,
+- requested backup command intent (`summary`, `verify`, `coverage`, `manifest`, `list`,
   `info`, `stats`, `search`, `export-jsonl`, `restore-plan`, or
   `retention-plan`),
 - the matching local `gitclaw backup ...` command to run against a fetched
@@ -3692,6 +3692,21 @@ of checking a tarball manifest, it checks the repo-scoped backup tree:
 The command prints a deterministic `GitClaw Backup Verify Report` with status,
 counts, paths, and failures. It exits non-zero when verification fails. It does
 not print issue bodies, comments, or transcript text.
+
+## Backup Coverage Command
+
+GitClaw also supports a focused backup coverage command for one conversation:
+
+```bash
+gitclaw backup coverage --root .gitclaw/backups --repo <owner/repo> --issue 123
+```
+
+Coverage verifies one requested issue against the fetched `gitclaw-backups`
+tree. It checks that the issue is indexed, points at the canonical
+`issues/000123.json` path, has a readable payload, and exposes only path,
+count, timestamp, and hash metadata. It exits non-zero when the backup is
+missing or the backup tree is not cleanly verified, making it useful in E2E and
+disaster-recovery runbooks.
 
 ## Backup Risk Command
 

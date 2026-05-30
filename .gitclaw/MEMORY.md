@@ -9,3 +9,4 @@
 - Keep prompt risk audits body-free: scan prompt-visible transcript, context, skills, and tool outputs internally, but report only metadata, hashes, codes, budgets, artifact gates, and runtime boundaries.
 - Keep heartbeat risk audits body-free: scheduled workflow and HEARTBEAT context scans may inspect bodies internally, but reports must emit only metadata, counts, hashes, risk codes, and runtime gates.
 - Keep trigger behavior explicit in `.gitclaw/config.yml`: default `label-or-prefix` for shared repos, `label-only` or `prefix-only` for stricter routing, and `inbox` only for dedicated assistant repositories.
+- Keep backup coverage checks body-free: prove one issue's indexed, canonical, readable backup payload with paths, counts, timestamps, and hashes, then use a live model follow-up for E2E coverage.

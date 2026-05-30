@@ -238,6 +238,40 @@ type BackupInfo struct {
 	RawBodiesIncluded    bool
 }
 
+type BackupCoverage struct {
+	Root                       string
+	Repo                       string
+	RepoDir                    string
+	IndexPath                  string
+	ReadmePath                 string
+	SchemaVersion              int
+	IndexGeneratedAt           string
+	BackupCoverageStatus       string
+	BackupVerifyStatus         string
+	VerificationFailures       int
+	IssueNumber                int
+	IssueIndexed               bool
+	IssueBackupPathExpected    string
+	IssuePath                  string
+	IssueBackupPathCanonical   bool
+	IssueBackupPayloadReadable bool
+	IssueBackupPayloadBytes    int
+	IssueBackupPayloadSHA      string
+	BackupGeneratedAt          string
+	EventName                  string
+	Labels                     int
+	Comments                   int
+	TranscriptMessages         int
+	UserMessages               int
+	AssistantMessages          int
+	AssistantTurns             int
+	ErrorComments              int
+	IssueTitleSHA              string
+	IssueBodySHA               string
+	RawBodiesIncluded          bool
+	LLME2ERequiredAfterChange  bool
+}
+
 type BackupRetentionPlan struct {
 	Root                  string
 	Repo                  string
@@ -270,6 +304,10 @@ type BackupRetentionIssue struct {
 	Comments           int
 	TranscriptMessages int
 	IssueTitleSHA      string
+}
+
+func (c BackupCoverage) OK() bool {
+	return c.BackupCoverageStatus == "ok"
 }
 
 func (r BackupVerifyResult) OK() bool {
@@ -777,6 +815,93 @@ func BuildBackupInfo(root, repo string, issueNumber int) (BackupInfo, error) {
 	return BackupInfo{}, fmt.Errorf("issue #%d not found in backup index", issueNumber)
 }
 
+func BuildBackupCoverage(root, repo string, issueNumber int) (BackupCoverage, error) {
+	if issueNumber <= 0 {
+		return BackupCoverage{}, fmt.Errorf("missing positive issue number")
+	}
+	if err := validateRepoName(repo); err != nil {
+		return BackupCoverage{}, err
+	}
+	repoDir, index, err := readBackupIndex(root, repo)
+	if err != nil {
+		return BackupCoverage{}, err
+	}
+	if root == "" {
+		root = filepath.Join(".gitclaw", "backups")
+	}
+	verify, err := VerifyBackupTree(root, repo)
+	if err != nil {
+		return BackupCoverage{}, err
+	}
+	expectedPath := filepath.ToSlash(filepath.Join("issues", fmt.Sprintf("%06d.json", issueNumber)))
+	coverage := BackupCoverage{
+		Root:                      filepath.ToSlash(root),
+		Repo:                      repo,
+		RepoDir:                   filepath.ToSlash(repoDir),
+		IndexPath:                 filepath.ToSlash(filepath.Join(repoDir, "index.json")),
+		ReadmePath:                filepath.ToSlash(filepath.Join(repoDir, "README.md")),
+		SchemaVersion:             index.Version,
+		IndexGeneratedAt:          index.GeneratedAt,
+		BackupCoverageStatus:      "ok",
+		BackupVerifyStatus:        "ok",
+		VerificationFailures:      len(verify.VerificationFailures),
+		IssueNumber:               issueNumber,
+		IssueBackupPathExpected:   expectedPath,
+		RawBodiesIncluded:         false,
+		LLME2ERequiredAfterChange: true,
+	}
+	if !verify.OK() {
+		coverage.BackupCoverageStatus = "warn"
+		coverage.BackupVerifyStatus = "warn"
+	}
+
+	for _, issue := range index.Issues {
+		if issue.Number != issueNumber {
+			continue
+		}
+		coverage.IssueIndexed = true
+		coverage.IssuePath = filepath.ToSlash(issue.Path)
+		coverage.IssueBackupPathCanonical = coverage.IssuePath == expectedPath
+		if !coverage.IssueBackupPathCanonical {
+			coverage.BackupCoverageStatus = "warn"
+		}
+		backup, payload, err := manifestPayload(repoDir, repo, issue)
+		if err != nil {
+			coverage.BackupCoverageStatus = "warn"
+			return coverage, nil
+		}
+		coverage.IssueBackupPayloadReadable = true
+		coverage.IssueBackupPayloadBytes = payload.Bytes
+		coverage.IssueBackupPayloadSHA = payload.SHA
+		coverage.BackupGeneratedAt = backup.GeneratedAt
+		coverage.EventName = backup.EventName
+		coverage.Labels = len(backup.Issue.Labels)
+		coverage.Comments = len(backup.Comments)
+		coverage.TranscriptMessages = len(backup.Transcript)
+		coverage.IssueTitleSHA = shortDocumentHash(backup.Issue.Title)
+		coverage.IssueBodySHA = shortDocumentHash(backup.Issue.Body)
+		for _, comment := range backup.Comments {
+			if HasGitClawMarker(comment.Body) {
+				coverage.AssistantTurns++
+			}
+			if HasGitClawErrorMarker(comment.Body) {
+				coverage.ErrorComments++
+			}
+		}
+		for _, msg := range backup.Transcript {
+			switch msg.Role {
+			case "assistant":
+				coverage.AssistantMessages++
+			default:
+				coverage.UserMessages++
+			}
+		}
+		return coverage, nil
+	}
+	coverage.BackupCoverageStatus = "missing"
+	return coverage, nil
+}
+
 func BuildBackupRetentionPlan(root, repo string, keepLatest int) (BackupRetentionPlan, error) {
 	if keepLatest <= 0 {
 		return BackupRetentionPlan{}, fmt.Errorf("keep latest must be positive")
@@ -1120,6 +1245,63 @@ func RenderBackupInfo(info BackupInfo) string {
 	writeHashList(&b, "comment", info.CommentBodySHAs)
 	b.WriteString("\n### Transcript Body Hashes\n")
 	writeHashList(&b, "message", info.TranscriptBodySHAs)
+	return strings.TrimSpace(b.String())
+}
+
+func RenderBackupCoverage(coverage BackupCoverage) string {
+	var b strings.Builder
+	b.WriteString("## GitClaw Backup Coverage Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	fmt.Fprintf(&b, "- repository: `%s`\n", coverage.Repo)
+	fmt.Fprintf(&b, "- backup_coverage_status: `%s`\n", coverage.BackupCoverageStatus)
+	fmt.Fprintf(&b, "- backup_verify_status: `%s`\n", coverage.BackupVerifyStatus)
+	fmt.Fprintf(&b, "- verification_failures: `%d`\n", coverage.VerificationFailures)
+	fmt.Fprintf(&b, "- backup_root: `%s`\n", coverage.Root)
+	fmt.Fprintf(&b, "- repo_backup_dir: `%s`\n", coverage.RepoDir)
+	fmt.Fprintf(&b, "- index_path: `%s`\n", coverage.IndexPath)
+	fmt.Fprintf(&b, "- readme_path: `%s`\n", coverage.ReadmePath)
+	fmt.Fprintf(&b, "- backup_schema_version: `%d`\n", coverage.SchemaVersion)
+	fmt.Fprintf(&b, "- index_generated_at: `%s`\n", coverage.IndexGeneratedAt)
+	fmt.Fprintf(&b, "- issue: `#%d`\n", coverage.IssueNumber)
+	fmt.Fprintf(&b, "- issue_indexed: `%t`\n", coverage.IssueIndexed)
+	fmt.Fprintf(&b, "- expected_issue_backup_path: `%s`\n", coverage.IssueBackupPathExpected)
+	if coverage.IssuePath != "" {
+		fmt.Fprintf(&b, "- issue_backup_path: `%s`\n", coverage.IssuePath)
+	} else {
+		b.WriteString("- issue_backup_path: `none`\n")
+	}
+	fmt.Fprintf(&b, "- issue_backup_path_canonical: `%t`\n", coverage.IssueBackupPathCanonical)
+	fmt.Fprintf(&b, "- issue_backup_payload_readable: `%t`\n", coverage.IssueBackupPayloadReadable)
+	if coverage.IssueBackupPayloadReadable {
+		fmt.Fprintf(&b, "- payload_bytes: `%d`\n", coverage.IssueBackupPayloadBytes)
+		fmt.Fprintf(&b, "- payload_sha256_12: `%s`\n", coverage.IssueBackupPayloadSHA)
+		fmt.Fprintf(&b, "- backup_generated_at: `%s`\n", coverage.BackupGeneratedAt)
+		fmt.Fprintf(&b, "- backup_event_name: `%s`\n", coverage.EventName)
+		fmt.Fprintf(&b, "- labels: `%d`\n", coverage.Labels)
+		fmt.Fprintf(&b, "- comments: `%d`\n", coverage.Comments)
+		fmt.Fprintf(&b, "- transcript_messages: `%d`\n", coverage.TranscriptMessages)
+		fmt.Fprintf(&b, "- user_messages: `%d`\n", coverage.UserMessages)
+		fmt.Fprintf(&b, "- assistant_messages: `%d`\n", coverage.AssistantMessages)
+		fmt.Fprintf(&b, "- assistant_turn_comments: `%d`\n", coverage.AssistantTurns)
+		fmt.Fprintf(&b, "- error_comments: `%d`\n", coverage.ErrorComments)
+		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", coverage.IssueTitleSHA)
+		fmt.Fprintf(&b, "- issue_body_sha256_12: `%s`\n", coverage.IssueBodySHA)
+	}
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", coverage.RawBodiesIncluded)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_backup_coverage_change: `%t`\n\n", coverage.LLME2ERequiredAfterChange)
+
+	b.WriteString("This report verifies whether one requested issue has a canonical, readable entry in a fetched `gitclaw-backups` tree. It reports paths, counts, timestamps, and hashes only; raw issue titles, issue bodies, comments, transcript messages, prompts, and restored content are not included.\n\n")
+	b.WriteString("### Coverage Evidence\n")
+	if !coverage.IssueIndexed {
+		b.WriteString("- index_entry=`missing`\n")
+		b.WriteString("- payload_read=`skipped`\n")
+	} else {
+		b.WriteString("- index_entry=`present`\n")
+		fmt.Fprintf(&b, "- canonical_path=`%t`\n", coverage.IssueBackupPathCanonical)
+		fmt.Fprintf(&b, "- payload_read=`%t`\n", coverage.IssueBackupPayloadReadable)
+	}
+	b.WriteString("- mutation_performed=`false`\n")
+	b.WriteString("- github_api_calls_performed=`false`\n")
 	return strings.TrimSpace(b.String())
 }
 

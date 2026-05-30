@@ -102,6 +102,34 @@ func TestRenderBackupInfoIssueCommandRecordsTargetIssue(t *testing.T) {
 	}
 }
 
+func TestRenderBackupCoverageIssueCommandRecordsTargetIssue(t *testing.T) {
+	ev := Event{
+		Repo: "owner/repo",
+		Issue: Issue{
+			Number: 97,
+			Title:  "@gitclaw /backup coverage #42",
+			Body:   "BACKUP_COVERAGE_INTENT_SECRET",
+		},
+	}
+
+	report := RenderBackupReport(ev, DefaultConfig(), nil, nil)
+	for _, want := range []string{
+		"requested_backup_command: `coverage`",
+		"backup_command_status: `ok`",
+		"requested_local_command: `gitclaw backup coverage --root .gitclaw/backups --repo owner/repo --issue 42`",
+		"run `gitclaw backup coverage --root .gitclaw/backups --repo owner/repo --issue 42` after fetching `gitclaw-backups`",
+		"issue_side_execution: `deferred_to_post_turn_backup_branch`",
+		"raw_bodies_included: `false`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("backup coverage report missing %q:\n%s", want, report)
+		}
+	}
+	if strings.Contains(report, "BACKUP_COVERAGE_INTENT_SECRET") {
+		t.Fatalf("backup coverage report leaked body:\n%s", report)
+	}
+}
+
 func TestRenderBackupRiskIssueCommandRecordsDeferredIntentWithoutBodies(t *testing.T) {
 	ev := Event{
 		Repo: "owner/repo",

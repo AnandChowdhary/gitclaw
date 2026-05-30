@@ -138,7 +138,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `33`' \
   'aliases: `31`' \
-  'local_cli_helpers: `123`' \
+  'local_cli_helpers: `124`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/agents' \
@@ -268,6 +268,7 @@ for expected in \
   'gitclaw policy verify' \
   'gitclaw policy risk' \
   'gitclaw backup verify' \
+  'gitclaw backup coverage --issue <number>' \
   'gitclaw backup risk' \
   'gitclaw backup manifest' \
   'gitclaw backup list' \

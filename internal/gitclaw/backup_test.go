@@ -450,6 +450,122 @@ func TestBuildBackupInfoReportsOneBackupWithoutBodies(t *testing.T) {
 	}
 }
 
+func TestBuildBackupCoverageReportsOneIssueWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T13:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issue_comment",
+		Issue: IssueBackupIssue{
+			Number: 8,
+			Title:  "@gitclaw coverage title BACKUP_COVERAGE_TITLE_SECRET",
+			Body:   "BACKUP_COVERAGE_BODY_SECRET",
+			Labels: []string{"gitclaw:e2e", "gitclaw"},
+		},
+		Transcript: []TranscriptMessage{
+			{Role: "user", Body: "BACKUP_COVERAGE_TRANSCRIPT_TOKEN", Actor: "alice", Trusted: true},
+			{Role: "assistant", Body: "BACKUP_COVERAGE_ASSISTANT_TOKEN", Actor: "github-actions[bot]", CommentID: 12, Trusted: true},
+		},
+		Comments: []IssueBackupComment{
+			{ID: 12, Body: "<!-- gitclaw:assistant-turn -->\nBACKUP_COVERAGE_COMMENT_TOKEN"},
+			{ID: 13, Body: "<!-- gitclaw:error -->\nBACKUP_COVERAGE_ERROR_TOKEN"},
+		},
+	})
+	if _, err := WriteBackupIndex(root, "owner/repo", time.Date(2026, 5, 29, 14, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+
+	coverage, err := BuildBackupCoverage(root, "owner/repo", 8)
+	if err != nil {
+		t.Fatalf("BuildBackupCoverage returned error: %v", err)
+	}
+	if !coverage.OK() || !coverage.IssueIndexed || !coverage.IssueBackupPayloadReadable || !coverage.IssueBackupPathCanonical || coverage.Comments != 2 || coverage.TranscriptMessages != 2 || coverage.AssistantTurns != 1 || coverage.ErrorComments != 1 {
+		t.Fatalf("unexpected backup coverage metadata: %#v", coverage)
+	}
+	report := RenderBackupCoverage(coverage)
+	for _, want := range []string{"GitClaw Backup Coverage Report", "repository: `owner/repo`", "backup_coverage_status: `ok`", "backup_verify_status: `ok`", "verification_failures: `0`", "backup_schema_version: `1`", "issue: `#8`", "issue_indexed: `true`", "expected_issue_backup_path: `issues/000008.json`", "issue_backup_path: `issues/000008.json`", "issue_backup_path_canonical: `true`", "issue_backup_payload_readable: `true`", "payload_bytes:", "payload_sha256_12:", "backup_event_name: `issue_comment`", "labels: `2`", "comments: `2`", "transcript_messages: `2`", "assistant_turn_comments: `1`", "error_comments: `1`", "issue_title_sha256_12:", "issue_body_sha256_12:", "raw_bodies_included: `false`", "llm_e2e_required_after_backup_coverage_change: `true`", "index_entry=`present`", "mutation_performed=`false`"} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("backup coverage report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"BACKUP_COVERAGE_TITLE_SECRET", "BACKUP_COVERAGE_BODY_SECRET", "BACKUP_COVERAGE_TRANSCRIPT_TOKEN", "BACKUP_COVERAGE_ASSISTANT_TOKEN", "BACKUP_COVERAGE_COMMENT_TOKEN", "BACKUP_COVERAGE_ERROR_TOKEN", "@gitclaw coverage title"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("backup coverage leaked body/title token %q:\n%s", leaked, report)
+		}
+	}
+}
+
+func TestBuildBackupCoverageReportsMissingIssue(t *testing.T) {
+	root := t.TempDir()
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T13:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue:       IssueBackupIssue{Number: 8, Title: "@gitclaw covered"},
+		Transcript:  []TranscriptMessage{{Role: "user"}},
+	})
+	if _, err := WriteBackupIndex(root, "owner/repo", time.Date(2026, 5, 29, 14, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+
+	coverage, err := BuildBackupCoverage(root, "owner/repo", 9)
+	if err != nil {
+		t.Fatalf("BuildBackupCoverage returned error: %v", err)
+	}
+	if coverage.OK() || coverage.BackupCoverageStatus != "missing" || coverage.IssueIndexed || coverage.IssueBackupPayloadReadable {
+		t.Fatalf("unexpected missing coverage metadata: %#v", coverage)
+	}
+	report := RenderBackupCoverage(coverage)
+	for _, want := range []string{"backup_coverage_status: `missing`", "issue: `#9`", "issue_indexed: `false`", "expected_issue_backup_path: `issues/000009.json`", "issue_backup_path: `none`", "index_entry=`missing`", "payload_read=`skipped`"} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("missing coverage report missing %q:\n%s", want, report)
+		}
+	}
+}
+
+func TestBuildBackupCoverageReportsUnreadableIndexedPayload(t *testing.T) {
+	root := t.TempDir()
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T13:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue: IssueBackupIssue{
+			Number: 8,
+			Title:  "@gitclaw coverage unreadable BACKUP_COVERAGE_UNREADABLE_TITLE_SECRET",
+			Body:   "BACKUP_COVERAGE_UNREADABLE_BODY_SECRET",
+		},
+		Transcript: []TranscriptMessage{{Role: "user", Body: "BACKUP_COVERAGE_UNREADABLE_TRANSCRIPT_SECRET"}},
+	})
+	if _, err := WriteBackupIndex(root, "owner/repo", time.Date(2026, 5, 29, 14, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+	if err := os.Remove(issueBackupPath(root, "owner/repo", 8)); err != nil {
+		t.Fatal(err)
+	}
+
+	coverage, err := BuildBackupCoverage(root, "owner/repo", 8)
+	if err != nil {
+		t.Fatalf("BuildBackupCoverage returned error: %v", err)
+	}
+	if coverage.OK() || coverage.BackupCoverageStatus != "warn" || coverage.BackupVerifyStatus != "warn" || !coverage.IssueIndexed || coverage.IssueBackupPayloadReadable {
+		t.Fatalf("unexpected unreadable coverage metadata: %#v", coverage)
+	}
+	report := RenderBackupCoverage(coverage)
+	for _, want := range []string{"backup_coverage_status: `warn`", "backup_verify_status: `warn`", "issue_indexed: `true`", "issue_backup_path: `issues/000008.json`", "issue_backup_payload_readable: `false`", "payload_read=`false`"} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("unreadable coverage report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"BACKUP_COVERAGE_UNREADABLE_TITLE_SECRET", "BACKUP_COVERAGE_UNREADABLE_BODY_SECRET", "BACKUP_COVERAGE_UNREADABLE_TRANSCRIPT_SECRET", "@gitclaw coverage unreadable"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("unreadable coverage leaked body/title token %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestBuildBackupSearchFindsBackedUpConversationWithoutBodies(t *testing.T) {
 	root := t.TempDir()
 	writeBackupFixture(t, root, IssueBackup{
