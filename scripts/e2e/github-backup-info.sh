@@ -182,8 +182,8 @@ for _ in {1..60}; do
     label_count="$(jq -r '.issue.labels | length' "$issue_json_path")"
     comment_count="$(jq -r '.comments | length' "$issue_json_path")"
     transcript_count="$(jq -r '.transcript | length' "$issue_json_path")"
-    user_count="$(jq -r '[.transcript[] | select(.role != "assistant")] | length' "$issue_json_path")"
-    assistant_count_json="$(jq -r '[.transcript[] | select(.role == "assistant")] | length' "$issue_json_path")"
+    user_count="$(jq -r '[.transcript[] | select(.Role != "assistant")] | length' "$issue_json_path")"
+    assistant_count_json="$(jq -r '[.transcript[] | select(.Role == "assistant")] | length' "$issue_json_path")"
     assistant_turn_count="$(jq -r '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length' "$issue_json_path")"
     error_count_json="$(jq -r '[.comments[] | select(.body | contains("gitclaw:error"))] | length' "$issue_json_path")"
 
