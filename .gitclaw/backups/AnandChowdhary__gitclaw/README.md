@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-05-30T19:22:50Z`
-- issue_count: `274`
+- generated_at: `2026-05-30T19:38:56Z`
+- issue_count: `275`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -279,3 +279,4 @@
 | #309 | @gitclaw /rollback risk e2e 20260530T190006Z | `2026-05-30T19:02:28Z` | 3 | 4 | `issues/000309.json` |
 | #310 | @gitclaw /profile risk e2e 20260530T191825Z | `2026-05-30T19:19:29Z` | 1 | 2 | `issues/000310.json` |
 | #311 | @gitclaw /profile risk e2e 20260530T192031Z | `2026-05-30T19:22:49Z` | 3 | 4 | `issues/000311.json` |
+| #312 | @gitclaw /models risk e2e 20260530T193752Z | `2026-05-30T19:38:55Z` | 1 | 2 | `issues/000312.json` |
