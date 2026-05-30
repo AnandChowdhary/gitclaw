@@ -121,6 +121,7 @@ gitclaw policy verify
 gitclaw channels verify
 gitclaw channels risk
 gitclaw proactive list
+gitclaw proactive risk
 gitclaw workspace verify
 gitclaw sandbox verify
 ```
@@ -140,6 +141,7 @@ Run a live E2E harness against the current GitHub repository:
 ```bash
 scripts/e2e/github-backup-risk-report.sh
 scripts/e2e/github-memory-risk-report.sh
+scripts/e2e/github-proactive-risk-report.sh
 scripts/e2e/github-tools-risk-report.sh
 scripts/e2e/github-channels-risk-report.sh
 ```

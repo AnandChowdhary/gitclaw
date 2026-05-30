@@ -535,6 +535,18 @@ focused `proactive info <name>` report that names the prompt file, generic
 workflow, generated workflow candidate, trigger metadata, hashes, and enqueue
 contract while keeping prompt/workflow/issue bodies out of comments.
 
+2026-05-30 proactive-risk follow-up: cron-like agents are high-leverage because
+a reviewed prompt plus a scheduled workflow can wake itself repeatedly. Borrow
+OpenClaw's separation between durable job definitions and runtime state, plus
+Hermes' fresh scheduled-session boundary, by adding a body-free
+`proactive risk` report. It should scan proactive prompt files and the generic
+GitHub Actions workflow internally for prompt-boundary overrides, credential
+material, raw prompt logging, host execution of prompt bodies, missing
+workflow-dispatch/permission boundaries, and unbounded loops, while reporting
+only paths, counts, risk codes, severities, and line hashes. E2E acceptance
+must include both the deterministic audit and a real GitHub Models follow-up
+conversation that proves model inference and tool-visible repo search.
+
 2026-05-30 skill-backed proactive follow-up: Hermes cron jobs run in fresh
 sessions and can attach skills in execution order, while OpenClaw standing
 orders keep durable authority in reviewed workspace files. GitClaw should keep

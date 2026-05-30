@@ -467,6 +467,7 @@ GitClaw supports a deterministic proactive audit command:
 ```text
 @gitclaw /proactive
 @gitclaw /proactive list
+@gitclaw /proactive risk
 @gitclaw /proactive info repo-hygiene
 @gitclaw /cron
 ```
@@ -484,6 +485,25 @@ inference. It posts a `gitclaw:assistant-turn` comment with
 
 It never dumps prompt, issue, or comment bodies. The command is for safe
 operator visibility before adding or editing scheduled jobs.
+
+The risk form:
+
+```text
+@gitclaw /proactive risk
+@gitclaw /cron risk
+```
+
+posts a `GitClaw Proactive Risk Report` without model inference. It scans the
+generic proactive workflow and `.gitclaw/proactive/*.md` prompt files for
+prompt-boundary overrides, credential material, raw prompt logging, host
+execution of prompt bodies, missing workflow-dispatch/permission boundaries,
+and unbounded scheduling loops. It reports counts, paths, trigger/permission
+metadata, risk codes, severities, and line hashes only; proactive prompt
+bodies, workflow bodies, issue bodies, comments, credentials, and secret values
+are not included. The report includes
+`llm_e2e_required_after_proactive_risk_change=true`, so changes to the risk
+surface must be paired with a live GitHub Models follow-up test, not only a
+deterministic report assertion.
 
 The focused info form:
 
@@ -505,6 +525,7 @@ issue:
 
 ```bash
 gitclaw proactive list
+gitclaw proactive risk
 gitclaw proactive info repo-hygiene
 ```
 
@@ -697,7 +718,7 @@ GitHub issue/comment event
   `channels list`, `channels verify`, `channels risk`, `channels info`,
   `checkpoints status`, `checkpoints list`, `checkpoints verify`,
   `rollback list`,
-  `proactive enqueue`, `proactive init`, `proactive info`,
+  `proactive enqueue`, `proactive init`, `proactive info`, `proactive risk`,
   `approvals list`, `approvals verify`,
   `artifacts list`, `artifacts verify`,
   `diffs summary`, `diffs verify`,
@@ -4210,6 +4231,23 @@ assert the expected comments/labels, and close the issue in cleanup.
      candidate, trigger metadata, and enqueue command hashes/paths,
    - assert no issue body, prompt body, or workflow body content is leaked.
 
+46. **Proactive risk report with model follow-up**
+
+   - create a real issue with `@gitclaw /proactive risk`,
+   - include a unique hidden token in the issue body,
+   - wait for the issue-opened workflow,
+   - assert the assistant posts exactly one deterministic
+     `GitClaw Proactive Risk Report` with `proactive_risk_status: ok`,
+   - assert the report lists workflow trigger/permission metadata, prompt
+     skill hints, risk counts, risk codes, and body-inclusion flags,
+   - assert no issue body, proactive prompt body, workflow body, or hidden
+     token content is leaked,
+   - add a normal follow-up comment that asks the agent to use repo search,
+   - wait for the issue-comment workflow and assert the second assistant
+     comment used GitHub Models, records prompt context provenance, selects
+     `repo-reader`, exposes `gitclaw.search_files`, and returns the expected
+     search token without leaking hidden issue/comment tokens.
+
 ### Example Live Commands
 
 The script can use commands in this shape:
@@ -4447,6 +4485,11 @@ examples/workflows/gitclaw.yml
   expose one proactive job definition, generic workflow metadata, generated
   workflow candidate metadata, and enqueue command shape without a model call
   or body leakage.
+- A `gh`-driven proactive-risk E2E harness verifies
+  `@gitclaw /proactive risk` and local `gitclaw proactive risk` expose
+  body-free workflow/prompt risk metadata, then runs a real GitHub Models
+  follow-up conversation that proves model inference, prompt provenance,
+  selected skills, and prompt-visible tool usage.
 - A `gh`-driven model-report E2E harness verifies `@gitclaw /models` reports
   GitHub Models provider and retry settings without a model call.
 - A `gh`-driven models-list E2E harness verifies `@gitclaw /models list` is

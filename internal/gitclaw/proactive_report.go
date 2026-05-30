@@ -39,6 +39,9 @@ func IsProactiveReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderProactiveReport(ev Event, cfg Config) string {
+	if isProactiveRiskRequest(ev, cfg) {
+		return renderProactiveRiskReport(ev, cfg, true)
+	}
 	if name := requestedProactiveInfoName(ev, cfg); name != "" {
 		return renderProactiveInfoReport(ev, cfg, name, true)
 	}
@@ -51,6 +54,10 @@ func RenderProactiveCLIReport(cfg Config) string {
 
 func RenderProactiveInfoCLIReport(cfg Config, name string) string {
 	return renderProactiveInfoReport(Event{}, cfg, name, false)
+}
+
+func RenderProactiveRiskCLIReport(cfg Config) string {
+	return renderProactiveRiskReport(Event{}, cfg, false)
 }
 
 func renderProactiveReport(ev Event, cfg Config, includeIssue bool) string {
@@ -278,6 +285,14 @@ func requestedProactiveInfoName(ev Event, cfg Config) string {
 		return ""
 	}
 	return cleanProactiveLookupName(fields[2])
+}
+
+func isProactiveRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 || !isProactiveCommand(fields[0]) {
+		return false
+	}
+	return strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit")
 }
 
 func matchingProactivePrompts(prompts []proactivePrompt, name string) []proactivePrompt {
