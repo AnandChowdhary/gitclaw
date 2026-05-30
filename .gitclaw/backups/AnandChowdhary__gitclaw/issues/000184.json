@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T06:56:24Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 184,
+    "title": "@gitclaw /memory info latest",
+    "body": "Live memory-info E2E.\n\nHidden memory info body token: GITCLAW_MEMORY_INFO_E2E_20260530T065521Z\nThis should produce a focused body-free memory file report without a model call.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /memory info latest\n\nLive memory-info E2E.\n\nHidden memory info body token: GITCLAW_MEMORY_INFO_E2E_20260530T065521Z\nThis should produce a focused body-free memory file report without a model call.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Memory Info Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#184`\n- requested_memory: `latest`\n- normalized_memory_path: `.gitclaw/memory/2026-05-29.md`\n- memory_info_status: `ok`\n- matched_memory_files: `1`\n- memory_mode: `read-only`\n- raw_bodies_included: `false`\n- memory_writes_allowed: `false`\n- memory_validation_status: `ok`\n- memory_validation_errors: `0`\n- memory_validation_warnings: `0`\n- long_term_memory_present: `true`\n- long_term_memory_loaded: `true`\n- dated_memory_notes: `1`\n- canonical_dated_memory_notes: `1`\n- noncanonical_dated_memory_notes: `0`\n- loaded_memory_notes: `1`\n- max_loaded_memory_notes: `3`\n- empty_memory_files: `0`\n- memory_files_at_limit: `0`\n- potential_secret_findings: `0`\n- issue_title_sha256_12: `8b83aeaea26f`\n\nThis report shows one repo-local memory file's metadata. Raw memory bodies, issue bodies, comments, prompts, and secret values are not included.\n\n### Match\n- kind=`dated-note` path=`.gitclaw/memory/2026-05-29.md` source=`repo-local` present=`true` canonical=`true` latest=`true` loaded_for_this_turn=`true` bytes=`11966` lines=`195` sha256_12=`f6eda9f51957` at_context_limit=`false`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4582012913,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4582012913,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26677416244\" event_id=\"issue-184\" model=\"gitclaw/memory\" idempotency_key=\"47af9b820d1f07ef593375a4af49796e\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26677416244\" --\u003e\n## GitClaw Memory Info Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#184`\n- requested_memory: `latest`\n- normalized_memory_path: `.gitclaw/memory/2026-05-29.md`\n- memory_info_status: `ok`\n- matched_memory_files: `1`\n- memory_mode: `read-only`\n- raw_bodies_included: `false`\n- memory_writes_allowed: `false`\n- memory_validation_status: `ok`\n- memory_validation_errors: `0`\n- memory_validation_warnings: `0`\n- long_term_memory_present: `true`\n- long_term_memory_loaded: `true`\n- dated_memory_notes: `1`\n- canonical_dated_memory_notes: `1`\n- noncanonical_dated_memory_notes: `0`\n- loaded_memory_notes: `1`\n- max_loaded_memory_notes: `3`\n- empty_memory_files: `0`\n- memory_files_at_limit: `0`\n- potential_secret_findings: `0`\n- issue_title_sha256_12: `8b83aeaea26f`\n\nThis report shows one repo-local memory file's metadata. Raw memory bodies, issue bodies, comments, prompts, and secret values are not included.\n\n### Match\n- kind=`dated-note` path=`.gitclaw/memory/2026-05-29.md` source=`repo-local` present=`true` canonical=`true` latest=`true` loaded_for_this_turn=`true` bytes=`11966` lines=`195` sha256_12=`f6eda9f51957` at_context_limit=`false`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T06:56:01Z",
+      "updated_at": "2026-05-30T06:56:01Z"
+    }
+  ]
+}
