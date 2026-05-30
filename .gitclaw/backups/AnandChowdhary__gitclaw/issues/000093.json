@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-30T00:07:48Z",
+  "generated_at": "2026-05-30T00:08:56Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 93,
     "title": "@gitclaw /context session search e2e 20260530T000652Z",
@@ -10,7 +10,8 @@
     "author": "AnandChowdhary",
     "author_association": "OWNER",
     "labels": [
-      "gitclaw"
+      "gitclaw",
+      "gitclaw:done"
     ]
   },
   "transcript": [
@@ -31,6 +32,24 @@
       "CommentID": 4580796718,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /session search session-search-anchor-20260530T000652Z\n\nPlease search this issue session.\nHidden comment token: GITCLAW_SESSION_SEARCH_COMMENT_20260530T000652Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4580798668,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Session Search Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#93`\n- session_search_status: `ok`\n- query_sha256_12: `c33f184662f6`\n- query_terms: `1`\n- max_results: `10`\n- transcript_messages: `3`\n- matched_messages: `3`\n- matched_lines: `3`\n- results_returned: `3`\n- raw_bodies_included: `false`\n\nThis report searches the reconstructed GitHub issue transcript with a local lexical matcher. It reports message indexes, sources, trust metadata, line numbers, scores, and hashes only; raw issue bodies, comment bodies, assistant replies, prompts, and raw search queries are not included.\n\n### Results\n- message=`01` role=`user` source=`issue` actor=`AnandChowdhary` association=`OWNER` trusted=`true` edited=`false` line=`5` score=`53` matched_terms=`1` message_bytes=`256` message_lines=`7` message_sha256_12=`fc3d87e087b4` line_sha256_12=`3ff094aa41f9`\n- message=`02` role=`assistant` source=`comment:4580796718` actor=`github-actions[bot]` association=`NONE` trusted=`true` edited=`false` line=`29` score=`53` matched_terms=`1` message_bytes=`1333` message_lines=`29` message_sha256_12=`3a75f10f9284` line_sha256_12=`c67109fa1090`\n- message=`03` role=`user` source=`comment:4580798668` actor=`AnandChowdhary` association=`OWNER` trusted=`true` edited=`false` line=`1` score=`53` matched_terms=`1` message_bytes=`168` message_lines=`4` message_sha256_12=`4a12da20d1c5` line_sha256_12=`b4f1de2043e2`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4580801856,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -41,6 +60,22 @@
       "author_association": "NONE",
       "created_at": "2026-05-30T00:07:30Z",
       "updated_at": "2026-05-30T00:07:30Z"
+    },
+    {
+      "id": 4580798668,
+      "body": "@gitclaw /session search session-search-anchor-20260530T000652Z\n\nPlease search this issue session.\nHidden comment token: GITCLAW_SESSION_SEARCH_COMMENT_20260530T000652Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-05-30T00:07:56Z",
+      "updated_at": "2026-05-30T00:07:56Z"
+    },
+    {
+      "id": 4580801856,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26668597588\" event_id=\"comment-4580798668\" model=\"gitclaw/session\" idempotency_key=\"6ba5764ea494700c0a4bbe4b6e1368d8\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26668597588\" --\u003e\n## GitClaw Session Search Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#93`\n- session_search_status: `ok`\n- query_sha256_12: `c33f184662f6`\n- query_terms: `1`\n- max_results: `10`\n- transcript_messages: `3`\n- matched_messages: `3`\n- matched_lines: `3`\n- results_returned: `3`\n- raw_bodies_included: `false`\n\nThis report searches the reconstructed GitHub issue transcript with a local lexical matcher. It reports message indexes, sources, trust metadata, line numbers, scores, and hashes only; raw issue bodies, comment bodies, assistant replies, prompts, and raw search queries are not included.\n\n### Results\n- message=`01` role=`user` source=`issue` actor=`AnandChowdhary` association=`OWNER` trusted=`true` edited=`false` line=`5` score=`53` matched_terms=`1` message_bytes=`256` message_lines=`7` message_sha256_12=`fc3d87e087b4` line_sha256_12=`3ff094aa41f9`\n- message=`02` role=`assistant` source=`comment:4580796718` actor=`github-actions[bot]` association=`NONE` trusted=`true` edited=`false` line=`29` score=`53` matched_terms=`1` message_bytes=`1333` message_lines=`29` message_sha256_12=`3a75f10f9284` line_sha256_12=`c67109fa1090`\n- message=`03` role=`user` source=`comment:4580798668` actor=`AnandChowdhary` association=`OWNER` trusted=`true` edited=`false` line=`1` score=`53` matched_terms=`1` message_bytes=`168` message_lines=`4` message_sha256_12=`4a12da20d1c5` line_sha256_12=`b4f1de2043e2`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T00:08:36Z",
+      "updated_at": "2026-05-30T00:08:36Z"
     }
   ]
 }
