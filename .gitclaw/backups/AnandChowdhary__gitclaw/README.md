@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-05-30T16:14:02Z`
-- issue_count: `260`
+- generated_at: `2026-05-30T16:28:03Z`
+- issue_count: `261`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -265,3 +265,4 @@
 | #295 | @gitclaw /soul risk e2e 20260530T154122Z | `2026-05-30T15:43:38Z` | 3 | 4 | `issues/000295.json` |
 | #296 | @gitclaw /tools risk e2e 20260530T155710Z | `2026-05-30T15:59:17Z` | 3 | 4 | `issues/000296.json` |
 | #297 | @gitclaw /channels risk e2e 20260530T161148Z | `2026-05-30T16:14:01Z` | 3 | 4 | `issues/000297.json` |
+| #298 | @gitclaw /backup risk e2e 20260530T162652Z | `2026-05-30T16:28:02Z` | 1 | 2 | `issues/000298.json` |
