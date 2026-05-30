@@ -106,11 +106,22 @@ func ValidateToolSurface(contracts []toolContract, repoContext RepoContext) Tool
 }
 
 func RenderToolsValidationReport(repoContext RepoContext) string {
+	return renderToolsValidationReport(Event{}, repoContext, false)
+}
+
+func renderToolsValidationReport(ev Event, repoContext RepoContext, includeIssue bool) string {
 	validation := ValidateTools(repoContext)
 	var b strings.Builder
 	b.WriteString("## GitClaw Tools Validate Report\n\n")
 	b.WriteString("Generated without a model call.\n\n")
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
 	writeToolsValidationSummary(&b, validation)
+	b.WriteString("\nThis report validates deterministic tool contracts and active output metadata without dumping tool outputs, tool inputs, file bodies, issue bodies, comments, prompts, or secret values.\n")
 	b.WriteString("\n### Findings\n")
 	writeToolsValidationFindings(&b, validation)
 	return strings.TrimSpace(b.String())

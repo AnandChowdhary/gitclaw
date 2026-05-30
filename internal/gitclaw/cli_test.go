@@ -300,7 +300,7 @@ func TestToolsValidateCommandReportsCurrentRepoShape(t *testing.T) {
 			t.Fatalf("tools validate returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Tools Validate Report", "tool_validation_status: `ok`", "tool_validation_errors: `0`", "tool_validation_warnings: `0`", "tool_contracts: `5`", "tool_active_outputs: `1`", "tool_guidance_files: `1`", "tool_missing_guidance: `0`", "tool_duplicate_contracts: `0`", "- none"} {
+	for _, want := range []string{"GitClaw Tools Validate Report", "scope: `local-cli`", "tool_validation_status: `ok`", "tool_validation_errors: `0`", "tool_validation_warnings: `0`", "tool_contracts: `5`", "tool_active_outputs: `1`", "tool_guidance_files: `1`", "tool_missing_guidance: `0`", "tool_duplicate_contracts: `0`", "- none"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("tools validate output missing %q:\n%s", want, output)
 		}

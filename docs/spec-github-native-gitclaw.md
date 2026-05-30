@@ -1036,6 +1036,7 @@ OpenClaw's tool policy visibility and Hermes' toolset inventory:
 ```text
 @gitclaw /tools
 @gitclaw /tools list
+@gitclaw /tools validate
 @gitclaw /tools search read_file
 ```
 
@@ -1058,6 +1059,11 @@ only; the issue-visible report exposes enough metadata to debug whether
 `gitclaw.skill_index`, or `gitclaw.policy` ran for the turn.
 `@gitclaw /tools list` is an explicit inventory alias for the same report,
 matching the local `gitclaw tools list` helper.
+
+When called as `@gitclaw /tools validate`, the command posts only the
+validation report: tool contract counts, active-output counts, status,
+error/warning totals, and body-free findings. This mirrors
+`gitclaw tools validate` for issue-side audits without the full inventory.
 
 When called as `@gitclaw /tools search <query>`, the command searches declared
 tool-contract metadata and active tool-output metadata. It reports the query
@@ -2775,6 +2781,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven tools-list E2E harness verifies `@gitclaw /tools list`
   is an explicit inventory alias with the same body-free tool contract,
   active-output, guidance, and validation metadata.
+- A `gh`-driven tools-validate E2E harness verifies
+  `@gitclaw /tools validate` exposes the body-free validation report without
+  falling back to the full inventory.
 - A `gh`-driven policy-report E2E harness verifies `@gitclaw /policy` produces
   a deterministic preflight/label/write-policy audit without a model call or
   issue-body leakage.

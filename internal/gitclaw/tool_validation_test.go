@@ -23,6 +23,7 @@ func TestValidateToolSurfaceReportsProblemsWithoutBodies(t *testing.T) {
 	}})
 	for _, want := range []string{
 		"GitClaw Tools Validate Report",
+		"scope: `local-cli`",
 		"tool_validation_status: `error`",
 		"tool_validation_errors: `1`",
 		"tool_validation_warnings: `1`",
@@ -63,7 +64,7 @@ func TestValidateToolsAcceptsCurrentToolShape(t *testing.T) {
 		Documents:   []ContextDocument{{Path: ".gitclaw/TOOLS.md", Body: "Read-only tools."}},
 		ToolOutputs: []ToolOutput{{Name: "gitclaw.list_files", Input: ".", Output: "go.mod"}},
 	})
-	for _, want := range []string{"tool_validation_status: `ok`", "tool_validation_errors: `0`", "tool_validation_warnings: `0`", "tool_missing_guidance: `0`", "tool_duplicate_contracts: `0`", "- none"} {
+	for _, want := range []string{"scope: `local-cli`", "tool_validation_status: `ok`", "tool_validation_errors: `0`", "tool_validation_warnings: `0`", "tool_missing_guidance: `0`", "tool_duplicate_contracts: `0`", "- none"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("validation report missing %q:\n%s", want, body)
 		}

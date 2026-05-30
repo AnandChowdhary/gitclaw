@@ -461,6 +461,12 @@ issue exists. Add `gitclaw doctor list` as the local mirror of `/doctor`: the
 same config/workflow/context/skill/memory/proactive/validation rollup, but with
 `scope: local-cli` and no repository, issue, or issue-title metadata.
 
+2026-05-30 tools-validate follow-up: validation should be addressable as its
+own issue command, not only embedded inside `/tools`. Add
+`@gitclaw /tools validate` as the issue-side mirror of
+`gitclaw tools validate`, returning only contract/output counts and body-free
+findings so maintainers can audit the tool surface without the full inventory.
+
 2026-05-29 channel visibility follow-up: Slack's Events API expects either a
 server HTTP endpoint or Socket Mode, Socket Mode uses a stateful WebSocket
 instead of a static public URL, Telegram's `getUpdates` provides long polling
