@@ -675,6 +675,7 @@ GitHub issue/comment event
   `rollback list`,
   `proactive enqueue`, `proactive init`, `proactive info`,
   `approvals list`, `approvals verify`,
+  `artifacts list`, `artifacts verify`,
   `hooks list`, `hooks verify`,
   `plugins list`, `plugins verify`,
   `tasks list`, `tasks verify`,
@@ -851,6 +852,8 @@ AGENTS.md                    # existing coding-agent instructions, if present
 .gitclaw/agents/*.md         # declarative agent specs, metadata-only in v1
 .gitclaw/NODES.md            # declarative runtime/node safety policy
 .gitclaw/nodes/*.md          # declarative node specs, metadata-only in v1
+.gitclaw/ARTIFACTS.md        # declarative artifact safety policy
+.gitclaw/artifacts/*.md      # declarative artifact specs, metadata-only in v1
 .gitclaw/SKILLS/*.md         # optional read-only local skills, v1+
 .gitclaw/MEMORY.md           # optional curated repo memory, human-reviewed only
 .gitclaw/memory/YYYY-MM-DD.md # dated working memory notes, human-reviewed only
@@ -887,6 +890,10 @@ MVP loads:
   policy; individual `.gitclaw/nodes/*.md` specs are audited by metadata
   reports and do not pair devices, open WebSockets, start services, or expose
   remote host capabilities
+- `.gitclaw/ARTIFACTS.md`, if present, as the repo-reviewed artifact safety
+  policy; individual `.gitclaw/artifacts/*.md` specs are audited by metadata
+  reports and do not upload files, read artifacts, or turn artifact bodies into
+  prompt or issue-comment content by themselves
 - `.gitclaw/SKILLS/*/SKILL.md`, if selected by the issue thread or marked
   always-on
 - bounded `@file:<repo-path>[:start-end]` context references explicitly named
@@ -2341,6 +2348,47 @@ gitclaw nodes list
 gitclaw nodes verify
 ```
 
+### Artifacts Command
+
+GitClaw supports a deterministic artifact-governance audit inspired by
+OpenClaw backup/migration exports, Hermes sessions and checkpoints, and
+GitHub Actions artifacts:
+
+```text
+@gitclaw /artifacts
+@gitclaw /artifact
+```
+
+The command runs after preflight and before model inference. It posts a
+`gitclaw:assistant-turn` comment with `model="gitclaw/artifacts"` and
+summarizes:
+
+- whether `.gitclaw/ARTIFACTS.md` exists and is loaded into model context,
+- declarative artifact specs in `.gitclaw/artifacts/*.md`,
+- artifact kind, storage backend, filename, workflow, label gate, retention,
+  redaction, and approval metadata,
+- workflow upload metadata for `actions/upload-artifact`, including version,
+  retention days, prompt-artifact label gates, and missing-file behavior,
+- the runtime boundary between short-lived Actions artifacts and durable
+  git-backed backups,
+- body-free findings for missing policy, missing metadata, unsafe storage, or
+  missing retention/redaction gates.
+
+GitClaw v1 does not treat artifacts as hidden state, durable memory, or a
+second conversation transcript. Issue comments may include artifact metadata,
+hashes, run links, and findings, but must not dump raw prompt, model, tool,
+backup, transcript, channel, secret, or artifact bodies. Future artifact types
+require reviewed workflows, explicit retention, redaction rules when needed,
+body-free audit cards, and a live GitHub Models conversation E2E in the same
+implementation batch.
+
+Local operators can inspect the same policy/spec/upload surface with:
+
+```bash
+gitclaw artifacts list
+gitclaw artifacts verify
+```
+
 ### Doctor Command
 
 GitClaw supports a deterministic doctor/health audit command:
@@ -2895,6 +2943,11 @@ Prompt artifacts must:
 - mark issue text, comments, context files, and tool outputs as untrusted input,
 - include basic run metadata and prompt byte count,
 - never be printed into workflow logs.
+
+`@gitclaw /artifacts` is the issue-visible audit surface for this contract. It
+reports the artifact policy, artifact spec metadata, `actions/upload-artifact`
+version, retention settings, and prompt-artifact label gate without reading or
+printing any uploaded artifact body.
 
 ## Git-Backed Backups
 
@@ -3452,7 +3505,18 @@ assert the expected comments/labels, and close the issue in cleanup.
    - ask for a selected local skill token,
    - assert the targeted skill is loaded and irrelevant skills stay unloaded.
 
-15. **Context inspection**
+15. **Artifact governance**
+
+   - create a real issue with `@gitclaw /artifacts`,
+   - assert the reply is marked `model="gitclaw/artifacts"`,
+   - assert the report lists `.gitclaw/ARTIFACTS.md`, artifact spec metadata,
+     `actions/upload-artifact@v6`, retention days, prompt-artifact label gate,
+     and missing-file behavior,
+   - assert artifact policy/spec body tokens and uploaded artifact bodies are
+     not printed,
+   - run a real GitHub Models conversation E2E in the same feature batch.
+
+16. **Context inspection**
 
    - create a real issue with `@gitclaw /context`,
    - create a real issue with `@gitclaw /context references` plus explicit
@@ -3469,7 +3533,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      report,
    - assert the run succeeds without requiring a model provider response.
 
-16. **Prompt inspection**
+17. **Prompt inspection**
 
    - create a real issue with `@gitclaw /prompt`,
    - create a real issue with `@gitclaw /prompt list` as the explicit alias,
@@ -3482,7 +3546,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      bodies, skill bodies, or tool output bodies,
    - assert the run succeeds without requiring a model provider response.
 
-17. **Memory inspection**
+18. **Memory inspection**
 
    - create a real issue with `@gitclaw /memory`,
    - create a second real issue with `@gitclaw /memory list`,
@@ -3500,7 +3564,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump memory file bodies or issue body tokens,
    - assert the run succeeds without requiring a model provider response.
 
-18. **Memory search inspection**
+19. **Memory search inspection**
 
    - create a real issue with `@gitclaw /memory search backup branch`,
    - assert the reply is marked `model="gitclaw/memory"`,
@@ -3511,7 +3575,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      file body tokens,
    - assert the run succeeds without requiring a model provider response.
 
-19. **Memory promotion plan**
+20. **Memory promotion plan**
 
    - create a real issue with `@gitclaw /memory promote-plan long-term`,
    - assert the reply is marked `model="gitclaw/memory"`,
@@ -3524,7 +3588,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      tokens, or candidate memory text,
    - assert the run succeeds without requiring a model provider response.
 
-20. **Skills inspection**
+21. **Skills inspection**
 
    - create a real issue with `@gitclaw /skills`,
    - create a second real issue with `@gitclaw /skills list`,
@@ -3540,7 +3604,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump full skill bodies or verification tokens,
    - assert the run succeeds without requiring a model provider response.
 
-21. **Skills search inspection**
+22. **Skills search inspection**
 
    - create a real issue with `@gitclaw /skills search repository context`,
    - assert the reply is marked `model="gitclaw/skills"`,
@@ -3551,7 +3615,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      `SKILL.md` verification token,
    - assert the run succeeds without requiring a model provider response.
 
-22. **Skills selection plan**
+23. **Skills selection plan**
 
    - create a real issue with `@gitclaw /skills select-plan repo-reader`,
    - assert the reply is marked `model="gitclaw/skills"`,
@@ -3563,7 +3627,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      full `SKILL.md` verification token,
    - assert the run succeeds without requiring a model provider response.
 
-23. **Soul inspection**
+24. **Soul inspection**
 
    - create a real issue with `@gitclaw /soul`,
    - create a second real issue with `@gitclaw /soul list`,
@@ -3583,7 +3647,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump full soul or memory bodies,
    - assert the run succeeds without requiring a model provider response.
 
-24. **Tools inspection**
+25. **Tools inspection**
 
    - create a real issue with `@gitclaw /tools`,
    - create a second real issue with `@gitclaw /tools list`,
@@ -3608,7 +3672,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump full file or search output bodies,
    - assert the run succeeds without requiring a model provider response.
 
-25. **Policy inspection**
+26. **Policy inspection**
 
    - create a real issue with `@gitclaw /policy` that also asks for write-mode
      work,
@@ -3625,7 +3689,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert `gitclaw:write-requested` and `gitclaw:done` are present without
      `gitclaw:running` or `gitclaw:error`.
 
-26. **Session inspection**
+27. **Session inspection**
 
    - create a real issue that gets one deterministic assistant turn,
    - post a follow-up comment with `@gitclaw /session`,
@@ -3636,7 +3700,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump issue or comment body tokens,
    - assert the run succeeds without requiring a model provider response.
 
-27. **Backup index**
+28. **Backup index**
 
    - create a real deterministic GitClaw issue turn,
    - wait for the successful backup job,
@@ -3645,7 +3709,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      number, title, and backup path,
    - assert the index contains metadata counts but not raw transcript bodies.
 
-28. **Backup inspection**
+29. **Backup inspection**
 
    - create a real issue with `@gitclaw /backup`,
    - assert the reply is marked `model="gitclaw/backup"`,
@@ -3656,7 +3720,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      entry for that same issue,
    - assert the report does not dump issue or comment body tokens.
 
-29. **Backup verification**
+30. **Backup verification**
 
    - create a real issue with `@gitclaw /backup verify`,
    - assert the issue-side report lists `requested_backup_command: verify`,
@@ -3669,7 +3733,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert `backup_verify_status: ok`, zero verification failures, zero
      unindexed issue files, and an index entry for the just-created issue.
 
-30. **Backup manifest**
+31. **Backup manifest**
 
    - create a real issue with `@gitclaw /backup manifest`,
    - assert the issue-side report lists `requested_backup_command: manifest`,
@@ -3684,7 +3748,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      count, and transcript count,
    - assert it does not dump the issue body token or raw transcript bodies.
 
-31. **Backup stats**
+32. **Backup stats**
 
    - create a real issue with `@gitclaw /backup stats`,
    - assert the issue-side report lists `requested_backup_command: stats`,
@@ -3700,7 +3764,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      metadata, event counts, and payload bytes,
    - assert it does not dump the issue body token or raw title.
 
-32. **Backup list**
+33. **Backup list**
 
    - create a real issue with `@gitclaw /backup list`,
    - assert the issue-side report lists `requested_backup_command: list`,
@@ -3716,7 +3780,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      event name, label/comment/transcript counts, and title hash,
    - assert it does not dump the issue body token or raw title.
 
-33. **Backup info**
+34. **Backup info**
 
    - create a real issue with `@gitclaw /backup info`,
    - assert the issue-side report lists `requested_backup_command: info`, the
@@ -3733,7 +3797,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      hashes,
    - assert it does not dump the issue body token or raw title.
 
-34. **Backup JSONL export**
+35. **Backup JSONL export**
 
    - create a real issue with `@gitclaw /backup export-jsonl`,
    - assert the issue-side report lists `requested_backup_command:
@@ -3748,7 +3812,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      contains the assistant backup report body, proving the command is an
      explicit raw recovery/export path rather than an issue-visible report.
 
-35. **Backup restore plan**
+36. **Backup restore plan**
 
    - create a real issue with `@gitclaw /backup restore-plan`,
    - assert the issue-side report lists `requested_backup_command:
@@ -3763,7 +3827,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      counts, assistant-turn/error counts, and body hashes,
    - assert it does not dump the issue body token or raw transcript bodies.
 
-36. **Backup retention plan**
+37. **Backup retention plan**
 
    - create a real issue with `@gitclaw /backup retention-plan`,
    - assert the issue-side report lists `requested_backup_command:
@@ -3780,7 +3844,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the just-created issue is included without dumping the issue body
      token or raw title.
 
-37. **Backup search**
+38. **Backup search**
 
    - create a real issue with `@gitclaw /backup search <query>`,
    - include a unique hidden token in the issue body,
@@ -3798,7 +3862,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert it does not dump the hidden token, raw issue body, raw issue title,
      raw comments, raw transcript messages, or raw query text.
 
-38. **Proactive init generator**
+39. **Proactive init generator**
 
    - run `gitclaw proactive init` against a temporary repo root,
    - assert it writes the expected prompt file and scheduled workflow,
@@ -3810,7 +3874,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert it creates a real proactive issue and receives one deterministic
      proactive report without leaking the hidden prompt token.
 
-39. **Proactive info report**
+40. **Proactive info report**
 
    - create a real issue with `@gitclaw /proactive info repo-hygiene`,
    - include a unique hidden token in the issue body,
@@ -4379,6 +4443,8 @@ examples/workflows/gitclaw.yml
 - `GITHUB_TOKEN` permissions: https://docs.github.com/en/actions/tutorials/authenticate-with-github_token
 - GitHub Actions workflow syntax and concurrency: https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax
 - GitHub Actions limits: https://docs.github.com/actions/reference/limits
+- GitHub Actions artifact storage docs: https://docs.github.com/en/actions/how-tos/writing-workflows/choosing-what-your-workflow-does/storing-and-sharing-data-from-a-workflow
+- `actions/upload-artifact` action: https://github.com/actions/upload-artifact
 - GitHub workflow dispatch REST API: https://docs.github.com/en/rest/actions/workflows#create-a-workflow-dispatch-event
 - GitHub Models quickstart: https://docs.github.com/en/github-models/quickstart
 - GitHub Models catalog REST API: https://docs.github.com/en/rest/models/catalog

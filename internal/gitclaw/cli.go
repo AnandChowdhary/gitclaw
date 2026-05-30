@@ -33,6 +33,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runAgentsCommand(args[1:])
 	case "nodes", "node":
 		return runNodesCommand(args[1:])
+	case "artifacts", "artifact":
+		return runArtifactsCommand(args[1:])
 	case "channel-ingest":
 		return runChannelIngestCommand(ctx, args[1:])
 	case "channel-state":
@@ -380,6 +382,30 @@ func runNodesListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderNodeCLIReport(cfg))
+	return nil
+}
+
+func runArtifactsCommand(args []string) error {
+	if len(args) == 0 {
+		return runArtifactsListCommand(nil)
+	}
+	switch args[0] {
+	case "list", "verify":
+		return runArtifactsListCommand(args[1:])
+	default:
+		return fmt.Errorf("usage: gitclaw artifacts [list|verify]")
+	}
+}
+
+func runArtifactsListCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown artifacts argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderArtifactCLIReport(cfg))
 	return nil
 }
 

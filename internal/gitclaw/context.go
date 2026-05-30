@@ -48,6 +48,7 @@ var contextDocumentPaths = []string{
 	".gitclaw/TASKS.md",
 	".gitclaw/AGENTS.md",
 	".gitclaw/NODES.md",
+	".gitclaw/ARTIFACTS.md",
 }
 
 func LoadRepoContext(root string, transcript []TranscriptMessage) (RepoContext, error) {

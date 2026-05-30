@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "config-list-report-e2e: $*" >&2
+  echo "artifacts-report-e2e: $*" >&2
 }
 
 die() {
@@ -33,12 +33,12 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_CONFIG_LIST_E2E_${timestamp}"
-title="@gitclaw /config list e2e ${timestamp}"
-body="Live config-list E2E.
+token="GITCLAW_ARTIFACTS_REPORT_E2E_${timestamp}"
+title="@gitclaw /artifacts e2e ${timestamp}"
+body="Live artifacts-report E2E.
 
-Hidden config list body token: ${token}
-This should produce a deterministic config report through the explicit list alias without a model call."
+Hidden artifacts report body token: ${token}
+This should produce a deterministic artifacts report without a model call."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -52,7 +52,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "config-list-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "artifacts-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -73,11 +73,11 @@ wait_for_run() {
       --json databaseId,status,conclusion,url,createdAt,displayTitle \
       --jq '. as $runs | $runs | map(select(.displayTitle == "'"${title}"'")) | sort_by(.createdAt) | reverse | .[0] // empty')"
     if [[ -n "$run_json" && "$run_json" != "null" ]]; then
-      local status conclusion url
-      status="$(jq -r '.status' <<<"$run_json")"
+      local run_status conclusion url
+      run_status="$(jq -r '.status' <<<"$run_json")"
       conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
       url="$(jq -r '.url' <<<"$run_json")"
-      if [[ "$status" == "completed" ]]; then
+      if [[ "$run_status" == "completed" ]]; then
         [[ "$conclusion" == "success" ]] || die "issues run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
@@ -128,68 +128,64 @@ wait_for_assistant_count() {
 }
 
 run_json="$(wait_for_run "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one config list report comment"
+wait_for_assistant_count 1 || die "expected one artifacts report comment"
 comments="$(assistant_comments)"
 
 for expected in \
-  'model="gitclaw/config"' \
-  "GitClaw Config Report" \
+  'model="gitclaw/artifacts"' \
+  "GitClaw Artifacts Report" \
   "Generated without a model call" \
-  'config_source: `defaults+repo+environment`' \
-  'config_file_path: `.gitclaw/config.yml`' \
-  'config_file_present: `true`' \
-  'trigger_label: `gitclaw`' \
-  'trigger_prefix: `@gitclaw`' \
-  'disabled_label: `gitclaw:disabled`' \
-  'model: `openai/gpt-5-nano`' \
-  'run_mode: `read-only`' \
-  'max_prompt_bytes: `60000`' \
-  'max_output_tokens: `4000`' \
-  'max_transcript_messages: `40`' \
-  'max_transcript_message_bytes: `8000`' \
-  'skills_allowed_configured: `0`' \
-  'skills_disabled_configured: `0`' \
-  'tools_allowed_configured: `0`' \
-  'tools_disabled_configured: `0`' \
-  'workflows_present: `7`' \
-  'slash_commands: `31`' \
-  '/agents' \
-  '/artifacts' \
-  '/nodes' \
-  '/approvals' \
-  '/bundles' \
-  '/checkpoints' \
-  '/secrets' \
-  '### Skill Gates' \
-  '### Tool Gates' \
-  'allowed=`none`' \
-  'disabled=`none`' \
-  'OWNER' \
-  'MEMBER' \
-  'COLLABORATOR' \
-  '/channels' \
-  '/config' \
-  '/doctor' \
-  '/help' \
-  '/memory' \
-  '/models' \
-  '/profile' \
-  '/runs' \
-  '/sandbox' \
-  '/prompt' \
-  '.github/workflows/gitclaw.yml' \
-  '.github/workflows/gitclaw-heartbeat.yml' \
-  '.github/workflows/gitclaw-proactive.yml' \
-  '.github/workflows/gitclaw-channel-ingest.yml' \
-  '.github/workflows/gitclaw-channel-state.yml' \
-  '.github/workflows/gitclaw-channel-gateway.yml' \
-  '.github/workflows/gitclaw-channel-delivery.yml'; do
-  grep -Fq "$expected" <<<"$comments" || die "config list report missing ${expected}"
+  'artifacts_status: `ok`' \
+  'artifact_policy_path: `.gitclaw/ARTIFACTS.md`' \
+  'artifact_policy_present: `true`' \
+  'artifact_policy_loaded_for_model: `true`' \
+  'artifact_specs_dir: `.gitclaw/artifacts`' \
+  'artifact_specs: `1`' \
+  'artifact_specs_with_frontmatter: `1`' \
+  'artifact_specs_requiring_approval: `1`' \
+  'artifact_specs_requiring_redaction: `1`' \
+  'artifact_retention_days_declared: `7`' \
+  'github_actions_artifact_uploaders: `1`' \
+  'upload_artifact_versions: `actions/upload-artifact@v6`' \
+  'prompt_artifact_default_enabled: `false`' \
+  'prompt_artifact_label: `gitclaw:e2e-prompt-artifact`' \
+  'prompt_artifact_env_path_configured: `false`' \
+  'artifact_storage_backend: `github-actions-artifacts`' \
+  'durable_backup_backend: `git-backup-branch`' \
+  'artifact_body_printing_allowed: `false`' \
+  'model_call_required: `false`' \
+  'repository_mutation_allowed: `false`' \
+  'raw_bodies_included: `false`' \
+  'raw_artifact_bodies_included: `false`' \
+  'llm_e2e_required_after_change: `true`' \
+  'name=`prompt-artifact`' \
+  'path=`.gitclaw/artifacts/prompt-artifact.md`' \
+  'frontmatter=`true`' \
+  'kind=`prompt`' \
+  'storage=`github-actions-artifact`' \
+  'filename=`prompt.md`' \
+  'workflow=`.github/workflows/gitclaw.yml`' \
+  'label=`gitclaw:e2e-prompt-artifact`' \
+  'retention_days=`7`' \
+  'redaction_required=`true`' \
+  'requires_approval=`true`' \
+  'path=`.github/workflows/gitclaw.yml`' \
+  'upload_artifact_actions=`actions/upload-artifact@v6`' \
+  'if_no_files_found_error=`true`' \
+  'prompt_artifact_label_gate=`true`' \
+  'prompt_artifact_path_env=`true`' \
+  'GitHub Actions artifacts are short-lived evidence bundles' \
+  'future artifact types require body-free audit cards' \
+  '### Verification Findings' \
+  '- none'; do
+  grep -Fq -- "$expected" <<<"$comments" || die "artifacts report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "config list report leaked issue body token"
-fi
+for forbidden in "$token" "GITCLAW_ARTIFACTS_CONTEXT_V1" "This declarative artifact record"; do
+  if grep -Fq -- "$forbidden" <<<"$comments"; then
+    die "artifacts report leaked ${forbidden}"
+  fi
+done
 
 url="$(jq -r '.url' <<<"$run_json")"
 log "passed for issue #${issue_number}: ${url}"

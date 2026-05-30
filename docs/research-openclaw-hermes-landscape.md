@@ -1382,6 +1382,15 @@ issue text, memory, skills, and tool output. GitClaw should therefore make
 prompt artifacts explicit opt-in, redact common token shapes before upload, and
 store them as GitHub Actions artifacts rather than issue comments or logs.
 
+2026-05-30 artifact-governance follow-up: OpenClaw backup/migrate flows and
+Hermes sessions/checkpoints make exportable evidence useful, but GitClaw's
+issue-native shape needs a body-safe audit surface. `@gitclaw /artifacts`
+should inspect `.gitclaw/ARTIFACTS.md`, artifact specs, `actions/upload-artifact`
+version, retention, missing-file behavior, label gates, and redaction/approval
+metadata without reading or printing uploaded artifact bodies. Each artifact
+feature batch should pair deterministic artifact-report E2E coverage with a
+real GitHub Models conversation E2E.
+
 2026-05-29 policy-inspection follow-up: OpenClaw's security docs separate
 sandbox location, tool allow/deny policy, and elevated host execution, and
 Hermes' docs frame safety around authorization, command approval, and container
@@ -1578,6 +1587,8 @@ Recommended non-goals for the first spec:
 - OpenClaw nodes CLI docs: https://docs.openclaw.ai/cli/nodes
 - OpenClaw secrets CLI docs: https://docs.openclaw.ai/cli/secrets
 - OpenClaw secrets management docs: https://docs.openclaw.ai/gateway/secrets
+- GitHub Actions artifact storage docs: https://docs.github.com/en/actions/how-tos/writing-workflows/choosing-what-your-workflow-does/storing-and-sharing-data-from-a-workflow
+- `actions/upload-artifact` action: https://github.com/actions/upload-artifact
 - Hermes docs index: https://hermes-agent.nousresearch.com/docs/llms.txt
 - Hermes GitHub and README: https://github.com/NousResearch/hermes-agent
 - Hermes architecture docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/developer-guide/architecture.md

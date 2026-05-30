@@ -136,13 +136,15 @@ for expected in \
   "GitClaw Commands Report" \
   "Generated without a model call" \
   'trigger_prefix: `@gitclaw`' \
-  'commands: `30`' \
-  'aliases: `26`' \
-  'local_cli_helpers: `89`' \
+  'commands: `31`' \
+  'aliases: `27`' \
+  'local_cli_helpers: `91`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/agents' \
   '/agent' \
+  '/artifacts' \
+  '/artifact' \
   '/approvals' \
   '/approval' \
   '/help' \
@@ -184,6 +186,8 @@ for expected in \
   '/cron' \
   'gitclaw agents list' \
   'gitclaw agents verify' \
+  'gitclaw artifacts list' \
+  'gitclaw artifacts verify' \
   'gitclaw nodes list' \
   'gitclaw nodes verify' \
   'gitclaw approvals list' \
