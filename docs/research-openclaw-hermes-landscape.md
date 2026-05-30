@@ -272,6 +272,20 @@ memory provenance, loaded state, canonical dated-note coverage, hashes,
 read-only write status, and explicit external-provider/session-index/background
 promotion non-goals.
 
+2026-05-30 memory-promote-plan follow-up: OpenClaw now documents memory as a
+reviewable promotion pipeline: compact `MEMORY.md`, daily notes, action-
+sensitive boundaries, dreaming/backfill review lanes, and no hidden memory
+state beyond files on disk. Hermes likewise keeps memory bounded, curated, and
+separate from both skills and session search. GitClaw should add
+`@gitclaw /memory promote-plan <target>` and `gitclaw memory promote-plan
+<target>` as the GitHub-native equivalent of a memory-promotion dry run:
+identify whether a thread should become reviewed long-term or daily-note
+memory, report target metadata and validation rollups, and explicitly avoid
+model calls, transcript bodies, memory bodies, repository mutation, and direct
+memory writes. Any real memory promotion should land as a reviewed git diff
+and be followed by memory/profile verification plus a live GitHub Models
+conversation E2E that performs an actual LLM call.
+
 2026-05-29 soul-inspection follow-up: because OpenClaw and Hermes treat
 `SOUL.md`, `IDENTITY.md`, `USER.md`, `MEMORY.md`, and dated memory notes as
 high-authority portable context, GitClaw should make that load set auditable

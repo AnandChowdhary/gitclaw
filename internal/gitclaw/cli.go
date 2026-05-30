@@ -87,7 +87,7 @@ func RunCLI(ctx context.Context, args []string) error {
 
 func runMemoryCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw memory verify|validate|list|info <path>|search <query>")
+		return fmt.Errorf("usage: gitclaw memory verify|validate|list|promote-plan [target]|info <path>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -96,6 +96,8 @@ func runMemoryCommand(args []string) error {
 		return runMemoryValidateCommand(args[1:])
 	case "list":
 		return runMemoryListCommand(args[1:])
+	case "promote-plan", "promote", "remember-plan":
+		return runMemoryPromotePlanCommand(args[1:])
 	case "info":
 		return runMemoryInfoCommand(args[1:])
 	case "search":
@@ -313,6 +315,26 @@ func runMemoryInfoCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderMemoryInfoCLIReport(cfg, repoContext, path))
+	return nil
+}
+
+func runMemoryPromotePlanCommand(args []string) error {
+	if len(args) > 1 {
+		return fmt.Errorf("usage: gitclaw memory promote-plan [target]")
+	}
+	target := "long-term"
+	if len(args) == 1 {
+		target = args[0]
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "memory promote-plan " + target}}, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderMemoryPromotePlanCLIReport(cfg, repoContext, target))
 	return nil
 }
 

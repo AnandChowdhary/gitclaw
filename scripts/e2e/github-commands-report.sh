@@ -138,7 +138,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `23`' \
   'aliases: `20`' \
-  'local_cli_helpers: `75`' \
+  'local_cli_helpers: `76`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/approvals' \
@@ -220,6 +220,7 @@ for expected in \
   'gitclaw memory verify' \
   'gitclaw memory validate' \
   'gitclaw memory list' \
+  'gitclaw memory promote-plan [target]' \
   'gitclaw memory info <path>' \
   'gitclaw memory search <query>' \
   'gitclaw migrate plan <source>' \

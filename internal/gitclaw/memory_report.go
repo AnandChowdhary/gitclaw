@@ -48,12 +48,19 @@ func IsMemoryReportRequest(ev Event, cfg Config) bool {
 	return command == "/memory" || command == "/memories"
 }
 
-func RenderMemoryReport(ev Event, cfg Config, repoContext RepoContext) string {
+func RenderMemoryReport(ev Event, cfg Config, repoContext RepoContext, transcript ...[]TranscriptMessage) string {
+	var messages []TranscriptMessage
+	if len(transcript) > 0 {
+		messages = transcript[0]
+	}
 	if isMemoryVerifyRequest(ev, cfg) {
 		return RenderMemoryVerifyReport(ev, cfg, repoContext)
 	}
 	if isMemoryValidateRequest(ev, cfg) {
 		return RenderMemoryValidationReport(ev, cfg, repoContext)
+	}
+	if isMemoryPromotePlanRequest(ev, cfg) {
+		return renderMemoryPromotePlanReport(ev, cfg, repoContext, messages, requestedMemoryPromoteTarget(ev, cfg), true)
 	}
 	if path := requestedMemoryInfoPath(ev, cfg); path != "" {
 		return RenderMemoryInfoReport(ev, cfg, repoContext, path)
