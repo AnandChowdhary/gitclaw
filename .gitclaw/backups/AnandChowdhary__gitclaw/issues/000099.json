@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T00:42:22Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 99,
+    "title": "@gitclaw /skills validate e2e 20260530T004118Z",
+    "body": "Live skills-validate E2E.\n\nHidden skills validate body token: GITCLAW_SKILLS_VALIDATE_E2E_20260530T004118Z\nThis should produce a deterministic skills validation report without calling a model or dumping skill inventory.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /skills validate e2e 20260530T004118Z\n\nLive skills-validate E2E.\n\nHidden skills validate body token: GITCLAW_SKILLS_VALIDATE_E2E_20260530T004118Z\nThis should produce a deterministic skills validation report without calling a model or dumping skill inventory.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Skills Validate Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#99`\n- skill_validation_status: `ok`\n- skill_validation_errors: `0`\n- skill_validation_warnings: `0`\n- skill_duplicate_names: `0`\n- skill_invalid_names: `0`\n- skill_name_folder_mismatches: `0`\n\nThis report validates local skill metadata without dumping full `SKILL.md` bodies, issue bodies, comments, prompts, or secret values.\n\n### Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4580952236,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4580952236,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26669523660\" event_id=\"issue-99\" model=\"gitclaw/skills\" idempotency_key=\"b26639d3d87d200773cad408e0a3a55e\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26669523660\" --\u003e\n## GitClaw Skills Validate Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#99`\n- skill_validation_status: `ok`\n- skill_validation_errors: `0`\n- skill_validation_warnings: `0`\n- skill_duplicate_names: `0`\n- skill_invalid_names: `0`\n- skill_name_folder_mismatches: `0`\n\nThis report validates local skill metadata without dumping full `SKILL.md` bodies, issue bodies, comments, prompts, or secret values.\n\n### Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T00:41:59Z",
+      "updated_at": "2026-05-30T00:41:59Z"
+    }
+  ]
+}
