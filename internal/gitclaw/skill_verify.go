@@ -9,6 +9,7 @@ type SkillVerifyReport struct {
 	Status                    string
 	Skills                    int
 	Validation                SkillValidationReport
+	Risk                      SkillRiskReport
 	EnabledSkills             int
 	DisabledSkills            int
 	AllowlistBlockedSkills    int
@@ -25,10 +26,12 @@ type SkillVerifyReport struct {
 
 func BuildSkillVerifyReport(skills []SkillSummary) SkillVerifyReport {
 	validation := ValidateSkillSummaries(skills)
+	risk := BuildSkillRiskReport(skills)
 	report := SkillVerifyReport{
 		Status:               validation.Status,
 		Skills:               len(skills),
 		Validation:           validation,
+		Risk:                 risk,
 		RegistryVerification: "not_configured",
 		RawBodiesIncluded:    false,
 	}
@@ -61,6 +64,11 @@ func BuildSkillVerifyReport(skills []SkillSummary) SkillVerifyReport {
 		}
 	}
 	if report.UnknownSourceSkills > 0 && report.Status == "ok" {
+		report.Status = "warn"
+	}
+	if risk.Status == "high" {
+		report.Status = "high"
+	} else if risk.Status == "warn" && report.Status == "ok" {
 		report.Status = "warn"
 	}
 	return report
@@ -97,8 +105,9 @@ func renderSkillsVerifyReport(ev Event, repoContext RepoContext, includeIssue bo
 	fmt.Fprintf(&b, "- installer_scripts_run: `%t`\n", report.InstallerScriptsRun)
 	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", report.RawBodiesIncluded)
 	writeSkillValidationSummary(&b, report.Validation)
+	writeSkillRiskSummary(&b, report.Risk)
 	b.WriteByte('\n')
-	b.WriteString("This report is GitClaw's local trust envelope for skills. It verifies repository-scoped skill metadata, source roots, requirement declarations, and body hashes. It does not contact an external registry, execute installers, dump full `SKILL.md` bodies, or include issue/comment text.\n\n")
+	b.WriteString("This report is GitClaw's local trust envelope for skills. It verifies repository-scoped skill metadata, source roots, requirement declarations, body hashes, and body-free risk categories. It does not contact an external registry, execute installers, dump full `SKILL.md` bodies, or include issue/comment text.\n\n")
 
 	b.WriteString("### Trust Cards\n")
 	if len(repoContext.SkillSummaries) == 0 {
@@ -115,7 +124,7 @@ func renderSkillsVerifyReport(ev Event, repoContext RepoContext, includeIssue bo
 }
 
 func writeSkillTrustCard(b *strings.Builder, skill SkillSummary) {
-	fmt.Fprintf(b, "- name=`%s` path=`%s` source=`%s` enabled=`%t` disabled_by_config=`%t` blocked_by_allowlist=`%t` frontmatter=`%t` description=`%t` sha256_12=`%s` requirements=`%s` requires_env=`%d` requires_bins=`%d` missing_env=`%d` missing_bins=`%d`\n",
+	fmt.Fprintf(b, "- name=`%s` path=`%s` source=`%s` enabled=`%t` disabled_by_config=`%t` blocked_by_allowlist=`%t` frontmatter=`%t` description=`%t` sha256_12=`%s` requirements=`%s` requires_env=`%d` requires_bins=`%d` missing_env=`%d` missing_bins=`%d` risk_findings=`%d` risk_max_severity=`%s` risk_codes=`%s`\n",
 		inlineCode(skill.Name),
 		skill.Path,
 		skillTrustSource(skill.Path),
@@ -130,6 +139,9 @@ func writeSkillTrustCard(b *strings.Builder, skill SkillSummary) {
 		len(skill.RequiredBins),
 		len(skill.MissingEnv),
 		len(skill.MissingBins),
+		len(skill.RiskFindings),
+		skillRiskMaxSeverity(skill.RiskFindings),
+		inlineListOrNone(skillRiskCodes(skill.RiskFindings)),
 	)
 }
 
@@ -145,6 +157,10 @@ func writeSkillVerifyFindings(b *strings.Builder, report SkillVerifyReport) {
 	}
 	for _, finding := range report.Validation.Findings {
 		fmt.Fprintf(b, "- severity=`%s` code=`%s` path=`%s` detail=`%s`\n", finding.Severity, finding.Code, finding.Path, inlineCode(finding.Detail))
+		wrote = true
+	}
+	for _, finding := range report.Risk.Findings {
+		fmt.Fprintf(b, "- severity=`%s` code=`%s` category=`%s` path=`%s` line=`%d` line_sha256_12=`%s`\n", finding.Severity, finding.Code, finding.Category, finding.Path, finding.Line, finding.LineSHA)
 		wrote = true
 	}
 	if !wrote {

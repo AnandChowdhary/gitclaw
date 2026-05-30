@@ -86,6 +86,9 @@ func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isSkillsVerifyRequest(ev, cfg) {
 		return renderSkillsVerifyReport(ev, repoContext, true)
 	}
+	if isSkillsRiskRequest(ev, cfg) {
+		return renderSkillsRiskReport(ev, repoContext, true)
+	}
 	if isSkillsValidateRequest(ev, cfg) {
 		return renderSkillsValidationReport(ev, repoContext, true)
 	}
@@ -122,7 +125,9 @@ func renderSkillsListReport(ev Event, repoContext RepoContext, includeIssue bool
 	fmt.Fprintf(&b, "- skills_with_requirements: `%d`\n", skillsWithRequirements(repoContext.SkillSummaries))
 	fmt.Fprintf(&b, "- skills_missing_requirements: `%d`\n", skillsMissingRequirements(repoContext.SkillSummaries))
 	validation := ValidateSkillSummaries(repoContext.SkillSummaries)
+	risk := BuildSkillRiskReport(repoContext.SkillSummaries)
 	writeSkillValidationSummary(&b, validation)
+	writeSkillRiskSummary(&b, risk)
 	b.WriteByte('\n')
 	b.WriteString("GitClaw uses progressive disclosure: this report lists available skill metadata, while full `SKILL.md` bodies are loaded only when selected or marked always-on.\n\n")
 	b.WriteString("Skill bodies are not included; hashes and requirement counts make local skills reviewable like code before they influence a model turn.\n\n")
@@ -418,6 +423,11 @@ func isSkillsVerifyRequest(ev Event, cfg Config) bool {
 	return len(fields) >= 2 && fields[0] == "/skills" && strings.EqualFold(fields[1], "verify")
 }
 
+func isSkillsRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && fields[0] == "/skills" && (strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit"))
+}
+
 func isSkillBundlesListRequest(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	if len(fields) == 0 {
@@ -650,7 +660,7 @@ func writeSkillInfoValidationFindings(b *strings.Builder, validation SkillValida
 }
 
 func writeSkillSummary(b *strings.Builder, skill SkillSummary) {
-	fmt.Fprintf(b, "- name=`%s` path=`%s` enabled=`%t` disabled_by_config=`%t` blocked_by_allowlist=`%t` always=`%t` frontmatter=`%t` description=`%t` bytes=`%d` lines=`%d` sha256_12=`%s` requires_env=`%d` requires_bins=`%d` missing_env=`%d` missing_bins=`%d`",
+	fmt.Fprintf(b, "- name=`%s` path=`%s` enabled=`%t` disabled_by_config=`%t` blocked_by_allowlist=`%t` always=`%t` frontmatter=`%t` description=`%t` bytes=`%d` lines=`%d` sha256_12=`%s` requires_env=`%d` requires_bins=`%d` missing_env=`%d` missing_bins=`%d` risk_findings=`%d` risk_max_severity=`%s` risk_codes=`%s`",
 		inlineCode(skill.Name),
 		skill.Path,
 		skillIsEnabled(skill),
@@ -666,6 +676,9 @@ func writeSkillSummary(b *strings.Builder, skill SkillSummary) {
 		len(skill.RequiredBins),
 		len(skill.MissingEnv),
 		len(skill.MissingBins),
+		len(skill.RiskFindings),
+		skillRiskMaxSeverity(skill.RiskFindings),
+		inlineListOrNone(skillRiskCodes(skill.RiskFindings)),
 	)
 	if skill.Description != "" {
 		fmt.Fprintf(b, " description=`%s`", inlineCode(skill.Description))

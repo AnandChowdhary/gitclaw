@@ -645,6 +645,7 @@ func loadSkillContext(root string, transcript []TranscriptMessage, cfg Config) (
 			RequiredBins:       append([]string(nil), skill.RequiredBins...),
 			MissingEnv:         missingEnvVars(skill.RequiredEnv),
 			MissingBins:        missingBins(skill.RequiredBins),
+			RiskFindings:       scanSkillRiskFindings(skill.Path, skill.Body),
 		})
 		if enabled && (skill.Always || skillMatchesQuery(skill, query) || skillSelectedByBundle(skill, bundleSelectedSkills)) {
 			selected = append(selected, ContextDocument{Path: skill.Path, Body: skill.Body})
@@ -1118,7 +1119,7 @@ func isStopWord(value string) bool {
 func renderSkillIndex(skills []SkillSummary) string {
 	var b strings.Builder
 	for _, skill := range skills {
-		fmt.Fprintf(&b, "- name=%s path=%s enabled=%t disabled_by_config=%t blocked_by_allowlist=%t always=%t frontmatter=%t description=%t bytes=%d lines=%d sha256_12=%s requires_env=%d requires_bins=%d missing_env=%d missing_bins=%d",
+		fmt.Fprintf(&b, "- name=%s path=%s enabled=%t disabled_by_config=%t blocked_by_allowlist=%t always=%t frontmatter=%t description=%t bytes=%d lines=%d sha256_12=%s requires_env=%d requires_bins=%d missing_env=%d missing_bins=%d risk_findings=%d risk_max_severity=%s risk_codes=%s",
 			skill.Name,
 			skill.Path,
 			skill.Enabled,
@@ -1134,6 +1135,9 @@ func renderSkillIndex(skills []SkillSummary) string {
 			len(skill.RequiredBins),
 			len(skill.MissingEnv),
 			len(skill.MissingBins),
+			len(skill.RiskFindings),
+			skillRiskMaxSeverity(skill.RiskFindings),
+			strings.Join(skillRiskCodes(skill.RiskFindings), ","),
 		)
 		if skill.Description != "" {
 			fmt.Fprintf(&b, " description=%q", skill.Description)

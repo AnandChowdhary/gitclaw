@@ -1158,6 +1158,7 @@ Validation is visible in the `/skills` report and locally through:
 
 ```bash
 gitclaw skills verify
+gitclaw skills risk
 gitclaw skills validate
 gitclaw skills check
 gitclaw skills list
@@ -1188,6 +1189,7 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills
 @gitclaw /skills list
 @gitclaw /skills verify
+@gitclaw /skills risk
 @gitclaw /skills validate
 @gitclaw /skills check
 @gitclaw /skills select-plan repo-reader
@@ -1212,6 +1214,8 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 - declared env/bin requirement counts and whether any are missing.
 - validation status, error/warning counts, duplicate-name count, invalid-name
   count, folder/name mismatch count, and body-free findings.
+- risk-audit status, risky-instruction category counts, finding codes, and
+  line hashes without raw `SKILL.md` text.
 - dry-run selection planning metadata when explicitly requested.
 - dry-run install/upgrade planning metadata when explicitly requested.
 
@@ -1263,6 +1267,16 @@ explicit
 `registry_verification=not_configured` field. This mirrors OpenClaw's
 verification posture while preserving GitClaw's no-registry, no-installer MVP
 boundary.
+
+When called as `@gitclaw /skills risk`, the command posts a body-free skill
+risk audit inspired by OpenClaw skill/plugin-hook safety and Hermes toolset
+filtering. GitClaw scans repo-local `SKILL.md` bodies internally for risky
+instruction categories such as prompt-boundary override, secret exfiltration,
+unbounded tool loops, hidden persistence, and unreviewed shell execution. The
+report publishes only status, category counts, finding codes, skill paths,
+content hashes, and line hashes. It never dumps skill bodies, issue/comment
+bodies, prompts, secrets, registry metadata, installer output, or raw matched
+lines, and it never executes skills or contacts a registry.
 
 When called as `@gitclaw /skills select-plan <name>`, the command posts a
 body-free dry-run explanation for one repo-local skill's influence on the
@@ -3753,7 +3767,22 @@ assert the expected comments/labels, and close the issue in cleanup.
      `SKILL.md` verification token,
    - assert the run succeeds without requiring a model provider response.
 
-23. **Skills selection plan**
+23. **Skills risk audit**
+
+   - create a real issue with `@gitclaw /skills risk`,
+   - assert the reply is marked `model="gitclaw/skills"`,
+   - assert the report is marked `GitClaw Skills Risk Report`,
+   - assert it reports skill risk status, scanned skill count, risky-finding
+     counts, risk codes, skill hashes, line hashes, no registry verification,
+     no installer execution, and no raw bodies,
+   - assert it does not dump the issue body token, raw `SKILL.md` body token,
+     or raw matched risky lines,
+   - add a normal follow-up comment that requires the repo-reader skill and
+     `gitclaw.search_files`, then assert the follow-up assistant marker records
+     a real GitHub Models model, selected skill, prompt provenance, and
+     `gitclaw.search_files`.
+
+24. **Skills selection plan**
 
    - create a real issue with `@gitclaw /skills select-plan repo-reader`,
    - assert the reply is marked `model="gitclaw/skills"`,
@@ -3765,7 +3794,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      full `SKILL.md` verification token,
    - assert the run succeeds without requiring a model provider response.
 
-24. **Soul inspection**
+25. **Soul inspection**
 
    - create a real issue with `@gitclaw /soul`,
    - create a second real issue with `@gitclaw /soul list`,
@@ -4451,6 +4480,11 @@ examples/workflows/gitclaw.yml
   `@gitclaw /skills verify` exposes the repo-local skill trust envelope,
   hashes, config-gate state, requirement status, and no-registry boundary
   without body leakage.
+- A `gh`-driven skills-risk E2E harness verifies
+  `@gitclaw /skills risk` exposes body-free risky-instruction category counts,
+  finding codes, skill hashes, and line hashes without a model call, and then
+  runs a live GitHub Models follow-up conversation that proves repo-local skill
+  selection and tool usage still work on the real model path.
 - A `gh`-driven skills-validate E2E harness verifies
   `@gitclaw /skills validate` and the OpenClaw-style
   `@gitclaw /skills check` alias expose the body-free validation report

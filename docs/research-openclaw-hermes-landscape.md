@@ -98,6 +98,17 @@ third-party skills. GitClaw's repo-native cut should therefore expose a skill
 index in prompt context and load full local skill bodies only when the issue
 thread selects them or the skill is marked always-on.
 
+2026-05-30 skill-risk follow-up: current OpenClaw plugin-hook docs make prompt,
+model, tool-call, and heartbeat extension points explicit, while Hermes'
+toolsets and MCP docs emphasize filtering exposed capabilities per task. Recent
+OpenClaw security work also focuses on persistent-state attacks and
+skill-driven token/tool amplification. GitClaw should add a body-free
+`@gitclaw /skills risk` / `gitclaw skills risk` report that scans repo-local
+`SKILL.md` bodies internally for risky instruction categories, but publishes
+only counts, categories, finding codes, paths, and line hashes. This gives
+maintainers an issue-visible risk envelope without executing skills, contacting
+registries, dumping skill bodies, or trusting third-party install metadata.
+
 ### Memory
 
 OpenClaw's default memory model is file-centric:
@@ -1615,6 +1626,9 @@ Recommended non-goals for the first spec:
 - OpenClaw heartbeat docs: https://openclawlab.com/en/docs/agent/heartbeat/
 - OpenClaw memory docs: https://docs.openclaw.ai/concepts/memory
 - OpenClaw tools overview: https://docs.openclaw.ai/tools
+- OpenClaw automation hooks docs: https://docs.openclaw.ai/automation/hooks
+- OpenClaw plugin hooks docs: https://docs.openclaw.ai/plugins/hooks
+- OpenClaw plugins docs: https://docs.openclaw.ai/plugins
 - OpenClaw config CLI docs: https://docs.openclaw.ai/cli/config
 - OpenClaw configure docs: https://docs.openclaw.ai/cli/configure
 - OpenClaw doctor docs: https://docs.openclaw.ai/doctor
@@ -1654,6 +1668,7 @@ Recommended non-goals for the first spec:
 - Hermes skills docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/skills.md
 - Hermes working with skills docs: https://hermes-agent.nousresearch.com/docs/guides/work-with-skills/
 - Hermes tools docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/tools/
+- Hermes features overview: https://hermes-agent.nousresearch.com/docs/user-guide/features/overview/
 - Hermes tools reference: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/reference/tools-reference.md
 - Hermes subagent delegation docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation
 - Hermes Kanban docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban
@@ -1671,4 +1686,6 @@ Recommended non-goals for the first spec:
 - Sleeper Channels and Provenance Gates: https://arxiv.org/abs/2605.13471
 - Your Agent, Their Asset: https://arxiv.org/abs/2604.04759
 - OpenClaw PRISM: https://arxiv.org/abs/2603.11853
+- Security of OpenClaw Agents: https://arxiv.org/abs/2605.25435
+- OpenClawBench: https://arxiv.org/abs/2605.29253
 - Cloud Security Alliance Hermes/OpenClaw research note: https://labs.cloudsecurityalliance.org/wp-content/uploads/2026/05/CSA_research_note_hermes_agent_CVEs_20260504-csa-styled.pdf

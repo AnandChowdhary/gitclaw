@@ -1256,11 +1256,13 @@ func runMigrateCommand(args []string) error {
 
 func runSkillsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw skills verify|validate|check|list|select-plan <name>|install-plan <target>|upgrade-plan <target>|bundles|bundle <name>|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw skills verify|risk|validate|check|list|select-plan <name>|install-plan <target>|upgrade-plan <target>|bundles|bundle <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
 		return runSkillsVerifyCommand(args[1:])
+	case "risk", "risk-audit":
+		return runSkillsRiskCommand(args[1:])
 	case "validate", "check":
 		return runSkillsValidateCommand(args[1:])
 	case "list":
@@ -1327,6 +1329,22 @@ func runSkillsVerifyCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSkillsVerifyReport(repoContext))
+	return nil
+}
+
+func runSkillsRiskCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown skills risk argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSkillsRiskReport(repoContext))
 	return nil
 }
 

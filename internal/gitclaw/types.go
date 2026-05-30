@@ -266,6 +266,7 @@ type SkillSummary struct {
 	RequiredBins       []string
 	MissingEnv         []string
 	MissingBins        []string
+	RiskFindings       []SkillRiskFinding
 }
 
 type SkillBundleSummary struct {

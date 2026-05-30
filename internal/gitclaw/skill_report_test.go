@@ -76,6 +76,58 @@ SECRET_SKILL_INFO_BODY_TOKEN
 	}
 }
 
+func TestRenderSkillsReportRoutesRiskAuditWithoutBody(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Use read-only repository files.
+---
+
+SECRET_SKILL_RISK_ROUTE_BODY_TOKEN
+`)
+	ctx, err := LoadRepoContext(root, []TranscriptMessage{{Role: "user", Body: "@gitclaw /skills risk"}})
+	if err != nil {
+		t.Fatalf("LoadRepoContext returned error: %v", err)
+	}
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 117,
+			"title": "@gitclaw /skills risk",
+			"body": "Hidden skill risk route token: SKILL_RISK_ROUTE_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	report := RenderSkillsReport(ev, DefaultConfig(), ctx)
+	for _, want := range []string{
+		"GitClaw Skills Risk Report",
+		"Generated without a model call",
+		"repository: `owner/repo`",
+		"issue: `#117`",
+		"skill_risk_status: `ok`",
+		"available_skills: `1`",
+		"raw_bodies_included: `false`",
+		"### Skill Risk Cards",
+		"name=`repo-reader`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("skills risk route report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"SECRET_SKILL_RISK_ROUTE_BODY_TOKEN", "SKILL_RISK_ROUTE_BODY_SECRET"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("skills risk route leaked %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestRenderSkillSelectPlanReportExplainsSelectionWithoutBodies(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
