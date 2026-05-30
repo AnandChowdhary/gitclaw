@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T12:46:28Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 272,
+    "title": "@gitclaw /agents e2e 20260530T124528Z",
+    "body": "Live agents-report E2E.\n\nHidden agents report body token: GITCLAW_AGENTS_REPORT_E2E_20260530T124528Z\nThis should produce a deterministic agents report without a model call.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /agents e2e 20260530T124528Z\n\nLive agents-report E2E.\n\nHidden agents report body token: GITCLAW_AGENTS_REPORT_E2E_20260530T124528Z\nThis should produce a deterministic agents report without a model call.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Agents Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#272`\n- agents_status: `ok`\n- agent_policy_path: `.gitclaw/AGENTS.md`\n- agent_policy_present: `true`\n- agent_policy_loaded_for_model: `true`\n- agent_specs_dir: `.gitclaw/agents`\n- agent_specs: `1`\n- agent_specs_with_frontmatter: `1`\n- agent_roles: `1`\n- agent_tools_requested: `2`\n- agent_specs_requiring_approval: `1`\n- agent_specs_single_assistant: `1`\n- active_agent_runtime: `github-actions`\n- multi_agent_routing_supported: `false`\n- multi_agent_delegation_supported: `false`\n- subagent_execution_supported: `false`\n- delegate_task_supported: `false`\n- remote_agent_process_allowed: `false`\n- agent_to_agent_messaging_allowed: `false`\n- model_call_required: `false`\n- repository_mutation_allowed: `false`\n- raw_bodies_included: `false`\n- raw_agent_bodies_included: `false`\n- llm_e2e_required_after_change: `true`\n- issue_title_sha256_12: `21937a971210`\n\nAgents describe reviewed assistant identity and routing intent. GitClaw treats agent specs as metadata only: no subagent is spawned, no gateway or node runtime is started, no agent-to-agent message is sent, and no agent, issue, comment, channel, or credential body is printed by this report.\n\n### Agent Policy\n- `.gitclaw/AGENTS.md` present=`true` bytes=`1052` lines=`25` sha256_12=`cc26dd08b575`\n- `.gitclaw/AGENTS.md` loaded=`true` source=`contextDocumentPaths`\n\n### Agent Specs\n- name=`repo-assistant` path=`.gitclaw/agents/repo-assistant.md` bytes=`415` lines=`16` frontmatter=`true` role=`primary` runtime=`github-actions` mode=`single-assistant` tools=`2` requires_approval=`true` sha256_12=`3880e04c1971`\n\n### Runtime Boundary\n- GitHub Actions is the only active assistant runtime in v1\n- GitHub issues and comments are the conversation and handoff boundary\n- agent specs are not process definitions and do not create child workers\n- future multi-agent routing or delegation requires reviewed workflows, explicit permissions, approval gates, and live GitHub Models E2E coverage\n\n### Verification Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4582862290,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4582862290,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26684157760\" event_id=\"issue-272\" model=\"gitclaw/agents\" idempotency_key=\"05f2b67722363a362a1abbd10114720c\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26684157760\" --\u003e\n## GitClaw Agents Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#272`\n- agents_status: `ok`\n- agent_policy_path: `.gitclaw/AGENTS.md`\n- agent_policy_present: `true`\n- agent_policy_loaded_for_model: `true`\n- agent_specs_dir: `.gitclaw/agents`\n- agent_specs: `1`\n- agent_specs_with_frontmatter: `1`\n- agent_roles: `1`\n- agent_tools_requested: `2`\n- agent_specs_requiring_approval: `1`\n- agent_specs_single_assistant: `1`\n- active_agent_runtime: `github-actions`\n- multi_agent_routing_supported: `false`\n- multi_agent_delegation_supported: `false`\n- subagent_execution_supported: `false`\n- delegate_task_supported: `false`\n- remote_agent_process_allowed: `false`\n- agent_to_agent_messaging_allowed: `false`\n- model_call_required: `false`\n- repository_mutation_allowed: `false`\n- raw_bodies_included: `false`\n- raw_agent_bodies_included: `false`\n- llm_e2e_required_after_change: `true`\n- issue_title_sha256_12: `21937a971210`\n\nAgents describe reviewed assistant identity and routing intent. GitClaw treats agent specs as metadata only: no subagent is spawned, no gateway or node runtime is started, no agent-to-agent message is sent, and no agent, issue, comment, channel, or credential body is printed by this report.\n\n### Agent Policy\n- `.gitclaw/AGENTS.md` present=`true` bytes=`1052` lines=`25` sha256_12=`cc26dd08b575`\n- `.gitclaw/AGENTS.md` loaded=`true` source=`contextDocumentPaths`\n\n### Agent Specs\n- name=`repo-assistant` path=`.gitclaw/agents/repo-assistant.md` bytes=`415` lines=`16` frontmatter=`true` role=`primary` runtime=`github-actions` mode=`single-assistant` tools=`2` requires_approval=`true` sha256_12=`3880e04c1971`\n\n### Runtime Boundary\n- GitHub Actions is the only active assistant runtime in v1\n- GitHub issues and comments are the conversation and handoff boundary\n- agent specs are not process definitions and do not create child workers\n- future multi-agent routing or delegation requires reviewed workflows, explicit permissions, approval gates, and live GitHub Models E2E coverage\n\n### Verification Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T12:46:06Z",
+      "updated_at": "2026-05-30T12:46:06Z"
+    }
+  ]
+}
