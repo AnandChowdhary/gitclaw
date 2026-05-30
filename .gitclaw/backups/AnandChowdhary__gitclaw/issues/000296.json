@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T15:58:10Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 296,
+    "title": "@gitclaw /tools risk e2e 20260530T155710Z",
+    "body": "@gitclaw /tools risk\n\nLive tools-risk E2E.\nDo not include this hidden issue token: GITCLAW_TOOLS_RISK_HIDDEN_20260530T155710Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /tools risk e2e 20260530T155710Z\n\n@gitclaw /tools risk\n\nLive tools-risk E2E.\nDo not include this hidden issue token: GITCLAW_TOOLS_RISK_HIDDEN_20260530T155710Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Tools Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#296`\n- tool_risk_status: `ok`\n- available_tools: `5`\n- scanned_contracts: `5`\n- active_tool_outputs: `3`\n- scanned_active_outputs: `3`\n- tool_guidance_files: `1`\n- surfaces_with_risk_findings: `0`\n- tool_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- registry_verification: `not_configured`\n- runtime_permission_verification: `static_contracts_only`\n- shell_execution_allowed: `false`\n- repository_mutation_allowed: `false`\n- raw_bodies_included: `false`\n- raw_inputs_included: `false`\n- llm_e2e_required_after_tool_risk_change: `true`\n\nThis report scans deterministic tool contracts, repo-local tool guidance, and active prompt-visible tool output metadata for body-free risk categories inspired by OpenClaw/Hermes tool, MCP, plugin, and permission safety boundaries. It reports only names, paths, counts, finding codes, severities, and hashes; raw tool outputs, tool inputs, file bodies, issue bodies, comments, prompts, and secret values are not included.\n\n### Tool Risk Cards\n- kind=`contract` name=`gitclaw.list_files` source=`builtin-gitclaw` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` mode=`read-only` mutating=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`contract` name=`gitclaw.search_files` source=`builtin-gitclaw` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` mode=`read-only` mutating=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`contract` name=`gitclaw.read_file` source=`builtin-gitclaw` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` mode=`read-only` mutating=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`contract` name=`gitclaw.skill_index` source=`builtin-gitclaw` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` mode=`metadata-only` mutating=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`contract` name=`gitclaw.policy` source=`builtin-gitclaw` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` mode=`metadata-only` mutating=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`guidance` path=`.gitclaw/TOOLS.md` source=`repo-local` bytes=`872` lines=`19` sha256_12=`523ee3c0f3e2` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`active-output` name=`gitclaw.list_files` contract_known=`true` input_sha256_12=`cdb4ee2aea69` output_bytes=`8475` output_lines=`240` output_sha256_12=`ff637531f87c` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`active-output` name=`gitclaw.skill_index` contract_known=`true` input_sha256_12=`79798d7bfe09` output_bytes=`444` output_lines=`1` output_sha256_12=`8daef3cac575` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`active-output` name=`gitclaw.search_files` contract_known=`true` input_sha256_12=`979918dfa6de` output_bytes=`635` output_lines=`9` output_sha256_12=`a64e84f8bb00` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Risk Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4583351793,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4583351793,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26688288186\" event_id=\"issue-296\" model=\"gitclaw/tools\" idempotency_key=\"510e709d25b8a0c3b526c0b7e01aada1\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26688288186\" --\u003e\n## GitClaw Tools Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#296`\n- tool_risk_status: `ok`\n- available_tools: `5`\n- scanned_contracts: `5`\n- active_tool_outputs: `3`\n- scanned_active_outputs: `3`\n- tool_guidance_files: `1`\n- surfaces_with_risk_findings: `0`\n- tool_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- registry_verification: `not_configured`\n- runtime_permission_verification: `static_contracts_only`\n- shell_execution_allowed: `false`\n- repository_mutation_allowed: `false`\n- raw_bodies_included: `false`\n- raw_inputs_included: `false`\n- llm_e2e_required_after_tool_risk_change: `true`\n\nThis report scans deterministic tool contracts, repo-local tool guidance, and active prompt-visible tool output metadata for body-free risk categories inspired by OpenClaw/Hermes tool, MCP, plugin, and permission safety boundaries. It reports only names, paths, counts, finding codes, severities, and hashes; raw tool outputs, tool inputs, file bodies, issue bodies, comments, prompts, and secret values are not included.\n\n### Tool Risk Cards\n- kind=`contract` name=`gitclaw.list_files` source=`builtin-gitclaw` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` mode=`read-only` mutating=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`contract` name=`gitclaw.search_files` source=`builtin-gitclaw` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` mode=`read-only` mutating=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`contract` name=`gitclaw.read_file` source=`builtin-gitclaw` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` mode=`read-only` mutating=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`contract` name=`gitclaw.skill_index` source=`builtin-gitclaw` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` mode=`metadata-only` mutating=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`contract` name=`gitclaw.policy` source=`builtin-gitclaw` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` mode=`metadata-only` mutating=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`guidance` path=`.gitclaw/TOOLS.md` source=`repo-local` bytes=`872` lines=`19` sha256_12=`523ee3c0f3e2` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`active-output` name=`gitclaw.list_files` contract_known=`true` input_sha256_12=`cdb4ee2aea69` output_bytes=`8475` output_lines=`240` output_sha256_12=`ff637531f87c` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`active-output` name=`gitclaw.skill_index` contract_known=`true` input_sha256_12=`79798d7bfe09` output_bytes=`444` output_lines=`1` output_sha256_12=`8daef3cac575` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`active-output` name=`gitclaw.search_files` contract_known=`true` input_sha256_12=`979918dfa6de` output_bytes=`635` output_lines=`9` output_sha256_12=`a64e84f8bb00` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Risk Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T15:57:52Z",
+      "updated_at": "2026-05-30T15:57:52Z"
+    }
+  ]
+}
