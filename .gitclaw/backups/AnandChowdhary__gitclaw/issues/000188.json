@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T07:25:51Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 188,
+    "title": "@gitclaw /bundles info repo-context e2e 20260530T072446Z",
+    "body": "Live skill-bundle info E2E.\n\nHidden bundle info body token: GITCLAW_BUNDLES_INFO_E2E_20260530T072446Z\nThis should produce a body-free repo-local skill bundle metadata report without a model call.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /bundles info repo-context e2e 20260530T072446Z\n\nLive skill-bundle info E2E.\n\nHidden bundle info body token: GITCLAW_BUNDLES_INFO_E2E_20260530T072446Z\nThis should produce a body-free repo-local skill bundle metadata report without a model call.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Skill Bundle Info Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#188`\n- requested_bundle: `repo-context`\n- skill_bundle_info_status: `ok`\n- available_bundles: `1`\n- matched_bundles: `1`\n- available_skills: `1`\n- run_mode: `read-only`\n- raw_bodies_included: `false`\n- issue_title_sha256_12: `51f198c99796`\n\nThis report shows one repo-local skill bundle by metadata only. Bundle YAML bodies, bundle instructions, skill bodies, issue bodies, comments, prompts, and secret values are not included.\n\n### Matches\n- bundle_name=`repo-context` path=`.gitclaw/skill-bundles/repo-context.yaml` skills=`repo-reader` resolved_skills=`repo-reader` missing_skills=`none` selected_for_this_turn=`false` instruction=`true` bytes=`290` lines=`7` sha256_12=`4a6baa73f30e` description=`Repository context questions using the repo-reader skill.`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4582078122,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4582078122,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26678004785\" event_id=\"issue-188\" model=\"gitclaw/skills\" idempotency_key=\"13da5248ce013e00117fecc837c3d672\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26678004785\" --\u003e\n## GitClaw Skill Bundle Info Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#188`\n- requested_bundle: `repo-context`\n- skill_bundle_info_status: `ok`\n- available_bundles: `1`\n- matched_bundles: `1`\n- available_skills: `1`\n- run_mode: `read-only`\n- raw_bodies_included: `false`\n- issue_title_sha256_12: `51f198c99796`\n\nThis report shows one repo-local skill bundle by metadata only. Bundle YAML bodies, bundle instructions, skill bodies, issue bodies, comments, prompts, and secret values are not included.\n\n### Matches\n- bundle_name=`repo-context` path=`.gitclaw/skill-bundles/repo-context.yaml` skills=`repo-reader` resolved_skills=`repo-reader` missing_skills=`none` selected_for_this_turn=`false` instruction=`true` bytes=`290` lines=`7` sha256_12=`4a6baa73f30e` description=`Repository context questions using the repo-reader skill.`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T07:25:28Z",
+      "updated_at": "2026-05-30T07:25:28Z"
+    }
+  ]
+}
