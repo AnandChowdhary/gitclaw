@@ -1592,6 +1592,16 @@ git status, numstat totals, changed paths, raw-patch suppression, and
 non-mutating boundaries without printing patch hunks or file bodies. Each diff
 feature batch should still run a real GitHub Models conversation E2E.
 
+2026-05-30 diff-risk follow-up: OpenClaw-style diff viewers and Hermes-style
+rollback previews are useful precisely because they show what changed before
+recovery or write actions. GitClaw should add `@gitclaw /diffs risk` as the
+safety twin of `/diffs`: scan diff policy, working-tree specs, and git metadata
+for raw patch leakage, destructive git actions, hidden state, untracked-file
+body context, external diff storage, missing approval gates, unsafe raw-patch
+modes, and unbounded file collection while reporting only metadata, paths,
+codes, severities, and line hashes. Acceptance requires deterministic body-free
+coverage plus a live GitHub Models follow-up E2E.
+
 2026-05-30 workspace-governance follow-up: OpenClaw treats the workspace as the
 agent's home for file tools and context, while Hermes recommends separate git
 worktrees so agent sessions get isolated checkouts and rollback history.

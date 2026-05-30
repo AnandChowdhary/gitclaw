@@ -721,7 +721,7 @@ GitHub issue/comment event
   `proactive enqueue`, `proactive init`, `proactive info`, `proactive risk`,
   `approvals list`, `approvals verify`,
   `artifacts list`, `artifacts risk`, `artifacts verify`,
-  `diffs summary`, `diffs verify`,
+  `diffs summary`, `diffs risk`, `diffs verify`,
   `workspace summary`, `workspace verify`,
   `hooks list`, `hooks risk`, `hooks verify`,
   `plugins list`, `plugins risk`, `plugins verify`,
@@ -2134,6 +2134,9 @@ diff artifact plugin and Hermes' checkpoint `/rollback diff` preview:
 @gitclaw /diffs
 @gitclaw /diff
 @gitclaw /changes
+@gitclaw /diffs risk
+@gitclaw /diff risk
+@gitclaw /changes risk
 ```
 
 The command runs after preflight and context loading, but before model
@@ -2157,10 +2160,22 @@ restores, commits, opens pull requests, or writes artifacts. Raw patches belong
 in explicit artifacts, pull requests, or local export paths; `/diffs` stays an
 issue-safe map of what changed.
 
+When called as `@gitclaw /diffs risk` or `@gitclaw /diffs risk-audit`, the
+command posts a `GitClaw Diff Risk Report`. It scans diff policy, diff specs,
+and git worktree metadata for prompt-boundary overrides, credential material,
+raw patch leakage, destructive git actions, hidden-state use, untracked-file
+body context, external storage, missing approval gates, unsafe raw-patch modes,
+and unbounded diff collection. The report only exposes metadata, changed paths,
+counts, codes, severities, and line hashes; it does not print patches, file
+bodies, issue bodies, comments, prompts, tool outputs, credentials, or secret
+values. Changes to this surface must include deterministic tests plus a live
+GitHub Models follow-up E2E.
+
 Local operators can inspect the same change surface without opening an issue:
 
 ```bash
 gitclaw diffs summary
+gitclaw diffs risk
 gitclaw diffs verify
 ```
 
@@ -4105,10 +4120,14 @@ assert the expected comments/labels, and close the issue in cleanup.
 28. **Diff inspection**
 
    - create a real issue with `@gitclaw /diffs`,
+   - create a real issue with `@gitclaw /diffs risk`,
    - assert the reply is marked `model="gitclaw/diffs"`,
    - assert the report lists `.gitclaw/DIFFS.md`, diff spec metadata, git
      availability, repository state, clean/dirty state, change counts, numstat
      totals, raw-diff suppression, and changed-file metadata,
+   - assert the risk report lists risk status/counts, policy/spec/git cards,
+     raw-patch, destructive-action, hidden-state, external-storage, approval,
+     and unbounded-collection boundaries,
    - assert policy/spec body tokens, raw patch hunks, file bodies, and issue
      body tokens are not printed,
    - assert the run succeeds without requiring a model provider response,
@@ -4960,6 +4979,11 @@ examples/workflows/gitclaw.yml
   the real checked-out repository's git change metadata, reports policy/spec
   state, clean/dirty state, changed-file counts, numstat totals, and raw-patch
   suppression without leaking issue body text, patch hunks, or file bodies.
+- A `gh`-driven diffs-risk E2E harness verifies `@gitclaw /diffs risk` and
+  local `gitclaw diffs risk` expose body-free diff policy/spec/worktree risk
+  metadata, then runs a real GitHub Models follow-up conversation that proves
+  model inference, prompt provenance, selected skills, and prompt-visible tool
+  usage.
 - A `gh`-driven workspace-report E2E harness verifies `@gitclaw /workspace`
   inspects the real GitHub Actions checkout, reports policy/spec metadata,
   git repository state, context counts, checkout/setup-go action versions,

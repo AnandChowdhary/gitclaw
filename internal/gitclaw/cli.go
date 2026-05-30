@@ -1030,8 +1030,10 @@ func runDiffsCommand(args []string) error {
 	switch args[0] {
 	case "summary", "list", "verify":
 		return runDiffsSummaryCommand(args[1:])
+	case "risk", "risk-audit":
+		return runDiffsRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw diffs [summary|verify]")
+		return fmt.Errorf("usage: gitclaw diffs [summary|risk|verify]")
 	}
 }
 
@@ -1044,6 +1046,18 @@ func runDiffsSummaryCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderDiffCLIReport(cfg))
+	return nil
+}
+
+func runDiffsRiskCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown diffs risk argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderDiffRiskCLIReport(cfg))
 	return nil
 }
 

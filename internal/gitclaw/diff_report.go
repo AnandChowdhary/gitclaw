@@ -104,11 +104,18 @@ func IsDiffReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderDiffReport(ev Event, cfg Config) string {
+	if isDiffRiskRequest(ev, cfg) {
+		return renderDiffRiskReport(ev, cfg, true)
+	}
 	return renderDiffReport(ev, cfg, true)
 }
 
 func RenderDiffCLIReport(cfg Config) string {
 	return renderDiffReport(Event{}, cfg, false)
+}
+
+func RenderDiffRiskCLIReport(cfg Config) string {
+	return renderDiffRiskReport(Event{}, cfg, false)
 }
 
 func renderDiffReport(ev Event, cfg Config, includeIssue bool) string {
@@ -480,6 +487,28 @@ func diffSpecsDisallowingRawPatch(specs []diffSpecCard) int {
 		}
 	}
 	return count
+}
+
+func diffMaxFilesDeclared(specs []diffSpecCard) int {
+	total := 0
+	for _, spec := range specs {
+		if spec.MaxFiles > 0 {
+			total += spec.MaxFiles
+		}
+	}
+	return total
+}
+
+func isDiffRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 {
+		return false
+	}
+	command := fields[0]
+	if command != "/diffs" && command != "/diff" && command != "/changes" {
+		return false
+	}
+	return strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit")
 }
 
 func parseDiffStatus(status string) map[string]*diffFileCard {

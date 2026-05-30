@@ -33,6 +33,7 @@ go run ./cmd/gitclaw commands
 go run ./cmd/gitclaw soul verify
 go run ./cmd/gitclaw tools risk
 go run ./cmd/gitclaw artifacts risk
+go run ./cmd/gitclaw diffs risk
 ```
 
 The GitHub Action handles issue/comment events that mention the configured
@@ -122,6 +123,9 @@ gitclaw policy verify
 gitclaw artifacts list
 gitclaw artifacts risk
 gitclaw artifacts verify
+gitclaw diffs summary
+gitclaw diffs risk
+gitclaw diffs verify
 gitclaw agents risk
 gitclaw nodes risk
 gitclaw hooks risk
@@ -152,6 +156,7 @@ scripts/e2e/github-backup-risk-report.sh
 scripts/e2e/github-agents-risk-report.sh
 scripts/e2e/github-nodes-risk-report.sh
 scripts/e2e/github-artifacts-risk-report.sh
+scripts/e2e/github-diffs-risk-report.sh
 scripts/e2e/github-hooks-risk-report.sh
 scripts/e2e/github-memory-risk-report.sh
 scripts/e2e/github-plugins-risk-report.sh
