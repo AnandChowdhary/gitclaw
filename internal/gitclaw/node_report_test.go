@@ -25,6 +25,7 @@ requires_approval: true
 
 # GitHub Actions Runner
 
+This runner does not start node hosts or pair devices.
 NODE_SPEC_BODY_SECRET
 `
 

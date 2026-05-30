@@ -56,11 +56,18 @@ func IsNodeReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderNodeReport(ev Event, cfg Config) string {
+	if isNodeRiskRequest(ev, cfg) {
+		return renderNodeRiskReport(ev, cfg, true)
+	}
 	return renderNodeReport(ev, cfg, true)
 }
 
 func RenderNodeCLIReport(cfg Config) string {
 	return renderNodeReport(Event{}, cfg, false)
+}
+
+func RenderNodeRiskCLIReport(cfg Config) string {
+	return renderNodeRiskReport(Event{}, cfg, false)
 }
 
 func renderNodeReport(ev Event, cfg Config, includeIssue bool) string {
@@ -352,4 +359,16 @@ func nodeSpecsEphemeralJobs(specs []nodeSpecCard) int {
 		}
 	}
 	return count
+}
+
+func isNodeRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 {
+		return false
+	}
+	command := fields[0]
+	if command != "/nodes" && command != "/node" {
+		return false
+	}
+	return strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit")
 }

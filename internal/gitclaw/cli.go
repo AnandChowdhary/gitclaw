@@ -430,8 +430,10 @@ func runNodesCommand(args []string) error {
 	switch args[0] {
 	case "list", "verify":
 		return runNodesListCommand(args[1:])
+	case "risk", "risk-audit":
+		return runNodesRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw nodes [list|verify]")
+		return fmt.Errorf("usage: gitclaw nodes [list|risk|verify]")
 	}
 }
 
@@ -444,6 +446,18 @@ func runNodesListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderNodeCLIReport(cfg))
+	return nil
+}
+
+func runNodesRiskCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown nodes risk argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderNodeRiskCLIReport(cfg))
 	return nil
 }
 

@@ -946,6 +946,23 @@ and reports make `gateway_websocket_required=false`,
 Any future node-host, socket, or remote-exec batch must include a live GitHub
 Models conversation E2E in addition to deterministic report coverage.
 
+2026-05-30 nodes-risk follow-up: OpenClaw node hosts connect to the Gateway
+WebSocket, pair as `role: node`, can expose `system.run`/`system.which`,
+`node.invoke`, browser proxy, and device/media capability surfaces, and can be
+installed as long-running services. Hermes' adjacent worker lane model spawns
+profile-backed or plugin-backed processes for Kanban cards and records worker
+logs, task events, heartbeats, crashes, and timeouts. GitClaw should keep v1
+strictly GitHub-native: `.gitclaw/NODES.md` and `.gitclaw/nodes/*.md` are
+reviewed metadata for ephemeral GitHub Actions jobs, not WebSocket clients,
+paired devices, node hosts, or worker lane definitions. Add a `nodes risk`
+report that scans policy/spec files for prompt-boundary overrides,
+credentials, untrusted issue-body execution, Gateway WebSocket node hosts,
+remote node exec, pairing or auto-approval, browser proxy, media/device
+capabilities, external worker lanes, raw payload logging, repository mutation,
+missing approval or ephemeral-job boundaries, and unbounded loops. Acceptance
+should include the deterministic body-free audit plus a real GitHub Models
+follow-up proving inference and repo-search tool exposure.
+
 ### Sandboxing
 
 OpenClaw can run tool execution in sandbox backends. The Gateway remains on the host; tools can run in Docker, SSH, or OpenShell-backed sandboxes. Sandboxing is optional and configurable by mode and scope.

@@ -727,6 +727,7 @@ GitHub issue/comment event
   `plugins list`, `plugins risk`, `plugins verify`,
   `tasks list`, `tasks risk`, `tasks verify`,
   `agents list`, `agents risk`, `agents verify`,
+  `nodes list`, `nodes risk`, `nodes verify`,
   `migrate plan`,
   `orders list`, `orders verify`,
   `profile show`, `profile verify`,
@@ -2620,6 +2621,7 @@ delegation runtime boundaries:
 
 ```text
 @gitclaw /nodes
+@gitclaw /nodes risk
 @gitclaw /node
 ```
 
@@ -2644,10 +2646,31 @@ provider payload bodies. Future remote-node execution requires reviewed
 workflows, explicit permissions, approval gates, body-free audit cards, and a
 live GitHub Models conversation E2E in the same implementation batch.
 
+The risk form:
+
+```text
+@gitclaw /nodes risk
+@gitclaw /node risk
+```
+
+posts a `GitClaw Node Risk Report` without model inference. It scans
+`.gitclaw/NODES.md` and `.gitclaw/nodes/*.md` for prompt-boundary overrides,
+credential material, untrusted issue-body execution, Gateway WebSocket node
+hosts, remote node execution, device pairing or auto-approval, browser-proxy
+surfaces, camera/screen/location/SMS/notification capabilities, external
+worker lanes, raw node payload logging, repository mutation, missing
+approval/ephemeral-job boundaries, and unbounded loops. It reports paths,
+metadata, counts, risk codes, severities, and line hashes only; node bodies,
+issue bodies, comments, transcript messages, channel payloads, worker outputs,
+credentials, and secret values are not included. Changes to this risk surface
+must include a live GitHub Models follow-up E2E so node safety is tested
+against actual inference and prompt-visible tools.
+
 Local operators can inspect the same policy/spec surface with:
 
 ```bash
 gitclaw nodes list
+gitclaw nodes risk
 gitclaw nodes verify
 ```
 
@@ -4626,6 +4649,11 @@ examples/workflows/gitclaw.yml
   usage.
 - A `gh`-driven agents-risk E2E harness verifies `@gitclaw /agents risk` and
   local `gitclaw agents risk` expose body-free agent policy/spec/request risk
+  metadata, then runs a real GitHub Models follow-up conversation that proves
+  model inference, prompt provenance, selected skills, and prompt-visible tool
+  usage.
+- A `gh`-driven nodes-risk E2E harness verifies `@gitclaw /nodes risk` and
+  local `gitclaw nodes risk` expose body-free node policy/spec/request risk
   metadata, then runs a real GitHub Models follow-up conversation that proves
   model inference, prompt provenance, selected skills, and prompt-visible tool
   usage.
