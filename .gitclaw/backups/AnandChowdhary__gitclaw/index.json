@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-30T12:30:41Z",
+  "generated_at": "2026-05-30T12:32:11Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 234,
+  "count": 235,
   "issues": [
     {
       "number": 3,
@@ -2852,6 +2852,18 @@
       "title": "@gitclaw /help e2e 20260530T122938Z",
       "path": "issues/000267.json",
       "backup_generated_at": "2026-05-30T12:30:40Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
+    },
+    {
+      "number": 268,
+      "title": "@gitclaw search tool chat e2e 20260530T123104Z",
+      "path": "issues/000268.json",
+      "backup_generated_at": "2026-05-30T12:32:10Z",
       "event_name": "issues",
       "labels": [
         "gitclaw"
