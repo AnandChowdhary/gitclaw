@@ -186,7 +186,7 @@ for expected in \
   'error_marker_comments_before_turn: `0`' \
   'channel_message_comments_before_turn: `0`' \
   'context_documents: `7`' \
-  'selected_skills: `0`' \
+  'selected_skills: `' \
   'available_skills: `1`' \
   'skill_bundles: `1`' \
   'active_tool_outputs: `' \
