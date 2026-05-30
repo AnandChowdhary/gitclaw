@@ -1057,11 +1057,13 @@ func runSessionSearchCommand(args []string) error {
 
 func runToolsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw tools verify|validate|list|run-plan <name>|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw tools verify|risk|validate|list|run-plan <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
 		return runToolsVerifyCommand(args[1:])
+	case "risk", "risk-audit":
+		return runToolsRiskCommand(args[1:])
 	case "validate":
 		return runToolsValidateCommand(args[1:])
 	case "list":
@@ -1118,6 +1120,22 @@ func runToolsVerifyCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderToolVerifyReport(repoContext))
+	return nil
+}
+
+func runToolsRiskCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown tools risk argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderToolRiskReport(repoContext))
 	return nil
 }
 

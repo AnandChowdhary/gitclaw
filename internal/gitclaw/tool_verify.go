@@ -8,6 +8,7 @@ import (
 type ToolVerifyReport struct {
 	Status                        string
 	Validation                    ToolValidationReport
+	Risk                          ToolRiskReport
 	AvailableTools                int
 	EnabledTools                  int
 	DisabledTools                 int
@@ -33,9 +34,11 @@ type ToolVerifyReport struct {
 
 func BuildToolVerifyReport(repoContext RepoContext) ToolVerifyReport {
 	validation := ValidateTools(repoContext)
+	risk := BuildToolRiskReport(repoContext)
 	report := ToolVerifyReport{
 		Status:                        validation.Status,
 		Validation:                    validation,
+		Risk:                          risk,
 		AvailableTools:                len(toolReportContracts),
 		EnabledTools:                  enabledToolCount(repoContext),
 		DisabledTools:                 disabledToolCount(repoContext),
@@ -83,6 +86,16 @@ func BuildToolVerifyReport(repoContext RepoContext) ToolVerifyReport {
 	if report.UnknownGuidanceFiles > 0 && report.Status == "ok" {
 		report.Status = "warn"
 	}
+	if report.Status != "error" {
+		switch risk.Status {
+		case "high":
+			report.Status = "high"
+		case "warn":
+			if report.Status == "ok" {
+				report.Status = "warn"
+			}
+		}
+	}
 	return report
 }
 
@@ -125,6 +138,7 @@ func renderToolVerifyReport(ev Event, repoContext RepoContext, includeIssue bool
 	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", report.RawBodiesIncluded)
 	fmt.Fprintf(&b, "- raw_inputs_included: `%t`\n", report.RawInputsIncluded)
 	writeToolsValidationSummary(&b, report.Validation)
+	writeToolRiskSummary(&b, report.Risk)
 	b.WriteByte('\n')
 	b.WriteString("This report verifies GitClaw's deterministic v1 tool contracts and active tool-output metadata. It reports built-in contract modes, guidance-file hashes, and active-output hashes only; raw tool outputs, tool inputs, file bodies, issue bodies, comments, prompts, and secret values are not included.\n\n")
 
@@ -145,7 +159,8 @@ func writeToolContractTrustCards(b *strings.Builder, repoContext RepoContext) {
 	}
 	for _, contract := range toolReportContracts {
 		enabled, disabled, blocked := toolEnabledInRepoContext(contract.Name, repoContext)
-		fmt.Fprintf(b, "- kind=`contract` name=`%s` source=`builtin-gitclaw` enabled=`%t` disabled_by_config=`%t` blocked_by_allowlist=`%t` mode=`%s` mutating=`%t` trigger=`%s` active_outputs=`%d`\n",
+		riskFindings := scanToolContractRiskFindings(contract)
+		fmt.Fprintf(b, "- kind=`contract` name=`%s` source=`builtin-gitclaw` enabled=`%t` disabled_by_config=`%t` blocked_by_allowlist=`%t` mode=`%s` mutating=`%t` trigger=`%s` active_outputs=`%d` risk_findings=`%d` risk_max_severity=`%s` risk_codes=`%s`\n",
 			contract.Name,
 			enabled,
 			disabled,
@@ -154,6 +169,9 @@ func writeToolContractTrustCards(b *strings.Builder, repoContext RepoContext) {
 			isMutatingToolContract(contract),
 			inlineCode(contract.Trigger),
 			activeCounts[contract.Name],
+			len(riskFindings),
+			toolRiskMaxSeverity(riskFindings),
+			inlineListOrNone(toolRiskCodes(riskFindings)),
 		)
 	}
 }
@@ -165,12 +183,16 @@ func writeToolGuidanceTrustCards(b *strings.Builder, docs []ContextDocument) {
 			continue
 		}
 		wrote = true
-		fmt.Fprintf(b, "- kind=`guidance` path=`%s` source=`%s` bytes=`%d` lines=`%d` sha256_12=`%s`\n",
+		riskFindings := scanToolRiskText("guidance", doc.Path, doc.Path, "body", doc.Body)
+		fmt.Fprintf(b, "- kind=`guidance` path=`%s` source=`%s` bytes=`%d` lines=`%d` sha256_12=`%s` risk_findings=`%d` risk_max_severity=`%s` risk_codes=`%s`\n",
 			doc.Path,
 			toolGuidanceSource(doc.Path),
 			len(doc.Body),
 			lineCount(doc.Body),
 			shortDocumentHash(doc.Body),
+			len(riskFindings),
+			toolRiskMaxSeverity(riskFindings),
+			inlineListOrNone(toolRiskCodes(riskFindings)),
 		)
 	}
 	if !wrote {
@@ -185,13 +207,17 @@ func writeToolOutputTrustCards(b *strings.Builder, outputs []ToolOutput) {
 	}
 	contracts := toolContractNameSet()
 	for _, output := range outputs {
-		fmt.Fprintf(b, "- kind=`active-output` name=`%s` contract_known=`%t` input_sha256_12=`%s` output_bytes=`%d` output_lines=`%d` output_sha256_12=`%s`\n",
+		riskFindings := scanToolOutputRiskFindings(output, contracts[output.Name])
+		fmt.Fprintf(b, "- kind=`active-output` name=`%s` contract_known=`%t` input_sha256_12=`%s` output_bytes=`%d` output_lines=`%d` output_sha256_12=`%s` risk_findings=`%d` risk_max_severity=`%s` risk_codes=`%s`\n",
 			output.Name,
 			contracts[output.Name],
 			shortDocumentHash(output.Input),
 			len(output.Output),
 			lineCount(output.Output),
 			shortDocumentHash(output.Output),
+			len(riskFindings),
+			toolRiskMaxSeverity(riskFindings),
+			inlineListOrNone(toolRiskCodes(riskFindings)),
 		)
 	}
 }
@@ -212,6 +238,10 @@ func writeToolVerifyFindings(b *strings.Builder, report ToolVerifyReport) {
 	}
 	for _, finding := range report.Validation.Findings {
 		fmt.Fprintf(b, "- severity=`%s` code=`%s` name=`%s` detail=`%s`\n", finding.Severity, finding.Code, finding.Name, inlineCode(finding.Detail))
+		wrote = true
+	}
+	for _, finding := range report.Risk.Findings {
+		fmt.Fprintf(b, "- severity=`%s` code=`%s` category=`%s` kind=`%s` name=`%s` path=`%s` field=`%s` line=`%d` line_sha256_12=`%s`\n", finding.Severity, finding.Code, finding.Category, finding.Kind, finding.Name, finding.Path, finding.Field, finding.Line, finding.LineSHA)
 		wrote = true
 	}
 	if !wrote {

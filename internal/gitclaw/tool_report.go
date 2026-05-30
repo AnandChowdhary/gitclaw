@@ -61,6 +61,9 @@ func RenderToolsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isToolsVerifyRequest(ev, cfg) {
 		return renderToolVerifyReport(ev, repoContext, true)
 	}
+	if isToolsRiskRequest(ev, cfg) {
+		return renderToolRiskReport(ev, repoContext, true)
+	}
 	if isToolsValidateRequest(ev, cfg) {
 		return renderToolsValidationReport(ev, repoContext, true)
 	}
@@ -89,6 +92,7 @@ func RenderToolInfoCLIReport(repoContext RepoContext, name string) string {
 
 func renderToolsListReport(ev Event, repoContext RepoContext, includeIssue bool) string {
 	validation := ValidateTools(repoContext)
+	risk := BuildToolRiskReport(repoContext)
 	var b strings.Builder
 	b.WriteString("## GitClaw Tools Report\n\n")
 	b.WriteString("Generated without a model call.\n\n")
@@ -104,6 +108,7 @@ func renderToolsListReport(ev Event, repoContext RepoContext, includeIssue bool)
 	fmt.Fprintf(&b, "- allowlist_blocked_tools: `%d`\n", allowlistBlockedToolCount(repoContext))
 	fmt.Fprintf(&b, "- active_tool_outputs: `%d`\n", len(repoContext.ToolOutputs))
 	writeToolsValidationSummary(&b, validation)
+	writeToolRiskSummary(&b, risk)
 	b.WriteString("\n")
 	b.WriteString("GitClaw v1 tools are deterministic pre-model context builders. They do not execute shell commands, mutate files, open pull requests, or modify repository state.\n\n")
 	b.WriteString("Tool output bodies are not included; hashes let maintainers verify exactly which prompt-visible outputs were produced.\n\n")
@@ -243,6 +248,11 @@ func isToolsValidateRequest(ev Event, cfg Config) bool {
 func isToolsVerifyRequest(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && fields[0] == "/tools" && strings.EqualFold(fields[1], "verify")
+}
+
+func isToolsRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && fields[0] == "/tools" && (strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit"))
 }
 
 func cleanToolLookupName(name string) string {

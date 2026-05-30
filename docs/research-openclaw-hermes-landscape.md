@@ -957,6 +957,19 @@ repo-local `.gitclaw/TOOLS.md` provenance, known versus unknown active outputs,
 input/output hashes, and explicit external-registry/runtime-attestation
 non-goals without printing raw tool inputs or output bodies.
 
+2026-05-30 tools-risk follow-up: OpenClaw's current plugin-permission and
+hook docs make `before_tool_call` gates, approval elicitations, and runtime
+tool interception explicit, while Hermes' tools reference exposes a large
+built-in and MCP-loaded tool registry. GitClaw should add `@gitclaw /tools
+risk` and `gitclaw tools risk` as the no-server equivalent of a tool/MCP
+security audit: scan deterministic contracts, `.gitclaw/TOOLS.md`, and active
+prompt-visible tool input/output metadata for prompt-boundary overrides,
+secret exfiltration, credential exposure, host execution, repository mutation,
+remote exfiltration, unbounded loops, and unknown tool-output provenance. The
+report should publish only names, paths, fields, counts, codes, severities, and
+hashes, and each implementation batch must pair the deterministic report with a
+real GitHub Models conversation E2E.
+
 2026-05-30 turn-provenance follow-up: OpenClaw/Hermes-style tool registries are
 useful only when an operator can prove what the model actually saw. GitClaw
 should therefore add body-free provenance to normal assistant-turn markers:

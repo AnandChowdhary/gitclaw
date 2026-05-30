@@ -717,7 +717,7 @@ GitHub issue/comment event
   `bundles list`, `bundles info`,
   `soul verify`, `soul risk`, `soul validate`, `soul list`,
   `soul edit-plan`, `soul info`, `soul search`,
-  `tools verify`, `tools validate`, `tools list`, `tools run-plan`,
+  `tools verify`, `tools risk`, `tools validate`, `tools list`, `tools run-plan`,
   `tools info`, `tools search`, `doctor`,
   `policy verify`,
   `secrets audit`, `secrets scan`, `secrets list`,
@@ -1649,6 +1649,7 @@ Validation is visible in the `/tools` report and locally through:
 
 ```bash
 gitclaw tools verify
+gitclaw tools risk
 gitclaw tools validate
 gitclaw tools list
 gitclaw tools run-plan <name>
@@ -1668,6 +1669,7 @@ OpenClaw's tool policy visibility and Hermes' toolset inventory:
 @gitclaw /tools
 @gitclaw /tools list
 @gitclaw /tools verify
+@gitclaw /tools risk
 @gitclaw /tools validate
 @gitclaw /tools run-plan search_files
 @gitclaw /tools info read_file
@@ -1686,6 +1688,10 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
   counts, unknown-output counts, unsafe-contract counts, over-limit output
   counts, missing-guidance count, duplicate-contract count, enabled/disabled/
   allowlist-blocked tool counts, per-tool gate state, and body-free findings.
+- tool risk status, risk finding counts, risk codes, severities, and hashes for
+  prompt-boundary, secret exfiltration, credential exposure, host execution,
+  repository mutation, remote exfiltration, unbounded-loop, and tool-provenance
+  risks.
 
 It never dumps full tool output bodies. Tool output bodies remain prompt inputs
 only; the issue-visible report exposes enough metadata to debug whether
@@ -1707,6 +1713,20 @@ unknown outputs, `.gitclaw/TOOLS.md` provenance and hash metadata,
 active-output input/output hashes, and explicit external-registry and runtime
 permission verification status. Unlike the inventory report, it does not print
 raw tool input values such as file paths or search phrases.
+
+When called as `@gitclaw /tools risk` or `@gitclaw /tools risk-audit`, the
+command posts a body-free tool-surface risk audit. It scans built-in
+deterministic tool contracts, repo-local `.gitclaw/TOOLS.md` guidance, and
+active prompt-visible tool input/output metadata for prompt-boundary overrides,
+secret exfiltration instructions, exposed credential material, host execution,
+repository mutation, remote exfiltration, unbounded tool loops, and unknown
+tool-output provenance. It reports only names, paths, fields, counts,
+categories, finding codes, severities, and short hashes. It never emits raw
+tool outputs, raw tool inputs, file bodies, issue bodies, comments, prompts, or
+secret values. The report includes
+`llm_e2e_required_after_tool_risk_change=true`; every change to this risk
+surface must ship with a live GitHub Models conversation E2E that makes an
+actual model call after the deterministic risk report.
 
 When called as `@gitclaw /tools info <name>`, the command posts a focused
 body-free card for one declared tool contract. The lookup accepts either the
@@ -3840,6 +3860,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - create a real issue with `@gitclaw /tools`,
    - create a second real issue with `@gitclaw /tools list`,
    - create a third real issue with `@gitclaw /tools verify`,
+   - create another real issue with `@gitclaw /tools risk`,
    - create another real issue with `@gitclaw /tools info read_file`,
    - create another real issue with `@gitclaw /tools run-plan search_files`,
    - ask for a concrete file read and search fixture phrase,
@@ -3849,6 +3870,9 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the verify report includes contract modes, repo-local guidance
      provenance, known/unknown output counts, active-output hashes, raw input
      suppression, and verification findings,
+   - assert the risk report includes contract/guidance/active-output risk
+     cards, status/counts, risk codes, line hashes, raw input/output
+     suppression, and `llm_e2e_required_after_tool_risk_change=true`,
    - assert the info report includes one contract, active-output hashes,
      validation scoped to the match, and no raw inputs,
    - assert the run-plan report includes one contract, gate state, active-output
@@ -4585,6 +4609,12 @@ examples/workflows/gitclaw.yml
   envelope, contract modes, gate-state metadata, guidance provenance,
   active-output hashes, raw input suppression, and verification findings
   without a model call.
+- A `gh`-driven tools-risk E2E harness verifies `@gitclaw /tools risk`
+  exposes body-free contract, guidance, active-output, and active-input risk
+  status, cards, codes, hashes, and the live-LLM E2E requirement. The same
+  harness must then post a normal follow-up comment that requires repo-reader
+  search so GitHub Models performs a real LLM call with prompt context, skill
+  selection, and prompt-visible tool provenance in the assistant marker.
 - A `gh`-driven tools-info E2E harness verifies
   `@gitclaw /tools info read_file` exposes one body-free tool contract card,
   active-output hashes, and match-scoped validation without raw inputs or
