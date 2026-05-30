@@ -643,6 +643,7 @@ GitHub issue/comment event
   `approvals list`, `approvals verify`,
   `profile show`, `profile verify`,
   `runs current`, `runs verify`,
+  `sandbox explain`, `sandbox verify`,
   `memory verify`, `memory validate`, `memory list`, `memory info`,
   `memory search`,
   `skills validate`,
@@ -1441,6 +1442,45 @@ tool output bodies, issue/comment bodies, prompts, or raw search queries. This
 keeps tool debugging aligned with OpenClaw's tool-policy visibility and
 Hermes' explicit toolset inventory without turning issue comments into a
 secondary prompt dump.
+
+## Sandbox Inspection Command
+
+GitClaw supports a deterministic sandbox/exec-policy report inspired by
+OpenClaw's sandbox versus tool-policy split and Hermes' explicit security
+boundary:
+
+```text
+@gitclaw /sandbox
+@gitclaw /sandboxes
+@gitclaw /exec-policy
+```
+
+The command runs after normal preflight authorization and context assembly, but
+before model inference. It posts a `gitclaw:assistant-turn` comment with
+`model="gitclaw/sandbox"` and summarizes:
+
+- GitHub Actions as the current ephemeral runtime boundary,
+- absence of host shell, file-write, pull-request, or elevated execution tools,
+- read-only write mode, disabled host exec, and non-applicable approval mode,
+- deterministic tool counts by read-only, metadata-only, and mutating modes,
+- active tool-output counts and input/output hashes,
+- checked-in workflow permission status and per-job expected/actual
+  permission cards,
+- skill binary requirement counts without running those binaries,
+- backup write permission as isolated to the post-handle backup job.
+
+It never dumps issue bodies, comments, prompts, workflow bodies, tool output
+bodies, or secrets. The report is intentionally honest about the MVP: GitClaw
+does not claim a Docker/OpenShell-style sandbox because it does not expose a
+host execution tool. Future host exec support must add allowlists, approval
+storage, hard blocklists, and body-free audit cards before enabling execution.
+
+Local operators can inspect the same boundary before opening an issue:
+
+```bash
+gitclaw sandbox explain
+gitclaw sandbox verify
+```
 
 ## Context Inspection Command
 
@@ -3731,6 +3771,10 @@ examples/workflows/gitclaw.yml
   `@gitclaw /tools info read_file` exposes one body-free tool contract card,
   active-output hashes, and match-scoped validation without raw inputs or
   output-body leakage.
+- A `gh`-driven sandbox-report E2E harness verifies `@gitclaw /sandbox`
+  exposes the current GitHub Actions runtime boundary, denied host exec,
+  read-only tool modes, workflow permission cards, and backup-job-only write
+  scope without a model call or body leakage.
 - A `gh`-driven policy-report E2E harness verifies `@gitclaw /policy` produces
   a deterministic preflight/label/write-policy audit without a model call or
   issue-body leakage.

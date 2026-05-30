@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "commands-report-e2e: $*" >&2
+  echo "sandbox-report-e2e: $*" >&2
 }
 
 die() {
@@ -33,12 +33,12 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_COMMANDS_REPORT_E2E_${timestamp}"
-title="@gitclaw /help e2e ${timestamp}"
-body="Live commands-report E2E.
+token="GITCLAW_SANDBOX_REPORT_E2E_${timestamp}"
+title="@gitclaw /sandbox e2e ${timestamp}"
+body="Live sandbox-report E2E.
 
-Hidden commands report body token: ${token}
-This should produce a deterministic command catalog report without a model call."
+Hidden sandbox report body token: ${token}
+Show the deterministic execution-boundary report without a model call or raw body leakage."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -52,7 +52,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "commands-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "sandbox-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -109,6 +109,13 @@ error_count() {
     --jq '[.comments[] | select(.body | contains("<!-- gitclaw:error"))] | length'
 }
 
+issue_label_names() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json labels \
+    --jq '.labels[].name'
+}
+
 wait_for_assistant_count() {
   local want="$1"
   for _ in {1..90}; do
@@ -127,121 +134,94 @@ wait_for_assistant_count() {
   return 1
 }
 
+wait_for_done_status() {
+  for _ in {1..60}; do
+    local labels
+    labels="$(issue_label_names)"
+    if grep -Fxq "gitclaw:done" <<<"$labels" &&
+      ! grep -Fxq "gitclaw:running" <<<"$labels" &&
+      ! grep -Fxq "gitclaw:error" <<<"$labels"; then
+      return 0
+    fi
+    sleep 5
+  done
+  return 1
+}
+
 run_json="$(wait_for_run "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one commands report comment"
+wait_for_assistant_count 1 || die "expected one sandbox report comment"
 comments="$(assistant_comments)"
 
 for expected in \
-  'model="gitclaw/commands"' \
-  "GitClaw Commands Report" \
+  'model="gitclaw/sandbox"' \
+  "GitClaw Sandbox Report" \
   "Generated without a model call" \
-  'trigger_prefix: `@gitclaw`' \
-  'commands: `22`' \
-  'aliases: `19`' \
-  'local_cli_helpers: `69`' \
-  'run_mode: `read-only`' \
-  "### Slash Commands" \
-  '/approvals' \
-  '/approval' \
-  '/help' \
-  '/commands' \
-  '/backup' \
-  '/bundles' \
-  '/checkpoints' \
-  '/checkpoint' \
-  '/rollback' \
-  '/tools' \
-  '/secrets' \
-  '/secret' \
-  '/doctor' \
-  '/skills' \
-  '/soul' \
-  '/profile' \
-  '/profiles' \
-  '/runs' \
-  '/run' \
-  '/ledger' \
-  '/sandbox' \
-  '/sandboxes' \
-  '/exec-policy' \
-  '/budget' \
-  '/prompt-budget' \
-  '/cron' \
-  'gitclaw approvals list' \
-  'gitclaw approvals verify' \
-  'gitclaw bundles list' \
-  'gitclaw bundles info <name>' \
-  'gitclaw channels verify' \
-  'gitclaw channels list' \
-  'gitclaw channels info <provider>' \
-  'gitclaw channel-state' \
-  'gitclaw channel-gateway' \
-  'gitclaw channel-delivery' \
-  'gitclaw checkpoints status' \
-  'gitclaw checkpoints list' \
-  'gitclaw checkpoints verify' \
-  'gitclaw rollback list' \
-  'gitclaw config list' \
-  'gitclaw context list' \
-  'gitclaw context info <path>' \
-  'gitclaw doctor' \
-  'gitclaw doctor list' \
-  'gitclaw profile show' \
-  'gitclaw profile verify' \
-  'gitclaw runs current' \
-  'gitclaw runs verify' \
-  'gitclaw sandbox explain' \
-  'gitclaw sandbox verify' \
-  'gitclaw prompt list' \
-  'gitclaw proactive list' \
-  'gitclaw proactive info <name>' \
-  'gitclaw proactive init' \
-  'gitclaw proactive enqueue' \
-  'gitclaw session list --backup <issue.json>' \
-  'gitclaw session search <query> --backup <issue.json>' \
-  'gitclaw secrets audit' \
-  'gitclaw secrets scan' \
-  'gitclaw secrets list' \
-  'gitclaw models list' \
-  'gitclaw policy list' \
-  'gitclaw policy verify' \
-  'gitclaw backup verify' \
-  'gitclaw backup manifest' \
-  'gitclaw backup list' \
-  'gitclaw backup info --issue <number>' \
-  'gitclaw backup stats' \
-  'gitclaw backup search <query>' \
-  'gitclaw backup export-jsonl' \
-  'gitclaw backup restore-plan' \
-  'gitclaw backup retention-plan' \
-  'gitclaw commands' \
-  'gitclaw memory verify' \
-  'gitclaw memory validate' \
-  'gitclaw memory list' \
-  'gitclaw memory info <path>' \
-  'gitclaw memory search <query>' \
-  'gitclaw soul verify' \
-  'gitclaw soul validate' \
-  'gitclaw soul list' \
-  'gitclaw soul info <path>' \
-  'gitclaw soul search <query>' \
-  'gitclaw skills verify' \
-  'gitclaw skills validate' \
-  'gitclaw skills check' \
-  'gitclaw skills list' \
-  'gitclaw skills info <name>' \
-  'gitclaw skills search <query>' \
-  'gitclaw tools verify' \
-  'gitclaw tools validate' \
-  'gitclaw tools list' \
-  'gitclaw tools info <name>' \
-  'gitclaw tools search <query>'; do
-  grep -Fq "$expected" <<<"$comments" || die "commands report missing ${expected}"
+  'repository: `'"$repo"'`' \
+  'issue: `#'"$issue_number"'`' \
+  'event_kind: `issue_opened`' \
+  'event_name: `issues`' \
+  'event_action: `opened`' \
+  'active_command: `/sandbox`' \
+  'sandbox_status: `locked_down`' \
+  'runtime_boundary: `github-actions-ephemeral-runner`' \
+  'sandbox_backend: `github-actions`' \
+  'host_exec_policy: `deny`' \
+  'shell_execution_allowed: `false`' \
+  'repository_mutation_allowed: `false`' \
+  'write_mode: `read-only`' \
+  'approval_mode: `not_applicable_no_exec_tool`' \
+  'approval_store: `not_configured`' \
+  'elevated_mode_available: `false`' \
+  'skill_cli_auto_allow: `false`' \
+  'inline_eval_policy: `not_applicable_no_exec_tool`' \
+  'network_egress_policy: `github-actions-default`' \
+  'available_tools: `5`' \
+  'enabled_tools: `5`' \
+  'disabled_tools: `0`' \
+  'allowlist_blocked_tools: `0`' \
+  'read_only_tool_contracts: `3`' \
+  'metadata_only_tool_contracts: `2`' \
+  'mutating_tool_contracts: `0`' \
+  'active_tool_outputs: `' \
+  'tool_validation_status: `ok`' \
+  'workflow_permission_status: `ok`' \
+  'workflow_present: `true`' \
+  'unexpected_write_permissions: `0`' \
+  'backup_write_permission_scope: `backup-job-only`' \
+  'raw_bodies_included: `false`' \
+  'raw_tool_outputs_included: `false`' \
+  'raw_workflow_included: `false`' \
+  "### Execution Boundary" \
+  'shell_tool=`absent`' \
+  'file_write_tool=`absent`' \
+  'pull_request_tool=`absent`' \
+  "### Tool Contracts" \
+  'name=`gitclaw.list_files` mode=`read-only` mutating=`false` enabled=`true`' \
+  'name=`gitclaw.policy` mode=`metadata-only` mutating=`false` enabled=`true`' \
+  "### Active Tool Outputs" \
+  'name=`gitclaw.list_files` input_sha256_12=`' \
+  'output_sha256_12=`' \
+  "### Workflow Permission Boundary" \
+  'job=`handle` present=`true`' \
+  'models:read' \
+  'job=`backup` present=`true`' \
+  'contents:write' \
+  "### Sandbox Notes" \
+  "host exec is denied because no shell/exec tool is exposed in GitClaw v1"; do
+  grep -Fq -- "$expected" <<<"$comments" || die "sandbox report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "commands report leaked issue body token"
-fi
+for leaked in \
+  "$token" \
+  "Hidden sandbox report body token" \
+  "Show the deterministic execution-boundary report" \
+  "GitClaw is a repo-native GitHub issue assistant" \
+  "GITCLAW_MEMORY_CONTEXT_V1"; do
+  if grep -Fq "$leaked" <<<"$comments"; then
+    die "sandbox report leaked ${leaked}"
+  fi
+done
 
+wait_for_done_status || die "expected gitclaw:done without running/error"
 url="$(jq -r '.url' <<<"$run_json")"
 log "passed for issue #${issue_number}: ${url}"

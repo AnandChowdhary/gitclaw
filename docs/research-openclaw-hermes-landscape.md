@@ -802,6 +802,18 @@ are only `read-only` or `metadata-only`, active outputs are declared and
 bounded, `.gitclaw/TOOLS.md` is loaded, and `/tools` plus
 `gitclaw tools validate` expose the result without dumping output bodies.
 
+2026-05-30 sandbox-report follow-up: OpenClaw's sandboxing docs separate host
+gateway execution from Docker/SSH/OpenShell sandboxes and warn that sandboxing
+is blast-radius reduction, not a perfect boundary. Its exec approvals docs
+also treat command execution as an explicit allowlist/approval decision.
+Hermes' security docs similarly separate authorization, environment isolation,
+container isolation, and dangerous command approval. GitClaw should expose the
+current narrower truth with `@gitclaw /sandbox` and `gitclaw sandbox verify`:
+GitHub Actions is the ephemeral runtime, no shell/exec/write/PR tool exists in
+v1, deterministic tools are read-only or metadata-only, workflow permissions
+are visible as body-free cards, and backup write permission is isolated to the
+post-handle backup job.
+
 2026-05-29 tools-search follow-up: OpenClaw's tools docs distinguish
 tool-policy visibility from skill/plugin instructions, and Hermes' tool
 reference keeps tool names and schemas inspectable as first-class registry

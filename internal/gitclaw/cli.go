@@ -45,6 +45,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runProfileCommand(args[1:])
 	case "runs", "run", "ledger":
 		return runRunsCommand(args[1:])
+	case "sandbox", "sandboxes", "exec-policy":
+		return runSandboxCommand(args[1:])
 	case "skills":
 		return runSkillsCommand(args[1:])
 	case "bundles", "bundle":
@@ -154,6 +156,34 @@ func runRunsCurrentCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderRunCLIReport(cfg, repoContext))
+	return nil
+}
+
+func runSandboxCommand(args []string) error {
+	if len(args) == 0 {
+		return runSandboxExplainCommand(nil)
+	}
+	switch args[0] {
+	case "explain", "verify", "list":
+		return runSandboxExplainCommand(args[1:])
+	default:
+		return fmt.Errorf("usage: gitclaw sandbox [explain|verify|list]")
+	}
+}
+
+func runSandboxExplainCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown sandbox argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSandboxCLIReport(cfg, repoContext))
 	return nil
 }
 
