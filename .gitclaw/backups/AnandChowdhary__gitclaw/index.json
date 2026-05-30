@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-30T21:43:48Z",
+  "generated_at": "2026-05-30T21:45:02Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 283,
   "issues": [
@@ -3470,14 +3470,15 @@
       "number": 320,
       "title": "@gitclaw /heartbeat risk e2e 20260530T214241Z",
       "path": "issues/000320.json",
-      "backup_generated_at": "2026-05-30T21:43:47Z",
-      "event_name": "issues",
+      "backup_generated_at": "2026-05-30T21:45:01Z",
+      "event_name": "issue_comment",
       "labels": [
         "gitclaw",
-        "gitclaw:heartbeat"
+        "gitclaw:heartbeat",
+        "gitclaw:done"
       ],
-      "comment_count": 1,
-      "transcript_messages": 2
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
