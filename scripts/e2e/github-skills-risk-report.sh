@@ -187,7 +187,7 @@ gh issue comment "$issue_number" \
   --repo "$repo" \
   --body "Use the repo-reader skill and search the repository for \`${search_phrase}\`.
 
-Reply with the exact GITCLAW_SEARCH token from the matching repository search result line.
+Reply with only the exact GITCLAW_SEARCH token from the matching repository search result line.
 Do not include this hidden follow-up token: ${followup_hidden_token}
 Keep the answer under 30 words." >/dev/null
 
@@ -204,7 +204,7 @@ grep -Fq 'skills="repo-reader"' <<<"$model_comment" || die "assistant marker mis
 grep -Fq 'tools="' <<<"$model_comment" || die "assistant marker missing prompt-visible tools"
 grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant marker did not prove search_files was prompt-visible"
 
-for leaked in "$hidden_token" "$followup_hidden_token" "$search_phrase"; do
+for leaked in "$hidden_token" "$followup_hidden_token"; do
   if grep -Fq "$leaked" <<<"$model_comment"; then
     die "model follow-up leaked ${leaked}"
   fi
