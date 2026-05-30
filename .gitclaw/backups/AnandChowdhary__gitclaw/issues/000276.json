@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T13:14:17Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 276,
+    "title": "@gitclaw /artifacts e2e 20260530T131318Z",
+    "body": "Live artifacts-report E2E.\n\nHidden artifacts report body token: GITCLAW_ARTIFACTS_REPORT_E2E_20260530T131318Z\nThis should produce a deterministic artifacts report without a model call.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /artifacts e2e 20260530T131318Z\n\nLive artifacts-report E2E.\n\nHidden artifacts report body token: GITCLAW_ARTIFACTS_REPORT_E2E_20260530T131318Z\nThis should produce a deterministic artifacts report without a model call.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Artifacts Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#276`\n- artifacts_status: `ok`\n- artifact_policy_path: `.gitclaw/ARTIFACTS.md`\n- artifact_policy_present: `true`\n- artifact_policy_loaded_for_model: `true`\n- artifact_specs_dir: `.gitclaw/artifacts`\n- artifact_specs: `1`\n- artifact_specs_with_frontmatter: `1`\n- artifact_specs_requiring_approval: `1`\n- artifact_specs_requiring_redaction: `1`\n- artifact_retention_days_declared: `7`\n- github_actions_artifact_uploaders: `1`\n- upload_artifact_versions: `actions/upload-artifact@v6`\n- prompt_artifact_default_enabled: `false`\n- prompt_artifact_label: `gitclaw:e2e-prompt-artifact`\n- prompt_artifact_env_path_configured: `false`\n- artifact_storage_backend: `github-actions-artifacts`\n- durable_backup_backend: `git-backup-branch`\n- artifact_body_printing_allowed: `false`\n- model_call_required: `false`\n- repository_mutation_allowed: `false`\n- raw_bodies_included: `false`\n- raw_artifact_bodies_included: `false`\n- llm_e2e_required_after_change: `true`\n- issue_title_sha256_12: `b66a43c78250`\n\nArtifacts describe reviewed evidence bundles. GitClaw treats artifact specs and workflow upload steps as metadata only: prompt dumps, tool outputs, transcripts, backups, channel payloads, and artifact bodies are not printed by this report.\n\n### Artifact Policy\n- `.gitclaw/ARTIFACTS.md` present=`true` bytes=`1400` lines=`31` sha256_12=`914d272395b6`\n- `.gitclaw/ARTIFACTS.md` loaded=`true` source=`contextDocumentPaths`\n\n### Artifact Specs\n- name=`prompt-artifact` path=`.gitclaw/artifacts/prompt-artifact.md` bytes=`541` lines=`18` frontmatter=`true` kind=`prompt` storage=`github-actions-artifact` filename=`prompt.md` workflow=`.github/workflows/gitclaw.yml` label=`gitclaw:e2e-prompt-artifact` retention_days=`7` redaction_required=`true` requires_approval=`true` sha256_12=`a06774f0a5c4`\n\n### Workflow Artifact Uploads\n- path=`.github/workflows/gitclaw.yml` bytes=`5564` lines=`168` upload_artifact_actions=`actions/upload-artifact@v6` retention_days=`7` if_no_files_found_error=`true` prompt_artifact_label_gate=`true` prompt_artifact_path_env=`true` sha256_12=`e876323850b9`\n\n### Runtime Boundary\n- GitHub Actions artifacts are short-lived evidence bundles, not durable memory\n- the git backup branch is the durable transcript backup path\n- artifact specs do not enable uploads by themselves; reviewed workflows and gates do\n- future artifact types require body-free audit cards, redaction rules when needed, explicit retention, and live GitHub Models E2E coverage\n\n### Verification Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4582923724,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4582923724,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26684714115\" event_id=\"issue-276\" model=\"gitclaw/artifacts\" idempotency_key=\"5859d0e3304553563a4da966552fbe3a\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26684714115\" --\u003e\n## GitClaw Artifacts Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#276`\n- artifacts_status: `ok`\n- artifact_policy_path: `.gitclaw/ARTIFACTS.md`\n- artifact_policy_present: `true`\n- artifact_policy_loaded_for_model: `true`\n- artifact_specs_dir: `.gitclaw/artifacts`\n- artifact_specs: `1`\n- artifact_specs_with_frontmatter: `1`\n- artifact_specs_requiring_approval: `1`\n- artifact_specs_requiring_redaction: `1`\n- artifact_retention_days_declared: `7`\n- github_actions_artifact_uploaders: `1`\n- upload_artifact_versions: `actions/upload-artifact@v6`\n- prompt_artifact_default_enabled: `false`\n- prompt_artifact_label: `gitclaw:e2e-prompt-artifact`\n- prompt_artifact_env_path_configured: `false`\n- artifact_storage_backend: `github-actions-artifacts`\n- durable_backup_backend: `git-backup-branch`\n- artifact_body_printing_allowed: `false`\n- model_call_required: `false`\n- repository_mutation_allowed: `false`\n- raw_bodies_included: `false`\n- raw_artifact_bodies_included: `false`\n- llm_e2e_required_after_change: `true`\n- issue_title_sha256_12: `b66a43c78250`\n\nArtifacts describe reviewed evidence bundles. GitClaw treats artifact specs and workflow upload steps as metadata only: prompt dumps, tool outputs, transcripts, backups, channel payloads, and artifact bodies are not printed by this report.\n\n### Artifact Policy\n- `.gitclaw/ARTIFACTS.md` present=`true` bytes=`1400` lines=`31` sha256_12=`914d272395b6`\n- `.gitclaw/ARTIFACTS.md` loaded=`true` source=`contextDocumentPaths`\n\n### Artifact Specs\n- name=`prompt-artifact` path=`.gitclaw/artifacts/prompt-artifact.md` bytes=`541` lines=`18` frontmatter=`true` kind=`prompt` storage=`github-actions-artifact` filename=`prompt.md` workflow=`.github/workflows/gitclaw.yml` label=`gitclaw:e2e-prompt-artifact` retention_days=`7` redaction_required=`true` requires_approval=`true` sha256_12=`a06774f0a5c4`\n\n### Workflow Artifact Uploads\n- path=`.github/workflows/gitclaw.yml` bytes=`5564` lines=`168` upload_artifact_actions=`actions/upload-artifact@v6` retention_days=`7` if_no_files_found_error=`true` prompt_artifact_label_gate=`true` prompt_artifact_path_env=`true` sha256_12=`e876323850b9`\n\n### Runtime Boundary\n- GitHub Actions artifacts are short-lived evidence bundles, not durable memory\n- the git backup branch is the durable transcript backup path\n- artifact specs do not enable uploads by themselves; reviewed workflows and gates do\n- future artifact types require body-free audit cards, redaction rules when needed, explicit retention, and live GitHub Models E2E coverage\n\n### Verification Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T13:13:58Z",
+      "updated_at": "2026-05-30T13:13:58Z"
+    }
+  ]
+}
