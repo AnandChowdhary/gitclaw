@@ -150,9 +150,9 @@ for expected in \
   grep -Fq "$expected" <<<"$comments" || die "backup report missing ${expected}"
 done
 
-for leaked in "$token" "$body"; do
+for leaked in "$token" "Live backup info E2E" "Hidden backup info token" "focused body-free backup info report"; do
   if grep -Fq "$leaked" <<<"$comments"; then
-    die "backup report leaked issue-side info input"
+    die "backup report leaked issue-side info input ${leaked}"
   fi
 done
 
