@@ -571,6 +571,19 @@ approval/metadata-only gates, and unbounded loops. Acceptance should mirror the
 other risk reports: deterministic body-free audit plus a real GitHub Models
 follow-up proving inference and repo-search tool exposure.
 
+2026-05-30 task-risk follow-up: OpenClaw Task Flow composes work by creating
+background tasks and advancing the flow as tasks complete, while Hermes Kanban
+uses durable task boards, dispatchers, workers, and a dedicated kanban toolset.
+GitClaw intentionally keeps the first task primitive simpler: GitHub issues
+are the durable task rows, labels are the state machine, and comments are the
+handoff log. Add a `tasks risk` report that scans task policy/spec files for
+detached-worker or subagent spawn instructions, external task DBs, untrusted
+issue-body execution, raw payload logging, prompt-boundary overrides,
+credentials, webhook bridges, repository mutation, missing approval or
+issue-native mode, and unbounded loops. Acceptance should include the
+deterministic body-free audit plus a real GitHub Models follow-up proving
+inference and repo-search tool exposure.
+
 2026-05-30 skill-backed proactive follow-up: Hermes cron jobs run in fresh
 sessions and can attach skills in execution order, while OpenClaw standing
 orders keep durable authority in reviewed workspace files. GitClaw should keep

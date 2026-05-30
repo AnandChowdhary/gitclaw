@@ -56,11 +56,18 @@ func IsTaskReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderTaskReport(ev Event, cfg Config, comments []Comment, transcript []TranscriptMessage) string {
+	if isTaskRiskRequest(ev, cfg) {
+		return renderTaskRiskReport(ev, cfg, comments, transcript, true)
+	}
 	return renderTaskReport(ev, cfg, comments, transcript, true)
 }
 
 func RenderTaskCLIReport(cfg Config) string {
 	return renderTaskReport(Event{}, cfg, nil, nil, false)
+}
+
+func RenderTaskRiskCLIReport(cfg Config) string {
+	return renderTaskRiskReport(Event{}, cfg, nil, nil, false)
 }
 
 func renderTaskReport(ev Event, cfg Config, comments []Comment, transcript []TranscriptMessage, includeIssue bool) string {
@@ -381,4 +388,16 @@ func taskSpecsIssueNative(specs []taskSpecCard) int {
 		}
 	}
 	return count
+}
+
+func isTaskRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 {
+		return false
+	}
+	command := fields[0]
+	if command != "/tasks" && command != "/task" {
+		return false
+	}
+	return strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit")
 }

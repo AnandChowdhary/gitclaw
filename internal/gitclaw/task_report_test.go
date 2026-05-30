@@ -30,6 +30,7 @@ requires_approval: true
 
 # Issue Native Board
 
+This board does not spawn detached workers.
 TASK_SPEC_BODY_SECRET
 `
 

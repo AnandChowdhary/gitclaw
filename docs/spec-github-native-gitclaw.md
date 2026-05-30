@@ -725,7 +725,7 @@ GitHub issue/comment event
   `workspace summary`, `workspace verify`,
   `hooks list`, `hooks risk`, `hooks verify`,
   `plugins list`, `plugins risk`, `plugins verify`,
-  `tasks list`, `tasks verify`,
+  `tasks list`, `tasks risk`, `tasks verify`,
   `migrate plan`,
   `orders list`, `orders verify`,
   `profile show`, `profile verify`,
@@ -2504,6 +2504,7 @@ background tasks, Task Flow, and Hermes Kanban:
 
 ```text
 @gitclaw /tasks
+@gitclaw /tasks risk
 @gitclaw /task
 ```
 
@@ -2525,10 +2526,30 @@ machine, and issue comments are the handoff log. The report never mutates the
 repo, calls the model, opens SQLite, or prints raw task policy, task spec,
 issue, comment, transcript, flow, or worker-output bodies.
 
+The risk form:
+
+```text
+@gitclaw /tasks risk
+@gitclaw /task risk
+```
+
+posts a `GitClaw Task Risk Report` without model inference. It scans
+`.gitclaw/TASKS.md` and `.gitclaw/tasks/*.md` for prompt-boundary overrides,
+credential material, untrusted issue-body execution, detached-worker or
+subagent spawn instructions, external task databases, raw task payload logging,
+webhook bridges, repository mutation, missing approval/issue-native
+boundaries, and unbounded loops. It reports paths, metadata, counts, risk
+codes, severities, and line hashes only; task bodies, issue bodies, comments,
+transcript messages, flow outputs, worker outputs, credentials, and secret
+values are not included. Changes to this risk surface must include a live
+GitHub Models follow-up E2E so task safety is tested against actual inference
+and prompt-visible tools.
+
 Local operators can inspect the same policy/spec surface with:
 
 ```bash
 gitclaw tasks list
+gitclaw tasks risk
 gitclaw tasks verify
 ```
 
@@ -4576,6 +4597,11 @@ examples/workflows/gitclaw.yml
   comment/transcript counts, Task Flow/Kanban execution boundaries, and
   body-free findings without a model call or task body leakage. Each tasks
   feature batch must still run a live GitHub Models conversation E2E.
+- A `gh`-driven tasks-risk E2E harness verifies `@gitclaw /tasks risk` and
+  local `gitclaw tasks risk` expose body-free task policy/spec/thread risk
+  metadata, then runs a real GitHub Models follow-up conversation that proves
+  model inference, prompt provenance, selected skills, and prompt-visible tool
+  usage.
 - A `gh`-driven agents-report E2E harness verifies `@gitclaw /agents` reports
   agent policy metadata, model-context loading, declarative agent spec
   metadata, single-assistant GitHub Actions runtime boundaries, no-delegation

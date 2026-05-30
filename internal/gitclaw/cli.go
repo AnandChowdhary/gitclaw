@@ -354,8 +354,10 @@ func runTasksCommand(args []string) error {
 	switch args[0] {
 	case "list", "verify":
 		return runTasksListCommand(args[1:])
+	case "risk", "risk-audit":
+		return runTasksRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw tasks [list|verify]")
+		return fmt.Errorf("usage: gitclaw tasks [list|risk|verify]")
 	}
 }
 
@@ -368,6 +370,18 @@ func runTasksListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderTaskCLIReport(cfg))
+	return nil
+}
+
+func runTasksRiskCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown tasks risk argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderTaskRiskCLIReport(cfg))
 	return nil
 }
 
