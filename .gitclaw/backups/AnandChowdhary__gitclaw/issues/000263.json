@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T12:16:07Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 263,
+    "title": "@gitclaw /plugins e2e 20260530T121511Z",
+    "body": "Live plugins-report E2E.\n\nHidden plugins report body token: GITCLAW_PLUGINS_REPORT_E2E_20260530T121511Z\nThis should produce a deterministic plugins report without a model call.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /plugins e2e 20260530T121511Z\n\nLive plugins-report E2E.\n\nHidden plugins report body token: GITCLAW_PLUGINS_REPORT_E2E_20260530T121511Z\nThis should produce a deterministic plugins report without a model call.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Plugins Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#263`\n- plugins_status: `ok`\n- plugin_policy_path: `.gitclaw/PLUGINS.md`\n- plugin_policy_present: `true`\n- plugin_policy_loaded_for_model: `true`\n- plugin_specs_dir: `.gitclaw/plugins`\n- plugin_specs: `1`\n- plugin_specs_with_frontmatter: `1`\n- plugin_capabilities: `2`\n- plugin_optional_capabilities: `1`\n- plugin_specs_requiring_approval: `1`\n- plugin_specs_metadata_only: `1`\n- plugin_package_files_present: `0`\n- plugin_install_supported: `false`\n- plugin_execution_supported: `false`\n- plugin_execution_allowed: `false`\n- mcp_connection_allowed: `false`\n- model_call_required: `false`\n- repository_mutation_allowed: `false`\n- raw_bodies_included: `false`\n- raw_plugin_bodies_included: `false`\n- llm_e2e_required_after_change: `true`\n- issue_title_sha256_12: `40fc6a75f437`\n\nPlugins describe runtime extension intent. GitClaw treats plugin specs as reviewed metadata only: no plugin is installed, no package manager is invoked, no MCP server is connected, and no plugin, issue, comment, config, or provider payload body is printed by this report.\n\n### Plugin Policy\n- `.gitclaw/PLUGINS.md` present=`true` bytes=`1053` lines=`23` sha256_12=`213d52b6f44a`\n- `.gitclaw/PLUGINS.md` loaded=`true` source=`contextDocumentPaths`\n\n### Plugin Specs\n- name=`github-models-provider` path=`.gitclaw/plugins/github-models-provider.md` bytes=`469` lines=`18` frontmatter=`true` kind=`provider` source=`repo-reviewed` activation=`metadata-only` capabilities=`2` optional_capabilities=`1` requires_approval=`true` sha256_12=`08b4c668c23f`\n\n### Runtime Boundary\n- plugin packages are not installed by `gitclaw handle`\n- plugin runtimes, MCP servers, webhooks, and channel bridges are not started\n- executable-looking plugin files are reported as ignored metadata, not run\n- future executable plugins require reviewed workflows, explicit permissions, approval gates, and body-free audit cards\n\n### Package Or Runtime Files\n- none\n\n### Verification Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4582789231,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4582789231,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26683558757\" event_id=\"issue-263\" model=\"gitclaw/plugins\" idempotency_key=\"debd414a2007d6f00818253acd50d261\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26683558757\" --\u003e\n## GitClaw Plugins Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#263`\n- plugins_status: `ok`\n- plugin_policy_path: `.gitclaw/PLUGINS.md`\n- plugin_policy_present: `true`\n- plugin_policy_loaded_for_model: `true`\n- plugin_specs_dir: `.gitclaw/plugins`\n- plugin_specs: `1`\n- plugin_specs_with_frontmatter: `1`\n- plugin_capabilities: `2`\n- plugin_optional_capabilities: `1`\n- plugin_specs_requiring_approval: `1`\n- plugin_specs_metadata_only: `1`\n- plugin_package_files_present: `0`\n- plugin_install_supported: `false`\n- plugin_execution_supported: `false`\n- plugin_execution_allowed: `false`\n- mcp_connection_allowed: `false`\n- model_call_required: `false`\n- repository_mutation_allowed: `false`\n- raw_bodies_included: `false`\n- raw_plugin_bodies_included: `false`\n- llm_e2e_required_after_change: `true`\n- issue_title_sha256_12: `40fc6a75f437`\n\nPlugins describe runtime extension intent. GitClaw treats plugin specs as reviewed metadata only: no plugin is installed, no package manager is invoked, no MCP server is connected, and no plugin, issue, comment, config, or provider payload body is printed by this report.\n\n### Plugin Policy\n- `.gitclaw/PLUGINS.md` present=`true` bytes=`1053` lines=`23` sha256_12=`213d52b6f44a`\n- `.gitclaw/PLUGINS.md` loaded=`true` source=`contextDocumentPaths`\n\n### Plugin Specs\n- name=`github-models-provider` path=`.gitclaw/plugins/github-models-provider.md` bytes=`469` lines=`18` frontmatter=`true` kind=`provider` source=`repo-reviewed` activation=`metadata-only` capabilities=`2` optional_capabilities=`1` requires_approval=`true` sha256_12=`08b4c668c23f`\n\n### Runtime Boundary\n- plugin packages are not installed by `gitclaw handle`\n- plugin runtimes, MCP servers, webhooks, and channel bridges are not started\n- executable-looking plugin files are reported as ignored metadata, not run\n- future executable plugins require reviewed workflows, explicit permissions, approval gates, and body-free audit cards\n\n### Package Or Runtime Files\n- none\n\n### Verification Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T12:15:49Z",
+      "updated_at": "2026-05-30T12:15:49Z"
+    }
+  ]
+}
