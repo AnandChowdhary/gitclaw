@@ -73,6 +73,7 @@ type Event struct {
 	Sender         User
 	DispatchID     string
 	DispatchReason string
+	ActiveText     string
 }
 
 type Issue struct {

@@ -16,6 +16,7 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 	if err != nil {
 		return fmt.Errorf("list issue comments: %w", err)
 	}
+	ev = withWorkflowDispatchActiveText(ev, comments)
 
 	key := IdempotencyKey(ev)
 	for _, comment := range comments {

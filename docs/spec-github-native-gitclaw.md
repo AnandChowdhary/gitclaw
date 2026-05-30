@@ -1555,6 +1555,11 @@ synthetic dispatch event. It should not wait for the mirrored GitHub comment to
 trigger `issue_comment`, because events created with the repository
 `GITHUB_TOKEN` generally do not recursively create new workflow runs.
 
+For `workflow_dispatch` wakeups from channel ingest, the active request text is
+the mirrored `gitclaw:channel-message` comment whose provider ID matches the
+dispatch ID. That lets Telegram/Slack users invoke deterministic commands such
+as `@gitclaw /channels` through the same bridge without a model call.
+
 Recommended use: optional low-latency-insensitive Telegram bridge, not the main
 Slack strategy.
 
@@ -2251,7 +2256,8 @@ assert the expected comments/labels, and close the issue in cleanup.
      `gitclaw:channel-thread`,
    - assert it posts a `gitclaw:channel-message` comment,
    - assert it dispatches the main workflow,
-   - assert the assistant replies with the exact nonce from the ingested body.
+   - assert a mirrored `@gitclaw /channels` command produces the deterministic
+     channel report without leaking the mirrored channel body.
    - dispatch the same channel message again,
    - assert it reuses the same issue, creates no duplicate channel-message
      comment, creates no duplicate assistant reply, and skips the redundant

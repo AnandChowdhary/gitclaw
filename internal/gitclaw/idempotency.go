@@ -119,6 +119,48 @@ func StripChannelMessageMarker(body string) string {
 	return strings.TrimSpace(channelMessageMarkerPattern.ReplaceAllString(body, ""))
 }
 
+func withWorkflowDispatchActiveText(ev Event, comments []Comment) Event {
+	if ev.Kind != EventWorkflowDispatch || strings.TrimSpace(ev.DispatchID) == "" {
+		return ev
+	}
+	for i := len(comments) - 1; i >= 0; i-- {
+		comment := comments[i]
+		if channelMessageDispatchID(comment.Body) != ev.DispatchID {
+			continue
+		}
+		ev.ActiveText = StripChannelMessageMarker(comment.Body)
+		return ev
+	}
+	return ev
+}
+
+func channelMessageDispatchID(body string) string {
+	match := channelMessageMarkerPattern.FindStringSubmatch(body)
+	if len(match) < 2 {
+		return ""
+	}
+	channel := markerAttribute(match[1], "channel")
+	messageID := markerAttribute(match[1], "message_id")
+	if channel == "" || messageID == "" {
+		return ""
+	}
+	return channel + "-" + messageID
+}
+
+func markerAttribute(attrs, key string) string {
+	needle := key + `="`
+	start := strings.Index(attrs, needle)
+	if start < 0 {
+		return ""
+	}
+	start += len(needle)
+	end := strings.Index(attrs[start:], `"`)
+	if end < 0 {
+		return ""
+	}
+	return attrs[start : start+end]
+}
+
 func escapeMarkerValue(value string) string {
 	value = strings.ReplaceAll(value, `"`, "")
 	value = strings.ReplaceAll(value, "-->", "")

@@ -42,10 +42,12 @@ thread_id="channel-ingest-e2e-${timestamp}"
 message_id="message-${timestamp}"
 dispatch_id="${channel}-${message_id}"
 token="GITCLAW_CHANNEL_INGEST_E2E_${timestamp}"
-body="Mirrored Telegram ingest message.
+body="@gitclaw /channels
 
-When this channel ingest is dispatched, reply with exact token \`${token}\`.
-Also include the exact word \`ingest\`."
+Mirrored Telegram ingest message.
+
+Hidden channel ingest body token: ${token}
+This should produce the deterministic channel report without a model call."
 
 run_list_json() {
   local workflow="$1"
@@ -181,9 +183,16 @@ issue_json="$(gh issue view "$issue_number" --repo "$repo" --json body,labels,co
 grep -Fq "gitclaw:channel-thread" <<<"$(jq -r '.body' <<<"$issue_json")" || die "issue body missing channel-thread marker"
 grep -Fq "gitclaw:channel-message" <<<"$(jq -r '[.comments[].body] | join("\n")' <<<"$issue_json")" || die "comments missing channel-message marker"
 comments="$(assistant_comments)"
-grep -Fq "$token" <<<"$comments" || die "assistant comment missing token ${token}"
-grep -Fiq "ingest" <<<"$comments" || die "assistant comment missing word ingest"
+grep -Fq 'model="gitclaw/channels"' <<<"$comments" || die "assistant marker missing channel model"
+grep -Fq "GitClaw Channel Report" <<<"$comments" || die "assistant comment missing channel report"
+grep -Fq "Generated without a model call" <<<"$comments" || die "assistant comment should be deterministic"
+grep -Fq 'channel_thread_issue: `true`' <<<"$comments" || die "channel report missing thread status"
+grep -Fq 'channel_message_comments_now: `1`' <<<"$comments" || die "channel report missing mirrored message count"
+grep -Fq 'workflow_dispatch_trigger: `true`' <<<"$comments" || die "channel report missing workflow dispatch status"
 grep -Fq "dispatch-${dispatch_id}" <<<"$comments" || die "assistant marker missing dispatch event id"
+if grep -Fq "$token" <<<"$comments" || grep -Fq "@gitclaw /channels" <<<"$comments"; then
+  die "channel report leaked mirrored channel body"
+fi
 labels="$(jq -r '.labels[].name' <<<"$issue_json")"
 grep -Fxq "gitclaw:channel" <<<"$labels" || die "issue missing gitclaw:channel label"
 grep -Fxq "gitclaw:done" <<<"$labels" || die "issue missing gitclaw:done label"

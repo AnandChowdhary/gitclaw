@@ -10,6 +10,9 @@ func IsContextReportRequest(ev Event, cfg Config) bool {
 }
 
 func activeRequestText(ev Event) string {
+	if strings.TrimSpace(ev.ActiveText) != "" {
+		return ev.ActiveText
+	}
 	if ev.Comment != nil {
 		return ev.Comment.Body
 	}

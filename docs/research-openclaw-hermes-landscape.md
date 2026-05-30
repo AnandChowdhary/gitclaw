@@ -732,6 +732,13 @@ deduped ingest result, not another mirrored comment or agent wakeup. The
 serverless workflow can skip the downstream `workflow_dispatch` when
 `gitclaw channel-ingest` reports `duplicate=true`.
 
+2026-05-30 channel command follow-up: OpenClaw-style gateways let the channel
+message be the active request. GitClaw should do the same for
+`workflow_dispatch` bridge wakeups by matching the dispatch ID to the mirrored
+`gitclaw:channel-message` marker. That allows model-free slash commands from
+Telegram/Slack and gives channel E2E tests a stable path during model
+rate-limit spikes.
+
 Hermes' session docs also expose a practical backup primitive:
 `hermes sessions export backup.jsonl` writes conversation metadata and messages
 as durable JSONL. GitClaw should preserve the same principle, but use GitHub

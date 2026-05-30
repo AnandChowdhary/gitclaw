@@ -486,6 +486,85 @@ jobs:
 	}
 }
 
+func TestHandleWorkflowDispatchUsesChannelMessageCommandWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".github/workflows/gitclaw-channel-ingest.yml", `name: GitClaw Channel Ingest
+
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        required: true
+      thread_id:
+        required: true
+      message_id:
+        required: true
+      author:
+        required: false
+      body:
+        required: true
+
+jobs:
+  ingest:
+    permissions:
+      actions: write
+      issues: write
+`)
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	ev := Event{
+		Kind:       EventWorkflowDispatch,
+		EventName:  "workflow_dispatch",
+		Repo:       "owner/repo",
+		DispatchID: "telegram-message-789",
+		Issue: Issue{
+			Number: 102,
+			Title:  "GitClaw telegram thread chat-123",
+			Body: RenderChannelThreadBody(ChannelIngestOptions{
+				Channel:  "telegram",
+				ThreadID: "chat-123",
+			}),
+			Labels: []string{cfg.ChannelLabel},
+		},
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{
+		102: {{
+			ID:                88,
+			AuthorAssociation: "NONE",
+			User:              User{Login: "github-actions[bot]", Type: "Bot"},
+			Body: RenderChannelMessageComment(ChannelIngestOptions{
+				Channel:   "telegram",
+				ThreadID:  "chat-123",
+				MessageID: "message-789",
+				Author:    "telegram:alice",
+				Body:      "@gitclaw /channels\n\nHidden channel command token: CHANNEL_DISPATCH_COMMAND_SECRET.",
+			}),
+		}},
+	}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for channel command dispatch", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Channel Report", "Generated without a model call", "model=\"gitclaw/channels\"", "event_id=\"dispatch-telegram-message-789\"", "channel_thread_issue: `true`", "channel_message_comments_now: `1`"} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("channel dispatch report missing %q:\n%s", want, body)
+		}
+	}
+	if strings.Contains(body, "CHANNEL_DISPATCH_COMMAND_SECRET") || strings.Contains(body, "@gitclaw /channels") {
+		t.Fatalf("channel dispatch report leaked mirrored command body:\n%s", body)
+	}
+	if !hasLabel(github.IssueLabels[102], "gitclaw:done") || hasLabel(github.IssueLabels[102], "gitclaw:running") || hasLabel(github.IssueLabels[102], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[102])
+	}
+}
+
 func TestHandleSkillsCommandPostsReportWithoutLLM(t *testing.T) {
 	root := t.TempDir()
 	if err := os.MkdirAll(filepath.Join(root, ".gitclaw", "SKILLS", "repo-reader"), 0o755); err != nil {
