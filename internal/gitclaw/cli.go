@@ -29,6 +29,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runChannelStateCommand(ctx, args[1:])
 	case "channel-gateway":
 		return runChannelGatewayCommand(ctx, args[1:])
+	case "channel-delivery":
+		return runChannelDeliveryCommand(ctx, args[1:])
 	case "channels", "channel":
 		return runChannelsCommand(args[1:])
 	case "proactive":
@@ -1431,6 +1433,115 @@ func runChannelGatewayCommand(ctx context.Context, args []string) error {
 		result.AccountHash,
 		result.LeaseHash,
 		result.IssueURL,
+	)
+	return nil
+}
+
+func runChannelDeliveryCommand(ctx context.Context, args []string) error {
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	opts := ChannelDeliveryOptions{
+		Repo:              os.Getenv("GITHUB_REPOSITORY"),
+		Channel:           os.Getenv("GITCLAW_CHANNEL"),
+		AccountID:         os.Getenv("GITCLAW_CHANNEL_ACCOUNT_ID"),
+		ExternalMessageID: os.Getenv("GITCLAW_CHANNEL_EXTERNAL_MESSAGE_ID"),
+		GatewayRunID:      os.Getenv("GITCLAW_CHANNEL_GATEWAY_RUN_ID"),
+	}
+	if value := os.Getenv("GITCLAW_CHANNEL_ISSUE_NUMBER"); value != "" {
+		parsed, err := parsePositiveInt(value, "GITCLAW_CHANNEL_ISSUE_NUMBER")
+		if err != nil {
+			return err
+		}
+		opts.IssueNumber = parsed
+	}
+	if value := os.Getenv("GITCLAW_CHANNEL_COMMENT_ID"); value != "" {
+		parsed, err := parsePositiveInt64(value, "GITCLAW_CHANNEL_COMMENT_ID")
+		if err != nil {
+			return err
+		}
+		opts.CommentID = parsed
+	}
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--repo requires a value")
+			}
+			opts.Repo = args[i+1]
+			i++
+		case "--channel":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--channel requires a value")
+			}
+			opts.Channel = args[i+1]
+			i++
+		case "--account-id":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--account-id requires a value")
+			}
+			opts.AccountID = args[i+1]
+			i++
+		case "--issue-number":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--issue-number requires a value")
+			}
+			parsed, err := parsePositiveInt(args[i+1], "--issue-number")
+			if err != nil {
+				return err
+			}
+			opts.IssueNumber = parsed
+			i++
+		case "--comment-id":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--comment-id requires a value")
+			}
+			parsed, err := parsePositiveInt64(args[i+1], "--comment-id")
+			if err != nil {
+				return err
+			}
+			opts.CommentID = parsed
+			i++
+		case "--external-message-id":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--external-message-id requires a value")
+			}
+			opts.ExternalMessageID = args[i+1]
+			i++
+		case "--gateway-run-id":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--gateway-run-id requires a value")
+			}
+			opts.GatewayRunID = args[i+1]
+			i++
+		default:
+			return fmt.Errorf("unknown channel-delivery argument %q", args[i])
+		}
+	}
+	token := githubTokenFromEnv()
+	if token == "" {
+		return fmt.Errorf("missing GH_TOKEN or GITHUB_TOKEN")
+	}
+	result, err := RunChannelDelivery(ctx, cfg, NewRESTGitHubClient(token), opts)
+	if err != nil {
+		return err
+	}
+	if err := writeChannelDeliveryOutputs(result); err != nil {
+		return err
+	}
+	fmt.Printf(
+		"channel_delivery state_issue=%d receipt_comment=%d created_state_issue=%t delivered=%t duplicate=%t issue=%d source_comment=%d account_sha256_12=%s external_message_sha256_12=%s url=%s\n",
+		result.StateIssueNumber,
+		result.ReceiptCommentID,
+		result.CreatedStateIssue,
+		result.Delivered,
+		result.Duplicate,
+		result.IssueNumber,
+		result.SourceCommentID,
+		result.AccountHash,
+		result.ExternalMessageHash,
+		result.StateIssueURL,
 	)
 	return nil
 }

@@ -1,0 +1,55 @@
+name: GitClaw Channel Delivery
+
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: External channel name, such as telegram or slack
+        required: true
+      account_id:
+        description: External channel account, bot, or workspace id
+        required: true
+      issue_number:
+        description: GitHub issue number containing the assistant reply
+        required: true
+      comment_id:
+        description: GitHub assistant comment id that was delivered
+        required: true
+      external_message_id:
+        description: Provider message id produced by the delivery
+        required: true
+      gateway_run_id:
+        description: Optional bridge run id for audit
+        required: false
+
+concurrency:
+  group: gitclaw-channel-delivery-${{ inputs.channel }}-${{ inputs.account_id }}-${{ inputs.issue_number }}-${{ inputs.comment_id }}
+  cancel-in-progress: false
+
+jobs:
+  delivery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: stable
+
+      - id: delivery
+        run: go run ./cmd/gitclaw channel-delivery
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
+          GITCLAW_CHANNEL: ${{ inputs.channel }}
+          GITCLAW_CHANNEL_ACCOUNT_ID: ${{ inputs.account_id }}
+          GITCLAW_CHANNEL_ISSUE_NUMBER: ${{ inputs.issue_number }}
+          GITCLAW_CHANNEL_COMMENT_ID: ${{ inputs.comment_id }}
+          GITCLAW_CHANNEL_EXTERNAL_MESSAGE_ID: ${{ inputs.external_message_id }}
+          GITCLAW_CHANNEL_GATEWAY_RUN_ID: ${{ inputs.gateway_run_id }}

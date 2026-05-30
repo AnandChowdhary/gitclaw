@@ -15,6 +15,7 @@ var channelMessageMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-mes
 var channelThreadMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-thread\s+([^>]*)-->`)
 var channelStateMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-state\s+([^>]*)-->`)
 var channelStateUpdateMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-state-update\s+([^>]*)-->`)
+var channelDeliveryMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-delivery\s+([^>]*)-->`)
 var proactiveRunMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:proactive-run\s+([^>]*)-->`)
 
 func IdempotencyKey(ev Event) string {
@@ -101,6 +102,10 @@ func HasChannelStateMarker(body string) bool {
 
 func HasChannelStateUpdateMarker(body string) bool {
 	return channelStateUpdateMarkerPattern.MatchString(body)
+}
+
+func HasChannelDeliveryMarker(body string) bool {
+	return channelDeliveryMarkerPattern.MatchString(body)
 }
 
 func HasProactiveRunMarker(body string) bool {

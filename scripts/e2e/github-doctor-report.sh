@@ -141,7 +141,7 @@ for expected in \
   'config_file_present: `true`' \
   'model: `openai/gpt-5-mini`' \
   'run_mode: `read-only`' \
-  'workflows_present: `6`' \
+  'workflows_present: `7`' \
   'context_files_present: `6`' \
   'memory_notes: `1`' \
   'skill_files: `1`' \

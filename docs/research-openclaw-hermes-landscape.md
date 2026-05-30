@@ -823,6 +823,13 @@ hash-only lease in the channel-state issue; the workflow wrapper can optionally
 `workflow_dispatch` its successor with `actions: write`. Provider sockets and
 pollers can be added behind that lease once the renewal surface is proven live.
 
+2026-05-30 channel delivery follow-up: OpenClaw's gateway owns both inbound
+delivery and outbound replies. GitClaw should record outbound reply delivery as
+a GitHub-native receipt: verify the source `gitclaw:assistant-turn`, write one
+`gitclaw:channel-delivery` marker to the channel-state issue, hash the provider
+message id, and dedupe by source issue/comment. This lets Telegram/Slack
+gateways retry safely without turning channel state into a plaintext transcript.
+
 Hermes' session docs also expose a practical backup primitive:
 `hermes sessions export backup.jsonl` writes conversation metadata and messages
 as durable JSONL. GitClaw should preserve the same principle, but use GitHub

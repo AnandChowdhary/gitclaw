@@ -179,6 +179,14 @@ type ChannelGatewayGitHubClient interface {
 	AddIssueLabels(ctx context.Context, repo string, issueNumber int, labels []string) error
 }
 
+type ChannelDeliveryGitHubClient interface {
+	CreateIssue(ctx context.Context, repo, title, body string, labels []string) (Issue, error)
+	ListOpenIssues(ctx context.Context, repo string, labels []string, limit int) ([]Issue, error)
+	ListIssueComments(ctx context.Context, repo string, issueNumber int) ([]Comment, error)
+	PostIssueComment(ctx context.Context, repo string, issueNumber int, body string) (PostedComment, error)
+	AddIssueLabels(ctx context.Context, repo string, issueNumber int, labels []string) error
+}
+
 type ProactiveGitHubClient interface {
 	CreateIssue(ctx context.Context, repo, title, body string, labels []string) (Issue, error)
 	ListOpenIssues(ctx context.Context, repo string, labels []string, limit int) ([]Issue, error)

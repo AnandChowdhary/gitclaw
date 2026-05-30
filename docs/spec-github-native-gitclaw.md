@@ -582,7 +582,8 @@ GitHub issue/comment event
 - Subcommands: `preflight`, `handle`, `backup`, `backup search`,
   `backup retention-plan`,
   `heartbeat`,
-  `channel-ingest`, `channel-state`, `proactive enqueue`, `proactive init`,
+  `channel-ingest`, `channel-state`, `channel-gateway`, `channel-delivery`,
+  `proactive enqueue`, `proactive init`,
   `memory verify`, `memory validate`, `memory list`, `memory search`,
   `skills validate`,
   `skills list`, `skills info`, `skills search`,
@@ -1707,6 +1708,40 @@ the job exits, using `actions: write`. This is the first executable version of
 the long-running Actions gateway idea: no webhook server, no always-on VM, and
 state durable in GitHub issues.
 
+### Channel Delivery Command
+
+Outbound channel bridges need the same idempotency discipline as inbound
+ingress. A future Telegram/Slack sender should not resend the same GitHub
+assistant reply after a retry, but GitHub issue comments should remain the
+canonical assistant transcript. GitClaw records that edge with a delivery
+receipt:
+
+```bash
+gitclaw channel-delivery \
+  --repo OWNER/REPO \
+  --channel telegram \
+  --account-id <provider-account-or-workspace-id> \
+  --issue-number <github-issue> \
+  --comment-id <github-assistant-comment-id> \
+  --external-message-id <provider-message-id>
+```
+
+Behavior:
+
+- verify the source comment exists and carries a `gitclaw:assistant-turn`
+  marker,
+- find or create the matching `gitclaw:channel-state` issue,
+- post one `gitclaw:channel-delivery` receipt for
+  `channel + account_sha256_12 + source issue + source comment`,
+- store the external provider message id only as `external_message_sha256_12`,
+- treat repeated delivery receipts for the same source comment as duplicates.
+
+`.github/workflows/gitclaw-channel-delivery.yml` exposes the same receipt path
+through `workflow_dispatch`, so a gateway can send a reply through Telegram or
+Slack and then use the repository `GITHUB_TOKEN` to record exactly what GitHub
+assistant comment was delivered without writing channel credentials or reply
+bodies into the state issue.
+
 ### Channel Inspection Command
 
 GitClaw supports a deterministic channel/control-plane audit command:
@@ -1747,6 +1782,7 @@ gitclaw channels list
 gitclaw channels verify
 gitclaw channel-state --channel telegram --account-id <id> --offset <offset>
 gitclaw channel-gateway --channel telegram --account-id <id> --renew
+gitclaw channel-delivery --channel telegram --account-id <id> --issue-number <issue> --comment-id <comment> --external-message-id <message>
 ```
 
 The local report omits issue-only fields such as repository, issue number,
@@ -1784,6 +1820,7 @@ channel-gateway run starts
   -> mirror inbound messages to GitHub issues/comments
   -> wake the canonical issue via workflow_dispatch using channel event ID
   -> mirror outbound GitClaw comments back to channel
+  -> record outbound delivery receipt with channel-delivery
   -> before timeout, workflow_dispatch next channel-gateway run
   -> release or transfer lease
 ```
@@ -1851,7 +1888,7 @@ Required bridge state:
 - Telegram last committed `update_id`,
 - Slack last seen event ids / timestamps,
 - GitHub issue mapping per channel thread,
-- outbound delivery markers,
+- outbound delivery markers from `gitclaw:channel-delivery`,
 - dedupe window.
 
 Slack caveat: Socket Mode is a WebSocket-based stateful connection. Running it
@@ -1889,6 +1926,8 @@ Do not let bridge channels bypass GitHub:
 
 - every inbound channel message maps to an issue or comment,
 - every outbound channel reply maps back to a GitHub assistant comment,
+- every delivered outbound reply records one `gitclaw:channel-delivery`
+  receipt and retries do not create a second receipt,
 - channel-specific IDs live in provenance markers,
 - dedupe is mandatory,
 - channel bridge failures must not corrupt the issue conversation.
@@ -2897,6 +2936,11 @@ examples/workflows/gitclaw.yml
   `.github/workflows/gitclaw-channel-gateway.yml`, verifies the gateway lease is
   persisted through channel-state hashes, then repeats the same lease to prove
   duplicate gateway runs are idempotent.
+- A `gh`-driven channel-delivery-workflow E2E harness dispatches
+  `.github/workflows/gitclaw-channel-delivery.yml`, verifies a source
+  `gitclaw:assistant-turn` comment can be recorded as delivered, checks that
+  only hashes are stored for channel account/provider message IDs, and repeats
+  the same delivery to prove outbound idempotency.
 - A `gh`-driven channels-report E2E harness verifies `@gitclaw /channels`
   reports workflow dispatch, channel labels, provider keys, and mirrored
   message marker counts without a model call.
