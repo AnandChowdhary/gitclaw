@@ -1339,6 +1339,18 @@ as the body-free dry run for progressive disclosure: one skill, selected state,
 gate state, bundle/request/always selection reasons, validation summary, no
 model call, no repo mutation, no raw request text, and no `SKILL.md` body dump.
 
+2026-05-31 skill-refresh-plan follow-up: OpenClaw's skill surface is built for
+a resident gateway that can maintain skill snapshots and refresh through local
+runtime control, while Hermes documents explicit skill lifecycle operations
+such as update/install/delete in a profile home. GitClaw should not emulate that
+with a hidden watcher or self-updating skill registry. Add `@gitclaw /skills
+refresh-plan` and `gitclaw skills refresh-plan` as the inspect-only Actions
+analogue: each issue/comment/workflow-dispatch turn rebuilds the repo-local
+skill index from the current checkout, reports hashes and validation state, and
+keeps install/update/mutation/model calls/raw bodies disabled. Pair any refresh
+behavior change with a live GitHub Models E2E that proves selected skills and
+tool usage still work.
+
 2026-05-30 tool-gating follow-up: Hermes/OpenClaw toolsets are useful partly
 because the operator can see and constrain what the agent may call. GitClaw
 should mirror that with repo-reviewed `tools.allowed` and `tools.disabled`
@@ -2026,6 +2038,7 @@ Recommended non-goals for the first spec:
 - OpenClaw diffs plugin docs: https://docs.openclaw.ai/vi/tools/diffs
 - OpenClaw secrets CLI docs: https://docs.openclaw.ai/cli/secrets
 - OpenClaw secrets management docs: https://docs.openclaw.ai/gateway/secrets
+- OpenClaw skills docs: https://docs.openclaw.ai/tools/skills
 - GitHub Actions artifact storage docs: https://docs.github.com/en/actions/how-tos/writing-workflows/choosing-what-your-workflow-does/storing-and-sharing-data-from-a-workflow
 - `actions/upload-artifact` action: https://github.com/actions/upload-artifact
 - GitHub Models quickstart: https://docs.github.com/en/github-models/quickstart

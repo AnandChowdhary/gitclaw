@@ -203,6 +203,98 @@ SECRET_SKILL_SELECT_PLAN_BODY_TOKEN
 	}
 }
 
+func TestRenderSkillRefreshPlanReportExplainsPerTurnDiscoveryWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Use read-only repository files.
+---
+
+# Repo Reader
+SECRET_SKILL_REFRESH_PLAN_BODY_TOKEN
+`)
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	cfg.AllowedSkills = map[string]bool{"repo-reader": true}
+	ctx, err := LoadRepoContextWithConfig(root, []TranscriptMessage{{Role: "user", Body: "Please use repo-reader while checking skill refresh."}}, cfg)
+	if err != nil {
+		t.Fatalf("LoadRepoContext returned error: %v", err)
+	}
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 117,
+			"title": "@gitclaw /skills refresh-plan",
+			"body": "Hidden skill refresh plan token: SKILL_REFRESH_PLAN_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	report := RenderSkillsReport(ev, cfg, ctx)
+	for _, want := range []string{
+		"GitClaw Skill Refresh Plan Report",
+		"Generated without a model call",
+		"skill_refresh_plan_status: `needs_review`",
+		"refresh_strategy: `github-actions-per-turn-discovery`",
+		"refresh_trigger: `next-issue-comment-or-workflow-dispatch-run`",
+		"current_snapshot_scope: `current-actions-checkout`",
+		"resident_skill_watcher: `false`",
+		"mid_run_hot_reload_supported: `false`",
+		"session_snapshot_reused_across_runs: `false`",
+		"skill_snapshot_persisted: `false`",
+		"remote_node_refresh_supported: `false`",
+		"remote_registry_polling_allowed: `false`",
+		"workflow_dispatch_refresh_supported: `true`",
+		"model_call_required: `false`",
+		"repository_mutation_allowed: `false`",
+		"skill_install_allowed: `false`",
+		"skill_update_allowed: `false`",
+		"raw_skill_bodies_included: `false`",
+		"raw_issue_bodies_included: `false`",
+		"raw_comment_bodies_included: `false`",
+		"raw_prompt_included: `false`",
+		"available_skills: `1`",
+		"enabled_skills: `1`",
+		"selected_skills: `1`",
+		"skill_hashes: `1`",
+		"skill_index_sha256_12:",
+		"config_allowed_skills: `1`",
+		"config_disabled_skills: `0`",
+		"llm_e2e_required_after_skill_refresh_change: `true`",
+		"skill_validation_status: `ok`",
+		"### Refresh Boundary",
+		"kind=`runtime` refresh_strategy=`github-actions-per-turn-discovery`",
+		"kind=`source` repo_review_required=`true`",
+		"kind=`prompt` progressive_disclosure=`true`",
+		"### Current Skill Snapshot",
+		"name=`repo-reader` path=`.gitclaw/SKILLS/repo-reader/SKILL.md`",
+		"selected_for_this_turn=`true`",
+		"### Refresh Steps",
+		"Start a new issue/comment turn or dispatch the workflow",
+		"### Findings",
+		"code=`per_turn_discovery`",
+		"code=`resident_watcher_disabled`",
+		"code=`progressive_disclosure`",
+		"code=`repository_mutation_disabled`",
+		"code=`live_llm_e2e_required`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("skill refresh plan report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"SECRET_SKILL_REFRESH_PLAN_BODY_TOKEN", "SKILL_REFRESH_PLAN_BODY_SECRET", "Please use repo-reader"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("skill refresh plan report leaked %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestRenderSkillInstallPlanReportPlansExistingSkillWithoutBodies(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---

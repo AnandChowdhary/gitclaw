@@ -1683,7 +1683,7 @@ func runMigrateRiskCommand(args []string) error {
 
 func runSkillsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw skills verify|risk|validate|check|list|select-plan <name>|install-plan <target>|upgrade-plan <target>|bundles [risk]|bundle <name>|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw skills verify|risk|validate|check|list|select-plan <name>|refresh-plan|install-plan <target>|upgrade-plan <target>|bundles [risk]|bundle <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -1696,6 +1696,8 @@ func runSkillsCommand(args []string) error {
 		return runSkillsListCommand(args[1:])
 	case "select-plan", "selection-plan":
 		return runSkillsSelectPlanCommand(args[1:])
+	case "refresh-plan", "refresh", "reload-plan", "snapshot":
+		return runSkillsRefreshPlanCommand(args[1:])
 	case "install-plan", "plan":
 		return runSkillsInstallPlanCommand(args[1:], "install-plan")
 	case "upgrade-plan":
@@ -1731,6 +1733,22 @@ func runSkillsSelectPlanCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSkillSelectPlanCLIReport(repoContext, args[0]))
+	return nil
+}
+
+func runSkillsRefreshPlanCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("usage: gitclaw skills refresh-plan")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "skills refresh-plan"}}, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSkillRefreshPlanCLIReport(cfg, repoContext))
 	return nil
 }
 

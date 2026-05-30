@@ -786,7 +786,8 @@ GitHub issue/comment event
   `memory verify`, `memory risk`, `memory validate`, `memory list`,
   `memory promote-plan`, `memory info`, `memory search`,
   `skills validate`,
-  `skills list`, `skills select-plan`, `skills info`, `skills search`,
+  `skills list`, `skills select-plan`, `skills refresh-plan`, `skills info`,
+  `skills search`,
   `bundles list`, `bundles risk`, `bundles info`,
   `soul verify`, `soul risk`, `soul validate`, `soul list`,
   `soul edit-plan`, `soul info`, `soul search`,
@@ -1288,6 +1289,7 @@ gitclaw skills validate
 gitclaw skills check
 gitclaw skills list
 gitclaw skills select-plan <name>
+gitclaw skills refresh-plan
 gitclaw skills install-plan <target>
 gitclaw skills upgrade-plan <target>
 gitclaw bundles list
@@ -1319,6 +1321,7 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills validate
 @gitclaw /skills check
 @gitclaw /skills select-plan repo-reader
+@gitclaw /skills refresh-plan
 @gitclaw /skills install-plan repo-reader
 @gitclaw /skills upgrade-plan repo-reader
 @gitclaw /bundles
@@ -1344,6 +1347,7 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 - risk-audit status, risky-instruction category counts, finding codes, and
   line hashes without raw `SKILL.md` text.
 - dry-run selection planning metadata when explicitly requested.
+- skill refresh-boundary planning metadata when explicitly requested.
 - dry-run install/upgrade planning metadata when explicitly requested.
 
 It does not dump full skill bodies. Full `SKILL.md` content remains a prompt
@@ -1430,6 +1434,24 @@ raw requested skill string, prints raw request text, or dumps full `SKILL.md`
 bodies. It includes `llm_e2e_required_after_change=true` because skill
 selection changes must be proven with a live GitHub Models conversation E2E,
 not only deterministic report tests.
+
+When called as `@gitclaw /skills refresh-plan` or
+`gitclaw skills refresh-plan`, GitClaw posts a body-free refresh-boundary
+report inspired by OpenClaw's explicit skill snapshots and watcher-driven
+refresh behavior, but adapted to GitHub Actions. GitClaw has no resident skill
+watcher, no mid-run hot reload, and no persisted skill snapshot shared across
+runs. Each issue, comment, or reviewed workflow dispatch turn rebuilds the
+skill index from the current Actions checkout. The report exposes only
+metadata: current checkout scope, available/enabled/selected skill counts,
+skill hashes, validation status, and the exact refresh boundary.
+
+The refresh planner never installs, updates, deletes, commits, pushes, polls a
+remote registry, mutates `.gitclaw/SKILLS`, calls a model, prints prompts, or
+dumps skill/issue/comment bodies. Skill edits become prompt-visible only after
+they land in the branch used by the next Actions checkout. Any change to skill
+refresh behavior must be paired with `gitclaw skills validate`, `gitclaw skills
+verify`, `gitclaw skills risk`, and a live GitHub Models conversation E2E that
+proves normal skill selection and tool usage still work.
 
 When called as `@gitclaw /skills install-plan <target>` or
 `@gitclaw /skills upgrade-plan <target>`, the command switches to a
@@ -5229,6 +5251,13 @@ examples/workflows/gitclaw.yml
   `@gitclaw /skills select-plan repo-reader` explains selected-for-turn state,
   gate metadata, selection reasons, validation status, and the live-LLM E2E
   rule without a model call, raw request text, or full `SKILL.md` body leakage.
+- A `gh`-driven skills-refresh-plan E2E harness verifies
+  `@gitclaw /skills refresh-plan` explains per-turn skill discovery,
+  current-checkout snapshot metadata, no resident watcher, no mid-run hot
+  reload, no registry polling, no install/update/repo mutation, and no
+  issue/comment/prompt/skill body leakage. It then runs a live GitHub Models
+  follow-up conversation that proves repo-local skill selection and tool usage
+  still work.
 - A `gh`-driven skills-install-plan E2E harness verifies
   `@gitclaw /skills install-plan repo-reader` produces a body-free,
   non-mutating install/upgrade plan with remote fetches, installer scripts,

@@ -83,6 +83,9 @@ func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
 		}
 		return renderSkillSelectPlanReport(ev, repoContext, skillName, activeRequestText(ev), true)
 	}
+	if isSkillsRefreshPlanRequest(ev, cfg) {
+		return renderSkillRefreshPlanReport(ev, cfg, repoContext, true)
+	}
 	if operation, target, ok := requestedSkillInstallPlan(ev, cfg); ok {
 		return renderSkillInstallPlanReport(ev, repoContext, operation, target, true)
 	}
