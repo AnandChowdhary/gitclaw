@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T09:49:16Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 230,
+    "title": "@gitclaw /config e2e 20260530T094813Z",
+    "body": "Live config-report E2E.\n\nHidden config report body token: GITCLAW_CONFIG_REPORT_E2E_20260530T094813Z\nThis should produce a deterministic config report without a model call.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /config e2e 20260530T094813Z\n\nLive config-report E2E.\n\nHidden config report body token: GITCLAW_CONFIG_REPORT_E2E_20260530T094813Z\nThis should produce a deterministic config report without a model call.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Config Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#230`\n- config_source: `defaults+repo+environment`\n- config_file_path: `.gitclaw/config.yml`\n- config_file_present: `true`\n- trigger_label: `gitclaw`\n- trigger_prefix: `@gitclaw`\n- disabled_label: `gitclaw:disabled`\n- model: `openai/gpt-5-nano`\n- run_mode: `read-only`\n- workdir: `.`\n- max_prompt_bytes: `60000`\n- max_output_tokens: `4000`\n- max_transcript_messages: `40`\n- max_transcript_message_bytes: `8000`\n- skills_allowed_configured: `0`\n- skills_disabled_configured: `0`\n- tools_allowed_configured: `0`\n- tools_disabled_configured: `0`\n- workflows_present: `7`\n- slash_commands: `22`\n- issue_title_sha256_12: `408eaf44553f`\n\nThis report shows effective GitClaw control-plane settings and file metadata. Config, workflow, issue, and comment bodies are not included.\n\n### Trusted Associations\n- `COLLABORATOR`\n- `MEMBER`\n- `OWNER`\n\n### Managed Labels\n- `gitclaw`\n- `gitclaw:running`\n- `gitclaw:done`\n- `gitclaw:error`\n- `gitclaw:disabled`\n- `gitclaw:write-requested`\n- `gitclaw:heartbeat`\n- `gitclaw:channel`\n- `gitclaw:proactive`\n\n### Slash Commands\n- `/approvals`\n- `/backup`\n- `/bundles`\n- `/channels`\n- `/checkpoints`\n- `/config`\n- `/context`\n- `/doctor`\n- `/help`\n- `/memory`\n- `/models`\n- `/policy`\n- `/profile`\n- `/prompt`\n- `/proactive`\n- `/runs`\n- `/sandbox`\n- `/secrets`\n- `/session`\n- `/skills`\n- `/soul`\n- `/tools`\n\n### Skill Gates\n- allowed=`none`\n- disabled=`none`\n\n### Tool Gates\n- allowed=`none`\n- disabled=`none`\n\n### Config File\n- `.gitclaw/config.yml` present=`true` bytes=`438` lines=`22` sha256_12=`b91d4a4505b5`\n\n### Workflow Files\n- `.github/workflows/gitclaw-channel-delivery.yml` present=`true` bytes=`1755` lines=`55` sha256_12=`33be09897bc2`\n- `.github/workflows/gitclaw-channel-gateway.yml` present=`true` bytes=`3115` lines=`89` sha256_12=`6b46ecf0a6b4`\n- `.github/workflows/gitclaw-channel-ingest.yml` present=`true` bytes=`2263` lines=`71` sha256_12=`1b1cde85c6b0`\n- `.github/workflows/gitclaw-channel-state.yml` present=`true` bytes=`1437` lines=`50` sha256_12=`7be973bbc095`\n- `.github/workflows/gitclaw-heartbeat.yml` present=`true` bytes=`1822` lines=`64` sha256_12=`972af26cd82a`\n- `.github/workflows/gitclaw-proactive.yml` present=`true` bytes=`2683` lines=`76` sha256_12=`91d1e5f4b023`\n- `.github/workflows/gitclaw.yml` present=`true` bytes=`5564` lines=`168` sha256_12=`e876323850b9`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4582459930,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4582459930,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26680775093\" event_id=\"issue-230\" model=\"gitclaw/config\" idempotency_key=\"b4cc388df00332da7a93f7d039accefa\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26680775093\" --\u003e\n## GitClaw Config Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#230`\n- config_source: `defaults+repo+environment`\n- config_file_path: `.gitclaw/config.yml`\n- config_file_present: `true`\n- trigger_label: `gitclaw`\n- trigger_prefix: `@gitclaw`\n- disabled_label: `gitclaw:disabled`\n- model: `openai/gpt-5-nano`\n- run_mode: `read-only`\n- workdir: `.`\n- max_prompt_bytes: `60000`\n- max_output_tokens: `4000`\n- max_transcript_messages: `40`\n- max_transcript_message_bytes: `8000`\n- skills_allowed_configured: `0`\n- skills_disabled_configured: `0`\n- tools_allowed_configured: `0`\n- tools_disabled_configured: `0`\n- workflows_present: `7`\n- slash_commands: `22`\n- issue_title_sha256_12: `408eaf44553f`\n\nThis report shows effective GitClaw control-plane settings and file metadata. Config, workflow, issue, and comment bodies are not included.\n\n### Trusted Associations\n- `COLLABORATOR`\n- `MEMBER`\n- `OWNER`\n\n### Managed Labels\n- `gitclaw`\n- `gitclaw:running`\n- `gitclaw:done`\n- `gitclaw:error`\n- `gitclaw:disabled`\n- `gitclaw:write-requested`\n- `gitclaw:heartbeat`\n- `gitclaw:channel`\n- `gitclaw:proactive`\n\n### Slash Commands\n- `/approvals`\n- `/backup`\n- `/bundles`\n- `/channels`\n- `/checkpoints`\n- `/config`\n- `/context`\n- `/doctor`\n- `/help`\n- `/memory`\n- `/models`\n- `/policy`\n- `/profile`\n- `/prompt`\n- `/proactive`\n- `/runs`\n- `/sandbox`\n- `/secrets`\n- `/session`\n- `/skills`\n- `/soul`\n- `/tools`\n\n### Skill Gates\n- allowed=`none`\n- disabled=`none`\n\n### Tool Gates\n- allowed=`none`\n- disabled=`none`\n\n### Config File\n- `.gitclaw/config.yml` present=`true` bytes=`438` lines=`22` sha256_12=`b91d4a4505b5`\n\n### Workflow Files\n- `.github/workflows/gitclaw-channel-delivery.yml` present=`true` bytes=`1755` lines=`55` sha256_12=`33be09897bc2`\n- `.github/workflows/gitclaw-channel-gateway.yml` present=`true` bytes=`3115` lines=`89` sha256_12=`6b46ecf0a6b4`\n- `.github/workflows/gitclaw-channel-ingest.yml` present=`true` bytes=`2263` lines=`71` sha256_12=`1b1cde85c6b0`\n- `.github/workflows/gitclaw-channel-state.yml` present=`true` bytes=`1437` lines=`50` sha256_12=`7be973bbc095`\n- `.github/workflows/gitclaw-heartbeat.yml` present=`true` bytes=`1822` lines=`64` sha256_12=`972af26cd82a`\n- `.github/workflows/gitclaw-proactive.yml` present=`true` bytes=`2683` lines=`76` sha256_12=`91d1e5f4b023`\n- `.github/workflows/gitclaw.yml` present=`true` bytes=`5564` lines=`168` sha256_12=`e876323850b9`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T09:48:52Z",
+      "updated_at": "2026-05-30T09:48:52Z"
+    }
+  ]
+}
