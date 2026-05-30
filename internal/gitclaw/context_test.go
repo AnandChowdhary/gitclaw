@@ -266,6 +266,23 @@ func TestSearchQueriesPreferExplicitPhrasesAndIdentifiers(t *testing.T) {
 	}
 }
 
+func TestSearchRepoFilesDoesNotLetBroadQueryStarveLaterExplicitQuery(t *testing.T) {
+	root := t.TempDir()
+	var files []string
+	for i := 0; i < maxSearchMatchesPerQuery+3; i++ {
+		path := filepath.ToSlash(filepath.Join("docs", "go-mod-mentions", "file-"+string(rune('a'+i))+".md"))
+		writeTestFile(t, root, path, "broad go.mod mention\n")
+		files = append(files, path)
+	}
+	writeTestFile(t, root, "docs/search-fixture.md", "bounded repository search fixture phrase => GITCLAW_SEARCH_CONTEXT_V1\n")
+	files = append(files, "docs/search-fixture.md")
+
+	output := searchRepoFiles(root, files, []string{"go.mod", "bounded repository search fixture phrase"})
+	if !strings.Contains(output, "GITCLAW_SEARCH_CONTEXT_V1") {
+		t.Fatalf("search output missing later explicit query after broad query:\n%s", output)
+	}
+}
+
 func TestLoadMemoryDocumentsKeepsLatestBoundedNotes(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/memory/2026-05-26.md", "old")

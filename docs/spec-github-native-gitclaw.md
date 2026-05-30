@@ -1132,7 +1132,9 @@ GitClaw v1 adds a small deterministic tool layer before the model call:
 
 - `gitclaw.list_files`: lists a bounded set of repository files in the checkout.
 - `gitclaw.search_files`: searches bounded text files for explicit quoted
-  phrases or identifiers from the issue thread and returns matching lines.
+  phrases or identifiers from the issue thread and returns matching lines with
+  file, query, per-query match, total match, and line-length limits so one broad
+  query cannot starve later explicit phrases.
 - `gitclaw.read_file`: reads a bounded text file only when the issue thread
   explicitly mentions that repository-relative path.
 

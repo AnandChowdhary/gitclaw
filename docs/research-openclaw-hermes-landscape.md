@@ -430,6 +430,9 @@ echoed the issue nonce where the harness wanted the repository search-result
 token. GitClaw should keep tool-output token requests explicit, document that
 `gitclaw.search_files` is authoritative for search-result tokens, and use
 distinct token prefixes plus redacted prompt artifacts in live E2E checks.
+The underlying search tool also needs per-query match limits because broad
+queries like `go.mod` can otherwise consume the total match budget before the
+explicit fixture phrase is searched.
 
 2026-05-29 workflow-runtime follow-up: GitClaw's serverless runtime is GitHub
 Actions itself, so action runtime deprecations are part of product reliability.

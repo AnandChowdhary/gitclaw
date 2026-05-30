@@ -12,15 +12,16 @@ import (
 )
 
 const (
-	maxContextDocumentBytes = 12000
-	maxToolReadBytes        = 8000
-	maxRepoFilesListed      = 240
-	maxToolFilesRead        = 5
-	maxMemoryDocuments      = 3
-	maxSearchQueries        = 5
-	maxSearchMatches        = 20
-	maxSearchFileBytes      = 64000
-	maxSearchLineBytes      = 300
+	maxContextDocumentBytes  = 12000
+	maxToolReadBytes         = 8000
+	maxRepoFilesListed       = 240
+	maxToolFilesRead         = 5
+	maxMemoryDocuments       = 3
+	maxSearchQueries         = 5
+	maxSearchMatches         = 20
+	maxSearchMatchesPerQuery = 5
+	maxSearchFileBytes       = 64000
+	maxSearchLineBytes       = 300
 )
 
 var searchIdentifierPattern = regexp.MustCompile(`[A-Za-z_][A-Za-z0-9_.:-]{5,}`)
@@ -647,8 +648,9 @@ func searchRepoFiles(root string, files []string, queries []string) string {
 	for _, query := range queries {
 		queryLower := strings.ToLower(query)
 		queryHeaderWritten := false
+		queryMatches := 0
 		for _, file := range files {
-			if matches >= maxSearchMatches {
+			if matches >= maxSearchMatches || queryMatches >= maxSearchMatchesPerQuery {
 				break
 			}
 			body, err := readRepoTextFile(root, file, maxSearchFileBytes)
@@ -657,7 +659,7 @@ func searchRepoFiles(root string, files []string, queries []string) string {
 			}
 			lines := strings.Split(body, "\n")
 			for i, line := range lines {
-				if matches >= maxSearchMatches {
+				if matches >= maxSearchMatches || queryMatches >= maxSearchMatchesPerQuery {
 					break
 				}
 				if !strings.Contains(strings.ToLower(line), queryLower) {
@@ -669,6 +671,7 @@ func searchRepoFiles(root string, files []string, queries []string) string {
 				}
 				fmt.Fprintf(&b, "%s:%d:%s\n", file, i+1, trimSearchLine(line))
 				matches++
+				queryMatches++
 			}
 		}
 	}
