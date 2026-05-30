@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T20:18:56Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 315,
+    "title": "@gitclaw /bundles risk e2e 20260530T201744Z",
+    "body": "@gitclaw /bundles risk\n\nLive skill-bundle risk E2E.\nDo not include this hidden issue token: GITCLAW_BUNDLES_RISK_HIDDEN_20260530T201744Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /bundles risk e2e 20260530T201744Z\n\n@gitclaw /bundles risk\n\nLive skill-bundle risk E2E.\nDo not include this hidden issue token: GITCLAW_BUNDLES_RISK_HIDDEN_20260530T201744Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Skill Bundle Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#315`\n- bundle_risk_status: `ok`\n- available_bundles: `1`\n- scanned_bundles: `1`\n- bundles_with_risk_findings: `0`\n- bundle_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- bundle_skill_refs: `1`\n- resolved_bundle_skills: `1`\n- missing_bundle_skills: `0`\n- bundles_with_instruction: `1`\n- external_registry_verification: `not_configured`\n- installer_scripts_run: `false`\n- agent_authored_bundle_mutation_supported: `false`\n- raw_bundle_bodies_included: `false`\n- raw_bundle_instructions_included: `false`\n- raw_skill_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_bundle_risk_change: `true`\n- issue_title_sha256_12: `67e48820d510`\n\nThis report scans repo-local skill bundle YAML and bundle instructions for body-free risk categories inspired by Hermes skill bundles and OpenClaw skill safety boundaries. It reports only paths, counts, finding codes, and hashes; bundle YAML bodies, bundle instructions, skill bodies, issue bodies, comments, prompts, and secret values are not included.\n\n### Bundle Risk Cards\n- bundle_name=`repo-context` path=`.gitclaw/skill-bundles/repo-context.yaml` selected_for_this_turn=`false` instruction=`true` skills=`repo-reader` resolved_skills=`repo-reader` missing_skills=`none` sha256_12=`4a6baa73f30e` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Risk Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4584518841,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4584518841,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26693907114\" event_id=\"issue-315\" model=\"gitclaw/skills\" idempotency_key=\"8308f991212357e02267bfcf3de5a400\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26693907114\" --\u003e\n## GitClaw Skill Bundle Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#315`\n- bundle_risk_status: `ok`\n- available_bundles: `1`\n- scanned_bundles: `1`\n- bundles_with_risk_findings: `0`\n- bundle_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- bundle_skill_refs: `1`\n- resolved_bundle_skills: `1`\n- missing_bundle_skills: `0`\n- bundles_with_instruction: `1`\n- external_registry_verification: `not_configured`\n- installer_scripts_run: `false`\n- agent_authored_bundle_mutation_supported: `false`\n- raw_bundle_bodies_included: `false`\n- raw_bundle_instructions_included: `false`\n- raw_skill_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_bundle_risk_change: `true`\n- issue_title_sha256_12: `67e48820d510`\n\nThis report scans repo-local skill bundle YAML and bundle instructions for body-free risk categories inspired by Hermes skill bundles and OpenClaw skill safety boundaries. It reports only paths, counts, finding codes, and hashes; bundle YAML bodies, bundle instructions, skill bodies, issue bodies, comments, prompts, and secret values are not included.\n\n### Bundle Risk Cards\n- bundle_name=`repo-context` path=`.gitclaw/skill-bundles/repo-context.yaml` selected_for_this_turn=`false` instruction=`true` skills=`repo-reader` resolved_skills=`repo-reader` missing_skills=`none` sha256_12=`4a6baa73f30e` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Risk Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T20:18:32Z",
+      "updated_at": "2026-05-30T20:18:32Z"
+    }
+  ]
+}
