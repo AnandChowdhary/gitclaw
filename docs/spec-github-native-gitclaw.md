@@ -684,6 +684,16 @@ and emits repo/issue backup metadata, marker counts, transcript counts, trust
 states, sources, sizes, and hashes without dumping issue bodies, comment bodies,
 or assistant replies.
 
+Backed-up sessions can also be searched locally without a GitHub API call:
+
+```bash
+gitclaw session search deployment window --backup .gitclaw/backups/owner/repo/issues/000123.json
+```
+
+The local search report uses the same body-free matcher and returns
+`scope: local-backup`, backup metadata, query hash/term count, transcript and
+match counts, result limits, sources, trust metadata, scores, and hashes.
+
 When called as `@gitclaw /session search <query>`, the command searches the
 current reconstructed GitHub issue transcript with a local lexical matcher. It
 reports the query hash and term count, transcript and match counts, result
@@ -2747,6 +2757,9 @@ examples/workflows/gitclaw.yml
   an explicit report alias, while local
   `gitclaw session list --backup <issue.json>` inspects a backed-up issue
   session without dumping raw issue, comment, assistant, or transcript bodies.
+- Local `gitclaw session search <query> --backup <issue.json>` searches the
+  same backed-up issue transcript and reports only query hashes, counts,
+  sources, trust metadata, scores, and message/line hashes.
 - A `gh`-driven failure E2E harness verifies the safe failure path against a
   real Actions/model failure.
 - A `gh`-driven prompt-budget E2E harness verifies a large real issue still

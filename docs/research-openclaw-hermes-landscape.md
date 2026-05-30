@@ -214,6 +214,8 @@ database yet; the issue thread is the session store. The matching primitive is
 `@gitclaw /session search <query>`: search the reconstructed issue transcript,
 then return only message indexes, roles, sources, trust metadata, scores, and
 message/line hashes without raw transcript snippets or raw query text.
+Local `gitclaw session search <query> --backup <issue.json>` should use the
+same matcher over canonical backup JSON for offline triage.
 
 2026-05-29 memory follow-up: the right GitClaw cut is read-only memory
 injection, not self-writing memory. Load compact files such as

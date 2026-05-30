@@ -138,7 +138,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `15`' \
   'aliases: `7`' \
-  'local_cli_helpers: `32`' \
+  'local_cli_helpers: `33`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/help' \
@@ -153,6 +153,7 @@ for expected in \
   'gitclaw context list' \
   'gitclaw prompt list' \
   'gitclaw session list --backup <issue.json>' \
+  'gitclaw session search <query> --backup <issue.json>' \
   'gitclaw models list' \
   'gitclaw policy list' \
   'gitclaw backup list' \

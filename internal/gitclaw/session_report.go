@@ -137,17 +137,39 @@ func commentsFromBackup(comments []IssueBackupComment) []Comment {
 }
 
 func RenderSessionSearchReport(ev Event, transcript []TranscriptMessage, query string, maxResults int) string {
+	return renderSessionSearchReport(ev, transcript, query, maxResults, true, "")
+}
+
+func RenderSessionSearchCLIReport(backupPath string, backup IssueBackup, query string, maxResults int) string {
+	ev := Event{
+		Kind: backup.EventName,
+		Repo: backup.Repo,
+		Issue: Issue{
+			Number: backup.Issue.Number,
+			Title:  backup.Issue.Title,
+			Body:   backup.Issue.Body,
+		},
+	}
+	return renderSessionSearchReport(ev, backup.Transcript, query, maxResults, false, backupPath)
+}
+
+func renderSessionSearchReport(ev Event, transcript []TranscriptMessage, query string, maxResults int, includeIssue bool, backupPath string) string {
 	report := BuildSessionSearchReport(transcript, query, maxResults)
 	var b strings.Builder
 	b.WriteString("## GitClaw Session Search Report\n\n")
 	b.WriteString("Generated without a model call.\n\n")
-	if ev.Repo != "" {
+	if includeIssue && ev.Repo != "" {
 		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
 	}
-	if ev.Issue.Number != 0 {
+	if includeIssue && ev.Issue.Number != 0 {
 		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
-	} else {
+	} else if includeIssue {
 		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-backup")
+		fmt.Fprintf(&b, "- backup_file: `%s`\n", inlineCode(backupPath))
+		fmt.Fprintf(&b, "- backup_repo: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- backup_issue: `#%d`\n", ev.Issue.Number)
 	}
 	fmt.Fprintf(&b, "- session_search_status: `%s`\n", report.SearchStatus)
 	fmt.Fprintf(&b, "- query_sha256_12: `%s`\n", report.QueryHash)

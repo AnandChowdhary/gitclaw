@@ -345,11 +345,13 @@ func runPromptCommand(args []string) error {
 
 func runSessionCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw session list --backup <issue.json>")
+		return fmt.Errorf("usage: gitclaw session list --backup <issue.json> | gitclaw session search <query> --backup <issue.json>")
 	}
 	switch args[0] {
 	case "list":
 		return runSessionListCommand(args[1:])
+	case "search":
+		return runSessionSearchCommand(args[1:])
 	default:
 		return fmt.Errorf("unknown session command %q", args[0])
 	}
@@ -377,6 +379,44 @@ func runSessionListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSessionCLIReport(backupPath, backup))
+	return nil
+}
+
+func runSessionSearchCommand(args []string) error {
+	backupPath := ""
+	maxResults := defaultSessionSearchMaxResults
+	var queryParts []string
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--backup":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--backup requires a value")
+			}
+			backupPath = args[i+1]
+			i++
+		case "--max-results":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--max-results requires a value")
+			}
+			parsed, err := strconv.Atoi(args[i+1])
+			if err != nil || parsed <= 0 {
+				return fmt.Errorf("invalid --max-results: %q", args[i+1])
+			}
+			maxResults = parsed
+			i++
+		default:
+			queryParts = append(queryParts, args[i])
+		}
+	}
+	query := strings.TrimSpace(strings.Join(queryParts, " "))
+	if backupPath == "" || query == "" {
+		return fmt.Errorf("usage: gitclaw session search <query> --backup <issue.json>")
+	}
+	backup, err := ReadIssueBackupFile(backupPath)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSessionSearchCLIReport(backupPath, backup, query, maxResults))
 	return nil
 }
 
