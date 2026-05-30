@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-30T05:27:13Z",
+  "generated_at": "2026-05-30T05:29:28Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 136,
+  "count": 137,
   "issues": [
     {
       "number": 3,
@@ -1669,6 +1669,18 @@
       "title": "@gitclaw /context info .gitclaw/SOUL.md e2e 20260530T052608Z",
       "path": "issues/000160.json",
       "backup_generated_at": "2026-05-30T05:27:07Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
+    },
+    {
+      "number": 161,
+      "title": "@gitclaw /context info .gitclaw/SOUL.md e2e 20260530T052822Z",
+      "path": "issues/000161.json",
+      "backup_generated_at": "2026-05-30T05:29:27Z",
       "event_name": "issues",
       "labels": [
         "gitclaw"
