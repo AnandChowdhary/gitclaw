@@ -140,14 +140,21 @@ for expected in \
   'model="gitclaw/backup"' \
   "GitClaw Backup Report" \
   "Generated without a model call" \
+  'requested_backup_command: `stats`' \
+  'backup_command_status: `ok`' \
+  'issue_side_execution: `deferred_to_post_turn_backup_branch`' \
+  'raw_bodies_included: `false`' \
+  "requested_local_command: \`gitclaw backup stats --root .gitclaw/backups --repo ${repo}\`" \
   'backup_branch: `gitclaw-backups`' \
   'backup_schema_version: `1`'; do
   grep -Fq "$expected" <<<"$comments" || die "backup report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "backup report leaked issue body token"
-fi
+for leaked in "$token" "$title"; do
+  if grep -Fq "$leaked" <<<"$comments"; then
+    die "backup report leaked issue-side stats input ${leaked}"
+  fi
+done
 
 repo_key="${repo//\//__}"
 issue_padded="$(printf "%06d" "$issue_number")"

@@ -2507,7 +2507,10 @@ assert the expected comments/labels, and close the issue in cleanup.
 
 28. **Backup manifest**
 
-   - create a real issue with `@gitclaw /backup`,
+   - create a real issue with `@gitclaw /backup manifest`,
+   - assert the issue-side report lists `requested_backup_command: manifest`,
+     `issue_side_execution: deferred_to_post_turn_backup_branch`, and the
+     concrete local manifest command without dumping body/title tokens,
    - wait for the successful backup job,
    - fetch the real `gitclaw-backups` branch,
    - run `gitclaw backup manifest --root <fetched>/.gitclaw/backups --repo
@@ -2517,9 +2520,28 @@ assert the expected comments/labels, and close the issue in cleanup.
      count, and transcript count,
    - assert it does not dump the issue body token or raw transcript bodies.
 
-29. **Backup list**
+29. **Backup stats**
 
-   - create a real issue with `@gitclaw /backup`,
+   - create a real issue with `@gitclaw /backup stats`,
+   - assert the issue-side report lists `requested_backup_command: stats`,
+     the deferred execution marker, and the concrete local stats command
+     without dumping body/title tokens,
+   - wait for the successful backup job,
+   - fetch the real `gitclaw-backups` branch,
+   - run `gitclaw backup stats --root <fetched>/.gitclaw/backups --repo
+     <owner/repo>`,
+   - assert the report is marked `backup_stats_status: ok` and
+     `backup_verify_status: ok`,
+   - assert it lists aggregate issue/comment/message counts, latest backup
+     metadata, event counts, and payload bytes,
+   - assert it does not dump the issue body token or raw title.
+
+30. **Backup list**
+
+   - create a real issue with `@gitclaw /backup list`,
+   - assert the issue-side report lists `requested_backup_command: list`,
+     the deferred execution marker, and the concrete local list command without
+     dumping body/title tokens,
    - wait for the successful backup job,
    - fetch the real `gitclaw-backups` branch,
    - run `gitclaw backup list --root <fetched>/.gitclaw/backups --repo
@@ -2530,9 +2552,12 @@ assert the expected comments/labels, and close the issue in cleanup.
      event name, label/comment/transcript counts, and title hash,
    - assert it does not dump the issue body token or raw title.
 
-30. **Backup JSONL export**
+31. **Backup JSONL export**
 
-   - create a real issue with `@gitclaw /backup`,
+   - create a real issue with `@gitclaw /backup export-jsonl`,
+   - assert the issue-side report lists `requested_backup_command:
+     export-jsonl`, the deferred execution marker, and the concrete local
+     export command without dumping body/title tokens,
    - wait for the successful backup job,
    - fetch the real `gitclaw-backups` branch,
    - run `gitclaw backup export-jsonl --root <fetched>/.gitclaw/backups --repo
@@ -2542,9 +2567,12 @@ assert the expected comments/labels, and close the issue in cleanup.
      contains the assistant backup report body, proving the command is an
      explicit raw recovery/export path rather than an issue-visible report.
 
-31. **Backup restore plan**
+32. **Backup restore plan**
 
-   - create a real issue with `@gitclaw /backup`,
+   - create a real issue with `@gitclaw /backup restore-plan`,
+   - assert the issue-side report lists `requested_backup_command:
+     restore-plan`, the deferred execution marker, and the concrete local
+     restore-plan command without dumping body/title tokens,
    - wait for the successful backup job,
    - fetch the real `gitclaw-backups` branch,
    - run `gitclaw backup restore-plan --root <fetched>/.gitclaw/backups --repo
@@ -2554,9 +2582,12 @@ assert the expected comments/labels, and close the issue in cleanup.
      counts, assistant-turn/error counts, and body hashes,
    - assert it does not dump the issue body token or raw transcript bodies.
 
-32. **Backup retention plan**
+33. **Backup retention plan**
 
-   - create a real issue with `@gitclaw /backup`,
+   - create a real issue with `@gitclaw /backup retention-plan`,
+   - assert the issue-side report lists `requested_backup_command:
+     retention-plan`, the deferred execution marker, and the concrete local
+     retention-plan command without dumping body/title tokens,
    - wait for the successful backup job,
    - fetch the real `gitclaw-backups` branch,
    - run `gitclaw backup retention-plan --root <fetched>/.gitclaw/backups
@@ -2568,7 +2599,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the just-created issue is included without dumping the issue body
      token or raw title.
 
-33. **Backup search**
+34. **Backup search**
 
    - create a real issue with `@gitclaw /backup search <query>`,
    - include a unique hidden token in the issue body,
@@ -2586,7 +2617,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert it does not dump the hidden token, raw issue body, raw issue title,
      raw comments, raw transcript messages, or raw query text.
 
-33. **Proactive init generator**
+35. **Proactive init generator**
 
    - run `gitclaw proactive init` against a temporary repo root,
    - assert it writes the expected prompt file and scheduled workflow,
@@ -2824,27 +2855,34 @@ examples/workflows/gitclaw.yml
   records the deferred issue-side command intent, then verifies the fetched
   `gitclaw-backups` branch with `gitclaw backup verify` after the real backup
   job succeeds.
-- A `gh`-driven backup-manifest E2E harness verifies the fetched
-  `gitclaw-backups` branch can produce a file-level manifest with control-file
-  and issue-payload hashes for one real issue, without dumping raw bodies.
-- A `gh`-driven backup-stats E2E harness verifies the fetched
-  `gitclaw-backups` branch can produce a repo-wide backup stats report with
-  verification status, aggregate counts, latest backup metadata, and event
-  counts, without dumping raw bodies or titles.
-- A `gh`-driven backup-list E2E harness verifies the fetched
-  `gitclaw-backups` branch can produce a timestamp-sorted indexed backup list
-  with paths, counts, event names, and title hashes, without dumping raw bodies
-  or titles.
-- A `gh`-driven backup-export-jsonl E2E harness verifies the fetched
-  `gitclaw-backups` branch can be exported into raw JSONL transcript records
-  for one real issue.
-- A `gh`-driven backup-restore-plan E2E harness verifies the fetched
-  `gitclaw-backups` branch can produce a dry-run restore plan for one real
-  issue without dumping raw bodies.
-- A `gh`-driven backup-retention-plan E2E harness verifies the fetched
-  `gitclaw-backups` branch can produce a dry-run keep-latest retention plan
-  with kept/prune-candidate metadata and hashes, without dumping raw titles or
-  bodies.
+- A `gh`-driven backup-manifest E2E harness verifies
+  `@gitclaw /backup manifest` records the deferred issue-side command intent,
+  then verifies the fetched `gitclaw-backups` branch can produce a file-level
+  manifest with control-file and issue-payload hashes for one real issue,
+  without dumping raw bodies.
+- A `gh`-driven backup-stats E2E harness verifies
+  `@gitclaw /backup stats` records the deferred issue-side command intent,
+  then verifies the fetched `gitclaw-backups` branch can produce a repo-wide
+  backup stats report with verification status, aggregate counts, latest backup
+  metadata, and event counts, without dumping raw bodies or titles.
+- A `gh`-driven backup-list E2E harness verifies
+  `@gitclaw /backup list` records the deferred issue-side command intent, then
+  verifies the fetched `gitclaw-backups` branch can produce a timestamp-sorted
+  indexed backup list with paths, counts, event names, and title hashes,
+  without dumping raw bodies or titles.
+- A `gh`-driven backup-export-jsonl E2E harness verifies
+  `@gitclaw /backup export-jsonl` records the deferred issue-side command
+  intent, then verifies the fetched `gitclaw-backups` branch can be exported
+  into raw JSONL transcript records for one real issue.
+- A `gh`-driven backup-restore-plan E2E harness verifies
+  `@gitclaw /backup restore-plan` records the deferred issue-side command
+  intent, then verifies the fetched `gitclaw-backups` branch can produce a
+  dry-run restore plan for one real issue without dumping raw bodies.
+- A `gh`-driven backup-retention-plan E2E harness verifies
+  `@gitclaw /backup retention-plan` records the deferred issue-side command
+  intent, then verifies the fetched `gitclaw-backups` branch can produce a
+  dry-run keep-latest retention plan with kept/prune-candidate metadata and
+  hashes, without dumping raw titles or bodies.
 - A `gh`-driven context-report E2E harness verifies `@gitclaw /context`
   produces a deterministic context summary without a model call.
 - A `gh`-driven context-list E2E harness verifies `@gitclaw /context list` is
