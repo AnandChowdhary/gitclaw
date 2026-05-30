@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T19:01:15Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 309,
+    "title": "@gitclaw /rollback risk e2e 20260530T190006Z",
+    "body": "@gitclaw /rollback risk\n\nLive checkpoints-risk E2E.\nDo not include this hidden issue token: GITCLAW_CHECKPOINTS_RISK_HIDDEN_20260530T190006Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /rollback risk e2e 20260530T190006Z\n\n@gitclaw /rollback risk\n\nLive checkpoints-risk E2E.\nDo not include this hidden issue token: GITCLAW_CHECKPOINTS_RISK_HIDDEN_20260530T190006Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Checkpoint Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#309`\n- checkpoint_risk_status: `ok`\n- verification_scope: `git_checkpoint_metadata`\n- checkpoint_strategy: `git-history-plus-backup-branch`\n- rollback_mode: `inspect-only`\n- git_available: `true`\n- git_repository: `true`\n- worktree_root: `.`\n- branch: `main`\n- head_commit: `86f9b7c5eb2f`\n- commits_available: `1`\n- recent_commits_returned: `1`\n- recent_commit_limit: `5`\n- worktree_clean: `true`\n- staged_changes: `0`\n- unstaged_changes: `0`\n- untracked_files: `0`\n- backup_branch: `gitclaw-backups`\n- backup_branch_local_ref: `false`\n- surfaces_with_risk_findings: `0`\n- checkpoint_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- raw_diffs_included: `false`\n- raw_file_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- credential_values_included: `false`\n- restore_operations_enabled: `false`\n- git_reset_allowed: `false`\n- git_clean_allowed: `false`\n- checkout_mutation_allowed: `false`\n- shadow_store_path_included: `false`\n- pre_restore_snapshot_required: `true`\n- rollback_diff_preview_required: `true`\n- backup_manifest_required_for_restore: `true`\n- llm_e2e_required_after_checkpoint_risk_change: `true`\n- issue_title_sha256_12: `ea0fc520e3e6`\n\nThis report checks rollback safety using git metadata already present in the checkout. It reports status counts, recent-commit hashes, risk codes, and severities only; it does not print diffs, file bodies, commit subjects, issue bodies, comments, prompts, tool outputs, credentials, or secret values, and it does not restore, reset, clean, or checkout files.\n\n### Git Checkpoint Risk Card\n- kind=`git-checkpoint` git_available=`true` git_repository=`true` root=`.` branch=`main` head_commit=`86f9b7c5eb2f` commits_available=`1` recent_commits_returned=`1` recent_commit_limit=`5` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Worktree Change Risk Card\n- kind=`checkpoint-worktree` worktree_clean=`true` staged_changes=`0` unstaged_changes=`0` untracked_files=`0` raw_diffs_included=`false` raw_file_bodies_included=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Backup Branch Risk Card\n- kind=`checkpoint-backup` backup_branch=`gitclaw-backups` backup_branch_local_ref=`false` backup_manifest_required_for_restore=`true` raw_backup_payloads_included=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Rollback Operation Risk Card\n- kind=`checkpoint-operation` rollback_mode=`inspect-only` restore_operations_enabled=`false` git_reset_allowed=`false` git_clean_allowed=`false` checkout_mutation_allowed=`false` pre_restore_snapshot_required=`true` rollback_diff_preview_required=`true` shadow_store_path_included=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Recent Commit Risk Cards\n- kind=`checkpoint-commit` commit=`86f9b7c` date=`2026-05-30` subject_sha256_12=`f222a34d03e2` raw_subject_included=`false` raw_diff_included=`false`\n\n### Current Checkpoint Request Risk Card\n- kind=`current-checkpoint-request` current_issue_checkpoint_request=`true` issue_body_scanned=`false` comment_bodies_scanned=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Risk Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4583953422,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4583953422,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26692255978\" event_id=\"issue-309\" model=\"gitclaw/checkpoints\" idempotency_key=\"d558ae25b55acbe58c1189eda739520e\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26692255978\" --\u003e\n## GitClaw Checkpoint Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#309`\n- checkpoint_risk_status: `ok`\n- verification_scope: `git_checkpoint_metadata`\n- checkpoint_strategy: `git-history-plus-backup-branch`\n- rollback_mode: `inspect-only`\n- git_available: `true`\n- git_repository: `true`\n- worktree_root: `.`\n- branch: `main`\n- head_commit: `86f9b7c5eb2f`\n- commits_available: `1`\n- recent_commits_returned: `1`\n- recent_commit_limit: `5`\n- worktree_clean: `true`\n- staged_changes: `0`\n- unstaged_changes: `0`\n- untracked_files: `0`\n- backup_branch: `gitclaw-backups`\n- backup_branch_local_ref: `false`\n- surfaces_with_risk_findings: `0`\n- checkpoint_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- raw_diffs_included: `false`\n- raw_file_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- credential_values_included: `false`\n- restore_operations_enabled: `false`\n- git_reset_allowed: `false`\n- git_clean_allowed: `false`\n- checkout_mutation_allowed: `false`\n- shadow_store_path_included: `false`\n- pre_restore_snapshot_required: `true`\n- rollback_diff_preview_required: `true`\n- backup_manifest_required_for_restore: `true`\n- llm_e2e_required_after_checkpoint_risk_change: `true`\n- issue_title_sha256_12: `ea0fc520e3e6`\n\nThis report checks rollback safety using git metadata already present in the checkout. It reports status counts, recent-commit hashes, risk codes, and severities only; it does not print diffs, file bodies, commit subjects, issue bodies, comments, prompts, tool outputs, credentials, or secret values, and it does not restore, reset, clean, or checkout files.\n\n### Git Checkpoint Risk Card\n- kind=`git-checkpoint` git_available=`true` git_repository=`true` root=`.` branch=`main` head_commit=`86f9b7c5eb2f` commits_available=`1` recent_commits_returned=`1` recent_commit_limit=`5` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Worktree Change Risk Card\n- kind=`checkpoint-worktree` worktree_clean=`true` staged_changes=`0` unstaged_changes=`0` untracked_files=`0` raw_diffs_included=`false` raw_file_bodies_included=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Backup Branch Risk Card\n- kind=`checkpoint-backup` backup_branch=`gitclaw-backups` backup_branch_local_ref=`false` backup_manifest_required_for_restore=`true` raw_backup_payloads_included=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Rollback Operation Risk Card\n- kind=`checkpoint-operation` rollback_mode=`inspect-only` restore_operations_enabled=`false` git_reset_allowed=`false` git_clean_allowed=`false` checkout_mutation_allowed=`false` pre_restore_snapshot_required=`true` rollback_diff_preview_required=`true` shadow_store_path_included=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Recent Commit Risk Cards\n- kind=`checkpoint-commit` commit=`86f9b7c` date=`2026-05-30` subject_sha256_12=`f222a34d03e2` raw_subject_included=`false` raw_diff_included=`false`\n\n### Current Checkpoint Request Risk Card\n- kind=`current-checkpoint-request` current_issue_checkpoint_request=`true` issue_body_scanned=`false` comment_bodies_scanned=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Risk Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T19:00:53Z",
+      "updated_at": "2026-05-30T19:00:53Z"
+    }
+  ]
+}
