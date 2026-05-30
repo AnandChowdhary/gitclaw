@@ -152,7 +152,7 @@ for expected in \
   'tools_allowed_configured: `0`' \
   'tools_disabled_configured: `0`' \
   'workflows_present: `7`' \
-  'slash_commands: `24`' \
+  'slash_commands: `25`' \
   '/approvals' \
   '/bundles' \
   '/checkpoints' \

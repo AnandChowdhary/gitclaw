@@ -136,9 +136,9 @@ for expected in \
   "GitClaw Commands Report" \
   "Generated without a model call" \
   'trigger_prefix: `@gitclaw`' \
-  'commands: `24`' \
-  'aliases: `20`' \
-  'local_cli_helpers: `77`' \
+  'commands: `25`' \
+  'aliases: `21`' \
+  'local_cli_helpers: `79`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/approvals' \
@@ -155,6 +155,8 @@ for expected in \
   '/secret' \
   '/migrate' \
   '/migration' \
+  '/orders' \
+  '/standing-orders' \
   '/heartbeat' \
   '/doctor' \
   '/skills' \
@@ -207,6 +209,8 @@ for expected in \
   'gitclaw secrets scan' \
   'gitclaw secrets list' \
   'gitclaw models list' \
+  'gitclaw orders list' \
+  'gitclaw orders verify' \
   'gitclaw policy list' \
   'gitclaw policy verify' \
   'gitclaw backup verify' \

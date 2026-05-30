@@ -63,6 +63,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runToolsCommand(args[1:])
 	case "models", "model":
 		return runModelsCommand(args[1:])
+	case "orders", "standing-orders":
+		return runOrdersCommand(args[1:])
 	case "config", "configuration":
 		return runConfigCommand(args[1:])
 	case "policy":
@@ -224,6 +226,30 @@ func runApprovalsListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderApprovalCLIReport(cfg))
+	return nil
+}
+
+func runOrdersCommand(args []string) error {
+	if len(args) == 0 {
+		return runOrdersListCommand(nil)
+	}
+	switch args[0] {
+	case "list", "verify":
+		return runOrdersListCommand(args[1:])
+	default:
+		return fmt.Errorf("usage: gitclaw orders [list|verify]")
+	}
+}
+
+func runOrdersListCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown orders argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderStandingOrdersCLIReport(cfg))
 	return nil
 }
 

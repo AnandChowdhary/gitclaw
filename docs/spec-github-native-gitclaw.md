@@ -676,6 +676,7 @@ GitHub issue/comment event
   `proactive enqueue`, `proactive init`, `proactive info`,
   `approvals list`, `approvals verify`,
   `migrate plan`,
+  `orders list`, `orders verify`,
   `profile show`, `profile verify`,
   `runs current`, `runs verify`,
   `sandbox explain`, `sandbox verify`,
@@ -836,6 +837,7 @@ AGENTS.md                    # existing coding-agent instructions, if present
 .gitclaw/IDENTITY.md         # agent identity and product framing
 .gitclaw/USER.md             # maintainer preferences, human-reviewed only
 .gitclaw/HEARTBEAT.md        # scheduled heartbeat checklist
+.gitclaw/STANDING_ORDERS.md  # durable operating authority boundaries
 .gitclaw/SKILLS/*.md         # optional read-only local skills, v1+
 .gitclaw/MEMORY.md           # optional curated repo memory, human-reviewed only
 .gitclaw/memory/YYYY-MM-DD.md # dated working memory notes, human-reviewed only
@@ -854,6 +856,8 @@ MVP loads:
 - latest bounded `.gitclaw/memory/*.md` notes, if present and human-reviewed
 - `.gitclaw/HEARTBEAT.md`, if present, for heartbeat turns and as optional
   issue context
+- `.gitclaw/STANDING_ORDERS.md`, if present, as persistent repo-reviewed
+  authority boundaries for normal and proactive turns
 - `.gitclaw/SKILLS/*/SKILL.md`, if selected by the issue thread or marked
   always-on
 - bounded `@file:<repo-path>[:start-end]` context references explicitly named
@@ -2091,6 +2095,40 @@ Local operators can print the same catalog with:
 
 ```bash
 gitclaw commands
+```
+
+### Standing Orders Command
+
+GitClaw supports repo-reviewed standing orders inspired by OpenClaw's
+persistent authority model:
+
+```text
+@gitclaw /orders
+@gitclaw /standing-orders
+```
+
+The command runs after preflight and before model inference. It posts a
+`gitclaw:assistant-turn` comment with `model="gitclaw/orders"` and summarizes:
+
+- whether `.gitclaw/STANDING_ORDERS.md` exists,
+- whether the file is loaded into model context,
+- whether `AGENTS.md` links to standing orders,
+- number of standing-order programs,
+- how many programs include `Authority`, `Trigger`, `Approval gate`, and
+  `Escalation` clauses,
+- proactive workflow and prompt metadata that can enforce scheduled programs,
+- body-free findings for missing structure.
+
+It never executes standing orders, creates schedules, changes repository files,
+calls the model, or prints raw order, issue, comment, workflow, or proactive
+prompt bodies. This keeps OpenClaw-style durable authority inspectable through
+GitHub before it becomes automation.
+
+Local operators can inspect the same surface with:
+
+```bash
+gitclaw orders list
+gitclaw orders verify
 ```
 
 ### Doctor Command
@@ -3811,6 +3849,11 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven commands-report E2E harness verifies `@gitclaw /help` reports
   deterministic commands, aliases, and every advertised local CLI helper
   without a model call or issue-body leakage.
+- A `gh`-driven orders-report E2E harness verifies `@gitclaw /orders`
+  reports standing-order file metadata, model-context loading, program clause
+  coverage, proactive enforcement metadata, and body-free findings without a
+  model call or standing-order body leakage. Each standing-orders feature batch
+  must still run a live GitHub Models conversation E2E.
 - A `gh`-driven runs-report E2E harness verifies `@gitclaw /runs` reports
   current turn/run provenance, managed labels, marker counts, prompt-visible
   input hashes, and active tool-output hashes without a model call or body

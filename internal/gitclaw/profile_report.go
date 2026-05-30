@@ -125,6 +125,8 @@ func profileDocumentCategory(path string) string {
 		return "memory"
 	case path == ".gitclaw/HEARTBEAT.md":
 		return "heartbeat"
+	case path == standingOrdersPath:
+		return "standing-orders"
 	default:
 		return "profile"
 	}

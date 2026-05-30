@@ -412,6 +412,16 @@ that create or reuse GitHub issues, then dispatch the main issue handler. This
 preserves the no-daemon architecture while allowing email triage, reminders,
 watchers, and reports to initiate their own visible issue threads.
 
+2026-05-30 standing-orders follow-up: OpenClaw distinguishes standing orders
+from cron, heartbeat, hooks, and task flow: they are durable authority programs
+with scope, triggers, approval gates, and escalation rules. Hermes profiles make
+the same lesson concrete by scoping SOUL, memories, sessions, skills, cron
+jobs, and state per profile. For GitClaw, the useful translation is
+`.gitclaw/STANDING_ORDERS.md`: a reviewed repo file loaded into model context,
+plus `@gitclaw /orders` and `gitclaw orders list|verify` reports that audit
+program clause coverage and proactive enforcement metadata without executing
+orders or printing their bodies.
+
 2026-05-29 proactive implementation follow-up: the minimal GitClaw cut is a
 generic `proactive enqueue` command and dispatchable workflow. It creates one
 issue per job name and slot, stores a `gitclaw:proactive-run` marker in the
