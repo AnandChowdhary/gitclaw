@@ -652,6 +652,17 @@ unknown fallbacks, credential material in `.gitclaw/config.yml`, raw prompt
 logging, live-probe requirements, and raw provider-error leakage, then pair the
 deterministic audit with a real GitHub Models follow-up conversation E2E.
 
+2026-05-30 session-risk follow-up: OpenClaw-style assistants treat transcripts
+and assistant-turn metadata as operational state, while Hermes emphasizes saved
+and searchable sessions. GitClaw should add `@gitclaw /session risk` and
+`gitclaw session risk --backup <issue.json>` as a body-free audit of the
+GitHub issue session itself: verify transcript reconstruction, trusted versus
+untrusted messages, edited messages, assistant-turn prompt provenance, error
+markers, heartbeat/channel/proactive origins, and reused prompt-context hashes.
+The report should expose only counts, finding codes, sources, and hashes, then
+prove the surface with a live E2E that first performs a real GitHub Models
+conversation and then audits that session metadata deterministically.
+
 2026-05-30 tool-grounding follow-up: the first model-backed conversation after
 the parameter fix proved provider access but exposed prompt ambiguity: the model
 echoed the issue nonce where the harness wanted the repository search-result

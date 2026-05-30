@@ -110,6 +110,7 @@ gitclaw backup export-jsonl
 gitclaw backup restore-plan
 gitclaw backup retention-plan
 gitclaw session list --backup <issue.json>
+gitclaw session risk --backup <issue.json>
 gitclaw session search <query> --backup <issue.json>
 gitclaw runs current
 gitclaw runs verify
@@ -171,6 +172,7 @@ scripts/e2e/github-model-risk-report.sh
 scripts/e2e/github-plugins-risk-report.sh
 scripts/e2e/github-profile-risk-report.sh
 scripts/e2e/github-proactive-risk-report.sh
+scripts/e2e/github-session-risk-report.sh
 scripts/e2e/github-tasks-risk-report.sh
 scripts/e2e/github-tools-risk-report.sh
 scripts/e2e/github-workspace-risk-report.sh

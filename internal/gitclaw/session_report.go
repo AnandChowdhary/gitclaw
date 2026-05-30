@@ -52,6 +52,9 @@ func IsSessionReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderSessionReport(ev Event, cfg Config, comments []Comment, transcript []TranscriptMessage) string {
+	if requestedSessionRisk(ev, cfg) {
+		return RenderSessionRiskReport(ev, comments, transcript)
+	}
 	if query := requestedSessionSearchQuery(ev, cfg); query != "" {
 		return RenderSessionSearchReport(ev, transcript, query, defaultSessionSearchMaxResults)
 	}
@@ -223,6 +226,11 @@ func requestedSessionSearchQuery(ev Event, cfg Config) string {
 		return ""
 	}
 	return cleanMemorySearchQuery(strings.Join(fields[2:], " "))
+}
+
+func requestedSessionRisk(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && fields[0] == "/session" && (strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit"))
 }
 
 func BuildSessionSearchReport(transcript []TranscriptMessage, query string, maxResults int) SessionSearchReport {

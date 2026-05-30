@@ -872,6 +872,7 @@ transcript/session CLIs and Hermes' saved/searchable sessions:
 ```text
 @gitclaw /session
 @gitclaw /session list
+@gitclaw /session risk
 @gitclaw /session search deployment window
 ```
 
@@ -908,12 +909,30 @@ or assistant replies.
 Backed-up sessions can also be searched locally without a GitHub API call:
 
 ```bash
+gitclaw session risk --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session search deployment window --backup .gitclaw/backups/owner/repo/issues/000123.json
 ```
+
+`gitclaw session risk --backup <issue.json>` audits a backed-up issue session
+without calling GitHub or a model. It reports marker/provenance counts,
+trusted/untrusted and edited transcript counts, channel/proactive origin flags,
+risk finding codes, severities, sources, and evidence hashes only. It flags
+empty transcripts, assistant turns missing prompt provenance, error markers,
+untrusted or edited prompt-visible messages, channel/proactive session origins,
+and reused prompt-context hashes without printing issue bodies, comments,
+assistant replies, prompts, tool outputs, search queries, credentials, or secret
+values.
 
 The local search report uses the same body-free matcher and returns
 `scope: local-backup`, backup metadata, query hash/term count, transcript and
 match counts, result limits, sources, trust metadata, scores, and hashes.
+
+When called as `@gitclaw /session risk`, the command audits the current
+GitHub issue session after transcript reconstruction and before model
+inference. The issue report publishes the same body-free risk cards plus
+`current_issue_session_request=true`. Any change to this surface requires local
+tests plus a live GitHub issue E2E that includes a normal GitHub Models turn
+with prompt provenance before the deterministic session-risk report.
 
 When called as `@gitclaw /session search <query>`, the command searches the
 current reconstructed GitHub issue transcript with a local lexical matcher. It

@@ -1166,11 +1166,13 @@ func runPromptCommand(args []string) error {
 
 func runSessionCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw session list --backup <issue.json> | gitclaw session search <query> --backup <issue.json>")
+		return fmt.Errorf("usage: gitclaw session list --backup <issue.json> | gitclaw session risk --backup <issue.json> | gitclaw session search <query> --backup <issue.json>")
 	}
 	switch args[0] {
 	case "list":
 		return runSessionListCommand(args[1:])
+	case "risk", "risk-audit":
+		return runSessionRiskCommand(args[1:])
 	case "search":
 		return runSessionSearchCommand(args[1:])
 	default:
@@ -1200,6 +1202,31 @@ func runSessionListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSessionCLIReport(backupPath, backup))
+	return nil
+}
+
+func runSessionRiskCommand(args []string) error {
+	backupPath := ""
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--backup":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--backup requires a value")
+			}
+			backupPath = args[i+1]
+			i++
+		default:
+			return fmt.Errorf("unknown session risk argument %q", args[i])
+		}
+	}
+	if backupPath == "" {
+		return fmt.Errorf("usage: gitclaw session risk --backup <issue.json>")
+	}
+	backup, err := ReadIssueBackupFile(backupPath)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSessionRiskCLIReport(backupPath, backup))
 	return nil
 }
 
