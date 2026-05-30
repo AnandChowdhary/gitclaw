@@ -1667,6 +1667,16 @@ running `reset`, `restore`, or checkout commands. This gives future write-mode
 turns a visible checkpoint gate while keeping rollback itself a reviewed human
 operation.
 
+2026-05-30 checkpoint-risk follow-up: Hermes' rollback model treats restore as
+dangerous enough to require preview and checkpoint evidence, while OpenClaw's
+write approval posture keeps mutation separate from inspection. GitClaw should
+add `@gitclaw /checkpoints risk` and `gitclaw checkpoints risk`: scan git
+checkpoint metadata for missing auditability, dirty worktrees, raw diff or file
+body exposure, restore/reset/clean/checkout authority, shadow-store path
+leakage, and missing rollback safety gates while reporting only metadata,
+counts, commit hashes, risk codes, and severities. Acceptance requires
+deterministic body-free coverage plus a live GitHub Models follow-up E2E.
+
 2026-05-30 approval-readiness follow-up: OpenClaw's exec approvals treat command
 execution as a policy decision layered with user approval, while Hermes frames
 dangerous commands as an explicit authorization boundary. GitClaw should expose

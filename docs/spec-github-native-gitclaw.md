@@ -716,8 +716,8 @@ GitHub issue/comment event
   `heartbeat`, `heartbeat status`,
   `channel-ingest`, `channel-state`, `channel-gateway`, `channel-delivery`,
   `channels list`, `channels verify`, `channels risk`, `channels info`,
-  `checkpoints status`, `checkpoints list`, `checkpoints verify`,
-  `rollback list`,
+  `checkpoints status`, `checkpoints list`, `checkpoints risk`,
+  `checkpoints verify`, `rollback list`, `rollback risk`,
   `proactive enqueue`, `proactive init`, `proactive info`, `proactive risk`,
   `approvals list`, `approvals verify`,
   `artifacts list`, `artifacts risk`, `artifacts verify`,
@@ -2092,6 +2092,8 @@ approval, sandboxing, and mutation:
 @gitclaw /checkpoints
 @gitclaw /checkpoint
 @gitclaw /rollback
+@gitclaw /checkpoints risk
+@gitclaw /rollback risk
 ```
 
 The command runs after normal preflight authorization but before model
@@ -2117,13 +2119,25 @@ Local operators can inspect the same checkpoint state without opening an issue:
 ```bash
 gitclaw checkpoints status
 gitclaw checkpoints list
+gitclaw checkpoints risk
 gitclaw checkpoints verify
 gitclaw rollback list
+gitclaw rollback risk
 ```
 
 The aliases intentionally return the same body-free report in v1. Reviewed
 recovery still happens through ordinary git history, pull requests, and fetched
 backup manifests.
+
+When called as `@gitclaw /checkpoints risk` or `@gitclaw /rollback risk`, the
+command posts a `GitClaw Checkpoint Risk Report`. It scans git checkpoint
+metadata for missing git auditability, dirty worktrees, raw diff/file-body
+exposure, restore/reset/clean/checkout authority, shadow-store path leakage,
+and missing rollback safety gates. It reports status counts, commit hashes,
+codes, severities, and risk cards only; it does not print diffs, file bodies,
+commit subjects, issue bodies, comments, prompts, tool outputs, credentials, or
+secret values. This surface must ship with deterministic tests and a live
+GitHub Models follow-up E2E because rollback safety is a future write-mode gate.
 
 ## Diffs Inspection Command
 
@@ -5005,6 +5019,10 @@ examples/workflows/gitclaw.yml
   checkpoint state, reports HEAD/worktree/backup-branch metadata, and does not
   leak issue body text, diffs, file bodies, commit subjects, or perform restore
   operations.
+- A `gh`-driven checkpoints-risk E2E harness verifies
+  `@gitclaw /rollback risk` exposes body-free checkpoint risk metadata, then
+  runs a real GitHub Models follow-up conversation that proves model inference,
+  prompt provenance, selected skills, and prompt-visible tool usage.
 - A `gh`-driven diffs-report E2E harness verifies `@gitclaw /diffs` inspects
   the real checked-out repository's git change metadata, reports policy/spec
   state, clean/dirty state, changed-file counts, numstat totals, and raw-patch

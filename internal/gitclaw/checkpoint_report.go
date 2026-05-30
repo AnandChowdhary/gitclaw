@@ -119,11 +119,18 @@ func BuildCheckpointReport(root string) CheckpointReport {
 }
 
 func RenderCheckpointReport(ev Event, report CheckpointReport) string {
+	if isCheckpointRiskRequest(ev, DefaultConfig()) {
+		return RenderCheckpointRiskReport(ev, report)
+	}
 	return renderCheckpointReport(ev, report, true)
 }
 
 func RenderCheckpointCLIReport(report CheckpointReport) string {
 	return renderCheckpointReport(Event{}, report, false)
+}
+
+func RenderCheckpointRiskCLIReport(report CheckpointReport) string {
+	return renderCheckpointRiskReport(Event{}, report, false)
 }
 
 func renderCheckpointReport(ev Event, report CheckpointReport, includeIssue bool) string {
@@ -176,8 +183,10 @@ func renderCheckpointReport(ev Event, report CheckpointReport, includeIssue bool
 	b.WriteString("\n### Local Commands\n")
 	b.WriteString("- `gitclaw checkpoints status`\n")
 	b.WriteString("- `gitclaw checkpoints list`\n")
+	b.WriteString("- `gitclaw checkpoints risk`\n")
 	b.WriteString("- `gitclaw checkpoints verify`\n")
 	b.WriteString("- `gitclaw rollback list`\n")
+	b.WriteString("- `gitclaw rollback risk`\n")
 	b.WriteString("- restore remains disabled in GitClaw v1; use pull requests, git history, and fetched backup manifests for reviewed recovery\n")
 	return strings.TrimSpace(b.String())
 }

@@ -218,8 +218,10 @@ func runCheckpointsCommand(args []string) error {
 	switch args[0] {
 	case "status", "list", "verify":
 		return runCheckpointsStatusCommand(args[1:])
+	case "risk", "risk-audit":
+		return runCheckpointsRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw checkpoints [status|list|verify]")
+		return fmt.Errorf("usage: gitclaw checkpoints [status|list|risk|verify]")
 	}
 }
 
@@ -506,8 +508,10 @@ func runRollbackCommand(args []string) error {
 	switch args[0] {
 	case "list", "status":
 		return runCheckpointsStatusCommand(args[1:])
+	case "risk", "risk-audit":
+		return runCheckpointsRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("gitclaw rollback is inspect-only; use: gitclaw rollback list")
+		return fmt.Errorf("gitclaw rollback is inspect-only; use: gitclaw rollback [list|risk]")
 	}
 }
 
@@ -521,6 +525,19 @@ func runCheckpointsStatusCommand(args []string) error {
 	}
 	report := BuildCheckpointReport(cfg.Workdir)
 	fmt.Println(RenderCheckpointCLIReport(report))
+	return nil
+}
+
+func runCheckpointsRiskCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown checkpoints risk argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	report := BuildCheckpointReport(cfg.Workdir)
+	fmt.Println(RenderCheckpointRiskCLIReport(report))
 	return nil
 }
 

@@ -138,7 +138,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `33`' \
   'aliases: `31`' \
-  'local_cli_helpers: `110`' \
+  'local_cli_helpers: `112`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/agents' \
@@ -212,8 +212,10 @@ for expected in \
   'gitclaw channel-delivery' \
   'gitclaw checkpoints status' \
   'gitclaw checkpoints list' \
+  'gitclaw checkpoints risk' \
   'gitclaw checkpoints verify' \
   'gitclaw rollback list' \
+  'gitclaw rollback risk' \
   'gitclaw config list' \
   'gitclaw context list' \
   'gitclaw context info <path>' \
