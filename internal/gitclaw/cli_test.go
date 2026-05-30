@@ -827,7 +827,7 @@ func TestModelsListCommandReportsProviderWithoutCallingModel(t *testing.T) {
 			t.Fatalf("models list returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Model Report", "scope: `local-cli`", "Generated without a model call", "provider: `github-models`", "model: `openai/gpt-5-nano`", "default_model_policy: `smallest-openai-github-models-catalog-model`", "catalog_endpoint_host: `models.github.ai`", "endpoint_host: `models.github.ai`", "token_source: `GITHUB_TOKEN`", "request_timeout_seconds: `60`", "retry_max_attempts: `5`", "retry_base_delay_seconds: `5`", "retry_max_delay_seconds: `60`", "retryable_statuses: `429, 408, 5xx`", "prompt_artifact_enabled: `false`", "GITCLAW_MODEL", "GITCLAW_LLM_BASE_URL"} {
+	for _, want := range []string{"GitClaw Model Report", "scope: `local-cli`", "Generated without a model call", "provider: `github-models`", "model: `openai/gpt-5-nano`", "default_model_policy: `smallest-openai-github-models-catalog-model`", "catalog_endpoint_host: `models.github.ai`", "endpoint_host: `models.github.ai`", "token_source: `GITHUB_TOKEN`", "output_token_parameter: `max_completion_tokens`", "request_timeout_seconds: `60`", "retry_max_attempts: `5`", "retry_base_delay_seconds: `5`", "retry_max_delay_seconds: `60`", "retryable_statuses: `429, 408, 5xx`", "prompt_artifact_enabled: `false`", "GITCLAW_MODEL", "GITCLAW_LLM_BASE_URL"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("models list output missing %q:\n%s", want, output)
 		}

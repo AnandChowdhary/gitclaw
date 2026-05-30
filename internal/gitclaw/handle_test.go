@@ -482,7 +482,7 @@ func TestHandleModelsCommandPostsReportWithoutLLM(t *testing.T) {
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Model Report", "Generated without a model call", "model=\"gitclaw/models\"", "provider: `github-models`", "model: `openai/gpt-5-nano`", "default_model_policy: `smallest-openai-github-models-catalog-model`", "catalog_endpoint_host: `models.github.ai`", "endpoint_host: `models.github.ai`", "token_source: `GITHUB_TOKEN`", "request_timeout_seconds: `75`", "retry_max_attempts: `6`", "retry_base_delay_seconds: `10`", "retry_max_delay_seconds: `90`", "retryable_statuses: `429, 408, 5xx`"} {
+	for _, want := range []string{"GitClaw Model Report", "Generated without a model call", "model=\"gitclaw/models\"", "provider: `github-models`", "model: `openai/gpt-5-nano`", "default_model_policy: `smallest-openai-github-models-catalog-model`", "catalog_endpoint_host: `models.github.ai`", "endpoint_host: `models.github.ai`", "token_source: `GITHUB_TOKEN`", "output_token_parameter: `max_completion_tokens`", "request_timeout_seconds: `75`", "retry_max_attempts: `6`", "retry_base_delay_seconds: `10`", "retry_max_delay_seconds: `90`", "retryable_statuses: `429, 408, 5xx`"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("model report missing %q:\n%s", want, body)
 		}

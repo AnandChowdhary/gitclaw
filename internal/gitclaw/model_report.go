@@ -40,6 +40,7 @@ func renderModelReport(ev Event, cfg Config, includeIssue bool) string {
 	fmt.Fprintf(&b, "- catalog_endpoint_host: `%s`\n", llmEndpointHost(defaultGitHubModelsCatalogURL))
 	fmt.Fprintf(&b, "- endpoint_host: `%s`\n", llmEndpointHost(baseURL))
 	fmt.Fprintf(&b, "- token_source: `%s`\n", llmTokenSource(baseURL))
+	fmt.Fprintf(&b, "- output_token_parameter: `%s`\n", llmOutputTokenParam(cfg.Model))
 	fmt.Fprintf(&b, "- request_timeout_seconds: `%d`\n", int(llmTimeout().Seconds()))
 	fmt.Fprintf(&b, "- retry_max_attempts: `%d`\n", llmMaxAttempts())
 	fmt.Fprintf(&b, "- retry_base_delay_seconds: `%d`\n", int(llmRetryBaseDelay().Seconds()))

@@ -104,7 +104,7 @@ func (c *OpenAICompatibleLLM) Complete(ctx context.Context, req LLMRequest) (str
 		},
 	}
 	if req.Config.MaxOutputTokens > 0 {
-		payload["max_tokens"] = req.Config.MaxOutputTokens
+		payload[llmOutputTokenParam(c.Model)] = req.Config.MaxOutputTokens
 	}
 	body, err := json.Marshal(payload)
 	if err != nil {
@@ -126,6 +126,14 @@ func (c *OpenAICompatibleLLM) Complete(ctx context.Context, req LLMRequest) (str
 		}
 	}
 	return "", lastErr
+}
+
+func llmOutputTokenParam(model string) string {
+	model = strings.ToLower(strings.TrimSpace(model))
+	if strings.Contains(model, "gpt-5") {
+		return "max_completion_tokens"
+	}
+	return "max_tokens"
 }
 
 type llmRetry struct {

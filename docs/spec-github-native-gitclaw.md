@@ -525,6 +525,8 @@ Default MVP behavior:
   authenticated GitHub Models catalog API
 - auth token lookup: `GITHUB_TOKEN`, then `GH_TOKEN`, then optional
   `GITCLAW_LLM_API_KEY` for local/manual runs
+- output token parameter: `max_completion_tokens` for GPT-5-family model IDs,
+  `max_tokens` otherwise
 - base URL override: `GITCLAW_LLM_BASE_URL`
 - model override: `GITCLAW_MODEL`
 
@@ -588,6 +590,7 @@ inference. It posts a `gitclaw:assistant-turn` comment with
 - default model policy and catalog endpoint host,
 - endpoint host without URL credentials,
 - token source name without token value,
+- selected output-token parameter,
 - request timeout,
 - retry attempts,
 - retry base and maximum delay,

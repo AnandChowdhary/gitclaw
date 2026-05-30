@@ -146,6 +146,38 @@ func TestOpenAICompatibleLLMSendsMaxOutputTokensFromConfig(t *testing.T) {
 	}
 }
 
+func TestOpenAICompatibleLLMUsesCompletionTokenParameterForGPT5(t *testing.T) {
+	var payload map[string]any
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+			t.Fatalf("decode request body: %v", err)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"choices":[{"message":{"content":"ok"}}]}`))
+	}))
+	defer server.Close()
+
+	llm := &OpenAICompatibleLLM{
+		APIKey:  "token",
+		BaseURL: server.URL,
+		Model:   "openai/gpt-5-nano",
+		Client:  server.Client(),
+	}
+	_, err := llm.Complete(context.Background(), LLMRequest{
+		Event:  Event{Repo: "owner/repo", Issue: Issue{Number: 1, Title: "max completion tokens"}},
+		Config: Config{MaxOutputTokens: 321},
+	})
+	if err != nil {
+		t.Fatalf("Complete returned error: %v", err)
+	}
+	if got := payload["max_completion_tokens"]; got != float64(321) {
+		t.Fatalf("max_completion_tokens = %#v, want 321", got)
+	}
+	if _, ok := payload["max_tokens"]; ok {
+		t.Fatalf("payload unexpectedly included max_tokens: %#v", payload)
+	}
+}
+
 func TestLLMTimeoutFromEnvIsBounded(t *testing.T) {
 	t.Setenv("GITCLAW_LLM_TIMEOUT_SECONDS", "999")
 	if got := llmTimeout(); got != 10*time.Minute {

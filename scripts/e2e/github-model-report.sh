@@ -141,6 +141,7 @@ for expected in \
   'catalog_endpoint_host: `models.github.ai`' \
   'endpoint_host: `models.github.ai`' \
   'token_source: `GITHUB_TOKEN`' \
+  'output_token_parameter: `max_completion_tokens`' \
   'request_timeout_seconds: `75`' \
   'retry_max_attempts: `6`' \
   'retry_base_delay_seconds: `10`' \

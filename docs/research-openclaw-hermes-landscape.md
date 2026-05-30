@@ -419,6 +419,11 @@ currently includes `openai/gpt-5-nano` and does not include
 `openai/gpt-5.4-mini`, so the default should move to `openai/gpt-5-nano` while
 keeping `GITCLAW_MODEL` overrides for repos with different catalog access.
 
+2026-05-30 GPT-5 parameter follow-up: the first live `openai/gpt-5-nano`
+conversation failed because GitHub Models rejected `max_tokens` and requested
+`max_completion_tokens`. GitClaw should select the output-token request
+parameter from the model family and include that choice in `/models` diagnostics.
+
 2026-05-29 workflow-runtime follow-up: GitClaw's serverless runtime is GitHub
 Actions itself, so action runtime deprecations are part of product reliability.
 Checked-in workflows and spec snippets should track Node 24-compatible
