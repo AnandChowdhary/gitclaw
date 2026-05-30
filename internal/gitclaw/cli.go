@@ -345,8 +345,8 @@ func runConfigCommand(args []string) error {
 }
 
 func runPolicyCommand(args []string) error {
-	if len(args) > 1 || (len(args) == 1 && args[0] != "list") {
-		return fmt.Errorf("usage: gitclaw policy [list]")
+	if len(args) > 1 || (len(args) == 1 && args[0] != "list" && args[0] != "verify") {
+		return fmt.Errorf("usage: gitclaw policy [list|verify]")
 	}
 	cfg, err := LoadEffectiveConfig()
 	if err != nil {
@@ -355,6 +355,10 @@ func runPolicyCommand(args []string) error {
 	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
 	if err != nil {
 		return err
+	}
+	if len(args) == 1 && args[0] == "verify" {
+		fmt.Println(RenderPolicyVerifyCLIReport(cfg, repoContext))
+		return nil
 	}
 	fmt.Println(RenderPolicyCLIReport(cfg, repoContext))
 	return nil

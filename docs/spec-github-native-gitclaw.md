@@ -608,6 +608,7 @@ GitHub issue/comment event
   `soul verify`, `soul validate`, `soul list`, `soul search`,
   `tools verify`, `tools validate`, `tools list`, `tools info`,
   `tools search`, `doctor`,
+  `policy verify`,
   `commands`, `version`.
 
 `internal/github`
@@ -1281,6 +1282,7 @@ posture:
 ```text
 @gitclaw /policy
 @gitclaw /policy list
+@gitclaw /policy verify
 ```
 
 The command runs after normal preflight authorization and context assembly, but
@@ -1298,10 +1300,22 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 It never dumps issue/comment bodies or the `gitclaw.policy` body. The report is
 for checking the enforcement shape and provenance without exposing prompt text.
 
+When called as `@gitclaw /policy verify`, the command switches from inventory
+to a stricter body-free permission audit. It verifies the checked-in
+`.github/workflows/gitclaw.yml` jobs against the expected contract:
+`preflight` has `contents:read` and `issues:read`, `handle` has
+`contents:read`, `issues:write`, and `models:read`, and `backup` has
+`contents:write` plus `issues:read`. It reports workflow file hashes,
+present job counts, matched/missing permissions, unexpected uncontracted write
+grants, active `gitclaw.policy` input/output hashes, and findings. It never
+emits workflow bodies, issue/comment bodies, raw policy inputs, or policy
+output bodies.
+
 Local operators can inspect static policy shape without opening an issue:
 
 ```bash
 gitclaw policy list
+gitclaw policy verify
 ```
 
 The local report omits event-only fields such as repository, issue number,
@@ -1309,6 +1323,8 @@ preflight result, actor association, trigger state, event labels, and
 write-request detection. It still reports trusted associations, managed labels,
 expected workflow permissions, model/run mode, and active policy-output
 metadata if present.
+`gitclaw policy verify` additionally checks the local workflow permission
+contract and returns a non-body verification report suitable for CI.
 
 ## Authorization And Abuse Controls
 
@@ -2603,10 +2619,15 @@ assert the expected comments/labels, and close the issue in cleanup.
 
    - create a real issue with `@gitclaw /policy` that also asks for write-mode
      work,
+   - create another real issue with `@gitclaw /policy verify` that asks for
+     write-mode work,
    - assert the reply is marked `model="gitclaw/policy"`,
    - assert the report shows trusted actor state, write-request detection,
      managed labels, expected workflow permissions, and `gitclaw.policy`
      metadata,
+   - assert the verify report checks actual workflow jobs and permissions,
+     reports matched/missing permission counts, and flags no unexpected write
+     permissions,
    - assert the report does not dump the issue body or policy output body,
    - assert `gitclaw:write-requested` and `gitclaw:done` are present without
      `gitclaw:running` or `gitclaw:error`.
@@ -3136,6 +3157,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven policy-list E2E harness verifies `@gitclaw /policy list` is an
   explicit report alias, while local `gitclaw policy list` exposes static
   policy metadata without issue-only fields.
+- A `gh`-driven policy-verify E2E harness verifies `@gitclaw /policy verify`
+  checks the checked-in workflow permission contract, reports active policy
+  output hashes, and avoids raw policy input/output leakage.
 - A `gh`-driven session-report E2E harness verifies `@gitclaw /session`
   reconstructs a real multi-turn GitHub issue session without a model call or
   transcript-body leakage.

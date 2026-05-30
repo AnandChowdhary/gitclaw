@@ -1830,6 +1830,71 @@ func TestHandlePolicyCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 }
 
+func TestHandlePolicyVerifyCommandPostsReportWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".github/workflows/gitclaw.yml", `name: GitClaw
+on:
+  issues:
+    types: [opened]
+jobs:
+  preflight:
+    permissions:
+      contents: read
+      issues: read
+  handle:
+    permissions:
+      contents: read
+      issues: write
+      models: read
+  backup:
+    permissions:
+      contents: write
+      issues: read
+`)
+
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 95,
+			"title": "@gitclaw /policy verify",
+			"body": "Please implement this policy verification change. Hidden token: GITCLAW_POLICY_VERIFY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{95: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic policy verify command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Policy Verify Report", "Generated without a model call", "model=\"gitclaw/policy\"", "policy_verify_status: `ok`", "verification_scope: `workflow-permissions-and-policy-surface`", "workflow_present: `true`", "expected_jobs: `3`", "jobs_present: `3`", "expected_permissions: `7`", "permissions_present: `7`", "missing_permissions: `0`", "unexpected_write_permissions: `0`", "policy_outputs_hashed: `1`", "raw_bodies_included: `false`", "raw_inputs_included: `false`", "job=`handle` present=`true`", "gitclaw.policy", "input_sha256_12=", "output_sha256_12=", "### Verification Findings", "- none"} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("policy verify report missing %q:\n%s", want, body)
+		}
+	}
+	if strings.Contains(body, "GITCLAW_POLICY_VERIFY_SECRET") || strings.Contains(body, "Please implement this policy") || strings.Contains(body, "input=`write-request`") {
+		t.Fatalf("policy verify report leaked issue body or policy input:\n%s", body)
+	}
+	if !hasLabel(github.IssueLabels[95], "gitclaw:write-requested") || !hasLabel(github.IssueLabels[95], "gitclaw:done") || hasLabel(github.IssueLabels[95], "gitclaw:running") || hasLabel(github.IssueLabels[95], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[95])
+	}
+}
+
 func TestHandleCommandsCommandPostsReportWithoutLLM(t *testing.T) {
 	ev, err := ParseEvent("issues", []byte(`{
 		"action": "opened",
@@ -1861,7 +1926,7 @@ func TestHandleCommandsCommandPostsReportWithoutLLM(t *testing.T) {
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Commands Report", "Generated without a model call", "model=\"gitclaw/commands\"", "commands: `15`", "aliases: `10`", "local_cli_helpers: `45`", "/commands", "/backup", "/tools", "/budget", "/prompt-budget", "/cron", "`gitclaw commands` command=`/help`", "`gitclaw doctor` command=`/doctor`", "`gitclaw doctor list` command=`/doctor`", "`gitclaw channels verify` command=`/channels`", "`gitclaw channels list` command=`/channels`", "`gitclaw channel-state` command=`/channels`", "`gitclaw channel-gateway` command=`/channels`", "`gitclaw channel-delivery` command=`/channels`", "`gitclaw config list` command=`/config`", "`gitclaw context list` command=`/context`", "`gitclaw prompt list` command=`/prompt`", "`gitclaw proactive list` command=`/proactive`", "`gitclaw proactive init` command=`/proactive`", "`gitclaw proactive enqueue` command=`/proactive`", "`gitclaw session list --backup <issue.json>` command=`/session`", "`gitclaw session search <query> --backup <issue.json>` command=`/session`", "`gitclaw models list` command=`/models`", "`gitclaw policy list` command=`/policy`", "`gitclaw backup verify` command=`/backup`", "`gitclaw backup manifest` command=`/backup`", "`gitclaw backup list` command=`/backup`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup export-jsonl` command=`/backup`", "`gitclaw backup restore-plan` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory verify` command=`/memory`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul verify` command=`/soul`", "`gitclaw soul validate` command=`/soul`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills verify` command=`/skills`", "`gitclaw skills validate` command=`/skills`", "`gitclaw skills check` command=`/skills`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools verify` command=`/tools`", "`gitclaw tools validate` command=`/tools`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools info <name>` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
+	for _, want := range []string{"GitClaw Commands Report", "Generated without a model call", "model=\"gitclaw/commands\"", "commands: `15`", "aliases: `10`", "local_cli_helpers: `46`", "/commands", "/backup", "/tools", "/budget", "/prompt-budget", "/cron", "`gitclaw commands` command=`/help`", "`gitclaw doctor` command=`/doctor`", "`gitclaw doctor list` command=`/doctor`", "`gitclaw channels verify` command=`/channels`", "`gitclaw channels list` command=`/channels`", "`gitclaw channel-state` command=`/channels`", "`gitclaw channel-gateway` command=`/channels`", "`gitclaw channel-delivery` command=`/channels`", "`gitclaw config list` command=`/config`", "`gitclaw context list` command=`/context`", "`gitclaw prompt list` command=`/prompt`", "`gitclaw proactive list` command=`/proactive`", "`gitclaw proactive init` command=`/proactive`", "`gitclaw proactive enqueue` command=`/proactive`", "`gitclaw session list --backup <issue.json>` command=`/session`", "`gitclaw session search <query> --backup <issue.json>` command=`/session`", "`gitclaw models list` command=`/models`", "`gitclaw policy list` command=`/policy`", "`gitclaw policy verify` command=`/policy`", "`gitclaw backup verify` command=`/backup`", "`gitclaw backup manifest` command=`/backup`", "`gitclaw backup list` command=`/backup`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup export-jsonl` command=`/backup`", "`gitclaw backup restore-plan` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory verify` command=`/memory`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul verify` command=`/soul`", "`gitclaw soul validate` command=`/soul`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills verify` command=`/skills`", "`gitclaw skills validate` command=`/skills`", "`gitclaw skills check` command=`/skills`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools verify` command=`/tools`", "`gitclaw tools validate` command=`/tools`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools info <name>` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("commands report missing %q:\n%s", want, body)
 		}
