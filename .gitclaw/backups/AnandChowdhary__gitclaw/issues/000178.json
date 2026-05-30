@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T06:26:44Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 178,
+    "title": "@gitclaw /models e2e 20260530T062547Z",
+    "body": "Live model-report E2E.\n\nHidden model report body token: GITCLAW_MODEL_REPORT_E2E_20260530T062547Z\nThis should produce a deterministic model provider report without a model call.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /models e2e 20260530T062547Z\n\nLive model-report E2E.\n\nHidden model report body token: GITCLAW_MODEL_REPORT_E2E_20260530T062547Z\nThis should produce a deterministic model provider report without a model call.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Model Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#178`\n- provider: `github-models`\n- model: `openai/gpt-5-nano`\n- default_model_policy: `smallest-openai-github-models-catalog-model`\n- catalog_endpoint_host: `models.github.ai`\n- endpoint_host: `models.github.ai`\n- token_source: `GITHUB_TOKEN`\n- output_token_parameter: `max_completion_tokens`\n- request_timeout_seconds: `75`\n- retry_max_attempts: `6`\n- retry_base_delay_seconds: `10`\n- retry_max_delay_seconds: `90`\n- retryable_statuses: `429, 408, 5xx`\n- prompt_artifact_enabled: `false`\n- issue_title_sha256_12: `cc445ce34470`\n\nThe model client retries transient provider failures with bounded exponential backoff and honors bounded `Retry-After` values when providers return them.\n\nIssue bodies, comment bodies, API keys, and raw provider error bodies are not included in this report.\n\n### Environment Knobs\n- `GITCLAW_MODEL`\n- `GITCLAW_LLM_BASE_URL`\n- `GITCLAW_LLM_TIMEOUT_SECONDS`\n- `GITCLAW_LLM_MAX_ATTEMPTS`\n- `GITCLAW_LLM_RETRY_BASE_DELAY_SECONDS`\n- `GITCLAW_LLM_RETRY_MAX_DELAY_SECONDS`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4581953459,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4581953459,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26676836075\" event_id=\"issue-178\" model=\"gitclaw/models\" idempotency_key=\"dcc74cde9f3e3370c1b7be3e9322ddd5\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26676836075\" --\u003e\n## GitClaw Model Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#178`\n- provider: `github-models`\n- model: `openai/gpt-5-nano`\n- default_model_policy: `smallest-openai-github-models-catalog-model`\n- catalog_endpoint_host: `models.github.ai`\n- endpoint_host: `models.github.ai`\n- token_source: `GITHUB_TOKEN`\n- output_token_parameter: `max_completion_tokens`\n- request_timeout_seconds: `75`\n- retry_max_attempts: `6`\n- retry_base_delay_seconds: `10`\n- retry_max_delay_seconds: `90`\n- retryable_statuses: `429, 408, 5xx`\n- prompt_artifact_enabled: `false`\n- issue_title_sha256_12: `cc445ce34470`\n\nThe model client retries transient provider failures with bounded exponential backoff and honors bounded `Retry-After` values when providers return them.\n\nIssue bodies, comment bodies, API keys, and raw provider error bodies are not included in this report.\n\n### Environment Knobs\n- `GITCLAW_MODEL`\n- `GITCLAW_LLM_BASE_URL`\n- `GITCLAW_LLM_TIMEOUT_SECONDS`\n- `GITCLAW_LLM_MAX_ATTEMPTS`\n- `GITCLAW_LLM_RETRY_BASE_DELAY_SECONDS`\n- `GITCLAW_LLM_RETRY_MAX_DELAY_SECONDS`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T06:26:25Z",
+      "updated_at": "2026-05-30T06:26:25Z"
+    }
+  ]
+}

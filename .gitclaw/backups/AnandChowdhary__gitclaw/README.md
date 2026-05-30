@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-05-30T06:17:35Z`
-- issue_count: `151`
+- generated_at: `2026-05-30T06:26:44Z`
+- issue_count: `152`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -156,3 +156,4 @@
 | #173 | @gitclaw /prompt list e2e 20260530T061139Z | `2026-05-30T06:12:36Z` | 1 | 2 | `issues/000173.json` |
 | #175 | @gitclaw /config list e2e 20260530T061615Z | `2026-05-30T06:17:14Z` | 1 | 2 | `issues/000175.json` |
 | #176 | @gitclaw /policy verify e2e 20260530T061616Z | `2026-05-30T06:17:34Z` | 1 | 2 | `issues/000176.json` |
+| #178 | @gitclaw /models e2e 20260530T062547Z | `2026-05-30T06:26:44Z` | 1 | 2 | `issues/000178.json` |
