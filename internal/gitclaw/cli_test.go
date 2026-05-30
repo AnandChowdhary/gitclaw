@@ -61,7 +61,7 @@ SECRET_SKILL_BODY_TOKEN
 			t.Fatalf("skills validate returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Skills Validate Report", "skill_validation_status: `ok`", "skill_validation_errors: `0`", "skill_validation_warnings: `0`", "- none"} {
+	for _, want := range []string{"GitClaw Skills Validate Report", "scope: `local-cli`", "skill_validation_status: `ok`", "skill_validation_errors: `0`", "skill_validation_warnings: `0`", "- none"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("skills validate output missing %q:\n%s", want, output)
 		}

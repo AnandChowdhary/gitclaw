@@ -38,6 +38,7 @@ func TestValidateSkillSummariesReportsProblemsWithoutBodies(t *testing.T) {
 	body := RenderSkillsValidationReport(RepoContext{SkillSummaries: skills})
 	for _, want := range []string{
 		"GitClaw Skills Validate Report",
+		"scope: `local-cli`",
 		"skill_validation_status: `error`",
 		"skill_validation_errors: `3`",
 		"skill_validation_warnings: `5`",

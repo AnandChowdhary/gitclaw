@@ -89,11 +89,22 @@ func ValidateSkillSummaries(skills []SkillSummary) SkillValidationReport {
 }
 
 func RenderSkillsValidationReport(repoContext RepoContext) string {
+	return renderSkillsValidationReport(Event{}, repoContext, false)
+}
+
+func renderSkillsValidationReport(ev Event, repoContext RepoContext, includeIssue bool) string {
 	validation := ValidateSkillSummaries(repoContext.SkillSummaries)
 	var b strings.Builder
 	b.WriteString("## GitClaw Skills Validate Report\n\n")
 	b.WriteString("Generated without a model call.\n\n")
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
 	writeSkillValidationSummary(&b, validation)
+	b.WriteString("\nThis report validates local skill metadata without dumping full `SKILL.md` bodies, issue bodies, comments, prompts, or secret values.\n")
 	b.WriteString("\n### Findings\n")
 	writeSkillValidationFindings(&b, validation)
 	return strings.TrimSpace(b.String())

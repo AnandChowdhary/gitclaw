@@ -67,6 +67,9 @@ func slashCommandFieldsFromLine(line, triggerPrefix string) []string {
 }
 
 func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
+	if isSkillsValidateRequest(ev, cfg) {
+		return renderSkillsValidationReport(ev, repoContext, true)
+	}
 	if skillName := requestedSkillInfoName(ev, cfg); skillName != "" {
 		return renderSkillInfoReport(ev, repoContext, skillName, true)
 	}
@@ -246,6 +249,11 @@ func requestedSkillSearchQuery(ev Event, cfg Config) string {
 		return ""
 	}
 	return cleanSkillSearchQuery(strings.Join(fields[2:], " "))
+}
+
+func isSkillsValidateRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && fields[0] == "/skills" && strings.EqualFold(fields[1], "validate")
 }
 
 func cleanSkillLookupName(name string) string {

@@ -467,6 +467,12 @@ own issue command, not only embedded inside `/tools`. Add
 `gitclaw tools validate`, returning only contract/output counts and body-free
 findings so maintainers can audit the tool surface without the full inventory.
 
+2026-05-30 skills-validate follow-up: local skills are code-like authority, so
+their validation deserves a dedicated issue command. Add
+`@gitclaw /skills validate` as the issue-side mirror of
+`gitclaw skills validate`, returning only validation counts and findings
+without dumping full `SKILL.md` bodies or inventory sections.
+
 2026-05-29 channel visibility follow-up: Slack's Events API expects either a
 server HTTP endpoint or Socket Mode, Socket Mode uses a stateful WebSocket
 instead of a static public URL, Telegram's `getUpdates` provides long polling
