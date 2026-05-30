@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-05-30T11:25:21Z`
-- issue_count: `219`
+- generated_at: `2026-05-30T11:26:55Z`
+- issue_count: `220`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -224,3 +224,4 @@
 | #248 | @gitclaw search tool chat e2e 20260530T110746Z | `2026-05-30T11:08:57Z` | 1 | 2 | `issues/000248.json` |
 | #249 | @gitclaw /memory promote-plan long-term e2e 20260530T112259Z | `2026-05-30T11:23:56Z` | 1 | 2 | `issues/000249.json` |
 | #250 | @gitclaw /help e2e 20260530T112422Z | `2026-05-30T11:25:21Z` | 1 | 2 | `issues/000250.json` |
+| #251 | @gitclaw search tool chat e2e 20260530T112543Z | `2026-05-30T11:26:55Z` | 1 | 2 | `issues/000251.json` |
