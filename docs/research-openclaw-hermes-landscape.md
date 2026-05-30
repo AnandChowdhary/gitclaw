@@ -770,6 +770,17 @@ the bundle slash command is invoked. This preserves Hermes' ergonomic workflow
 packs while keeping OpenClaw-style supply-chain caution: bundles do not install
 skills, execute scripts, contact registries, or mutate the system prompt.
 
+2026-05-30 bundle-risk follow-up: Hermes loads every skill in an invoked bundle
+plus the bundle's optional instruction text into the same user-message turn,
+while OpenClaw's current skill docs explicitly treat third-party skill content
+as untrusted code and require human review/sandboxing before enabling risky
+skills. GitClaw should therefore audit bundle YAML and instructions as
+prompt-visible control data: `@gitclaw /bundles risk` and
+`gitclaw bundles risk` should flag missing refs, duplicate names, malformed
+YAML, prompt-boundary overrides, hidden persistence, remote installs, external
+delivery, shell-exec language, and credential transfer language, while
+reporting only counts, codes, paths, bundle hashes, and line hashes.
+
 2026-05-30 context-references follow-up: Hermes' context reference docs expose
 `@file:path`, `@file:path:10-25`, and `@folder:path` as inline context
 attachments, alongside broader `@diff`, `@staged`, `@git:N`, and `@url:`

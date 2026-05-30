@@ -767,7 +767,7 @@ GitHub issue/comment event
   `memory promote-plan`, `memory info`, `memory search`,
   `skills validate`,
   `skills list`, `skills select-plan`, `skills info`, `skills search`,
-  `bundles list`, `bundles info`,
+  `bundles list`, `bundles risk`, `bundles info`,
   `soul verify`, `soul risk`, `soul validate`, `soul list`,
   `soul edit-plan`, `soul info`, `soul search`,
   `tools verify`, `tools risk`, `tools validate`, `tools list`, `tools run-plan`,
@@ -1249,6 +1249,7 @@ gitclaw skills select-plan <name>
 gitclaw skills install-plan <target>
 gitclaw skills upgrade-plan <target>
 gitclaw bundles list
+gitclaw bundles risk
 gitclaw bundles info <name>
 gitclaw skills info <name>
 gitclaw skills search <query>
@@ -1279,6 +1280,7 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills install-plan repo-reader
 @gitclaw /skills upgrade-plan repo-reader
 @gitclaw /bundles
+@gitclaw /bundles risk
 @gitclaw /bundles info repo-context
 @gitclaw /skills info repo-reader
 @gitclaw /skills search repository context
@@ -1327,6 +1329,18 @@ counts, and short hash. `@gitclaw /bundles info <name>` and
 `gitclaw bundles info <name>` show one focused bundle card. Bundle YAML bodies,
 bundle instructions, skill bodies, issue bodies, comments, prompts, and secret
 values are never printed in reports.
+
+`@gitclaw /bundles risk` and `gitclaw bundles risk` scan repo-local bundle YAML
+and optional bundle instructions internally for prompt-boundary overrides,
+secret-exfiltration instructions, hidden persistence, unreviewed shell
+execution, unbounded tool loops, external delivery, remote-install language,
+missing skill refs, empty bundles, parse errors, and duplicate bundle names.
+The report publishes only bundle counts, skill-ref counts, finding codes,
+severities, paths, bundle hashes, and line hashes. It never prints bundle YAML
+bodies, bundle instructions, skill bodies, issue/comment bodies, prompts, raw
+provider errors, credentials, or secret values. Any change to this surface
+requires focused local tests plus a live GitHub Models follow-up E2E proving
+normal inference, selected skills, and prompt-visible tools still work.
 
 When a user invokes a repo-local bundle slash command such as
 `@gitclaw /repo-context explain go.mod`, GitClaw selects every enabled,
@@ -4149,10 +4163,13 @@ assert the expected comments/labels, and close the issue in cleanup.
    - create a real issue with `@gitclaw /skills`,
    - create a second real issue with `@gitclaw /skills list`,
    - create a third real issue with `@gitclaw /bundles info repo-context`,
+   - create a fourth real issue with `@gitclaw /bundles risk`,
    - assert the reply is marked `model="gitclaw/skills"`,
    - assert the report lists available skill metadata and selected skill paths,
    - assert the bundle info report lists bundle path, referenced/resolved
      skills, selected-for-turn state, instruction presence, and hashes,
+   - assert the bundle risk report lists body-free bundle risk status, counts,
+     finding codes, severities, bundle hashes, and line hashes,
    - assert hashes, frontmatter/description presence, and requirement counts
      are present,
    - assert skill validation status, duplicate-name count, invalid-name count,
@@ -5022,6 +5039,11 @@ examples/workflows/gitclaw.yml
   `@gitclaw /bundles info repo-context` produces focused repo-local bundle
   metadata, resolved/missing skill refs, instruction presence, hashes, and no
   bundle instruction or skill body leakage.
+- A `gh`-driven skill-bundle risk E2E harness verifies
+  `@gitclaw /bundles risk` scans repo-local bundle YAML and instructions for
+  body-free risk categories, reports zero findings for the current
+  `repo-context` bundle, and pairs the deterministic report with a real GitHub
+  Models follow-up that proves selected skills and repo-search tool usage.
 - A `gh`-driven skills-search E2E harness verifies
   `@gitclaw /skills search repository context` searches local skill metadata
   without a model call, raw query leakage, or full `SKILL.md` body leakage.

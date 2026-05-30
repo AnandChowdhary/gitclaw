@@ -281,6 +281,8 @@ type SkillBundleSummary struct {
 	Bytes              int
 	Lines              int
 	SHA                string
+	ParseError         string
+	RiskFindings       []SkillBundleRiskFinding
 }
 
 type ToolOutput struct {

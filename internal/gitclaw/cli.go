@@ -1519,7 +1519,7 @@ func runMigrateCommand(args []string) error {
 
 func runSkillsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw skills verify|risk|validate|check|list|select-plan <name>|install-plan <target>|upgrade-plan <target>|bundles|bundle <name>|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw skills verify|risk|validate|check|list|select-plan <name>|install-plan <target>|upgrade-plan <target>|bundles [risk]|bundle <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -1537,7 +1537,12 @@ func runSkillsCommand(args []string) error {
 	case "upgrade-plan":
 		return runSkillsInstallPlanCommand(args[1:], "upgrade-plan")
 	case "bundles", "bundle-list":
+		if len(args) > 1 && (args[1] == "risk" || args[1] == "risk-audit") {
+			return runBundlesRiskCommand(args[2:])
+		}
 		return runBundlesListCommand(args[1:])
+	case "bundle-risk", "bundles-risk":
+		return runBundlesRiskCommand(args[1:])
 	case "bundle", "bundle-info":
 		return runBundlesInfoCommand(args[1:])
 	case "info":
@@ -1572,10 +1577,12 @@ func runBundlesCommand(args []string) error {
 	switch args[0] {
 	case "list":
 		return runBundlesListCommand(args[1:])
+	case "risk", "risk-audit":
+		return runBundlesRiskCommand(args[1:])
 	case "info", "show":
 		return runBundlesInfoCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw bundles [list|info <name>]")
+		return fmt.Errorf("usage: gitclaw bundles [list|risk|info <name>]")
 	}
 }
 
@@ -1656,6 +1663,22 @@ func runBundlesListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSkillBundlesCLIReport(repoContext))
+	return nil
+}
+
+func runBundlesRiskCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown bundles risk argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSkillBundlesRiskCLIReport(repoContext))
 	return nil
 }
 

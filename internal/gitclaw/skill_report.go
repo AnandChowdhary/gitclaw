@@ -68,6 +68,9 @@ func slashCommandFieldsFromLine(line, triggerPrefix string) []string {
 }
 
 func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
+	if isSkillBundlesRiskRequest(ev, cfg) {
+		return renderSkillBundlesRiskReport(ev, repoContext, true)
+	}
 	if isSkillBundlesListRequest(ev, cfg) {
 		return renderSkillBundlesReport(ev, repoContext, true)
 	}
@@ -166,6 +169,10 @@ func RenderSkillSearchCLIReport(repoContext RepoContext, query string) string {
 
 func RenderSkillBundlesCLIReport(repoContext RepoContext) string {
 	return renderSkillBundlesReport(Event{}, repoContext, false)
+}
+
+func RenderSkillBundlesRiskCLIReport(repoContext RepoContext) string {
+	return renderSkillBundlesRiskReport(Event{}, repoContext, false)
 }
 
 func RenderSkillBundleInfoCLIReport(repoContext RepoContext, name string) string {
@@ -436,7 +443,27 @@ func isSkillBundlesListRequest(ev Event, cfg Config) bool {
 	if fields[0] == "/bundles" {
 		return len(fields) == 1 || strings.EqualFold(fields[1], "list")
 	}
-	return len(fields) >= 2 && fields[0] == "/skills" && (strings.EqualFold(fields[1], "bundles") || strings.EqualFold(fields[1], "bundle-list"))
+	return (len(fields) == 2 && fields[0] == "/skills" && strings.EqualFold(fields[1], "bundles")) ||
+		(len(fields) == 2 && fields[0] == "/skills" && strings.EqualFold(fields[1], "bundle-list"))
+}
+
+func isSkillBundlesRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) == 0 {
+		return false
+	}
+	if fields[0] == "/bundles" {
+		return len(fields) >= 2 && (strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit"))
+	}
+	if fields[0] != "/skills" || len(fields) < 2 {
+		return false
+	}
+	if strings.EqualFold(fields[1], "bundle-risk") || strings.EqualFold(fields[1], "bundles-risk") {
+		return true
+	}
+	return len(fields) >= 3 &&
+		(strings.EqualFold(fields[1], "bundles") || strings.EqualFold(fields[1], "bundle-list")) &&
+		(strings.EqualFold(fields[2], "risk") || strings.EqualFold(fields[2], "risk-audit"))
 }
 
 func cleanSkillLookupName(name string) string {

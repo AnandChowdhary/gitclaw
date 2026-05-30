@@ -1055,6 +1055,8 @@ func summarizeSkillBundles(bundles []skillBundleDocument, skills []SkillSummary,
 			Bytes:              len(bundle.Body),
 			Lines:              lineCount(bundle.Body),
 			SHA:                shortDocumentHash(bundle.Body),
+			ParseError:         bundle.ParseError,
+			RiskFindings:       scanSkillBundleRiskFindings(bundle.Path, bundle.Body, bundle.ParseError),
 		})
 	}
 	return summaries

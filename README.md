@@ -82,6 +82,7 @@ gitclaw skills upgrade-plan <target>
 gitclaw skills info <name>
 gitclaw skills search <query>
 gitclaw bundles list
+gitclaw bundles risk
 gitclaw bundles info <name>
 ```
 
@@ -171,6 +172,7 @@ scripts/e2e/github-diffs-risk-report.sh
 scripts/e2e/github-hooks-risk-report.sh
 scripts/e2e/github-memory-risk-report.sh
 scripts/e2e/github-model-risk-report.sh
+scripts/e2e/github-bundles-risk-report.sh
 scripts/e2e/github-plugins-risk-report.sh
 scripts/e2e/github-profile-risk-report.sh
 scripts/e2e/github-proactive-risk-report.sh
