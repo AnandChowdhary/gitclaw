@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-30T18:12:27Z",
+  "generated_at": "2026-05-30T18:13:40Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 269,
   "issues": [
@@ -3286,13 +3286,14 @@
       "number": 306,
       "title": "@gitclaw /artifacts risk e2e 20260530T181122Z",
       "path": "issues/000306.json",
-      "backup_generated_at": "2026-05-30T18:12:26Z",
-      "event_name": "issues",
+      "backup_generated_at": "2026-05-30T18:13:39Z",
+      "event_name": "issue_comment",
       "labels": [
-        "gitclaw"
+        "gitclaw",
+        "gitclaw:done"
       ],
-      "comment_count": 1,
-      "transcript_messages": 2
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
