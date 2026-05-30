@@ -1722,6 +1722,12 @@ func runBackupIndex(args []string) error {
 }
 
 func runHeartbeatCommand(ctx context.Context, args []string) error {
+	if len(args) > 0 {
+		switch args[0] {
+		case "status", "list", "verify":
+			return runHeartbeatStatusCommand(args[1:])
+		}
+	}
 	cfg, err := LoadEffectiveConfig()
 	if err != nil {
 		return err
@@ -1786,6 +1792,18 @@ func runHeartbeatCommand(ctx context.Context, args []string) error {
 		return err
 	}
 	fmt.Printf("heartbeat scanned=%d posted=%d skipped=%d\n", result.Scanned, result.Posted, result.Skipped)
+	return nil
+}
+
+func runHeartbeatStatusCommand(args []string) error {
+	if len(args) != 0 {
+		return fmt.Errorf("usage: gitclaw heartbeat status")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderHeartbeatCLIReport(cfg))
 	return nil
 }
 

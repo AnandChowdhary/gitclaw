@@ -388,6 +388,15 @@ when there is a visible update. The critical safety difference is that each
 heartbeat is a fresh Actions run with a hidden idempotency slot, not a
 long-lived main session that can silently mutate memory.
 
+2026-05-30 heartbeat-report follow-up: OpenClaw's heartbeat contract and
+Hermes' fresh-session cron posture also imply a separate operator visibility
+surface. GitClaw should let maintainers ask `@gitclaw /heartbeat` or run
+`gitclaw heartbeat status` to inspect heartbeat workflow triggers,
+permissions, context-file metadata, labels, idempotency, and the
+`HEARTBEAT_OK` quiet contract without calling the model or scanning issue
+bodies. That keeps routine heartbeat debugging cheap while still requiring
+live GitHub Models E2E for any feature batch that touches heartbeat behavior.
+
 2026-05-29 workflow-dispatch follow-up: GitClaw needs a second fresh-run
 boundary in addition to heartbeat. A channel poller that mirrors Telegram or
 Slack messages using `GITHUB_TOKEN` cannot depend on those generated comments to

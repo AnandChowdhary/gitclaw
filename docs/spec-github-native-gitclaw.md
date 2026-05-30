@@ -101,7 +101,9 @@ Deterministic slash commands are recognized when the issue title, comment
 body, or a line in the issue body starts with the trigger prefix plus command,
 such as `@gitclaw /proactive`. Inline mentions inside prose are ignored.
 `@gitclaw /help` and `@gitclaw /commands` expose the current deterministic
-command catalog without making a model call.
+command catalog without making a model call. `@gitclaw /heartbeat` exposes the
+scheduled heartbeat surface, while the actual heartbeat runner remains a
+separate workflow/CLI path that may call GitHub Models.
 
 ## GitHub Actions Event Model
 
@@ -289,6 +291,38 @@ Heartbeat behavior:
 Default idempotency slot: current UTC hour. Manual dispatch and E2E can pass an
 explicit slot. Re-running the same slot must not create a second heartbeat
 comment.
+
+### Heartbeat Status Report
+
+GitClaw also supports a deterministic heartbeat status command:
+
+```text
+@gitclaw /heartbeat
+```
+
+and the local equivalent:
+
+```bash
+gitclaw heartbeat status
+```
+
+This report is intentionally not the heartbeat runner. It runs after preflight
+and before model inference, posts a `gitclaw:assistant-turn` comment with
+`model="gitclaw/heartbeat"`, and summarizes:
+
+- the heartbeat label, disabled label, and trigger label,
+- `.github/workflows/gitclaw-heartbeat.yml` presence, schedule trigger,
+  workflow-dispatch trigger, inputs, and permissions,
+- `.gitclaw/HEARTBEAT.md` presence and hash,
+- heartbeat marker/idempotency contract,
+- the quiet response contract, `HEARTBEAT_OK`,
+- whether the current issue has the heartbeat label,
+- existing heartbeat marker count for the current issue.
+
+It never scans heartbeat issues, calls the model, mutates repository contents,
+or prints issue/comment/workflow/heartbeat context bodies. The report carries
+`model_call_required: false` and `runner_model_call_required: true` so E2E can
+distinguish the operator report from the real scheduled model-backed runner.
 
 ## Proactive Usefulness
 
@@ -634,7 +668,7 @@ GitHub issue/comment event
 - CLI entry point.
 - Subcommands: `preflight`, `handle`, `backup`, `backup search`,
   `backup info`, `backup retention-plan`,
-  `heartbeat`,
+  `heartbeat`, `heartbeat status`,
   `channel-ingest`, `channel-state`, `channel-gateway`, `channel-delivery`,
   `channels info`,
   `checkpoints status`, `checkpoints list`, `checkpoints verify`,
@@ -3706,6 +3740,11 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven heartbeat E2E harness verifies a real scheduled-workflow path
   via `workflow_dispatch`, including issue transcript context,
   `.gitclaw/HEARTBEAT.md`, exact token content, and same-slot idempotency.
+- A `gh`-driven heartbeat-report E2E harness verifies `@gitclaw /heartbeat`
+  reports workflow triggers, permissions, heartbeat context metadata, label
+  state, marker counts, and the runner/model-call contract without a model call
+  or body leakage. Each heartbeat-report implementation batch must still run a
+  live GitHub Models conversation E2E that makes an actual LLM call.
 - A `gh`-driven workflow-dispatch E2E harness verifies the main handler can be
   woken for a specific issue and deduped by dispatch ID.
 - A `gh`-driven channel-message E2E harness verifies a mirrored channel

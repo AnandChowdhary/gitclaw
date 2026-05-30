@@ -136,9 +136,9 @@ for expected in \
   "GitClaw Commands Report" \
   "Generated without a model call" \
   'trigger_prefix: `@gitclaw`' \
-  'commands: `23`' \
+  'commands: `24`' \
   'aliases: `20`' \
-  'local_cli_helpers: `76`' \
+  'local_cli_helpers: `77`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/approvals' \
@@ -155,6 +155,7 @@ for expected in \
   '/secret' \
   '/migrate' \
   '/migration' \
+  '/heartbeat' \
   '/doctor' \
   '/skills' \
   '/soul' \
@@ -188,6 +189,7 @@ for expected in \
   'gitclaw context info <path>' \
   'gitclaw doctor' \
   'gitclaw doctor list' \
+  'gitclaw heartbeat status' \
   'gitclaw profile show' \
   'gitclaw profile verify' \
   'gitclaw runs current' \
