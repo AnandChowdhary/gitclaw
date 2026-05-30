@@ -432,6 +432,20 @@ and `gitclaw hooks list|verify` without executing handlers. This preserves the
 event-driven design lesson while keeping all side effects behind reviewed
 GitHub workflows and approval gates.
 
+2026-05-30 plugins/toolsets follow-up: OpenClaw's capabilities docs draw a
+clean line between tools, skills, and plugins: plugins add runtime capabilities
+such as tools, providers, channels, hooks, and packaged skills, while tool
+policy decides what the model can actually see. Its plugin-building docs also
+require manifests/contracts so hosts can discover ownership before loading a
+runtime. Hermes makes the same boundary explicit through toolsets and MCP:
+toolsets configure capability bundles per platform/session/task, and MCP
+servers are filtered so only selected external tools are exposed. GitClaw
+should therefore add `.gitclaw/PLUGINS.md` plus `.gitclaw/plugins/*.md` as a
+declarative audit layer only. The first cut is `@gitclaw /plugins` and
+`gitclaw plugins list|verify`, reporting plugin intent and quarantining package
+files, installers, MCP connections, and runtime hooks until reviewed workflows
+and approval gates exist.
+
 2026-05-29 proactive implementation follow-up: the minimal GitClaw cut is a
 generic `proactive enqueue` command and dispatchable workflow. It creates one
 issue per job name and slot, stores a `gitclaw:proactive-run` marker in the

@@ -25,6 +25,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runHeartbeatCommand(ctx, args[1:])
 	case "hooks", "hook":
 		return runHooksCommand(args[1:])
+	case "plugins", "plugin":
+		return runPluginsCommand(args[1:])
 	case "channel-ingest":
 		return runChannelIngestCommand(ctx, args[1:])
 	case "channel-state":
@@ -276,6 +278,30 @@ func runHooksListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderHookCLIReport(cfg))
+	return nil
+}
+
+func runPluginsCommand(args []string) error {
+	if len(args) == 0 {
+		return runPluginsListCommand(nil)
+	}
+	switch args[0] {
+	case "list", "verify":
+		return runPluginsListCommand(args[1:])
+	default:
+		return fmt.Errorf("usage: gitclaw plugins [list|verify]")
+	}
+}
+
+func runPluginsListCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown plugins argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderPluginCLIReport(cfg))
 	return nil
 }
 

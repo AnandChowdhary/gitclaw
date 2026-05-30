@@ -676,6 +676,7 @@ GitHub issue/comment event
   `proactive enqueue`, `proactive init`, `proactive info`,
   `approvals list`, `approvals verify`,
   `hooks list`, `hooks verify`,
+  `plugins list`, `plugins verify`,
   `migrate plan`,
   `orders list`, `orders verify`,
   `profile show`, `profile verify`,
@@ -841,6 +842,8 @@ AGENTS.md                    # existing coding-agent instructions, if present
 .gitclaw/STANDING_ORDERS.md  # durable operating authority boundaries
 .gitclaw/HOOKS.md            # declarative hook safety policy
 .gitclaw/hooks/*.md          # declarative hook specs, metadata-only in v1
+.gitclaw/PLUGINS.md          # declarative plugin safety policy
+.gitclaw/plugins/*.md        # declarative plugin specs, metadata-only in v1
 .gitclaw/SKILLS/*.md         # optional read-only local skills, v1+
 .gitclaw/MEMORY.md           # optional curated repo memory, human-reviewed only
 .gitclaw/memory/YYYY-MM-DD.md # dated working memory notes, human-reviewed only
@@ -864,6 +867,9 @@ MVP loads:
 - `.gitclaw/HOOKS.md`, if present, as hook safety policy for event-driven
   automation; individual `.gitclaw/hooks/*.md` specs are audited by metadata
   reports and are not executed by the model runtime
+- `.gitclaw/PLUGINS.md`, if present, as plugin safety policy for runtime
+  extension boundaries; individual `.gitclaw/plugins/*.md` specs are audited
+  by metadata reports and are not installed or executed by the model runtime
 - `.gitclaw/SKILLS/*/SKILL.md`, if selected by the issue thread or marked
   always-on
 - bounded `@file:<repo-path>[:start-end]` context references explicitly named
@@ -2169,6 +2175,42 @@ Local operators can inspect the same surface with:
 ```bash
 gitclaw hooks list
 gitclaw hooks verify
+```
+
+### Plugins Command
+
+GitClaw supports declarative plugin audits inspired by OpenClaw's manifest and
+runtime extension model, and by Hermes' toolset/MCP filtering:
+
+```text
+@gitclaw /plugins
+@gitclaw /plugin
+```
+
+The command runs after preflight and before model inference. It posts a
+`gitclaw:assistant-turn` comment with `model="gitclaw/plugins"` and summarizes:
+
+- whether `.gitclaw/PLUGINS.md` exists and is loaded into model context,
+- declarative plugin specs in `.gitclaw/plugins/*.md`,
+- plugin kind, source, and metadata-only activation state,
+- declared capability and optional capability counts,
+- whether specs require approval before side effects or new tool exposure,
+- whether executable/package/runtime-looking files are present,
+- body-free findings for missing metadata or unsafe-looking files.
+
+GitClaw v1 does not install plugins, connect MCP servers, invoke package
+managers, start webhooks, or expose new model-visible tools from plugin specs.
+Plugin specs are reviewed repo metadata, not runtime code. The report never
+mutates the repo, calls the model, or prints raw plugin policy, plugin spec,
+issue, comment, config, credential, or provider payload bodies. Future
+executable plugins require reviewed workflows, explicit permissions, approval
+gates, and audit cards before any runtime can activate.
+
+Local operators can inspect the same surface with:
+
+```bash
+gitclaw plugins list
+gitclaw plugins verify
 ```
 
 ### Doctor Command
@@ -3907,6 +3949,12 @@ examples/workflows/gitclaw.yml
   approval/audit-only gates, ignored executable handler state, and body-free
   findings without a model call or hook body leakage. Each hooks feature batch
   must still run a live GitHub Models conversation E2E.
+- A `gh`-driven plugins-report E2E harness verifies `@gitclaw /plugins`
+  reports plugin policy metadata, model-context loading, declarative plugin
+  spec metadata, metadata-only activation, approval gates, ignored package or
+  runtime file state, MCP/plugin execution boundaries, and body-free findings
+  without a model call or plugin body leakage. Each plugins feature batch must
+  still run a live GitHub Models conversation E2E.
 - A `gh`-driven runs-report E2E harness verifies `@gitclaw /runs` reports
   current turn/run provenance, managed labels, marker counts, prompt-visible
   input hashes, and active tool-output hashes without a model call or body
@@ -4199,6 +4247,8 @@ examples/workflows/gitclaw.yml
 - OpenClaw scheduled tasks docs: https://docs.openclaw.ai/automation/cron-jobs
 - OpenClaw standing orders docs: https://docs.openclaw.ai/automation/standing-orders
 - OpenClaw hooks docs: https://docs.openclaw.ai/automation/hooks
+- OpenClaw capabilities overview: https://docs.openclaw.ai/tools
+- OpenClaw building plugins docs: https://docs.openclaw.ai/plugins/building-plugins
 - OpenClaw memory docs: https://docs.openclaw.ai/concepts/memory
 - OpenClaw agent workspace docs: https://docs.openclaw.ai/agent-workspace
 - OpenClaw creating skills docs: https://docs.openclaw.ai/tools/creating-skills
@@ -4217,6 +4267,8 @@ examples/workflows/gitclaw.yml
 - Hermes security docs: https://hermes-agent.nousresearch.com/docs/user-guide/security
 - Hermes working with skills docs: https://hermes-agent.nousresearch.com/docs/guides/work-with-skills/
 - Hermes profiles docs: https://hermes-agent.nousresearch.com/docs/user-guide/profiles
+- Hermes toolsets reference: https://hermes-agent.nousresearch.com/docs/reference/toolsets-reference
+- Hermes MCP docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp
 - Slack Socket Mode: https://api.slack.com/apis/connections/socket
 - Slack Events API: https://docs.slack.dev/apis/events-api/
 - Telegram Bot API `getUpdates`: https://core.telegram.org/bots/api#getupdates

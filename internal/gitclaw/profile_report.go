@@ -129,6 +129,8 @@ func profileDocumentCategory(path string) string {
 		return "standing-orders"
 	case path == hookPolicyPath:
 		return "hooks"
+	case path == pluginPolicyPath:
+		return "plugins"
 	default:
 		return "profile"
 	}
