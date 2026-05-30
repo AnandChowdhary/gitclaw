@@ -1,6 +1,6 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-05-30T22:49:14Z`
+- generated_at: `2026-05-30T22:50:37Z`
 - issue_count: `288`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
@@ -292,4 +292,4 @@
 | #322 | @gitclaw /config risk e2e 20260530T221413Z | `2026-05-30T22:16:38Z` | 3 | 4 | `issues/000322.json` |
 | #323 | @gitclaw /backup coverage e2e 20260530T223109Z | `2026-05-30T22:32:17Z` | 1 | 2 | `issues/000323.json` |
 | #324 | @gitclaw /backup coverage e2e 20260530T223424Z | `2026-05-30T22:36:51Z` | 3 | 4 | `issues/000324.json` |
-| #325 | @gitclaw session coverage e2e 20260530T224805Z | `2026-05-30T22:49:12Z` | 1 | 2 | `issues/000325.json` |
+| #325 | @gitclaw session coverage e2e 20260530T224805Z | `2026-05-30T22:50:36Z` | 3 | 4 | `issues/000325.json` |
