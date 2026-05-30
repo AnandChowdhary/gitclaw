@@ -137,7 +137,7 @@ for expected in \
   "Generated without a model call" \
   'trigger_prefix: `@gitclaw`' \
   'commands: `15`' \
-  'aliases: `7`' \
+  'aliases: `10`' \
   'local_cli_helpers: `34`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
@@ -148,6 +148,9 @@ for expected in \
   '/doctor' \
   '/skills' \
   '/soul' \
+  '/budget' \
+  '/prompt-budget' \
+  '/cron' \
   'gitclaw channels list' \
   'gitclaw config list' \
   'gitclaw context list' \

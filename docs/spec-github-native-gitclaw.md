@@ -407,6 +407,7 @@ GitClaw supports a deterministic proactive audit command:
 ```text
 @gitclaw /proactive
 @gitclaw /proactive list
+@gitclaw /cron
 ```
 
 The command runs after normal preflight and context loading, but before model
