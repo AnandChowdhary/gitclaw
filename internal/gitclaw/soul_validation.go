@@ -83,11 +83,22 @@ func ValidateSoulContext(repoContext RepoContext) SoulValidationReport {
 }
 
 func RenderSoulValidationReport(repoContext RepoContext) string {
+	return renderSoulValidationReport(Event{}, repoContext, false)
+}
+
+func renderSoulValidationReport(ev Event, repoContext RepoContext, includeIssue bool) string {
 	validation := ValidateSoulContext(repoContext)
 	var b strings.Builder
 	b.WriteString("## GitClaw Soul Validate Report\n\n")
 	b.WriteString("Generated without a model call.\n\n")
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
 	writeSoulValidationSummary(&b, validation)
+	b.WriteString("\nThis report validates high-authority context metadata without dumping soul, identity, user, memory, tool, heartbeat, issue, comment, prompt, or secret bodies.\n")
 	b.WriteString("\n### Findings\n")
 	writeSoulValidationFindings(&b, validation)
 	return strings.TrimSpace(b.String())

@@ -163,7 +163,7 @@ func TestSoulValidateCommandReportsCurrentRepoShape(t *testing.T) {
 			t.Fatalf("soul validate returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Soul Validate Report", "soul_validation_status: `ok`", "soul_validation_errors: `0`", "soul_validation_warnings: `0`", "soul_required_files_present: `6`", "soul_memory_notes: `1`", "- none"} {
+	for _, want := range []string{"GitClaw Soul Validate Report", "scope: `local-cli`", "soul_validation_status: `ok`", "soul_validation_errors: `0`", "soul_validation_warnings: `0`", "soul_required_files_present: `6`", "soul_memory_notes: `1`", "- none"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("soul validate output missing %q:\n%s", want, output)
 		}

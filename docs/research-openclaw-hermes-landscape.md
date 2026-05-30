@@ -473,6 +473,12 @@ their validation deserves a dedicated issue command. Add
 `gitclaw skills validate`, returning only validation counts and findings
 without dumping full `SKILL.md` bodies or inventory sections.
 
+2026-05-30 soul-validate follow-up: high-authority context validation should
+also be separately addressable from inventory. Add `@gitclaw /soul validate`
+as the issue-side mirror of `gitclaw soul validate`, returning required-file,
+memory-note, status, and body-free finding counts without listing context
+files when there are no findings.
+
 2026-05-29 channel visibility follow-up: Slack's Events API expects either a
 server HTTP endpoint or Socket Mode, Socket Mode uses a stateful WebSocket
 instead of a static public URL, Telegram's `getUpdates` provides long polling

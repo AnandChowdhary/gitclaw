@@ -777,6 +777,68 @@ func TestHandleSoulSearchCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 }
 
+func TestHandleSoulValidateCommandPostsReportWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	files := map[string]string{
+		".gitclaw/SOUL.md":              "SOUL_VALIDATE_HANDLER_SECRET: stay repo native.",
+		".gitclaw/IDENTITY.md":          "Identity: GitClaw.",
+		".gitclaw/USER.md":              "USER_VALIDATE_HANDLER_SECRET: maintainer facts.",
+		".gitclaw/TOOLS.md":             "TOOLS_VALIDATE_HANDLER_SECRET: read-only tools.",
+		".gitclaw/MEMORY.md":            "Memory: durable facts.",
+		".gitclaw/HEARTBEAT.md":         "Heartbeat: scheduled workflow notes.",
+		".gitclaw/memory/2026-05-29.md": "Daily note token.",
+	}
+	for path, body := range files {
+		writeTestFile(t, root, path, body)
+	}
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 120,
+			"title": "@gitclaw /soul validate",
+			"body": "Hidden soul validate body token: SOUL_VALIDATE_HANDLER_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{120: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic soul validate command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Soul Validate Report", "Generated without a model call", "model=\"gitclaw/soul\"", "repository: `owner/repo`", "issue: `#120`", "soul_validation_status: `ok`", "soul_validation_errors: `0`", "soul_validation_warnings: `0`", "soul_required_files: `6`", "soul_required_files_present: `6`", "soul_required_files_missing: `0`", "soul_memory_notes: `1`", "soul_noncanonical_memory_notes: `0`", "### Findings", "- none"} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("soul validate report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SOUL_VALIDATE_HANDLER_SECRET", "USER_VALIDATE_HANDLER_SECRET", "TOOLS_VALIDATE_HANDLER_SECRET", "SOUL_VALIDATE_HANDLER_BODY_SECRET", ".gitclaw/SOUL.md", ".gitclaw/memory/2026-05-29.md"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("soul validate report leaked body/path token %q:\n%s", leaked, body)
+		}
+	}
+	if strings.Contains(body, "### Identity And Policy Files") || strings.Contains(body, "### Memory Notes") {
+		t.Fatalf("soul validate report unexpectedly included inventory sections:\n%s", body)
+	}
+	if !hasLabel(github.IssueLabels[120], "gitclaw:done") || hasLabel(github.IssueLabels[120], "gitclaw:running") || hasLabel(github.IssueLabels[120], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[120])
+	}
+}
+
 func TestHandleMemoryCommandPostsReportWithoutLLM(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/MEMORY.md", "LONG_TERM_MEMORY_SECRET: durable facts.")

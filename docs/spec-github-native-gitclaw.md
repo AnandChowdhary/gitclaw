@@ -969,6 +969,7 @@ by OpenClaw and Hermes' portable workspace files:
 ```text
 @gitclaw /soul
 @gitclaw /soul list
+@gitclaw /soul validate
 @gitclaw /soul search durable state layer
 ```
 
@@ -988,6 +989,12 @@ It never dumps full file bodies. The hashes make the issue-visible report
 verifiable without exposing private user, memory, or policy text.
 `@gitclaw /soul list` is an explicit inventory alias for the same report,
 matching the local `gitclaw soul list` helper.
+
+When called as `@gitclaw /soul validate`, the command posts only the
+validation report: status, error/warning totals, required-file counts,
+memory-note counts, noncanonical memory-note count, and body-free findings.
+This mirrors `gitclaw soul validate` for issue-side audits without the full
+context inventory.
 
 When called as `@gitclaw /soul search <query>`, the command searches only the
 loaded high-authority context files with a local lexical matcher. It reports
@@ -2785,6 +2792,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven soul-list E2E harness verifies `@gitclaw /soul list` is an
   explicit inventory alias with the same body-free context file, memory-note,
   hash, and validation metadata.
+- A `gh`-driven soul-validate E2E harness verifies
+  `@gitclaw /soul validate` exposes the body-free validation report without
+  falling back to the full context inventory.
 - A `gh`-driven tools-report E2E harness verifies `@gitclaw /tools` produces a
   deterministic tool contract and active-output audit with validation metadata,
   without a model call or output-body leakage.

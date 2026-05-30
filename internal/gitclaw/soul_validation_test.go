@@ -18,6 +18,7 @@ func TestValidateSoulContextReportsProblemsWithoutBodies(t *testing.T) {
 	body := RenderSoulValidationReport(repoContext)
 	for _, want := range []string{
 		"GitClaw Soul Validate Report",
+		"scope: `local-cli`",
 		"soul_validation_status: `error`",
 		"soul_validation_errors: `5`",
 		"soul_validation_warnings: `1`",
@@ -63,7 +64,7 @@ func TestValidateSoulContextAcceptsCurrentSoulShape(t *testing.T) {
 		{Path: ".gitclaw/HEARTBEAT.md", Body: "Scheduled workflow notes."},
 		{Path: ".gitclaw/memory/2026-05-29.md", Body: "Dated memory note."},
 	}})
-	for _, want := range []string{"soul_validation_status: `ok`", "soul_validation_errors: `0`", "soul_validation_warnings: `0`", "- none"} {
+	for _, want := range []string{"scope: `local-cli`", "soul_validation_status: `ok`", "soul_validation_errors: `0`", "soul_validation_warnings: `0`", "- none"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("validation report missing %q:\n%s", want, body)
 		}
