@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-05-30T10:23:50Z`
-- issue_count: `207`
+- generated_at: `2026-05-30T10:25:28Z`
+- issue_count: `208`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -212,3 +212,4 @@
 | #236 | @gitclaw search tool chat e2e 20260530T101143Z | `2026-05-30T10:12:46Z` | 1 | 2 | `issues/000236.json` |
 | #237 | @gitclaw /soul edit-plan soul e2e 20260530T102122Z | `2026-05-30T10:22:27Z` | 1 | 2 | `issues/000237.json` |
 | #238 | @gitclaw /help e2e 20260530T102249Z | `2026-05-30T10:23:49Z` | 1 | 2 | `issues/000238.json` |
+| #239 | @gitclaw context reference chat e2e 20260530T102414Z | `2026-05-30T10:25:26Z` | 1 | 2 | `issues/000239.json` |
