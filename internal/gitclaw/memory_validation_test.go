@@ -70,7 +70,8 @@ func TestRenderMemoryVerifyReportShowsTrustEnvelopeWithoutBodies(t *testing.T) {
 	if err != nil {
 		t.Fatalf("LoadRepoContext returned error: %v", err)
 	}
-	cfg := Config{Workdir: root}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
 	report := RenderMemoryVerifyReport(Event{}, cfg, ctx)
 	for _, want := range []string{
 		"GitClaw Memory Verify Report",
@@ -176,6 +177,61 @@ func TestRenderMemorySearchReportFindsMemoryWithoutBodies(t *testing.T) {
 	for _, leaked := range []string{"MEMORY_SEARCH_LONG_TERM_SECRET", "MEMORY_SEARCH_DATED_SECRET", "MEMORY_SEARCH_QUERY_SECRET", "MEMORY_SEARCH_ISSUE_SECRET", "deployment rollout"} {
 		if strings.Contains(report, leaked) {
 			t.Fatalf("memory search report leaked %q:\n%s", leaked, report)
+		}
+	}
+}
+
+func TestRenderMemoryInfoReportShowsOneMemoryFileWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/MEMORY.md", "Long-term memory with MEMORY_INFO_LONG_TERM_SECRET.\n")
+	writeTestFile(t, root, ".gitclaw/memory/2026-05-29.md", "Daily note with MEMORY_INFO_DATED_SECRET.\n")
+	ctx, err := LoadRepoContext(root, []TranscriptMessage{{Role: "user", Body: "memory info .gitclaw/memory/2026-05-29.md"}})
+	if err != nil {
+		t.Fatalf("LoadRepoContext returned error: %v", err)
+	}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 131,
+			"title": "@gitclaw /memory info .gitclaw/memory/2026-05-29.md",
+			"body": "Hidden memory info issue token: MEMORY_INFO_ISSUE_SECRET.",
+			"author_association": "OWNER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+
+	report := RenderMemoryReport(ev, cfg, ctx)
+	for _, want := range []string{
+		"GitClaw Memory Info Report",
+		"Generated without a model call",
+		"repository: `owner/repo`",
+		"issue: `#131`",
+		"requested_memory: `.gitclaw/memory/2026-05-29.md`",
+		"normalized_memory_path: `.gitclaw/memory/2026-05-29.md`",
+		"memory_info_status: `ok`",
+		"matched_memory_files: `1`",
+		"memory_mode: `read-only`",
+		"raw_bodies_included: `false`",
+		"memory_writes_allowed: `false`",
+		"memory_validation_status: `ok`",
+		"kind=`dated-note` path=`.gitclaw/memory/2026-05-29.md` source=`repo-local` present=`true` canonical=`true` latest=`true` loaded_for_this_turn=`true`",
+		"sha256_12=",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("memory info report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"MEMORY_INFO_LONG_TERM_SECRET", "MEMORY_INFO_DATED_SECRET", "MEMORY_INFO_ISSUE_SECRET", "Daily note with"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("memory info report leaked %q:\n%s", leaked, report)
 		}
 	}
 }

@@ -828,6 +828,7 @@ larger session recall:
 @gitclaw /memory list
 @gitclaw /memory verify
 @gitclaw /memory validate
+@gitclaw /memory info .gitclaw/memory/2026-05-29.md
 @gitclaw /memory search backup branch
 ```
 
@@ -851,6 +852,13 @@ read-only during assistant turns; edits require normal reviewed git changes.
 `@gitclaw /memory list` is an explicit inventory alias for the same report,
 matching the local `gitclaw memory list` helper.
 
+When called as `@gitclaw /memory info <path>`, the command posts a focused
+body-free card for one memory file. It accepts `.gitclaw/MEMORY.md`,
+`.gitclaw/memory/YYYY-MM-DD.md`, a bare date, or `latest`, and reports the
+normalized path, match status, kind, repo-local source, canonicality,
+latest-note state, loaded-for-this-turn state, byte/line counts, short hash,
+context-limit state, validation rollup, and read-only write status.
+
 When called as `@gitclaw /memory search <query>`, the command searches
 git-backed memory files with a local lexical matcher. It reports query hash,
 term count, scanned file count, matched file/line counts, paths, line numbers,
@@ -871,6 +879,7 @@ memory-hygiene report. Local operators can run the same validation with:
 gitclaw memory verify
 gitclaw memory validate
 gitclaw memory list
+gitclaw memory info <path>
 gitclaw memory search <query> --max-results 10
 gitclaw memory search --query <query> --max-results 10
 ```
@@ -2689,12 +2698,16 @@ assert the expected comments/labels, and close the issue in cleanup.
    - create a real issue with `@gitclaw /memory`,
    - create a second real issue with `@gitclaw /memory list`,
    - create a third real issue with `@gitclaw /memory verify`,
+   - create a fourth real issue with `@gitclaw /memory info latest`,
    - assert the reply is marked `model="gitclaw/memory"`,
    - assert the report lists `.gitclaw/MEMORY.md`, dated memory note counts,
      loaded/omitted note counts, and memory file hashes,
    - assert the verify report includes repo-local provenance, loaded state,
      external-provider/session-index/background-promotion non-goals, and
      body-free trust cards,
+   - assert the info report includes the normalized memory path, match status,
+     kind/source/canonical/latest/loaded metadata, and file hash without a
+     body,
    - assert the report does not dump memory file bodies or issue body tokens,
    - assert the run succeeds without requiring a model provider response.
 
@@ -3295,6 +3308,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven memory-list E2E harness verifies `@gitclaw /memory list`
   is an explicit inventory alias with the same body-free memory-file,
   loaded-note, hash, and validation metadata.
+- A `gh`-driven memory-info E2E harness verifies `@gitclaw /memory info
+  latest` returns one focused body-free memory file card with normalized path,
+  kind/source/canonical/latest/loaded metadata, and hashes.
 - A `gh`-driven memory-search E2E harness verifies
   `@gitclaw /memory search backup branch` searches git-backed memory files
   without a model call, raw query leakage, or memory-body leakage.

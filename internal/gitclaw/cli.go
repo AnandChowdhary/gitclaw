@@ -69,7 +69,7 @@ func RunCLI(ctx context.Context, args []string) error {
 
 func runMemoryCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw memory verify|validate|list|search <query>")
+		return fmt.Errorf("usage: gitclaw memory verify|validate|list|info <path>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -78,6 +78,8 @@ func runMemoryCommand(args []string) error {
 		return runMemoryValidateCommand(args[1:])
 	case "list":
 		return runMemoryListCommand(args[1:])
+	case "info":
+		return runMemoryInfoCommand(args[1:])
 	case "search":
 		return runMemorySearchCommand(args[1:])
 	default:
@@ -114,6 +116,40 @@ func runMemoryListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderMemoryCLIReport(cfg, repoContext))
+	return nil
+}
+
+func runMemoryInfoCommand(args []string) error {
+	pathFlag := ""
+	var pathParts []string
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--path":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--path requires a value")
+			}
+			pathFlag = args[i+1]
+			i++
+		default:
+			pathParts = append(pathParts, args[i])
+		}
+	}
+	path := strings.TrimSpace(strings.Join(pathParts, " "))
+	if strings.TrimSpace(pathFlag) != "" {
+		path = strings.TrimSpace(pathFlag)
+	}
+	if path == "" {
+		return fmt.Errorf("usage: gitclaw memory info <path>")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "memory info " + path}}, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderMemoryInfoCLIReport(cfg, repoContext, path))
 	return nil
 }
 

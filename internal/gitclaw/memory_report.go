@@ -55,6 +55,9 @@ func RenderMemoryReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isMemoryValidateRequest(ev, cfg) {
 		return RenderMemoryValidationReport(ev, cfg, repoContext)
 	}
+	if path := requestedMemoryInfoPath(ev, cfg); path != "" {
+		return RenderMemoryInfoReport(ev, cfg, repoContext, path)
+	}
 	if query := requestedMemorySearchQuery(ev, cfg); query != "" {
 		return RenderMemorySearchReport(ev, cfg, repoContext, query, defaultMemorySearchMaxResults)
 	}
@@ -63,6 +66,10 @@ func RenderMemoryReport(ev Event, cfg Config, repoContext RepoContext) string {
 
 func RenderMemoryCLIReport(cfg Config, repoContext RepoContext) string {
 	return renderMemoryListReport(Event{}, cfg, repoContext, false)
+}
+
+func RenderMemoryInfoCLIReport(cfg Config, repoContext RepoContext, path string) string {
+	return renderMemoryInfoReport(Event{}, cfg, repoContext, path, false)
 }
 
 func renderMemoryListReport(ev Event, cfg Config, repoContext RepoContext, includeIssue bool) string {
@@ -153,6 +160,62 @@ func RenderMemorySearchReport(ev Event, cfg Config, repoContext RepoContext, que
 	return strings.TrimSpace(b.String())
 }
 
+func RenderMemoryInfoReport(ev Event, cfg Config, repoContext RepoContext, path string) string {
+	return renderMemoryInfoReport(ev, cfg, repoContext, path, true)
+}
+
+func renderMemoryInfoReport(ev Event, cfg Config, repoContext RepoContext, path string, includeIssue bool) string {
+	surface := inspectMemorySurface(cfg.Workdir, repoContext)
+	validation := ValidateMemory(cfg.Workdir, repoContext)
+	normalized := normalizeMemoryInfoPath(path, surface)
+	match, ok := memoryInfoMatch(surface, normalized)
+	status := "not_found"
+	if ok && match.File.Present {
+		status = "ok"
+	} else if ok {
+		status = "missing"
+	}
+	if normalized == "" {
+		status = "missing_path"
+	}
+
+	var b strings.Builder
+	b.WriteString("## GitClaw Memory Info Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
+	fmt.Fprintf(&b, "- requested_memory: `%s`\n", inlineCode(path))
+	fmt.Fprintf(&b, "- normalized_memory_path: `%s`\n", inlineCode(normalized))
+	fmt.Fprintf(&b, "- memory_info_status: `%s`\n", status)
+	matched := 0
+	if ok {
+		matched = 1
+	}
+	fmt.Fprintf(&b, "- matched_memory_files: `%d`\n", matched)
+	fmt.Fprintf(&b, "- memory_mode: `%s`\n", "read-only")
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- memory_writes_allowed: `%t`\n", false)
+	writeMemoryValidationSummary(&b, validation)
+	if includeIssue {
+		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
+	}
+	b.WriteByte('\n')
+	b.WriteString("This report shows one repo-local memory file's metadata. Raw memory bodies, issue bodies, comments, prompts, and secret values are not included.\n\n")
+
+	b.WriteString("### Match\n")
+	if !ok {
+		b.WriteString("- none\n")
+	} else {
+		writeMemoryInfoMatch(&b, match)
+	}
+
+	return strings.TrimSpace(b.String())
+}
+
 func isMemoryValidateRequest(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && (fields[0] == "/memory" || fields[0] == "/memories") && strings.EqualFold(fields[1], "validate")
@@ -161,6 +224,14 @@ func isMemoryValidateRequest(ev Event, cfg Config) bool {
 func isMemoryVerifyRequest(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && (fields[0] == "/memory" || fields[0] == "/memories") && strings.EqualFold(fields[1], "verify")
+}
+
+func requestedMemoryInfoPath(ev Event, cfg Config) string {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 3 || (fields[0] != "/memory" && fields[0] != "/memories") || !strings.EqualFold(fields[1], "info") {
+		return ""
+	}
+	return cleanMemoryInfoPath(strings.Join(fields[2:], " "))
 }
 
 func requestedMemorySearchQuery(ev Event, cfg Config) string {
@@ -309,6 +380,103 @@ func memorySearchTerms(query string) []string {
 
 func cleanMemorySearchQuery(query string) string {
 	return strings.Trim(strings.TrimSpace(query), " \t\r\n.,:;!?`\"'")
+}
+
+func cleanMemoryInfoPath(path string) string {
+	return strings.Trim(strings.TrimSpace(path), " \t\r\n,;`\"'")
+}
+
+type memoryInfoMatchResult struct {
+	File              configSurfaceFile
+	Kind              string
+	Source            string
+	Canonical         bool
+	Latest            bool
+	LoadedForThisTurn bool
+	AtContextLimit    bool
+}
+
+func normalizeMemoryInfoPath(raw string, surface memorySurface) string {
+	value := cleanMemoryInfoPath(raw)
+	if value == "" {
+		return ""
+	}
+	value = strings.TrimPrefix(value, "./")
+	lower := strings.ToLower(value)
+	switch lower {
+	case "long-term", "longterm", "memory", "memory.md", "long-term-memory", ".gitclaw/memory.md":
+		return longTermMemoryPath
+	case "latest", "latest-note", "latest-memory-note":
+		return latestMemoryNotePath(surface.DatedNotes)
+	}
+	if datedMemoryDatePattern.MatchString(value) {
+		return ".gitclaw/memory/" + value + ".md"
+	}
+	if datedMemoryBasenamePattern.MatchString(value) {
+		return ".gitclaw/memory/" + value
+	}
+	if strings.HasPrefix(value, "memory/") {
+		return ".gitclaw/" + value
+	}
+	return filepath.ToSlash(filepath.Clean(filepath.FromSlash(value)))
+}
+
+var (
+	datedMemoryDatePattern     = regexp.MustCompile(`^\d{4}-\d{2}-\d{2}$`)
+	datedMemoryBasenamePattern = regexp.MustCompile(`^\d{4}-\d{2}-\d{2}\.md$`)
+)
+
+func memoryInfoMatch(surface memorySurface, path string) (memoryInfoMatchResult, bool) {
+	loaded := loadedMemoryPathSet(surface)
+	latest := latestMemoryNotePath(surface.DatedNotes)
+	for _, file := range memorySearchFiles(surface) {
+		if file.Path != path {
+			continue
+		}
+		return memoryInfoMatchResult{
+			File:              file,
+			Kind:              memoryFileKind(file.Path),
+			Source:            memoryTrustSource(file.Path),
+			Canonical:         memoryFileCanonical(file.Path),
+			Latest:            file.Path == latest,
+			LoadedForThisTurn: loaded[file.Path],
+			AtContextLimit:    file.Bytes >= maxContextDocumentBytes,
+		}, true
+	}
+	return memoryInfoMatchResult{}, false
+}
+
+func memoryFileKind(path string) string {
+	if path == longTermMemoryPath {
+		return "long-term"
+	}
+	if datedMemoryNotePattern.MatchString(path) {
+		return "dated-note"
+	}
+	if strings.HasPrefix(path, ".gitclaw/memory/") {
+		return "memory-note"
+	}
+	return "unknown"
+}
+
+func memoryFileCanonical(path string) bool {
+	return path == longTermMemoryPath || datedMemoryNotePattern.MatchString(path)
+}
+
+func writeMemoryInfoMatch(b *strings.Builder, match memoryInfoMatchResult) {
+	fmt.Fprintf(b, "- kind=`%s` path=`%s` source=`%s` present=`%t` canonical=`%t` latest=`%t` loaded_for_this_turn=`%t` bytes=`%d` lines=`%d` sha256_12=`%s` at_context_limit=`%t`\n",
+		match.Kind,
+		match.File.Path,
+		match.Source,
+		match.File.Present,
+		match.Canonical,
+		match.Latest,
+		match.LoadedForThisTurn,
+		match.File.Bytes,
+		match.File.Lines,
+		match.File.SHA,
+		match.AtContextLimit,
+	)
 }
 
 func rootOrDot(root string) string {

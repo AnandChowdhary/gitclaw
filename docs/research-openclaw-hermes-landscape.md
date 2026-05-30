@@ -501,6 +501,13 @@ not just the fallback behavior of `/memory`. Add `@gitclaw /memory list` and
 long-term memory, dated note counts, loaded/omitted notes, latest note,
 hashes, and validation rollups.
 
+2026-05-30 memory-info follow-up: OpenClaw/Hermes inspection surfaces make
+focused provenance cards useful when an operator wants one durable context
+file, not a full inventory. GitClaw should add `@gitclaw /memory info <path>`
+and `gitclaw memory info <path>` for one body-free memory file card with
+normalized path, source/kind, canonical/latest/loaded state, byte/line counts,
+and hash metadata.
+
 2026-05-30 memory-verify follow-up: add `@gitclaw /memory verify` as the
 issue-side mirror of `gitclaw memory verify`, returning memory-file trust
 cards, repo-local provenance, loaded/omitted state, hashes, hygiene rollup, and
