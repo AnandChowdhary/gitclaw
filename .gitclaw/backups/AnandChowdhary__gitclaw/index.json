@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-30T20:31:04Z",
+  "generated_at": "2026-05-30T20:32:18Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 279,
   "issues": [
@@ -3415,13 +3415,14 @@
       "number": 316,
       "title": "@gitclaw /orders risk e2e 20260530T202953Z",
       "path": "issues/000316.json",
-      "backup_generated_at": "2026-05-30T20:31:03Z",
-      "event_name": "issues",
+      "backup_generated_at": "2026-05-30T20:32:16Z",
+      "event_name": "issue_comment",
       "labels": [
-        "gitclaw"
+        "gitclaw",
+        "gitclaw:done"
       ],
-      "comment_count": 1,
-      "transcript_messages": 2
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
