@@ -76,6 +76,135 @@ SECRET_SKILL_INFO_BODY_TOKEN
 	}
 }
 
+func TestRenderSkillInstallPlanReportPlansExistingSkillWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Use read-only repository files.
+metadata:
+  openclaw:
+    requires:
+      bins: [git]
+---
+
+# Repo Reader
+SECRET_SKILL_INSTALL_BODY_TOKEN
+`)
+	ctx, err := LoadRepoContext(root, []TranscriptMessage{{Role: "user", Body: "skills install-plan repo-reader"}})
+	if err != nil {
+		t.Fatalf("LoadRepoContext returned error: %v", err)
+	}
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 114,
+			"title": "@gitclaw /skills install-plan repo-reader e2e",
+			"body": "Hidden skill install plan token: SKILL_INSTALL_PLAN_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	report := RenderSkillsReport(ev, DefaultConfig(), ctx)
+	for _, want := range []string{
+		"GitClaw Skill Install Plan Report",
+		"Generated without a model call",
+		"install_plan_status: `needs_review`",
+		"operation: `install-plan`",
+		"target_type: `registry-name`",
+		"target_sha256_12:",
+		"target_terms: `1`",
+		"safe_name_candidate: `repo-reader`",
+		"destination_path: `.gitclaw/SKILLS/repo-reader/SKILL.md`",
+		"destination_exists: `true`",
+		"existing_skill_matches: `1`",
+		"available_skills: `1`",
+		"run_mode: `read-only`",
+		"remote_fetch_allowed: `false`",
+		"installer_scripts_run: `false`",
+		"dependency_install_allowed: `false`",
+		"repository_mutation_allowed: `false`",
+		"manual_review_required: `true`",
+		"llm_e2e_required_after_change: `true`",
+		"raw_target_included: `false`",
+		"raw_manifest_included: `false`",
+		"raw_skill_body_included: `false`",
+		"skill_validation_status: `ok`",
+		"### Existing Skill Matches",
+		"skill_name=`repo-reader`",
+		"selected_for_this_turn=`true`",
+		"### Review Steps",
+		"Run a live GitHub Models conversation E2E",
+		"### Findings",
+		"code=`manual_review_required`",
+		"code=`installer_scripts_disabled`",
+		"code=`repository_mutation_disabled`",
+		"code=`existing_skill_found`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("skill install plan report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"SECRET_SKILL_INSTALL_BODY_TOKEN", "SKILL_INSTALL_PLAN_BODY_SECRET"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("skill install plan report leaked %q:\n%s", leaked, report)
+		}
+	}
+}
+
+func TestRenderSkillInstallPlanReportDoesNotLeakRemoteURLSecrets(t *testing.T) {
+	root := t.TempDir()
+	ctx, err := LoadRepoContext(root, nil)
+	if err != nil {
+		t.Fatalf("LoadRepoContext returned error: %v", err)
+	}
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 115,
+			"title": "@gitclaw /skills install-plan https://github.com/example/repo-reader?token=REMOTE_URL_SECRET",
+			"body": "Hidden remote install body token: REMOTE_INSTALL_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	report := RenderSkillsReport(ev, DefaultConfig(), ctx)
+	for _, want := range []string{
+		"GitClaw Skill Install Plan Report",
+		"install_plan_status: `needs_review`",
+		"target_type: `github-url`",
+		"safe_name_candidate: `repo-reader`",
+		"destination_path: `.gitclaw/SKILLS/repo-reader/SKILL.md`",
+		"destination_exists: `false`",
+		"existing_skill_matches: `0`",
+		"remote_fetch_allowed: `false`",
+		"raw_target_included: `false`",
+		"raw_manifest_included: `false`",
+		"raw_skill_body_included: `false`",
+		"code=`network_fetch_disabled`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("remote skill install plan report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"REMOTE_URL_SECRET", "REMOTE_INSTALL_BODY_SECRET", "https://github.com/example/repo-reader"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("remote skill install plan report leaked %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestRenderSkillSearchReportSearchesMetadataWithoutBodies(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---

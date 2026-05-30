@@ -1017,6 +1017,8 @@ gitclaw skills verify
 gitclaw skills validate
 gitclaw skills check
 gitclaw skills list
+gitclaw skills install-plan <target>
+gitclaw skills upgrade-plan <target>
 gitclaw bundles list
 gitclaw bundles info <name>
 gitclaw skills info <name>
@@ -1043,6 +1045,8 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills verify
 @gitclaw /skills validate
 @gitclaw /skills check
+@gitclaw /skills install-plan repo-reader
+@gitclaw /skills upgrade-plan repo-reader
 @gitclaw /bundles
 @gitclaw /bundles info repo-context
 @gitclaw /skills info repo-reader
@@ -1062,6 +1066,7 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 - declared env/bin requirement counts and whether any are missing.
 - validation status, error/warning counts, duplicate-name count, invalid-name
   count, folder/name mismatch count, and body-free findings.
+- dry-run install/upgrade planning metadata when explicitly requested.
 
 It does not dump full skill bodies. Full `SKILL.md` content remains a prompt
 input only when selected by the normal progressive-disclosure rules.
@@ -1111,6 +1116,25 @@ explicit
 `registry_verification=not_configured` field. This mirrors OpenClaw's
 verification posture while preserving GitClaw's no-registry, no-installer MVP
 boundary.
+
+When called as `@gitclaw /skills install-plan <target>` or
+`@gitclaw /skills upgrade-plan <target>`, the command switches to a
+non-mutating install planner inspired by OpenClaw's ClawHub/AgentSkills
+install UX and Hermes' skill trust posture. The planner classifies the target
+as a registry name, local skill path, GitHub shorthand, GitHub URL, generic
+HTTPS URL, insecure HTTP URL, unsupported URL, unsafe path, or empty target. It
+reports only safe metadata: target hash, target type, derived safe
+repo-local name, destination path candidate, existing repo-local matches,
+validation rollup, and findings.
+
+The install planner never fetches remote targets, never contacts a registry,
+never runs installer scripts, never installs dependencies, never writes
+`.gitclaw/SKILLS`, and never commits or pushes. Remote URLs are classified only
+and require manual review. Existing skill matches are reported as upgrade or
+overwrite risk. The report includes `llm_e2e_required_after_change=true` to
+make the release rule explicit: after a skill is actually changed, maintainers
+must run a live GitHub Models conversation E2E in addition to deterministic
+skill-report tests.
 
 When called as `@gitclaw /skills info <name>`, the same deterministic command
 switches from inventory mode to focused skill-info mode. The info report shows
@@ -3724,6 +3748,12 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven skills-info E2E harness verifies
   `@gitclaw /skills info repo-reader` produces focused skill metadata without
   a model call or full `SKILL.md` body leakage.
+- A `gh`-driven skills-install-plan E2E harness verifies
+  `@gitclaw /skills install-plan repo-reader` produces a body-free,
+  non-mutating install/upgrade plan with remote fetches, installer scripts,
+  dependency installs, repository mutations, raw targets, manifests, and skill
+  bodies all disabled. This deterministic check must be paired in the same
+  implementation batch with a live GitHub Models conversation E2E.
 - A `gh`-driven skill-bundle info E2E harness verifies
   `@gitclaw /bundles info repo-context` produces focused repo-local bundle
   metadata, resolved/missing skill refs, instruction presence, hashes, and no

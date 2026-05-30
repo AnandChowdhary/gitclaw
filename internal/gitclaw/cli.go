@@ -922,7 +922,7 @@ func runDoctorCommand(args []string) error {
 
 func runSkillsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw skills verify|validate|check|list|bundles|bundle <name>|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw skills verify|validate|check|list|install-plan <target>|upgrade-plan <target>|bundles|bundle <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -931,6 +931,10 @@ func runSkillsCommand(args []string) error {
 		return runSkillsValidateCommand(args[1:])
 	case "list":
 		return runSkillsListCommand(args[1:])
+	case "install-plan", "plan":
+		return runSkillsInstallPlanCommand(args[1:], "install-plan")
+	case "upgrade-plan":
+		return runSkillsInstallPlanCommand(args[1:], "upgrade-plan")
 	case "bundles", "bundle-list":
 		return runBundlesListCommand(args[1:])
 	case "bundle", "bundle-info":
@@ -987,6 +991,22 @@ func runSkillsListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSkillsCLIReport(repoContext))
+	return nil
+}
+
+func runSkillsInstallPlanCommand(args []string, operation string) error {
+	if len(args) != 1 {
+		return fmt.Errorf("usage: gitclaw skills %s <target>", normalizeSkillInstallOperation(operation))
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "skills " + normalizeSkillInstallOperation(operation) + " " + args[0]}}, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSkillInstallPlanCLIReport(repoContext, operation, args[0]))
 	return nil
 }
 

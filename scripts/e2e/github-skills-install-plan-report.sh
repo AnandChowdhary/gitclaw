@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "commands-report-e2e: $*" >&2
+  echo "skills-install-plan-report-e2e: $*" >&2
 }
 
 die() {
@@ -33,12 +33,12 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_COMMANDS_REPORT_E2E_${timestamp}"
-title="@gitclaw /help e2e ${timestamp}"
-body="Live commands-report E2E.
+token="GITCLAW_SKILLS_INSTALL_PLAN_E2E_${timestamp}"
+title="@gitclaw /skills install-plan repo-reader e2e ${timestamp}"
+body="Live skills install-plan E2E.
 
-Hidden commands report body token: ${token}
-This should produce a deterministic command catalog report without a model call."
+Hidden skills install plan token: ${token}
+This should produce a deterministic dry-run plan without fetching remote code or dumping the full SKILL.md body."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -52,7 +52,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "commands-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "skills-install-plan-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -109,13 +109,20 @@ error_count() {
     --jq '[.comments[] | select(.body | contains("<!-- gitclaw:error"))] | length'
 }
 
+issue_label_names() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json labels \
+    --jq '.labels[].name'
+}
+
 wait_for_assistant_count() {
   local want="$1"
   for _ in {1..90}; do
     local errors
     errors="$(error_count)"
     if [[ "$errors" != "0" ]]; then
-      die "assistant run posted ${errors} error marker comment(s)"
+      die "assistant run posted ${errors} error comment(s)"
     fi
     local got
     got="$(assistant_count)"
@@ -127,123 +134,70 @@ wait_for_assistant_count() {
   return 1
 }
 
+wait_for_done_status() {
+  for _ in {1..60}; do
+    local labels
+    labels="$(issue_label_names)"
+    if grep -Fxq "gitclaw:done" <<<"$labels" &&
+      ! grep -Fxq "gitclaw:running" <<<"$labels" &&
+      ! grep -Fxq "gitclaw:error" <<<"$labels"; then
+      return 0
+    fi
+    sleep 5
+  done
+  return 1
+}
+
 run_json="$(wait_for_run "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one commands report comment"
+wait_for_assistant_count 1 || die "expected one skills install-plan report comment"
 comments="$(assistant_comments)"
 
 for expected in \
-  'model="gitclaw/commands"' \
-  "GitClaw Commands Report" \
+  'model="gitclaw/skills"' \
+  "GitClaw Skill Install Plan Report" \
   "Generated without a model call" \
-  'trigger_prefix: `@gitclaw`' \
-  'commands: `22`' \
-  'aliases: `19`' \
-  'local_cli_helpers: `71`' \
+  'install_plan_status: `needs_review`' \
+  'operation: `install-plan`' \
+  'target_type: `registry-name`' \
+  'safe_name_candidate: `repo-reader`' \
+  'destination_path: `.gitclaw/SKILLS/repo-reader/SKILL.md`' \
+  'destination_exists: `true`' \
+  'existing_skill_matches: `1`' \
+  'available_skills: `1`' \
   'run_mode: `read-only`' \
-  "### Slash Commands" \
-  '/approvals' \
-  '/approval' \
-  '/help' \
-  '/commands' \
-  '/backup' \
-  '/bundles' \
-  '/checkpoints' \
-  '/checkpoint' \
-  '/rollback' \
-  '/tools' \
-  '/secrets' \
-  '/secret' \
-  '/doctor' \
-  '/skills' \
-  '/soul' \
-  '/profile' \
-  '/profiles' \
-  '/runs' \
-  '/run' \
-  '/ledger' \
-  '/sandbox' \
-  '/sandboxes' \
-  '/exec-policy' \
-  '/budget' \
-  '/prompt-budget' \
-  '/cron' \
-  'gitclaw approvals list' \
-  'gitclaw approvals verify' \
-  'gitclaw bundles list' \
-  'gitclaw bundles info <name>' \
-  'gitclaw channels verify' \
-  'gitclaw channels list' \
-  'gitclaw channels info <provider>' \
-  'gitclaw channel-state' \
-  'gitclaw channel-gateway' \
-  'gitclaw channel-delivery' \
-  'gitclaw checkpoints status' \
-  'gitclaw checkpoints list' \
-  'gitclaw checkpoints verify' \
-  'gitclaw rollback list' \
-  'gitclaw config list' \
-  'gitclaw context list' \
-  'gitclaw context info <path>' \
-  'gitclaw doctor' \
-  'gitclaw doctor list' \
-  'gitclaw profile show' \
-  'gitclaw profile verify' \
-  'gitclaw runs current' \
-  'gitclaw runs verify' \
-  'gitclaw sandbox explain' \
-  'gitclaw sandbox verify' \
-  'gitclaw prompt list' \
-  'gitclaw proactive list' \
-  'gitclaw proactive info <name>' \
-  'gitclaw proactive init' \
-  'gitclaw proactive enqueue' \
-  'gitclaw session list --backup <issue.json>' \
-  'gitclaw session search <query> --backup <issue.json>' \
-  'gitclaw secrets audit' \
-  'gitclaw secrets scan' \
-  'gitclaw secrets list' \
-  'gitclaw models list' \
-  'gitclaw policy list' \
-  'gitclaw policy verify' \
-  'gitclaw backup verify' \
-  'gitclaw backup manifest' \
-  'gitclaw backup list' \
-  'gitclaw backup info --issue <number>' \
-  'gitclaw backup stats' \
-  'gitclaw backup search <query>' \
-  'gitclaw backup export-jsonl' \
-  'gitclaw backup restore-plan' \
-  'gitclaw backup retention-plan' \
-  'gitclaw commands' \
-  'gitclaw memory verify' \
-  'gitclaw memory validate' \
-  'gitclaw memory list' \
-  'gitclaw memory info <path>' \
-  'gitclaw memory search <query>' \
-  'gitclaw soul verify' \
-  'gitclaw soul validate' \
-  'gitclaw soul list' \
-  'gitclaw soul info <path>' \
-  'gitclaw soul search <query>' \
-  'gitclaw skills verify' \
-  'gitclaw skills validate' \
-  'gitclaw skills check' \
-  'gitclaw skills list' \
-  'gitclaw skills install-plan <target>' \
-  'gitclaw skills upgrade-plan <target>' \
-  'gitclaw skills info <name>' \
-  'gitclaw skills search <query>' \
-  'gitclaw tools verify' \
-  'gitclaw tools validate' \
-  'gitclaw tools list' \
-  'gitclaw tools info <name>' \
-  'gitclaw tools search <query>'; do
-  grep -Fq "$expected" <<<"$comments" || die "commands report missing ${expected}"
+  'remote_fetch_allowed: `false`' \
+  'installer_scripts_run: `false`' \
+  'dependency_install_allowed: `false`' \
+  'repository_mutation_allowed: `false`' \
+  'manual_review_required: `true`' \
+  'llm_e2e_required_after_change: `true`' \
+  'raw_target_included: `false`' \
+  'raw_manifest_included: `false`' \
+  'raw_skill_body_included: `false`' \
+  'skill_validation_status: `ok`' \
+  '### Existing Skill Matches' \
+  'skill_name=`repo-reader`' \
+  'path=`.gitclaw/SKILLS/repo-reader/SKILL.md`' \
+  'selected_for_this_turn=`true`' \
+  '### Review Steps' \
+  'Run a live GitHub Models conversation E2E' \
+  '### Findings' \
+  'code=`manual_review_required`' \
+  'code=`installer_scripts_disabled`' \
+  'code=`repository_mutation_disabled`' \
+  'code=`existing_skill_found`' \
+  'target_sha256_12:'; do
+  grep -Fq -- "$expected" <<<"$comments" || die "skills install-plan report missing ${expected}"
 done
 
 if grep -Fq "$token" <<<"$comments"; then
-  die "commands report leaked issue body token"
+  die "skills install-plan report leaked issue body token"
 fi
 
+if grep -Fq "GITCLAW_SKILL_CONTEXT_V1" <<<"$comments"; then
+  die "skills install-plan report leaked full skill body token"
+fi
+
+wait_for_done_status || die "expected gitclaw:done without running/error"
 url="$(jq -r '.url' <<<"$run_json")"
 log "passed for issue #${issue_number}: ${url}"

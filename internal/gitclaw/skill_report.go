@@ -74,6 +74,9 @@ func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if bundleName := requestedSkillBundleInfoName(ev, cfg); bundleName != "" {
 		return renderSkillBundleInfoReport(ev, repoContext, bundleName, true)
 	}
+	if operation, target, ok := requestedSkillInstallPlan(ev, cfg); ok {
+		return renderSkillInstallPlanReport(ev, repoContext, operation, target, true)
+	}
 	if isSkillsVerifyRequest(ev, cfg) {
 		return renderSkillsVerifyReport(ev, repoContext, true)
 	}
@@ -156,6 +159,10 @@ func RenderSkillBundlesCLIReport(repoContext RepoContext) string {
 
 func RenderSkillBundleInfoCLIReport(repoContext RepoContext, name string) string {
 	return renderSkillBundleInfoReport(Event{}, repoContext, name, false)
+}
+
+func RenderSkillInstallPlanCLIReport(repoContext RepoContext, operation, target string) string {
+	return renderSkillInstallPlanReport(Event{}, repoContext, operation, target, false)
 }
 
 func renderSkillBundlesReport(ev Event, repoContext RepoContext, includeIssue bool) string {
@@ -374,6 +381,25 @@ func requestedSkillSearchQuery(ev Event, cfg Config) string {
 		return ""
 	}
 	return cleanSkillSearchQuery(strings.Join(fields[2:], " "))
+}
+
+func requestedSkillInstallPlan(ev Event, cfg Config) (operation string, target string, ok bool) {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 || fields[0] != "/skills" {
+		return "", "", false
+	}
+	switch strings.ToLower(fields[1]) {
+	case "install-plan", "plan":
+		operation = "install-plan"
+	case "upgrade-plan":
+		operation = "upgrade-plan"
+	default:
+		return "", "", false
+	}
+	if len(fields) >= 3 {
+		target = cleanSkillInstallTarget(fields[2])
+	}
+	return operation, target, true
 }
 
 func isSkillsValidateRequest(ev Event, cfg Config) bool {
