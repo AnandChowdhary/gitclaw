@@ -287,6 +287,16 @@ per assistant turn. This lets a later issue comment verify that a previous
 model answer actually saw `gitclaw.search_files` or a selected skill without
 replaying raw prompts.
 
+2026-05-31 session-coverage follow-up: OpenClaw and Hermes both separate
+operator-facing session inspection from the raw transcript store, but live E2E
+needs a sharper gate than "a deterministic report ran." GitClaw should add
+`@gitclaw /session coverage` plus local
+`gitclaw session coverage --backup <issue.json>` so test harnesses can fail
+unless the backed-up conversation contains a real model-backed turn, prompt
+provenance, and expected prompt-visible skills/tools. This preserves
+OpenClaw/Hermes-style replayability while making GitHub-native tests prove LLM
+and tool usage without exposing raw prompts or transcript bodies.
+
 2026-05-30 run-ledger follow-up: OpenClaw's gateway/runtime docs make
 execution provenance visible through workspace, session, and run surfaces,
 while Hermes' checkpoint/session model treats runs as replayable, auditable

@@ -52,6 +52,10 @@ func IsSessionReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderSessionReport(ev Event, cfg Config, comments []Comment, transcript []TranscriptMessage) string {
+	if requestedSessionCoverage(ev, cfg) {
+		report := BuildSessionCoverageReport("issue-thread", "", ev, comments, transcript, DefaultSessionCoverageRequirements())
+		return RenderSessionCoverageReport(report)
+	}
 	if requestedSessionRisk(ev, cfg) {
 		return RenderSessionRiskReport(ev, comments, transcript)
 	}
@@ -231,6 +235,11 @@ func requestedSessionSearchQuery(ev Event, cfg Config) string {
 func requestedSessionRisk(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && fields[0] == "/session" && (strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit"))
+}
+
+func requestedSessionCoverage(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && fields[0] == "/session" && (strings.EqualFold(fields[1], "coverage") || strings.EqualFold(fields[1], "covered"))
 }
 
 func BuildSessionSearchReport(transcript []TranscriptMessage, query string, maxResults int) SessionSearchReport {

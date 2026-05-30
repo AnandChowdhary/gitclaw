@@ -1,6 +1,7 @@
 package gitclaw
 
 import (
+	"context"
 	"strings"
 	"testing"
 )
@@ -101,5 +102,157 @@ func TestBuildSessionPromptProvenanceReportCountsMissingMarkers(t *testing.T) {
 	}})
 	if report.TurnsWithProvenance != 0 || report.PromptContextHashMissing != 1 || len(report.Turns) != 1 {
 		t.Fatalf("unexpected provenance report: %#v", report)
+	}
+}
+
+func TestRenderSessionCoverageReportRequiresModelBackedProvenanceWithoutBodies(t *testing.T) {
+	comments := []Comment{{
+		ID:                61,
+		Body:              "<!-- gitclaw:assistant-turn run_id=\"run-1\" model=\"openai/gpt-4.1-nano\" prompt_context_sha256_12=\"abc123abc123\" context_documents=\"2\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.search_files\" -->\nSESSION_COVERAGE_ASSISTANT_SECRET",
+		User:              User{Login: "github-actions[bot]", Type: "Bot"},
+		AuthorAssociation: "NONE",
+	}}
+	transcript := []TranscriptMessage{{
+		Role:      "assistant",
+		Body:      "SESSION_COVERAGE_ASSISTANT_SECRET",
+		Actor:     "github-actions[bot]",
+		CommentID: 61,
+		Trusted:   true,
+	}}
+	req := DefaultSessionCoverageRequirements()
+	req.RequiredSkills = []string{"repo-reader"}
+	req.RequiredTools = []string{"gitclaw.search_files"}
+	report := BuildSessionCoverageReport("issue-thread", "", Event{Repo: "owner/repo", Issue: Issue{Number: 5}}, comments, transcript, req)
+	if !report.OK() {
+		t.Fatalf("session coverage unexpectedly failed: %#v", report)
+	}
+	body := RenderSessionCoverageReport(report)
+	for _, want := range []string{
+		"GitClaw Session Coverage Report",
+		"session_coverage_status: `ok`",
+		"required_assistant_turns: `1`",
+		"required_prompt_provenance_turns: `1`",
+		"required_model_backed_turns: `1`",
+		"required_skill_names: `repo-reader`",
+		"required_tool_names: `gitclaw.search_files`",
+		"assistant_turn_comments: `1`",
+		"assistant_turns_with_prompt_provenance: `1`",
+		"model_backed_assistant_turns: `1`",
+		"deterministic_assistant_turns: `0`",
+		"model_names: `openai/gpt-4.1-nano`",
+		"prompt_visible_skill_names: `repo-reader`",
+		"prompt_visible_tool_names: `gitclaw.list_files, gitclaw.search_files`",
+		"missing_required_skill_names: `none`",
+		"missing_required_tool_names: `none`",
+		"raw_bodies_included: `false`",
+		"raw_prompts_included: `false`",
+		"llm_e2e_required_after_session_coverage_change: `true`",
+		"assistant_turns_met=`true`",
+		"prompt_provenance_met=`true`",
+		"model_backed_turns_met=`true`",
+		"required_skills_met=`true`",
+		"required_tools_met=`true`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("session coverage report missing %q:\n%s", want, body)
+		}
+	}
+	if strings.Contains(body, "SESSION_COVERAGE_ASSISTANT_SECRET") {
+		t.Fatalf("session coverage report leaked assistant body:\n%s", body)
+	}
+}
+
+func TestRenderSessionCoverageReportWarnsWithoutModelBackedTurn(t *testing.T) {
+	report := BuildSessionCoverageReport("issue-thread", "", Event{Repo: "owner/repo", Issue: Issue{Number: 5}}, []Comment{{
+		ID:   62,
+		Body: "<!-- gitclaw:assistant-turn model=\"gitclaw/session\" prompt_context_sha256_12=\"abc123abc123\" context_documents=\"1\" selected_skills=\"0\" tool_outputs=\"0\" -->\ndeterministic body",
+	}}, nil, DefaultSessionCoverageRequirements())
+	if report.OK() || report.SessionCoverageStatus != "warn" || report.ModelBackedTurnsMet {
+		t.Fatalf("session coverage unexpectedly passed: %#v", report)
+	}
+	body := RenderSessionCoverageReport(report)
+	for _, want := range []string{"session_coverage_status: `warn`", "model_backed_assistant_turns: `0`", "deterministic_assistant_turns: `1`", "model_backed_turns_met=`false`"} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("warning session coverage report missing %q:\n%s", want, body)
+		}
+	}
+}
+
+func TestRenderSessionReportRoutesCoverageCommand(t *testing.T) {
+	body := RenderSessionReport(Event{
+		Repo:  "owner/repo",
+		Issue: Issue{Number: 5, Title: "@gitclaw /session coverage"},
+	}, DefaultConfig(), []Comment{{
+		ID:   63,
+		Body: "<!-- gitclaw:assistant-turn model=\"openai/gpt-4.1-nano\" prompt_context_sha256_12=\"abc123abc123\" context_documents=\"1\" selected_skills=\"1\" tool_outputs=\"1\" skills=\"repo-reader\" tools=\"gitclaw.search_files\" -->\ncoverage body secret",
+	}}, nil)
+	for _, want := range []string{"GitClaw Session Coverage Report", "session_coverage_status: `ok`", "model_backed_assistant_turns: `1`", "prompt_visible_skill_names: `repo-reader`", "prompt_visible_tool_names: `gitclaw.search_files`"} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("session coverage route missing %q:\n%s", want, body)
+		}
+	}
+	if strings.Contains(body, "coverage body secret") {
+		t.Fatalf("session coverage route leaked body:\n%s", body)
+	}
+}
+
+func TestSessionCoverageCommandReportsBackupCoverageWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	backup := IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-31T00:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue: IssueBackupIssue{
+			Number: 22,
+			Title:  "@gitclaw coverage backup SESSION_COVERAGE_BACKUP_TITLE_SECRET",
+			Body:   "SESSION_COVERAGE_BACKUP_BODY_SECRET",
+		},
+		Comments: []IssueBackupComment{{
+			ID:                71,
+			Body:              "<!-- gitclaw:assistant-turn model=\"openai/gpt-4.1-nano\" prompt_context_sha256_12=\"def456def456\" context_documents=\"4\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" -->\nSESSION_COVERAGE_BACKUP_ASSISTANT_SECRET",
+			Author:            "github-actions[bot]",
+			AuthorAssociation: "NONE",
+		}},
+		Transcript: []TranscriptMessage{
+			{Role: "user", Body: "SESSION_COVERAGE_BACKUP_USER_SECRET", Actor: "alice", Trusted: true},
+			{Role: "assistant", Body: "SESSION_COVERAGE_BACKUP_ASSISTANT_SECRET", Actor: "github-actions[bot]", CommentID: 71, Trusted: true},
+		},
+	}
+	writeBackupFixture(t, root, backup)
+	backupPath := issueBackupPath(root, backup.Repo, backup.Issue.Number)
+
+	output := captureStdout(t, func() {
+		err := RunCLI(context.Background(), []string{
+			"session", "coverage",
+			"--backup", backupPath,
+			"--require-skill", "repo-reader",
+			"--require-tool", "gitclaw.search_files",
+		})
+		if err != nil {
+			t.Fatalf("session coverage returned error: %v", err)
+		}
+	})
+	for _, want := range []string{
+		"GitClaw Session Coverage Report",
+		"scope: `local-backup`",
+		"backup_file:",
+		"repository: `owner/repo`",
+		"issue: `#22`",
+		"session_coverage_status: `ok`",
+		"model_backed_assistant_turns: `1`",
+		"required_skill_names: `repo-reader`",
+		"required_tool_names: `gitclaw.search_files`",
+		"prompt_visible_tool_names: `gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files`",
+		"required_tools_met=`true`",
+	} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("session coverage output missing %q:\n%s", want, output)
+		}
+	}
+	for _, leaked := range []string{"SESSION_COVERAGE_BACKUP_TITLE_SECRET", "SESSION_COVERAGE_BACKUP_BODY_SECRET", "SESSION_COVERAGE_BACKUP_USER_SECRET", "SESSION_COVERAGE_BACKUP_ASSISTANT_SECRET", "@gitclaw coverage backup"} {
+		if strings.Contains(output, leaked) {
+			t.Fatalf("session coverage leaked body/title token %q:\n%s", leaked, output)
+		}
 	}
 }

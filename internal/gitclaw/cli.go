@@ -1224,11 +1224,13 @@ func runPromptCommand(args []string) error {
 
 func runSessionCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw session list --backup <issue.json> | gitclaw session risk --backup <issue.json> | gitclaw session search <query> --backup <issue.json>")
+		return fmt.Errorf("usage: gitclaw session list --backup <issue.json> | gitclaw session coverage --backup <issue.json> | gitclaw session risk --backup <issue.json> | gitclaw session search <query> --backup <issue.json>")
 	}
 	switch args[0] {
 	case "list":
 		return runSessionListCommand(args[1:])
+	case "coverage", "covered":
+		return runSessionCoverageCommand(args[1:])
 	case "risk", "risk-audit":
 		return runSessionRiskCommand(args[1:])
 	case "search":
@@ -1260,6 +1262,87 @@ func runSessionListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSessionCLIReport(backupPath, backup))
+	return nil
+}
+
+func runSessionCoverageCommand(args []string) error {
+	backupPath := ""
+	req := DefaultSessionCoverageRequirements()
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--backup":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--backup requires a value")
+			}
+			backupPath = args[i+1]
+			i++
+		case "--min-assistant-turns":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--min-assistant-turns requires a value")
+			}
+			parsed, err := strconv.Atoi(args[i+1])
+			if err != nil || parsed <= 0 {
+				return fmt.Errorf("invalid --min-assistant-turns: %q", args[i+1])
+			}
+			req.MinAssistantTurns = parsed
+			i++
+		case "--min-prompt-provenance":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--min-prompt-provenance requires a value")
+			}
+			parsed, err := strconv.Atoi(args[i+1])
+			if err != nil || parsed <= 0 {
+				return fmt.Errorf("invalid --min-prompt-provenance: %q", args[i+1])
+			}
+			req.MinPromptProvenance = parsed
+			i++
+		case "--min-model-turns":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--min-model-turns requires a value")
+			}
+			parsed, err := strconv.Atoi(args[i+1])
+			if err != nil || parsed <= 0 {
+				return fmt.Errorf("invalid --min-model-turns: %q", args[i+1])
+			}
+			req.MinModelBackedTurns = parsed
+			i++
+		case "--require-skill":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--require-skill requires a value")
+			}
+			req.RequiredSkills = append(req.RequiredSkills, args[i+1])
+			i++
+		case "--require-tool":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--require-tool requires a value")
+			}
+			req.RequiredTools = append(req.RequiredTools, args[i+1])
+			i++
+		default:
+			return fmt.Errorf("unknown session coverage argument %q", args[i])
+		}
+	}
+	if backupPath == "" {
+		return fmt.Errorf("usage: gitclaw session coverage --backup <issue.json>")
+	}
+	backup, err := ReadIssueBackupFile(backupPath)
+	if err != nil {
+		return err
+	}
+	ev := Event{
+		Kind: backup.EventName,
+		Repo: backup.Repo,
+		Issue: Issue{
+			Number: backup.Issue.Number,
+			Title:  backup.Issue.Title,
+			Body:   backup.Issue.Body,
+		},
+	}
+	report := BuildSessionCoverageReport("local-backup", backupPath, ev, commentsFromBackup(backup.Comments), backup.Transcript, req)
+	fmt.Println(RenderSessionCoverageReport(report))
+	if !report.OK() {
+		return fmt.Errorf("session coverage reported %s", report.SessionCoverageStatus)
+	}
 	return nil
 }
 

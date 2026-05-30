@@ -760,6 +760,7 @@ GitHub issue/comment event
 - CLI entry point.
 - Subcommands: `preflight`, `handle`, `backup`, `backup coverage`,
   `backup search`, `backup info`, `backup retention-plan`,
+  `session coverage`,
   `heartbeat`, `heartbeat status`, `heartbeat risk`,
   `channel-ingest`, `channel-state`, `channel-gateway`, `channel-delivery`,
   `channels list`, `channels verify`, `channels risk`, `channels info`,
@@ -893,6 +894,7 @@ transcript/session CLIs and Hermes' saved/searchable sessions:
 ```text
 @gitclaw /session
 @gitclaw /session list
+@gitclaw /session coverage
 @gitclaw /session risk
 @gitclaw /session search deployment window
 ```
@@ -920,6 +922,7 @@ Local operators can inspect a backed-up issue session without calling GitHub:
 
 ```bash
 gitclaw session list --backup .gitclaw/backups/owner/repo/issues/000123.json
+gitclaw session coverage --backup .gitclaw/backups/owner/repo/issues/000123.json
 ```
 
 The local report reads the canonical backup JSON, uses `scope: local-backup`,
@@ -927,9 +930,20 @@ and emits repo/issue backup metadata, marker counts, transcript counts, trust
 states, sources, sizes, and hashes without dumping issue bodies, comment bodies,
 or assistant replies.
 
+`gitclaw session coverage --backup <issue.json>` is the stricter E2E gate. By
+default it requires at least one assistant turn, at least one assistant marker
+with prompt provenance, and at least one non-`gitclaw/*` model-backed turn. It
+can also require specific prompt-visible skills or tools such as
+`--require-skill repo-reader` and `--require-tool gitclaw.search_files`. It
+reports only counts, model names, skill names, tool names, missing requirement
+sets, and boolean evidence; it exits non-zero when coverage is missing. This is
+the operator proof that a test exercised a real GitHub Models conversation and
+tool context rather than only a deterministic report.
+
 Backed-up sessions can also be searched locally without a GitHub API call:
 
 ```bash
+gitclaw session coverage --backup .gitclaw/backups/owner/repo/issues/000123.json --require-tool gitclaw.search_files
 gitclaw session risk --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session search deployment window --backup .gitclaw/backups/owner/repo/issues/000123.json
 ```
@@ -954,6 +968,13 @@ inference. The issue report publishes the same body-free risk cards plus
 `current_issue_session_request=true`. Any change to this surface requires local
 tests plus a live GitHub issue E2E that includes a normal GitHub Models turn
 with prompt provenance before the deterministic session-risk report.
+
+When called as `@gitclaw /session coverage`, the command checks the current
+issue thread for the same model-backed prompt provenance requirements. It does
+not fail the workflow if coverage is missing; it posts a body-free warning
+report so maintainers can see whether the current conversation is useful as an
+LLM/tool E2E fixture. The local backup form is the enforceable gate because it
+can exit non-zero in scripts.
 
 When called as `@gitclaw /session search <query>`, the command searches the
 current reconstructed GitHub issue transcript with a local lexical matcher. It
@@ -5323,6 +5344,11 @@ examples/workflows/gitclaw.yml
   an explicit report alias, while local
   `gitclaw session list --backup <issue.json>` inspects a backed-up issue
   session without dumping raw issue, comment, assistant, or transcript bodies.
+- A `gh`-driven session-coverage E2E harness verifies an actual GitHub Models
+  conversation with repo-reader skill and `gitclaw.search_files` tool
+  provenance, then checks both issue-side `@gitclaw /session coverage` and
+  local `gitclaw session coverage --backup <issue.json> --require-tool
+  gitclaw.search_files` against the fetched backup branch.
 - Local `gitclaw session search <query> --backup <issue.json>` searches the
   same backed-up issue transcript and reports only query hashes, counts,
   sources, trust metadata, scores, and message/line hashes.
