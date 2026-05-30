@@ -152,7 +152,7 @@ for expected in \
   'tools_allowed_configured: `0`' \
   'tools_disabled_configured: `0`' \
   'workflows_present: `7`' \
-  'slash_commands: `31`' \
+  'slash_commands: `32`' \
   '/agents' \
   '/artifacts' \
   '/nodes' \
@@ -169,6 +169,7 @@ for expected in \
   'COLLABORATOR' \
   '/channels' \
   '/config' \
+  '/diffs' \
   '/doctor' \
   '/help' \
   '/memory' \

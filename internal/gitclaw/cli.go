@@ -83,6 +83,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runPolicyCommand(args[1:])
 	case "context":
 		return runContextCommand(args[1:])
+	case "diffs", "diff", "changes":
+		return runDiffsCommand(args[1:])
 	case "prompt", "budget", "prompt-budget":
 		return runPromptCommand(args[1:])
 	case "session":
@@ -890,6 +892,30 @@ func runContextCommand(args []string) error {
 		return nil
 	}
 	return fmt.Errorf("usage: gitclaw context [list|info <path>]")
+}
+
+func runDiffsCommand(args []string) error {
+	if len(args) == 0 {
+		return runDiffsSummaryCommand(nil)
+	}
+	switch args[0] {
+	case "summary", "list", "verify":
+		return runDiffsSummaryCommand(args[1:])
+	default:
+		return fmt.Errorf("usage: gitclaw diffs [summary|verify]")
+	}
+}
+
+func runDiffsSummaryCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown diffs argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderDiffCLIReport(cfg))
+	return nil
 }
 
 func runPromptCommand(args []string) error {

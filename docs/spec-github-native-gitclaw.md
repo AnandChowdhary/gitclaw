@@ -676,6 +676,7 @@ GitHub issue/comment event
   `proactive enqueue`, `proactive init`, `proactive info`,
   `approvals list`, `approvals verify`,
   `artifacts list`, `artifacts verify`,
+  `diffs summary`, `diffs verify`,
   `hooks list`, `hooks verify`,
   `plugins list`, `plugins verify`,
   `tasks list`, `tasks verify`,
@@ -854,6 +855,8 @@ AGENTS.md                    # existing coding-agent instructions, if present
 .gitclaw/nodes/*.md          # declarative node specs, metadata-only in v1
 .gitclaw/ARTIFACTS.md        # declarative artifact safety policy
 .gitclaw/artifacts/*.md      # declarative artifact specs, metadata-only in v1
+.gitclaw/DIFFS.md            # declarative diff/reporting safety policy
+.gitclaw/diffs/*.md          # declarative diff specs, metadata-only in v1
 .gitclaw/SKILLS/*.md         # optional read-only local skills, v1+
 .gitclaw/MEMORY.md           # optional curated repo memory, human-reviewed only
 .gitclaw/memory/YYYY-MM-DD.md # dated working memory notes, human-reviewed only
@@ -894,6 +897,10 @@ MVP loads:
   policy; individual `.gitclaw/artifacts/*.md` specs are audited by metadata
   reports and do not upload files, read artifacts, or turn artifact bodies into
   prompt or issue-comment content by themselves
+- `.gitclaw/DIFFS.md`, if present, as the repo-reviewed diff/reporting safety
+  policy; individual `.gitclaw/diffs/*.md` specs are audited by metadata
+  reports and do not render raw patches, stage files, reset files, or expose
+  untracked file contents
 - `.gitclaw/SKILLS/*/SKILL.md`, if selected by the issue thread or marked
   always-on
 - bounded `@file:<repo-path>[:start-end]` context references explicitly named
@@ -1983,6 +1990,45 @@ gitclaw rollback list
 The aliases intentionally return the same body-free report in v1. Reviewed
 recovery still happens through ordinary git history, pull requests, and fetched
 backup manifests.
+
+## Diffs Inspection Command
+
+GitClaw supports a deterministic diff audit inspired by OpenClaw's read-only
+diff artifact plugin and Hermes' checkpoint `/rollback diff` preview:
+
+```text
+@gitclaw /diffs
+@gitclaw /diff
+@gitclaw /changes
+```
+
+The command runs after preflight and context loading, but before model
+inference. It posts a `gitclaw:assistant-turn` comment with
+`model="gitclaw/diffs"` and summarizes:
+
+- whether `.gitclaw/DIFFS.md` exists and is loaded into model context,
+- declarative diff specs in `.gitclaw/diffs/*.md`,
+- git availability, repository detection, branch, and HEAD short SHA,
+- worktree clean/dirty state,
+- changed, staged, unstaged, untracked, renamed, deleted, and binary-file
+  counts,
+- staged and unstaged insertion/deletion totals from `git diff --numstat`,
+- changed file paths and git status codes, capped by a fixed file limit,
+- body-free findings for missing policy, unsafe specs, or git inspection
+  failures.
+
+It never prints raw unified patch hunks, file bodies, issue/comment bodies,
+prompts, tool outputs, backups, or secret values. It also never stages, resets,
+restores, commits, opens pull requests, or writes artifacts. Raw patches belong
+in explicit artifacts, pull requests, or local export paths; `/diffs` stays an
+issue-safe map of what changed.
+
+Local operators can inspect the same change surface without opening an issue:
+
+```bash
+gitclaw diffs summary
+gitclaw diffs verify
+```
 
 ## Authorization And Abuse Controls
 
@@ -3672,7 +3718,19 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump full file or search output bodies,
    - assert the run succeeds without requiring a model provider response.
 
-26. **Policy inspection**
+26. **Diff inspection**
+
+   - create a real issue with `@gitclaw /diffs`,
+   - assert the reply is marked `model="gitclaw/diffs"`,
+   - assert the report lists `.gitclaw/DIFFS.md`, diff spec metadata, git
+     availability, repository state, clean/dirty state, change counts, numstat
+     totals, raw-diff suppression, and changed-file metadata,
+   - assert policy/spec body tokens, raw patch hunks, file bodies, and issue
+     body tokens are not printed,
+   - assert the run succeeds without requiring a model provider response,
+   - run a real GitHub Models conversation E2E in the same feature batch.
+
+27. **Policy inspection**
 
    - create a real issue with `@gitclaw /policy` that also asks for write-mode
      work,
@@ -3689,7 +3747,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert `gitclaw:write-requested` and `gitclaw:done` are present without
      `gitclaw:running` or `gitclaw:error`.
 
-27. **Session inspection**
+28. **Session inspection**
 
    - create a real issue that gets one deterministic assistant turn,
    - post a follow-up comment with `@gitclaw /session`,
@@ -3700,7 +3758,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report does not dump issue or comment body tokens,
    - assert the run succeeds without requiring a model provider response.
 
-28. **Backup index**
+29. **Backup index**
 
    - create a real deterministic GitClaw issue turn,
    - wait for the successful backup job,
@@ -3709,7 +3767,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      number, title, and backup path,
    - assert the index contains metadata counts but not raw transcript bodies.
 
-29. **Backup inspection**
+30. **Backup inspection**
 
    - create a real issue with `@gitclaw /backup`,
    - assert the reply is marked `model="gitclaw/backup"`,
@@ -3720,7 +3778,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      entry for that same issue,
    - assert the report does not dump issue or comment body tokens.
 
-30. **Backup verification**
+31. **Backup verification**
 
    - create a real issue with `@gitclaw /backup verify`,
    - assert the issue-side report lists `requested_backup_command: verify`,
@@ -3733,7 +3791,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert `backup_verify_status: ok`, zero verification failures, zero
      unindexed issue files, and an index entry for the just-created issue.
 
-31. **Backup manifest**
+32. **Backup manifest**
 
    - create a real issue with `@gitclaw /backup manifest`,
    - assert the issue-side report lists `requested_backup_command: manifest`,
@@ -3748,7 +3806,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      count, and transcript count,
    - assert it does not dump the issue body token or raw transcript bodies.
 
-32. **Backup stats**
+33. **Backup stats**
 
    - create a real issue with `@gitclaw /backup stats`,
    - assert the issue-side report lists `requested_backup_command: stats`,
@@ -3764,7 +3822,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      metadata, event counts, and payload bytes,
    - assert it does not dump the issue body token or raw title.
 
-33. **Backup list**
+34. **Backup list**
 
    - create a real issue with `@gitclaw /backup list`,
    - assert the issue-side report lists `requested_backup_command: list`,
@@ -3780,7 +3838,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      event name, label/comment/transcript counts, and title hash,
    - assert it does not dump the issue body token or raw title.
 
-34. **Backup info**
+35. **Backup info**
 
    - create a real issue with `@gitclaw /backup info`,
    - assert the issue-side report lists `requested_backup_command: info`, the
@@ -3797,7 +3855,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      hashes,
    - assert it does not dump the issue body token or raw title.
 
-35. **Backup JSONL export**
+36. **Backup JSONL export**
 
    - create a real issue with `@gitclaw /backup export-jsonl`,
    - assert the issue-side report lists `requested_backup_command:
@@ -3812,7 +3870,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      contains the assistant backup report body, proving the command is an
      explicit raw recovery/export path rather than an issue-visible report.
 
-36. **Backup restore plan**
+37. **Backup restore plan**
 
    - create a real issue with `@gitclaw /backup restore-plan`,
    - assert the issue-side report lists `requested_backup_command:
@@ -3827,7 +3885,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      counts, assistant-turn/error counts, and body hashes,
    - assert it does not dump the issue body token or raw transcript bodies.
 
-37. **Backup retention plan**
+38. **Backup retention plan**
 
    - create a real issue with `@gitclaw /backup retention-plan`,
    - assert the issue-side report lists `requested_backup_command:
@@ -3844,7 +3902,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the just-created issue is included without dumping the issue body
      token or raw title.
 
-38. **Backup search**
+39. **Backup search**
 
    - create a real issue with `@gitclaw /backup search <query>`,
    - include a unique hidden token in the issue body,
@@ -3862,7 +3920,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert it does not dump the hidden token, raw issue body, raw issue title,
      raw comments, raw transcript messages, or raw query text.
 
-39. **Proactive init generator**
+40. **Proactive init generator**
 
    - run `gitclaw proactive init` against a temporary repo root,
    - assert it writes the expected prompt file and scheduled workflow,
@@ -3874,7 +3932,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert it creates a real proactive issue and receives one deterministic
      proactive report without leaking the hidden prompt token.
 
-40. **Proactive info report**
+41. **Proactive info report**
 
    - create a real issue with `@gitclaw /proactive info repo-hygiene`,
    - include a unique hidden token in the issue body,
@@ -4397,6 +4455,10 @@ examples/workflows/gitclaw.yml
   checkpoint state, reports HEAD/worktree/backup-branch metadata, and does not
   leak issue body text, diffs, file bodies, commit subjects, or perform restore
   operations.
+- A `gh`-driven diffs-report E2E harness verifies `@gitclaw /diffs` inspects
+  the real checked-out repository's git change metadata, reports policy/spec
+  state, clean/dirty state, changed-file counts, numstat totals, and raw-patch
+  suppression without leaking issue body text, patch hunks, or file bodies.
 - A `gh`-driven session-report E2E harness verifies `@gitclaw /session`
   reconstructs a real multi-turn GitHub issue session without a model call or
   transcript-body leakage.
@@ -4472,6 +4534,7 @@ examples/workflows/gitclaw.yml
 - OpenClaw node host CLI docs: https://docs.openclaw.ai/cli/node
 - OpenClaw multi-agent routing docs: https://docs.openclaw.ai/concepts/multi-agent
 - OpenClaw nodes CLI docs: https://docs.openclaw.ai/cli/nodes
+- OpenClaw diffs plugin docs: https://docs.openclaw.ai/vi/tools/diffs
 - OpenClaw config CLI docs: https://docs.openclaw.ai/cli/config
 - OpenClaw configure docs: https://docs.openclaw.ai/cli/configure
 - OpenClaw doctor docs: https://docs.openclaw.ai/doctor
@@ -4480,6 +4543,7 @@ examples/workflows/gitclaw.yml
 - OpenClaw sandboxing docs: https://docs.openclaw.ai/gateway/sandboxing
 - Hermes memory docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/memory.md
 - Hermes checkpoints and rollback docs: https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback
+- Hermes git worktrees docs: https://hermes-agent.nousresearch.com/docs/user-guide/git-worktrees
 - Hermes cron docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/cron.md
 - Hermes cron internals docs: https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals
 - Hermes security docs: https://hermes-agent.nousresearch.com/docs/user-guide/security

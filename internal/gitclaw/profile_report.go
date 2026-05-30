@@ -139,6 +139,8 @@ func profileDocumentCategory(path string) string {
 		return "nodes"
 	case path == artifactPolicyPath:
 		return "artifacts"
+	case path == diffPolicyPath:
+		return "diffs"
 	default:
 		return "profile"
 	}

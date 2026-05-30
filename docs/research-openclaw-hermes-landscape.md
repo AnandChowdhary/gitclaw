@@ -1391,6 +1391,14 @@ metadata without reading or printing uploaded artifact bodies. Each artifact
 feature batch should pair deterministic artifact-report E2E coverage with a
 real GitHub Models conversation E2E.
 
+2026-05-30 diff-governance follow-up: OpenClaw's diffs plugin treats change
+content as a read-only diff artifact, while Hermes recommends previewing
+checkpoint changes with `/rollback diff` before restoring. GitClaw's issue-safe
+version should be `@gitclaw /diffs`: report `.gitclaw/DIFFS.md`, diff specs,
+git status, numstat totals, changed paths, raw-patch suppression, and
+non-mutating boundaries without printing patch hunks or file bodies. Each diff
+feature batch should still run a real GitHub Models conversation E2E.
+
 2026-05-29 policy-inspection follow-up: OpenClaw's security docs separate
 sandbox location, tool allow/deny policy, and elevated host execution, and
 Hermes' docs frame safety around authorization, command approval, and container
@@ -1585,6 +1593,7 @@ Recommended non-goals for the first spec:
 - OpenClaw node host CLI docs: https://docs.openclaw.ai/cli/node
 - OpenClaw multi-agent routing docs: https://docs.openclaw.ai/concepts/multi-agent
 - OpenClaw nodes CLI docs: https://docs.openclaw.ai/cli/nodes
+- OpenClaw diffs plugin docs: https://docs.openclaw.ai/vi/tools/diffs
 - OpenClaw secrets CLI docs: https://docs.openclaw.ai/cli/secrets
 - OpenClaw secrets management docs: https://docs.openclaw.ai/gateway/secrets
 - GitHub Actions artifact storage docs: https://docs.github.com/en/actions/how-tos/writing-workflows/choosing-what-your-workflow-does/storing-and-sharing-data-from-a-workflow
@@ -1595,6 +1604,7 @@ Recommended non-goals for the first spec:
 - Hermes sessions docs: https://hermes-agent.nousresearch.com/docs/user-guide/sessions
 - Hermes profiles docs: https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 - Hermes checkpoints and rollback docs: https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback
+- Hermes git worktrees docs: https://hermes-agent.nousresearch.com/docs/user-guide/git-worktrees
 - Hermes migrate from OpenClaw docs: https://hermes-agent.nousresearch.com/docs/guides/migrate-from-openclaw
 - Hermes memory docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/memory.md
 - Hermes three-layer memory explainer: https://hermes-agent.ai/blog/hermes-agent-memory-system

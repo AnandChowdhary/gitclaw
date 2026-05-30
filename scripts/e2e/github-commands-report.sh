@@ -136,9 +136,9 @@ for expected in \
   "GitClaw Commands Report" \
   "Generated without a model call" \
   'trigger_prefix: `@gitclaw`' \
-  'commands: `31`' \
-  'aliases: `27`' \
-  'local_cli_helpers: `91`' \
+  'commands: `32`' \
+  'aliases: `29`' \
+  'local_cli_helpers: `93`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/agents' \
@@ -154,6 +154,9 @@ for expected in \
   '/checkpoints' \
   '/checkpoint' \
   '/rollback' \
+  '/diffs' \
+  '/diff' \
+  '/changes' \
   '/tools' \
   '/secrets' \
   '/secret' \
@@ -207,6 +210,8 @@ for expected in \
   'gitclaw config list' \
   'gitclaw context list' \
   'gitclaw context info <path>' \
+  'gitclaw diffs summary' \
+  'gitclaw diffs verify' \
   'gitclaw doctor' \
   'gitclaw doctor list' \
   'gitclaw heartbeat status' \

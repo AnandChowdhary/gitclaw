@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "config-list-report-e2e: $*" >&2
+  echo "diffs-report-e2e: $*" >&2
 }
 
 die() {
@@ -33,12 +33,12 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_CONFIG_LIST_E2E_${timestamp}"
-title="@gitclaw /config list e2e ${timestamp}"
-body="Live config-list E2E.
+token="GITCLAW_DIFFS_REPORT_E2E_${timestamp}"
+title="@gitclaw /diffs e2e ${timestamp}"
+body="Live diffs-report E2E.
 
-Hidden config list body token: ${token}
-This should produce a deterministic config report through the explicit list alias without a model call."
+Hidden diffs report body token: ${token}
+This should produce a deterministic diffs report without a model call."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -52,7 +52,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "config-list-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "diffs-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -73,11 +73,11 @@ wait_for_run() {
       --json databaseId,status,conclusion,url,createdAt,displayTitle \
       --jq '. as $runs | $runs | map(select(.displayTitle == "'"${title}"'")) | sort_by(.createdAt) | reverse | .[0] // empty')"
     if [[ -n "$run_json" && "$run_json" != "null" ]]; then
-      local status conclusion url
-      status="$(jq -r '.status' <<<"$run_json")"
+      local run_status conclusion url
+      run_status="$(jq -r '.status' <<<"$run_json")"
       conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
       url="$(jq -r '.url' <<<"$run_json")"
-      if [[ "$status" == "completed" ]]; then
+      if [[ "$run_status" == "completed" ]]; then
         [[ "$conclusion" == "success" ]] || die "issues run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
@@ -128,69 +128,66 @@ wait_for_assistant_count() {
 }
 
 run_json="$(wait_for_run "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one config list report comment"
+wait_for_assistant_count 1 || die "expected one diffs report comment"
 comments="$(assistant_comments)"
 
 for expected in \
-  'model="gitclaw/config"' \
-  "GitClaw Config Report" \
+  'model="gitclaw/diffs"' \
+  "GitClaw Diffs Report" \
   "Generated without a model call" \
-  'config_source: `defaults+repo+environment`' \
-  'config_file_path: `.gitclaw/config.yml`' \
-  'config_file_present: `true`' \
-  'trigger_label: `gitclaw`' \
-  'trigger_prefix: `@gitclaw`' \
-  'disabled_label: `gitclaw:disabled`' \
-  'model: `openai/gpt-5-nano`' \
-  'run_mode: `read-only`' \
-  'max_prompt_bytes: `60000`' \
-  'max_output_tokens: `4000`' \
-  'max_transcript_messages: `40`' \
-  'max_transcript_message_bytes: `8000`' \
-  'skills_allowed_configured: `0`' \
-  'skills_disabled_configured: `0`' \
-  'tools_allowed_configured: `0`' \
-  'tools_disabled_configured: `0`' \
-  'workflows_present: `7`' \
-  'slash_commands: `32`' \
-  '/agents' \
-  '/artifacts' \
-  '/nodes' \
-  '/approvals' \
-  '/bundles' \
-  '/checkpoints' \
-  '/secrets' \
-  '### Skill Gates' \
-  '### Tool Gates' \
-  'allowed=`none`' \
-  'disabled=`none`' \
-  'OWNER' \
-  'MEMBER' \
-  'COLLABORATOR' \
-  '/channels' \
-  '/config' \
-  '/diffs' \
-  '/doctor' \
-  '/help' \
-  '/memory' \
-  '/models' \
-  '/profile' \
-  '/runs' \
-  '/sandbox' \
-  '/prompt' \
-  '.github/workflows/gitclaw.yml' \
-  '.github/workflows/gitclaw-heartbeat.yml' \
-  '.github/workflows/gitclaw-proactive.yml' \
-  '.github/workflows/gitclaw-channel-ingest.yml' \
-  '.github/workflows/gitclaw-channel-state.yml' \
-  '.github/workflows/gitclaw-channel-gateway.yml' \
-  '.github/workflows/gitclaw-channel-delivery.yml'; do
-  grep -Fq "$expected" <<<"$comments" || die "config list report missing ${expected}"
+  'diff_status: `clean`' \
+  'diff_policy_path: `.gitclaw/DIFFS.md`' \
+  'diff_policy_present: `true`' \
+  'diff_policy_loaded_for_model: `true`' \
+  'diff_specs_dir: `.gitclaw/diffs`' \
+  'diff_specs: `1`' \
+  'diff_specs_with_frontmatter: `1`' \
+  'diff_specs_requiring_approval: `1`' \
+  'diff_specs_disallowing_raw_patch: `1`' \
+  'git_available: `true`' \
+  'git_repository: `true`' \
+  'worktree_root: `.`' \
+  'worktree_clean: `true`' \
+  'changed_files: `0`' \
+  'staged_files: `0`' \
+  'unstaged_files: `0`' \
+  'untracked_files: `0`' \
+  'renamed_files: `0`' \
+  'deleted_files: `0`' \
+  'staged_insertions: `0`' \
+  'staged_deletions: `0`' \
+  'unstaged_insertions: `0`' \
+  'unstaged_deletions: `0`' \
+  'binary_diff_files: `0`' \
+  'diff_file_limit: `200`' \
+  'diff_files_returned: `0`' \
+  'raw_diffs_included: `false`' \
+  'raw_file_bodies_included: `false`' \
+  'model_call_required: `false`' \
+  'repository_mutation_allowed: `false`' \
+  'llm_e2e_required_after_change: `true`' \
+  'name=`working-tree`' \
+  'path=`.gitclaw/diffs/working-tree.md`' \
+  'frontmatter=`true`' \
+  'kind=`git-diff`' \
+  'source=`git-worktree`' \
+  'mode=`metadata-only`' \
+  'max_files=`200`' \
+  'raw_patch_allowed=`false`' \
+  'requires_approval=`true`' \
+  '### Changed Files' \
+  '- none' \
+  '`/diffs` is inspect-only' \
+  'future diff rendering needs reviewed workflows' \
+  '### Verification Findings'; do
+  grep -Fq -- "$expected" <<<"$comments" || die "diffs report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "config list report leaked issue body token"
-fi
+for forbidden in "$token" "GITCLAW_DIFFS_CONTEXT_V1" "This declarative diff record"; do
+  if grep -Fq -- "$forbidden" <<<"$comments"; then
+    die "diffs report leaked ${forbidden}"
+  fi
+done
 
 url="$(jq -r '.url' <<<"$run_json")"
 log "passed for issue #${issue_number}: ${url}"
