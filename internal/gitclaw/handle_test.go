@@ -213,7 +213,7 @@ func TestHandleContextInfoCommandPostsFocusedReportWithoutLLM(t *testing.T) {
 		"repository": {"full_name": "owner/repo", "default_branch": "main"},
 		"issue": {
 			"number": 91,
-			"title": "@gitclaw /context info .gitclaw/SOUL.md",
+			"title": "@gitclaw /context info .gitclaw/SOUL.md trailing words",
 			"body": "Hidden context info body token: CONTEXT_INFO_HANDLE_ISSUE_TOKEN.",
 			"author_association": "MEMBER",
 			"user": {"login": "alice", "type": "User"},

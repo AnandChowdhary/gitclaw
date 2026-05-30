@@ -146,7 +146,7 @@ func requestedContextInfoPath(ev Event, cfg Config) string {
 	if len(fields) < 3 || fields[0] != "/context" || !strings.EqualFold(fields[1], "info") {
 		return ""
 	}
-	return cleanContextLookupPath(strings.Join(fields[2:], " "))
+	return cleanContextLookupPath(fields[2])
 }
 
 func isContextInfoRequest(ev Event, cfg Config) bool {
