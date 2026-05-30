@@ -1250,6 +1250,15 @@ running `reset`, `restore`, or checkout commands. This gives future write-mode
 turns a visible checkpoint gate while keeping rollback itself a reviewed human
 operation.
 
+2026-05-30 approval-readiness follow-up: OpenClaw's exec approvals treat command
+execution as a policy decision layered with user approval, while Hermes frames
+dangerous commands as an explicit authorization boundary. GitClaw should expose
+that boundary before it grows write mode: `@gitclaw /approvals` reports trusted
+actor state, write-request detection, per-issue approval labels, and the
+read-only write-mode block, but never approves, mutates, executes, or prints raw
+issue/comment/prompt text. Local `gitclaw approvals list|verify` should mirror
+the static approval shape without issue-only state.
+
 Main attack pattern: an untrusted input enters through one surface, persists into memory/skills/cron/filesystem, then fires later through a different surface when the attacker is no longer present.
 
 Design requirements for `gitclaw`:

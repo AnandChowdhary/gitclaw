@@ -549,7 +549,7 @@ model:
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Config Report", "Generated without a model call", "model=\"gitclaw/config\"", "config_source: `defaults+repo`", "config_file_path: `.gitclaw/config.yml`", "config_file_present: `true`", "trigger_label: `gitclaw`", "trigger_prefix: `@gitclaw`", "run_mode: `read-only`", "max_prompt_bytes: `60000`", "max_output_tokens: `4000`", "skills_allowed_configured: `0`", "skills_disabled_configured: `0`", "tools_allowed_configured: `0`", "tools_disabled_configured: `0`", "workflows_present: `2`", "slash_commands: `18`", "### Tool Gates", "OWNER", "COLLABORATOR", "gitclaw:disabled", "/bundles", "/channels", "/checkpoints", "/doctor", "/help", "/memory", "/models", "/prompt", "/config", "/secrets", ".github/workflows/gitclaw.yml", ".github/workflows/gitclaw-heartbeat.yml", "sha256_12="} {
+	for _, want := range []string{"GitClaw Config Report", "Generated without a model call", "model=\"gitclaw/config\"", "config_source: `defaults+repo`", "config_file_path: `.gitclaw/config.yml`", "config_file_present: `true`", "trigger_label: `gitclaw`", "trigger_prefix: `@gitclaw`", "run_mode: `read-only`", "max_prompt_bytes: `60000`", "max_output_tokens: `4000`", "skills_allowed_configured: `0`", "skills_disabled_configured: `0`", "tools_allowed_configured: `0`", "tools_disabled_configured: `0`", "workflows_present: `2`", "slash_commands: `19`", "### Tool Gates", "OWNER", "COLLABORATOR", "gitclaw:disabled", "/approvals", "/bundles", "/channels", "/checkpoints", "/doctor", "/help", "/memory", "/models", "/prompt", "/config", "/secrets", ".github/workflows/gitclaw.yml", ".github/workflows/gitclaw-heartbeat.yml", "sha256_12="} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("config report missing %q:\n%s", want, body)
 		}
@@ -2456,7 +2456,7 @@ func TestHandleCommandsCommandPostsReportWithoutLLM(t *testing.T) {
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Commands Report", "Generated without a model call", "model=\"gitclaw/commands\"", "commands: `18`", "aliases: `13`", "local_cli_helpers: `61`", "/commands", "/backup", "/bundles", "/checkpoints", "/checkpoint", "/rollback", "/tools", "/budget", "/prompt-budget", "/cron", "/secrets", "/secret", "`gitclaw commands` command=`/help`", "`gitclaw bundles list` command=`/bundles`", "`gitclaw bundles info <name>` command=`/bundles`", "`gitclaw doctor` command=`/doctor`", "`gitclaw doctor list` command=`/doctor`", "`gitclaw channels verify` command=`/channels`", "`gitclaw channels list` command=`/channels`", "`gitclaw channels info <provider>` command=`/channels`", "`gitclaw channel-state` command=`/channels`", "`gitclaw channel-gateway` command=`/channels`", "`gitclaw channel-delivery` command=`/channels`", "`gitclaw checkpoints status` command=`/checkpoints`", "`gitclaw checkpoints list` command=`/checkpoints`", "`gitclaw checkpoints verify` command=`/checkpoints`", "`gitclaw rollback list` command=`/checkpoints`", "`gitclaw config list` command=`/config`", "`gitclaw context list` command=`/context`", "`gitclaw context info <path>` command=`/context`", "`gitclaw prompt list` command=`/prompt`", "`gitclaw proactive list` command=`/proactive`", "`gitclaw proactive info <name>` command=`/proactive`", "`gitclaw proactive init` command=`/proactive`", "`gitclaw proactive enqueue` command=`/proactive`", "`gitclaw session list --backup <issue.json>` command=`/session`", "`gitclaw session search <query> --backup <issue.json>` command=`/session`", "`gitclaw secrets audit` command=`/secrets`", "`gitclaw secrets scan` command=`/secrets`", "`gitclaw secrets list` command=`/secrets`", "`gitclaw models list` command=`/models`", "`gitclaw policy list` command=`/policy`", "`gitclaw policy verify` command=`/policy`", "`gitclaw backup verify` command=`/backup`", "`gitclaw backup manifest` command=`/backup`", "`gitclaw backup list` command=`/backup`", "`gitclaw backup info --issue <number>` command=`/backup`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup export-jsonl` command=`/backup`", "`gitclaw backup restore-plan` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory verify` command=`/memory`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory info <path>` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul verify` command=`/soul`", "`gitclaw soul validate` command=`/soul`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul info <path>` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills verify` command=`/skills`", "`gitclaw skills validate` command=`/skills`", "`gitclaw skills check` command=`/skills`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools verify` command=`/tools`", "`gitclaw tools validate` command=`/tools`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools info <name>` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
+	for _, want := range []string{"GitClaw Commands Report", "Generated without a model call", "model=\"gitclaw/commands\"", "commands: `19`", "aliases: `14`", "local_cli_helpers: `63`", "/approvals", "/approval", "/commands", "/backup", "/bundles", "/checkpoints", "/checkpoint", "/rollback", "/tools", "/budget", "/prompt-budget", "/cron", "/secrets", "/secret", "`gitclaw approvals list` command=`/approvals`", "`gitclaw approvals verify` command=`/approvals`", "`gitclaw commands` command=`/help`", "`gitclaw bundles list` command=`/bundles`", "`gitclaw bundles info <name>` command=`/bundles`", "`gitclaw doctor` command=`/doctor`", "`gitclaw doctor list` command=`/doctor`", "`gitclaw channels verify` command=`/channels`", "`gitclaw channels list` command=`/channels`", "`gitclaw channels info <provider>` command=`/channels`", "`gitclaw channel-state` command=`/channels`", "`gitclaw channel-gateway` command=`/channels`", "`gitclaw channel-delivery` command=`/channels`", "`gitclaw checkpoints status` command=`/checkpoints`", "`gitclaw checkpoints list` command=`/checkpoints`", "`gitclaw checkpoints verify` command=`/checkpoints`", "`gitclaw rollback list` command=`/checkpoints`", "`gitclaw config list` command=`/config`", "`gitclaw context list` command=`/context`", "`gitclaw context info <path>` command=`/context`", "`gitclaw prompt list` command=`/prompt`", "`gitclaw proactive list` command=`/proactive`", "`gitclaw proactive info <name>` command=`/proactive`", "`gitclaw proactive init` command=`/proactive`", "`gitclaw proactive enqueue` command=`/proactive`", "`gitclaw session list --backup <issue.json>` command=`/session`", "`gitclaw session search <query> --backup <issue.json>` command=`/session`", "`gitclaw secrets audit` command=`/secrets`", "`gitclaw secrets scan` command=`/secrets`", "`gitclaw secrets list` command=`/secrets`", "`gitclaw models list` command=`/models`", "`gitclaw policy list` command=`/policy`", "`gitclaw policy verify` command=`/policy`", "`gitclaw backup verify` command=`/backup`", "`gitclaw backup manifest` command=`/backup`", "`gitclaw backup list` command=`/backup`", "`gitclaw backup info --issue <number>` command=`/backup`", "`gitclaw backup stats` command=`/backup`", "`gitclaw backup search <query>` command=`/backup`", "`gitclaw backup export-jsonl` command=`/backup`", "`gitclaw backup restore-plan` command=`/backup`", "`gitclaw backup retention-plan` command=`/backup`", "`gitclaw memory verify` command=`/memory`", "`gitclaw memory validate` command=`/memory`", "`gitclaw memory list` command=`/memory`", "`gitclaw memory info <path>` command=`/memory`", "`gitclaw memory search <query>` command=`/memory`", "`gitclaw soul verify` command=`/soul`", "`gitclaw soul validate` command=`/soul`", "`gitclaw soul list` command=`/soul`", "`gitclaw soul info <path>` command=`/soul`", "`gitclaw soul search <query>` command=`/soul`", "`gitclaw skills verify` command=`/skills`", "`gitclaw skills validate` command=`/skills`", "`gitclaw skills check` command=`/skills`", "`gitclaw skills list` command=`/skills`", "`gitclaw skills info <name>` command=`/skills`", "`gitclaw skills search <query>` command=`/skills`", "`gitclaw tools verify` command=`/tools`", "`gitclaw tools validate` command=`/tools`", "`gitclaw tools list` command=`/tools`", "`gitclaw tools info <name>` command=`/tools`", "`gitclaw tools search <query>` command=`/tools`"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("commands report missing %q:\n%s", want, body)
 		}
@@ -2466,6 +2466,52 @@ func TestHandleCommandsCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 	if !hasLabel(github.IssueLabels[108], "gitclaw:done") || hasLabel(github.IssueLabels[108], "gitclaw:running") || hasLabel(github.IssueLabels[108], "gitclaw:error") {
 		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[108])
+	}
+}
+
+func TestHandleApprovalCommandPostsReportWithoutLLM(t *testing.T) {
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 109,
+			"title": "@gitclaw /approvals",
+			"body": "Please implement this change and open a PR. APPROVAL_HANDLER_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}, {"name": "gitclaw:approved"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	cfg := DefaultConfig()
+	cfg.Workdir = t.TempDir()
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{109: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic approvals command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Approvals Report", "Generated without a model call", "model=\"gitclaw/approvals\"", "repository: `owner/repo`", "issue: `#109`", "preflight_allowed: `true`", "actor_association: `MEMBER`", "actor_trusted: `true`", "write_request_detected: `true`", "write_requested_label_present: `true`", "approved_label_present: `true`", "approval_status: `approved_but_write_mode_disabled`", "approval_decision: `proposal_only_approved_label_seen`", "approval_store: `github-issue-labels`", "approval_scope: `per-issue`", "approval_label: `gitclaw:approved`", "needs_human_label: `gitclaw:needs-human`", "write_requested_label: `gitclaw:write-requested`", "write_actions_enabled: `false`", "run_mode: `read-only`", "raw_bodies_included: `false`", "raw_approval_payloads_included: `false`", "gate=`trusted_actor` status=`passed`", "gate=`write_request` status=`detected`", "gate=`approval_label` status=`present`", "gate=`write_mode` status=`blocked`", "OWNER", "MEMBER", "COLLABORATOR"} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("approvals report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"APPROVAL_HANDLER_BODY_SECRET", "Please implement this change"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("approvals report leaked issue body token %q:\n%s", leaked, body)
+		}
+	}
+	if !hasLabel(github.IssueLabels[109], "gitclaw:write-requested") || !hasLabel(github.IssueLabels[109], "gitclaw:done") || hasLabel(github.IssueLabels[109], "gitclaw:running") || hasLabel(github.IssueLabels[109], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[109])
 	}
 }
 

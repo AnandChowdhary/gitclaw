@@ -33,6 +33,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runChannelDeliveryCommand(ctx, args[1:])
 	case "channels", "channel":
 		return runChannelsCommand(args[1:])
+	case "approvals", "approval":
+		return runApprovalsCommand(args[1:])
 	case "checkpoints", "checkpoint":
 		return runCheckpointsCommand(args[1:])
 	case "rollback":
@@ -105,6 +107,30 @@ func runCheckpointsCommand(args []string) error {
 	default:
 		return fmt.Errorf("usage: gitclaw checkpoints [status|list|verify]")
 	}
+}
+
+func runApprovalsCommand(args []string) error {
+	if len(args) == 0 {
+		return runApprovalsListCommand(nil)
+	}
+	switch args[0] {
+	case "list", "verify":
+		return runApprovalsListCommand(args[1:])
+	default:
+		return fmt.Errorf("usage: gitclaw approvals [list|verify]")
+	}
+}
+
+func runApprovalsListCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown approvals argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderApprovalCLIReport(cfg))
+	return nil
 }
 
 func runRollbackCommand(args []string) error {

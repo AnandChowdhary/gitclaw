@@ -15,6 +15,7 @@ type commandCatalogEntry struct {
 }
 
 var commandCatalog = []commandCatalogEntry{
+	{Command: "/approvals", Aliases: []string{"/approval"}, Model: "gitclaw/approvals", Category: "approval", Summary: "Inspect write-request approval gates without enabling write actions.", LocalCLI: []string{"gitclaw approvals list", "gitclaw approvals verify"}},
 	{Command: "/backup", Aliases: []string{"/backups"}, Model: "gitclaw/backup", Category: "backup", Summary: "Show expected backup branch paths and inspect fetched backups.", LocalCLI: []string{"gitclaw backup verify", "gitclaw backup manifest", "gitclaw backup list", "gitclaw backup info --issue <number>", "gitclaw backup stats", "gitclaw backup search <query>", "gitclaw backup export-jsonl", "gitclaw backup restore-plan", "gitclaw backup retention-plan"}},
 	{Command: "/bundles", Model: "gitclaw/skills", Category: "skills", Summary: "List or inspect repo-local skill bundles that group existing skills into task profiles.", LocalCLI: []string{"gitclaw bundles list", "gitclaw bundles info <name>"}},
 	{Command: "/channels", Aliases: []string{"/channel"}, Model: "gitclaw/channels", Category: "channels", Summary: "Audit channel bridge settings and workflow-dispatch ingress.", LocalCLI: []string{"gitclaw channels verify", "gitclaw channels list", "gitclaw channels info <provider>", "gitclaw channel-state", "gitclaw channel-gateway", "gitclaw channel-delivery"}},

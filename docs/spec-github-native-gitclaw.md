@@ -640,6 +640,7 @@ GitHub issue/comment event
   `checkpoints status`, `checkpoints list`, `checkpoints verify`,
   `rollback list`,
   `proactive enqueue`, `proactive init`, `proactive info`,
+  `approvals list`, `approvals verify`,
   `memory verify`, `memory validate`, `memory list`, `memory info`,
   `memory search`,
   `skills validate`,
@@ -1468,6 +1469,43 @@ artifacts remain the source of truth. Label update failures should not prevent
 the assistant from answering, but the live E2E harness verifies that configured
 repositories end successful turns with `gitclaw:done` and without
 `gitclaw:running` or `gitclaw:error`.
+
+## Approvals Inspection Command
+
+GitClaw supports a deterministic approval-readiness command inspired by
+OpenClaw's exec-approval gates and Hermes' explicit command approval posture:
+
+```text
+@gitclaw /approvals
+@gitclaw /approval
+```
+
+The command runs after normal preflight authorization and context assembly, but
+before model inference. It posts a `gitclaw:assistant-turn` comment with
+`model="gitclaw/approvals"` and summarizes:
+
+- preflight result, trigger state, actor association, and trust decision,
+- whether write intent was detected and labeled with `gitclaw:write-requested`,
+- whether per-issue approval labels are present,
+- the future approval store and scope, currently GitHub issue labels per issue,
+- the hard read-only write-mode gate.
+
+It never enables write mode, approves anything, executes commands, dumps issue
+or comment bodies, prints prompt text, or exposes approval payloads. In v1, an
+issue with both write intent and `gitclaw:approved` reports
+`approved_but_write_mode_disabled`: the approval signal is visible, but mutation
+remains blocked until a later reviewed write-mode implementation exists.
+
+Local operators can inspect the static approval shape without opening an issue:
+
+```bash
+gitclaw approvals list
+gitclaw approvals verify
+```
+
+The local report omits repository, issue, actor, trigger, and write-intent
+state. It still reports the approval label names, trusted association source,
+per-issue GitHub-label approval store, and read-only write-mode gate.
 
 ## Policy Inspection Command
 
@@ -3596,6 +3634,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven policy-verify E2E harness verifies `@gitclaw /policy verify`
   checks the checked-in workflow permission contract, reports active policy
   output hashes, and avoids raw policy input/output leakage.
+- A `gh`-driven approvals-report E2E harness verifies
+  `@gitclaw /approvals` detects real write intent, observes
+  `gitclaw:approved`, reports the approval gates as read-only, applies
+  `gitclaw:write-requested`, and avoids issue body leakage.
 - A `gh`-driven secrets-report E2E harness verifies
   `@gitclaw /secrets audit` scans the real checked-out repository, reports
   plaintext-like findings and GitHub Actions secret references with path, line,

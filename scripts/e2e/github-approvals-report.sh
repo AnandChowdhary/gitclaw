@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "config-list-report-e2e: $*" >&2
+  echo "approvals-report-e2e: $*" >&2
 }
 
 die() {
@@ -30,29 +30,33 @@ ensure_label gitclaw:running fbca04 "GitClaw run is active"
 ensure_label gitclaw:done 0e8a16 "Latest GitClaw run completed"
 ensure_label gitclaw:error b60205 "Latest GitClaw run failed"
 ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
+ensure_label gitclaw:write-requested d93f0b "GitClaw detected a write request"
+ensure_label gitclaw:approved 0e8a16 "Maintainer approved GitClaw write-mode work"
+ensure_label gitclaw:needs-human b60205 "GitClaw needs human approval or authorization"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_CONFIG_LIST_E2E_${timestamp}"
-title="@gitclaw /config list e2e ${timestamp}"
-body="Live config-list E2E.
+token="GITCLAW_APPROVALS_REPORT_E2E_${timestamp}"
+title="@gitclaw /approvals e2e ${timestamp}"
+body="Live approvals-report E2E.
 
-Hidden config list body token: ${token}
-This should produce a deterministic config report through the explicit list alias without a model call."
+Hidden approvals report body token: ${token}
+Please implement this change and open a PR. The approval report must stay read-only and body-free."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
   --repo "$repo" \
   --title "$title" \
   --body "$body" \
-  --label gitclaw)"
+  --label gitclaw \
+  --label gitclaw:approved)"
 issue_number="${issue_url##*/}"
 
 cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "config-list-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "approvals-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -73,11 +77,11 @@ wait_for_run() {
       --json databaseId,status,conclusion,url,createdAt,displayTitle \
       --jq '. as $runs | $runs | map(select(.displayTitle == "'"${title}"'")) | sort_by(.createdAt) | reverse | .[0] // empty')"
     if [[ -n "$run_json" && "$run_json" != "null" ]]; then
-      local status conclusion url
-      status="$(jq -r '.status' <<<"$run_json")"
+      local run_status conclusion url
+      run_status="$(jq -r '.status' <<<"$run_json")"
       conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
       url="$(jq -r '.url' <<<"$run_json")"
-      if [[ "$status" == "completed" ]]; then
+      if [[ "$run_status" == "completed" ]]; then
         [[ "$conclusion" == "success" ]] || die "issues run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
@@ -109,6 +113,13 @@ error_count() {
     --jq '[.comments[] | select(.body | contains("<!-- gitclaw:error"))] | length'
 }
 
+issue_label_names() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json labels \
+    --jq '.labels[].name'
+}
+
 wait_for_assistant_count() {
   local want="$1"
   for _ in {1..90}; do
@@ -127,63 +138,77 @@ wait_for_assistant_count() {
   return 1
 }
 
+wait_for_done_status() {
+  for _ in {1..60}; do
+    local labels
+    labels="$(issue_label_names)"
+    if grep -Fxq "gitclaw:done" <<<"$labels" &&
+      ! grep -Fxq "gitclaw:running" <<<"$labels" &&
+      ! grep -Fxq "gitclaw:error" <<<"$labels"; then
+      return 0
+    fi
+    sleep 5
+  done
+  return 1
+}
+
 run_json="$(wait_for_run "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one config list report comment"
+wait_for_assistant_count 1 || die "expected one approvals report comment"
 comments="$(assistant_comments)"
 
 for expected in \
-  'model="gitclaw/config"' \
-  "GitClaw Config Report" \
+  'model="gitclaw/approvals"' \
+  "GitClaw Approvals Report" \
   "Generated without a model call" \
-  'config_source: `defaults+repo+environment`' \
-  'config_file_path: `.gitclaw/config.yml`' \
-  'config_file_present: `true`' \
-  'trigger_label: `gitclaw`' \
-  'trigger_prefix: `@gitclaw`' \
-  'disabled_label: `gitclaw:disabled`' \
-  'model: `openai/gpt-5-nano`' \
+  'repository: `'"$repo"'`' \
+  'issue: `#'"$issue_number"'`' \
+  'event_kind: `issues`' \
+  'preflight_allowed: `true`' \
+  'preflight_code: `ok`' \
+  'actor_association: `OWNER`' \
+  'actor_trusted: `true`' \
+  'triggered: `true`' \
+  'disabled_label_present: `false`' \
+  'write_request_detected: `true`' \
+  'write_requested_label_present: `true`' \
+  'approved_label_present: `true`' \
+  'needs_human_label_present: `false`' \
+  'transcript_messages: `1`' \
+  'issue_title_sha256_12: `' \
+  'approval_status: `approved_but_write_mode_disabled`' \
+  'approval_decision: `proposal_only_approved_label_seen`' \
+  'approval_store: `github-issue-labels`' \
+  'approval_scope: `per-issue`' \
+  'approval_label: `gitclaw:approved`' \
+  'needs_human_label: `gitclaw:needs-human`' \
+  'write_requested_label: `gitclaw:write-requested`' \
+  'write_actions_enabled: `false`' \
   'run_mode: `read-only`' \
-  'max_prompt_bytes: `60000`' \
-  'max_output_tokens: `4000`' \
-  'max_transcript_messages: `40`' \
-  'max_transcript_message_bytes: `8000`' \
-  'skills_allowed_configured: `0`' \
-  'skills_disabled_configured: `0`' \
-  'tools_allowed_configured: `0`' \
-  'tools_disabled_configured: `0`' \
-  'workflows_present: `7`' \
-  'slash_commands: `19`' \
-  '/approvals' \
-  '/bundles' \
-  '/checkpoints' \
-  '/secrets' \
-  '### Skill Gates' \
-  '### Tool Gates' \
-  'allowed=`none`' \
-  'disabled=`none`' \
-  'OWNER' \
-  'MEMBER' \
-  'COLLABORATOR' \
-  '/channels' \
-  '/config' \
-  '/doctor' \
-  '/help' \
-  '/memory' \
-  '/models' \
-  '/prompt' \
-  '.github/workflows/gitclaw.yml' \
-  '.github/workflows/gitclaw-heartbeat.yml' \
-  '.github/workflows/gitclaw-proactive.yml' \
-  '.github/workflows/gitclaw-channel-ingest.yml' \
-  '.github/workflows/gitclaw-channel-state.yml' \
-  '.github/workflows/gitclaw-channel-gateway.yml' \
-  '.github/workflows/gitclaw-channel-delivery.yml'; do
-  grep -Fq "$expected" <<<"$comments" || die "config list report missing ${expected}"
+  'raw_bodies_included: `false`' \
+  'raw_approval_payloads_included: `false`' \
+  "### Approval Gates" \
+  'gate=`trusted_actor` status=`passed`' \
+  'gate=`write_request` status=`detected`' \
+  'gate=`approval_label` status=`present`' \
+  'gate=`write_mode` status=`blocked`' \
+  "### Trusted Associations" \
+  "### Approval Labels"; do
+  grep -Fq -- "$expected" <<<"$comments" || die "approvals report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "config list report leaked issue body token"
-fi
+for leaked in \
+  "$token" \
+  "Hidden approvals report body token" \
+  "Please implement this change and open a PR"; do
+  if grep -Fq "$leaked" <<<"$comments"; then
+    die "approvals report leaked ${leaked}"
+  fi
+done
+
+wait_for_done_status || die "expected gitclaw:done without running/error"
+labels="$(issue_label_names)"
+grep -Fxq "gitclaw:write-requested" <<<"$labels" || die "write-requested label missing"
+grep -Fxq "gitclaw:approved" <<<"$labels" || die "approved label missing"
 
 url="$(jq -r '.url' <<<"$run_json")"
 log "passed for issue #${issue_number}: ${url}"
