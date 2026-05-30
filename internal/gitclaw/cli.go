@@ -440,9 +440,11 @@ func runSessionSearchCommand(args []string) error {
 
 func runToolsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw tools validate|list|search <query>")
+		return fmt.Errorf("usage: gitclaw tools verify|validate|list|search <query>")
 	}
 	switch args[0] {
+	case "verify":
+		return runToolsVerifyCommand(args[1:])
 	case "validate":
 		return runToolsValidateCommand(args[1:])
 	case "list":
@@ -452,6 +454,22 @@ func runToolsCommand(args []string) error {
 	default:
 		return fmt.Errorf("unknown tools command %q", args[0])
 	}
+}
+
+func runToolsVerifyCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown tools verify argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderToolVerifyReport(repoContext))
+	return nil
 }
 
 func runToolsListCommand(args []string) error {

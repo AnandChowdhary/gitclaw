@@ -586,8 +586,8 @@ GitHub issue/comment event
   `memory validate`, `memory list`, `memory search`, `skills validate`,
   `skills list`, `skills info`, `skills search`,
   `soul verify`, `soul validate`, `soul list`, `soul search`,
-  `tools validate`, `tools list`, `tools search`, `doctor`, `commands`,
-  `version`.
+  `tools verify`, `tools validate`, `tools list`, `tools search`, `doctor`,
+  `commands`, `version`.
 
 `internal/github`
 
@@ -1064,6 +1064,7 @@ safety split between callable tools, procedural skills, plugins, and toolsets:
 Validation is visible in the `/tools` report and locally through:
 
 ```bash
+gitclaw tools verify
 gitclaw tools validate
 gitclaw tools list
 gitclaw tools search <query> --max-results 10
@@ -1080,6 +1081,7 @@ OpenClaw's tool policy visibility and Hermes' toolset inventory:
 ```text
 @gitclaw /tools
 @gitclaw /tools list
+@gitclaw /tools verify
 @gitclaw /tools validate
 @gitclaw /tools search read_file
 ```
@@ -1108,6 +1110,14 @@ When called as `@gitclaw /tools validate`, the command posts only the
 validation report: tool contract counts, active-output counts, status,
 error/warning totals, and body-free findings. This mirrors
 `gitclaw tools validate` for issue-side audits without the full inventory.
+
+When called as `@gitclaw /tools verify`, the command posts a stricter
+body-free trust envelope for deterministic tool contracts. It reports built-in
+contract modes, read-only/metadata-only/mutating counts, active output counts,
+known versus unknown outputs, `.gitclaw/TOOLS.md` provenance and hash metadata,
+active-output input/output hashes, and explicit external-registry and runtime
+permission verification status. Unlike the inventory report, it does not print
+raw tool input values such as file paths or search phrases.
 
 When called as `@gitclaw /tools search <query>`, the command searches declared
 tool-contract metadata and active tool-output metadata. It reports the query
@@ -2395,10 +2405,14 @@ assert the expected comments/labels, and close the issue in cleanup.
 
    - create a real issue with `@gitclaw /tools`,
    - create a second real issue with `@gitclaw /tools list`,
+   - create a third real issue with `@gitclaw /tools verify`,
    - ask for a concrete file read and search fixture phrase,
    - assert the reply is marked `model="gitclaw/tools"`,
    - assert the report lists available tool contracts and active output
      metadata for list/search/read,
+   - assert the verify report includes contract modes, repo-local guidance
+     provenance, known/unknown output counts, active-output hashes, raw input
+     suppression, and verification findings,
    - assert tool validation status, contract counts, active-output counts,
      unknown-output counts, unsafe-contract counts, and over-limit output
      counts, missing-guidance count, and duplicate-contract count are present,
@@ -2859,6 +2873,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven tools-validate E2E harness verifies
   `@gitclaw /tools validate` exposes the body-free validation report without
   falling back to the full inventory.
+- A `gh`-driven tools-verify E2E harness verifies
+  `@gitclaw /tools verify` exposes the body-free deterministic tool trust
+  envelope, contract modes, guidance provenance, active-output hashes, raw
+  input suppression, and verification findings without a model call.
 - A `gh`-driven policy-report E2E harness verifies `@gitclaw /policy` produces
   a deterministic preflight/label/write-policy audit without a model call or
   issue-body leakage.

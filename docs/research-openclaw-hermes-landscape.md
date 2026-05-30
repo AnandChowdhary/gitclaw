@@ -626,6 +626,15 @@ active output metadata, but `@gitclaw /tools list` and `gitclaw tools list`
 should be documented aliases so operators can inspect the tool registry without
 confusing it with validation or search.
 
+2026-05-30 tools-verify follow-up: OpenClaw treats tools as typed functions
+sent to the model and separates them from skills/plugins, while Hermes exposes
+toolsets and platform-specific registries. GitClaw should add
+`@gitclaw /tools verify` and `gitclaw tools verify` as a body-free trust
+envelope that reports built-in contract modes, read-only/metadata-only counts,
+repo-local `.gitclaw/TOOLS.md` provenance, known versus unknown active outputs,
+input/output hashes, and explicit external-registry/runtime-attestation
+non-goals without printing raw tool inputs or output bodies.
+
 2026-05-29 tool-validation follow-up: OpenClaw's exec approval docs treat tool
 execution as a stacked policy/allowlist/approval decision, and Hermes separates
 toolsets such as terminal, file, web, cron, memory, and messaging by platform

@@ -138,7 +138,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `15`' \
   'aliases: `10`' \
-  'local_cli_helpers: `38`' \
+  'local_cli_helpers: `39`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/help' \
@@ -186,6 +186,7 @@ for expected in \
   'gitclaw skills list' \
   'gitclaw skills info <name>' \
   'gitclaw skills search <query>' \
+  'gitclaw tools verify' \
   'gitclaw tools validate' \
   'gitclaw tools list' \
   'gitclaw tools search <query>'; do

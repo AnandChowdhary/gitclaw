@@ -71,6 +71,62 @@ func TestValidateToolsAcceptsCurrentToolShape(t *testing.T) {
 	}
 }
 
+func TestRenderToolVerifyReportShowsTrustEnvelopeWithoutBodies(t *testing.T) {
+	repoContext := RepoContext{
+		Documents: []ContextDocument{{Path: ".gitclaw/TOOLS.md", Body: "TOOL_VERIFY_GUIDANCE_SECRET: read-only tools."}},
+		ToolOutputs: []ToolOutput{
+			{Name: "gitclaw.list_files", Input: ". TOOL_VERIFY_INPUT_SECRET", Output: "go.mod\nREADME.md\nTOOL_VERIFY_LIST_OUTPUT_SECRET"},
+			{Name: "gitclaw.read_file", Input: "go.mod TOOL_VERIFY_FILE_INPUT_SECRET", Output: "module github.com/AnandChowdhary/gitclaw\nTOOL_VERIFY_READ_OUTPUT_SECRET"},
+		},
+	}
+	body := RenderToolVerifyReport(repoContext)
+	for _, want := range []string{
+		"GitClaw Tools Verify Report",
+		"scope: `local-cli`",
+		"tool_verify_status: `ok`",
+		"verification_scope: `deterministic-tool-contracts`",
+		"available_tools: `5`",
+		"read_only_contracts: `3`",
+		"metadata_only_contracts: `2`",
+		"mutating_contracts: `0`",
+		"active_tool_outputs: `2`",
+		"known_tool_outputs: `2`",
+		"unknown_tool_outputs: `0`",
+		"tool_guidance_files: `1`",
+		"repo_local_guidance_files: `1`",
+		"unknown_guidance_files: `0`",
+		"tool_outputs_hashed: `2`",
+		"tool_inputs_hashed: `2`",
+		"registry_verification: `not_configured`",
+		"runtime_permission_verification: `static_contracts_only`",
+		"shell_execution_allowed: `false`",
+		"repository_mutation_allowed: `false`",
+		"raw_bodies_included: `false`",
+		"raw_inputs_included: `false`",
+		"tool_validation_status: `ok`",
+		"tool_validation_errors: `0`",
+		"tool_validation_warnings: `0`",
+		"### Trust Cards",
+		"kind=`contract` name=`gitclaw.list_files` source=`builtin-gitclaw` mode=`read-only` mutating=`false`",
+		"kind=`contract` name=`gitclaw.policy` source=`builtin-gitclaw` mode=`metadata-only` mutating=`false`",
+		"kind=`guidance` path=`.gitclaw/TOOLS.md` source=`repo-local`",
+		"kind=`active-output` name=`gitclaw.read_file` contract_known=`true` input_sha256_12=",
+		"output_sha256_12=",
+		"### Verification Findings",
+		"code=`tool_registry_verification_not_configured`",
+		"code=`runtime_permission_verification_static_only`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("tool verify report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"TOOL_VERIFY_GUIDANCE_SECRET", "TOOL_VERIFY_INPUT_SECRET", "TOOL_VERIFY_FILE_INPUT_SECRET", "TOOL_VERIFY_LIST_OUTPUT_SECRET", "TOOL_VERIFY_READ_OUTPUT_SECRET", "module github.com/AnandChowdhary/gitclaw", "go.mod"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("tool verify report leaked body/input token %q:\n%s", leaked, body)
+		}
+	}
+}
+
 func TestRenderToolSearchReportFindsContractsAndOutputsWithoutBodies(t *testing.T) {
 	repoContext := RepoContext{
 		Documents: []ContextDocument{{Path: ".gitclaw/TOOLS.md", Body: "TOOL_SEARCH_GUIDANCE_SECRET"}},

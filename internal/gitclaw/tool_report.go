@@ -55,6 +55,9 @@ func IsToolsReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderToolsReport(ev Event, cfg Config, repoContext RepoContext) string {
+	if isToolsVerifyRequest(ev, cfg) {
+		return renderToolVerifyReport(ev, repoContext, true)
+	}
 	if isToolsValidateRequest(ev, cfg) {
 		return renderToolsValidationReport(ev, repoContext, true)
 	}
@@ -151,6 +154,11 @@ func requestedToolSearchQuery(ev Event, cfg Config) string {
 func isToolsValidateRequest(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && fields[0] == "/tools" && strings.EqualFold(fields[1], "validate")
+}
+
+func isToolsVerifyRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && fields[0] == "/tools" && strings.EqualFold(fields[1], "verify")
 }
 
 func BuildToolSearchReport(repoContext RepoContext, query string, maxResults int) ToolSearchReport {
