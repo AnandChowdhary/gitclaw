@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-30T06:03:12Z",
+  "generated_at": "2026-05-30T06:03:23Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 145,
+  "count": 146,
   "issues": [
     {
       "number": 3,
@@ -1765,6 +1765,18 @@
       "title": "@gitclaw /doctor list e2e 20260530T060053Z",
       "path": "issues/000168.json",
       "backup_generated_at": "2026-05-30T06:01:49Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
+    },
+    {
+      "number": 169,
+      "title": "GitClaw tools info e2e 20260530T060219Z",
+      "path": "issues/000169.json",
+      "backup_generated_at": "2026-05-30T06:03:22Z",
       "event_name": "issues",
       "labels": [
         "gitclaw"
