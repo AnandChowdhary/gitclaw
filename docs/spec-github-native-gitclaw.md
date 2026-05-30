@@ -2709,8 +2709,8 @@ examples/workflows/gitclaw.yml
   explicit report alias, while local `gitclaw config list` exposes the same
   control-plane metadata without issue-only fields.
 - A `gh`-driven commands-report E2E harness verifies `@gitclaw /help` reports
-  deterministic commands, aliases, and local CLI helpers without a model call
-  or issue-body leakage.
+  deterministic commands, aliases, and every advertised local CLI helper
+  without a model call or issue-body leakage.
 - A `gh`-driven doctor-report E2E harness verifies `@gitclaw /doctor` reports
   config validation, workflow presence, context files, skills, memory notes,
   proactive prompts, and skill/soul/tool validation rollups without a model

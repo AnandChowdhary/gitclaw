@@ -158,20 +158,28 @@ for expected in \
   'gitclaw doctor list' \
   'gitclaw prompt list' \
   'gitclaw proactive list' \
+  'gitclaw proactive init' \
+  'gitclaw proactive enqueue' \
   'gitclaw session list --backup <issue.json>' \
   'gitclaw session search <query> --backup <issue.json>' \
   'gitclaw models list' \
   'gitclaw policy list' \
+  'gitclaw backup verify' \
+  'gitclaw backup manifest' \
   'gitclaw backup list' \
   'gitclaw backup stats' \
   'gitclaw backup search <query>' \
+  'gitclaw backup export-jsonl' \
+  'gitclaw backup restore-plan' \
   'gitclaw backup retention-plan' \
   'gitclaw commands' \
   'gitclaw memory validate' \
   'gitclaw memory list' \
   'gitclaw memory search <query>' \
+  'gitclaw soul validate' \
   'gitclaw soul list' \
   'gitclaw soul search <query>' \
+  'gitclaw skills validate' \
   'gitclaw skills list' \
   'gitclaw skills info <name>' \
   'gitclaw skills search <query>' \
