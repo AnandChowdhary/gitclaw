@@ -38,12 +38,24 @@ func IsProactiveReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderProactiveReport(ev Event, cfg Config) string {
+	return renderProactiveReport(ev, cfg, true)
+}
+
+func RenderProactiveCLIReport(cfg Config) string {
+	return renderProactiveReport(Event{}, cfg, false)
+}
+
+func renderProactiveReport(ev Event, cfg Config, includeIssue bool) string {
 	surface := inspectProactiveSurface(cfg.Workdir)
 	var b strings.Builder
 	b.WriteString("## GitClaw Proactive Report\n\n")
 	b.WriteString("Generated without a model call.\n\n")
-	fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
-	fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
 	fmt.Fprintf(&b, "- proactive_label: `%s`\n", cfg.ProactiveLabel)
 	fmt.Fprintf(&b, "- trigger_label: `%s`\n", cfg.TriggerLabel)
 	fmt.Fprintf(&b, "- workflow_path: `%s`\n", proactiveWorkflowPath)
@@ -51,8 +63,11 @@ func RenderProactiveReport(ev Event, cfg Config) string {
 	fmt.Fprintf(&b, "- workflow_dispatch_trigger: `%t`\n", surface.Workflow.WorkflowDispatch)
 	fmt.Fprintf(&b, "- schedule_trigger: `%t`\n", surface.Workflow.Schedule)
 	fmt.Fprintf(&b, "- prompt_files: `%d`\n", len(surface.Prompts))
-	fmt.Fprintf(&b, "- proactive_run_issue: `%t`\n", HasProactiveRunMarker(ev.Issue.Body))
-	fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n\n", shortDocumentHash(ev.Issue.Title))
+	if includeIssue {
+		fmt.Fprintf(&b, "- proactive_run_issue: `%t`\n", HasProactiveRunMarker(ev.Issue.Body))
+		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
+	}
+	b.WriteByte('\n')
 	b.WriteString("Proactive jobs create or reuse visible GitHub issues, then wake the normal issue handler with `workflow_dispatch`. Prompt bodies and issue bodies are not included in this report.\n\n")
 
 	b.WriteString("### Workflow\n")

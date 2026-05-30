@@ -1197,9 +1197,11 @@ func runChannelIngestCommand(ctx context.Context, args []string) error {
 
 func runProactiveCommand(ctx context.Context, args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw proactive <enqueue|init>")
+		return fmt.Errorf("usage: gitclaw proactive <list|enqueue|init>")
 	}
 	switch args[0] {
+	case "list":
+		return runProactiveListCommand(args[1:])
 	case "enqueue":
 		return runProactiveEnqueueCommand(ctx, args[1:])
 	case "init":
@@ -1207,6 +1209,18 @@ func runProactiveCommand(ctx context.Context, args []string) error {
 	default:
 		return fmt.Errorf("unknown proactive command %q", args[0])
 	}
+}
+
+func runProactiveListCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown proactive list argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderProactiveCLIReport(cfg))
+	return nil
 }
 
 func runProactiveInitCommand(args []string) error {

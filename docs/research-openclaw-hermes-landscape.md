@@ -328,6 +328,12 @@ operator visibility through issue-visible metadata: `@gitclaw /proactive`
 reports the proactive workflow, schedule trigger, prompt files, labels, and
 enqueue contract without dumping the prompt bodies.
 
+2026-05-30 proactive-list follow-up: proactive visibility should be available
+before opening an issue too. Add `gitclaw proactive list` as the local mirror
+of `/proactive`: workflow presence, workflow_dispatch/schedule trigger state,
+prompt file metadata, labels, and enqueue contract, with no prompt bodies and
+no issue-only metadata.
+
 2026-05-29 proactive-init follow-up: the reviewed-file boundary matters as much
 as the scheduler. GitClaw should make new cron-like jobs easy through a local
 generator that writes `.gitclaw/proactive/<name>.md` and
