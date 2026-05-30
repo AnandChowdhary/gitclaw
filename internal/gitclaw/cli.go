@@ -1099,6 +1099,14 @@ func runContextCommand(args []string) error {
 		fmt.Println(RenderContextCLIReport(cfg, repoContext))
 		return nil
 	}
+	if len(args) == 1 && (args[0] == "risk" || args[0] == "risk-audit") {
+		repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+		if err != nil {
+			return err
+		}
+		fmt.Println(RenderContextRiskCLIReport(cfg, repoContext))
+		return nil
+	}
 	if len(args) >= 2 && args[0] == "info" {
 		path := cleanContextLookupPath(strings.Join(args[1:], " "))
 		if path == "" {
@@ -1115,7 +1123,7 @@ func runContextCommand(args []string) error {
 		}
 		return nil
 	}
-	return fmt.Errorf("usage: gitclaw context [list|info <path>]")
+	return fmt.Errorf("usage: gitclaw context [list|risk|info <path>]")
 }
 
 func runDiffsCommand(args []string) error {

@@ -34,6 +34,9 @@ func activeRequestText(ev Event) string {
 }
 
 func RenderContextReport(ev Event, cfg Config, transcript []TranscriptMessage, repoContext RepoContext) string {
+	if isContextRiskRequest(ev, cfg) {
+		return renderContextRiskReport(ev, cfg, transcript, repoContext, true)
+	}
 	if isContextInfoRequest(ev, cfg) {
 		return renderContextInfoReport(ev, cfg, repoContext, requestedContextInfoPath(ev, cfg), true)
 	}
@@ -46,6 +49,10 @@ func RenderContextCLIReport(cfg Config, repoContext RepoContext) string {
 
 func RenderContextInfoCLIReport(cfg Config, repoContext RepoContext, path string) string {
 	return renderContextInfoReport(Event{}, cfg, repoContext, path, false)
+}
+
+func RenderContextRiskCLIReport(cfg Config, repoContext RepoContext) string {
+	return renderContextRiskReport(Event{}, cfg, nil, repoContext, false)
 }
 
 func renderContextReport(ev Event, cfg Config, transcript []TranscriptMessage, repoContext RepoContext, includeIssue bool) string {
@@ -185,6 +192,11 @@ func requestedContextInfoPath(ev Event, cfg Config) string {
 func isContextInfoRequest(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && fields[0] == "/context" && strings.EqualFold(fields[1], "info")
+}
+
+func isContextRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && fields[0] == "/context" && (strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit"))
 }
 
 func cleanContextLookupPath(path string) string {

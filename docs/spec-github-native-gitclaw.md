@@ -761,6 +761,7 @@ GitHub issue/comment event
   `migrate plan`,
   `orders list`, `orders verify`, `orders risk`,
   `profile show`, `profile verify`,
+  `context list`, `context risk`, `context info`,
   `runs current`, `runs verify`,
   `sandbox explain`, `sandbox verify`,
   `memory verify`, `memory risk`, `memory validate`, `memory list`,
@@ -805,6 +806,8 @@ GitHub issue/comment event
 - Supports deterministic `@gitclaw /context` reports so maintainers can inspect
   which context files, context references, skills, and tool outputs were
   assembled without making a model call.
+- Supports deterministic `@gitclaw /context risk` reports so maintainers can
+  audit prompt-visible context risk without printing context bodies.
 
 `internal/agent`
 
@@ -1930,6 +1933,7 @@ OpenClaw's `/context` diagnostics:
 ```text
 @gitclaw /context
 @gitclaw /context list
+@gitclaw /context risk
 @gitclaw /context info <path>
 ```
 
@@ -1955,11 +1959,24 @@ short hashes, match source, and safety flags. It never emits raw file bodies,
 skill bodies, tool output bodies, raw tool inputs, issue/comment bodies, prompts,
 or secrets.
 
+When called as `@gitclaw /context risk`, the command posts a body-free risk
+audit for the prompt-visible context boundary. It scans loaded context files,
+explicit context references, selected skill bodies, and deterministic tool
+outputs for prompt-boundary, credential-exfiltration, hidden-instruction,
+host-exec, and unbounded-context patterns, but emits only metadata, counts,
+paths, hashes, risk codes, and severities. It also reports prompt budget
+pressure, reference status counts, bounded-reference limits, and runtime gates
+for external URL fetches, repository mutation, and host exec. Any change to
+this surface requires a live GitHub issue E2E that first asserts the
+deterministic report and then performs a normal GitHub Models conversation with
+repo-reader/tool usage.
+
 Local operators can inspect the same repository context surface without opening
 an issue:
 
 ```bash
 gitclaw context list
+gitclaw context risk
 gitclaw context info .gitclaw/SOUL.md
 gitclaw context info go.mod
 ```
@@ -1970,6 +1987,8 @@ deterministic tool-output metadata with short hashes. The focused local
 `context info` variant seeds context assembly with the requested path, so
 ordinary repository files can be inspected through the same body-free
 `gitclaw.read_file` metadata that would be prompt-visible in an issue turn.
+The local `context risk` variant performs the same body-free risk audit without
+repository or issue metadata.
 
 ## Prompt Inspection Command
 
@@ -4994,6 +5013,12 @@ examples/workflows/gitclaw.yml
   .gitclaw/SOUL.md` returns exactly one focused, body-free context card, while
   local `gitclaw context info <path>` covers both loaded context documents and
   repo files surfaced through deterministic `gitclaw.read_file` metadata.
+- A `gh`-driven context-risk E2E harness verifies
+  `@gitclaw /context risk` reports body-free context file, explicit reference,
+  selected skill, deterministic tool-output, prompt-budget, and runtime gate
+  risk metadata. The same harness must then run a real GitHub Models follow-up
+  conversation that proves model inference, prompt provenance, selected skills,
+  and prompt-visible repository search tool usage.
 - A `gh`-driven context-references E2E harness verifies
   `@gitclaw /context references` reports `@file:` line ranges and `@folder:`
   metadata without dumping referenced bodies, issue text, or fixture tokens.

@@ -1252,6 +1252,18 @@ and `gitclaw context info <path>` so maintainers can inspect one loaded context
 file, selected skill document, or deterministic read-file output by path/name
 with only kind, path/tool metadata, byte/line counts, and short hashes.
 
+2026-05-30 context-risk follow-up: OpenClaw's `/context` docs emphasize
+diagnostic visibility into prompt contributors without dumping the full prompt,
+while Hermes context references explicitly bound `@file`, `@folder`, `@diff`,
+`@staged`, and `@git:N`, block sensitive paths, reject traversal, and security
+scan context files before injection. GitClaw should add `@gitclaw /context
+risk` and `gitclaw context risk` as the body-free risk audit for prompt-visible
+context: scan loaded context files, explicit references, selected skills, and
+tool outputs for prompt-boundary, credential-exfiltration, hidden-instruction,
+host-exec, and unbounded-context patterns, then report only counts, paths,
+hashes, risk codes, and runtime gates. Pair the deterministic audit with a live
+GitHub Models follow-up that proves repo-reader/tool context still works.
+
 2026-05-30 skill-gating follow-up: OpenClaw-style skill systems treat skill
 availability as policy, not only discovery. Add repo-reviewed
 `skills.allowed` and `skills.disabled` gates so local skills remain inspectable

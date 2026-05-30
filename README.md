@@ -33,6 +33,7 @@ go run ./cmd/gitclaw commands
 go run ./cmd/gitclaw soul verify
 go run ./cmd/gitclaw tools risk
 go run ./cmd/gitclaw artifacts risk
+go run ./cmd/gitclaw context risk
 go run ./cmd/gitclaw diffs risk
 go run ./cmd/gitclaw profile risk
 go run ./cmd/gitclaw models risk
@@ -137,6 +138,7 @@ gitclaw artifacts risk
 gitclaw artifacts verify
 gitclaw checkpoints risk
 gitclaw rollback risk
+gitclaw context risk
 gitclaw diffs summary
 gitclaw diffs risk
 gitclaw diffs verify
@@ -174,6 +176,7 @@ scripts/e2e/github-agents-risk-report.sh
 scripts/e2e/github-nodes-risk-report.sh
 scripts/e2e/github-artifacts-risk-report.sh
 scripts/e2e/github-checkpoints-risk-report.sh
+scripts/e2e/github-context-risk-report.sh
 scripts/e2e/github-diffs-risk-report.sh
 scripts/e2e/github-hooks-risk-report.sh
 scripts/e2e/github-memory-risk-report.sh
