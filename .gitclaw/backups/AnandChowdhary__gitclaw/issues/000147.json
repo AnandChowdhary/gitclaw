@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T04:20:44Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 147,
+    "title": "@gitclaw /policy verify e2e 20260530T041944Z",
+    "body": "Live policy-verify E2E.\n\nPlease implement a small policy verify fixture and open a PR.\nHidden policy verify token: GITCLAW_POLICY_VERIFY_E2E_20260530T041944Z\nThis should produce a deterministic policy verify report without calling a model.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /policy verify e2e 20260530T041944Z\n\nLive policy-verify E2E.\n\nPlease implement a small policy verify fixture and open a PR.\nHidden policy verify token: GITCLAW_POLICY_VERIFY_E2E_20260530T041944Z\nThis should produce a deterministic policy verify report without calling a model.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Policy Verify Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#147`\n- policy_verify_status: `ok`\n- verification_scope: `workflow-permissions-and-policy-surface`\n- run_mode: `read-only`\n- model: `openai/gpt-5-mini`\n- trusted_associations: `3`\n- managed_labels: `9`\n- workflow_path: `.github/workflows/gitclaw.yml`\n- workflow_present: `true`\n- workflow_bytes: `5461`\n- workflow_lines: `165`\n- workflow_sha256_12: `d8b5c5972465`\n- expected_jobs: `3`\n- jobs_present: `3`\n- expected_permissions: `7`\n- permissions_present: `7`\n- missing_permissions: `0`\n- unexpected_write_permissions: `0`\n- policy_outputs_hashed: `1`\n- raw_bodies_included: `false`\n- raw_inputs_included: `false`\n\nThis report verifies the checked-in GitClaw workflow permission surface against the read-only policy contract. Workflow bodies, issue bodies, comments, prompts, policy output bodies, and raw policy inputs are not included.\n\n### Workflow Permission Cards\n- job=`backup` present=`true` expected=`contents:write, issues:read` actual=`contents:write, issues:read` matched=`2` missing=`none` unexpected_write=`none`\n- job=`handle` present=`true` expected=`contents:read, issues:write, models:read` actual=`contents:read, issues:write, models:read` matched=`3` missing=`none` unexpected_write=`none`\n- job=`preflight` present=`true` expected=`contents:read, issues:read` actual=`contents:read, issues:read` matched=`2` missing=`none` unexpected_write=`none`\n\n### Active Policy Output Trust Cards\n- name=`gitclaw.policy` input_sha256_12=`61b15aa7a238` output_bytes=`250` output_lines=`1` output_sha256_12=`f3fa36d0df79`\n\n### Verification Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4581631162,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4581631162,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26674308345\" event_id=\"issue-147\" model=\"gitclaw/policy\" idempotency_key=\"887013970405f4fab36c23d9d94b1d91\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26674308345\" --\u003e\n## GitClaw Policy Verify Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#147`\n- policy_verify_status: `ok`\n- verification_scope: `workflow-permissions-and-policy-surface`\n- run_mode: `read-only`\n- model: `openai/gpt-5-mini`\n- trusted_associations: `3`\n- managed_labels: `9`\n- workflow_path: `.github/workflows/gitclaw.yml`\n- workflow_present: `true`\n- workflow_bytes: `5461`\n- workflow_lines: `165`\n- workflow_sha256_12: `d8b5c5972465`\n- expected_jobs: `3`\n- jobs_present: `3`\n- expected_permissions: `7`\n- permissions_present: `7`\n- missing_permissions: `0`\n- unexpected_write_permissions: `0`\n- policy_outputs_hashed: `1`\n- raw_bodies_included: `false`\n- raw_inputs_included: `false`\n\nThis report verifies the checked-in GitClaw workflow permission surface against the read-only policy contract. Workflow bodies, issue bodies, comments, prompts, policy output bodies, and raw policy inputs are not included.\n\n### Workflow Permission Cards\n- job=`backup` present=`true` expected=`contents:write, issues:read` actual=`contents:write, issues:read` matched=`2` missing=`none` unexpected_write=`none`\n- job=`handle` present=`true` expected=`contents:read, issues:write, models:read` actual=`contents:read, issues:write, models:read` matched=`3` missing=`none` unexpected_write=`none`\n- job=`preflight` present=`true` expected=`contents:read, issues:read` actual=`contents:read, issues:read` matched=`2` missing=`none` unexpected_write=`none`\n\n### Active Policy Output Trust Cards\n- name=`gitclaw.policy` input_sha256_12=`61b15aa7a238` output_bytes=`250` output_lines=`1` output_sha256_12=`f3fa36d0df79`\n\n### Verification Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T04:20:24Z",
+      "updated_at": "2026-05-30T04:20:24Z"
+    }
+  ]
+}
