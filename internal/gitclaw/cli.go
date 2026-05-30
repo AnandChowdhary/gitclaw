@@ -386,19 +386,35 @@ func runPolicyCommand(args []string) error {
 }
 
 func runContextCommand(args []string) error {
-	if len(args) > 1 || (len(args) == 1 && args[0] != "list") {
-		return fmt.Errorf("usage: gitclaw context [list]")
-	}
 	cfg, err := LoadEffectiveConfig()
 	if err != nil {
 		return err
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
-	if err != nil {
-		return err
+	if len(args) == 0 || (len(args) == 1 && args[0] == "list") {
+		repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+		if err != nil {
+			return err
+		}
+		fmt.Println(RenderContextCLIReport(cfg, repoContext))
+		return nil
 	}
-	fmt.Println(RenderContextCLIReport(cfg, repoContext))
-	return nil
+	if len(args) >= 2 && args[0] == "info" {
+		path := cleanContextLookupPath(strings.Join(args[1:], " "))
+		if path == "" {
+			return fmt.Errorf("usage: gitclaw context info <path>")
+		}
+		repoContext, err := LoadRepoContext(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "context info " + path}})
+		if err != nil {
+			return err
+		}
+		report := RenderContextInfoCLIReport(cfg, repoContext, path)
+		fmt.Println(report)
+		if len(BuildContextInfoMatches(repoContext, path)) == 0 {
+			return fmt.Errorf("context %q not found", path)
+		}
+		return nil
+	}
+	return fmt.Errorf("usage: gitclaw context [list|info <path>]")
 }
 
 func runPromptCommand(args []string) error {

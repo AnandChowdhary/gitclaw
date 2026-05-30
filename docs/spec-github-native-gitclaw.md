@@ -1206,6 +1206,7 @@ OpenClaw's `/context` diagnostics:
 ```text
 @gitclaw /context
 @gitclaw /context list
+@gitclaw /context info <path>
 ```
 
 The command runs after normal preflight authorization and context assembly, but
@@ -1221,16 +1222,30 @@ It never dumps full file bodies, skill bodies, prompts, or tool output contents
 into the issue. This makes context visibility cheap enough for routine E2E
 debugging and avoids burning GitHub Models quota for a diagnostic turn.
 
+When called as `@gitclaw /context info <path>`, the command posts a focused
+body-free card for one requested context item. The lookup covers loaded context
+documents, selected skill documents, deterministic `gitclaw.read_file` outputs
+for explicitly mentioned repository files, and active tool outputs addressed by
+tool name. It reports only the matched kind, path/tool name, byte/line counts,
+short hashes, match source, and safety flags. It never emits raw file bodies,
+skill bodies, tool output bodies, raw tool inputs, issue/comment bodies, prompts,
+or secrets.
+
 Local operators can inspect the same repository context surface without opening
 an issue:
 
 ```bash
 gitclaw context list
+gitclaw context info .gitclaw/SOUL.md
+gitclaw context info go.mod
 ```
 
 The local report omits repository and issue metadata, reports zero transcript
 messages, and lists body-free context files, selected always-on skills, and
-deterministic tool-output metadata with short hashes.
+deterministic tool-output metadata with short hashes. The focused local
+`context info` variant seeds context assembly with the requested path, so
+ordinary repository files can be inspected through the same body-free
+`gitclaw.read_file` metadata that would be prompt-visible in an issue turn.
 
 ## Prompt Inspection Command
 
@@ -3188,6 +3203,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven context-list E2E harness verifies `@gitclaw /context list` is
   an explicit report alias, while local `gitclaw context list` exposes the same
   body-free repository context metadata without issue-only fields.
+- A `gh`-driven context-info E2E harness verifies `@gitclaw /context info
+  .gitclaw/SOUL.md` returns exactly one focused, body-free context card, while
+  local `gitclaw context info <path>` covers both loaded context documents and
+  repo files surfaced through deterministic `gitclaw.read_file` metadata.
 - A `gh`-driven prompt-report E2E harness verifies `@gitclaw /prompt`
   produces a deterministic prompt budget, hash, truncation, context, and tool
   metadata report without a model call or prompt/body leakage.

@@ -733,6 +733,12 @@ body-free context file metadata, selected always-on skills, deterministic tool
 output input/size/hash metadata, and prompt budget settings, with no file,
 skill, prompt, or tool-output bodies.
 
+2026-05-30 context-info follow-up: OpenClaw-style context debugging benefits
+from focused cards, not just inventories. Add `@gitclaw /context info <path>`
+and `gitclaw context info <path>` so maintainers can inspect one loaded context
+file, selected skill document, or deterministic read-file output by path/name
+with only kind, path/tool metadata, byte/line counts, and short hashes.
+
 2026-05-30 prompt-list follow-up: prompt-budget visibility should also be
 available before opening an issue. Add `gitclaw prompt list` as the local
 mirror of `/prompt`: provider/model, prompt size/hash, configured budgets,
