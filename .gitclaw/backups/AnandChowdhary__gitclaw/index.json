@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-30T15:42:28Z",
+  "generated_at": "2026-05-30T15:43:40Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 258,
   "issues": [
@@ -3143,13 +3143,14 @@
       "number": 295,
       "title": "@gitclaw /soul risk e2e 20260530T154122Z",
       "path": "issues/000295.json",
-      "backup_generated_at": "2026-05-30T15:42:27Z",
-      "event_name": "issues",
+      "backup_generated_at": "2026-05-30T15:43:38Z",
+      "event_name": "issue_comment",
       "labels": [
-        "gitclaw"
+        "gitclaw",
+        "gitclaw:done"
       ],
-      "comment_count": 1,
-      "transcript_messages": 2
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
