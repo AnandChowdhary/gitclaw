@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T16:12:50Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 297,
+    "title": "@gitclaw /channels risk e2e 20260530T161148Z",
+    "body": "@gitclaw /channels risk\n\nLive channels-risk E2E.\nDo not include this hidden issue token: GITCLAW_CHANNELS_RISK_HIDDEN_20260530T161148Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels risk e2e 20260530T161148Z\n\n@gitclaw /channels risk\n\nLive channels-risk E2E.\nDo not include this hidden issue token: GITCLAW_CHANNELS_RISK_HIDDEN_20260530T161148Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#297`\n- channel_risk_status: `ok`\n- verification_scope: `workflow_dispatch_channel_bridge`\n- supported_providers: `3`\n- scanned_providers: `3`\n- scanned_workflows: `4`\n- present_workflows: `4`\n- channel_message_comments: `0`\n- channel_message_comments_scanned: `0`\n- surfaces_with_risk_findings: `0`\n- channel_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- wake_strategy: `workflow_dispatch`\n- state_storage: `gitclaw:channel-state issue`\n- gateway_runtime: `GitHub Actions workflow_dispatch`\n- raw_bodies_included: `false`\n- raw_workflow_bodies_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_channel_risk_change: `true`\n- channel_thread_issue: `false`\n- issue_title_sha256_12: `4b3fd9b34beb`\n\nThis report scans the GitHub-native Slack/Telegram channel bridge for workflow-dispatch control risks and prompt-visible mirrored channel-message risk. It reports provider names, workflow metadata, comment IDs, counts, risk codes, severities, and hashes only; channel message bodies, issue bodies, workflow bodies, prompts, provider credentials, and secret values are not included.\n\n### Provider Risk Cards\n- kind=`provider` name=`telegram` ingress=`getUpdates polling or long-running gateway lease` gateway=`self-renewing GitHub Actions gateway with durable offset hashes` offset_key=`update_id` thread_key=`chat_id` message_key=`update_id or message_id` required_secret_names=`TELEGRAM_BOT_TOKEN` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n- kind=`provider` name=`slack` ingress=`Socket Mode gateway or low-volume conversations polling` gateway=`self-renewing GitHub Actions gateway with durable event hashes` offset_key=`event_id or channel timestamp` thread_key=`channel_id + thread_ts` message_key=`event_id or message timestamp` required_secret_names=`SLACK_APP_TOKEN, SLACK_BOT_TOKEN` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n- kind=`provider` name=`generic` ingress=`manual workflow_dispatch or tiny external dispatcher` gateway=`optional; external caller can invoke channel-ingest directly` offset_key=`external offset` thread_key=`thread_id` message_key=`message_id` required_secret_names=`none` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Workflow Risk Cards\n- kind=`workflow` name=`ingest` path=`.github/workflows/gitclaw-channel-ingest.yml` present=`true` workflow_dispatch=`true` actions_write=`true` issues_write=`true` inputs=`5` required_inputs=`5` sha256_12=`1b1cde85c6b0` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`workflow` name=`state` path=`.github/workflows/gitclaw-channel-state.yml` present=`true` workflow_dispatch=`true` actions_write=`false` issues_write=`true` inputs=`4` required_inputs=`4` sha256_12=`7be973bbc095` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`workflow` name=`gateway` path=`.github/workflows/gitclaw-channel-gateway.yml` present=`true` workflow_dispatch=`true` actions_write=`true` issues_write=`true` inputs=`6` required_inputs=`6` sha256_12=`6b46ecf0a6b4` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`workflow` name=`delivery` path=`.github/workflows/gitclaw-channel-delivery.yml` present=`true` workflow_dispatch=`true` actions_write=`false` issues_write=`true` inputs=`6` required_inputs=`6` sha256_12=`33be09897bc2` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Channel Message Risk Cards\n- kind=`channel-message` none\n\n### Risk Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4583386354,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4583386354,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26688612971\" event_id=\"issue-297\" model=\"gitclaw/channels\" idempotency_key=\"bc36e749bd03bfd4c8826b0464dac72c\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26688612971\" --\u003e\n## GitClaw Channel Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#297`\n- channel_risk_status: `ok`\n- verification_scope: `workflow_dispatch_channel_bridge`\n- supported_providers: `3`\n- scanned_providers: `3`\n- scanned_workflows: `4`\n- present_workflows: `4`\n- channel_message_comments: `0`\n- channel_message_comments_scanned: `0`\n- surfaces_with_risk_findings: `0`\n- channel_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- wake_strategy: `workflow_dispatch`\n- state_storage: `gitclaw:channel-state issue`\n- gateway_runtime: `GitHub Actions workflow_dispatch`\n- raw_bodies_included: `false`\n- raw_workflow_bodies_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_channel_risk_change: `true`\n- channel_thread_issue: `false`\n- issue_title_sha256_12: `4b3fd9b34beb`\n\nThis report scans the GitHub-native Slack/Telegram channel bridge for workflow-dispatch control risks and prompt-visible mirrored channel-message risk. It reports provider names, workflow metadata, comment IDs, counts, risk codes, severities, and hashes only; channel message bodies, issue bodies, workflow bodies, prompts, provider credentials, and secret values are not included.\n\n### Provider Risk Cards\n- kind=`provider` name=`telegram` ingress=`getUpdates polling or long-running gateway lease` gateway=`self-renewing GitHub Actions gateway with durable offset hashes` offset_key=`update_id` thread_key=`chat_id` message_key=`update_id or message_id` required_secret_names=`TELEGRAM_BOT_TOKEN` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n- kind=`provider` name=`slack` ingress=`Socket Mode gateway or low-volume conversations polling` gateway=`self-renewing GitHub Actions gateway with durable event hashes` offset_key=`event_id or channel timestamp` thread_key=`channel_id + thread_ts` message_key=`event_id or message timestamp` required_secret_names=`SLACK_APP_TOKEN, SLACK_BOT_TOKEN` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n- kind=`provider` name=`generic` ingress=`manual workflow_dispatch or tiny external dispatcher` gateway=`optional; external caller can invoke channel-ingest directly` offset_key=`external offset` thread_key=`thread_id` message_key=`message_id` required_secret_names=`none` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Workflow Risk Cards\n- kind=`workflow` name=`ingest` path=`.github/workflows/gitclaw-channel-ingest.yml` present=`true` workflow_dispatch=`true` actions_write=`true` issues_write=`true` inputs=`5` required_inputs=`5` sha256_12=`1b1cde85c6b0` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`workflow` name=`state` path=`.github/workflows/gitclaw-channel-state.yml` present=`true` workflow_dispatch=`true` actions_write=`false` issues_write=`true` inputs=`4` required_inputs=`4` sha256_12=`7be973bbc095` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`workflow` name=`gateway` path=`.github/workflows/gitclaw-channel-gateway.yml` present=`true` workflow_dispatch=`true` actions_write=`true` issues_write=`true` inputs=`6` required_inputs=`6` sha256_12=`6b46ecf0a6b4` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n- kind=`workflow` name=`delivery` path=`.github/workflows/gitclaw-channel-delivery.yml` present=`true` workflow_dispatch=`true` actions_write=`false` issues_write=`true` inputs=`6` required_inputs=`6` sha256_12=`33be09897bc2` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` line_hashes=`none`\n\n### Channel Message Risk Cards\n- kind=`channel-message` none\n\n### Risk Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T16:12:30Z",
+      "updated_at": "2026-05-30T16:12:30Z"
+    }
+  ]
+}
