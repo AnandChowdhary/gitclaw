@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-30T19:40:09Z",
+  "generated_at": "2026-05-30T19:50:07Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 275,
+  "count": 276,
   "issues": [
     {
       "number": 3,
@@ -3371,6 +3371,18 @@
       ],
       "comment_count": 3,
       "transcript_messages": 4
+    },
+    {
+      "number": 313,
+      "title": "@gitclaw session risk e2e 20260530T194902Z",
+      "path": "issues/000313.json",
+      "backup_generated_at": "2026-05-30T19:50:06Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }
