@@ -164,13 +164,62 @@ SECRET_SKILLS_LIST_CLI_BODY
 			t.Fatalf("skills list returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Skills Report", "scope: `local-cli`", "available_skills: `1`", "selected_skills: `0`", "skills_with_frontmatter: `1`", "skills_with_description: `1`", "skill_validation_status: `ok`", "### Available Skills", "name=`repo-reader`", ".gitclaw/SKILLS/repo-reader/SKILL.md", "description=`Use read-only repository context.`", "sha256_12=", "### Selected For This Turn", "- none"} {
+	for _, want := range []string{"GitClaw Skills Report", "scope: `local-cli`", "available_skills: `1`", "enabled_skills: `1`", "disabled_skills: `0`", "allowlist_blocked_skills: `0`", "selected_skills: `0`", "skills_with_frontmatter: `1`", "skills_with_description: `1`", "skill_validation_status: `ok`", "### Available Skills", "name=`repo-reader`", "enabled=`true`", ".gitclaw/SKILLS/repo-reader/SKILL.md", "description=`Use read-only repository context.`", "sha256_12=", "### Selected For This Turn", "- none"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("skills list output missing %q:\n%s", want, output)
 		}
 	}
 	if strings.Contains(output, "SECRET_SKILLS_LIST_CLI_BODY") {
 		t.Fatalf("skills list leaked skill body:\n%s", output)
+	}
+}
+
+func TestSkillsListCommandHonorsConfiguredSkillGates(t *testing.T) {
+	dir := t.TempDir()
+	writeTestFile(t, dir, ".gitclaw/config.yml", `skills:
+  allowed:
+    - repo-reader
+  disabled:
+    - always-on
+`)
+	writeTestFile(t, dir, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Use read-only repository context.
+---
+
+SECRET_ENABLED_SKILL_BODY
+`)
+	writeTestFile(t, dir, ".gitclaw/SKILLS/always-on/SKILL.md", `---
+name: always-on
+description: Always loaded.
+always: true
+---
+
+SECRET_DISABLED_SKILL_BODY
+`)
+	writeTestFile(t, dir, ".gitclaw/SKILLS/blocked/SKILL.md", `---
+name: blocked
+description: Blocked by allowlist.
+always: true
+---
+
+SECRET_BLOCKED_SKILL_BODY
+`)
+	t.Setenv("GITCLAW_WORKDIR", dir)
+	output := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"skills", "list"}); err != nil {
+			t.Fatalf("skills list returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"available_skills: `3`", "enabled_skills: `1`", "disabled_skills: `1`", "allowlist_blocked_skills: `1`", "selected_skills: `0`", "name=`repo-reader`", "enabled=`true`", "name=`always-on`", "disabled_by_config=`true`", "name=`blocked`", "blocked_by_allowlist=`true`", "skill_validation_status: `ok`"} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("skills list output missing %q:\n%s", want, output)
+		}
+	}
+	for _, leaked := range []string{"SECRET_ENABLED_SKILL_BODY", "SECRET_DISABLED_SKILL_BODY", "SECRET_BLOCKED_SKILL_BODY"} {
+		if strings.Contains(output, leaked) {
+			t.Fatalf("skills list leaked %q:\n%s", leaked, output)
+		}
 	}
 }
 
@@ -771,7 +820,7 @@ model:
 			t.Fatalf("config list returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Config Report", "scope: `local-cli`", "Generated without a model call", "config_source: `defaults+repo+environment`", "config_file_path: `.gitclaw/config.yml`", "config_file_present: `true`", "trigger_label: `gitclaw`", "trigger_prefix: `@gitclaw`", "disabled_label: `gitclaw:disabled`", "model: `openai/gpt-5-mini`", "run_mode: `read-only`", "max_prompt_bytes: `60000`", "max_output_tokens: `4000`", "max_transcript_messages: `40`", "max_transcript_message_bytes: `8000`", "workflows_present: `2`", "slash_commands: `15`", "OWNER", "COLLABORATOR", "gitclaw:disabled", "/channels", "/config", "/models", ".gitclaw/config.yml", ".github/workflows/gitclaw.yml", ".github/workflows/gitclaw-heartbeat.yml", "sha256_12="} {
+	for _, want := range []string{"GitClaw Config Report", "scope: `local-cli`", "Generated without a model call", "config_source: `defaults+repo+environment`", "config_file_path: `.gitclaw/config.yml`", "config_file_present: `true`", "trigger_label: `gitclaw`", "trigger_prefix: `@gitclaw`", "disabled_label: `gitclaw:disabled`", "model: `openai/gpt-5-mini`", "run_mode: `read-only`", "max_prompt_bytes: `60000`", "max_output_tokens: `4000`", "max_transcript_messages: `40`", "max_transcript_message_bytes: `8000`", "skills_allowed_configured: `0`", "skills_disabled_configured: `0`", "workflows_present: `2`", "slash_commands: `15`", "### Skill Gates", "allowed=`none`", "disabled=`none`", "OWNER", "COLLABORATOR", "gitclaw:disabled", "/channels", "/config", "/models", ".gitclaw/config.yml", ".github/workflows/gitclaw.yml", ".github/workflows/gitclaw-heartbeat.yml", "sha256_12="} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("config list output missing %q:\n%s", want, output)
 		}
@@ -1076,7 +1125,7 @@ SKILL_DOCTOR_LIST_SECRET
 			t.Fatalf("doctor list returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Doctor Report", "scope: `local-cli`", "Generated without a model call", "health_status: `ok`", "config_source: `defaults+repo+environment`", "config_valid: `true`", "config_file_present: `true`", "model: `openai/gpt-5-mini`", "run_mode: `read-only`", "workflows_present: `7`", "context_files_present: `6`", "memory_notes: `1`", "skill_files: `1`", "proactive_prompt_files: `1`", "managed_labels: `9`", "validation_errors: `0`", "validation_warnings: `0`", "skill_validation_status: `ok`", "soul_validation_status: `ok`", "memory_validation_status: `ok`", "tool_validation_status: `ok`", "`config_validation`: `ok`", "`workflow_set`: `ok`", "`identity_context`: `ok`", "`local_skills`: `ok`", "`proactive_prompt`: `ok`", ".gitclaw/config.yml", ".github/workflows/gitclaw.yml", ".gitclaw/SOUL.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", ".gitclaw/proactive/repo-hygiene.md", "sha256_12="} {
+	for _, want := range []string{"GitClaw Doctor Report", "scope: `local-cli`", "Generated without a model call", "health_status: `ok`", "config_source: `defaults+repo+environment`", "config_valid: `true`", "config_file_present: `true`", "model: `openai/gpt-5-mini`", "run_mode: `read-only`", "workflows_present: `7`", "context_files_present: `6`", "memory_notes: `1`", "skill_files: `1`", "enabled_skills: `1`", "disabled_skills: `0`", "allowlist_blocked_skills: `0`", "proactive_prompt_files: `1`", "managed_labels: `9`", "validation_errors: `0`", "validation_warnings: `0`", "skill_validation_status: `ok`", "soul_validation_status: `ok`", "memory_validation_status: `ok`", "tool_validation_status: `ok`", "`config_validation`: `ok`", "`workflow_set`: `ok`", "`identity_context`: `ok`", "`local_skills`: `ok`", "`proactive_prompt`: `ok`", ".gitclaw/config.yml", ".github/workflows/gitclaw.yml", ".gitclaw/SOUL.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", ".gitclaw/proactive/repo-hygiene.md", "sha256_12="} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("doctor list output missing %q:\n%s", want, output)
 		}

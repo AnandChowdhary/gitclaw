@@ -147,8 +147,13 @@ for expected in \
   'max_output_tokens: `4000`' \
   'max_transcript_messages: `40`' \
   'max_transcript_message_bytes: `8000`' \
+  'skills_allowed_configured: `0`' \
+  'skills_disabled_configured: `0`' \
   'workflows_present: `7`' \
   'slash_commands: `15`' \
+  '### Skill Gates' \
+  'allowed=`none`' \
+  'disabled=`none`' \
   'OWNER' \
   'MEMBER' \
   'COLLABORATOR' \

@@ -9,6 +9,9 @@ type SkillVerifyReport struct {
 	Status                    string
 	Skills                    int
 	Validation                SkillValidationReport
+	EnabledSkills             int
+	DisabledSkills            int
+	AllowlistBlockedSkills    int
 	RepoLocalSkills           int
 	CompatRootSkills          int
 	UnknownSourceSkills       int
@@ -30,6 +33,15 @@ func BuildSkillVerifyReport(skills []SkillSummary) SkillVerifyReport {
 		RawBodiesIncluded:    false,
 	}
 	for _, skill := range skills {
+		if skillIsEnabled(skill) {
+			report.EnabledSkills++
+		}
+		if skill.DisabledByConfig {
+			report.DisabledSkills++
+		}
+		if skill.BlockedByAllowlist {
+			report.AllowlistBlockedSkills++
+		}
 		switch skillTrustSource(skill.Path) {
 		case "repo-local":
 			report.RepoLocalSkills++
@@ -44,7 +56,7 @@ func BuildSkillVerifyReport(skills []SkillSummary) SkillVerifyReport {
 		if len(skill.RequiredEnv) > 0 || len(skill.RequiredBins) > 0 {
 			report.SkillsWithRequirements++
 		}
-		if len(skill.MissingEnv) > 0 || len(skill.MissingBins) > 0 {
+		if skillIsEnabled(skill) && (len(skill.MissingEnv) > 0 || len(skill.MissingBins) > 0) {
 			report.SkillsMissingRequirements++
 		}
 	}
@@ -72,6 +84,9 @@ func renderSkillsVerifyReport(ev Event, repoContext RepoContext, includeIssue bo
 	fmt.Fprintf(&b, "- skill_verify_status: `%s`\n", report.Status)
 	fmt.Fprintf(&b, "- verification_scope: `%s`\n", "repo-local-metadata")
 	fmt.Fprintf(&b, "- available_skills: `%d`\n", report.Skills)
+	fmt.Fprintf(&b, "- enabled_skills: `%d`\n", report.EnabledSkills)
+	fmt.Fprintf(&b, "- disabled_skills: `%d`\n", report.DisabledSkills)
+	fmt.Fprintf(&b, "- allowlist_blocked_skills: `%d`\n", report.AllowlistBlockedSkills)
 	fmt.Fprintf(&b, "- repo_local_skills: `%d`\n", report.RepoLocalSkills)
 	fmt.Fprintf(&b, "- compat_root_skills: `%d`\n", report.CompatRootSkills)
 	fmt.Fprintf(&b, "- unknown_source_skills: `%d`\n", report.UnknownSourceSkills)
@@ -100,10 +115,13 @@ func renderSkillsVerifyReport(ev Event, repoContext RepoContext, includeIssue bo
 }
 
 func writeSkillTrustCard(b *strings.Builder, skill SkillSummary) {
-	fmt.Fprintf(b, "- name=`%s` path=`%s` source=`%s` frontmatter=`%t` description=`%t` sha256_12=`%s` requirements=`%s` requires_env=`%d` requires_bins=`%d` missing_env=`%d` missing_bins=`%d`\n",
+	fmt.Fprintf(b, "- name=`%s` path=`%s` source=`%s` enabled=`%t` disabled_by_config=`%t` blocked_by_allowlist=`%t` frontmatter=`%t` description=`%t` sha256_12=`%s` requirements=`%s` requires_env=`%d` requires_bins=`%d` missing_env=`%d` missing_bins=`%d`\n",
 		inlineCode(skill.Name),
 		skill.Path,
 		skillTrustSource(skill.Path),
+		skillIsEnabled(skill),
+		skill.DisabledByConfig,
+		skill.BlockedByAllowlist,
 		skill.FrontmatterPresent,
 		strings.TrimSpace(skill.Description) != "",
 		skill.SHA,
@@ -146,6 +164,9 @@ func skillTrustSource(path string) string {
 }
 
 func skillRequirementStatus(skill SkillSummary) string {
+	if !skillIsEnabled(skill) {
+		return "gated"
+	}
 	if len(skill.MissingEnv) > 0 || len(skill.MissingBins) > 0 {
 		return "missing"
 	}

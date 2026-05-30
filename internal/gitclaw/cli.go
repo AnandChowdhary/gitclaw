@@ -93,7 +93,7 @@ func runMemoryVerifyCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
 	if err != nil {
 		return err
 	}
@@ -109,7 +109,7 @@ func runMemoryListCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
 	if err != nil {
 		return err
 	}
@@ -154,7 +154,7 @@ func runMemorySearchCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "memory search " + query}})
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "memory search " + query}}, cfg)
 	if err != nil {
 		return err
 	}
@@ -170,7 +170,7 @@ func runMemoryValidateCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
 	if err != nil {
 		return err
 	}
@@ -204,7 +204,7 @@ func runSoulVerifyCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
 	if err != nil {
 		return err
 	}
@@ -220,7 +220,7 @@ func runSoulListCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
 	if err != nil {
 		return err
 	}
@@ -265,7 +265,7 @@ func runSoulSearchCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "soul search " + query}})
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "soul search " + query}}, cfg)
 	if err != nil {
 		return err
 	}
@@ -281,7 +281,7 @@ func runSoulValidateCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
 	if err != nil {
 		return err
 	}
@@ -373,7 +373,7 @@ func runPolicyCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
 	if err != nil {
 		return err
 	}
@@ -391,7 +391,7 @@ func runContextCommand(args []string) error {
 		return err
 	}
 	if len(args) == 0 || (len(args) == 1 && args[0] == "list") {
-		repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+		repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
 		if err != nil {
 			return err
 		}
@@ -403,7 +403,7 @@ func runContextCommand(args []string) error {
 		if path == "" {
 			return fmt.Errorf("usage: gitclaw context info <path>")
 		}
-		repoContext, err := LoadRepoContext(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "context info " + path}})
+		repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "context info " + path}}, cfg)
 		if err != nil {
 			return err
 		}
@@ -425,7 +425,7 @@ func runPromptCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
 	if err != nil {
 		return err
 	}
@@ -538,7 +538,7 @@ func runToolsVerifyCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
 	if err != nil {
 		return err
 	}
@@ -554,7 +554,7 @@ func runToolsListCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
 	if err != nil {
 		return err
 	}
@@ -570,7 +570,7 @@ func runToolsInfoCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "tools info " + args[0]}})
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "tools info " + args[0]}}, cfg)
 	if err != nil {
 		return err
 	}
@@ -619,7 +619,7 @@ func runToolsSearchCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "tools search " + query}})
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "tools search " + query}}, cfg)
 	if err != nil {
 		return err
 	}
@@ -635,7 +635,7 @@ func runToolsValidateCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
 	if err != nil {
 		return err
 	}
@@ -651,7 +651,7 @@ func runDoctorCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
 	if err != nil {
 		return err
 	}
@@ -687,7 +687,7 @@ func runSkillsVerifyCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
 	if err != nil {
 		return err
 	}
@@ -703,7 +703,7 @@ func runSkillsListCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
 	if err != nil {
 		return err
 	}
@@ -720,7 +720,7 @@ func runSkillsSearchCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "skills search " + query}})
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "skills search " + query}}, cfg)
 	if err != nil {
 		return err
 	}
@@ -736,7 +736,7 @@ func runSkillsInfoCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "skills info " + args[0]}})
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "skills info " + args[0]}}, cfg)
 	if err != nil {
 		return err
 	}
@@ -756,7 +756,7 @@ func runSkillsValidateCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, nil)
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
 	if err != nil {
 		return err
 	}

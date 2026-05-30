@@ -72,6 +72,8 @@ func renderConfigReport(ev Event, cfg Config, includeIssue bool) string {
 	fmt.Fprintf(&b, "- max_output_tokens: `%d`\n", cfg.MaxOutputTokens)
 	fmt.Fprintf(&b, "- max_transcript_messages: `%d`\n", cfg.MaxTranscriptMessages)
 	fmt.Fprintf(&b, "- max_transcript_message_bytes: `%d`\n", cfg.MaxTranscriptMessageBytes)
+	fmt.Fprintf(&b, "- skills_allowed_configured: `%d`\n", len(cfg.AllowedSkills))
+	fmt.Fprintf(&b, "- skills_disabled_configured: `%d`\n", len(cfg.DisabledSkills))
 	fmt.Fprintf(&b, "- workflows_present: `%d`\n", countPresentConfigFiles(surface.Workflows))
 	fmt.Fprintf(&b, "- slash_commands: `%d`\n", len(configSlashCommands))
 	if includeIssue {
@@ -95,6 +97,10 @@ func renderConfigReport(ev Event, cfg Config, includeIssue bool) string {
 		fmt.Fprintf(&b, "- `%s`\n", command)
 	}
 
+	b.WriteString("\n### Skill Gates\n")
+	writeConfigSkillGateList(&b, "allowed", cfg.AllowedSkills)
+	writeConfigSkillGateList(&b, "disabled", cfg.DisabledSkills)
+
 	b.WriteString("\n### Config File\n")
 	writeConfigSurfaceFile(&b, surface.ConfigFile)
 
@@ -104,6 +110,19 @@ func renderConfigReport(ev Event, cfg Config, includeIssue bool) string {
 	}
 
 	return strings.TrimSpace(b.String())
+}
+
+func writeConfigSkillGateList(b *strings.Builder, label string, values map[string]bool) {
+	if len(values) == 0 {
+		fmt.Fprintf(b, "- %s=`none`\n", label)
+		return
+	}
+	names := make([]string, 0, len(values))
+	for name := range values {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	fmt.Fprintf(b, "- %s=`%s`\n", label, inlineList(names))
 }
 
 func configSource(cfg Config) string {

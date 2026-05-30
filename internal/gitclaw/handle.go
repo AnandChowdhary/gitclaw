@@ -33,7 +33,7 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 	if writeRequested {
 		status.SetWriteRequested()
 	}
-	repoContext, err := LoadRepoContext(cfg.Workdir, transcript)
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, transcript, cfg)
 	if err != nil {
 		return failStartedTurn(ctx, cfg, github, ev, status, "context", fmt.Errorf("load repo context: %w", err))
 	}

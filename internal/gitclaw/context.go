@@ -38,6 +38,10 @@ var contextDocumentPaths = []string{
 }
 
 func LoadRepoContext(root string, transcript []TranscriptMessage) (RepoContext, error) {
+	return LoadRepoContextWithConfig(root, transcript, Config{})
+}
+
+func LoadRepoContextWithConfig(root string, transcript []TranscriptMessage, cfg Config) (RepoContext, error) {
 	if root == "" {
 		root = "."
 	}
@@ -59,7 +63,7 @@ func LoadRepoContext(root string, transcript []TranscriptMessage) (RepoContext, 
 	}
 	documents := loadContextDocuments(absRoot, contextDocumentPaths)
 	documents = append(documents, loadMemoryDocuments(absRoot)...)
-	skillSummaries, skills := loadSkillContext(absRoot, transcript)
+	skillSummaries, skills := loadSkillContext(absRoot, transcript, cfg)
 	ctx := RepoContext{
 		Documents:      documents,
 		Skills:         skills,
@@ -134,7 +138,7 @@ func loadContextDocuments(root string, paths []string) []ContextDocument {
 	return docs
 }
 
-func loadSkillContext(root string, transcript []TranscriptMessage) ([]SkillSummary, []ContextDocument) {
+func loadSkillContext(root string, transcript []TranscriptMessage, cfg Config) ([]SkillSummary, []ContextDocument) {
 	available := discoverSkills(root)
 	if len(available) == 0 {
 		return nil, nil
@@ -143,11 +147,15 @@ func loadSkillContext(root string, transcript []TranscriptMessage) ([]SkillSumma
 	summaries := make([]SkillSummary, 0, len(available))
 	selected := make([]ContextDocument, 0, len(available))
 	for _, skill := range available {
+		enabled, disabledByConfig, blockedByAllowlist := skillEnabledByConfig(skill, cfg)
 		summaries = append(summaries, SkillSummary{
 			Name:               skill.Name,
 			Description:        skill.Description,
 			Path:               skill.Path,
 			Always:             skill.Always,
+			Enabled:            enabled,
+			DisabledByConfig:   disabledByConfig,
+			BlockedByAllowlist: blockedByAllowlist,
 			FrontmatterPresent: skill.FrontmatterPresent,
 			Bytes:              len(skill.Body),
 			Lines:              lineCount(skill.Body),
@@ -157,11 +165,36 @@ func loadSkillContext(root string, transcript []TranscriptMessage) ([]SkillSumma
 			MissingEnv:         missingEnvVars(skill.RequiredEnv),
 			MissingBins:        missingBins(skill.RequiredBins),
 		})
-		if skill.Always || skillMatchesQuery(skill, query) {
+		if enabled && (skill.Always || skillMatchesQuery(skill, query)) {
 			selected = append(selected, ContextDocument{Path: skill.Path, Body: skill.Body})
 		}
 	}
 	return summaries, selected
+}
+
+func skillEnabledByConfig(skill skillDocument, cfg Config) (enabled bool, disabledByConfig bool, blockedByAllowlist bool) {
+	name := strings.ToLower(strings.TrimSpace(skill.Name))
+	folder := strings.ToLower(skillFolderName(skill.Path))
+	if skillNameInSet(cfg.DisabledSkills, name, folder) {
+		return false, true, false
+	}
+	if len(cfg.AllowedSkills) > 0 && !skillNameInSet(cfg.AllowedSkills, name, folder) {
+		return false, false, true
+	}
+	return true, false, false
+}
+
+func skillNameInSet(values map[string]bool, candidates ...string) bool {
+	if len(values) == 0 {
+		return false
+	}
+	for _, candidate := range candidates {
+		candidate = strings.ToLower(strings.TrimSpace(candidate))
+		if candidate != "" && values[candidate] {
+			return true
+		}
+	}
+	return false
 }
 
 type skillDocument struct {
@@ -423,9 +456,12 @@ func isStopWord(value string) bool {
 func renderSkillIndex(skills []SkillSummary) string {
 	var b strings.Builder
 	for _, skill := range skills {
-		fmt.Fprintf(&b, "- name=%s path=%s always=%t frontmatter=%t description=%t bytes=%d lines=%d sha256_12=%s requires_env=%d requires_bins=%d missing_env=%d missing_bins=%d",
+		fmt.Fprintf(&b, "- name=%s path=%s enabled=%t disabled_by_config=%t blocked_by_allowlist=%t always=%t frontmatter=%t description=%t bytes=%d lines=%d sha256_12=%s requires_env=%d requires_bins=%d missing_env=%d missing_bins=%d",
 			skill.Name,
 			skill.Path,
+			skill.Enabled,
+			skill.DisabledByConfig,
+			skill.BlockedByAllowlist,
 			skill.Always,
 			skill.FrontmatterPresent,
 			strings.TrimSpace(skill.Description) != "",

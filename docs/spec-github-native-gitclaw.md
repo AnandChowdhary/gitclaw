@@ -900,12 +900,31 @@ metadata:
 
 GitClaw inserts a compact `gitclaw.skill_index` tool output listing all
 discovered local skills. The index includes only review metadata: path, byte
-and line counts, short hash, frontmatter/description presence, `always`, and
-counts of declared/missing runtime requirements. Full skill instructions are
+and line counts, short hash, frontmatter/description presence, configured gate
+state, `always`, and counts of declared/missing runtime requirements. Full skill
+instructions are
 loaded only when:
 
+- the skill is enabled by repo config,
 - the user mentions the skill name, folder, path, or relevant description terms;
 - the skill declares `always: true` or `metadata.openclaw.always: true`.
+
+Repo owners can gate skill loading without deleting reviewed skill files:
+
+```yaml
+skills:
+  allowed:
+    - repo-reader
+  disabled:
+    - deploy-helper
+```
+
+`skills.allowed` is an optional allowlist; if present, only those skill names or
+folder names can load into prompt context. `skills.disabled` is an optional
+denylist and wins over `skills.allowed`. Both lists accept lower hyphen-case
+skill names only. Disabled or allowlist-blocked skills remain visible in
+metadata reports and `gitclaw.skill_index`, but their full `SKILL.md` bodies are
+not selected even when `always: true` or explicitly mentioned.
 
 Remote skill installation, skill execution scripts, dependency installation,
 and agent-authored skill edits remain out of scope.
@@ -920,7 +939,7 @@ OpenClaw/AgentSkills:
 - `description` should be present,
 - leaf folder name should match the effective skill name,
 - duplicate effective names are warned about,
-- missing declared env/bin requirements are warned about.
+- missing declared env/bin requirements are warned about for enabled skills.
 
 Validation is visible in the `/skills` report and locally through:
 
@@ -962,8 +981,10 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 `model="gitclaw/skills"` and summarizes:
 
 - available local skills from git-tracked `SKILL.md` files,
+- enabled, config-disabled, and allowlist-blocked skill counts,
 - selected skills for the current issue/comment,
-- `always` activation state and frontmatter descriptions,
+- configured gate state, `always` activation state, and frontmatter
+  descriptions,
 - short hashes and size metadata for review,
 - declared env/bin requirement counts and whether any are missing.
 - validation status, error/warning counts, duplicate-name count, invalid-name
@@ -983,8 +1004,9 @@ compatibility aliases for the same validation-only report.
 
 When called as `@gitclaw /skills verify`, the command posts the repo-local
 skill trust envelope. It includes `verification_scope=repo-local-metadata`,
-source-root counts, per-skill trust cards with short body hashes, declared and
-missing requirement counts, and an explicit
+enabled/disabled/allowlist-blocked counts, source-root counts, per-skill trust
+cards with short body hashes, declared and missing requirement counts, and an
+explicit
 `registry_verification=not_configured` field. This mirrors OpenClaw's
 verification posture while preserving GitClaw's no-registry, no-installer MVP
 boundary.
@@ -995,7 +1017,8 @@ one skill's safe metadata:
 
 - requested name and match count,
 - path, folder, byte/line counts, and content hash,
-- whether the skill was selected for this turn,
+- enabled/disabled/allowlist-blocked state and whether the skill was selected
+  for this turn,
 - `always`, frontmatter, and description presence,
 - declared and missing env/bin requirement names/counts,
 - validation findings for matching skill files only.
@@ -1007,7 +1030,8 @@ issue-visible diagnostics never dump full skill bodies or secret values.
 When called as `@gitclaw /skills search <query>`, the command switches to
 body-safe metadata search. It searches skill names, leaf folders, paths, and
 frontmatter descriptions, then reports match counts, match fields, selection
-state, hashes, sizes, and requirement counts. The raw search query is
+state, configured gate state, hashes, sizes, and requirement counts. The raw
+search query is
 represented only by a short hash and term count because the query itself comes
 from issue text and may contain secrets.
 
@@ -1404,6 +1428,11 @@ model:
   max_input_tokens: 60000
   max_output_tokens: 4000
 
+skills:
+  allowed:
+    - repo-reader
+  disabled: []
+
 actions:
   mode: read_only
 ```
@@ -1431,6 +1460,8 @@ The first supported schema is deliberately narrow:
 - `model.max_output_tokens`,
 - `model.max_transcript_messages`,
 - `model.max_transcript_message_bytes`,
+- `skills.allowed`, optional lower hyphen-case skill allowlist,
+- `skills.disabled`, optional lower hyphen-case skill denylist,
 - `actions.mode`, which must currently be `read_only`.
 
 Unknown YAML fields are rejected. This mirrors OpenClaw's schema/validate
@@ -3232,13 +3263,15 @@ examples/workflows/gitclaw.yml
   verification non-goals without a model call.
 - A `gh`-driven skills-report E2E harness verifies `@gitclaw /skills`
   produces a deterministic local skill inventory with provenance and
-  requirement and validation metadata, without a model call.
+  requirement, config-gate, and validation metadata, without a model call.
 - A `gh`-driven skills-list E2E harness verifies `@gitclaw /skills list`
   is an explicit inventory alias with the same body-free skill metadata and
-  selected-skill provenance.
+  selected-skill provenance, including enabled/disabled/allowlist-blocked
+  counts.
 - A `gh`-driven skills-verify E2E harness verifies
   `@gitclaw /skills verify` exposes the repo-local skill trust envelope,
-  hashes, requirement status, and no-registry boundary without body leakage.
+  hashes, config-gate state, requirement status, and no-registry boundary
+  without body leakage.
 - A `gh`-driven skills-validate E2E harness verifies
   `@gitclaw /skills validate` and the OpenClaw-style
   `@gitclaw /skills check` alias expose the body-free validation report

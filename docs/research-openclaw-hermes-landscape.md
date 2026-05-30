@@ -739,6 +739,12 @@ and `gitclaw context info <path>` so maintainers can inspect one loaded context
 file, selected skill document, or deterministic read-file output by path/name
 with only kind, path/tool metadata, byte/line counts, and short hashes.
 
+2026-05-30 skill-gating follow-up: OpenClaw-style skill systems treat skill
+availability as policy, not only discovery. Add repo-reviewed
+`skills.allowed` and `skills.disabled` gates so local skills remain inspectable
+and hashable, but disabled or allowlist-blocked skill bodies never load into
+prompt context even when mentioned or marked always-on.
+
 2026-05-30 prompt-list follow-up: prompt-budget visibility should also be
 available before opening an issue. Add `gitclaw prompt list` as the local
 mirror of `/prompt`: provider/model, prompt size/hash, configured budgets,

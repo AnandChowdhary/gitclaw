@@ -97,6 +97,9 @@ func renderSkillsListReport(ev Event, repoContext RepoContext, includeIssue bool
 		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
 	}
 	fmt.Fprintf(&b, "- available_skills: `%d`\n", availableSkillCount(repoContext))
+	fmt.Fprintf(&b, "- enabled_skills: `%d`\n", enabledSkillCount(repoContext.SkillSummaries))
+	fmt.Fprintf(&b, "- disabled_skills: `%d`\n", disabledByConfigCount(repoContext.SkillSummaries))
+	fmt.Fprintf(&b, "- allowlist_blocked_skills: `%d`\n", blockedByAllowlistCount(repoContext.SkillSummaries))
 	fmt.Fprintf(&b, "- selected_skills: `%d`\n", len(repoContext.Skills))
 	fmt.Fprintf(&b, "- skills_with_frontmatter: `%d`\n", skillsWithFrontmatter(repoContext.SkillSummaries))
 	fmt.Fprintf(&b, "- skills_with_description: `%d`\n", skillsWithDescription(repoContext.SkillSummaries))
@@ -163,6 +166,7 @@ func renderSkillInfoReport(ev Event, repoContext RepoContext, name string, inclu
 	fmt.Fprintf(&b, "- requested_skill: `%s`\n", inlineCode(name))
 	fmt.Fprintf(&b, "- skill_info_status: `%s`\n", status)
 	fmt.Fprintf(&b, "- available_skills: `%d`\n", availableSkillCount(repoContext))
+	fmt.Fprintf(&b, "- enabled_skills: `%d`\n", enabledSkillCount(repoContext.SkillSummaries))
 	fmt.Fprintf(&b, "- matched_skills: `%d`\n", len(matches))
 	fmt.Fprintf(&b, "- run_mode: `%s`\n\n", "read-only")
 	b.WriteString("This report shows metadata for one local skill. Full `SKILL.md` bodies, issue bodies, comments, prompts, and secret values are not included.\n\n")
@@ -215,6 +219,7 @@ func renderSkillSearchReport(ev Event, repoContext RepoContext, query string, in
 	fmt.Fprintf(&b, "- query_sha256_12: `%s`\n", shortDocumentHash(query))
 	fmt.Fprintf(&b, "- query_terms: `%d`\n", len(skillSearchTerms(query)))
 	fmt.Fprintf(&b, "- available_skills: `%d`\n", availableSkillCount(repoContext))
+	fmt.Fprintf(&b, "- enabled_skills: `%d`\n", enabledSkillCount(repoContext.SkillSummaries))
 	fmt.Fprintf(&b, "- matched_skills: `%d`\n", len(results))
 	fmt.Fprintf(&b, "- run_mode: `%s`\n", "read-only")
 	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n\n", false)
@@ -387,10 +392,13 @@ func skillSelectedForTurn(repoContext RepoContext, skill SkillSummary) bool {
 }
 
 func writeSkillInfoSummary(b *strings.Builder, skill SkillSummary, selected bool) {
-	fmt.Fprintf(b, "- skill_name=`%s` path=`%s` folder=`%s` selected_for_this_turn=`%t` always=`%t` frontmatter=`%t` description=`%t` bytes=`%d` lines=`%d` sha256_12=`%s` requires_env=`%d` requires_bins=`%d` missing_env=`%d` missing_bins=`%d`",
+	fmt.Fprintf(b, "- skill_name=`%s` path=`%s` folder=`%s` enabled=`%t` disabled_by_config=`%t` blocked_by_allowlist=`%t` selected_for_this_turn=`%t` always=`%t` frontmatter=`%t` description=`%t` bytes=`%d` lines=`%d` sha256_12=`%s` requires_env=`%d` requires_bins=`%d` missing_env=`%d` missing_bins=`%d`",
 		inlineCode(skill.Name),
 		skill.Path,
 		skillFolderName(skill.Path),
+		skillIsEnabled(skill),
+		skill.DisabledByConfig,
+		skill.BlockedByAllowlist,
 		selected,
 		skill.Always,
 		skill.FrontmatterPresent,
@@ -423,11 +431,14 @@ func writeSkillInfoList(b *strings.Builder, label string, values []string) {
 
 func writeSkillSearchResult(b *strings.Builder, result SkillSearchResult, selected bool) {
 	skill := result.Skill
-	fmt.Fprintf(b, "- skill_name=`%s` path=`%s` folder=`%s` match_fields=`%s` selected_for_this_turn=`%t` always=`%t` frontmatter=`%t` description=`%t` bytes=`%d` lines=`%d` sha256_12=`%s` requires_env=`%d` requires_bins=`%d` missing_env=`%d` missing_bins=`%d`\n",
+	fmt.Fprintf(b, "- skill_name=`%s` path=`%s` folder=`%s` match_fields=`%s` enabled=`%t` disabled_by_config=`%t` blocked_by_allowlist=`%t` selected_for_this_turn=`%t` always=`%t` frontmatter=`%t` description=`%t` bytes=`%d` lines=`%d` sha256_12=`%s` requires_env=`%d` requires_bins=`%d` missing_env=`%d` missing_bins=`%d`\n",
 		inlineCode(skill.Name),
 		skill.Path,
 		skillFolderName(skill.Path),
 		inlineList(result.MatchFields),
+		skillIsEnabled(skill),
+		skill.DisabledByConfig,
+		skill.BlockedByAllowlist,
 		selected,
 		skill.Always,
 		skill.FrontmatterPresent,
@@ -465,9 +476,12 @@ func writeSkillInfoValidationFindings(b *strings.Builder, validation SkillValida
 }
 
 func writeSkillSummary(b *strings.Builder, skill SkillSummary) {
-	fmt.Fprintf(b, "- name=`%s` path=`%s` always=`%t` frontmatter=`%t` description=`%t` bytes=`%d` lines=`%d` sha256_12=`%s` requires_env=`%d` requires_bins=`%d` missing_env=`%d` missing_bins=`%d`",
+	fmt.Fprintf(b, "- name=`%s` path=`%s` enabled=`%t` disabled_by_config=`%t` blocked_by_allowlist=`%t` always=`%t` frontmatter=`%t` description=`%t` bytes=`%d` lines=`%d` sha256_12=`%s` requires_env=`%d` requires_bins=`%d` missing_env=`%d` missing_bins=`%d`",
 		inlineCode(skill.Name),
 		skill.Path,
+		skillIsEnabled(skill),
+		skill.DisabledByConfig,
+		skill.BlockedByAllowlist,
 		skill.Always,
 		skill.FrontmatterPresent,
 		strings.TrimSpace(skill.Description) != "",
@@ -515,6 +529,40 @@ func availableSkillCount(repoContext RepoContext) int {
 	return lineCount(index)
 }
 
+func enabledSkillCount(skills []SkillSummary) int {
+	count := 0
+	for _, skill := range skills {
+		if skillIsEnabled(skill) {
+			count++
+		}
+	}
+	return count
+}
+
+func skillIsEnabled(skill SkillSummary) bool {
+	return skill.Enabled || (!skill.DisabledByConfig && !skill.BlockedByAllowlist)
+}
+
+func disabledByConfigCount(skills []SkillSummary) int {
+	count := 0
+	for _, skill := range skills {
+		if skill.DisabledByConfig {
+			count++
+		}
+	}
+	return count
+}
+
+func blockedByAllowlistCount(skills []SkillSummary) int {
+	count := 0
+	for _, skill := range skills {
+		if skill.BlockedByAllowlist {
+			count++
+		}
+	}
+	return count
+}
+
 func skillsWithFrontmatter(skills []SkillSummary) int {
 	count := 0
 	for _, skill := range skills {
@@ -548,7 +596,7 @@ func skillsWithRequirements(skills []SkillSummary) int {
 func skillsMissingRequirements(skills []SkillSummary) int {
 	count := 0
 	for _, skill := range skills {
-		if len(skill.MissingEnv) > 0 || len(skill.MissingBins) > 0 {
+		if skillIsEnabled(skill) && (len(skill.MissingEnv) > 0 || len(skill.MissingBins) > 0) {
 			count++
 		}
 	}

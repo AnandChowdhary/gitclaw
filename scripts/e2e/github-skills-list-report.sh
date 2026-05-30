@@ -158,6 +158,9 @@ for expected in \
   "GitClaw Skills Report" \
   "Generated without a model call" \
   'available_skills: `1`' \
+  'enabled_skills: `1`' \
+  'disabled_skills: `0`' \
+  'allowlist_blocked_skills: `0`' \
   'selected_skills: `1`' \
   'skills_with_frontmatter: `1`' \
   'skills_with_description: `1`' \
@@ -175,6 +178,9 @@ for expected in \
   '- none' \
   'repo-reader' \
   '.gitclaw/SKILLS/repo-reader/SKILL.md' \
+  'enabled=`true`' \
+  'disabled_by_config=`false`' \
+  'blocked_by_allowlist=`false`' \
   'frontmatter=`true`' \
   'description=`true`' \
   'sha256_12=' \

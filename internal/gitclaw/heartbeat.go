@@ -84,7 +84,7 @@ func runIssueHeartbeat(ctx context.Context, cfg Config, github HeartbeatGitHubCl
 		Actor:   "gitclaw-heartbeat",
 		Trusted: true,
 	})
-	repoContext, err := LoadRepoContext(cfg.Workdir, transcript)
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, transcript, cfg)
 	if err != nil {
 		return false, fmt.Errorf("load heartbeat context: %w", err)
 	}

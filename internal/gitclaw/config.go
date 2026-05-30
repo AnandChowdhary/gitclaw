@@ -16,6 +16,7 @@ type fileConfig struct {
 	Authorization fileAuthorizationConfig `yaml:"authorization"`
 	Model         fileModelConfig         `yaml:"model"`
 	Actions       fileActionsConfig       `yaml:"actions"`
+	Skills        fileSkillsConfig        `yaml:"skills"`
 }
 
 type fileTriggerConfig struct {
@@ -41,6 +42,11 @@ type fileModelConfig struct {
 
 type fileActionsConfig struct {
 	Mode string `yaml:"mode"`
+}
+
+type fileSkillsConfig struct {
+	Allowed  []string `yaml:"allowed"`
+	Disabled []string `yaml:"disabled"`
 }
 
 var knownAuthorAssociations = []string{
@@ -181,6 +187,20 @@ func applyFileConfig(cfg *Config, file fileConfig) error {
 	if value := strings.TrimSpace(file.Actions.Mode); value != "" && value != "read_only" {
 		return fmt.Errorf("%s actions.mode must be read_only", gitclawConfigPath)
 	}
+	if len(file.Skills.Allowed) > 0 {
+		allowed, err := normalizeConfiguredSkillSet("skills.allowed", file.Skills.Allowed)
+		if err != nil {
+			return err
+		}
+		cfg.AllowedSkills = allowed
+	}
+	if len(file.Skills.Disabled) > 0 {
+		disabled, err := normalizeConfiguredSkillSet("skills.disabled", file.Skills.Disabled)
+		if err != nil {
+			return err
+		}
+		cfg.DisabledSkills = disabled
+	}
 	return validateConfig(*cfg)
 }
 
@@ -225,6 +245,21 @@ func validateConfig(cfg Config) error {
 		return fmt.Errorf("%s authorization.allowed_associations must not be empty", gitclawConfigPath)
 	}
 	return nil
+}
+
+func normalizeConfiguredSkillSet(field string, values []string) (map[string]bool, error) {
+	out := map[string]bool{}
+	for _, value := range values {
+		name := strings.ToLower(cleanSkillLookupName(value))
+		if name == "" {
+			continue
+		}
+		if !skillNamePattern.MatchString(name) {
+			return nil, fmt.Errorf("%s %s contains invalid skill name %q", gitclawConfigPath, field, value)
+		}
+		out[name] = true
+	}
+	return out, nil
 }
 
 func validateLabelValue(name, value string) error {

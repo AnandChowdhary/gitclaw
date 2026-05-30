@@ -104,7 +104,7 @@ description: Handle unrelated calendar work.
 # Unrelated
 Should not be selected.`)
 
-	summaries, skills := loadSkillContext(root, []TranscriptMessage{{Role: "user", Body: "Use the repo-reader skill for go.mod."}})
+	summaries, skills := loadSkillContext(root, []TranscriptMessage{{Role: "user", Body: "Use the repo-reader skill for go.mod."}}, Config{})
 	if len(summaries) != 3 {
 		t.Fatalf("len(summaries) = %d, want 3: %#v", len(summaries), summaries)
 	}
@@ -118,7 +118,61 @@ Should not be selected.`)
 		t.Fatalf("unrelated skill should not be selected: %#v", skills)
 	}
 	index := renderSkillIndex(summaries)
-	for _, want := range []string{"repo-reader", "always-on", "unrelated", "frontmatter=true", "description=true", "sha256_12=", "requires_env=1", "requires_bins=1", "missing_env=1", "missing_bins=1"} {
+	for _, want := range []string{"repo-reader", "always-on", "unrelated", "enabled=true", "disabled_by_config=false", "blocked_by_allowlist=false", "frontmatter=true", "description=true", "sha256_12=", "requires_env=1", "requires_bins=1", "missing_env=1", "missing_bins=1"} {
+		if !strings.Contains(index, want) {
+			t.Fatalf("skill index missing %q: %s", want, index)
+		}
+	}
+}
+
+func TestLoadSkillContextHonorsConfiguredSkillGates(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Read repository files.
+---
+
+# Repo Reader
+Skill token: GITCLAW_REPO_READER_ENABLED.`)
+	writeTestFile(t, root, ".gitclaw/SKILLS/always-on/SKILL.md", `---
+name: always-on
+description: Always loaded baseline behavior.
+always: true
+---
+
+# Always On
+Skill token: GITCLAW_ALWAYS_ON_DISABLED.`)
+	writeTestFile(t, root, ".gitclaw/SKILLS/blocked/SKILL.md", `---
+name: blocked
+description: Blocked by allowlist.
+always: true
+---
+
+# Blocked
+Skill token: GITCLAW_BLOCKED_BY_ALLOWLIST.`)
+
+	cfg := Config{
+		AllowedSkills:  map[string]bool{"repo-reader": true, "always-on": true},
+		DisabledSkills: map[string]bool{"always-on": true},
+	}
+	summaries, skills := loadSkillContext(root, []TranscriptMessage{{Role: "user", Body: "Use repo-reader and blocked."}}, cfg)
+	if len(summaries) != 3 {
+		t.Fatalf("len(summaries) = %d, want 3: %#v", len(summaries), summaries)
+	}
+	if !hasContextDoc(skills, ".gitclaw/SKILLS/repo-reader/SKILL.md", "GITCLAW_REPO_READER_ENABLED") {
+		t.Fatalf("repo-reader should be selected: %#v", skills)
+	}
+	if hasContextDoc(skills, ".gitclaw/SKILLS/always-on/SKILL.md", "GITCLAW_ALWAYS_ON_DISABLED") {
+		t.Fatalf("disabled always-on skill should not be selected: %#v", skills)
+	}
+	if hasContextDoc(skills, ".gitclaw/SKILLS/blocked/SKILL.md", "GITCLAW_BLOCKED_BY_ALLOWLIST") {
+		t.Fatalf("allowlist-blocked skill should not be selected: %#v", skills)
+	}
+	if enabledSkillCount(summaries) != 1 || disabledByConfigCount(summaries) != 1 || blockedByAllowlistCount(summaries) != 1 {
+		t.Fatalf("unexpected skill gate counts: %#v", summaries)
+	}
+	index := renderSkillIndex(summaries)
+	for _, want := range []string{"name=repo-reader", "enabled=true", "name=always-on", "disabled_by_config=true", "name=blocked", "blocked_by_allowlist=true"} {
 		if !strings.Contains(index, want) {
 			t.Fatalf("skill index missing %q: %s", want, index)
 		}

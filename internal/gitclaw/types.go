@@ -31,6 +31,8 @@ type Config struct {
 	MaxOutputTokens           int
 	MaxTranscriptMessages     int
 	MaxTranscriptMessageBytes int
+	AllowedSkills             map[string]bool
+	DisabledSkills            map[string]bool
 }
 
 func DefaultConfig() Config {
@@ -227,6 +229,9 @@ type SkillSummary struct {
 	Description        string
 	Path               string
 	Always             bool
+	Enabled            bool
+	DisabledByConfig   bool
+	BlockedByAllowlist bool
 	FrontmatterPresent bool
 	Bytes              int
 	Lines              int

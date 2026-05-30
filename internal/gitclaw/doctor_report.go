@@ -76,6 +76,9 @@ func renderDoctorReport(ev Event, cfg Config, repoContext RepoContext, includeIs
 	fmt.Fprintf(&b, "- context_files_present: `%d`\n", countPresentConfigFiles(surface.ContextFiles))
 	fmt.Fprintf(&b, "- memory_notes: `%d`\n", len(surface.MemoryNotes))
 	fmt.Fprintf(&b, "- skill_files: `%d`\n", len(surface.SkillFiles))
+	fmt.Fprintf(&b, "- enabled_skills: `%d`\n", enabledSkillCount(repoContext.SkillSummaries))
+	fmt.Fprintf(&b, "- disabled_skills: `%d`\n", disabledByConfigCount(repoContext.SkillSummaries))
+	fmt.Fprintf(&b, "- allowlist_blocked_skills: `%d`\n", blockedByAllowlistCount(repoContext.SkillSummaries))
 	fmt.Fprintf(&b, "- proactive_prompt_files: `%d`\n", len(surface.Proactive.Prompts))
 	fmt.Fprintf(&b, "- managed_labels: `%d`\n", len(surface.ManagedLabels))
 	fmt.Fprintf(&b, "- validation_errors: `%d`\n", surface.ValidationErrors)
@@ -321,7 +324,7 @@ func writeDoctorFileList(b *strings.Builder, files []configSurfaceFile) {
 }
 
 func PrintDoctorReport(cfg Config) {
-	repoContext, _ := LoadRepoContext(cfg.Workdir, nil)
+	repoContext, _ := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
 	if repo := os.Getenv("GITHUB_REPOSITORY"); repo != "" {
 		fmt.Println(RenderDoctorReport(Event{Repo: repo}, cfg, repoContext))
 		return

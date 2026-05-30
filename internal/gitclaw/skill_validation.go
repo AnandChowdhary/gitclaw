@@ -53,7 +53,7 @@ func ValidateSkillSummaries(skills []SkillSummary) SkillValidationReport {
 			report.Mismatches++
 			report.addFinding("warning", "name_folder_mismatch", skill.Path, fmt.Sprintf("folder %q does not match skill name %q", folder, name))
 		}
-		if len(skill.MissingEnv) > 0 || len(skill.MissingBins) > 0 {
+		if skillIsEnabled(skill) && (len(skill.MissingEnv) > 0 || len(skill.MissingBins) > 0) {
 			report.addFinding("warning", "missing_requirements", skill.Path, fmt.Sprintf("missing_env=%d missing_bins=%d", len(skill.MissingEnv), len(skill.MissingBins)))
 		}
 	}

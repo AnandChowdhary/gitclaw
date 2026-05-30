@@ -28,6 +28,13 @@ model:
 
 actions:
   mode: read_only
+
+skills:
+  allowed:
+    - repo-reader
+    - deploy-helper
+  disabled:
+    - deploy-helper
 `)
 	cfg := DefaultConfig()
 	cfg.Workdir = root
@@ -49,6 +56,12 @@ actions:
 	}
 	if loaded.MaxPromptBytes != 12345 || loaded.MaxOutputTokens != 678 || loaded.MaxTranscriptMessages != 12 || loaded.MaxTranscriptMessageBytes != 3456 {
 		t.Fatalf("prompt budget config not applied: %#v", loaded)
+	}
+	if !loaded.AllowedSkills["repo-reader"] || !loaded.AllowedSkills["deploy-helper"] || len(loaded.AllowedSkills) != 2 {
+		t.Fatalf("skills.allowed config not applied: %#v", loaded.AllowedSkills)
+	}
+	if !loaded.DisabledSkills["deploy-helper"] || len(loaded.DisabledSkills) != 1 {
+		t.Fatalf("skills.disabled config not applied: %#v", loaded.DisabledSkills)
 	}
 }
 
@@ -86,5 +99,22 @@ func TestLoadConfigRejectsUnknownFields(t *testing.T) {
 	}
 	if !strings.Contains(err.Error(), "api_key") {
 		t.Fatalf("error should mention unknown field, got %v", err)
+	}
+}
+
+func TestLoadConfigRejectsInvalidSkillGateNames(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/config.yml", `skills:
+  allowed:
+    - Repo Reader
+`)
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	_, err := LoadConfigFromWorkdir(cfg)
+	if err == nil {
+		t.Fatalf("LoadConfigFromWorkdir should reject invalid skill names")
+	}
+	if !strings.Contains(err.Error(), "skills.allowed") {
+		t.Fatalf("error should mention skills.allowed, got %v", err)
 	}
 }
