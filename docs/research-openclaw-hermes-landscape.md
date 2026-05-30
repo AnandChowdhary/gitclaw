@@ -782,6 +782,24 @@ single-assistant policy, active runtime is `github-actions`, and reports make
 explicit. Any future routing/delegation batch must be paired with a live GitHub
 Models conversation E2E, not just a deterministic report.
 
+2026-05-30 nodes-runtime follow-up: OpenClaw's node host docs expose a separate
+execution plane: a headless node service connects to the Gateway WebSocket,
+pairs as `role: node`, advertises capabilities, and can run approved
+`system.run`/`system.which` calls on another machine. The broader nodes docs add
+camera, screen, location, notification, browser-proxy, Canvas, and platform
+permission gates, with command policy split between node-declared commands and
+gateway allow/deny policy. Hermes' adjacent durable-worker story is Kanban:
+workers are full OS processes with named profiles and tool-based board access,
+while `delegate_task` children are fresh-context subagents that are synchronous
+and non-durable. GitClaw's GitHub-native v1 should keep runtime nodes narrow:
+`.gitclaw/NODES.md` plus `.gitclaw/nodes/*.md` declare reviewed node intent,
+`@gitclaw /nodes` reports `active_node_runtime=github-actions-ephemeral-job`,
+and reports make `gateway_websocket_required=false`,
+`headless_node_host_supported=false`, `node_pairing_supported=false`,
+`node_rpc_supported=false`, and `remote_node_exec_supported=false` explicit.
+Any future node-host, socket, or remote-exec batch must include a live GitHub
+Models conversation E2E in addition to deterministic report coverage.
+
 ### Sandboxing
 
 OpenClaw can run tool execution in sandbox backends. The Gateway remains on the host; tools can run in Docker, SSH, or OpenShell-backed sandboxes. Sandboxing is optional and configurable by mode and scope.
@@ -1555,6 +1573,7 @@ Recommended non-goals for the first spec:
 - OpenClaw migrating from Hermes: https://docs.openclaw.ai/install/migrating-hermes
 - OpenClaw migrate CLI docs: https://docs.openclaw.ai/cli/migrate
 - OpenClaw models CLI docs: https://docs.openclaw.ai/cli/models
+- OpenClaw node host CLI docs: https://docs.openclaw.ai/cli/node
 - OpenClaw multi-agent routing docs: https://docs.openclaw.ai/concepts/multi-agent
 - OpenClaw nodes CLI docs: https://docs.openclaw.ai/cli/nodes
 - OpenClaw secrets CLI docs: https://docs.openclaw.ai/cli/secrets

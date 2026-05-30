@@ -135,6 +135,8 @@ func profileDocumentCategory(path string) string {
 		return "tasks"
 	case path == agentPolicyPath:
 		return "agents"
+	case path == nodePolicyPath:
+		return "nodes"
 	default:
 		return "profile"
 	}

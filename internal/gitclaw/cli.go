@@ -31,6 +31,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runTasksCommand(args[1:])
 	case "agents", "agent":
 		return runAgentsCommand(args[1:])
+	case "nodes", "node":
+		return runNodesCommand(args[1:])
 	case "channel-ingest":
 		return runChannelIngestCommand(ctx, args[1:])
 	case "channel-state":
@@ -354,6 +356,30 @@ func runAgentsListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderAgentCLIReport(cfg))
+	return nil
+}
+
+func runNodesCommand(args []string) error {
+	if len(args) == 0 {
+		return runNodesListCommand(nil)
+	}
+	switch args[0] {
+	case "list", "verify":
+		return runNodesListCommand(args[1:])
+	default:
+		return fmt.Errorf("usage: gitclaw nodes [list|verify]")
+	}
+}
+
+func runNodesListCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown nodes argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderNodeCLIReport(cfg))
 	return nil
 }
 

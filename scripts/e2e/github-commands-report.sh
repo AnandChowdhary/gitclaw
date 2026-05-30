@@ -136,9 +136,9 @@ for expected in \
   "GitClaw Commands Report" \
   "Generated without a model call" \
   'trigger_prefix: `@gitclaw`' \
-  'commands: `29`' \
-  'aliases: `25`' \
-  'local_cli_helpers: `87`' \
+  'commands: `30`' \
+  'aliases: `26`' \
+  'local_cli_helpers: `89`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/agents' \
@@ -157,6 +157,8 @@ for expected in \
   '/secret' \
   '/migrate' \
   '/migration' \
+  '/nodes' \
+  '/node' \
   '/orders' \
   '/standing-orders' \
   '/heartbeat' \
@@ -182,6 +184,8 @@ for expected in \
   '/cron' \
   'gitclaw agents list' \
   'gitclaw agents verify' \
+  'gitclaw nodes list' \
+  'gitclaw nodes verify' \
   'gitclaw approvals list' \
   'gitclaw approvals verify' \
   'gitclaw bundles list' \

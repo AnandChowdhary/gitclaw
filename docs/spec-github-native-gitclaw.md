@@ -849,6 +849,8 @@ AGENTS.md                    # existing coding-agent instructions, if present
 .gitclaw/tasks/*.md          # declarative task/flow specs, issue-native in v1
 .gitclaw/AGENTS.md           # declarative agent/routing safety policy
 .gitclaw/agents/*.md         # declarative agent specs, metadata-only in v1
+.gitclaw/NODES.md            # declarative runtime/node safety policy
+.gitclaw/nodes/*.md          # declarative node specs, metadata-only in v1
 .gitclaw/SKILLS/*.md         # optional read-only local skills, v1+
 .gitclaw/MEMORY.md           # optional curated repo memory, human-reviewed only
 .gitclaw/memory/YYYY-MM-DD.md # dated working memory notes, human-reviewed only
@@ -881,6 +883,10 @@ MVP loads:
 - `.gitclaw/AGENTS.md`, if present, as the repo-reviewed agent/routing safety
   policy; individual `.gitclaw/agents/*.md` specs are audited by metadata
   reports and do not spawn child agents, gateways, nodes, or remote workers
+- `.gitclaw/NODES.md`, if present, as the repo-reviewed runtime/node safety
+  policy; individual `.gitclaw/nodes/*.md` specs are audited by metadata
+  reports and do not pair devices, open WebSockets, start services, or expose
+  remote host capabilities
 - `.gitclaw/SKILLS/*/SKILL.md`, if selected by the issue thread or marked
   always-on
 - bounded `@file:<repo-path>[:start-end]` context references explicitly named
@@ -2294,6 +2300,45 @@ Local operators can inspect the same policy/spec surface with:
 ```bash
 gitclaw agents list
 gitclaw agents verify
+```
+
+### Nodes Command
+
+GitClaw supports a deterministic node-surface audit inspired by OpenClaw node
+hosts and paired device capabilities, plus Hermes' durable workers and
+delegation runtime boundaries:
+
+```text
+@gitclaw /nodes
+@gitclaw /node
+```
+
+The command runs after preflight and before model inference. It posts a
+`gitclaw:assistant-turn` comment with `model="gitclaw/nodes"` and summarizes:
+
+- whether `.gitclaw/NODES.md` exists and is loaded into model context,
+- declarative node specs in `.gitclaw/nodes/*.md`,
+- declared node roles, runtime, mode, and GitHub-native capabilities,
+- whether specs require approval before pairing, remote execution, or new host
+  capabilities,
+- the active runtime boundary: ephemeral GitHub Actions jobs in v1,
+- body-free findings for missing policy or unsafe-looking specs.
+
+GitClaw v1 does not run OpenClaw-style node hosts, pair devices, maintain a
+Gateway WebSocket, invoke node RPC commands, expose browser proxies, access
+camera/screen/location/SMS/notification surfaces, or forward shell execution to
+remote nodes. Node specs are reviewed repo metadata, not service definitions.
+The report never mutates the repo, calls the model, starts a node service, or
+prints raw node policy, node spec, issue, comment, channel, credential, or
+provider payload bodies. Future remote-node execution requires reviewed
+workflows, explicit permissions, approval gates, body-free audit cards, and a
+live GitHub Models conversation E2E in the same implementation batch.
+
+Local operators can inspect the same policy/spec surface with:
+
+```bash
+gitclaw nodes list
+gitclaw nodes verify
 ```
 
 ### Doctor Command
@@ -4050,6 +4095,12 @@ examples/workflows/gitclaw.yml
   gates, and body-free findings without a model call or agent body leakage.
   Each agents feature batch must still run a live GitHub Models conversation
   E2E that makes an actual LLM call; report-only coverage is not enough.
+- A `gh`-driven nodes-report E2E harness verifies `@gitclaw /nodes` reports
+  node policy metadata, model-context loading, declarative node spec metadata,
+  GitHub Actions ephemeral-job boundaries, no-WebSocket/no-pairing/no-remote-exec
+  gates, and body-free findings without a model call or node body leakage.
+  Each nodes feature batch must still run a live GitHub Models conversation E2E
+  that makes an actual LLM call; report-only coverage is not enough.
 - A `gh`-driven runs-report E2E harness verifies `@gitclaw /runs` reports
   current turn/run provenance, managed labels, marker counts, prompt-visible
   input hashes, and active tool-output hashes without a model call or body
@@ -4352,6 +4403,7 @@ examples/workflows/gitclaw.yml
 - OpenClaw creating skills docs: https://docs.openclaw.ai/tools/creating-skills
 - OpenClaw skill format docs: https://docs.openclaw.ai/clawhub/skill-format
 - OpenClaw models CLI docs: https://docs.openclaw.ai/cli/models
+- OpenClaw node host CLI docs: https://docs.openclaw.ai/cli/node
 - OpenClaw multi-agent routing docs: https://docs.openclaw.ai/concepts/multi-agent
 - OpenClaw nodes CLI docs: https://docs.openclaw.ai/cli/nodes
 - OpenClaw config CLI docs: https://docs.openclaw.ai/cli/config
