@@ -177,7 +177,7 @@ for expected in \
   'selected_skills: `1`' \
   'skill_bundles: `1`' \
   'available_tools: `5`' \
-  'active_tool_outputs: `2`' \
+  'active_tool_outputs: `3`' \
   'config_file_present: `true`' \
   'config_file_path: `.gitclaw/config.yml`' \
   'surfaces_with_risk_findings: `0`' \
