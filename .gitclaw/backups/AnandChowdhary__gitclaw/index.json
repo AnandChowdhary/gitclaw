@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T15:20:42Z",
+  "generated_at": "2026-05-31T15:21:59Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 376,
   "issues": [
@@ -4682,14 +4682,15 @@
       "number": 416,
       "title": "@gitclaw /heartbeat e2e 20260531T151940Z",
       "path": "issues/000416.json",
-      "backup_generated_at": "2026-05-31T15:20:41Z",
-      "event_name": "issues",
+      "backup_generated_at": "2026-05-31T15:21:58Z",
+      "event_name": "issue_comment",
       "labels": [
         "gitclaw",
-        "gitclaw:heartbeat"
+        "gitclaw:heartbeat",
+        "gitclaw:done"
       ],
-      "comment_count": 1,
-      "transcript_messages": 2
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
