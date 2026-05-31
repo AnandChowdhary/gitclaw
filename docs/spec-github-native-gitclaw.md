@@ -2766,10 +2766,13 @@ provenance. The report explains the current approval evidence chain:
 GitHub event trust, per-issue label state, write-request detection source,
 assistant-turn marker history, and the read-only runtime boundary. It reports
 counts and hashes for issue labels, active commands, idempotency keys,
-transcript shape, and assistant markers; it may show configured managed label
-names and recognized assistant marker model names, but unrecognized marker
-model attributes are reported only by hash. It never prints raw issue bodies,
-comments, prompts, approval payloads, run URLs, credentials, or secret values.
+transcript shape, and assistant markers. `write_requested_label_present` is the
+current label snapshot, while `write_request_evidence_present` combines current
+label state with transcript write-intent detection. The report may show
+configured managed label names and recognized assistant marker model names, but
+unrecognized marker model attributes are reported only by hash. It never prints
+raw issue bodies, comments, prompts, approval payloads, run URLs, credentials,
+or secret values.
 The report includes
 `llm_e2e_required_after_approval_provenance_change=true`; every change to this
 surface must be tested by first creating a model-backed GitHub issue

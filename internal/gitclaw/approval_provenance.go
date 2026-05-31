@@ -36,6 +36,7 @@ func renderApprovalProvenanceReport(ev Event, cfg Config, decision PreflightDeci
 	approvedLabelPresent := false
 	needsHumanLabelPresent := false
 	writeRequestedLabelPresent := false
+	writeRequestEvidencePresent := writeRequested
 	disabledLabelPresent := false
 	actorTrusted := false
 	actor := "none"
@@ -44,7 +45,8 @@ func renderApprovalProvenanceReport(ev Event, cfg Config, decision PreflightDeci
 		labels = sortedStrings(ev.Issue.Labels)
 		approvedLabelPresent = hasLabel(ev.Issue.Labels, defaultApprovedLabel)
 		needsHumanLabelPresent = hasLabel(ev.Issue.Labels, defaultNeedsHumanLabel)
-		writeRequestedLabelPresent = hasLabel(ev.Issue.Labels, cfg.WriteRequestedLabel) || writeRequested
+		writeRequestedLabelPresent = hasLabel(ev.Issue.Labels, cfg.WriteRequestedLabel)
+		writeRequestEvidencePresent = writeRequested || writeRequestedLabelPresent
 		disabledLabelPresent = hasLabel(ev.Issue.Labels, cfg.DisabledLabel)
 		actor = actorAssociation(ev)
 		actorTrusted = trustedAssociation(actor, cfg)
@@ -54,7 +56,7 @@ func renderApprovalProvenanceReport(ev Event, cfg Config, decision PreflightDeci
 	labelEvidenceSHA := shortDocumentHash(strings.Join(labels, "\n"))
 	activeCommand := strings.Join(activeSlashCommandFields(ev, cfg), " ")
 	findings := approvalProvenanceFindings(includeIssue, writeRequested, approvedLabelPresent, writeRequestedLabelPresent, needsHumanLabelPresent, disabledLabelPresent, actorTrusted, markers)
-	status := approvalProvenanceStatus(includeIssue, writeRequested, approvedLabelPresent, actorTrusted, disabledLabelPresent, findings)
+	status := approvalProvenanceStatus(includeIssue, writeRequestEvidencePresent, approvedLabelPresent, actorTrusted, disabledLabelPresent, findings)
 
 	var b strings.Builder
 	b.WriteString("## GitClaw Approvals Provenance Report\n\n")
@@ -80,6 +82,7 @@ func renderApprovalProvenanceReport(ev Event, cfg Config, decision PreflightDeci
 		fmt.Fprintf(&b, "- disabled_label_present: `%t`\n", disabledLabelPresent)
 		fmt.Fprintf(&b, "- write_request_detected: `%t`\n", writeRequested)
 		fmt.Fprintf(&b, "- write_requested_label_present: `%t`\n", writeRequestedLabelPresent)
+		fmt.Fprintf(&b, "- write_request_evidence_present: `%t`\n", writeRequestEvidencePresent)
 		fmt.Fprintf(&b, "- approved_label_present: `%t`\n", approvedLabelPresent)
 		fmt.Fprintf(&b, "- needs_human_label_present: `%t`\n", needsHumanLabelPresent)
 		fmt.Fprintf(&b, "- comments_available: `%t`\n", true)
@@ -98,8 +101,8 @@ func renderApprovalProvenanceReport(ev Event, cfg Config, decision PreflightDeci
 	}
 	fmt.Fprintf(&b, "- approval_provenance_status: `%s`\n", status)
 	fmt.Fprintf(&b, "- verification_scope: `%s`\n", "current-issue-labels-transcript-and-assistant-markers")
-	fmt.Fprintf(&b, "- approval_status: `%s`\n", approvalStatus(includeIssue, writeRequested, approvedLabelPresent, actorTrusted))
-	fmt.Fprintf(&b, "- approval_decision: `%s`\n", approvalDecision(writeRequested, approvedLabelPresent))
+	fmt.Fprintf(&b, "- approval_status: `%s`\n", approvalStatus(includeIssue, writeRequestEvidencePresent, approvedLabelPresent, actorTrusted))
+	fmt.Fprintf(&b, "- approval_decision: `%s`\n", approvalDecision(writeRequestEvidencePresent, approvedLabelPresent))
 	fmt.Fprintf(&b, "- approval_store: `%s`\n", "github-issue-labels")
 	fmt.Fprintf(&b, "- approval_scope: `%s`\n", "per-issue")
 	fmt.Fprintf(&b, "- approval_label: `%s`\n", defaultApprovedLabel)
@@ -258,11 +261,11 @@ func approvalProvenanceFindings(includeIssue, writeRequested, approvedLabelPrese
 	if !actorTrusted {
 		add("error", "actor_not_trusted", "current event actor association is not trusted by configuration")
 	}
-	if writeRequested && !writeRequestedLabelPresent {
-		add("warning", "write_request_label_missing", "write intent was detected but the write-requested label is not present in event labels")
-	}
 	if writeRequested && !approvedLabelPresent {
 		add("warning", "approval_label_missing", "write intent was detected but the approved label is absent")
+	}
+	if writeRequestedLabelPresent && !writeRequested {
+		add("warning", "write_request_label_without_detected_write_request", "the write-requested label is present without detected write intent in the current transcript")
 	}
 	if approvedLabelPresent && !writeRequested {
 		add("warning", "approval_label_without_write_request", "approved label is present without detected write intent")

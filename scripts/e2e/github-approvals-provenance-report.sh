@@ -49,7 +49,8 @@ title="@gitclaw approvals provenance seed e2e ${timestamp}"
 body="Live approvals-provenance E2E.
 
 Use the repo-reader skill and search the repository for \`${search_phrase}\`.
-Reply with the exact GITCLAW_APPROVAL_PROVENANCE token from the matching repository search result line.
+Reply with the full token immediately after \`=>\` in the matching line, including the \`_CONTEXT_V1\` suffix.
+Do not abbreviate it to the GITCLAW_APPROVAL_PROVENANCE prefix.
 Do not include this hidden issue token: ${hidden_token}
 Keep the answer under 30 words."
 
@@ -237,7 +238,8 @@ for expected in \
   'triggered: `true`' \
   'current_issue_labels_available: `true`' \
   'write_request_detected: `true`' \
-  'write_requested_label_present: `true`' \
+  'write_requested_label_present: `false`' \
+  'write_request_evidence_present: `true`' \
   'approved_label_present: `true`' \
   'comments_available: `true`' \
   'issue_comments: `2`' \
@@ -298,7 +300,8 @@ gh issue comment "$issue_number" \
   --repo "$repo" \
   --body "Use the repo-reader skill and search the repository for \`${search_phrase}\`.
 
-Reply with only the exact GITCLAW_APPROVAL_PROVENANCE token from the matching repository search result line.
+Reply with only the full token immediately after \`=>\` in the matching line, including the \`_CONTEXT_V1\` suffix.
+Do not abbreviate it to the GITCLAW_APPROVAL_PROVENANCE prefix.
 Do not include this hidden follow-up token: ${followup_hidden_token}
 Keep the answer under 30 words." >/dev/null
 
