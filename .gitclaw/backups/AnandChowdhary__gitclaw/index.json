@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T11:48:02Z",
+  "generated_at": "2026-05-31T11:49:05Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 350,
   "issues": [
@@ -4342,7 +4342,7 @@
       "number": 388,
       "title": "GitClaw proactive proactive-e2e-20260531t114620z slot-20260531T114620Z",
       "path": "issues/000388.json",
-      "backup_generated_at": "2026-05-31T11:48:01Z",
+      "backup_generated_at": "2026-05-31T11:49:04Z",
       "event_name": "workflow_dispatch",
       "labels": [
         "gitclaw",
