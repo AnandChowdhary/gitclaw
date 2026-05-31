@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T23:39:42Z",
+  "generated_at": "2026-05-31T23:41:02Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 424,
   "issues": [
@@ -5310,13 +5310,14 @@
       "number": 464,
       "title": "@gitclaw /skills sources provenance e2e 20260531T233833Z",
       "path": "issues/000464.json",
-      "backup_generated_at": "2026-05-31T23:39:41Z",
-      "event_name": "issues",
+      "backup_generated_at": "2026-05-31T23:41:01Z",
+      "event_name": "issue_comment",
       "labels": [
-        "gitclaw"
+        "gitclaw",
+        "gitclaw:done"
       ],
-      "comment_count": 1,
-      "transcript_messages": 2
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
