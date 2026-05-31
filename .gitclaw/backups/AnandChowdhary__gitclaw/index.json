@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T10:21:40Z",
+  "generated_at": "2026-05-31T10:29:48Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 339,
+  "count": 340,
   "issues": [
     {
       "number": 3,
@@ -4207,6 +4207,18 @@
       ],
       "comment_count": 3,
       "transcript_messages": 4
+    },
+    {
+      "number": 377,
+      "title": "@gitclaw /skills upgrade-plan repo-reader e2e 20260531T102839Z",
+      "path": "issues/000377.json",
+      "backup_generated_at": "2026-05-31T10:29:46Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
