@@ -2107,6 +2107,21 @@ prompts, search queries, or tool outputs. This gives operators a Hermes-style
 compact recap and an OpenClaw-style session inspection command while preserving
 GitHub issues and git-backed backups as the canonical storage layer.
 
+### 2026-05-31 Backup Drill Follow-Up
+
+OpenClaw's backup command treats recovery as an explicit archive/verify path
+with manifest metadata, while Hermes sessions and checkpoint/rollback docs
+emphasize resumable conversation history and recoverable state. GitClaw's
+GitHub-native equivalent should keep that recovery confidence inside the repo:
+`gitclaw backup drill --issue <number>` composes backup verification,
+single-issue coverage, and a dry-run restore plan against a fetched
+`gitclaw-backups` branch.
+
+Issue-side `@gitclaw /backup drill` should remain metadata-only and deferred
+because the backup branch is written after the assistant turn. E2E coverage
+must prove both halves: the deterministic body-free drill report and a real
+GitHub Models follow-up with repo-reader/tool evidence.
+
 ## Open Questions For Speccing
 
 1. Is `gitclaw` primarily for one user's repos, or for teams/organizations?

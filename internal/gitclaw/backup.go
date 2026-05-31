@@ -272,6 +272,46 @@ type BackupCoverage struct {
 	LLME2ERequiredAfterChange  bool
 }
 
+type BackupDrill struct {
+	Root                       string
+	Repo                       string
+	TargetRepo                 string
+	RepoDir                    string
+	IndexPath                  string
+	ReadmePath                 string
+	SchemaVersion              int
+	IndexGeneratedAt           string
+	BackupDrillStatus          string
+	BackupVerifyStatus         string
+	BackupCoverageStatus       string
+	RestorePlanStatus          string
+	VerificationFailures       int
+	IssueNumber                int
+	IssueIndexed               bool
+	IssueBackupPathExpected    string
+	IssuePath                  string
+	IssueBackupPathCanonical   bool
+	IssueBackupPayloadReadable bool
+	IssueBackupPayloadBytes    int
+	IssueBackupPayloadSHA      string
+	BackupGeneratedAt          string
+	EventName                  string
+	Labels                     int
+	Comments                   int
+	TranscriptMessages         int
+	UserMessages               int
+	AssistantMessages          int
+	AssistantTurns             int
+	ErrorComments              int
+	IssueTitleSHA              string
+	IssueBodySHA               string
+	CommentBodySHAs            []string
+	TranscriptMessageSHAs      []string
+	RestorePlanAvailable       bool
+	RawBodiesIncluded          bool
+	LLME2ERequiredAfterChange  bool
+}
+
 type BackupRetentionPlan struct {
 	Root                  string
 	Repo                  string
@@ -308,6 +348,10 @@ type BackupRetentionIssue struct {
 
 func (c BackupCoverage) OK() bool {
 	return c.BackupCoverageStatus == "ok"
+}
+
+func (d BackupDrill) OK() bool {
+	return d.BackupDrillStatus == "ok"
 }
 
 func (r BackupVerifyResult) OK() bool {
@@ -902,6 +946,75 @@ func BuildBackupCoverage(root, repo string, issueNumber int) (BackupCoverage, er
 	return coverage, nil
 }
 
+func BuildBackupDrill(root, repo string, issueNumber int, targetRepo string) (BackupDrill, error) {
+	if issueNumber <= 0 {
+		return BackupDrill{}, fmt.Errorf("missing positive issue number")
+	}
+	if strings.TrimSpace(targetRepo) == "" {
+		targetRepo = repo
+	}
+	if err := validateRepoName(targetRepo); err != nil {
+		return BackupDrill{}, err
+	}
+	coverage, err := BuildBackupCoverage(root, repo, issueNumber)
+	if err != nil {
+		return BackupDrill{}, err
+	}
+	drill := BackupDrill{
+		Root:                       coverage.Root,
+		Repo:                       coverage.Repo,
+		TargetRepo:                 targetRepo,
+		RepoDir:                    coverage.RepoDir,
+		IndexPath:                  coverage.IndexPath,
+		ReadmePath:                 coverage.ReadmePath,
+		SchemaVersion:              coverage.SchemaVersion,
+		IndexGeneratedAt:           coverage.IndexGeneratedAt,
+		BackupDrillStatus:          "ok",
+		BackupVerifyStatus:         coverage.BackupVerifyStatus,
+		BackupCoverageStatus:       coverage.BackupCoverageStatus,
+		RestorePlanStatus:          "ok",
+		VerificationFailures:       coverage.VerificationFailures,
+		IssueNumber:                coverage.IssueNumber,
+		IssueIndexed:               coverage.IssueIndexed,
+		IssueBackupPathExpected:    coverage.IssueBackupPathExpected,
+		IssuePath:                  coverage.IssuePath,
+		IssueBackupPathCanonical:   coverage.IssueBackupPathCanonical,
+		IssueBackupPayloadReadable: coverage.IssueBackupPayloadReadable,
+		IssueBackupPayloadBytes:    coverage.IssueBackupPayloadBytes,
+		IssueBackupPayloadSHA:      coverage.IssueBackupPayloadSHA,
+		BackupGeneratedAt:          coverage.BackupGeneratedAt,
+		EventName:                  coverage.EventName,
+		Labels:                     coverage.Labels,
+		Comments:                   coverage.Comments,
+		TranscriptMessages:         coverage.TranscriptMessages,
+		UserMessages:               coverage.UserMessages,
+		AssistantMessages:          coverage.AssistantMessages,
+		AssistantTurns:             coverage.AssistantTurns,
+		ErrorComments:              coverage.ErrorComments,
+		IssueTitleSHA:              coverage.IssueTitleSHA,
+		IssueBodySHA:               coverage.IssueBodySHA,
+		RawBodiesIncluded:          false,
+		LLME2ERequiredAfterChange:  true,
+	}
+	if !coverage.OK() {
+		drill.BackupDrillStatus = coverage.BackupCoverageStatus
+		drill.RestorePlanStatus = "skipped"
+		return drill, nil
+	}
+	plan, err := PlanBackupRestore(root, repo, issueNumber, targetRepo)
+	if err != nil {
+		return BackupDrill{}, err
+	}
+	drill.RestorePlanAvailable = true
+	drill.CommentBodySHAs = append([]string(nil), plan.CommentBodySHAs...)
+	drill.TranscriptMessageSHAs = append([]string(nil), plan.TranscriptMessageSHAs...)
+	if plan.Comments != drill.Comments || plan.TranscriptMessages != drill.TranscriptMessages || plan.AssistantTurns != drill.AssistantTurns || plan.ErrorComments != drill.ErrorComments {
+		drill.BackupDrillStatus = "warn"
+		drill.RestorePlanStatus = "warn"
+	}
+	return drill, nil
+}
+
 func BuildBackupRetentionPlan(root, repo string, keepLatest int) (BackupRetentionPlan, error) {
 	if keepLatest <= 0 {
 		return BackupRetentionPlan{}, fmt.Errorf("keep latest must be positive")
@@ -1305,6 +1418,69 @@ func RenderBackupCoverage(coverage BackupCoverage) string {
 	return strings.TrimSpace(b.String())
 }
 
+func RenderBackupDrill(drill BackupDrill) string {
+	var b strings.Builder
+	b.WriteString("## GitClaw Backup Drill Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	fmt.Fprintf(&b, "- repository: `%s`\n", drill.Repo)
+	fmt.Fprintf(&b, "- target_repository: `%s`\n", drill.TargetRepo)
+	fmt.Fprintf(&b, "- backup_drill_status: `%s`\n", drill.BackupDrillStatus)
+	fmt.Fprintf(&b, "- backup_verify_status: `%s`\n", drill.BackupVerifyStatus)
+	fmt.Fprintf(&b, "- backup_coverage_status: `%s`\n", drill.BackupCoverageStatus)
+	fmt.Fprintf(&b, "- restore_plan_status: `%s`\n", drill.RestorePlanStatus)
+	fmt.Fprintf(&b, "- restore_mode: `%s`\n", "dry-run")
+	fmt.Fprintf(&b, "- verification_failures: `%d`\n", drill.VerificationFailures)
+	fmt.Fprintf(&b, "- backup_root: `%s`\n", drill.Root)
+	fmt.Fprintf(&b, "- repo_backup_dir: `%s`\n", drill.RepoDir)
+	fmt.Fprintf(&b, "- index_path: `%s`\n", drill.IndexPath)
+	fmt.Fprintf(&b, "- readme_path: `%s`\n", drill.ReadmePath)
+	fmt.Fprintf(&b, "- backup_schema_version: `%d`\n", drill.SchemaVersion)
+	fmt.Fprintf(&b, "- index_generated_at: `%s`\n", drill.IndexGeneratedAt)
+	fmt.Fprintf(&b, "- issue: `#%d`\n", drill.IssueNumber)
+	fmt.Fprintf(&b, "- issue_indexed: `%t`\n", drill.IssueIndexed)
+	fmt.Fprintf(&b, "- expected_issue_backup_path: `%s`\n", drill.IssueBackupPathExpected)
+	if drill.IssuePath != "" {
+		fmt.Fprintf(&b, "- issue_backup_path: `%s`\n", drill.IssuePath)
+	} else {
+		b.WriteString("- issue_backup_path: `none`\n")
+	}
+	fmt.Fprintf(&b, "- issue_backup_path_canonical: `%t`\n", drill.IssueBackupPathCanonical)
+	fmt.Fprintf(&b, "- issue_backup_payload_readable: `%t`\n", drill.IssueBackupPayloadReadable)
+	if drill.IssueBackupPayloadReadable {
+		fmt.Fprintf(&b, "- payload_bytes: `%d`\n", drill.IssueBackupPayloadBytes)
+		fmt.Fprintf(&b, "- payload_sha256_12: `%s`\n", drill.IssueBackupPayloadSHA)
+		fmt.Fprintf(&b, "- backup_generated_at: `%s`\n", drill.BackupGeneratedAt)
+		fmt.Fprintf(&b, "- backup_event_name: `%s`\n", drill.EventName)
+		fmt.Fprintf(&b, "- labels: `%d`\n", drill.Labels)
+		fmt.Fprintf(&b, "- comments: `%d`\n", drill.Comments)
+		fmt.Fprintf(&b, "- transcript_messages: `%d`\n", drill.TranscriptMessages)
+		fmt.Fprintf(&b, "- user_messages: `%d`\n", drill.UserMessages)
+		fmt.Fprintf(&b, "- assistant_messages: `%d`\n", drill.AssistantMessages)
+		fmt.Fprintf(&b, "- assistant_turn_comments: `%d`\n", drill.AssistantTurns)
+		fmt.Fprintf(&b, "- error_comments: `%d`\n", drill.ErrorComments)
+		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", drill.IssueTitleSHA)
+		fmt.Fprintf(&b, "- issue_body_sha256_12: `%s`\n", drill.IssueBodySHA)
+	}
+	fmt.Fprintf(&b, "- restore_plan_available: `%t`\n", drill.RestorePlanAvailable)
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", drill.RawBodiesIncluded)
+	fmt.Fprintf(&b, "- mutation_performed: `%t`\n", false)
+	fmt.Fprintf(&b, "- github_api_calls_performed: `%t`\n", false)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_backup_drill_change: `%t`\n\n", drill.LLME2ERequiredAfterChange)
+
+	b.WriteString("This restore-readiness drill composes backup verification, single-issue coverage, and a dry-run restore plan against a fetched `gitclaw-backups` tree. It reports only paths, counts, timestamps, gate statuses, and hashes; raw issue titles, issue bodies, comments, transcript messages, prompts, and restored content are not included.\n\n")
+	b.WriteString("### Drill Gates\n")
+	writeBackupDrillGate(&b, "verify_gate", drill.BackupVerifyStatus)
+	writeBackupDrillGate(&b, "coverage_gate", drill.BackupCoverageStatus)
+	writeBackupDrillGate(&b, "restore_plan_gate", drill.RestorePlanStatus)
+	b.WriteString("- backup_branch_fetch_required=`true`\n")
+	b.WriteString("- issue_side_intent_supported=`true`\n")
+	b.WriteString("\n### Comment Body Hashes\n")
+	writeHashList(&b, "comment", drill.CommentBodySHAs)
+	b.WriteString("\n### Transcript Body Hashes\n")
+	writeHashList(&b, "message", drill.TranscriptMessageSHAs)
+	return strings.TrimSpace(b.String())
+}
+
 func writeBackupListIssues(b *strings.Builder, issues []BackupListIssue) {
 	if len(issues) == 0 {
 		b.WriteString("- none\n")
@@ -1482,6 +1658,19 @@ func writeHashList(b *strings.Builder, prefix string, hashes []string) {
 	for i, hash := range hashes {
 		fmt.Fprintf(b, "- %s_%d_sha256_12: `%s`\n", prefix, i+1, hash)
 	}
+}
+
+func writeBackupDrillGate(b *strings.Builder, name, status string) {
+	gate := "warn"
+	switch status {
+	case "ok":
+		gate = "pass"
+	case "skipped":
+		gate = "skipped"
+	case "missing":
+		gate = "missing"
+	}
+	fmt.Fprintf(b, "- %s=`%s`\n", name, gate)
 }
 
 func backupJSONLRecord(backup IssueBackup, msg TranscriptMessage, sequence int) BackupJSONLRecord {

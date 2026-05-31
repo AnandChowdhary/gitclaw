@@ -4003,6 +4003,36 @@ numeric issue argument such as `#123` is present, GitClaw records that target;
 otherwise trailing prose in an issue title is ignored so E2E labels and run
 descriptions do not turn into invalid issue numbers.
 
+## Backup Drill Command
+
+GitClaw supports a local restore-readiness drill for one backed-up
+conversation:
+
+```bash
+gitclaw backup drill --root .gitclaw/backups --repo <owner/repo> --issue 123
+```
+
+The drill composes three non-mutating gates against a fetched
+`gitclaw-backups` tree:
+
+- verify the repo-scoped backup index, README, schema, and canonical payload
+  paths,
+- prove the requested issue is indexed, canonical, and readable,
+- build a dry-run restore plan for the same issue and target repository.
+
+The deterministic `GitClaw Backup Drill Report` prints gate statuses,
+backup paths, schema/timestamp metadata, counts, payload hashes, and body
+hashes. It does not print issue titles, issue bodies, comments, transcript
+messages, prompts, restored content, or provider responses, and it does not
+call GitHub APIs or mutate the repository.
+
+Issue-side `@gitclaw /backup drill` is intentionally deferred just like other
+backup inspection commands: the assistant records the concrete local command
+to run after the post-turn backup job writes the `gitclaw-backups` branch.
+Changes to this surface must include a live GitHub Models follow-up E2E that
+proves normal inference, repo-reader skill selection, and prompt-visible tool
+usage after the deterministic drill report.
+
 ## Backup Risk Command
 
 GitClaw also supports a local backup risk audit for fetched backup branches:
@@ -4891,7 +4921,24 @@ assert the expected comments/labels, and close the issue in cleanup.
      counts, assistant-turn/error counts, and body hashes,
    - assert it does not dump the issue body token or raw transcript bodies.
 
-42. **Backup retention plan**
+42. **Backup drill**
+
+   - create a real issue with `@gitclaw /backup drill`,
+   - assert the issue-side report lists `requested_backup_command: drill`, the
+     deferred execution marker, and the concrete local drill command without
+     dumping body/title tokens,
+   - wait for the successful backup job,
+   - fetch the real `gitclaw-backups` branch,
+   - run `gitclaw backup drill --root <fetched>/.gitclaw/backups --repo
+     <owner/repo> --issue <issue-number>`,
+   - assert the report includes verify, coverage, and dry-run restore-plan
+     gates, plus schema, path, count, assistant-turn/error, and hash metadata,
+   - assert it does not dump issue/comment/transcript bodies,
+   - post a normal follow-up comment that requires repo-reader search and
+     assert the next assistant turn used GitHub Models with prompt provenance,
+     selected skills, and prompt-visible tool names.
+
+43. **Backup retention plan**
 
    - create a real issue with `@gitclaw /backup retention-plan`,
    - assert the issue-side report lists `requested_backup_command:
@@ -4908,7 +4955,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the just-created issue is included without dumping the issue body
      token or raw title.
 
-43. **Backup search**
+44. **Backup search**
 
    - create a real issue with `@gitclaw /backup search <query>`,
    - include a unique hidden token in the issue body,
@@ -4926,7 +4973,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert it does not dump the hidden token, raw issue body, raw issue title,
      raw comments, raw transcript messages, or raw query text.
 
-44. **Proactive init generator**
+45. **Proactive init generator**
 
    - run `gitclaw proactive init` against a temporary repo root,
    - assert it writes the expected prompt file and scheduled workflow,
@@ -4938,7 +4985,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert it creates a real proactive issue and receives one deterministic
      proactive report without leaking the hidden prompt token.
 
-45. **Proactive info report**
+46. **Proactive info report**
 
    - create a real issue with `@gitclaw /proactive info repo-hygiene`,
    - include a unique hidden token in the issue body,
@@ -4949,7 +4996,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      candidate, trigger metadata, and enqueue command hashes/paths,
    - assert no issue body, prompt body, or workflow body content is leaked.
 
-46. **Proactive risk report with model follow-up**
+47. **Proactive risk report with model follow-up**
 
    - create a real issue with `@gitclaw /proactive risk`,
    - include a unique hidden token in the issue body,

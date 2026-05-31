@@ -2165,6 +2165,9 @@ func runBackup(ctx context.Context, args []string) error {
 	if len(args) > 0 && (args[0] == "coverage" || args[0] == "covered") {
 		return runBackupCoverage(args[1:])
 	}
+	if len(args) > 0 && (args[0] == "drill" || args[0] == "restore-drill") {
+		return runBackupDrill(args[1:])
+	}
 	if len(args) > 0 && (args[0] == "risk" || args[0] == "risk-audit") {
 		return runBackupRisk(args[1:])
 	}
@@ -2302,6 +2305,69 @@ func runBackupCoverage(args []string) error {
 	fmt.Println(RenderBackupCoverage(coverage))
 	if !coverage.OK() {
 		return fmt.Errorf("backup coverage reported %s", coverage.BackupCoverageStatus)
+	}
+	return nil
+}
+
+func runBackupDrill(args []string) error {
+	root := filepath.Join(".gitclaw", "backups")
+	repo := os.Getenv("GITHUB_REPOSITORY")
+	targetRepo := ""
+	issueNumber := 0
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--root":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--root requires a value")
+			}
+			root = args[i+1]
+			i++
+		case "--repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--repo requires a value")
+			}
+			repo = args[i+1]
+			i++
+		case "--target-repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--target-repo requires a value")
+			}
+			targetRepo = args[i+1]
+			i++
+		case "--issue":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--issue requires a value")
+			}
+			parsed, err := strconv.Atoi(args[i+1])
+			if err != nil || parsed <= 0 {
+				return fmt.Errorf("invalid --issue: %q", args[i+1])
+			}
+			issueNumber = parsed
+			i++
+		default:
+			if issueNumber == 0 {
+				parsed, err := strconv.Atoi(strings.TrimPrefix(args[i], "#"))
+				if err == nil && parsed > 0 {
+					issueNumber = parsed
+					continue
+				}
+			}
+			return fmt.Errorf("unknown backup drill argument %q", args[i])
+		}
+	}
+	if repo == "" {
+		return fmt.Errorf("missing --repo or GITHUB_REPOSITORY")
+	}
+	if issueNumber <= 0 {
+		return fmt.Errorf("missing --issue")
+	}
+	drill, err := BuildBackupDrill(root, repo, issueNumber, targetRepo)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderBackupDrill(drill))
+	if !drill.OK() {
+		return fmt.Errorf("backup drill reported %s", drill.BackupDrillStatus)
 	}
 	return nil
 }

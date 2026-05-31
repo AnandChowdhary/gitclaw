@@ -155,6 +155,49 @@ func TestRenderBackupCoverageIssueCommandDefaultsToCurrentIssueWithTrailingProse
 	}
 }
 
+func TestRenderBackupDrillIssueCommandRecordsDeferredIntentWithoutBodies(t *testing.T) {
+	ev := Event{
+		Repo: "owner/repo",
+		Issue: Issue{
+			Number: 99,
+			Title:  "@gitclaw /backup drill",
+			Body:   "BACKUP_DRILL_ISSUE_BODY_SECRET",
+		},
+	}
+	comments := []Comment{{
+		ID:   22,
+		Body: "<!-- gitclaw:assistant-turn idempotency_key=old -->\nBACKUP_DRILL_COMMENT_SECRET",
+		User: User{Login: "github-actions[bot]", Type: "Bot"},
+	}}
+	transcript := []TranscriptMessage{
+		{Role: "user", Body: "BACKUP_DRILL_TRANSCRIPT_SECRET"},
+	}
+
+	report := RenderBackupReport(ev, DefaultConfig(), comments, transcript)
+	for _, want := range []string{
+		"GitClaw Backup Report",
+		"requested_backup_command: `drill`",
+		"backup_command_status: `ok`",
+		"requested_local_command: `gitclaw backup drill --root .gitclaw/backups --repo owner/repo --issue 99`",
+		"run `gitclaw backup drill --root .gitclaw/backups --repo owner/repo --issue 99` after fetching `gitclaw-backups`",
+		"backup_drill_status: `deferred`",
+		"backup_drill_execution: `local_fetched_backup_branch`",
+		"backup_drill_gates: `verify, coverage, restore-plan`",
+		"raw_backup_payloads_scanned_issue_side: `false`",
+		"llm_e2e_required_after_backup_drill_change: `true`",
+		"raw_bodies_included: `false`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("backup drill report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"BACKUP_DRILL_ISSUE_BODY_SECRET", "BACKUP_DRILL_COMMENT_SECRET", "BACKUP_DRILL_TRANSCRIPT_SECRET"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("backup drill report leaked %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestRenderBackupRiskIssueCommandRecordsDeferredIntentWithoutBodies(t *testing.T) {
 	ev := Event{
 		Repo: "owner/repo",

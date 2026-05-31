@@ -61,6 +61,9 @@ func RenderBackupReport(ev Event, cfg Config, comments []Comment, transcript []T
 	if request.Name == "risk" {
 		writeBackupIssueRiskSummary(&b)
 	}
+	if request.Name == "drill" {
+		writeBackupIssueDrillSummary(&b)
+	}
 	b.WriteByte('\n')
 
 	b.WriteString("The backup job runs after a successful assistant turn and writes the raw transcript backup plus repo-scoped index to the dedicated backup branch.\n\n")
@@ -76,6 +79,7 @@ func RenderBackupReport(ev Event, cfg Config, comments []Comment, transcript []T
 	b.WriteString("\n### Verification\n")
 	b.WriteString("- `gitclaw backup verify --root .gitclaw/backups --repo <owner/repo>`\n")
 	b.WriteString("- `gitclaw backup coverage --root .gitclaw/backups --repo <owner/repo> --issue <number>`\n")
+	b.WriteString("- `gitclaw backup drill --root .gitclaw/backups --repo <owner/repo> --issue <number>`\n")
 	b.WriteString("- `gitclaw backup risk --root .gitclaw/backups --repo <owner/repo>`\n")
 	b.WriteString("- `gitclaw backup search --root .gitclaw/backups --repo <owner/repo> <query>`\n")
 	b.WriteString("- `gitclaw backup retention-plan --root .gitclaw/backups --repo <owner/repo> --keep-latest 50`\n")
@@ -113,6 +117,19 @@ func requestedBackupIssueCommand(ev Event, cfg Config) backupIssueCommand {
 			Name:         "coverage",
 			Status:       "ok",
 			LocalCommand: fmt.Sprintf("gitclaw backup coverage --root %s --repo %s --issue %d", defaultBackupRoot, backupReportRepo(ev.Repo), issueNumber),
+		}
+	case "drill", "restore-drill":
+		issueNumber := ev.Issue.Number
+		if len(fields) >= 3 {
+			parsed, ok := parseBackupIssueNumber(fields[2])
+			if ok {
+				issueNumber = parsed
+			}
+		}
+		return backupIssueCommand{
+			Name:         "drill",
+			Status:       "ok",
+			LocalCommand: fmt.Sprintf("gitclaw backup drill --root %s --repo %s --issue %d", defaultBackupRoot, backupReportRepo(ev.Repo), issueNumber),
 		}
 	case "risk", "risk-audit":
 		return backupIssueCommand{
@@ -201,9 +218,9 @@ func writeBackupIssueCommandSummary(b *strings.Builder, request backupIssueComma
 			b.WriteString("- raw search query is not printed; only query hash and term count are shown\n")
 		}
 	case "unknown":
-		b.WriteString("- unknown backup subcommand; supported issue intents are `verify`, `coverage`, `risk`, `manifest`, `list`, `info`, `stats`, `search`, `export-jsonl`, `restore-plan`, and `retention-plan`\n")
+		b.WriteString("- unknown backup subcommand; supported issue intents are `verify`, `coverage`, `drill`, `risk`, `manifest`, `list`, `info`, `stats`, `search`, `export-jsonl`, `restore-plan`, and `retention-plan`\n")
 	case "invalid_issue":
-		b.WriteString("- invalid backup issue number; use `@gitclaw /backup info <issue-number>`, `@gitclaw /backup coverage <issue-number>`, or inspect the current issue without an explicit issue number\n")
+		b.WriteString("- invalid backup issue number; use `@gitclaw /backup info <issue-number>`, `@gitclaw /backup coverage <issue-number>`, `@gitclaw /backup drill <issue-number>`, or inspect the current issue without an explicit issue number\n")
 	default:
 		b.WriteString("- summary report requested\n")
 	}
@@ -216,6 +233,14 @@ func writeBackupIssueRiskSummary(b *strings.Builder) {
 	b.WriteString("- backup_risk_categories: `integrity, path-safety, credential-handling, prompt-boundary, restore-safety, retention`\n")
 	b.WriteString("- raw_backup_payloads_scanned_issue_side: `false`\n")
 	b.WriteString("- llm_e2e_required_after_backup_risk_change: `true`\n")
+}
+
+func writeBackupIssueDrillSummary(b *strings.Builder) {
+	b.WriteString("- backup_drill_status: `deferred`\n")
+	b.WriteString("- backup_drill_execution: `local_fetched_backup_branch`\n")
+	b.WriteString("- backup_drill_gates: `verify, coverage, restore-plan`\n")
+	b.WriteString("- raw_backup_payloads_scanned_issue_side: `false`\n")
+	b.WriteString("- llm_e2e_required_after_backup_drill_change: `true`\n")
 }
 
 func parseBackupIssueNumber(value string) (int, bool) {

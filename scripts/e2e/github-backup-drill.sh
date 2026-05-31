@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "doctor-report-e2e: $*" >&2
+  echo "backup-drill-e2e: $*" >&2
 }
 
 die() {
@@ -12,6 +12,7 @@ die() {
 
 repo="${GITCLAW_E2E_REPO:-}"
 workflow_name="${GITCLAW_E2E_WORKFLOW:-.github/workflows/gitclaw.yml}"
+backup_branch="${GITCLAW_E2E_BACKUP_BRANCH:-gitclaw-backups}"
 retention_label="${GITCLAW_E2E_RETENTION_LABEL:-gitclaw:e2e}"
 
 if [[ -z "$repo" ]]; then
@@ -33,15 +34,15 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_DOCTOR_REPORT_E2E_${timestamp}"
-followup_hidden_token="GITCLAW_DOCTOR_REPORT_FOLLOWUP_E2E_${timestamp}"
+hidden_token="GITCLAW_BACKUP_DRILL_HIDDEN_${timestamp}"
+followup_hidden_token="GITCLAW_BACKUP_DRILL_FOLLOWUP_HIDDEN_${timestamp}"
 expected_token="GITCLAW_SEARCH_CONTEXT_V1"
 search_phrase="bounded repository search fixture phrase"
-title="@gitclaw /doctor e2e ${timestamp}"
-body="Live doctor-report E2E.
+title="@gitclaw /backup drill e2e ${timestamp}"
+body="@gitclaw /backup drill
 
-Hidden doctor body token: ${token}
-This should produce a deterministic health report without a model call."
+Live backup-drill E2E.
+The issue-visible report and local drill must not print this hidden token: ${hidden_token}."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -50,12 +51,16 @@ issue_url="$(gh issue create \
   --body "$body" \
   --label gitclaw)"
 issue_number="${issue_url##*/}"
+tmp_dir=""
 
 cleanup() {
+  if [[ -n "${tmp_dir:-}" ]]; then
+    rm -rf "$tmp_dir"
+  fi
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "doctor-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "backup-drill e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -77,11 +82,11 @@ wait_for_run() {
       --json databaseId,status,conclusion,url,createdAt,displayTitle \
       --jq '. as $runs | $runs | map(select(.displayTitle == "'"${title}"'")) | sort_by(.createdAt) | reverse | .[0] // empty')"
     if [[ -n "$run_json" && "$run_json" != "null" ]]; then
-      local run_status conclusion url
-      run_status="$(jq -r '.status' <<<"$run_json")"
+      local status conclusion url
+      status="$(jq -r '.status' <<<"$run_json")"
       conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
       url="$(jq -r '.url' <<<"$run_json")"
-      if [[ "$run_status" == "completed" ]]; then
+      if [[ "$status" == "completed" ]]; then
         [[ "$conclusion" == "success" ]] || die "${event_name} run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
@@ -92,11 +97,11 @@ wait_for_run() {
   return 1
 }
 
-assistant_comments() {
+assistant_count() {
   gh issue view "$issue_number" \
     --repo "$repo" \
     --json comments \
-    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | join("\n---GITCLAW-COMMENT---\n")'
+    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length'
 }
 
 latest_assistant_comment() {
@@ -104,13 +109,6 @@ latest_assistant_comment() {
     --repo "$repo" \
     --json comments \
     --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | .[-1] // ""'
-}
-
-assistant_count() {
-  gh issue view "$issue_number" \
-    --repo "$repo" \
-    --json comments \
-    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length'
 }
 
 error_count() {
@@ -159,79 +157,91 @@ wait_for_done_status() {
   return 1
 }
 
-run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one doctor report comment"
-comments="$(assistant_comments)"
+drill_run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
+wait_for_assistant_count 1 || die "expected one backup drill report comment"
+drill_comment="$(latest_assistant_comment)"
 
 for expected in \
-  'model="gitclaw/doctor"' \
-  "GitClaw Doctor Report" \
+  'model="gitclaw/backup"' \
+  "GitClaw Backup Report" \
   "Generated without a model call" \
-  'health_status: `ok`' \
-  'config_source: `defaults+repo+environment`' \
-  'config_valid: `true`' \
-  'config_file_present: `true`' \
-  'model: `openai/gpt-5-nano`' \
-  'run_mode: `read-only`' \
-  'workflows_present: `7`' \
-  'context_files_present: `6`' \
-  'memory_notes: `1`' \
-  'skill_files: `1`' \
-  'e2e_scripts: `147`' \
-  'e2e_live_issue_scripts: `140`' \
-  'e2e_cleanup_scripts: `146`' \
-  'e2e_model_coverage_scripts: `58`' \
-  'e2e_model_followup_scripts: `44`' \
-  'e2e_session_coverage_scripts: `2`' \
-  'e2e_backup_gate_scripts: `22`' \
-  'e2e_workflow_dispatch_scripts: `21`' \
-  'enabled_skills: `1`' \
-  'disabled_skills: `0`' \
-  'allowlist_blocked_skills: `0`' \
-  'enabled_tools: `5`' \
-  'disabled_tools: `0`' \
-  'allowlist_blocked_tools: `0`' \
-  'proactive_prompt_files: `1`' \
-  'managed_labels: `9`' \
-  'validation_errors: `0`' \
-  'validation_warnings: `0`' \
-  'skill_validation_status: `ok`' \
-  'skill_validation_errors: `0`' \
-  'skill_validation_warnings: `0`' \
-  'soul_validation_status: `ok`' \
-  'soul_validation_errors: `0`' \
-  'soul_validation_warnings: `0`' \
-  'memory_validation_status: `ok`' \
-  'memory_validation_errors: `0`' \
-  'memory_validation_warnings: `0`' \
-  'tool_validation_status: `ok`' \
-  'tool_validation_errors: `0`' \
-  'tool_validation_warnings: `0`' \
-  '`config_validation`: `ok`' \
-  '`workflow_set`: `ok`' \
-  '`identity_context`: `ok`' \
-  '`local_skills`: `ok`' \
-  '`e2e_harnesses`: `ok`' \
-  '`skill_validation`: `ok`' \
-  '`soul_validation`: `ok`' \
-  '`memory_validation`: `ok`' \
-  '`tool_validation`: `ok`' \
-  '.gitclaw/config.yml' \
-  '.github/workflows/gitclaw.yml' \
-  '.gitclaw/SOUL.md' \
-  '.gitclaw/SKILLS/repo-reader/SKILL.md' \
-  '.gitclaw/proactive/repo-hygiene.md' \
-  "### E2E Harnesses" \
-  'e2e_coverage_status=`ok`' \
-  'path=`scripts/e2e/github-doctor-report.sh`' \
-  'model_coverage=`true`' \
-  'model_followup=`true`' \
-  'sha256_12='; do
-  grep -Fq "$expected" <<<"$comments" || die "doctor report missing ${expected}"
+  'requested_backup_command: `drill`' \
+  'backup_command_status: `ok`' \
+  'issue_side_execution: `deferred_to_post_turn_backup_branch`' \
+  'requested_local_command: `gitclaw backup drill --root .gitclaw/backups --repo '"${repo}"' --issue '"${issue_number}"'`' \
+  'backup_drill_status: `deferred`' \
+  'backup_drill_execution: `local_fetched_backup_branch`' \
+  'backup_drill_gates: `verify, coverage, restore-plan`' \
+  'raw_backup_payloads_scanned_issue_side: `false`' \
+  'llm_e2e_required_after_backup_drill_change: `true`' \
+  'raw_bodies_included: `false`'; do
+  grep -Fq "$expected" <<<"$drill_comment" || die "backup drill issue report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "doctor report leaked issue body token"
+if grep -Fq "$hidden_token" <<<"$drill_comment"; then
+  die "backup drill issue report leaked hidden token"
+fi
+
+repo_key="${repo//\//__}"
+issue_padded="$(printf "%06d" "$issue_number")"
+issue_path="issues/${issue_padded}.json"
+
+fetch_backup_branch() {
+  rm -rf "$tmp_dir"
+  tmp_dir="$(mktemp -d)"
+  backup_checkout="${tmp_dir}/backup-branch"
+  gh repo clone "$repo" "$backup_checkout" -- --depth=1 --branch "$backup_branch" >/dev/null 2>&1
+}
+
+for _ in {1..60}; do
+  if fetch_backup_branch; then
+    index_path="${backup_checkout}/.gitclaw/backups/${repo_key}/index.json"
+  else
+    sleep 5
+    continue
+  fi
+  if [[ -f "$index_path" ]] &&
+    jq -e --argjson number "$issue_number" --arg title "$title" --arg path "$issue_path" '
+      any(.issues[]; .number == $number and .title == $title and .path == $path)
+    ' "$index_path" >/dev/null; then
+    drill_output="$(go run ./cmd/gitclaw backup drill --root "${backup_checkout}/.gitclaw/backups" --repo "$repo" --target-repo "$repo" --issue "$issue_number")"
+    for expected in \
+      "GitClaw Backup Drill Report" \
+      "repository: \`${repo}\`" \
+      "target_repository: \`${repo}\`" \
+      'backup_drill_status: `ok`' \
+      'backup_verify_status: `ok`' \
+      'backup_coverage_status: `ok`' \
+      'restore_plan_status: `ok`' \
+      'restore_mode: `dry-run`' \
+      'verification_failures: `0`' \
+      "issue: \`#${issue_number}\`" \
+      'issue_indexed: `true`' \
+      "expected_issue_backup_path: \`${issue_path}\`" \
+      "issue_backup_path: \`${issue_path}\`" \
+      'issue_backup_payload_readable: `true`' \
+      'restore_plan_available: `true`' \
+      'raw_bodies_included: `false`' \
+      'mutation_performed: `false`' \
+      'github_api_calls_performed: `false`' \
+      'llm_e2e_required_after_backup_drill_change: `true`' \
+      'verify_gate=`pass`' \
+      'coverage_gate=`pass`' \
+      'restore_plan_gate=`pass`' \
+      'comment_1_sha256_12:' \
+      'message_1_sha256_12:'; do
+      grep -Fq "$expected" <<<"$drill_output" || die "backup drill output missing ${expected}"
+    done
+    if grep -Fq "$hidden_token" <<<"$drill_output" || grep -Fq "Live backup-drill E2E" <<<"$drill_output"; then
+      die "backup drill output leaked raw issue data"
+    fi
+    break
+  fi
+  sleep 5
+done
+
+if [[ -z "${drill_output:-}" ]]; then
+  die "backup drill did not observe issue #${issue_number} in ${backup_branch}"
 fi
 
 comment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
@@ -256,13 +266,13 @@ grep -Fq 'skills="repo-reader"' <<<"$model_comment" || die "assistant marker mis
 grep -Fq 'tools="' <<<"$model_comment" || die "assistant marker missing prompt-visible tools"
 grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant marker did not prove search_files was prompt-visible"
 
-for leaked in "$token" "$followup_hidden_token"; do
+for leaked in "$hidden_token" "$followup_hidden_token"; do
   if grep -Fq "$leaked" <<<"$model_comment"; then
     die "model follow-up leaked ${leaked}"
   fi
 done
 
 wait_for_done_status || die "expected gitclaw:done without running/error"
-url="$(jq -r '.url' <<<"$run_json")"
+drill_url="$(jq -r '.url' <<<"$drill_run_json")"
 model_url="$(jq -r '.url' <<<"$model_run_json")"
-log "passed for issue #${issue_number}: ${url} (model follow-up: ${model_url})"
+log "passed for issue #${issue_number}: ${drill_url} (model follow-up: ${model_url})"

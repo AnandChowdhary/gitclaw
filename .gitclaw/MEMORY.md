@@ -10,6 +10,7 @@
 - Keep heartbeat risk audits body-free: scheduled workflow and HEARTBEAT context scans may inspect bodies internally, but reports must emit only metadata, counts, hashes, risk codes, and runtime gates.
 - Keep trigger behavior explicit in `.gitclaw/config.yml`: default `label-or-prefix` for shared repos, `label-only` or `prefix-only` for stricter routing, and `inbox` only for dedicated assistant repositories.
 - Keep backup coverage checks body-free: prove one issue's indexed, canonical, readable backup payload with paths, counts, timestamps, and hashes, then use a live model follow-up for E2E coverage.
+- Keep backup drill checks body-free: compose verify, one-issue coverage, and dry-run restore plan gates against a fetched backup branch, then pair changes with a live GitHub Models repo-reader/tool follow-up.
 - Keep session coverage checks strict: real E2E should prove a model-backed assistant marker, prompt provenance, selected skill names, and prompt-visible tool names from the issue thread and the fetched backup.
 - Keep session stats body-free: summarize roles, trust, model/provenance totals, prompt-visible skill/tool names, and marker counts without printing issue bodies, comment bodies, assistant replies, prompts, or tool outputs.
 - Keep sandbox risk audits body-free: report runtime, tool, workflow, skill, backup, and raw-body leak gates with stable finding codes, then prove normal LLM/tool behavior in live E2E.

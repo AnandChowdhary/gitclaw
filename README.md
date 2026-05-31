@@ -139,6 +139,7 @@ Backups, sessions, and run provenance:
 ```bash
 gitclaw backup verify
 gitclaw backup coverage --issue <number>
+gitclaw backup drill --issue <number>
 gitclaw backup risk
 gitclaw backup manifest
 gitclaw backup list

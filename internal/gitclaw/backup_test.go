@@ -496,6 +496,52 @@ func TestBuildBackupCoverageReportsOneIssueWithoutBodies(t *testing.T) {
 	}
 }
 
+func TestBuildBackupDrillComposesRestoreReadinessWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T13:30:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issue_comment",
+		Issue: IssueBackupIssue{
+			Number: 10,
+			Title:  "@gitclaw drill title BACKUP_DRILL_TITLE_SECRET",
+			Body:   "BACKUP_DRILL_BODY_SECRET",
+			Labels: []string{"gitclaw:e2e", "gitclaw"},
+		},
+		Transcript: []TranscriptMessage{
+			{Role: "user", Body: "BACKUP_DRILL_TRANSCRIPT_TOKEN", Actor: "alice", Trusted: true},
+			{Role: "assistant", Body: "BACKUP_DRILL_ASSISTANT_TOKEN", Actor: "github-actions[bot]", CommentID: 12, Trusted: true},
+		},
+		Comments: []IssueBackupComment{
+			{ID: 12, Body: "<!-- gitclaw:assistant-turn -->\nBACKUP_DRILL_COMMENT_TOKEN"},
+			{ID: 13, Body: "<!-- gitclaw:error -->\nBACKUP_DRILL_ERROR_TOKEN"},
+		},
+	})
+	if _, err := WriteBackupIndex(root, "owner/repo", time.Date(2026, 5, 29, 14, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+
+	drill, err := BuildBackupDrill(root, "owner/repo", 10, "owner/restored")
+	if err != nil {
+		t.Fatalf("BuildBackupDrill returned error: %v", err)
+	}
+	if !drill.OK() || drill.TargetRepo != "owner/restored" || drill.BackupVerifyStatus != "ok" || drill.BackupCoverageStatus != "ok" || drill.RestorePlanStatus != "ok" || !drill.RestorePlanAvailable || drill.Comments != 2 || drill.TranscriptMessages != 2 || drill.AssistantTurns != 1 || drill.ErrorComments != 1 {
+		t.Fatalf("unexpected backup drill metadata: %#v", drill)
+	}
+	report := RenderBackupDrill(drill)
+	for _, want := range []string{"GitClaw Backup Drill Report", "repository: `owner/repo`", "target_repository: `owner/restored`", "backup_drill_status: `ok`", "backup_verify_status: `ok`", "backup_coverage_status: `ok`", "restore_plan_status: `ok`", "restore_mode: `dry-run`", "verification_failures: `0`", "backup_schema_version: `1`", "issue: `#10`", "issue_indexed: `true`", "expected_issue_backup_path: `issues/000010.json`", "issue_backup_path: `issues/000010.json`", "issue_backup_payload_readable: `true`", "comments: `2`", "transcript_messages: `2`", "assistant_turn_comments: `1`", "error_comments: `1`", "restore_plan_available: `true`", "raw_bodies_included: `false`", "mutation_performed: `false`", "github_api_calls_performed: `false`", "llm_e2e_required_after_backup_drill_change: `true`", "verify_gate=`pass`", "coverage_gate=`pass`", "restore_plan_gate=`pass`", "comment_1_sha256_12:", "message_1_sha256_12:"} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("backup drill report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"BACKUP_DRILL_TITLE_SECRET", "BACKUP_DRILL_BODY_SECRET", "BACKUP_DRILL_TRANSCRIPT_TOKEN", "BACKUP_DRILL_ASSISTANT_TOKEN", "BACKUP_DRILL_COMMENT_TOKEN", "BACKUP_DRILL_ERROR_TOKEN", "@gitclaw drill title"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("backup drill leaked body/title token %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestBuildBackupCoverageReportsMissingIssue(t *testing.T) {
 	root := t.TempDir()
 	writeBackupFixture(t, root, IssueBackup{
