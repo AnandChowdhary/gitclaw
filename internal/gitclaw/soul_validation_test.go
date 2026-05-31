@@ -130,6 +130,102 @@ func TestRenderSoulVerifyReportShowsTrustEnvelopeWithoutBodies(t *testing.T) {
 	}
 }
 
+func TestRenderSoulAnchorsReportShowsAuthorityMapWithoutBodies(t *testing.T) {
+	repoContext := RepoContext{Documents: []ContextDocument{
+		{Path: ".gitclaw/SOUL.md", Body: "---\ndescription: Repo-local soul.\n---\nSOUL_ANCHOR_BODY_TOKEN"},
+		{Path: ".gitclaw/IDENTITY.md", Body: "Identity."},
+		{Path: ".gitclaw/USER.md", Body: "USER_ANCHOR_BODY_TOKEN"},
+		{Path: ".gitclaw/TOOLS.md", Body: "Tools."},
+		{Path: ".gitclaw/MEMORY.md", Body: "Memory."},
+		{Path: ".gitclaw/HEARTBEAT.md", Body: "Heartbeat."},
+		{Path: ".gitclaw/STANDING_ORDERS.md", Body: "Orders."},
+		{Path: ".gitclaw/memory/2026-05-29.md", Body: "Memory note."},
+	}}
+	body := RenderSoulAnchorsReport(repoContext)
+	for _, want := range []string{
+		"GitClaw Soul Anchors Report",
+		"scope: `local-cli`",
+		"soul_anchors_status: `ok`",
+		"authority_model: `repo-local-workspace-files`",
+		"loaded_anchors: `8`",
+		"required_anchors: `6`",
+		"required_anchors_loaded: `6`",
+		"required_anchors_missing: `0`",
+		"optional_anchors_loaded: `2`",
+		"memory_note_anchors: `1`",
+		"prompt_visible_anchors: `8`",
+		"raw_bodies_included: `false`",
+		"soul_writes_allowed: `false`",
+		"llm_e2e_required_after_soul_anchors_change: `true`",
+		"soul_validation_status: `ok`",
+		"soul_risk_status: `ok`",
+		"### Authority Anchors",
+		"name=`soul` path=`.gitclaw/SOUL.md` category=`soul` role=`persona-boundaries` authority=`core` source=`repo-local` required=`true` loaded=`true` prompt_visible=`true` canonical=`true`",
+		"name=`standing-orders` path=`.gitclaw/STANDING_ORDERS.md`",
+		"name=`memory-note` path=`.gitclaw/memory/2026-05-29.md` category=`memory-note` role=`working-memory-note` authority=`memory`",
+		"sha256_12=",
+		"risk_findings=`0`",
+		"risk_codes=`none`",
+		"### Anchor Gates",
+		"validation_gate=`pass`",
+		"risk_gate=`pass`",
+		"mutation_gate=`disabled`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("soul anchors report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SOUL_ANCHOR_BODY_TOKEN", "USER_ANCHOR_BODY_TOKEN", "Repo-local soul"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("soul anchors report leaked body token %q:\n%s", leaked, body)
+		}
+	}
+}
+
+func TestRenderSoulReportRoutesAnchorsWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SOUL.md", "SOUL_ANCHOR_ROUTE_BODY_TOKEN")
+	writeTestFile(t, root, ".gitclaw/IDENTITY.md", "Identity.")
+	writeTestFile(t, root, ".gitclaw/USER.md", "USER_ANCHOR_ROUTE_BODY_TOKEN")
+	writeTestFile(t, root, ".gitclaw/TOOLS.md", "Tools.")
+	writeTestFile(t, root, ".gitclaw/MEMORY.md", "Memory.")
+	writeTestFile(t, root, ".gitclaw/HEARTBEAT.md", "Heartbeat.")
+	writeTestFile(t, root, ".gitclaw/memory/2026-05-29.md", "Memory note.")
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	ctx, err := LoadRepoContext(root, []TranscriptMessage{{Role: "user", Body: "soul anchors"}})
+	if err != nil {
+		t.Fatalf("LoadRepoContext returned error: %v", err)
+	}
+	ev := Event{
+		Repo: "owner/repo",
+		Issue: Issue{
+			Number: 44,
+			Title:  "@gitclaw /soul anchors",
+			Body:   "Hidden soul anchors issue token: SOUL_ANCHOR_ROUTE_ISSUE_SECRET.",
+		},
+	}
+	body := RenderSoulReport(ev, cfg, ctx)
+	for _, want := range []string{
+		"GitClaw Soul Anchors Report",
+		"repository: `owner/repo`",
+		"issue: `#44`",
+		"soul_anchors_status: `ok`",
+		"issue_title_sha256_12:",
+		"name=`soul` path=`.gitclaw/SOUL.md`",
+		"raw_bodies_included: `false`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("soul anchors route report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SOUL_ANCHOR_ROUTE_BODY_TOKEN", "USER_ANCHOR_ROUTE_BODY_TOKEN", "SOUL_ANCHOR_ROUTE_ISSUE_SECRET"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("soul anchors route report leaked %q:\n%s", leaked, body)
+		}
+	}
+}
+
 func TestRenderSoulSearchReportFindsContextWithoutBodies(t *testing.T) {
 	repoContext := RepoContext{Documents: []ContextDocument{
 		{Path: ".gitclaw/SOUL.md", Body: "Repo-native operating guidance SOUL_SEARCH_BODY_TOKEN."},

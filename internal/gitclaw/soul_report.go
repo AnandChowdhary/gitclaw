@@ -39,6 +39,9 @@ func IsSoulReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderSoulReport(ev Event, cfg Config, repoContext RepoContext) string {
+	if isSoulAnchorsRequest(ev, cfg) {
+		return renderSoulAnchorsReport(ev, repoContext, true)
+	}
 	if isSoulVerifyRequest(ev, cfg) {
 		return renderSoulVerifyReport(ev, repoContext, true)
 	}

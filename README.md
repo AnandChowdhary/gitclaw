@@ -56,6 +56,7 @@ stricter shared repos can use `label-only` or `prefix-only`.
 High-authority context:
 
 ```bash
+gitclaw soul anchors
 gitclaw soul verify
 gitclaw soul risk
 gitclaw soul validate

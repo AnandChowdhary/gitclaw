@@ -805,9 +805,11 @@ func runMemoryValidateCommand(args []string) error {
 
 func runSoulCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw soul verify|risk|validate|list|edit-plan <path>|info <path>|search <query>")
+		return fmt.Errorf("usage: gitclaw soul anchors|verify|risk|validate|list|edit-plan <path>|info <path>|search <query>")
 	}
 	switch args[0] {
+	case "anchors", "anchor", "authority", "map":
+		return runSoulAnchorsCommand(args[1:])
 	case "verify":
 		return runSoulVerifyCommand(args[1:])
 	case "risk", "risk-audit":
@@ -825,6 +827,22 @@ func runSoulCommand(args []string) error {
 	default:
 		return fmt.Errorf("unknown soul command %q", args[0])
 	}
+}
+
+func runSoulAnchorsCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown soul anchors argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSoulAnchorsReport(repoContext))
+	return nil
 }
 
 func runSoulVerifyCommand(args []string) error {

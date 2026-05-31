@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "doctor-report-e2e: $*" >&2
+  echo "soul-anchors-report-e2e: $*" >&2
 }
 
 die() {
@@ -33,15 +33,15 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_DOCTOR_REPORT_E2E_${timestamp}"
-followup_hidden_token="GITCLAW_DOCTOR_REPORT_FOLLOWUP_E2E_${timestamp}"
+hidden_token="GITCLAW_SOUL_ANCHORS_HIDDEN_${timestamp}"
+followup_hidden_token="GITCLAW_SOUL_ANCHORS_FOLLOWUP_HIDDEN_${timestamp}"
 expected_token="GITCLAW_SEARCH_CONTEXT_V1"
 search_phrase="bounded repository search fixture phrase"
-title="@gitclaw /doctor e2e ${timestamp}"
-body="Live doctor-report E2E.
+title="@gitclaw /soul anchors e2e ${timestamp}"
+body="@gitclaw /soul anchors
 
-Hidden doctor body token: ${token}
-This should produce a deterministic health report without a model call."
+Live soul-anchors E2E.
+Do not include this hidden issue token: ${hidden_token}"
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -55,7 +55,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "doctor-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "soul-anchors-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -77,11 +77,11 @@ wait_for_run() {
       --json databaseId,status,conclusion,url,createdAt,displayTitle \
       --jq '. as $runs | $runs | map(select(.displayTitle == "'"${title}"'")) | sort_by(.createdAt) | reverse | .[0] // empty')"
     if [[ -n "$run_json" && "$run_json" != "null" ]]; then
-      local run_status conclusion url
-      run_status="$(jq -r '.status' <<<"$run_json")"
+      local status conclusion url
+      status="$(jq -r '.status' <<<"$run_json")"
       conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
       url="$(jq -r '.url' <<<"$run_json")"
-      if [[ "$run_status" == "completed" ]]; then
+      if [[ "$status" == "completed" ]]; then
         [[ "$conclusion" == "success" ]] || die "${event_name} run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
@@ -92,11 +92,11 @@ wait_for_run() {
   return 1
 }
 
-assistant_comments() {
+assistant_count() {
   gh issue view "$issue_number" \
     --repo "$repo" \
     --json comments \
-    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | join("\n---GITCLAW-COMMENT---\n")'
+    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length'
 }
 
 latest_assistant_comment() {
@@ -104,13 +104,6 @@ latest_assistant_comment() {
     --repo "$repo" \
     --json comments \
     --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | .[-1] // ""'
-}
-
-assistant_count() {
-  gh issue view "$issue_number" \
-    --repo "$repo" \
-    --json comments \
-    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length'
 }
 
 error_count() {
@@ -159,80 +152,54 @@ wait_for_done_status() {
   return 1
 }
 
-run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one doctor report comment"
-comments="$(assistant_comments)"
+anchors_run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
+wait_for_assistant_count 1 || die "expected one soul anchors report comment"
+anchors_comment="$(latest_assistant_comment)"
 
 for expected in \
-  'model="gitclaw/doctor"' \
-  "GitClaw Doctor Report" \
+  'model="gitclaw/soul"' \
+  "GitClaw Soul Anchors Report" \
   "Generated without a model call" \
-  'health_status: `ok`' \
-  'config_source: `defaults+repo+environment`' \
-  'config_valid: `true`' \
-  'config_file_present: `true`' \
-  'model: `openai/gpt-5-nano`' \
-  'run_mode: `read-only`' \
-  'workflows_present: `7`' \
-  'context_files_present: `6`' \
-  'memory_notes: `1`' \
-  'skill_files: `1`' \
-  'e2e_scripts: `148`' \
-  'e2e_live_issue_scripts: `141`' \
-  'e2e_cleanup_scripts: `148`' \
-  'e2e_model_coverage_scripts: `59`' \
-  'e2e_model_followup_scripts: `45`' \
-  'e2e_session_coverage_scripts: `2`' \
-  'e2e_backup_gate_scripts: `22`' \
-  'e2e_workflow_dispatch_scripts: `21`' \
-  'enabled_skills: `1`' \
-  'disabled_skills: `0`' \
-  'allowlist_blocked_skills: `0`' \
-  'enabled_tools: `5`' \
-  'disabled_tools: `0`' \
-  'allowlist_blocked_tools: `0`' \
-  'proactive_prompt_files: `1`' \
-  'managed_labels: `9`' \
-  'validation_errors: `0`' \
-  'validation_warnings: `0`' \
-  'skill_validation_status: `ok`' \
-  'skill_validation_errors: `0`' \
-  'skill_validation_warnings: `0`' \
+  'soul_anchors_status: `ok`' \
+  'authority_model: `repo-local-workspace-files`' \
+  'anchor_count:' \
+  'loaded_anchors:' \
+  'required_anchors: `6`' \
+  'required_anchors_loaded: `6`' \
+  'required_anchors_missing: `0`' \
+  'memory_note_anchors:' \
+  'prompt_visible_anchors:' \
+  'raw_bodies_included: `false`' \
+  'soul_writes_allowed: `false`' \
+  'llm_e2e_required_after_soul_anchors_change: `true`' \
   'soul_validation_status: `ok`' \
-  'soul_validation_errors: `0`' \
-  'soul_validation_warnings: `0`' \
-  'memory_validation_status: `ok`' \
-  'memory_validation_errors: `0`' \
-  'memory_validation_warnings: `0`' \
-  'tool_validation_status: `ok`' \
-  'tool_validation_errors: `0`' \
-  'tool_validation_warnings: `0`' \
-  '`config_validation`: `ok`' \
-  '`workflow_set`: `ok`' \
-  '`identity_context`: `ok`' \
-  '`local_skills`: `ok`' \
-  '`e2e_harnesses`: `ok`' \
-  '`skill_validation`: `ok`' \
-  '`soul_validation`: `ok`' \
-  '`memory_validation`: `ok`' \
-  '`tool_validation`: `ok`' \
-  '.gitclaw/config.yml' \
-  '.github/workflows/gitclaw.yml' \
-  '.gitclaw/SOUL.md' \
-  '.gitclaw/SKILLS/repo-reader/SKILL.md' \
-  '.gitclaw/proactive/repo-hygiene.md' \
-  "### E2E Harnesses" \
-  'e2e_coverage_status=`ok`' \
-  'path=`scripts/e2e/github-doctor-report.sh`' \
-  'model_coverage=`true`' \
-  'model_followup=`true`' \
-  'sha256_12='; do
-  grep -Fq "$expected" <<<"$comments" || die "doctor report missing ${expected}"
+  'soul_risk_status: `ok`' \
+  "### Authority Anchors" \
+  'name=`soul` path=`.gitclaw/SOUL.md` category=`soul` role=`persona-boundaries` authority=`core`' \
+  'name=`identity` path=`.gitclaw/IDENTITY.md`' \
+  'name=`user` path=`.gitclaw/USER.md`' \
+  'name=`tools` path=`.gitclaw/TOOLS.md`' \
+  'name=`memory` path=`.gitclaw/MEMORY.md`' \
+  'name=`heartbeat` path=`.gitclaw/HEARTBEAT.md`' \
+  'name=`memory-note` path=`.gitclaw/memory/' \
+  'prompt_visible=`true`' \
+  'canonical=`true`' \
+  'sha256_12=' \
+  'risk_codes=`none`' \
+  "### Anchor Gates" \
+  'validation_gate=`pass`' \
+  'risk_gate=`pass`' \
+  'external_registry_gate=`not_configured`' \
+  'profile_export_gate=`not_configured`' \
+  'mutation_gate=`disabled`'; do
+  grep -Fq -- "$expected" <<<"$anchors_comment" || die "soul anchors report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "doctor report leaked issue body token"
-fi
+for leaked in "$hidden_token" "GitClaw remembers durable product decisions" "GitClaw is a repo-native GitHub issue assistant"; do
+  if grep -Fq "$leaked" <<<"$anchors_comment"; then
+    die "soul anchors report leaked ${leaked}"
+  fi
+done
 
 comment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \
@@ -256,13 +223,13 @@ grep -Fq 'skills="repo-reader"' <<<"$model_comment" || die "assistant marker mis
 grep -Fq 'tools="' <<<"$model_comment" || die "assistant marker missing prompt-visible tools"
 grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant marker did not prove search_files was prompt-visible"
 
-for leaked in "$token" "$followup_hidden_token"; do
+for leaked in "$hidden_token" "$followup_hidden_token"; do
   if grep -Fq "$leaked" <<<"$model_comment"; then
     die "model follow-up leaked ${leaked}"
   fi
 done
 
 wait_for_done_status || die "expected gitclaw:done without running/error"
-url="$(jq -r '.url' <<<"$run_json")"
+anchors_url="$(jq -r '.url' <<<"$anchors_run_json")"
 model_url="$(jq -r '.url' <<<"$model_run_json")"
-log "passed for issue #${issue_number}: ${url} (model follow-up: ${model_url})"
+log "passed for issue #${issue_number}: ${anchors_url} (model follow-up: ${model_url})"

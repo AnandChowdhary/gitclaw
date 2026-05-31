@@ -2122,6 +2122,23 @@ because the backup branch is written after the assistant turn. E2E coverage
 must prove both halves: the deterministic body-free drill report and a real
 GitHub Models follow-up with repo-reader/tool evidence.
 
+### 2026-05-31 Soul Anchors Follow-Up
+
+OpenClaw's workspace map treats files such as `AGENTS.md`, `SOUL.md`,
+`USER.md`, `IDENTITY.md`, `TOOLS.md`, `HEARTBEAT.md`, `MEMORY.md`, and dated
+memory notes as the agent's loaded home context, while Hermes profiles isolate
+`config.yaml`, `.env`, `SOUL.md`, memories, sessions, skills, cron jobs, and
+state database per agent. GitClaw should expose the same concept as a
+repo-native authority map rather than a hidden prompt detail.
+
+`gitclaw soul anchors` and `@gitclaw /soul anchors` should report anchor names,
+roles, authority layers, required/loaded/prompt-visible/canonical flags, short
+hashes, validation gates, risk gates, and mutation-disabled gates without
+printing raw soul, user, memory, tool, issue, comment, prompt, or secret
+bodies. The live E2E must pair the deterministic anchors report with a normal
+GitHub Models follow-up that proves repo-reader and prompt-visible tool
+provenance still work.
+
 ## Open Questions For Speccing
 
 1. Is `gitclaw` primarily for one user's repos, or for teams/organizations?

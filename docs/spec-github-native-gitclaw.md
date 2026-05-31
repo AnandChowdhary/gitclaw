@@ -1789,6 +1789,7 @@ agents rely on for durable identity and policy:
 Validation is visible in the `/soul` report and locally through:
 
 ```bash
+gitclaw soul anchors
 gitclaw soul verify
 gitclaw soul risk
 gitclaw soul validate
@@ -1808,6 +1809,7 @@ by OpenClaw and Hermes' portable workspace files:
 
 ```text
 @gitclaw /soul
+@gitclaw /soul anchors
 @gitclaw /soul list
 @gitclaw /soul verify
 @gitclaw /soul risk
@@ -1831,12 +1833,29 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 - soul risk status, risk finding counts, risk codes, and line hashes for
   prompt-boundary, secret exfiltration, persistent-state, channel-control,
   automation-amplification, host-execution, and credential persistence risks.
+- high-authority anchor roles, authority layers, prompt-visible flags,
+  canonical path flags, and mutation-disabled gates when explicitly requested.
 - high-authority edit planning metadata when explicitly requested.
 
 It never dumps full file bodies. The hashes make the issue-visible report
 verifiable without exposing private user, memory, or policy text.
 `@gitclaw /soul list` is an explicit inventory alias for the same report,
 matching the local `gitclaw soul list` helper.
+
+When called as `@gitclaw /soul anchors`, `@gitclaw /soul authority`, or
+`@gitclaw /soul map`, the command posts a body-free authority map for the
+repo-local context hierarchy. The report treats OpenClaw workspace files and
+Hermes profile files as anchors: `SOUL.md` for persona/boundaries,
+`IDENTITY.md` for agent identity, `USER.md` for user profile, `TOOLS.md` for
+tool guidance, `MEMORY.md` and dated memory notes for memory, `HEARTBEAT.md`
+for proactive checks, and optional policy files such as standing orders,
+hooks, plugins, tasks, nodes, artifacts, diffs, and workspace policy. It
+reports anchor names, roles, authority layers, sources, required/loaded/
+prompt-visible/canonical/latest flags, byte and line counts, short hashes,
+frontmatter/description presence, validation gates, risk gates, and mutation
+gates only. It never emits raw file, issue, comment, prompt, or secret bodies.
+Changes to this report must be paired with a live GitHub Models follow-up E2E
+that proves normal inference and prompt-visible tool provenance.
 
 When called as `@gitclaw /soul info <path>`, the command posts one focused
 high-authority context metadata card. Supported targets include `soul`,
@@ -4658,6 +4677,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - create a third real issue with `@gitclaw /soul verify`,
    - create a fourth real issue with `@gitclaw /soul risk`,
    - create a fifth real issue with `@gitclaw /soul info soul`,
+   - create another real issue with `@gitclaw /soul anchors`,
    - assert the reply is marked `model="gitclaw/soul"`,
    - assert the report lists loaded identity, policy, user, and memory paths
      with byte counts, line counts, and hashes,
@@ -4666,6 +4686,10 @@ assert the expected comments/labels, and close the issue in cleanup.
      verification status, trust cards, and verification findings,
    - assert the risk report includes status/counts, risk cards, risk codes,
      line hashes, and `llm_e2e_required_after_soul_risk_change=true`,
+   - assert the anchors report includes anchor roles, authority layers,
+     required/loaded/prompt-visible/canonical flags, validation gates, risk
+     gates, mutation-disabled gates, and
+     `llm_e2e_required_after_soul_anchors_change=true`,
    - assert the info report includes exactly one matched soul file, normalized
      path, category, source, loaded-for-turn state, short hash, and
      body-free/write-disabled flags,
@@ -5580,6 +5604,11 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven soul-list E2E harness verifies `@gitclaw /soul list` is an
   explicit inventory alias with the same body-free context file, memory-note,
   hash, and validation metadata.
+- A `gh`-driven soul-anchors E2E harness verifies
+  `@gitclaw /soul anchors` exposes the body-free authority map across
+  repo-local soul/profile/memory/policy anchors, then posts a normal follow-up
+  requiring repo-reader search so GitHub Models proves model inference, prompt
+  provenance, selected skills, and prompt-visible tool names.
 - A `gh`-driven soul-info E2E harness verifies `@gitclaw /soul info soul`
   exposes one body-free high-authority context metadata card with normalized
   path, category, repo-local source, selected-for-turn state, hashes, and
