@@ -48,6 +48,9 @@
 - Channel-delivery workflow E2E needs source assistant verification, hash-only
   outbound receipt state, duplicate receipt suppression, and two normal
   model/tool issue-comment turns that do not leak source reply bodies.
+- Channel-delivery follow-up prompts must reject state hashes and receipt
+  metadata explicitly; the repo-search answer has to come from the exact
+  `docs/search-fixture.md` line, not from issue-visible hashes.
 - Heartbeat comments are model-backed scheduled turns; their
   `gitclaw:heartbeat` markers must include model, prompt-context, context-count,
   and usage telemetry without printing prompt or heartbeat bodies.

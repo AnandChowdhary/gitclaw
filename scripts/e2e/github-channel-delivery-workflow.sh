@@ -272,8 +272,10 @@ gh issue comment "$state_issue" \
   --body "@gitclaw Continue after the channel-delivery workflow and use the repo-reader skill.
 
 Search the repository for \`${search_phrase}\`.
-The matching repository search result line has the form \`${search_phrase} => <token>\`.
-Reply with only the token after the arrow from the matching gitclaw.search_files tool output line.
+Search for that exact phrase, not shorter words from it.
+The matching repository search result line in \`docs/search-fixture.md\` has the form \`${search_phrase} => <token>\`.
+Reply with only the uppercase fixture token after the arrow from the matching gitclaw.search_files tool output line.
+Do not answer with an issue title, issue number, source comment id, gateway run id, account hash, external message hash, or any 12-character hash from this issue.
 Do not answer with any token from this issue or its comments.
 Do not include this hidden follow-up token: ${followup_hidden_token}
 Keep the answer under 30 words." >/dev/null
@@ -304,8 +306,10 @@ gh issue comment "$state_issue" \
   --body "@gitclaw Continue this channel-delivery receipt issue conversation.
 
 Use the repo-reader skill and search the repository for \`${second_search_phrase}\`.
-The matching repository search result line has the form \`${second_search_phrase} => <token>\`.
-Reply with only the token after the arrow from the matching gitclaw.search_files tool output line.
+Search for that exact phrase, not shorter words from it.
+The matching repository search result line in \`docs/search-fixture.md\` has the form \`${second_search_phrase} => <token>\`.
+Reply with only the uppercase fixture token after the arrow from the matching gitclaw.search_files tool output line.
+Do not answer with an issue title, issue number, source comment id, gateway run id, account hash, external message hash, or any 12-character hash from this issue.
 Do not answer with any token from this issue or its comments.
 Do not include this hidden follow-up token: ${second_followup_hidden_token}
 Keep the answer under 30 words." >/dev/null
