@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T15:30:37Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 418,
+    "title": "GitClaw workflow_dispatch e2e 20260531T152923Z",
+    "body": "Live workflow_dispatch E2E.\n\nWhen GitClaw is manually dispatched for this issue, reply with exact token `GITCLAW_WORKFLOW_DISPATCH_E2E_20260531T152923Z`.\n",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw",
+      "gitclaw:e2e"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw workflow_dispatch e2e 20260531T152923Z\n\nLive workflow_dispatch E2E.\n\nWhen GitClaw is manually dispatched for this issue, reply with exact token `GITCLAW_WORKFLOW_DISPATCH_E2E_20260531T152923Z`.\n",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_WORKFLOW_DISPATCH_E2E_20260531T152923Z",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4587158068,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4587158068,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26716695504\" event_id=\"issue-418\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"81f8c554631477163ec885bebcb10eab\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26716695504\" prompt_context_sha256_12=\"ac04b8c4565b\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"9174\" usage_completion_tokens=\"20\" usage_total_tokens=\"9194\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_WORKFLOW_DISPATCH_E2E_20260531T152923Z",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T15:30:09Z",
+      "updated_at": "2026-05-31T15:30:09Z"
+    }
+  ]
+}
