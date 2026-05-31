@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T17:59:23Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "workflow_dispatch",
+  "issue": {
+    "number": 438,
+    "title": "GitClaw proactive proactive-e2e-20260531t175745z slot-20260531T175745Z",
+    "body": "\u003c!-- gitclaw:proactive-run name=\"proactive-e2e-20260531t175745z\" slot=\"slot-20260531T175745Z\" --\u003e\nGitClaw proactive run.\n\n- name: proactive-e2e-20260531t175745z\n- slot: slot-20260531T175745Z\n\nProactive instruction:\n\nProactive E2E instruction.\n\nUse the repo-reader skill and search the repository for `proactive run unique search fixture phrase`.\nReply with the exact token from the matching gitclaw.search_files result line.\nAlso include the exact word `proactive`.\nDo not include this hidden proactive token: NOECHO_PROACTIVE_RUN_20260531T175745Z.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw",
+      "gitclaw:done",
+      "gitclaw:proactive"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw proactive proactive-e2e-20260531t175745z slot-20260531T175745Z\n\n\u003c!-- gitclaw:proactive-run name=\"proactive-e2e-20260531t175745z\" slot=\"slot-20260531T175745Z\" --\u003e\nGitClaw proactive run.\n\n- name: proactive-e2e-20260531t175745z\n- slot: slot-20260531T175745Z\n\nProactive instruction:\n\nProactive E2E instruction.\n\nUse the repo-reader skill and search the repository for `proactive run unique search fixture phrase`.\nReply with the exact token from the matching gitclaw.search_files result line.\nAlso include the exact word `proactive`.\nDo not include this hidden proactive token: NOECHO_PROACTIVE_RUN_20260531T175745Z.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "assistant",
+      "Body": "`GITCLAW_PROACTIVE_RUN_CONTEXT_V1`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4587575283,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4587575283,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26720145814\" event_id=\"dispatch-proactive-proactive-e2e-20260531t175745z-slot-20260531T175745Z\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"8b1bf61ff26a6e42b2b6a52afbfd729e\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26720145814\" prompt_context_sha256_12=\"37658ebe3518\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"9861\" usage_completion_tokens=\"13\" usage_total_tokens=\"9874\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\n`GITCLAW_PROACTIVE_RUN_CONTEXT_V1`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T17:59:00Z",
+      "updated_at": "2026-05-31T17:59:00Z"
+    }
+  ]
+}
