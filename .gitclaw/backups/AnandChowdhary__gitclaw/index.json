@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T00:58:52Z",
+  "generated_at": "2026-05-31T01:00:14Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 299,
   "issues": [
@@ -3678,13 +3678,14 @@
       "number": 336,
       "title": "@gitclaw /skills proposals risk e2e 20260531T005743Z",
       "path": "issues/000336.json",
-      "backup_generated_at": "2026-05-31T00:58:51Z",
-      "event_name": "issues",
+      "backup_generated_at": "2026-05-31T01:00:14Z",
+      "event_name": "issue_comment",
       "labels": [
-        "gitclaw"
+        "gitclaw",
+        "gitclaw:done"
       ],
-      "comment_count": 1,
-      "transcript_messages": 2
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
