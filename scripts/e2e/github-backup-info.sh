@@ -38,8 +38,8 @@ token="NOECHO_BACKUP_INFO_${timestamp}"
 followup_hidden_token="NOECHO_BACKUP_INFO_FOLLOWUP_${timestamp}"
 expected_token="GITCLAW_BACKUP_INFO_CONTEXT_V1"
 search_phrase="backup info unique search fixture phrase"
-title="@gitclaw /backup info e2e ${timestamp}"
-body="Live backup info E2E.
+title="@gitclaw /backup info"
+body="Live backup info E2E ${timestamp}.
 
 Hidden backup info token: ${token}
 This should produce a deterministic backup intent report, then the fetched backup branch should render a focused body-free backup info report for this issue."
