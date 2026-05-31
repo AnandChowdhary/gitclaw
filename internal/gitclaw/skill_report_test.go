@@ -921,6 +921,101 @@ instruction: |
 	}
 }
 
+func TestRenderSkillBundleCatalogReportShowsCompactBundleCatalogWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Use read-only repository context.
+---
+
+SECRET_BUNDLE_CATALOG_SKILL_BODY_TOKEN`)
+	writeTestFile(t, root, ".gitclaw/skill-bundles/repo-context.yaml", `name: repo-context
+description: Repository context workflow.
+skills:
+  - repo-reader
+instruction: |
+  SECRET_BUNDLE_CATALOG_INSTRUCTION_TOKEN
+`)
+	ctx, err := LoadRepoContextWithConfig(root, []TranscriptMessage{{Role: "user", Body: "@gitclaw /bundles catalog"}}, DefaultConfig())
+	if err != nil {
+		t.Fatalf("LoadRepoContext returned error: %v", err)
+	}
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 164,
+			"title": "@gitclaw /bundles catalog",
+			"body": "Hidden bundle catalog token: BUNDLE_CATALOG_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	report := RenderSkillsReport(ev, DefaultConfig(), ctx)
+	for _, want := range []string{
+		"GitClaw Skill Bundle Catalog Report",
+		"Generated without a model call",
+		"bundle_catalog_status: `ok`",
+		"catalog_strategy: `compact-bundle-orchestration-discovery`",
+		"catalog_scope: `repo-local-skill-bundles-procedural-memory`",
+		"bundle_model: `repo-local-reviewed-yaml`",
+		"hermes_bundle_boundary: `task-profile-loads-existing-skills`",
+		"openclaw_skill_boundary: `skills-install-separately-review-first`",
+		"available_bundles: `1`",
+		"cataloged_entries: `1`",
+		"selected_bundles: `0`",
+		"available_skills: `1`",
+		"bundle_skill_refs: `1`",
+		"resolved_bundle_skills: `1`",
+		"missing_bundle_skills: `0`",
+		"bundles_with_instruction: `1`",
+		"prompt_visible_instructions: `0`",
+		"metadata_only_instructions: `1`",
+		"entries_with_risk_findings: `0`",
+		"bundle_risk_findings: `0`",
+		"external_registry_verification: `not_configured`",
+		"installer_scripts_run: `false`",
+		"agent_authored_bundle_mutation_allowed: `false`",
+		"raw_bundle_bodies_included: `false`",
+		"raw_bundle_instructions_included: `false`",
+		"raw_skill_bodies_included: `false`",
+		"raw_issue_bodies_included: `false`",
+		"raw_comment_bodies_included: `false`",
+		"raw_prompt_bodies_included: `false`",
+		"credential_values_included: `false`",
+		"llm_e2e_required_after_bundle_catalog_change: `true`",
+		"### Bundle Catalog Entries",
+		"position=`1` bundle_name=`repo-context` path=`.gitclaw/skill-bundles/repo-context.yaml` orchestration_layer=`procedural-memory`",
+		"role=`available-task-profile` selected_for_this_turn=`false` prompt_visible=`false` instruction=`true` instruction_load_mode=`metadata-only`",
+		"instruction_sha256_12=",
+		"skills=`repo-reader` resolved_skills=`repo-reader` missing_skills=`none`",
+		"risk_findings=`0` risk_max_severity=`none` risk_codes=`none`",
+		"reason_codes=`all_skill_refs_resolved, available_task_profile, instruction_present, metadata_only, no_risk_findings, not_prompt_visible, not_selected, parse_ok, procedural_memory, repo_local_yaml`",
+		"### Catalog Gates",
+		"risk_gate=`pass`",
+		"skill_ref_gate=`pass`",
+		"instruction_body_gate=`sha256_12`",
+		"external_registry_gate=`not_configured`",
+		"installer_gate=`disabled`",
+		"agent_authored_mutation_gate=`disabled`",
+		"raw_body_gate=`hash_only`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("skill bundle catalog report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"SECRET_BUNDLE_CATALOG_SKILL_BODY_TOKEN", "SECRET_BUNDLE_CATALOG_INSTRUCTION_TOKEN", "BUNDLE_CATALOG_BODY_SECRET"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("skill bundle catalog report leaked %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestRenderSkillBundleInfoReportShowsOneBundleWithoutBodies(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---

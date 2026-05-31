@@ -133,6 +133,7 @@ gitclaw skills install-plan <target>
 gitclaw skills upgrade-plan <target>
 gitclaw skills info <name>
 gitclaw skills search <query>
+gitclaw bundles catalog
 gitclaw bundles list
 gitclaw bundles risk
 gitclaw bundles provenance
@@ -149,6 +150,12 @@ the deterministic report.
 OpenClaw/Hermes `skills_list`/`skill_view` split. It reports prompt eligibility,
 load mode, gate reasons, and description/body hashes without printing raw skill
 bodies or descriptions.
+
+`gitclaw bundles catalog` is the compact orchestration index for Hermes-style
+skill bundles. It reports repo-local bundle roles, selected/load state,
+skill-ref resolution, instruction hashes, risk rollups, reason codes, and
+disabled registry/install/mutation gates without printing raw bundle YAML,
+bundle instructions, skill bodies, prompts, issue text, or credentials.
 
 Migration:
 
@@ -424,6 +431,7 @@ scripts/e2e/github-skills-runtime-report.sh
 scripts/e2e/github-skills-catalog-report.sh
 scripts/e2e/github-skills-install-plan-report.sh
 scripts/e2e/github-skills-upgrade-plan-report.sh
+scripts/e2e/github-bundles-catalog-report.sh
 scripts/e2e/github-bundles-provenance-report.sh
 scripts/e2e/github-bundles-risk-report.sh
 scripts/e2e/github-orders-risk-report.sh

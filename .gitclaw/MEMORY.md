@@ -130,6 +130,10 @@
 - Skills catalog changes need two proofs: body-free eligibility/load-mode
   metadata with description hashes instead of raw descriptions, plus a normal
   model/tool follow-up proving live repo-reader search.
+- Bundle catalog changes need two proofs: body-free orchestration metadata for
+  repo-local skill bundles, including skill-ref gates, instruction hashes,
+  reason codes, and disabled registry/install/mutation gates, plus a normal
+  model/tool follow-up proving live repo-reader search.
 - Soul catalog changes need two proofs: body-free authority catalog metadata
   with authority layers, load modes, reason codes, body/description exclusion,
   and disabled mutation/profile-export gates, plus a normal model/tool

@@ -1425,6 +1425,7 @@ gitclaw skills proposals [risk]
 gitclaw skills proposal-plan <name>
 gitclaw skills install-plan <target>
 gitclaw skills upgrade-plan <target>
+gitclaw bundles catalog
 gitclaw bundles list
 gitclaw bundles risk
 gitclaw bundles provenance
@@ -1471,6 +1472,7 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills install-plan repo-reader
 @gitclaw /skills upgrade-plan repo-reader
 @gitclaw /bundles
+@gitclaw /bundles catalog
 @gitclaw /bundles risk
 @gitclaw /bundles provenance
 @gitclaw /bundles info repo-context
@@ -1552,6 +1554,17 @@ counts, and short hash. `@gitclaw /bundles info <name>` and
 `gitclaw bundles info <name>` show one focused bundle card. Bundle YAML bodies,
 bundle instructions, skill bodies, issue bodies, comments, prompts, and secret
 values are never printed in reports.
+
+`@gitclaw /bundles catalog`, `@gitclaw /bundles index`, and
+`gitclaw bundles catalog` produce the compact orchestration catalog for
+Hermes-style skill bundles. The report treats bundles as procedural-memory
+task profiles over existing reviewed skills and shows selected/load state,
+instruction load mode, skill-ref resolution, instruction hashes, risk rollups,
+reason codes, and disabled external-registry, installer, and agent-authored
+mutation gates. It includes
+`llm_e2e_required_after_bundle_catalog_change: true` and never prints raw
+bundle YAML, bundle instructions, skill bodies, issue bodies, comments,
+prompts, credentials, provider payloads, or secret values.
 
 `@gitclaw /bundles provenance`, `@gitclaw /bundles history`,
 `@gitclaw /bundles timeline`, and `gitclaw bundles provenance` map
@@ -5490,6 +5503,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - create a second real issue with `@gitclaw /skills list`,
    - create another real issue with `@gitclaw /skills catalog`,
    - create another real issue with `@gitclaw /skills provenance`,
+   - create another real issue with `@gitclaw /bundles catalog`,
    - create a third real issue with `@gitclaw /bundles info repo-context`,
    - create a fourth real issue with `@gitclaw /bundles risk`,
    - assert the reply is marked `model="gitclaw/skills"`,
@@ -5499,6 +5513,9 @@ assert the expected comments/labels, and close the issue in cleanup.
      no-registry/no-install gates, and no raw descriptions or skill bodies,
    - assert the bundle info report lists bundle path, referenced/resolved
      skills, selected-for-turn state, instruction presence, and hashes,
+   - assert the bundle catalog report lists compact orchestration metadata,
+     selected/load state, instruction load mode, skill-ref gates, reason codes,
+     risk rollups, and no raw bundle/skill/instruction bodies,
    - assert the bundle risk report lists body-free bundle risk status, counts,
      finding codes, severities, bundle hashes, and line hashes,
    - assert hashes, frontmatter/description presence, and requirement counts
@@ -6842,6 +6859,15 @@ examples/workflows/gitclaw.yml
   distinct prefix from the expected search-fixture token so the model cannot
   satisfy the E2E by echoing issue/comment context instead of repository search
   context.
+- A `gh`-driven skill-bundle catalog E2E harness verifies
+  `@gitclaw /bundles catalog` and local `gitclaw bundles catalog` expose
+  compact Hermes-style bundle orchestration metadata, selected/load state,
+  skill-ref resolution, instruction hashes, reason codes, risk gates, and
+  disabled registry/install/mutation gates without raw bundle YAML,
+  instruction, skill, issue, prompt, credential, or provider-payload leakage.
+  It then runs a real GitHub Models follow-up proving selected `repo-reader`
+  context, prompt-context provenance, `gitclaw.search_files`, and usage
+  telemetry.
 - A `gh`-driven skills-proposal-plan E2E harness verifies
   `@gitclaw /skills proposal-plan repo-reader` produces a body-free,
   non-mutating OpenClaw Skills Workshop-style proposal plan with review paths,

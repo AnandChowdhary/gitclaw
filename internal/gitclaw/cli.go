@@ -2417,6 +2417,8 @@ func runBundlesCommand(args []string) error {
 		return runBundlesListCommand(nil)
 	}
 	switch args[0] {
+	case "catalog", "index", "eligible", "eligibility":
+		return runBundlesCatalogCommand(args[1:])
 	case "list":
 		return runBundlesListCommand(args[1:])
 	case "risk", "risk-audit":
@@ -2426,7 +2428,7 @@ func runBundlesCommand(args []string) error {
 	case "info", "show":
 		return runBundlesInfoCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw bundles [list|risk|provenance|info <name>]")
+		return fmt.Errorf("usage: gitclaw bundles [catalog|list|risk|provenance|info <name>]")
 	}
 }
 
@@ -2539,6 +2541,22 @@ func runBundlesListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSkillBundlesCLIReport(repoContext))
+	return nil
+}
+
+func runBundlesCatalogCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown bundles catalog argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSkillBundleCatalogCLIReport(repoContext))
 	return nil
 }
 

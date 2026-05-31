@@ -1376,6 +1376,17 @@ YAML, prompt-boundary overrides, hidden persistence, remote installs, external
 delivery, shell-exec language, and credential transfer language, while
 reporting only counts, codes, paths, bundle hashes, and line hashes.
 
+2026-05-31 bundle-catalog follow-up: current Hermes material emphasizes skill
+bundles as reusable workflow packs over existing skills, while OpenClaw's
+skill docs still separate discovery/configuration from raw skill body loading
+and tool execution. GitClaw should add `@gitclaw /bundles catalog` and
+`gitclaw bundles catalog` as the compact bundle orchestration catalog:
+procedural-memory task-profile metadata, selected/load state, instruction
+load mode and hashes, skill-ref resolution, risk rollups, reason codes, and
+disabled registry/install/agent-authored mutation gates, with a live LLM/tool
+E2E proof and no raw bundle YAML, instructions, skill bodies, issue/comment
+bodies, prompts, credentials, provider payloads, or secret values.
+
 2026-05-30 context-references follow-up: Hermes' context reference docs expose
 `@file:path`, `@file:path:10-25`, and `@folder:path` as inline context
 attachments, alongside broader `@diff`, `@staged`, `@git:N`, and `@url:`

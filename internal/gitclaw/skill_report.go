@@ -74,6 +74,9 @@ func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isSkillBundlesProvenanceRequest(ev, cfg) {
 		return renderSkillBundleProvenanceReport(ev, cfg, repoContext, true)
 	}
+	if isSkillBundlesCatalogRequest(ev, cfg) {
+		return renderSkillBundleCatalogReport(ev, repoContext, true)
+	}
 	if isSkillBundlesListRequest(ev, cfg) {
 		return renderSkillBundlesReport(ev, repoContext, true)
 	}
@@ -616,6 +619,25 @@ func isSkillBundlesListRequest(ev Event, cfg Config) bool {
 	}
 	return (len(fields) == 2 && fields[0] == "/skills" && strings.EqualFold(fields[1], "bundles")) ||
 		(len(fields) == 2 && fields[0] == "/skills" && strings.EqualFold(fields[1], "bundle-list"))
+}
+
+func isSkillBundlesCatalogRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) == 0 {
+		return false
+	}
+	if fields[0] == "/bundles" {
+		return len(fields) >= 2 && (strings.EqualFold(fields[1], "catalog") || strings.EqualFold(fields[1], "index") || strings.EqualFold(fields[1], "eligible") || strings.EqualFold(fields[1], "eligibility"))
+	}
+	if fields[0] != "/skills" || len(fields) < 2 {
+		return false
+	}
+	if strings.EqualFold(fields[1], "bundle-catalog") || strings.EqualFold(fields[1], "bundles-catalog") {
+		return true
+	}
+	return len(fields) >= 3 &&
+		(strings.EqualFold(fields[1], "bundles") || strings.EqualFold(fields[1], "bundle-list")) &&
+		(strings.EqualFold(fields[2], "catalog") || strings.EqualFold(fields[2], "index") || strings.EqualFold(fields[2], "eligible") || strings.EqualFold(fields[2], "eligibility"))
 }
 
 func isSkillBundlesRiskRequest(ev Event, cfg Config) bool {

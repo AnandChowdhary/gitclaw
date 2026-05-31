@@ -149,7 +149,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `33`' \
   'aliases: `31`' \
-  'local_cli_helpers: `176`' \
+  'local_cli_helpers: `177`' \
   'run_mode: `read-only`' \
   'llm_e2e_required_after_commands_report_change: `true`' \
   "### Slash Commands" \
@@ -215,6 +215,7 @@ for expected in \
   'gitclaw approvals verify' \
   'gitclaw approvals provenance' \
   'gitclaw approvals risk' \
+  'gitclaw bundles catalog' \
   'gitclaw bundles list' \
   'gitclaw bundles risk' \
   'gitclaw bundles provenance' \
@@ -317,6 +318,7 @@ for expected in \
   'gitclaw backup restore-plan' \
   'gitclaw backup retention-plan' \
   'gitclaw commands' \
+  'gitclaw bundles catalog' \
   'gitclaw memory catalog' \
   'gitclaw memory verify' \
   'gitclaw memory risk' \
