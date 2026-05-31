@@ -3947,7 +3947,7 @@ func runProactiveEnqueueCommand(ctx context.Context, args []string) error {
 	if err := writeProactiveOutputs(result); err != nil {
 		return err
 	}
-	fmt.Printf("proactive_enqueue issue=%d name=%s slot=%s created=%t due=%t skipped=%t not_before=%s url=%s\n", result.IssueNumber, result.Name, result.Slot, result.Created, result.Due, result.Skipped, result.NotBefore, result.IssueURL)
+	fmt.Printf("proactive_enqueue issue=%d name=%s slot=%s created=%t due=%t skipped=%t not_before=%s llm_e2e_required_after_proactive_not_before_change=true url=%s\n", result.IssueNumber, result.Name, result.Slot, result.Created, result.Due, result.Skipped, result.NotBefore, result.IssueURL)
 	return nil
 }
 

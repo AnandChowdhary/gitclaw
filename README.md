@@ -362,6 +362,7 @@ scripts/e2e/github-channel-message.sh
 scripts/e2e/github-channels-info-report.sh
 scripts/e2e/github-proactive.sh
 scripts/e2e/github-proactive-init.sh
+scripts/e2e/github-proactive-not-before.sh
 scripts/e2e/github-proactive-report.sh
 scripts/e2e/github-proactive-list-report.sh
 scripts/e2e/github-proactive-info-report.sh
@@ -424,6 +425,9 @@ The proactive-init harness now applies the same gate to generated scheduled
 jobs: it verifies body-free prompt/workflow creation, dispatches a real
 proactive issue, then continues that issue with a model-backed repo-reader
 search turn.
+The proactive-not-before harness proves reminder due gates both ways: future
+runs log `skipped=true` without creating an issue, while due runs create a
+proactive issue and continue with a model-backed repo-reader search turn.
 `gitclaw doctor list` also inventories checked-in E2E harnesses by count,
 cleanup coverage, live issue coverage, model marker coverage, real model
 follow-up coverage, session coverage, backup gates, and workflow-dispatch

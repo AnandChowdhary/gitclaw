@@ -1018,6 +1018,15 @@ Models repo-reader/search turn. That proves the generated scheduled job is not
 just syntactically valid, but conversationally usable once GitHub Actions wakes
 it.
 
+2026-05-31 proactive not-before E2E follow-up: OpenClaw cron exposes skipped
+runs as a meaningful `not-due` state, and Hermes cron separates scheduled
+definition from each due execution. GitClaw's `--not-before` should therefore
+be observable in both directions: a future run must produce `skipped=true`
+and `issue_number=0` without creating any issue, while a due run must create
+the normal proactive issue and continue into a GitHub Models repo-reader/search
+turn. This keeps one-shot reminders cheap and serverless without letting a due
+gate become an untested branch around the normal conversation path.
+
 2026-05-29 model resilience follow-up: OpenClaw cron records model/provider
 failures as job errors instead of treating empty replies as success, and Hermes
 cron documents fresh sessions plus provider recovery/fallback behavior for

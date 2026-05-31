@@ -12,6 +12,7 @@ die() {
 
 repo="${GITCLAW_E2E_REPO:-}"
 workflow="${GITCLAW_E2E_PROACTIVE_WORKFLOW:-.github/workflows/gitclaw-proactive.yml}"
+main_workflow="${GITCLAW_E2E_WORKFLOW:-.github/workflows/gitclaw.yml}"
 lock_dir="/tmp/gitclaw-proactive-not-before-e2e.lock"
 cleanup_success=0
 
@@ -46,6 +47,9 @@ ensure_label() {
 
 ensure_label gitclaw 5319e7 "Handled by GitClaw"
 ensure_label gitclaw:proactive fbca04 "GitClaw proactive run"
+ensure_label gitclaw:running fbca04 "GitClaw run is active"
+ensure_label gitclaw:done 0e8a16 "Latest GitClaw run completed"
+ensure_label gitclaw:error b60205 "Latest GitClaw run failed"
 ensure_label gitclaw:e2e 0e8a16 "Temporary GitClaw end-to-end test"
 ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 
@@ -54,8 +58,11 @@ normalized_timestamp="$(printf "%s" "$timestamp" | tr '[:upper:]' '[:lower:]')"
 name="proactive-not-before-e2e-${normalized_timestamp}"
 future_slot="future-${timestamp}"
 due_slot="due-${timestamp}"
-future_token="GITCLAW_PROACTIVE_NOT_BEFORE_FUTURE_${timestamp}"
-due_token="GITCLAW_PROACTIVE_NOT_BEFORE_DUE_${timestamp}"
+future_token="NOECHO_PROACTIVE_NOT_BEFORE_FUTURE_${timestamp}"
+due_token="NOECHO_PROACTIVE_NOT_BEFORE_DUE_${timestamp}"
+followup_hidden_token="NOECHO_PROACTIVE_NOT_BEFORE_FOLLOWUP_${timestamp}"
+expected_token="GITCLAW_PROACTIVE_NOT_BEFORE_CONTEXT_V1"
+search_phrase="proactive not-before unique search fixture phrase"
 
 run_list_json() {
   gh run list \
@@ -79,6 +86,39 @@ wait_for_run() {
       url="$(jq -r '.url' <<<"$run_json")"
       if [[ "$status" == "completed" ]]; then
         [[ "$conclusion" == "success" ]] || die "${workflow} run failed with conclusion ${conclusion}: ${url}"
+        echo "$run_json"
+        return 0
+      fi
+    fi
+    sleep 5
+  done
+  return 1
+}
+
+run_log() {
+  local run_id="$1"
+  gh run view "$run_id" --repo "$repo" --log
+}
+
+wait_for_issue_comment_run() {
+  local started_at="$1"
+  local run_json
+  for _ in {1..90}; do
+    run_json="$(gh run list \
+      --repo "$repo" \
+      --workflow "$main_workflow" \
+      --event issue_comment \
+      --created ">=$started_at" \
+      --limit 10 \
+      --json databaseId,status,conclusion,createdAt,url,displayTitle \
+      --jq '. as $runs | $runs | map(select(.displayTitle == "'"${issue_title}"'")) | sort_by(.createdAt) | reverse | .[0] // empty')"
+    if [[ -n "$run_json" && "$run_json" != "null" ]]; then
+      local status conclusion url
+      status="$(jq -r '.status' <<<"$run_json")"
+      conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
+      url="$(jq -r '.url' <<<"$run_json")"
+      if [[ "$status" == "completed" ]]; then
+        [[ "$conclusion" == "success" ]] || die "issue_comment run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
       fi
@@ -118,6 +158,13 @@ assistant_comments() {
     --repo "$repo" \
     --json comments \
     --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | join("\n---GITCLAW-COMMENT---\n")'
+}
+
+latest_assistant_comment() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json comments \
+    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | .[-1] // ""'
 }
 
 assistant_count() {
@@ -166,7 +213,20 @@ gh workflow run "$workflow" \
   -f slot="$future_slot" \
   -f prompt="$future_prompt" \
   -f not_before="2099-01-01T00:00:00Z"
-wait_for_run "$started_at" >/dev/null || die "timed out waiting for future not-before proactive workflow"
+future_run_json="$(wait_for_run "$started_at")" || die "timed out waiting for future not-before proactive workflow"
+future_run_id="$(jq -r '.databaseId' <<<"$future_run_json")"
+future_log="$(run_log "$future_run_id")"
+for expected in \
+  "proactive_enqueue issue=0" \
+  "name=${name}" \
+  "slot=${future_slot}" \
+  "created=false" \
+  "due=false" \
+  "skipped=true" \
+  "not_before=2099-01-01T00:00:00Z" \
+  "llm_e2e_required_after_proactive_not_before_change=true"; do
+  grep -Fq "$expected" <<<"$future_log" || die "future not-before workflow log missing ${expected}"
+done
 
 sleep 5
 if [[ -n "$(find_issue_numbers "$future_slot")" ]]; then
@@ -188,10 +248,24 @@ gh workflow run "$workflow" \
   -f slot="$due_slot" \
   -f prompt="$due_prompt" \
   -f not_before="2000-01-01T00:00:00Z"
-wait_for_run "$started_at" >/dev/null || die "timed out waiting for due proactive workflow"
+due_run_json="$(wait_for_run "$started_at")" || die "timed out waiting for due proactive workflow"
+due_run_id="$(jq -r '.databaseId' <<<"$due_run_json")"
+due_log="$(run_log "$due_run_id")"
+for expected in \
+  "proactive_enqueue issue=" \
+  "name=${name}" \
+  "slot=${due_slot}" \
+  "created=true" \
+  "due=true" \
+  "skipped=false" \
+  "not_before=2000-01-01T00:00:00Z" \
+  "llm_e2e_required_after_proactive_not_before_change=true"; do
+  grep -Fq "$expected" <<<"$due_log" || die "due not-before workflow log missing ${expected}"
+done
 
 issue_number="$(wait_for_issue_number "$due_slot")" || die "timed out finding due proactive issue for ${name}/${due_slot}"
 log "due proactive workflow created issue #${issue_number}"
+issue_title="GitClaw proactive ${name} ${due_slot}"
 wait_for_assistant_count 1 || die "timed out waiting for due proactive assistant response"
 
 issue_json="$(gh issue view "$issue_number" --repo "$repo" --json body,labels,comments)"
@@ -202,8 +276,15 @@ comments="$(assistant_comments)"
 grep -Fq 'model="gitclaw/proactive"' <<<"$comments" || die "assistant marker missing proactive report model"
 grep -Fq "GitClaw Proactive Report" <<<"$comments" || die "assistant comment missing proactive report"
 grep -Fq 'proactive_run_issue: `true`' <<<"$comments" || die "assistant comment did not detect proactive issue"
+grep -Fq 'llm_e2e_required_after_proactive_report_change: `true`' <<<"$comments" || die "assistant proactive report missing live E2E marker"
 if grep -Fq "$due_token" <<<"$comments"; then
   die "assistant proactive report leaked due prompt token ${due_token}"
+fi
+if grep -Fq "$future_token" <<<"$comments"; then
+  die "assistant proactive report leaked future prompt token ${future_token}"
+fi
+if grep -Fq "$expected_token" <<<"$comments" || grep -Fq "$search_phrase" <<<"$comments"; then
+  die "assistant proactive report leaked follow-up fixture context"
 fi
 grep -Fq "dispatch-proactive-${name}-${due_slot}" <<<"$comments" || die "assistant marker missing proactive dispatch event id"
 
@@ -211,5 +292,39 @@ labels="$(jq -r '.labels[].name' <<<"$issue_json")"
 grep -Fxq "gitclaw:proactive" <<<"$labels" || die "issue missing gitclaw:proactive label"
 grep -Fxq "gitclaw:done" <<<"$labels" || die "issue missing gitclaw:done label"
 
-log "passed for issue #${issue_number}"
+comment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+gh issue comment "$issue_number" \
+  --repo "$repo" \
+  --body "@gitclaw Continue after the proactive not-before due gate and use the repo-reader skill.
+
+Search the repository for \`${search_phrase}\`.
+Search for that exact phrase, not shorter words from it.
+The matching repository search result line in \`docs/search-fixture.md\` has the form \`${search_phrase} => <token>\`.
+Reply with only the uppercase fixture token after the arrow from the matching gitclaw.search_files tool output line.
+Do not answer with the proactive job name, slot, dispatch id, issue title, or any token from this issue body/comments.
+Do not include this hidden follow-up token: ${followup_hidden_token}
+Keep the answer under 30 words." >/dev/null
+
+model_run_json="$(wait_for_issue_comment_run "$comment_started_at")" || die "timed out waiting for proactive not-before issue_comment follow-up"
+wait_for_assistant_count 2 || die "expected model-backed proactive not-before follow-up assistant comment"
+model_comment="$(latest_assistant_comment)"
+
+grep -Fq "$expected_token" <<<"$model_comment" || die "assistant did not include search_files token ${expected_token}"
+if ! grep -Fq 'model="openai/gpt-5-nano"' <<<"$model_comment" && ! grep -Fq 'model="openai/gpt-4.1-nano"' <<<"$model_comment"; then
+  die "assistant marker did not use configured GitHub Models primary or fallback"
+fi
+grep -Fq 'prompt_context_sha256_12="' <<<"$model_comment" || die "assistant marker missing prompt context hash"
+grep -Fq 'skills="repo-reader"' <<<"$model_comment" || die "assistant marker missing selected repo-reader skill"
+grep -Fq 'tools="' <<<"$model_comment" || die "assistant marker missing prompt-visible tools"
+grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant marker did not prove search_files was prompt-visible"
+grep -Fq 'usage_total_tokens="' <<<"$model_comment" || die "assistant marker missing usage token telemetry"
+
+for leaked in "$future_token" "$due_token" "$followup_hidden_token"; do
+  if grep -Fq "$leaked" <<<"$model_comment"; then
+    die "model follow-up leaked ${leaked}"
+  fi
+done
+
+model_url="$(jq -r '.url' <<<"$model_run_json")"
+log "passed for issue #${issue_number} (future run: ${future_run_id}; due run: ${due_run_id}; model follow-up: ${model_url})"
 cleanup_success=1

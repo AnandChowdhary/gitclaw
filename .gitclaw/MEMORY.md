@@ -37,6 +37,9 @@
 - Proactive init changes need two proofs: reviewed prompt/workflow generation
   without prompt-body leakage, plus a real dispatched proactive issue that
   continues with a normal model/tool follow-up.
+- Proactive not-before changes need two proofs: future due gates must log a
+  skipped no-issue run, while due runs must create a proactive issue and then
+  continue with a normal model/tool follow-up.
 - Channel-message and proactive workflow-dispatch E2E must prove repo-reader
   search/tool grounding, model provenance, and usage telemetry, not just nonce
   echoing from the mirrored prompt.

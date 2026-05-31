@@ -2089,7 +2089,7 @@ func TestProactiveEnqueueCommandSkipsFutureNotBeforeWithoutToken(t *testing.T) {
 			t.Fatalf("proactive enqueue returned error before due gate: %v", err)
 		}
 	})
-	for _, want := range []string{"proactive_enqueue", "issue=0", "name=reminder", "slot=future-slot", "created=false", "due=false", "skipped=true", "not_before=2099-01-01T00:00:00Z"} {
+	for _, want := range []string{"proactive_enqueue", "issue=0", "name=reminder", "slot=future-slot", "created=false", "due=false", "skipped=true", "not_before=2099-01-01T00:00:00Z", "llm_e2e_required_after_proactive_not_before_change=true"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("proactive enqueue output missing %q:\n%s", want, output)
 		}

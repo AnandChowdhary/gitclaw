@@ -431,7 +431,11 @@ no GitHub issue writes, and does not dispatch the main agent workflow. When
 the same scheduled workflow runs at or after the due gate, it creates or
 reuses the normal proactive issue and dispatches GitClaw with the usual
 `proactive-<name>-<slot>` idempotency key. This keeps reminders serverless and
-auditable while accepting GitHub Actions' best-effort schedule timing.
+auditable while accepting GitHub Actions' best-effort schedule timing. The
+enqueue CLI output includes
+`llm_e2e_required_after_proactive_not_before_change=true`, and changes to the
+due gate require both skipped-run log evidence and a live due-run
+GitHub Models follow-up that uses `repo-reader` and bounded repository search.
 
 Reference proactive workflow shape:
 
@@ -6060,6 +6064,14 @@ examples/workflows/gitclaw.yml
   hidden issue tokens.
 - A `gh`-driven proactive E2E harness verifies the generic proactive enqueue
   workflow end to end.
+- A `gh`-driven proactive-not-before E2E harness verifies future reminders
+  write `due=false`, `skipped=true`, `issue_number=0`, and
+  `llm_e2e_required_after_proactive_not_before_change=true` without creating an
+  issue, then verifies a due run creates a proactive issue, posts the
+  deterministic proactive report, and continues with a normal GitHub Models
+  follow-up that selects `repo-reader`, exposes `gitclaw.search_files`,
+  recovers a bounded repository-search fixture token, and publishes usage
+  telemetry without leaking hidden reminder tokens.
 - A `gh`-driven proactive-init E2E harness verifies
   `gitclaw proactive init` generates a scheduled workflow and prompt file
   without leaking prompt bodies and includes
