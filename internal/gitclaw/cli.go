@@ -693,13 +693,27 @@ func runNodesCommand(args []string) error {
 		return runNodesListCommand(nil)
 	}
 	switch args[0] {
+	case "catalog", "commands", "capabilities", "index":
+		return runNodesCatalogCommand(args[1:])
 	case "list", "verify":
 		return runNodesListCommand(args[1:])
 	case "risk", "risk-audit":
 		return runNodesRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw nodes [list|risk|verify]")
+		return fmt.Errorf("usage: gitclaw nodes [catalog|list|risk|verify]")
 	}
+}
+
+func runNodesCatalogCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown nodes catalog argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderNodeCatalogCLIReport(cfg))
+	return nil
 }
 
 func runNodesListCommand(args []string) error {

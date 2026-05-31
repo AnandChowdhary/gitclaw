@@ -56,6 +56,9 @@ func IsNodeReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderNodeReport(ev Event, cfg Config) string {
+	if isNodeCatalogRequest(ev, cfg) {
+		return RenderNodeCatalogReport(ev, cfg)
+	}
 	if isNodeRiskRequest(ev, cfg) {
 		return renderNodeRiskReport(ev, cfg, true)
 	}
@@ -371,4 +374,21 @@ func isNodeRiskRequest(ev Event, cfg Config) bool {
 		return false
 	}
 	return strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit")
+}
+
+func isNodeCatalogRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 {
+		return false
+	}
+	command := fields[0]
+	if command != "/nodes" && command != "/node" {
+		return false
+	}
+	switch strings.ToLower(fields[1]) {
+	case "catalog", "commands", "capabilities", "index":
+		return true
+	default:
+		return false
+	}
 }

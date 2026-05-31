@@ -1693,6 +1693,25 @@ payloads, or sessions. Acceptance requires a real issue E2E, a local CLI
 assertion, and a GitHub Models repo-reader/search follow-up that recovers a
 distinct agents-catalog repository-search fixture token.
 
+2026-05-31 nodes-catalog follow-up: OpenClaw's current node docs frame nodes as
+paired peripherals connected to the Gateway WebSocket with `role: "node"`,
+declared command/capability surfaces, gateway policy gates, and local exec
+approvals; Hermes' current delegation docs frame child workers around bounded
+toolsets, kill switches, interrupt behavior, and non-durable child execution.
+GitClaw should expose the analogous surface without implementing it:
+`@gitclaw /nodes catalog` and `gitclaw nodes catalog` should list node commands,
+`.gitclaw/NODES.md`, `.gitclaw/nodes/*.md`, the GitHub Actions ephemeral-job
+runtime, GitHub-native wake paths, issue/comment conversation boundary,
+reviewed capability names, approval frontmatter, and explicit no-gateway,
+no-pairing, no-RPC, no-browser-proxy, no-media-device, and no-remote-exec gates.
+The report must not print node bodies, issue/comment bodies, prompts, tool
+outputs, credentials, channel payloads, worker payloads, or sessions. Acceptance
+requires a real issue E2E, a local CLI assertion, and a GitHub Models
+repo-reader/search follow-up that recovers a distinct nodes-catalog repository
+search fixture token. Sources: https://docs.openclaw.ai/nodes,
+https://docs.openclaw.ai/cli/gateway, and
+https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation.
+
 2026-05-30 nodes-runtime follow-up: OpenClaw's node host docs expose a separate
 execution plane: a headless node service connects to the Gateway WebSocket,
 pairs as `role: node`, advertises capabilities, and can run approved

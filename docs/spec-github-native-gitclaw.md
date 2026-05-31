@@ -838,7 +838,7 @@ GitHub issue/comment event
   `plugins list`, `plugins risk`, `plugins verify`,
   `tasks list`, `tasks risk`, `tasks verify`, `tasks ledger`,
   `agents catalog`, `agents list`, `agents risk`, `agents verify`,
-  `nodes list`, `nodes risk`, `nodes verify`,
+  `nodes catalog`, `nodes list`, `nodes risk`, `nodes verify`,
   `migrate plan`, `migrate risk`,
   `orders list`, `orders verify`, `orders risk`,
   `profile show`, `profile verify`,
@@ -3847,8 +3847,10 @@ delegation runtime boundaries:
 
 ```text
 @gitclaw /nodes
+@gitclaw /nodes catalog
 @gitclaw /nodes risk
 @gitclaw /node
+@gitclaw /node catalog
 ```
 
 The command runs after preflight and before model inference. It posts a
@@ -3871,6 +3873,23 @@ prints raw node policy, node spec, issue, comment, channel, credential, or
 provider payload bodies. Future remote-node execution requires reviewed
 workflows, explicit permissions, approval gates, body-free audit cards, and a
 live GitHub Models conversation E2E in the same implementation batch.
+
+The catalog form:
+
+```text
+@gitclaw /nodes catalog
+@gitclaw /node catalog
+```
+
+posts a `GitClaw Nodes Catalog Report` without model inference. It maps the
+node command surface, `.gitclaw/NODES.md`, `.gitclaw/nodes/*.md`, the GitHub
+Actions ephemeral-job runtime, GitHub-native wake paths, GitHub issue/comment
+conversation boundary, reviewed capability-name intent, approval frontmatter,
+and explicit no-gateway/no-pairing/no-RPC/no-browser-proxy/no-media-device/
+no-remote-exec gates. It does not print node policy/spec bodies, issue bodies,
+comments, prompts, tool outputs, credentials, channel payloads, worker payloads,
+or session bodies. Changes to this surface must include deterministic tests
+plus a live GitHub Models follow-up E2E that makes an actual model call.
 
 The risk form:
 
@@ -3895,6 +3914,7 @@ against actual inference and prompt-visible tools.
 Local operators can inspect the same policy/spec surface with:
 
 ```bash
+gitclaw nodes catalog
 gitclaw nodes list
 gitclaw nodes risk
 gitclaw nodes verify
@@ -6616,6 +6636,13 @@ examples/workflows/gitclaw.yml
   metadata, then runs a real GitHub Models follow-up conversation that proves
   model inference, prompt provenance, selected skills, and prompt-visible tool
   usage.
+- A `gh`-driven nodes-catalog E2E harness verifies
+  `@gitclaw /nodes catalog` and local `gitclaw nodes catalog` expose body-free
+  node command, policy/spec, runtime, wake-path, conversation, capability,
+  approval, and no-remote-exec gate metadata, then runs a real GitHub Models
+  follow-up conversation that proves model inference, prompt provenance,
+  selected skills, prompt-visible tool usage, usage telemetry, and recovery of
+  the bounded nodes-catalog repository-search fixture token.
 - A `gh`-driven artifacts-risk E2E harness verifies
   `@gitclaw /artifacts risk` and local `gitclaw artifacts risk` expose
   body-free artifact policy/spec/workflow risk metadata, then runs a real
