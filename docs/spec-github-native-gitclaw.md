@@ -535,7 +535,11 @@ proactive workflow trigger metadata; the generated workflow candidate path
 `.github/workflows/gitclaw-proactive-<name>.yml`; whether that generated
 workflow exists and has `workflow_dispatch`/`schedule`; and the exact enqueue
 command shape. It includes `proactive_info_status` as `ok`, `not_found`, or
-`ambiguous`, plus `raw_bodies_included=false`.
+`ambiguous`, plus `raw_bodies_included=false` and
+`llm_e2e_required_after_proactive_info_change=true`. Changes to this operator
+surface must pair the deterministic body-free report with a normal GitHub
+Models follow-up that uses `repo-reader` and bounded repository search, so the
+scheduled-job inspection path is tested with real model/tool context.
 
 Local operators can inspect the same proactive surface without opening an
 issue:
@@ -5895,8 +5899,12 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven proactive-info E2E harness verifies
   `@gitclaw /proactive info <name>` and local `gitclaw proactive info <name>`
   expose one proactive job definition, generic workflow metadata, generated
-  workflow candidate metadata, and enqueue command shape without a model call
-  or body leakage.
+  workflow candidate metadata, enqueue command shape, and
+  `llm_e2e_required_after_proactive_info_change: true` without a model call or
+  body leakage. The same live harness then posts a normal issue-comment
+  follow-up that must make a GitHub Models call, select `repo-reader`, expose
+  `gitclaw.search_files`, recover a bounded repository-search fixture token,
+  and publish usage telemetry without leaking hidden issue tokens.
 - A `gh`-driven proactive-risk E2E harness verifies
   `@gitclaw /proactive risk` and local `gitclaw proactive risk` expose
   body-free workflow/prompt risk metadata, then runs a real GitHub Models

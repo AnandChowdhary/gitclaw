@@ -15,6 +15,8 @@
   model, heartbeat, hooks, agents, nodes, artifacts, checkpoints, channels,
   plugins, MCP, tasks, runs, and orders reports remain read-only control-plane
   audits with explicit no-write/no-exec/no-leak gates.
+- Proactive jobs are reviewed prompt/workflow files plus visible issue runs;
+  info/risk surfaces stay body-free and prove changes with live model/tool E2E.
 - Skills stay repo-local and review-first: refresh per Actions checkout;
   proposals stay inert; install/upgrade/source/runtime/bundle/provenance
   surfaces classify, hash, and validate only; no registries, remote fetches,

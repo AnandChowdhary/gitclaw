@@ -258,6 +258,9 @@ gitclaw channels verify
 gitclaw channels risk
 gitclaw proactive list
 gitclaw proactive risk
+gitclaw proactive info repo-hygiene
+gitclaw proactive init --name email-triage --cron "17 8 * * 1-5"
+gitclaw proactive enqueue --name repo-hygiene --slot "$(date -u +%F)"
 gitclaw workspace risk
 gitclaw workspace verify
 gitclaw profile show
@@ -321,6 +324,7 @@ scripts/e2e/github-secrets-risk-report.sh
 scripts/e2e/github-plugins-risk-report.sh
 scripts/e2e/github-plugins-mcp-report.sh
 scripts/e2e/github-profile-risk-report.sh
+scripts/e2e/github-proactive-info-report.sh
 scripts/e2e/github-proactive-risk-report.sh
 scripts/e2e/github-session-risk-report.sh
 scripts/e2e/github-session-status-report.sh

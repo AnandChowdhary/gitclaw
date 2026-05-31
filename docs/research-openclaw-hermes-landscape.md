@@ -657,6 +657,15 @@ OpenClaw splits automation into several mechanisms:
 
 The important design lesson is that "automation" is not one feature. Exact time, approximate awareness, detached work, event hooks, and persistent authority need separate semantics.
 
+2026-05-31 proactive-info E2E follow-up: OpenClaw's cron/reminder surfaces and
+Hermes' scheduled goals both make scheduled work inspectable before it runs.
+GitClaw's equivalent is not a hidden scheduler database: it is reviewed
+workflow files plus `.gitclaw/proactive/*.md` prompts. The `proactive info`
+surface should therefore stay body-free and metadata-only, but any change to it
+should be proven with a real GitHub Models issue-comment follow-up that selects
+`repo-reader`, exposes bounded repository search, and confirms scheduled-job
+inspection still works on the same path users will use for normal conversation.
+
 2026-05-29 heartbeat follow-up: OpenClaw's heartbeat docs define heartbeat as
 "periodic awareness": it reads `HEARTBEAT.md`, runs lightweight checks on a
 fixed interval, and expects `HEARTBEAT_OK` when there is nothing useful to say.

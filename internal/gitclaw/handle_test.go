@@ -567,7 +567,7 @@ on:
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Proactive Info Report", "Generated without a model call", "model=\"gitclaw/proactive\"", "requested_proactive: `repo-hygiene`", "proactive_info_status: `ok`", "prompt_matches: `1`", "generic_workflow_present: `true`", "generic_workflow_dispatch_trigger: `true`", "generic_schedule_trigger: `true`", "generated_workflow_path: `.github/workflows/gitclaw-proactive-repo-hygiene.yml`", "generated_workflow_present: `false`", "raw_bodies_included: `false`", ".gitclaw/proactive/repo-hygiene.md", "gitclaw proactive enqueue --name repo-hygiene"} {
+	for _, want := range []string{"GitClaw Proactive Info Report", "Generated without a model call", "model=\"gitclaw/proactive\"", "requested_proactive: `repo-hygiene`", "proactive_info_status: `ok`", "prompt_matches: `1`", "generic_workflow_present: `true`", "generic_workflow_dispatch_trigger: `true`", "generic_schedule_trigger: `true`", "generated_workflow_path: `.github/workflows/gitclaw-proactive-repo-hygiene.yml`", "generated_workflow_present: `false`", "raw_bodies_included: `false`", "llm_e2e_required_after_proactive_info_change: `true`", ".gitclaw/proactive/repo-hygiene.md", "gitclaw proactive enqueue --name repo-hygiene"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("proactive info report missing %q:\n%s", want, body)
 		}

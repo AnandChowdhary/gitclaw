@@ -161,6 +161,7 @@ func renderProactiveInfoReport(ev Event, cfg Config, name string, includeIssue b
 	fmt.Fprintf(&b, "- generated_schedule_trigger: `%t`\n", generatedWorkflow.Schedule)
 	fmt.Fprintf(&b, "- run_mode: `%s`\n", "read-only")
 	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_proactive_info_change: `%t`\n", true)
 	if includeIssue {
 		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
 	}
