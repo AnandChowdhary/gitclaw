@@ -182,21 +182,22 @@ type BackupStatsEvent struct {
 }
 
 type BackupList struct {
-	Root                 string
-	Repo                 string
-	RepoDir              string
-	IndexPath            string
-	ReadmePath           string
-	SchemaVersion        int
-	IndexGeneratedAt     string
-	BackupListStatus     string
-	BackupVerifyStatus   string
-	VerificationFailures int
-	IssueCount           int
-	Limit                int
-	BackupsReturned      int
-	RawBodiesIncluded    bool
-	Issues               []BackupListIssue
+	Root                      string
+	Repo                      string
+	RepoDir                   string
+	IndexPath                 string
+	ReadmePath                string
+	SchemaVersion             int
+	IndexGeneratedAt          string
+	BackupListStatus          string
+	BackupVerifyStatus        string
+	VerificationFailures      int
+	IssueCount                int
+	Limit                     int
+	BackupsReturned           int
+	RawBodiesIncluded         bool
+	LLME2ERequiredAfterChange bool
+	Issues                    []BackupListIssue
 }
 
 type BackupListIssue struct {
@@ -768,19 +769,20 @@ func BuildBackupList(root, repo string, limit int) (BackupList, error) {
 		return BackupList{}, err
 	}
 	list := BackupList{
-		Root:                 filepath.ToSlash(root),
-		Repo:                 repo,
-		RepoDir:              filepath.ToSlash(repoDir),
-		IndexPath:            filepath.ToSlash(filepath.Join(repoDir, "index.json")),
-		ReadmePath:           filepath.ToSlash(filepath.Join(repoDir, "README.md")),
-		SchemaVersion:        index.Version,
-		IndexGeneratedAt:     index.GeneratedAt,
-		BackupListStatus:     "ok",
-		BackupVerifyStatus:   "ok",
-		VerificationFailures: len(verify.VerificationFailures),
-		IssueCount:           len(index.Issues),
-		Limit:                limit,
-		RawBodiesIncluded:    false,
+		Root:                      filepath.ToSlash(root),
+		Repo:                      repo,
+		RepoDir:                   filepath.ToSlash(repoDir),
+		IndexPath:                 filepath.ToSlash(filepath.Join(repoDir, "index.json")),
+		ReadmePath:                filepath.ToSlash(filepath.Join(repoDir, "README.md")),
+		SchemaVersion:             index.Version,
+		IndexGeneratedAt:          index.GeneratedAt,
+		BackupListStatus:          "ok",
+		BackupVerifyStatus:        "ok",
+		VerificationFailures:      len(verify.VerificationFailures),
+		IssueCount:                len(index.Issues),
+		Limit:                     limit,
+		RawBodiesIncluded:         false,
+		LLME2ERequiredAfterChange: true,
 	}
 	if !verify.OK() {
 		list.BackupListStatus = "warn"
@@ -1481,7 +1483,8 @@ func RenderBackupList(list BackupList) string {
 	fmt.Fprintf(&b, "- issue_count: `%d`\n", list.IssueCount)
 	fmt.Fprintf(&b, "- limit: `%d`\n", list.Limit)
 	fmt.Fprintf(&b, "- backups_returned: `%d`\n", list.BackupsReturned)
-	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n\n", list.RawBodiesIncluded)
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", list.RawBodiesIncluded)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_backup_list_change: `%t`\n\n", list.LLME2ERequiredAfterChange)
 	b.WriteString("This report lists indexed backup conversation metadata from a fetched backup tree. It does not print raw issue titles, issue bodies, comments, or transcript bodies.\n\n")
 
 	b.WriteString("### Indexed Backups\n")

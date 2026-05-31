@@ -43,3 +43,4 @@ backup export jsonl unique search fixture phrase => GITCLAW_BACKUP_EXPORT_JSONL_
 backup search unique search fixture phrase => GITCLAW_BACKUP_SEARCH_CONTEXT_V1
 backup info unique search fixture phrase => GITCLAW_BACKUP_INFO_CONTEXT_V1
 backup stats unique search fixture phrase => GITCLAW_BACKUP_STATS_CONTEXT_V1
+backup list unique search fixture phrase => GITCLAW_BACKUP_LIST_CONTEXT_V1

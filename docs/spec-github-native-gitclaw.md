@@ -4682,7 +4682,9 @@ backups by backup timestamp descending, and prints a deterministic
 It never prints raw issue titles, issue bodies, comments, or transcript bodies.
 The list report is the body-safe navigation layer before a more specific
 `backup info`, `backup manifest`, `backup search`, `backup restore-plan`, or raw
-`backup export-jsonl` command.
+`backup export-jsonl` command. List-surface changes carry
+`llm_e2e_required_after_backup_list_change: true` and require a fetched-branch
+list proof plus a normal GitHub Models repo-reader/search follow-up.
 
 ## Backup Timeline Command
 
@@ -5521,18 +5523,24 @@ assert the expected comments/labels, and close the issue in cleanup.
 39. **Backup list**
 
    - create a real issue with `@gitclaw /backup list`,
-   - assert the issue-side report lists `requested_backup_command: list`,
-     the deferred execution marker, and the concrete local list command without
-     dumping body/title tokens,
-   - wait for the successful backup job,
+	   - assert the issue-side report lists `requested_backup_command: list`,
+	     the deferred execution marker, and the concrete local list command without
+	     dumping body/title tokens,
+	   - assert the issue-visible report includes
+	     `llm_e2e_required_after_backup_list_change: true`,
+	   - wait for the successful backup job,
    - fetch the real `gitclaw-backups` branch,
    - run `gitclaw backup list --root <fetched>/.gitclaw/backups --repo
      <owner/repo> --limit 5`,
-   - assert the report is marked `backup_list_status: ok` and
-     `backup_verify_status: ok`,
-   - assert it lists the just-created issue number, canonical path, timestamp,
-     event name, label/comment/transcript counts, and title hash,
-   - assert it does not dump the issue body token or raw title.
+	   - assert the report is marked `backup_list_status: ok` and
+	     `backup_verify_status: ok`,
+	   - assert it lists the just-created issue number, canonical path, timestamp,
+	     event name, label/comment/transcript counts, and title hash,
+	   - assert it does not dump the issue body token or raw title,
+	   - post a normal follow-up that requires repo-reader search and assert the
+	     second assistant turn is GitHub Models-backed with prompt context,
+	     selected skill, prompt-visible `gitclaw.search_files`, usage telemetry,
+	     and the backup-list repository-search fixture token.
 
 40. **Backup timeline**
 
@@ -6160,7 +6168,10 @@ examples/workflows/gitclaw.yml
   `@gitclaw /backup list` records the deferred issue-side command intent, then
   verifies the fetched `gitclaw-backups` branch can produce a timestamp-sorted
   indexed backup list with paths, counts, event names, and title hashes,
-  without dumping raw bodies or titles.
+  without dumping raw bodies or titles. The same harness posts a normal
+  model-backed follow-up that proves repo-reader search, prompt provenance,
+  selected skill metadata, prompt-visible tool names, usage markers, and the
+  bounded backup-list repository-search fixture token.
 - A `gh`-driven backup-timeline E2E harness verifies
   `@gitclaw /backup timeline` records the deferred issue-side command intent,
   then verifies the fetched `gitclaw-backups` branch can produce a

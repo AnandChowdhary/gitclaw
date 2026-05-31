@@ -290,6 +290,7 @@ scripts/e2e/github-backup-verify.sh
 scripts/e2e/github-backup-coverage.sh
 scripts/e2e/github-backup-provenance.sh
 scripts/e2e/github-backup-stats.sh
+scripts/e2e/github-backup-list.sh
 scripts/e2e/github-backup-timeline.sh
 scripts/e2e/github-backup-info.sh
 scripts/e2e/github-backup-search.sh

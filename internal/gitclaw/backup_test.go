@@ -392,7 +392,7 @@ func TestBuildBackupListListsNewestBackupsWithoutBodies(t *testing.T) {
 		t.Fatalf("unexpected backup list issue: %#v", list.Issues[0])
 	}
 	report := RenderBackupList(list)
-	for _, want := range []string{"GitClaw Backup List Report", "backup_list_status: `ok`", "backup_verify_status: `ok`", "verification_failures: `0`", "backup_schema_version: `1`", "issue_count: `2`", "limit: `1`", "backups_returned: `1`", "raw_bodies_included: `false`", "### Indexed Backups", "issue=#8 path=`issues/000008.json`", "event=`issue_comment`", "labels=`2`", "comments=`1`", "transcript_messages=`2`", "title_sha256_12="} {
+	for _, want := range []string{"GitClaw Backup List Report", "backup_list_status: `ok`", "backup_verify_status: `ok`", "verification_failures: `0`", "backup_schema_version: `1`", "issue_count: `2`", "limit: `1`", "backups_returned: `1`", "raw_bodies_included: `false`", "llm_e2e_required_after_backup_list_change: `true`", "### Indexed Backups", "issue=#8 path=`issues/000008.json`", "event=`issue_comment`", "labels=`2`", "comments=`1`", "transcript_messages=`2`", "title_sha256_12="} {
 		if !strings.Contains(report, want) {
 			t.Fatalf("backup list report missing %q:\n%s", want, report)
 		}

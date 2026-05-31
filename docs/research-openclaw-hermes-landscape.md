@@ -383,6 +383,12 @@ restore. GitClaw should add `gitclaw backup list`: verify the fetched
 numbers, payload paths, timestamps, event names, label/comment/transcript
 counts, and title hashes only. This keeps routine backup navigation body-free.
 
+2026-05-31 backup-list E2E hardening: Treat indexed backup navigation as part
+of recovery posture. Changes now need a live fetched-branch list proof plus a
+normal GitHub Models follow-up that selects repo-reader, exposes
+`gitclaw.search_files`, recovers the backup-list repository-search fixture
+token, and avoids hidden issue/comment token echoing.
+
 2026-05-31 backup-timeline follow-up: the latest OpenClaw release notes keep
 emphasizing bounded release/QA/E2E proof lanes and a status surface for active
 work, while OpenClaw's session CLI frames sessions as manageable/exportable
