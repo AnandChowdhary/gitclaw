@@ -811,7 +811,7 @@ func TestBuildBackupRetentionPlanKeepsNewestWithoutBodies(t *testing.T) {
 		t.Fatalf("unexpected kept boundary metadata: %#v", plan)
 	}
 	report := RenderBackupRetentionPlan(plan)
-	for _, want := range []string{"GitClaw Backup Retention Plan", "retention_mode: `dry-run`", "backup_retention_status: `ok`", "backup_verify_status: `ok`", "verification_failures: `0`", "keep_latest: `2`", "issue_count: `3`", "keep_count: `2`", "prune_candidate_count: `1`", "newest_kept_issue: `#9`", "oldest_kept_issue: `#8`", "raw_bodies_included: `false`", "### Kept Backups", "issue=#9 path=`issues/000009.json`", "issue=#8 path=`issues/000008.json`", "### Prune Candidates", "issue=#7 path=`issues/000007.json`", "title_sha256_12="} {
+	for _, want := range []string{"GitClaw Backup Retention Plan", "retention_mode: `dry-run`", "backup_retention_status: `ok`", "backup_verify_status: `ok`", "verification_failures: `0`", "keep_latest: `2`", "issue_count: `3`", "keep_count: `2`", "prune_candidate_count: `1`", "newest_kept_issue: `#9`", "oldest_kept_issue: `#8`", "raw_bodies_included: `false`", "llm_e2e_required_after_backup_retention_plan_change: `true`", "### Kept Backups", "issue=#9 path=`issues/000009.json`", "issue=#8 path=`issues/000008.json`", "### Prune Candidates", "issue=#7 path=`issues/000007.json`", "title_sha256_12="} {
 		if !strings.Contains(report, want) {
 			t.Fatalf("retention plan report missing %q:\n%s", want, report)
 		}

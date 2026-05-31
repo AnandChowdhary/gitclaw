@@ -375,6 +375,14 @@ GitClaw's git-native equivalent should start with a non-mutating
 backups by timestamp, keep the latest N, list older payloads as prune
 candidates, and expose only paths, counts, timestamps, and title hashes.
 
+2026-05-31 backup-retention E2E follow-up: OpenClaw migration/backup docs keep
+preview/verify steps before destructive state changes, while Hermes sessions
+docs include expiry, cleanup, deletion, and JSONL export surfaces. GitClaw's
+retention plan should therefore remain a dry-run delete-free report, but every
+change to it should be paired with a normal GitHub Models repo-reader follow-up
+that proves the deterministic backup cleanup planning path did not replace
+live model/tool coverage.
+
 2026-05-30 backup-search follow-up: OpenClaw's transcript/session CLIs and
 Hermes' cross-session search both make old conversations discoverable. GitClaw
 can copy the operator value without copying the storage shape: search the

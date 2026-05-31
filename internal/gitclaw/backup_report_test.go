@@ -201,6 +201,53 @@ func TestRenderBackupRestorePlanIssueCommandRecordsDeferredIntentWithoutBodies(t
 	}
 }
 
+func TestRenderBackupRetentionPlanIssueCommandRecordsDeferredIntentWithoutBodies(t *testing.T) {
+	ev := Event{
+		Repo: "owner/repo",
+		Issue: Issue{
+			Number: 97,
+			Title:  "@gitclaw /backup retention-plan e2e",
+			Body:   "BACKUP_RETENTION_PLAN_INTENT_SECRET",
+		},
+	}
+	comments := []Comment{{
+		ID:   25,
+		Body: "<!-- gitclaw:assistant-turn idempotency_key=old -->\nBACKUP_RETENTION_PLAN_COMMENT_SECRET",
+		User: User{Login: "github-actions[bot]", Type: "Bot"},
+	}}
+	transcript := []TranscriptMessage{
+		{Role: "user", Body: "BACKUP_RETENTION_PLAN_TRANSCRIPT_SECRET"},
+	}
+
+	report := RenderBackupReport(ev, DefaultConfig(), comments, transcript)
+	for _, want := range []string{
+		"GitClaw Backup Report",
+		"requested_backup_command: `retention-plan`",
+		"backup_command_status: `ok`",
+		"requested_local_command: `gitclaw backup retention-plan --root .gitclaw/backups --repo owner/repo --keep-latest 50`",
+		"run `gitclaw backup retention-plan --root .gitclaw/backups --repo owner/repo --keep-latest 50` after fetching `gitclaw-backups`",
+		"backup_retention_plan_status: `deferred`",
+		"backup_retention_plan_execution: `local_fetched_backup_branch`",
+		"backup_retention_plan_mode: `dry-run`",
+		"backup_retention_plan_gates: `verify, keep-latest-plan, body-free-output, explicit-future-approval`",
+		"raw_backup_payloads_scanned_issue_side: `false`",
+		"repository_mutation_allowed_issue_side: `false`",
+		"branch_deletion_allowed_issue_side: `false`",
+		"github_api_calls_performed_issue_side: `false`",
+		"llm_e2e_required_after_backup_retention_plan_change: `true`",
+		"raw_bodies_included: `false`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("backup retention-plan report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"BACKUP_RETENTION_PLAN_INTENT_SECRET", "BACKUP_RETENTION_PLAN_COMMENT_SECRET", "BACKUP_RETENTION_PLAN_TRANSCRIPT_SECRET", "@gitclaw /backup retention-plan e2e"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("backup retention-plan report leaked %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestRenderBackupTimelineIssueCommandRecordsDeferredIntentWithoutBodies(t *testing.T) {
 	ev := Event{
 		Repo: "owner/repo",

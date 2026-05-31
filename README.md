@@ -191,6 +191,10 @@ payload. Its live harness pairs deterministic restore metadata checks with a
 real GitHub Models repo-reader follow-up so backup changes keep normal LLM and
 tool coverage honest.
 
+`gitclaw backup retention-plan` is a dry-run cleanup plan for fetched backups.
+Its live harness now also proves a real GitHub Models repo-reader follow-up
+after the deterministic keep/prune metadata check.
+
 Operational surfaces:
 
 ```bash

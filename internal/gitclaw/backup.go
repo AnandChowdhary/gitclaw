@@ -358,27 +358,28 @@ type BackupDrill struct {
 }
 
 type BackupRetentionPlan struct {
-	Root                  string
-	Repo                  string
-	RepoDir               string
-	IndexPath             string
-	ReadmePath            string
-	SchemaVersion         int
-	IndexGeneratedAt      string
-	KeepLatest            int
-	IssueCount            int
-	KeepCount             int
-	PruneCandidateCount   int
-	RetentionPlanStatus   string
-	BackupVerifyStatus    string
-	VerificationFailures  int
-	OldestKeptIssueNumber int
-	OldestKeptGeneratedAt string
-	NewestKeptIssueNumber int
-	NewestKeptGeneratedAt string
-	RawBodiesIncluded     bool
-	Kept                  []BackupRetentionIssue
-	PruneCandidates       []BackupRetentionIssue
+	Root                      string
+	Repo                      string
+	RepoDir                   string
+	IndexPath                 string
+	ReadmePath                string
+	SchemaVersion             int
+	IndexGeneratedAt          string
+	KeepLatest                int
+	IssueCount                int
+	KeepCount                 int
+	PruneCandidateCount       int
+	RetentionPlanStatus       string
+	BackupVerifyStatus        string
+	VerificationFailures      int
+	OldestKeptIssueNumber     int
+	OldestKeptGeneratedAt     string
+	NewestKeptIssueNumber     int
+	NewestKeptGeneratedAt     string
+	RawBodiesIncluded         bool
+	LLME2ERequiredAfterChange bool
+	Kept                      []BackupRetentionIssue
+	PruneCandidates           []BackupRetentionIssue
 }
 
 type BackupRetentionIssue struct {
@@ -1200,19 +1201,20 @@ func BuildBackupRetentionPlan(root, repo string, keepLatest int) (BackupRetentio
 		return BackupRetentionPlan{}, err
 	}
 	plan := BackupRetentionPlan{
-		Root:                 filepath.ToSlash(root),
-		Repo:                 repo,
-		RepoDir:              filepath.ToSlash(repoDir),
-		IndexPath:            filepath.ToSlash(filepath.Join(repoDir, "index.json")),
-		ReadmePath:           filepath.ToSlash(filepath.Join(repoDir, "README.md")),
-		SchemaVersion:        index.Version,
-		IndexGeneratedAt:     index.GeneratedAt,
-		KeepLatest:           keepLatest,
-		IssueCount:           len(index.Issues),
-		RetentionPlanStatus:  "ok",
-		BackupVerifyStatus:   "ok",
-		VerificationFailures: len(verify.VerificationFailures),
-		RawBodiesIncluded:    false,
+		Root:                      filepath.ToSlash(root),
+		Repo:                      repo,
+		RepoDir:                   filepath.ToSlash(repoDir),
+		IndexPath:                 filepath.ToSlash(filepath.Join(repoDir, "index.json")),
+		ReadmePath:                filepath.ToSlash(filepath.Join(repoDir, "README.md")),
+		SchemaVersion:             index.Version,
+		IndexGeneratedAt:          index.GeneratedAt,
+		KeepLatest:                keepLatest,
+		IssueCount:                len(index.Issues),
+		RetentionPlanStatus:       "ok",
+		BackupVerifyStatus:        "ok",
+		VerificationFailures:      len(verify.VerificationFailures),
+		RawBodiesIncluded:         false,
+		LLME2ERequiredAfterChange: true,
 	}
 	if !verify.OK() {
 		plan.RetentionPlanStatus = "warn"
@@ -1346,7 +1348,8 @@ func RenderBackupRetentionPlan(plan BackupRetentionPlan) string {
 		b.WriteString("- newest_kept_issue: `none`\n")
 		b.WriteString("- oldest_kept_issue: `none`\n")
 	}
-	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n\n", plan.RawBodiesIncluded)
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", plan.RawBodiesIncluded)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_backup_retention_plan_change: `%t`\n\n", plan.LLME2ERequiredAfterChange)
 
 	b.WriteString("This is a non-mutating retention plan. It reads the local backup tree only; it does not delete files, delete branches, edit issues, post comments, or call GitHub APIs.\n\n")
 	b.WriteString("Issue and comment bodies are not included. Titles are represented by short hashes so retention can be audited without exposing transcript contents.\n\n")

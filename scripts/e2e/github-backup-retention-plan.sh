@@ -35,6 +35,9 @@ ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
 token="GITCLAW_BACKUP_RETENTION_PLAN_E2E_${timestamp}"
+followup_token="GITCLAW_BACKUP_RETENTION_PLAN_FOLLOWUP_HIDDEN_${timestamp}"
+expected_token="GITCLAW_BACKUP_RETENTION_PLAN_CONTEXT_V1"
+search_phrase="backup retention plan unique search fixture phrase"
 title="@gitclaw /backup retention-plan e2e ${timestamp}"
 body="Live backup retention-plan E2E.
 
@@ -66,13 +69,14 @@ trap cleanup EXIT
 log "created issue #${issue_number}: ${issue_url}"
 
 wait_for_run() {
-  local started_at="$1"
+  local event_name="$1"
+  local started_at="$2"
   for _ in {1..90}; do
     local run_json
     run_json="$(gh run list \
       --repo "$repo" \
       --workflow "$workflow_name" \
-      --event issues \
+      --event "$event_name" \
       --created ">=$started_at" \
       --limit 10 \
       --json databaseId,status,conclusion,url,createdAt,displayTitle \
@@ -83,7 +87,7 @@ wait_for_run() {
       conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
       url="$(jq -r '.url' <<<"$run_json")"
       if [[ "$status" == "completed" ]]; then
-        [[ "$conclusion" == "success" ]] || die "issues run failed with conclusion ${conclusion}: ${url}"
+        [[ "$conclusion" == "success" ]] || die "${event_name} run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
       fi
@@ -98,6 +102,13 @@ assistant_comments() {
     --repo "$repo" \
     --json comments \
     --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | join("\n---GITCLAW-COMMENT---\n")'
+}
+
+latest_assistant_comment() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json comments \
+    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | .[-1] // ""'
 }
 
 assistant_count() {
@@ -132,7 +143,7 @@ wait_for_assistant_count() {
   return 1
 }
 
-run_json="$(wait_for_run "$issue_started_at")" || die "timed out waiting for issues workflow run"
+run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
 wait_for_assistant_count 1 || die "expected one backup report comment"
 comments="$(assistant_comments)"
 
@@ -145,6 +156,15 @@ for expected in \
   'issue_side_execution: `deferred_to_post_turn_backup_branch`' \
   'raw_bodies_included: `false`' \
   "requested_local_command: \`gitclaw backup retention-plan --root .gitclaw/backups --repo ${repo} --keep-latest 50\`" \
+  'backup_retention_plan_status: `deferred`' \
+  'backup_retention_plan_execution: `local_fetched_backup_branch`' \
+  'backup_retention_plan_mode: `dry-run`' \
+  'backup_retention_plan_gates: `verify, keep-latest-plan, body-free-output, explicit-future-approval`' \
+  'raw_backup_payloads_scanned_issue_side: `false`' \
+  'repository_mutation_allowed_issue_side: `false`' \
+  'branch_deletion_allowed_issue_side: `false`' \
+  'github_api_calls_performed_issue_side: `false`' \
+  'llm_e2e_required_after_backup_retention_plan_change: `true`' \
   'backup_branch: `gitclaw-backups`' \
   'backup_schema_version: `1`'; do
   grep -Fq "$expected" <<<"$comments" || die "backup report missing ${expected}"
@@ -194,6 +214,7 @@ for _ in {1..60}; do
       'keep_count: `1`' \
       "prune_candidate_count: \`${prune_count}\`" \
       'raw_bodies_included: `false`' \
+      'llm_e2e_required_after_backup_retention_plan_change: `true`' \
       "### Kept Backups" \
       "### Prune Candidates" \
       "issue=#${issue_number}" \
@@ -207,11 +228,45 @@ for _ in {1..60}; do
     if grep -Fq "$title" <<<"$retention_output"; then
       die "backup retention plan leaked issue title"
     fi
-    url="$(jq -r '.url' <<<"$run_json")"
-    log "passed for issue #${issue_number}: ${url}"
-    exit 0
+    break
   fi
   sleep 5
 done
 
-die "backup retention plan did not observe issue #${issue_number} in ${backup_branch}"
+if [[ -z "${retention_output:-}" ]]; then
+  die "backup retention plan did not observe issue #${issue_number} in ${backup_branch}"
+fi
+
+followup_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+gh issue comment "$issue_number" \
+  --repo "$repo" \
+  --body "Use the repo-reader skill and search the repository for \`${search_phrase}\`.
+
+Reply with only the full token immediately after \`=>\` in the matching line, including the \`_CONTEXT_V1\` suffix.
+Do not abbreviate it to the GITCLAW_BACKUP_RETENTION_PLAN prefix.
+Do not include this hidden follow-up token: ${followup_token}
+Keep the answer under 30 words." >/dev/null
+
+followup_run_json="$(wait_for_run issue_comment "$followup_started_at")" || die "timed out waiting for model follow-up issue_comment workflow run"
+wait_for_assistant_count 2 || die "expected model-backed follow-up assistant comment"
+followup_comment="$(latest_assistant_comment)"
+
+grep -Fq "$expected_token" <<<"$followup_comment" || die "model follow-up did not include search_files token ${expected_token}"
+if ! grep -Fq 'model="openai/gpt-5-nano"' <<<"$followup_comment" && ! grep -Fq 'model="openai/gpt-4.1-nano"' <<<"$followup_comment"; then
+  die "model follow-up marker did not use configured GitHub Models primary or fallback"
+fi
+grep -Fq 'prompt_context_sha256_12="' <<<"$followup_comment" || die "model follow-up marker missing prompt context hash"
+grep -Fq 'skills="repo-reader"' <<<"$followup_comment" || die "model follow-up marker missing repo-reader skill"
+grep -Fq 'tools="' <<<"$followup_comment" || die "model follow-up marker missing prompt-visible tools"
+grep -Fq 'gitclaw.search_files' <<<"$followup_comment" || die "model follow-up marker did not prove search_files was prompt-visible"
+grep -Fq 'usage_total_tokens="' <<<"$followup_comment" || die "model follow-up marker missing normalized provider usage"
+
+for leaked in "$token" "$followup_token"; do
+  if grep -Fq "$leaked" <<<"$followup_comment"; then
+    die "model follow-up leaked ${leaked}"
+  fi
+done
+
+issue_run_url="$(jq -r '.url' <<<"$run_json")"
+followup_run_url="$(jq -r '.url' <<<"$followup_run_json")"
+log "passed for issue #${issue_number}: backup=${issue_run_url} followup=${followup_run_url}"

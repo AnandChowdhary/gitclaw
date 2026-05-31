@@ -70,6 +70,9 @@ func RenderBackupReport(ev Event, cfg Config, comments []Comment, transcript []T
 	if request.Name == "restore-plan" {
 		writeBackupIssueRestorePlanSummary(&b)
 	}
+	if request.Name == "retention-plan" {
+		writeBackupIssueRetentionPlanSummary(&b)
+	}
 	b.WriteByte('\n')
 
 	b.WriteString("The backup job runs after a successful assistant turn and writes the raw transcript backup plus repo-scoped index to the dedicated backup branch.\n\n")
@@ -282,6 +285,18 @@ func writeBackupIssueRestorePlanSummary(b *strings.Builder) {
 	b.WriteString("- repository_mutation_allowed_issue_side: `false`\n")
 	b.WriteString("- github_api_calls_performed_issue_side: `false`\n")
 	b.WriteString("- llm_e2e_required_after_backup_restore_plan_change: `true`\n")
+}
+
+func writeBackupIssueRetentionPlanSummary(b *strings.Builder) {
+	b.WriteString("- backup_retention_plan_status: `deferred`\n")
+	b.WriteString("- backup_retention_plan_execution: `local_fetched_backup_branch`\n")
+	b.WriteString("- backup_retention_plan_mode: `dry-run`\n")
+	b.WriteString("- backup_retention_plan_gates: `verify, keep-latest-plan, body-free-output, explicit-future-approval`\n")
+	b.WriteString("- raw_backup_payloads_scanned_issue_side: `false`\n")
+	b.WriteString("- repository_mutation_allowed_issue_side: `false`\n")
+	b.WriteString("- branch_deletion_allowed_issue_side: `false`\n")
+	b.WriteString("- github_api_calls_performed_issue_side: `false`\n")
+	b.WriteString("- llm_e2e_required_after_backup_retention_plan_change: `true`\n")
 }
 
 func parseBackupIssueNumber(value string) (int, bool) {

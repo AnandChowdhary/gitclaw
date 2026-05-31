@@ -4743,6 +4743,10 @@ older backups as prune candidates. It prints a deterministic
 - newest and oldest kept backup boundaries,
 - kept backup and prune-candidate paths, timestamps, event names, counts, and
   title hashes.
+- `llm_e2e_required_after_backup_retention_plan_change=true`, so retention-plan
+  changes must be paired with a live GitHub Models follow-up that proves prompt
+  context hashing, selected skills, prompt-visible repo-reader search, and
+  usage markers.
 
 This is a dry-run report. It does not delete files, delete branches, edit
 issues, post comments, or call GitHub APIs. It never prints raw issue titles,
@@ -5571,7 +5575,10 @@ assert the expected comments/labels, and close the issue in cleanup.
      prune-candidate count, kept backups, prune candidates, paths, timestamps,
      and title hashes,
    - assert the just-created issue is included without dumping the issue body
-     token or raw title.
+     token or raw title,
+   - post a normal follow-up comment that requires repo-reader search and
+     assert the next assistant turn used GitHub Models with prompt provenance,
+     selected skills, prompt-visible tool names, and usage markers.
 
 46. **Backup search**
 
@@ -6084,7 +6091,10 @@ examples/workflows/gitclaw.yml
   `@gitclaw /backup retention-plan` records the deferred issue-side command
   intent, then verifies the fetched `gitclaw-backups` branch can produce a
   dry-run keep-latest retention plan with kept/prune-candidate metadata and
-  hashes, without dumping raw titles or bodies.
+  hashes, without dumping raw titles or bodies. The same harness posts a
+  normal model-backed follow-up that proves repo-reader search, prompt
+  provenance, selected skill metadata, prompt-visible tool names, and
+  normalized usage markers.
 - A `gh`-driven context-report E2E harness verifies `@gitclaw /context`
   produces a deterministic context summary without a model call.
 - A `gh`-driven context-list E2E harness verifies `@gitclaw /context list` is
