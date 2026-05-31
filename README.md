@@ -322,6 +322,9 @@ needle without falling back to a whole-file `read_file`.
 The live git-reference chat harness applies the same conversational proof to
 `@git:1`: first copy the bounded commit hash, then continue with repo-reader
 and `gitclaw.search_files` in a second issue-comment turn.
+The live search-tool chat harness also uses two distinct search needles now, so
+tool grounding has to survive a continued issue conversation and cannot be only
+a first-turn fixture recovery.
 
 ## Testing
 

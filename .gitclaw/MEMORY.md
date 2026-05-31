@@ -121,6 +121,8 @@
   must not be widened by `read_file`, plus a normal model/tool follow-up.
 - Git-reference chat changes need two proofs: bounded `@git:N` recall first,
   plus a normal repo-reader/search follow-up in the same issue.
+- Search-tool chat changes need two repo-search proofs with distinct needles:
+  initial issue turn plus normal issue-comment follow-up.
 - Soul, memory, and profile files are high-authority git-reviewed context:
   edit/promote plans are dry-run, body-free, and review-first; planner changes
   need live model/tool E2E, and validation must stay prompt-fit and green.

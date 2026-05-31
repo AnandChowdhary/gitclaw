@@ -1196,6 +1196,11 @@ distinct token prefixes plus redacted prompt artifacts in live E2E checks.
 The underlying search tool also needs per-query match limits because broad
 queries like `go.mod` can otherwise consume the total match budget before the
 explicit fixture phrase is searched.
+2026-05-31 search-tool chat hardening: a single search-token answer proves tool
+visibility but not conversational continuity. The live search-tool harness
+should use two distinct search needles across the issue body and a later
+comment, matching the GitClaw design goal that GitHub issues are durable
+threads where grounded tool context remains available turn after turn.
 
 2026-05-29 workflow-runtime follow-up: GitClaw's serverless runtime is GitHub
 Actions itself, so action runtime deprecations are part of product reliability.
