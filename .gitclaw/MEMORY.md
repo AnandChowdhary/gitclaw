@@ -29,8 +29,8 @@
   `gitclaw:assistant-turn` markers; reports hash markers, labels, model
   provenance, skills, and tools without printing assistant replies or prompts.
 - Soul, memory, and profile files are high-authority git-reviewed context:
-  edit/promote plans are dry-run, body-free, and review-first; validation must
-  stay prompt-fit and green before relying on these files.
+  edit/promote plans are dry-run, body-free, and review-first; planner changes
+  need live model/tool E2E, and validation must stay prompt-fit and green.
 - Keep trigger behavior explicit in `.gitclaw/config.yml`: default
   `label-or-prefix` for shared repos, stricter `label-only`/`prefix-only` when
   needed, and `inbox` only for dedicated assistant repositories.

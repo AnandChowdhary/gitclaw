@@ -1262,10 +1262,14 @@ durable memory. Supported targets are `long-term` for `.gitclaw/MEMORY.md` and
 `daily-note` for `.gitclaw/memory/YYYY-MM-DD.md`. The report includes request
 hashes, transcript-message count, target kind/path, current target metadata,
 memory budget, validation rollup, promotion boundaries, review steps, and an
-explicit live-LLM E2E requirement. It never generates the candidate memory,
-calls a model, writes files, mutates the repository, or dumps issue bodies,
-comments, transcript bodies, current memory bodies, or candidate memory text.
-User-profile promotions route to `/soul edit-plan user`.
+explicit live-LLM E2E requirement, including
+`llm_e2e_required_after_memory_promote_plan_change: true`. It never generates
+the candidate memory, calls a model, writes files, mutates the repository, or
+dumps issue bodies, comments, transcript bodies, current memory bodies, or
+candidate memory text. User-profile promotions route to `/soul edit-plan user`.
+Any implementation change to the planner must pair the deterministic report
+check with a normal issue-comment follow-up that uses GitHub Models, the
+repo-reader skill, and bounded repository search to prove tool visibility.
 
 When called as `@gitclaw /memory validate`, the command renders only the
 memory-hygiene report. Local operators can run the same validation with:
@@ -6177,9 +6181,12 @@ examples/workflows/gitclaw.yml
   `@gitclaw /memory promote-plan long-term` produces a body-free,
   non-mutating reviewed-memory promotion plan with model calls, candidate
   generation, transcript dumping, memory-body dumping, and memory writes
-  disabled. This deterministic check must be paired in the same implementation
-  batch with a live GitHub Models conversation E2E that makes an actual LLM
-  call.
+  disabled, and includes
+  `llm_e2e_required_after_memory_promote_plan_change: true`. The same harness
+  then posts a normal issue-comment follow-up that must make a GitHub Models
+  call, select `repo-reader`, expose `gitclaw.search_files`, recover a bounded
+  repository-search fixture token, and publish usage telemetry without leaking
+  hidden issue tokens.
 - A `gh`-driven memory-validate E2E harness verifies
   `@gitclaw /memory validate` reports memory hygiene without a model call or
   memory-body leakage.

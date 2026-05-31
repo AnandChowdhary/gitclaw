@@ -56,6 +56,7 @@ func TestRenderMemoryPromotePlanReportsMetadataWithoutBodies(t *testing.T) {
 		"candidate_generation_included: `false`",
 		"manual_review_required: `true`",
 		"llm_e2e_required_after_change: `true`",
+		"llm_e2e_required_after_memory_promote_plan_change: `true`",
 		"raw_candidate_memory_included: `false`",
 		"raw_transcript_bodies_included: `false`",
 		"raw_memory_bodies_included: `false`",

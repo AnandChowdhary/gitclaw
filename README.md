@@ -92,6 +92,11 @@ gitclaw memory info <path>
 gitclaw memory search <query>
 ```
 
+`gitclaw memory promote-plan [target]` is a dry-run planner for durable memory
+promotion. It stays body-free and write-disabled, and its live harness now
+proves a real GitHub Models repo-reader follow-up after the deterministic
+report.
+
 Skills and bundles:
 
 ```bash

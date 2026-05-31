@@ -535,6 +535,14 @@ memory writes. Any real memory promotion should land as a reviewed git diff
 and be followed by memory/profile verification plus a live GitHub Models
 conversation E2E that performs an actual LLM call.
 
+2026-05-31 memory-promote-plan E2E follow-up: to keep the GitHub-native design
+honest, the dry-run planner now carries a planner-specific LLM-E2E flag and the
+live harness exercises both halves of the memory-promotion contract: first the
+body-free, non-mutating report, then a normal GitHub Models issue-comment turn
+that selects `repo-reader`, exposes bounded search, and recovers only the
+fixture token. This mirrors the OpenClaw/Hermes split between reviewed memory
+promotion and ordinary model/tool conversation.
+
 2026-05-29 soul-inspection follow-up: because OpenClaw and Hermes treat
 `SOUL.md`, `IDENTITY.md`, `USER.md`, `MEMORY.md`, and dated memory notes as
 high-authority portable context, GitClaw should make that load set auditable

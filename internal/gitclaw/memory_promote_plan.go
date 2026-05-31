@@ -74,6 +74,7 @@ func renderMemoryPromotePlanReport(ev Event, cfg Config, repoContext RepoContext
 	fmt.Fprintf(&b, "- candidate_generation_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- manual_review_required: `%t`\n", true)
 	fmt.Fprintf(&b, "- llm_e2e_required_after_change: `%t`\n", true)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_memory_promote_plan_change: `%t`\n", true)
 	fmt.Fprintf(&b, "- raw_candidate_memory_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_transcript_bodies_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_memory_bodies_included: `%t`\n", false)
