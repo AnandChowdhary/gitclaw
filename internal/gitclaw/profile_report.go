@@ -11,6 +11,9 @@ func IsProfileReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderProfileReport(ev Event, cfg Config, repoContext RepoContext) string {
+	if isProfileCatalogRequest(ev, cfg) {
+		return RenderProfileCatalogReport(ev, cfg, repoContext)
+	}
 	if isProfileManifestRequest(ev, cfg) {
 		return renderProfileManifestReport(ev, cfg, repoContext, true)
 	}
@@ -186,4 +189,21 @@ func isProfileRiskRequest(ev Event, cfg Config) bool {
 		return false
 	}
 	return strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit")
+}
+
+func isProfileCatalogRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 {
+		return false
+	}
+	command := fields[0]
+	if command != "/profile" && command != "/profiles" {
+		return false
+	}
+	switch strings.ToLower(fields[1]) {
+	case "catalog", "commands", "capabilities", "index":
+		return true
+	default:
+		return false
+	}
 }

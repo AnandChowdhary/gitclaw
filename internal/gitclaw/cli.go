@@ -152,6 +152,8 @@ func runProfileCommand(args []string) error {
 		return runProfileShowCommand(nil)
 	}
 	switch args[0] {
+	case "catalog", "commands", "capabilities", "index":
+		return runProfileCatalogCommand(args[1:])
 	case "show", "verify", "list":
 		return runProfileShowCommand(args[1:])
 	case "manifest", "portability", "portable", "export-plan", "export", "package-plan", "distribution":
@@ -159,8 +161,24 @@ func runProfileCommand(args []string) error {
 	case "risk", "risk-audit":
 		return runProfileRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw profile [show|verify|list|manifest|export-plan|risk]")
+		return fmt.Errorf("usage: gitclaw profile [catalog|show|verify|list|manifest|export-plan|risk]")
 	}
+}
+
+func runProfileCatalogCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown profile catalog argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderProfileCatalogCLIReport(cfg, repoContext))
+	return nil
 }
 
 func runProfileShowCommand(args []string) error {

@@ -39,6 +39,7 @@ go run ./cmd/gitclaw prompt cache
 go run ./cmd/gitclaw prompt compression
 go run ./cmd/gitclaw prompt risk
 go run ./cmd/gitclaw diffs risk
+go run ./cmd/gitclaw profile catalog
 go run ./cmd/gitclaw profile manifest
 go run ./cmd/gitclaw profile risk
 go run ./cmd/gitclaw models usage
@@ -344,6 +345,7 @@ gitclaw proactive init --name email-triage --cron "17 8 * * 1-5"
 gitclaw proactive enqueue --name repo-hygiene --slot "$(date -u +%F)"
 gitclaw workspace risk
 gitclaw workspace verify
+gitclaw profile catalog
 gitclaw profile show
 gitclaw profile manifest
 gitclaw profile export-plan
@@ -353,6 +355,12 @@ gitclaw sandbox risk
 ```
 
 Use `gitclaw commands` for the full catalog.
+
+`gitclaw profile catalog` is the compact discovery view for the repo-local
+agent profile. It maps profile commands and layers across identity, soul,
+memory, skills, tools, models, proactive jobs, channels, backups, and sessions
+while keeping raw profile files, issue/comment bodies, prompts, tool outputs,
+credentials, sessions, and backup payloads out of the report.
 
 The live channels-report harness verifies the GitHub-native Slack/Telegram
 bridge contract, workflow-dispatch wake strategy, and mirrored message counts
@@ -471,6 +479,7 @@ scripts/e2e/github-approvals-risk-report.sh
 scripts/e2e/github-secrets-risk-report.sh
 scripts/e2e/github-plugins-risk-report.sh
 scripts/e2e/github-plugins-mcp-report.sh
+scripts/e2e/github-profile-catalog-report.sh
 scripts/e2e/github-profile-risk-report.sh
 scripts/e2e/github-channel-message.sh
 scripts/e2e/github-channels-info-report.sh

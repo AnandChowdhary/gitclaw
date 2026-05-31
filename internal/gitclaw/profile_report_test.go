@@ -89,6 +89,103 @@ SKILL_PROFILE_SECRET`)
 	}
 }
 
+func TestRenderProfileCatalogReportShowsCommandAndLayerSurfaceWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SOUL.md", "SOUL_PROFILE_CATALOG_SECRET")
+	writeTestFile(t, root, ".gitclaw/IDENTITY.md", "IDENTITY_PROFILE_CATALOG_SECRET")
+	writeTestFile(t, root, ".gitclaw/USER.md", "USER_PROFILE_CATALOG_SECRET")
+	writeTestFile(t, root, ".gitclaw/TOOLS.md", "TOOLS_PROFILE_CATALOG_SECRET")
+	writeTestFile(t, root, ".gitclaw/MEMORY.md", "MEMORY_PROFILE_CATALOG_SECRET")
+	writeTestFile(t, root, ".gitclaw/HEARTBEAT.md", "HEARTBEAT_PROFILE_CATALOG_SECRET")
+	writeTestFile(t, root, ".gitclaw/memory/2026-05-30.md", "MEMORY_NOTE_PROFILE_CATALOG_SECRET")
+	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Use read-only repository context.
+---
+
+SKILL_PROFILE_CATALOG_SECRET`)
+	writeTestFile(t, root, ".gitclaw/skill-bundles/repo-context.yaml", "name: repo-context\nskills:\n  - repo-reader\n")
+	writeTestFile(t, root, ".gitclaw/proactive/repo-hygiene.md", "PROACTIVE_PROFILE_CATALOG_SECRET")
+
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	ctx, err := LoadRepoContextWithConfig(root, []TranscriptMessage{{Role: "user", Body: "Use repo-reader for profile catalog."}}, cfg)
+	if err != nil {
+		t.Fatalf("LoadRepoContextWithConfig returned error: %v", err)
+	}
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 178,
+			"title": "@gitclaw /profile catalog",
+			"body": "Hidden profile catalog route token: PROFILE_CATALOG_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	report := RenderProfileReport(ev, cfg, ctx)
+	for _, want := range []string{
+		"GitClaw Profile Catalog Report",
+		"Generated without a model call",
+		"repository: `owner/repo`",
+		"issue: `#178`",
+		"requested_profile_command: `catalog`",
+		"profile_command_status: `ok`",
+		"profile_catalog_status: `ok`",
+		"catalog_strategy: `compact-repo-local-profile-discovery`",
+		"profile_strategy: `repo-local-git-profile`",
+		"profile_surface: `identity, user, soul, memory, skills, bundles, tools, models, proactive, hooks, channels, backups, sessions`",
+		"catalog_entries: `6`",
+		"profile_layers: `13`",
+		"profile_documents_loaded: `7`",
+		"identity_policy_files: `6`",
+		"memory_notes: `1`",
+		"available_skills: `1`",
+		"selected_skills: `1`",
+		"skill_bundles: `1`",
+		"available_tools: `5`",
+		"raw_bodies_included: `false`",
+		"raw_profile_payloads_included: `false`",
+		"raw_config_bodies_included: `false`",
+		"raw_memory_bodies_included: `false`",
+		"raw_skill_bodies_included: `false`",
+		"raw_tool_outputs_included: `false`",
+		"credential_values_included: `false`",
+		"profile_mutation_allowed: `false`",
+		"profile_switching_supported: `false`",
+		"profile_import_supported: `false`",
+		"profile_export_supported: `false`",
+		"llm_e2e_required_after_profile_catalog_change: `true`",
+		"### Catalog Entries",
+		"command=`catalog` issue_intent=`@gitclaw /profile catalog` local_command=`gitclaw profile catalog` execution=`metadata-only` gate=`body-free-output`",
+		"command=`risk` issue_intent=`@gitclaw /profile risk` local_command=`gitclaw profile risk` execution=`repo-local-risk-audit` gate=`profile-isolation`",
+		"### Profile Layers",
+		"layer=`identity` store=`.gitclaw/IDENTITY.md`",
+		"layer=`proactive` store=`.gitclaw/proactive + .github/workflows` source=`scheduled-workflow-prompts` gate=`workflow-dispatch-issue-ingress` count=`1`",
+		"layer=`sessions` store=`GitHub issue thread + backup JSON`",
+		"### Catalog Gates",
+		"profile_store_gate=`repo-local-reviewed-files`",
+		"switching_gate=`unsupported-single-repository-profile`",
+		"raw_body_gate=`hashes-counts-and-metadata-only`",
+		"session_gate=`github-issue-thread-plus-backup-json`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("profile catalog report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"SOUL_PROFILE_CATALOG_SECRET", "IDENTITY_PROFILE_CATALOG_SECRET", "USER_PROFILE_CATALOG_SECRET", "TOOLS_PROFILE_CATALOG_SECRET", "MEMORY_PROFILE_CATALOG_SECRET", "HEARTBEAT_PROFILE_CATALOG_SECRET", "MEMORY_NOTE_PROFILE_CATALOG_SECRET", "SKILL_PROFILE_CATALOG_SECRET", "PROACTIVE_PROFILE_CATALOG_SECRET", "PROFILE_CATALOG_BODY_SECRET"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("profile catalog report leaked %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestRenderProfileManifestReportShowsPortabilityPlanWithoutBodies(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/config.yml", "model:\n  provider: github-models\n  name: openai/gpt-5-nano\n")

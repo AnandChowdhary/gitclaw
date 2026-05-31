@@ -73,6 +73,7 @@ channel gateway unique search fixture phrase => GITCLAW_CHANNEL_GATEWAY_CONTEXT_
 channel gateway followup unique search fixture phrase => GITCLAW_CHANNEL_GATEWAY_FOLLOWUP_CONTEXT_V1
 channel delivery unique search fixture phrase => GITCLAW_CHANNEL_DELIVERY_CONTEXT_V1
 channel delivery followup unique search fixture phrase => GITCLAW_CHANNEL_DELIVERY_FOLLOWUP_CONTEXT_V1
+profile catalog unique search fixture phrase => GITCLAW_PROFILE_CATALOG_CONTEXT_V1
 session catalog unique search fixture phrase => GITCLAW_SESSION_CATALOG_CONTEXT_V1
 proactive run unique search fixture phrase => GITCLAW_PROACTIVE_RUN_CONTEXT_V1
 proactive run followup unique search fixture phrase => GITCLAW_PROACTIVE_RUN_FOLLOWUP_CONTEXT_V1

@@ -1326,6 +1326,17 @@ external homes, sessions, backup payloads, and mutation/install/switch
 operations. The harness must include a real GitHub Models repo-reader/search
 follow-up so the deterministic manifest does not replace LLM/tool coverage.
 
+2026-05-31 profile-catalog follow-up: before offering any profile
+manifest/export-plan surface, GitClaw should give operators a compact profile
+command and layer map. Hermes' profile boundary groups config, memory,
+sessions, skills, cron jobs, plugins, and state; OpenClaw's workspace boundary
+keeps the same idea file-shaped in the repository. GitClaw's catalog should
+therefore name the commands and layers for identity, user, soul, memory,
+skills, bundles, tools, models, proactive workflows, hooks, channels, backups,
+and sessions, but report only counts and gates. It must stay body-free and
+prove the deterministic surface with a real GitHub Models repo-reader/search
+follow-up.
+
 2026-05-30 config-list follow-up: config inspection should also exist outside
 issue chat. Add `gitclaw config list` as the local mirror of `/config`: report
 effective config source, labels, trusted associations, model/prompt budgets,

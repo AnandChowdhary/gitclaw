@@ -1842,6 +1842,7 @@ Hermes profiles and OpenClaw workspace files:
 ```text
 @gitclaw /profile
 @gitclaw /profiles
+@gitclaw /profile catalog
 @gitclaw /profile manifest
 @gitclaw /profile export-plan
 @gitclaw /profile risk
@@ -1874,6 +1875,7 @@ mutation command.
 Local operators can inspect the same profile envelope without opening an issue:
 
 ```bash
+gitclaw profile catalog
 gitclaw profile show
 gitclaw profile verify
 gitclaw profile manifest
@@ -1884,6 +1886,17 @@ gitclaw profile risk
 `show`, `verify`, and `list` intentionally return the same body-free envelope
 in v1. `manifest` and `export-plan` return the same body-free portability
 manifest.
+
+`@gitclaw /profile catalog` and `gitclaw profile catalog` add a compact
+profile discovery surface before the manifest and risk views. The catalog maps
+supported profile commands and repo-local layers across identity, user, soul,
+memory, skills, bundles, tools, models, proactive prompts, hooks, channels,
+backups, and sessions. It reports counts, gates, and command availability only;
+raw profile file bodies, skill bodies, tool outputs, issue/comment bodies,
+prompts, credentials, sessions, and backup payloads are excluded. Any catalog
+change must include live GitHub issue E2E plus a GitHub Models follow-up that
+selects `repo-reader`, exposes `gitclaw.search_files`, and recovers a
+repository-search fixture token.
 
 `@gitclaw /profile manifest`, `@gitclaw /profile portability`, and
 `@gitclaw /profile export-plan` produce a deterministic dry-run manifest for
@@ -6949,6 +6962,13 @@ examples/workflows/gitclaw.yml
   produces a deterministic repo-local profile envelope across identity,
   memory, skills, tools, model, and validation state without a model call or
   profile-body leakage.
+- A `gh`-driven profile-catalog E2E harness verifies
+  `@gitclaw /profile catalog` produces a body-free profile command/layer
+  inventory across identity, memory, skills, tools, model, proactive, channel,
+  backup, and session gates. The same issue then receives a live GitHub Models
+  follow-up that proves `repo-reader` selection, prompt-visible
+  `gitclaw.search_files`, usage telemetry, and repository-search fixture
+  recovery.
 - A `gh`-driven profile-manifest E2E harness verifies
   `@gitclaw /profile manifest` produces a body-free portability manifest for
   repo-local profile files, skills, bundles, proactive prompts, toolsets, and
