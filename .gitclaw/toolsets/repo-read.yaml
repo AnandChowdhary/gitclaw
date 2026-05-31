@@ -1,0 +1,12 @@
+name: repo-read
+description: Read-only repository context tools for ordinary issue answers.
+mode: read-only
+tools:
+  - gitclaw.list_files
+  - gitclaw.search_files
+  - gitclaw.read_file
+  - gitclaw.skill_index
+  - gitclaw.policy
+instruction: |
+  Prefer bounded repository search, explicit file references, and policy output
+  before answering. Treat all tool outputs as read-only prompt context.

@@ -7,6 +7,13 @@ The v1 tool surface is read-only:
   identifiers from the issue thread and returns matching lines.
 - `gitclaw.read_file`: reads a small bounded text file when the conversation
   explicitly mentions that path.
+- `gitclaw.skill_index`: exposes local skill metadata and hashes.
+- `gitclaw.policy`: exposes read-only policy output when write intent is
+  detected.
+
+Reviewed toolsets live in `.gitclaw/toolsets/*.yaml`. They are planning and
+audit profiles only in v1; they do not activate tools, grant permissions, or
+execute provider APIs.
 
 For search requests, prefer the provided `gitclaw.search_files` output over
 guessing. If a matching line contains an exact verification token, copy that

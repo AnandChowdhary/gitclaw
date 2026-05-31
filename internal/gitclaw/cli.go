@@ -1456,7 +1456,7 @@ func runSessionSearchCommand(args []string) error {
 
 func runToolsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw tools verify|risk|validate|list|run-plan <name>|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw tools verify|risk|validate|list|toolsets [risk|info <name>]|run-plan <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -1467,6 +1467,8 @@ func runToolsCommand(args []string) error {
 		return runToolsValidateCommand(args[1:])
 	case "list":
 		return runToolsListCommand(args[1:])
+	case "toolsets", "toolset":
+		return runToolsToolsetsCommand(args[1:])
 	case "run-plan", "plan":
 		return runToolsRunPlanCommand(args[1:])
 	case "info":
@@ -1476,6 +1478,39 @@ func runToolsCommand(args []string) error {
 	default:
 		return fmt.Errorf("unknown tools command %q", args[0])
 	}
+}
+
+func runToolsToolsetsCommand(args []string) error {
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	if len(args) == 0 || args[0] == "list" {
+		if len(args) > 1 {
+			return fmt.Errorf("unknown tools toolsets list argument %q", args[1])
+		}
+		fmt.Println(RenderToolsetsCLIReport(cfg))
+		return nil
+	}
+	if args[0] == "risk" || args[0] == "risk-audit" {
+		if len(args) > 1 {
+			return fmt.Errorf("unknown tools toolsets risk argument %q", args[1])
+		}
+		fmt.Println(RenderToolsetsRiskCLIReport(cfg))
+		return nil
+	}
+	if args[0] == "info" || args[0] == "show" {
+		if len(args) != 2 {
+			return fmt.Errorf("usage: gitclaw tools toolsets info <name>")
+		}
+		report := RenderToolsetInfoCLIReport(cfg, args[1])
+		fmt.Println(report)
+		if len(matchingToolsetSummaries(BuildToolsetStoreReport(cfg).Summaries, args[1])) == 0 {
+			return fmt.Errorf("toolset %q not found", args[1])
+		}
+		return nil
+	}
+	return fmt.Errorf("usage: gitclaw tools toolsets [list|risk|info <name>]")
 }
 
 func runSecretsCommand(args []string) error {

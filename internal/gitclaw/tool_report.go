@@ -67,6 +67,15 @@ func RenderToolsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isToolsValidateRequest(ev, cfg) {
 		return renderToolsValidationReport(ev, repoContext, true)
 	}
+	if isToolsetsRiskRequest(ev, cfg) {
+		return renderToolsetsRiskReport(ev, cfg, true)
+	}
+	if toolsetName := requestedToolsetInfoName(ev, cfg); toolsetName != "" {
+		return renderToolsetInfoReport(ev, cfg, toolsetName, true)
+	}
+	if isToolsetsListRequest(ev, cfg) {
+		return renderToolsetsReport(ev, cfg, true, "list")
+	}
 	if toolName := requestedToolRunPlanName(ev, cfg); toolName != "" {
 		if toolName == "__missing__" {
 			toolName = ""
@@ -253,6 +262,34 @@ func isToolsVerifyRequest(ev Event, cfg Config) bool {
 func isToolsRiskRequest(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && fields[0] == "/tools" && (strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit"))
+}
+
+func isToolsetsListRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && fields[0] == "/tools" &&
+		(strings.EqualFold(fields[1], "toolsets") || strings.EqualFold(fields[1], "toolset")) &&
+		(len(fields) == 2 || strings.EqualFold(fields[2], "list"))
+}
+
+func isToolsetsRiskRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 3 && fields[0] == "/tools" &&
+		(strings.EqualFold(fields[1], "toolsets") || strings.EqualFold(fields[1], "toolset")) &&
+		(strings.EqualFold(fields[2], "risk") || strings.EqualFold(fields[2], "risk-audit"))
+}
+
+func requestedToolsetInfoName(ev Event, cfg Config) string {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 4 || fields[0] != "/tools" {
+		return ""
+	}
+	if !strings.EqualFold(fields[1], "toolsets") && !strings.EqualFold(fields[1], "toolset") {
+		return ""
+	}
+	if !strings.EqualFold(fields[2], "info") && !strings.EqualFold(fields[2], "show") {
+		return ""
+	}
+	return normalizeToolsetName(fields[3])
 }
 
 func cleanToolLookupName(name string) string {

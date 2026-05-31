@@ -1030,6 +1030,7 @@ AGENTS.md                    # existing coding-agent instructions, if present
 .gitclaw/WORKSPACE.md        # declarative workspace/checkout safety policy
 .gitclaw/workspaces/*.md     # declarative workspace specs, metadata-only in v1
 .gitclaw/SKILLS/*.md         # optional read-only local skills, v1+
+.gitclaw/toolsets/*.yaml     # reviewed deterministic tool profiles, advisory in v1
 .gitclaw/MEMORY.md           # optional curated repo memory, human-reviewed only
 .gitclaw/memory/YYYY-MM-DD.md # dated working memory notes, human-reviewed only
 ```
@@ -1866,6 +1867,10 @@ GitClaw v1 adds a small deterministic tool layer before the model call:
   query cannot starve later explicit phrases.
 - `gitclaw.read_file`: reads a bounded text file only when the issue thread
   explicitly mentions that repository-relative path.
+- `gitclaw.skill_index`: exposes local skill names, paths, gates, hashes, and
+  requirement counts.
+- `gitclaw.policy`: exposes read-only policy output when the issue thread
+  contains write intent.
 
 Tool outputs are inserted into the prompt as auditable context blocks. They are
 not autonomous shell execution, and they do not mutate the repository.
@@ -1908,6 +1913,9 @@ gitclaw tools verify
 gitclaw tools risk
 gitclaw tools validate
 gitclaw tools list
+gitclaw tools toolsets
+gitclaw tools toolsets risk
+gitclaw tools toolsets info <name>
 gitclaw tools run-plan <name>
 gitclaw tools info <name>
 gitclaw tools search <query> --max-results 10
@@ -1927,6 +1935,9 @@ OpenClaw's tool policy visibility and Hermes' toolset inventory:
 @gitclaw /tools verify
 @gitclaw /tools risk
 @gitclaw /tools validate
+@gitclaw /tools toolsets
+@gitclaw /tools toolsets risk
+@gitclaw /tools toolsets info repo-read
 @gitclaw /tools run-plan search_files
 @gitclaw /tools info read_file
 @gitclaw /tools search read_file
@@ -1955,6 +1966,44 @@ only; the issue-visible report exposes enough metadata to debug whether
 `gitclaw.skill_index`, or `gitclaw.policy` ran for the turn.
 `@gitclaw /tools list` is an explicit inventory alias for the same report,
 matching the local `gitclaw tools list` helper.
+
+### Toolset Profiles
+
+GitClaw also supports repo-reviewed toolset profile files:
+
+```yaml
+name: repo-read
+description: Read-only repository context tools for ordinary issue answers.
+mode: read-only
+tools:
+  - gitclaw.list_files
+  - gitclaw.search_files
+  - gitclaw.read_file
+  - gitclaw.skill_index
+  - gitclaw.policy
+instruction: |
+  Prefer bounded repository search and explicit file references.
+```
+
+Toolsets live in `.gitclaw/toolsets/*.yaml`. They mirror the useful part of
+Hermes/OpenClaw toolsets: a named, reviewed task profile that declares which
+tool contracts belong together. In GitClaw v1 they are advisory inventory and
+risk surfaces only. They do not dynamically activate tools, bypass
+`tools.allowed`/`tools.disabled`, call providers, execute shell commands, or
+grant repository write permissions.
+
+`@gitclaw /tools toolsets` and `gitclaw tools toolsets` list the profiles by
+path, normalized tool refs, resolved/unknown refs, config gate state, hashes,
+and whether an instruction/description exists. `@gitclaw /tools toolsets risk`
+and `gitclaw tools toolsets risk` scan toolset YAML for unknown tool refs,
+disabled/allowlist-blocked refs, non-read-only modes, prompt-boundary
+overrides, secret exfiltration instructions, credential material, host
+execution, repository mutation, remote exfiltration, and unbounded loops.
+`@gitclaw /tools toolsets info <name>` and
+`gitclaw tools toolsets info <name>` show one profile. All three reports are
+body-free: they never print raw toolset instructions, issue/comment bodies,
+prompts, tool outputs, credentials, or secret values, and changes require a
+live GitHub Models follow-up E2E.
 
 When called as `@gitclaw /tools validate`, the command posts only the
 validation report: tool contract counts, active-output counts, status,

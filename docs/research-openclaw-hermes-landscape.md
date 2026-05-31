@@ -1274,6 +1274,19 @@ active-output hashes, validation summary, no shell/network/repository/model
 execution, and an explicit requirement that tool-behavior changes also pass a
 live GitHub Models conversation E2E.
 
+2026-05-31 toolsets follow-up: Hermes' toolsets and OpenClaw's tool-policy
+surfaces both point to named, task-oriented capability profiles, but GitClaw
+should keep v1 stricter than either runtime. Add repo-reviewed
+`.gitclaw/toolsets/*.yaml` profiles and expose them through
+`@gitclaw /tools toolsets`, `@gitclaw /tools toolsets risk`, and
+`gitclaw tools toolsets ...`. These files declare expected deterministic tool
+contracts for a task profile and can carry reviewed guidance, but they do not
+activate tools, install plugins, expose MCP servers, call provider APIs,
+execute shell commands, or change repository permissions. Reports should
+publish only profile names, paths, normalized tool refs, resolved/unknown refs,
+config-gate state, hashes, risk codes, and line hashes; raw toolset bodies and
+instructions stay out of issue comments.
+
 2026-05-30 migration-plan follow-up: OpenClaw's migration posture is
 preview-first, secret-redacted, and backup-backed, while Hermes' profiles keep
 agent state isolated by config, `.env`, `SOUL.md`, memories, sessions, skills,

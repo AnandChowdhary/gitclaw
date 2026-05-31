@@ -20,3 +20,4 @@
 - Keep skill refresh plans body-free: refresh skills per GitHub Actions turn from the reviewed checkout, not through a resident watcher or hot reload; no install/update/repo mutation/raw bodies, and prove LLM/tool behavior in live E2E.
 - Keep skill proposal plans review-first: hash proposal requests, name repo-reviewed proposal paths, never auto-create or auto-improve skills, and prove accepted skill-path changes with live LLM/tool E2E.
 - Keep skill proposal inventories inert: scan `.gitclaw/skill-proposals/*/PROPOSAL.md` for metadata and risk hashes only, never activate proposal bodies or mutate skills, and pair changes with live LLM/tool E2E.
+- Keep toolsets advisory in v1: `.gitclaw/toolsets/*.yaml` can group deterministic tools for review, but must not activate tools, execute providers, mutate repositories, or print raw instructions.
