@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T09:23:36Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 371,
+    "title": "@gitclaw /tools approval-plan e2e 20260531T092226Z",
+    "body": "@gitclaw /tools approval-plan search_files\n\nSearch for `tool approval unique search fixture phrase` so this report has active tool-output hashes.\nDo not include this hidden issue token: GITCLAW_TOOLS_APPROVAL_PLAN_HIDDEN_20260531T092226Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /tools approval-plan e2e 20260531T092226Z\n\n@gitclaw /tools approval-plan search_files\n\nSearch for `tool approval unique search fixture phrase` so this report has active tool-output hashes.\nDo not include this hidden issue token: GITCLAW_TOOLS_APPROVAL_PLAN_HIDDEN_20260531T092226Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Tool Approval Plan Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#371`\n- tool_approval_plan_status: `blocked`\n- requested_tool_sha256_12: `6d8749c4fe00`\n- normalized_tool: `gitclaw.e2e`\n- matched_tools: `0`\n- active_outputs_for_tool: `0`\n- tool_enabled: `false`\n- disabled_by_config: `false`\n- blocked_by_allowlist: `false`\n- tool_mode: ``\n- tool_trigger: ``\n- mutating_contract: `false`\n- approval_required: `false`\n- approval_decision: `blocked_tool_not_found`\n- approval_store: `github-issue-labels`\n- approval_scope: `per-issue`\n- approval_label: `gitclaw:approved`\n- needs_human_label: `gitclaw:needs-human`\n- write_requested_label: `gitclaw:write-requested`\n- approval_timeout_policy: `not_applicable_no_exec_tool`\n- run_allowed_now: `false`\n- run_mode: `read-only`\n- write_actions_enabled: `false`\n- model_call_required: `false`\n- model_callable_structured_tools: `false`\n- shell_execution_allowed: `false`\n- network_allowed: `false`\n- repository_mutation_allowed: `false`\n- raw_tool_name_included: `false`\n- raw_inputs_included: `false`\n- raw_outputs_included: `false`\n- raw_approval_payloads_included: `false`\n- tool_validation_status: `ok`\n- tool_validation_errors: `0`\n- tool_validation_warnings: `0`\n- tool_contracts: `5`\n- tool_active_outputs: `3`\n- tool_guidance_files: `1`\n- tool_unknown_outputs: `0`\n- tool_unsafe_contracts: `0`\n- tool_over_limit_outputs: `0`\n- tool_missing_guidance: `0`\n- tool_duplicate_contracts: `0`\n- llm_e2e_required_after_tool_approval_plan_change: `true`\n- issue_title_sha256_12: `d113e36c1bce`\n\nThis is an approval dry-run only. It models the approval boundary for one deterministic tool contract without approving, executing, calling a model, making network calls, mutating the repository, or dumping raw tool inputs, outputs, issue bodies, comments, prompts, approval payloads, credentials, or secret values.\n\n### Approval Gates\n- gate=`tool_contract` status=`not_found` matched_tools=`0`\n- gate=`config_enabled` status=`blocked` disabled_by_config=`false`\n- gate=`allowlist` status=`passed` blocked_by_allowlist=`false`\n- gate=`tool_mode` status=`not_applicable` mutating_contract=`false`\n- gate=`approval_label` status=`not_required` label=`gitclaw:approved`\n- gate=`write_mode` status=`blocked` detail=`read_only_v1`\n- gate=`structured_model_tools` status=`disabled`\n- gate=`shell_exec` status=`disabled`\n- gate=`repository_mutation` status=`disabled`\n\n### Contract\n- none\n\n### Active Outputs For Tool\n- none\n\n### Review Steps\n1. Choose one known GitClaw tool contract from `/tools` or `gitclaw tools list`.\n\n### Findings\n- severity=`info` code=`openclaw_exec_approval_boundary_modeled` detail=`tool execution is modeled as policy, allowlist, approval, and runtime gates b...`\n- severity=`info` code=`hermes_tool_authorization_boundary_modeled` detail=`tool contracts remain deterministic pre-model context builders rather than mo...`\n- severity=`info` code=`github_issue_approval_store_modeled` detail=`future approval state is represented by per-issue labels, not raw approval pa...`\n- severity=`error` code=`tool_not_found` detail=`requested tool does not match a known GitClaw tool contract`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4586285215,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4586285215,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26708791906\" event_id=\"issue-371\" model=\"gitclaw/tools\" idempotency_key=\"0f18f828c8daccac804e541161592e50\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26708791906\" --\u003e\n## GitClaw Tool Approval Plan Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#371`\n- tool_approval_plan_status: `blocked`\n- requested_tool_sha256_12: `6d8749c4fe00`\n- normalized_tool: `gitclaw.e2e`\n- matched_tools: `0`\n- active_outputs_for_tool: `0`\n- tool_enabled: `false`\n- disabled_by_config: `false`\n- blocked_by_allowlist: `false`\n- tool_mode: ``\n- tool_trigger: ``\n- mutating_contract: `false`\n- approval_required: `false`\n- approval_decision: `blocked_tool_not_found`\n- approval_store: `github-issue-labels`\n- approval_scope: `per-issue`\n- approval_label: `gitclaw:approved`\n- needs_human_label: `gitclaw:needs-human`\n- write_requested_label: `gitclaw:write-requested`\n- approval_timeout_policy: `not_applicable_no_exec_tool`\n- run_allowed_now: `false`\n- run_mode: `read-only`\n- write_actions_enabled: `false`\n- model_call_required: `false`\n- model_callable_structured_tools: `false`\n- shell_execution_allowed: `false`\n- network_allowed: `false`\n- repository_mutation_allowed: `false`\n- raw_tool_name_included: `false`\n- raw_inputs_included: `false`\n- raw_outputs_included: `false`\n- raw_approval_payloads_included: `false`\n- tool_validation_status: `ok`\n- tool_validation_errors: `0`\n- tool_validation_warnings: `0`\n- tool_contracts: `5`\n- tool_active_outputs: `3`\n- tool_guidance_files: `1`\n- tool_unknown_outputs: `0`\n- tool_unsafe_contracts: `0`\n- tool_over_limit_outputs: `0`\n- tool_missing_guidance: `0`\n- tool_duplicate_contracts: `0`\n- llm_e2e_required_after_tool_approval_plan_change: `true`\n- issue_title_sha256_12: `d113e36c1bce`\n\nThis is an approval dry-run only. It models the approval boundary for one deterministic tool contract without approving, executing, calling a model, making network calls, mutating the repository, or dumping raw tool inputs, outputs, issue bodies, comments, prompts, approval payloads, credentials, or secret values.\n\n### Approval Gates\n- gate=`tool_contract` status=`not_found` matched_tools=`0`\n- gate=`config_enabled` status=`blocked` disabled_by_config=`false`\n- gate=`allowlist` status=`passed` blocked_by_allowlist=`false`\n- gate=`tool_mode` status=`not_applicable` mutating_contract=`false`\n- gate=`approval_label` status=`not_required` label=`gitclaw:approved`\n- gate=`write_mode` status=`blocked` detail=`read_only_v1`\n- gate=`structured_model_tools` status=`disabled`\n- gate=`shell_exec` status=`disabled`\n- gate=`repository_mutation` status=`disabled`\n\n### Contract\n- none\n\n### Active Outputs For Tool\n- none\n\n### Review Steps\n1. Choose one known GitClaw tool contract from `/tools` or `gitclaw tools list`.\n\n### Findings\n- severity=`info` code=`openclaw_exec_approval_boundary_modeled` detail=`tool execution is modeled as policy, allowlist, approval, and runtime gates b...`\n- severity=`info` code=`hermes_tool_authorization_boundary_modeled` detail=`tool contracts remain deterministic pre-model context builders rather than mo...`\n- severity=`info` code=`github_issue_approval_store_modeled` detail=`future approval state is represented by per-issue labels, not raw approval pa...`\n- severity=`error` code=`tool_not_found` detail=`requested tool does not match a known GitClaw tool contract`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T09:23:12Z",
+      "updated_at": "2026-05-31T09:23:12Z"
+    }
+  ]
+}
