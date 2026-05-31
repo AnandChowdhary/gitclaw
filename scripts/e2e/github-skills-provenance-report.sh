@@ -166,7 +166,7 @@ for expected in \
   'enabled_skills: `1`' \
   'disabled_skills: `0`' \
   'allowlist_blocked_skills: `0`' \
-  'selected_skills: `0`' \
+  'selected_skills: `1`' \
   'repo_local_skills: `1`' \
   'compat_root_skills: `0`' \
   'unknown_source_skills: `0`' \
@@ -190,7 +190,7 @@ for expected in \
   'folder=`repo-reader`' \
   'source=`repo-local`' \
   'enabled=`true`' \
-  'selected_for_this_turn=`false`' \
+  'selected_for_this_turn=`true`' \
   'frontmatter=`true`' \
   'description=`true`' \
   'risk_findings=`0`' \
