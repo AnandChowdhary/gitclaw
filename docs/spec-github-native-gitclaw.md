@@ -673,6 +673,7 @@ GitClaw supports a deterministic model/provider audit command:
 ```text
 @gitclaw /models
 @gitclaw /models list
+@gitclaw /models usage
 @gitclaw /models risk
 ```
 
@@ -694,6 +695,29 @@ inference. It posts a `gitclaw:assistant-turn` comment with
 - fallback enablement and primary attempts before fallback,
 - prompt-artifact enablement.
 
+`@gitclaw /models usage` adds the body-free token telemetry view inspired by
+OpenClaw's `/status` and `/usage` split and Hermes' use of API-reported token
+counts for context management. GitClaw normalizes usage fields returned by
+GitHub Models/OpenAI-compatible chat completions (`prompt_tokens`/`input_tokens`,
+`completion_tokens`/`output_tokens`, `total_tokens`, and common cached-token
+aliases) and persists those counters as assistant-marker attributes on
+model-backed turns. The deterministic usage report never performs a live model
+probe. It reads existing assistant markers, prompt-projection metadata, model
+config, and context counts, then reports recorded prompt/completion/total/cache
+tokens when present.
+
+Current references: OpenClaw token-use documentation
+(`https://docs.openclaw.ai/reference/token-use`), Hermes context compression
+and caching docs (`https://hermes-agent.nousresearch.com/docs/developer-guide/context-compression-and-caching/`),
+and GitHub Models Actions quickstart
+(`https://docs.github.com/en/github-models/quickstart`).
+
+Cost estimation is deliberately off in v1. GitHub Models can be called in
+Actions with `models: read` and the workflow `GITHUB_TOKEN`, but GitClaw does
+not yet maintain a reviewed local pricing catalog or query billing APIs.
+Therefore `/models usage` reports token counts and cost-estimation gaps without
+guessing dollars.
+
 It never dumps issue/comment bodies, API keys, full prompts, or raw provider
 error bodies. This gives operators a safe way to inspect GitHub Models and
 OpenAI-compatible provider wiring from the issue thread before burning model
@@ -703,6 +727,7 @@ Local operators can inspect the same model wiring without opening an issue:
 
 ```bash
 gitclaw models list
+gitclaw models usage
 gitclaw models risk
 ```
 
@@ -5800,6 +5825,11 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven models-list E2E harness verifies `@gitclaw /models list` is
   an explicit report alias, while local `gitclaw models list` exposes the same
   provider wiring without issue-only fields.
+- A `gh`-driven model-usage E2E harness verifies `@gitclaw /models usage` and
+  local `gitclaw models usage` expose normalized token telemetry, prompt
+  projection, raw-payload exclusion, and cost-estimation gaps without a model
+  call, then runs a real GitHub Models follow-up that proves repo-reader search
+  and normalized usage-marker persistence on the model-backed turn.
 - A `gh`-driven config-report E2E harness verifies `@gitclaw /config` reports
   effective labels, prompt budgets, commands, and workflow metadata without a
   model call.

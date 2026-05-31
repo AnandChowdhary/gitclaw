@@ -17,6 +17,7 @@ import (
 
 type StaticLLM struct {
 	Response string
+	Usage    LLMUsage
 }
 
 func (s StaticLLM) Complete(ctx context.Context, req LLMRequest) (string, error) {
@@ -26,12 +27,17 @@ func (s StaticLLM) Complete(ctx context.Context, req LLMRequest) (string, error)
 	return s.Response, nil
 }
 
+func (s StaticLLM) LastUsage() LLMUsage {
+	return s.Usage
+}
+
 type OpenAICompatibleLLM struct {
 	APIKey         string
 	BaseURL        string
 	Model          string
 	FallbackModels []string
 	LastModel      string
+	LastUsageData  LLMUsage
 	Client         *http.Client
 }
 
@@ -114,9 +120,10 @@ func (c *OpenAICompatibleLLM) Complete(ctx context.Context, req LLMRequest) (str
 			attempts = primaryAttempts
 		}
 		for attempt := 1; attempt <= attempts; attempt++ {
-			response, retry, err := c.completeAttempt(ctx, body, attempt)
+			response, usage, retry, err := c.completeAttempt(ctx, body, attempt)
 			if err == nil {
 				c.LastModel = model
+				c.LastUsageData = usage
 				return response, nil
 			}
 			lastErr = err
@@ -139,6 +146,10 @@ func (c *OpenAICompatibleLLM) SelectedModel() string {
 		return model
 	}
 	return c.Model
+}
+
+func (c *OpenAICompatibleLLM) LastUsage() LLMUsage {
+	return c.LastUsageData
 }
 
 func marshalLLMPayload(model string, req LLMRequest, prompt string) ([]byte, error) {
@@ -174,10 +185,10 @@ type llmRetry struct {
 	Delay time.Duration
 }
 
-func (c *OpenAICompatibleLLM) completeAttempt(ctx context.Context, body []byte, attempt int) (string, llmRetry, error) {
+func (c *OpenAICompatibleLLM) completeAttempt(ctx context.Context, body []byte, attempt int) (string, LLMUsage, llmRetry, error) {
 	httpReq, err := http.NewRequestWithContext(ctx, http.MethodPost, c.BaseURL, bytes.NewReader(body))
 	if err != nil {
-		return "", llmRetry{}, err
+		return "", LLMUsage{}, llmRetry{}, err
 	}
 	httpReq.Header.Set("Authorization", "Bearer "+c.APIKey)
 	httpReq.Header.Set("Content-Type", "application/json")
@@ -186,18 +197,18 @@ func (c *OpenAICompatibleLLM) completeAttempt(ctx context.Context, body []byte, 
 	res, err := c.httpClient().Do(httpReq)
 	if err != nil {
 		if ctx.Err() != nil {
-			return "", llmRetry{}, err
+			return "", LLMUsage{}, llmRetry{}, err
 		}
-		return "", llmRetry{Retry: true, Delay: llmRetryDelay(nil, attempt)}, err
+		return "", LLMUsage{}, llmRetry{Retry: true, Delay: llmRetryDelay(nil, attempt)}, err
 	}
 	defer res.Body.Close()
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
 		data, _ := io.ReadAll(io.LimitReader(res.Body, 4096))
 		err := fmt.Errorf("LLM request failed: status=%d body=%s", res.StatusCode, strings.TrimSpace(string(data)))
 		if retryableLLMStatus(res.StatusCode) {
-			return "", llmRetry{Retry: true, Delay: llmRetryDelay(res, attempt)}, err
+			return "", LLMUsage{}, llmRetry{Retry: true, Delay: llmRetryDelay(res, attempt)}, err
 		}
-		return "", llmRetry{}, err
+		return "", LLMUsage{}, llmRetry{}, err
 	}
 	var raw struct {
 		Choices []struct {
@@ -205,14 +216,64 @@ func (c *OpenAICompatibleLLM) completeAttempt(ctx context.Context, body []byte, 
 				Content string `json:"content"`
 			} `json:"message"`
 		} `json:"choices"`
+		Usage map[string]any `json:"usage"`
 	}
 	if err := json.NewDecoder(res.Body).Decode(&raw); err != nil {
-		return "", llmRetry{}, err
+		return "", LLMUsage{}, llmRetry{}, err
 	}
 	if len(raw.Choices) == 0 || strings.TrimSpace(raw.Choices[0].Message.Content) == "" {
-		return "", llmRetry{}, fmt.Errorf("LLM returned no content")
+		return "", LLMUsage{}, llmRetry{}, fmt.Errorf("LLM returned no content")
 	}
-	return strings.TrimSpace(raw.Choices[0].Message.Content), llmRetry{}, nil
+	return strings.TrimSpace(raw.Choices[0].Message.Content), normalizeLLMUsage(raw.Usage), llmRetry{}, nil
+}
+
+func normalizeLLMUsage(raw map[string]any) LLMUsage {
+	if len(raw) == 0 {
+		return LLMUsage{}
+	}
+	usage := LLMUsage{
+		Present:          true,
+		PromptTokens:     usageInt(raw, "prompt_tokens", "input_tokens"),
+		CompletionTokens: usageInt(raw, "completion_tokens", "output_tokens"),
+		TotalTokens:      usageInt(raw, "total_tokens"),
+		CacheReadTokens:  usageInt(raw, "cache_read_tokens", "cache_read", "cached_tokens"),
+		CacheWriteTokens: usageInt(raw, "cache_write_tokens", "cache_write"),
+	}
+	if nested, ok := raw["prompt_tokens_details"].(map[string]any); ok && usage.CacheReadTokens == 0 {
+		usage.CacheReadTokens = usageInt(nested, "cached_tokens", "cache_read_tokens", "cache_read")
+	}
+	if nested, ok := raw["input_tokens_details"].(map[string]any); ok && usage.CacheReadTokens == 0 {
+		usage.CacheReadTokens = usageInt(nested, "cached_tokens", "cache_read_tokens", "cache_read")
+	}
+	if usage.TotalTokens == 0 && (usage.PromptTokens > 0 || usage.CompletionTokens > 0) {
+		usage.TotalTokens = usage.PromptTokens + usage.CompletionTokens
+	}
+	return usage
+}
+
+func usageInt(raw map[string]any, keys ...string) int {
+	for _, key := range keys {
+		value, ok := raw[key]
+		if !ok {
+			continue
+		}
+		switch typed := value.(type) {
+		case float64:
+			if typed > 0 {
+				return int(typed)
+			}
+		case int:
+			if typed > 0 {
+				return typed
+			}
+		case string:
+			parsed, err := strconv.Atoi(strings.TrimSpace(typed))
+			if err == nil && parsed > 0 {
+				return parsed
+			}
+		}
+	}
+	return 0
 }
 
 func llmMaxAttempts() int {

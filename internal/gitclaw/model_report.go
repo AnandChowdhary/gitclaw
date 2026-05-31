@@ -16,6 +16,9 @@ func IsModelReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderModelReport(ev Event, cfg Config) string {
+	if IsModelUsageRequest(ev, cfg) {
+		return RenderModelUsageReport(ev, cfg, nil, nil, RepoContext{})
+	}
 	if isModelRiskRequest(ev, cfg) {
 		return renderModelRiskReport(ev, cfg, true)
 	}

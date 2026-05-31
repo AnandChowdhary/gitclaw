@@ -69,6 +69,13 @@ func TestRenderAssistantCommentIncludesMarker(t *testing.T) {
 		ToolOutputs:         1,
 		PromptVisibleSkills: []string{"repo-reader"},
 		PromptVisibleTools:  []string{"gitclaw.search_files"},
+		Usage: LLMUsage{
+			Present:          true,
+			PromptTokens:     120,
+			CompletionTokens: 30,
+			TotalTokens:      150,
+			CacheReadTokens:  80,
+		},
 	}
 	body := RenderAssistantComment(marker, "Hello.")
 	if !HasGitClawMarker(body) {
@@ -77,7 +84,7 @@ func TestRenderAssistantCommentIncludesMarker(t *testing.T) {
 	if !ContainsIdempotencyKey(body, "abc") {
 		t.Fatalf("rendered comment does not contain idempotency key: %s", body)
 	}
-	for _, want := range []string{`prompt_context_sha256_12="abc123def456"`, `context_documents="2"`, `selected_skills="1"`, `tool_outputs="1"`, `skills="repo-reader"`, `tools="gitclaw.search_files"`} {
+	for _, want := range []string{`prompt_context_sha256_12="abc123def456"`, `context_documents="2"`, `selected_skills="1"`, `tool_outputs="1"`, `skills="repo-reader"`, `tools="gitclaw.search_files"`, `usage_prompt_tokens="120"`, `usage_completion_tokens="30"`, `usage_total_tokens="150"`, `usage_cache_read_tokens="80"`, `usage_cache_write_tokens="0"`} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("rendered comment missing %q: %s", want, body)
 		}

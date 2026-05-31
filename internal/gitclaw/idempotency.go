@@ -63,6 +63,15 @@ func RenderAssistantComment(marker Marker, text string) string {
 			parts = append(parts, fmt.Sprintf(`tools="%s"`, escapeMarkerValue(strings.Join(marker.PromptVisibleTools, ","))))
 		}
 	}
+	if marker.Usage.Present {
+		parts = append(parts,
+			fmt.Sprintf(`usage_prompt_tokens="%d"`, marker.Usage.PromptTokens),
+			fmt.Sprintf(`usage_completion_tokens="%d"`, marker.Usage.CompletionTokens),
+			fmt.Sprintf(`usage_total_tokens="%d"`, marker.Usage.TotalTokens),
+			fmt.Sprintf(`usage_cache_read_tokens="%d"`, marker.Usage.CacheReadTokens),
+			fmt.Sprintf(`usage_cache_write_tokens="%d"`, marker.Usage.CacheWriteTokens),
+		)
+	}
 	return fmt.Sprintf("<!-- gitclaw:assistant-turn %s -->\n%s", strings.Join(parts, " "), strings.TrimSpace(text))
 }
 

@@ -161,6 +161,42 @@ func TestOpenAICompatibleLLMRetriesRateLimit(t *testing.T) {
 	}
 }
 
+func TestOpenAICompatibleLLMNormalizesUsageMetadata(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{
+			"choices":[{"message":{"content":"usage ok"}}],
+			"usage":{
+				"prompt_tokens":120,
+				"completion_tokens":30,
+				"total_tokens":150,
+				"prompt_tokens_details":{"cached_tokens":80}
+			}
+		}`))
+	}))
+	defer server.Close()
+
+	llm := &OpenAICompatibleLLM{
+		APIKey:  "token",
+		BaseURL: server.URL,
+		Model:   "test-model",
+		Client:  server.Client(),
+	}
+	got, err := llm.Complete(context.Background(), LLMRequest{
+		Event: Event{Repo: "owner/repo", Issue: Issue{Number: 1, Title: "usage"}},
+	})
+	if err != nil {
+		t.Fatalf("Complete returned error: %v", err)
+	}
+	if got != "usage ok" {
+		t.Fatalf("Complete = %q, want usage ok", got)
+	}
+	usage := llm.LastUsage()
+	if !usage.Present || usage.PromptTokens != 120 || usage.CompletionTokens != 30 || usage.TotalTokens != 150 || usage.CacheReadTokens != 80 {
+		t.Fatalf("LastUsage = %#v", usage)
+	}
+}
+
 func TestOpenAICompatibleLLMFallsBackAfterRetryablePrimaryFailure(t *testing.T) {
 	t.Setenv("GITCLAW_LLM_MAX_ATTEMPTS", "3")
 	t.Setenv("GITCLAW_LLM_PRIMARY_ATTEMPTS_BEFORE_FALLBACK", "1")

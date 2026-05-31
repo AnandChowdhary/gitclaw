@@ -24,6 +24,7 @@ type sessionPromptProvenanceTurn struct {
 	ToolOutputs       int
 	Skills            []string
 	Tools             []string
+	Usage             LLMUsage
 	HasPromptEvidence bool
 }
 
@@ -80,6 +81,14 @@ func parseSessionPromptProvenanceTurn(comment Comment) (sessionPromptProvenanceT
 		ToolOutputs:      markerAttributeInt(attrs, "tool_outputs"),
 		Skills:           markerAttributeList(attrs, "skills"),
 		Tools:            markerAttributeList(attrs, "tools"),
+		Usage: LLMUsage{
+			Present:          markerAttribute(attrs, "usage_total_tokens") != "",
+			PromptTokens:     markerAttributeInt(attrs, "usage_prompt_tokens"),
+			CompletionTokens: markerAttributeInt(attrs, "usage_completion_tokens"),
+			TotalTokens:      markerAttributeInt(attrs, "usage_total_tokens"),
+			CacheReadTokens:  markerAttributeInt(attrs, "usage_cache_read_tokens"),
+			CacheWriteTokens: markerAttributeInt(attrs, "usage_cache_write_tokens"),
+		},
 	}
 	turn.HasPromptEvidence = turn.PromptContextSHA != ""
 	return turn, true

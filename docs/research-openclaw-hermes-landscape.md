@@ -882,6 +882,18 @@ unknown fallbacks, credential material in `.gitclaw/config.yml`, raw prompt
 logging, live-probe requirements, and raw provider-error leakage, then pair the
 deterministic audit with a real GitHub Models follow-up conversation E2E.
 
+2026-05-31 model-usage follow-up: OpenClaw's token-use reference treats
+per-response usage, cached-token counters, and cost estimates as separate
+operational surfaces, while Hermes' context engine tracks API-reported token
+counts when deciding whether to compress. GitHub Models supports Actions calls
+through `models: read` and the workflow `GITHUB_TOKEN`, but its free/API usage
+is rate-limited and production billing details live outside an individual
+inference response. GitClaw should therefore normalize provider response usage
+into assistant-marker attributes when present, add `@gitclaw /models usage`
+and `gitclaw models usage` as the deterministic readback, keep raw provider
+payloads and prompt bodies out of the report, and mark dollar cost estimation
+unsupported until a reviewed pricing catalog or billing API integration exists.
+
 2026-05-30 session-risk follow-up: OpenClaw-style assistants treat transcripts
 and assistant-turn metadata as operational state, while Hermes emphasizes saved
 and searchable sessions. GitClaw should add `@gitclaw /session risk` and

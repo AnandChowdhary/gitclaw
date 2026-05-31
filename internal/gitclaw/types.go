@@ -146,6 +146,7 @@ type Marker struct {
 	ToolOutputs         int
 	PromptVisibleSkills []string
 	PromptVisibleTools  []string
+	Usage               LLMUsage
 }
 
 type HeartbeatMarker struct {
@@ -221,6 +222,15 @@ type HeartbeatGitHubClient interface {
 
 type LLMClient interface {
 	Complete(ctx context.Context, req LLMRequest) (string, error)
+}
+
+type LLMUsage struct {
+	Present          bool
+	PromptTokens     int
+	CompletionTokens int
+	TotalTokens      int
+	CacheReadTokens  int
+	CacheWriteTokens int
 }
 
 type LLMRequest struct {

@@ -527,6 +527,20 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		status.SetDone()
 		return nil
 	}
+	if IsModelUsageRequest(ev, cfg) {
+		body := RenderAssistantComment(Marker{
+			RunID:          envFirst("GITHUB_RUN_ID", "local"),
+			EventID:        eventID(ev),
+			Model:          "gitclaw/models",
+			IdempotencyKey: key,
+			RunURL:         actionRunURL(ev),
+		}, RenderModelUsageReport(ev, cfg, comments, transcript, repoContext))
+		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post model usage report comment: %w", err))
+		}
+		status.SetDone()
+		return nil
+	}
 	if IsModelReportRequest(ev, cfg) {
 		body := RenderAssistantComment(Marker{
 			RunID:          envFirst("GITHUB_RUN_ID", "local"),
@@ -599,6 +613,7 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		Model:          selectedLLMModel(cfg, llm),
 		IdempotencyKey: key,
 		RunURL:         actionRunURL(ev),
+		Usage:          selectedLLMUsage(llm),
 	}, repoContext), response)
 	if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
 		return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post issue comment: %w", err))
@@ -611,6 +626,10 @@ type selectedModelReporter interface {
 	SelectedModel() string
 }
 
+type selectedUsageReporter interface {
+	LastUsage() LLMUsage
+}
+
 func selectedLLMModel(cfg Config, llm LLMClient) string {
 	if reporter, ok := llm.(selectedModelReporter); ok {
 		if model := strings.TrimSpace(reporter.SelectedModel()); model != "" {
@@ -618,6 +637,13 @@ func selectedLLMModel(cfg Config, llm LLMClient) string {
 		}
 	}
 	return cfg.Model
+}
+
+func selectedLLMUsage(llm LLMClient) LLMUsage {
+	if reporter, ok := llm.(selectedUsageReporter); ok {
+		return reporter.LastUsage()
+	}
+	return LLMUsage{}
 }
 
 func failStartedTurn(ctx context.Context, cfg Config, github GitHubClient, ev Event, status issueStatusUpdater, phase string, cause error) error {

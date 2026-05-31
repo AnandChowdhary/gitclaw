@@ -1238,7 +1238,22 @@ func runModelsCommand(args []string) error {
 		fmt.Println(RenderModelRiskCLIReport(cfg))
 		return nil
 	}
-	return fmt.Errorf("usage: gitclaw models [list|risk]")
+	if args[0] == "usage" || args[0] == "tokens" || args[0] == "token-use" || args[0] == "cost" || args[0] == "costs" || args[0] == "spend" {
+		if len(args) > 1 {
+			return fmt.Errorf("unknown models usage argument %q", args[1])
+		}
+		cfg, err := LoadEffectiveConfig()
+		if err != nil {
+			return err
+		}
+		repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+		if err != nil {
+			return err
+		}
+		fmt.Println(RenderModelUsageCLIReport(cfg, repoContext))
+		return nil
+	}
+	return fmt.Errorf("usage: gitclaw models [list|risk|usage]")
 }
 
 func runConfigCommand(args []string) error {
