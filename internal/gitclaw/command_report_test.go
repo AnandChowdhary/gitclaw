@@ -30,6 +30,7 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"aliases: `31`",
 		"local_cli_helpers: `170`",
 		"run_mode: `read-only`",
+		"llm_e2e_required_after_commands_report_change: `true`",
 		"### Slash Commands",
 		"### Local CLI Helpers",
 		"`/agents` model=`gitclaw/agents`",

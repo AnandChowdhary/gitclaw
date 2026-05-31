@@ -1240,6 +1240,17 @@ body-free, deterministic command catalog with aliases, model marker names,
 categories, summaries, and local CLI helpers, so maintainers can inspect the
 available control-plane surface before invoking a more specific report.
 
+2026-05-31 commands-report E2E hardening: current OpenClaw CLI docs continue
+to treat `--help`, channel helpers, doctor/status, and gateway operations as
+the operator's navigational surface, while Hermes' CLI reference centralizes
+terminal commands, worktree flags, skills, gateway, and doctor commands. GitClaw
+should keep `/help` equally useful but safer in GitHub issues: deterministic,
+body-free, no model call, no raw issue text, and explicitly paired with a
+normal GitHub Models follow-up that selects `repo-reader`, exposes bounded
+repository search, and recovers the commands-report fixture token. That keeps
+the catalog from becoming a stale checklist that no longer proves the live
+LLM/tool path.
+
 2026-05-29 skill-info follow-up: OpenClaw's skills CLI includes local
 `list`/`info`/`check` commands, while Hermes documents a compact `/skills` or
 `hermes skills list` inventory plus progressive `skill_view(name)` loading.

@@ -78,6 +78,7 @@ func renderCommandReport(ev Event, cfg Config, includeIssue bool) string {
 	fmt.Fprintf(&b, "- aliases: `%d`\n", commandAliasCount(commandCatalog))
 	fmt.Fprintf(&b, "- local_cli_helpers: `%d`\n", commandLocalCLICount(commandCatalog))
 	fmt.Fprintf(&b, "- run_mode: `%s`\n", "read-only")
+	fmt.Fprintf(&b, "- llm_e2e_required_after_commands_report_change: `%t`\n", true)
 	if includeIssue {
 		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
 	}

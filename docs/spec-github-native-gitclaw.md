@@ -3305,6 +3305,10 @@ It never dumps issue/comment bodies, prompts, config bodies, workflow bodies,
 or backup payloads. This is the GitHub-native equivalent of the
 OpenClaw/Hermes help surface: a stable issue-visible capability index that
 operators can ask for before using more specific commands.
+The report includes `llm_e2e_required_after_commands_report_change=true`;
+changes to this surface must be paired with a live GitHub Models follow-up that
+selects `repo-reader`, exposes `gitclaw.search_files`, and recovers a bounded
+repository-search fixture token without echoing issue-body sentinels.
 
 Local operators can print the same catalog with:
 
@@ -6155,7 +6159,10 @@ examples/workflows/gitclaw.yml
   control-plane metadata without issue-only fields.
 - A `gh`-driven commands-report E2E harness verifies `@gitclaw /help` reports
   deterministic commands, aliases, and every advertised local CLI helper
-  without a model call or issue-body leakage.
+  without a model call or issue-body leakage. The same live issue then receives
+  a normal issue-comment follow-up that must make a GitHub Models call, select
+  `repo-reader`, expose `gitclaw.search_files`, recover the commands-report
+  repository-search fixture token, and avoid hidden sentinel leakage.
 - A `gh`-driven orders-report E2E harness verifies `@gitclaw /orders`
   reports standing-order file metadata, model-context loading, program clause
   coverage, proactive enforcement metadata, and body-free findings without a

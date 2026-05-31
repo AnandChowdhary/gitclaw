@@ -72,6 +72,8 @@
   inventory, plus a normal model/tool issue-comment follow-up.
 - Checkpoint report changes need two proofs: body-free HEAD/worktree/backup
   readiness without restore authority, plus a normal model/tool follow-up.
+- Commands report changes need two proofs: body-free command/helper catalog,
+  plus a normal model/tool follow-up proving live repo-reader search.
 - Skills stay repo-local and review-first: refresh per Actions checkout;
   proposals stay inert; install/upgrade/source/runtime/bundle/provenance
   surfaces classify, hash, and validate only; no registries, remote fetches,
