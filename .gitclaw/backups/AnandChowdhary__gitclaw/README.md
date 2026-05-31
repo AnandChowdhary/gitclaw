@@ -1,6 +1,6 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-05-31T06:40:55Z`
+- generated_at: `2026-05-31T06:42:16Z`
 - issue_count: `322`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
@@ -326,4 +326,4 @@
 | #356 | @gitclaw /skills runtime e2e 20260531T060003Z | `2026-05-31T06:02:21Z` | 3 | 4 | `issues/000356.json` |
 | #357 | @gitclaw /bundles provenance e2e 20260531T061815Z | `2026-05-31T06:20:53Z` | 3 | 4 | `issues/000357.json` |
 | #358 | @gitclaw /bundles provenance e2e 20260531T062247Z | `2026-05-31T06:25:13Z` | 3 | 4 | `issues/000358.json` |
-| #359 | @gitclaw /hooks provenance e2e 20260531T063949Z | `2026-05-31T06:40:54Z` | 1 | 2 | `issues/000359.json` |
+| #359 | @gitclaw /hooks provenance e2e 20260531T063949Z | `2026-05-31T06:42:15Z` | 3 | 4 | `issues/000359.json` |
