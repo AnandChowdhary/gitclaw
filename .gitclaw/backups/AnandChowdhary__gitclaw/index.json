@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T11:16:48Z",
+  "generated_at": "2026-05-31T11:18:18Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 346,
   "issues": [
@@ -4289,13 +4289,14 @@
       "number": 383,
       "title": "@gitclaw /channels info telegram e2e 20260531T111545Z",
       "path": "issues/000383.json",
-      "backup_generated_at": "2026-05-31T11:16:47Z",
-      "event_name": "issues",
+      "backup_generated_at": "2026-05-31T11:18:17Z",
+      "event_name": "issue_comment",
       "labels": [
-        "gitclaw"
+        "gitclaw",
+        "gitclaw:done"
       ],
-      "comment_count": 1,
-      "transcript_messages": 2
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
