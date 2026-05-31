@@ -1491,7 +1491,7 @@ func runSessionSearchCommand(args []string) error {
 
 func runToolsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw tools verify|risk|validate|list|toolsets [risk|info <name>]|run-plan <name>|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw tools verify|risk|validate|list|exposure [risk]|toolsets [risk|info <name>]|run-plan <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -1502,6 +1502,8 @@ func runToolsCommand(args []string) error {
 		return runToolsValidateCommand(args[1:])
 	case "list":
 		return runToolsListCommand(args[1:])
+	case "exposure", "expose":
+		return runToolsExposureCommand(args[1:])
 	case "toolsets", "toolset":
 		return runToolsToolsetsCommand(args[1:])
 	case "run-plan", "plan":
@@ -1513,6 +1515,32 @@ func runToolsCommand(args []string) error {
 	default:
 		return fmt.Errorf("unknown tools command %q", args[0])
 	}
+}
+
+func runToolsExposureCommand(args []string) error {
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	if len(args) == 0 || args[0] == "list" {
+		if len(args) > 1 {
+			return fmt.Errorf("unknown tools exposure list argument %q", args[1])
+		}
+		fmt.Println(RenderToolExposureCLIReport(repoContext))
+		return nil
+	}
+	if args[0] == "risk" || args[0] == "risk-audit" {
+		if len(args) > 1 {
+			return fmt.Errorf("unknown tools exposure risk argument %q", args[1])
+		}
+		fmt.Println(RenderToolExposureRiskCLIReport(repoContext))
+		return nil
+	}
+	return fmt.Errorf("usage: gitclaw tools exposure [list|risk]")
 }
 
 func runToolsToolsetsCommand(args []string) error {

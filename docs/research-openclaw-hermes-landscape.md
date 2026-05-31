@@ -1245,6 +1245,19 @@ report should publish only names, paths, fields, counts, codes, severities, and
 hashes, and each implementation batch must pair the deterministic report with a
 real GitHub Models conversation E2E.
 
+2026-05-31 tool-exposure follow-up: OpenClaw's tools docs now make allow/deny
+and tool-profile visibility a first-class operator concern, while Hermes' Tool
+Search docs frame model-visible tool schemas as a progressive-disclosure and
+prompt-cache tradeoff. GitClaw should expose the narrower GitHub-native truth
+with `@gitclaw /tools exposure`, `@gitclaw /tools exposure risk`, and
+`gitclaw tools exposure ...`: static built-in contracts only, no
+model-callable structured tool schemas, no Hermes-style deferred bridge in v1,
+bounded pre-model tool outputs, explicit allowlist/denylist gate counts, and a
+fail-closed finding when an explicit allowlist leaves zero enabled tool
+contracts. Reports should publish only names, modes, counts, hashes, gate
+state, and finding codes, never raw tool schemas, inputs, outputs, prompts,
+issue/comment bodies, credentials, or secrets.
+
 2026-05-30 turn-provenance follow-up: OpenClaw/Hermes-style tool registries are
 useful only when an operator can prove what the model actually saw. GitClaw
 should therefore add body-free provenance to normal assistant-turn markers:

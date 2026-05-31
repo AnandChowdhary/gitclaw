@@ -115,6 +115,8 @@ gitclaw tools verify
 gitclaw tools risk
 gitclaw tools validate
 gitclaw tools list
+gitclaw tools exposure
+gitclaw tools exposure risk
 gitclaw tools toolsets
 gitclaw tools toolsets risk
 gitclaw tools toolsets info <name>
@@ -245,6 +247,7 @@ scripts/e2e/github-session-coverage.sh
 scripts/e2e/github-sandbox-risk-report.sh
 scripts/e2e/github-tasks-risk-report.sh
 scripts/e2e/github-tools-toolsets-report.sh
+scripts/e2e/github-tools-exposure-report.sh
 scripts/e2e/github-tools-risk-report.sh
 scripts/e2e/github-workspace-risk-report.sh
 scripts/e2e/github-channels-risk-report.sh

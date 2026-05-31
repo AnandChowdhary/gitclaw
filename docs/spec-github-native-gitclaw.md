@@ -792,8 +792,9 @@ GitHub issue/comment event
   `bundles list`, `bundles risk`, `bundles info`,
   `soul verify`, `soul risk`, `soul validate`, `soul list`,
   `soul edit-plan`, `soul info`, `soul search`,
-  `tools verify`, `tools risk`, `tools validate`, `tools list`, `tools run-plan`,
-  `tools info`, `tools search`, `doctor`,
+  `tools verify`, `tools risk`, `tools validate`, `tools list`,
+  `tools exposure`, `tools exposure risk`, `tools run-plan`, `tools info`,
+  `tools search`, `doctor`,
   `policy verify`, `policy risk`,
   `secrets audit`, `secrets scan`, `secrets list`,
   `commands`, `version`.
@@ -1959,6 +1960,8 @@ gitclaw tools verify
 gitclaw tools risk
 gitclaw tools validate
 gitclaw tools list
+gitclaw tools exposure
+gitclaw tools exposure risk
 gitclaw tools toolsets
 gitclaw tools toolsets risk
 gitclaw tools toolsets info <name>
@@ -1981,6 +1984,8 @@ OpenClaw's tool policy visibility and Hermes' toolset inventory:
 @gitclaw /tools verify
 @gitclaw /tools risk
 @gitclaw /tools validate
+@gitclaw /tools exposure
+@gitclaw /tools exposure risk
 @gitclaw /tools toolsets
 @gitclaw /tools toolsets risk
 @gitclaw /tools toolsets info repo-read
@@ -2012,6 +2017,23 @@ only; the issue-visible report exposes enough metadata to debug whether
 `gitclaw.skill_index`, or `gitclaw.policy` ran for the turn.
 `@gitclaw /tools list` is an explicit inventory alias for the same report,
 matching the local `gitclaw tools list` helper.
+
+`@gitclaw /tools exposure` and `gitclaw tools exposure` make the model-visible
+tool boundary explicit. Inspired by OpenClaw's tool allow/deny/profile
+visibility and Hermes' Tool Search progressive-disclosure design, the report
+lists static GitClaw tool contracts, enabled/disabled/allowlist-blocked gate
+state, prompt-visible output counts, structured-tool bridge status, and
+fail-closed status. GitClaw v1 does not expose model-callable structured tool
+schemas and does not defer schemas behind a Hermes-style bridge; it provides
+bounded pre-model tool outputs and hashed provenance instead.
+
+`@gitclaw /tools exposure risk` and `gitclaw tools exposure risk` add finding
+codes for explicit allowlists that resolve to zero enabled tools, validation
+errors or warnings, unknown active outputs, mutating contracts, and the
+static/bridge boundary. They never print raw tool schemas, tool inputs, tool
+outputs, issue bodies, comments, prompts, credentials, or secret values. The
+report includes `llm_e2e_required_after_tool_exposure_change=true`; every
+change to this surface must ship with a live GitHub Models follow-up E2E.
 
 ### Toolset Profiles
 
@@ -5549,6 +5571,14 @@ examples/workflows/gitclaw.yml
   envelope, contract modes, gate-state metadata, guidance provenance,
   active-output hashes, raw input suppression, and verification findings
   without a model call.
+- A `gh`-driven tools-exposure E2E harness verifies
+  `@gitclaw /tools exposure risk` exposes the body-free prompt-visible tool
+  exposure boundary, static pre-model context strategy, structured-tool bridge
+  non-goals, fail-closed allowlist metadata, raw schema/input/output
+  suppression, and the live-LLM E2E requirement. The same harness then posts a
+  normal follow-up comment that requires repo-reader search so GitHub Models
+  performs a real LLM call with prompt context, selected skill, and
+  prompt-visible tool provenance.
 - A `gh`-driven tools-risk E2E harness verifies `@gitclaw /tools risk`
   exposes body-free contract, guidance, active-output, and active-input risk
   status, cards, codes, hashes, and the live-LLM E2E requirement. The same

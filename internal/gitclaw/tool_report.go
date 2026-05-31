@@ -67,6 +67,12 @@ func RenderToolsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isToolsValidateRequest(ev, cfg) {
 		return renderToolsValidationReport(ev, repoContext, true)
 	}
+	if isToolExposureRiskRequest(ev, cfg) {
+		return renderToolExposureRiskReport(ev, repoContext, true)
+	}
+	if isToolExposureListRequest(ev, cfg) {
+		return renderToolExposureReport(ev, repoContext, true)
+	}
 	if isToolsetsRiskRequest(ev, cfg) {
 		return renderToolsetsRiskReport(ev, cfg, true)
 	}
