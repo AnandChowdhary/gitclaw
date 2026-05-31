@@ -32,6 +32,10 @@ ensure_label gitclaw:error b60205 "Latest GitClaw run failed"
 ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
+timestamp_with_run_filter_slack() {
+  date -u -v-15S +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -d "15 seconds ago" +%Y-%m-%dT%H:%M:%SZ
+}
+
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
 seed_hidden_token="GITCLAW_MODEL_COST_SEED_HIDDEN_${timestamp}"
 cost_hidden_token="GITCLAW_MODEL_COST_REPORT_HIDDEN_${timestamp}"
@@ -78,7 +82,7 @@ for expected in \
   grep -Fq -- "$expected" <<<"$local_report" || die "local model cost report missing ${expected}"
 done
 
-issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+issue_started_at="$(timestamp_with_run_filter_slack)"
 issue_url="$(gh issue create \
   --repo "$repo" \
   --title "$title" \
@@ -205,7 +209,7 @@ if grep -Fq "$seed_hidden_token" <<<"$seed_comment"; then
   die "seed assistant leaked ${seed_hidden_token}"
 fi
 
-cost_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+cost_started_at="$(timestamp_with_run_filter_slack)"
 gh issue comment "$issue_number" \
   --repo "$repo" \
   --body "@gitclaw /models cost
@@ -285,7 +289,7 @@ for leaked in "$seed_hidden_token" "$cost_hidden_token" "$expected_token" "$sear
   fi
 done
 
-followup_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+followup_started_at="$(timestamp_with_run_filter_slack)"
 gh issue comment "$issue_number" \
   --repo "$repo" \
   --body "Use the repo-reader skill and search the repository again for \`${search_phrase}\`.
