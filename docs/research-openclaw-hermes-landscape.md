@@ -571,6 +571,15 @@ repository search, and recover the runs-report fixture token. That keeps the
 ledger from becoming a disconnected diagnostic card and proves ordinary
 LLM/tool execution still works after run-provenance changes.
 
+2026-05-31 prompt-report E2E hardening: OpenClaw-style prompt inspection is
+most useful when it reports budgets, hashes, and truncation pressure without
+printing raw prompt text. Hermes-style bounded context has the same lesson:
+diagnostics should make the envelope auditable without becoming a second
+conversation channel. GitClaw's `/prompt` report should therefore ship with a
+live follow-up proof that a normal GitHub Models turn can still select
+`repo-reader`, expose `gitclaw.search_files`, and recover a fixture token after
+the deterministic prompt report runs.
+
 2026-05-31 run-history follow-up: OpenClaw's trajectory/progress framing is
 useful, but GitClaw should keep the first history surface narrower than a full
 trace database. `/runs history` should reconstruct a body-free timeline from

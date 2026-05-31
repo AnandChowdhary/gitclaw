@@ -39,6 +39,7 @@ workflow dispatch unique search fixture phrase => GITCLAW_WORKFLOW_DISPATCH_CONT
 checkpoints report unique search fixture phrase => GITCLAW_CHECKPOINTS_REPORT_CONTEXT_V1
 commands report unique search fixture phrase => GITCLAW_COMMANDS_REPORT_CONTEXT_V1
 runs report unique search fixture phrase => GITCLAW_RUNS_REPORT_CONTEXT_V1
+prompt report unique search fixture phrase => GITCLAW_PROMPT_REPORT_CONTEXT_V1
 proactive info unique search fixture phrase => GITCLAW_PROACTIVE_INFO_CONTEXT_V1
 proactive report unique search fixture phrase => GITCLAW_PROACTIVE_REPORT_CONTEXT_V1
 proactive list unique search fixture phrase => GITCLAW_PROACTIVE_LIST_CONTEXT_V1

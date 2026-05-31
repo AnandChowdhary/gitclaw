@@ -2634,6 +2634,10 @@ It never dumps the prompt text, issue/comment bodies, context file bodies,
 skill bodies, or tool output bodies into the issue. This gives maintainers a
 low-cost way to debug prompt bloat, missing context, and truncation behavior
 without leaking the exact prompt into a public or long-lived GitHub comment.
+The report includes `llm_e2e_required_after_prompt_report_change=true`;
+changes to this surface must be paired with a live GitHub Models follow-up
+that selects `repo-reader`, exposes `gitclaw.search_files`, and recovers a
+bounded repository-search fixture token without echoing prompt/body sentinels.
 
 When called as `@gitclaw /prompt pack`, the command posts a body-free packing
 projection for the same prompt envelope. It follows the exact deterministic
@@ -6415,7 +6419,11 @@ examples/workflows/gitclaw.yml
   answer from an explicit `@git:1` reference by copying the latest commit hash.
 - A `gh`-driven prompt-report E2E harness verifies `@gitclaw /prompt`
   produces a deterministic prompt budget, hash, truncation, context, and tool
-  metadata report without a model call or prompt/body leakage.
+  metadata report without a model call or prompt/body leakage. The same live
+  issue then receives a normal issue-comment follow-up that must make a GitHub
+  Models call, select `repo-reader`, expose `gitclaw.search_files`, recover
+  the prompt-report repository-search fixture token, and avoid hidden sentinel
+  leakage.
 - A `gh`-driven prompt-list E2E harness verifies `@gitclaw /prompt list` is an
   explicit report alias, while local `gitclaw prompt list` exposes the same
   body-free prompt-budget, prompt-input, context, skill, and tool metadata

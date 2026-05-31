@@ -76,6 +76,7 @@ func renderPromptReport(ev Event, cfg Config, transcript []TranscriptMessage, re
 	fmt.Fprintf(&b, "- prompt_artifact_enabled: `%t`\n", strings.TrimSpace(os.Getenv("GITCLAW_PROMPT_ARTIFACT_PATH")) != "")
 	fmt.Fprintf(&b, "- prompt_artifact_redaction_patterns: `%d`\n", len(promptArtifactRedactions))
 	fmt.Fprintf(&b, "- prompt_body_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_prompt_report_change: `%t`\n", true)
 	if includeIssue {
 		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
 	}
