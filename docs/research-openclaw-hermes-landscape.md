@@ -2222,6 +2222,15 @@ maintainer can inspect repo-local memory ordering, prompt visibility,
 first/latest note, dated-note gaps, validation/risk gates, hashes, and the
 LLM-backed E2E requirement without dumping memory bodies.
 
+2026-05-31 soul-provenance follow-up: OpenClaw's Hermes migration path copies
+memory and skills into the new workspace rather than treating them as opaque
+runtime state, and Hermes profiles isolate config, sessions, skills, and
+memory per agent. GitClaw should make that reviewed-state boundary visible by
+adding `@gitclaw /soul provenance` and `gitclaw soul provenance`: a body-free
+git provenance report for loaded soul/profile files that shows tracked state,
+last commit IDs/dates, subject hashes, validation/risk gates, and no raw file
+bodies, commit subjects, or author identities.
+
 - OpenClaw official docs: https://docs.openclaw.ai/llms.txt
 - OpenClaw default AGENTS.md template: https://docs.openclaw.ai/reference/AGENTS.default
 - OpenClaw about page: https://openclawlab.com/en/about/

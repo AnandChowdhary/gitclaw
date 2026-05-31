@@ -790,7 +790,7 @@ GitHub issue/comment event
   `skills proposals`, `skills proposal-plan`, `skills install-plan`,
   `skills upgrade-plan`, `skills info`, `skills search`,
   `bundles list`, `bundles risk`, `bundles info`,
-  `soul verify`, `soul risk`, `soul validate`, `soul list`,
+  `soul provenance`, `soul verify`, `soul risk`, `soul validate`, `soul list`,
   `soul edit-plan`, `soul info`, `soul search`,
   `tools verify`, `tools risk`, `tools validate`, `tools list`,
   `tools exposure`, `tools exposure risk`, `tools provenance`,
@@ -1878,6 +1878,7 @@ Validation is visible in the `/soul` report and locally through:
 
 ```bash
 gitclaw soul anchors
+gitclaw soul provenance
 gitclaw soul verify
 gitclaw soul risk
 gitclaw soul validate
@@ -1898,6 +1899,7 @@ by OpenClaw and Hermes' portable workspace files:
 ```text
 @gitclaw /soul
 @gitclaw /soul anchors
+@gitclaw /soul provenance
 @gitclaw /soul list
 @gitclaw /soul verify
 @gitclaw /soul risk
@@ -1923,6 +1925,8 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
   automation-amplification, host-execution, and credential persistence risks.
 - high-authority anchor roles, authority layers, prompt-visible flags,
   canonical path flags, and mutation-disabled gates when explicitly requested.
+- high-authority git provenance with tracked state, last commit IDs/dates, and
+  commit-subject hashes when explicitly requested.
 - high-authority edit planning metadata when explicitly requested.
 
 It never dumps full file bodies. The hashes make the issue-visible report
@@ -1944,6 +1948,15 @@ frontmatter/description presence, validation gates, risk gates, and mutation
 gates only. It never emits raw file, issue, comment, prompt, or secret bodies.
 Changes to this report must be paired with a live GitHub Models follow-up E2E
 that proves normal inference and prompt-visible tool provenance.
+
+When called as `@gitclaw /soul provenance`, `@gitclaw /soul history`, or
+`@gitclaw /soul timeline`, the command posts a body-free git provenance map
+for loaded high-authority context. It reports repo-local document counts,
+tracked/untracked counts, commit availability, last commit SHA/date metadata,
+commit-subject hashes, validation/risk gates, and mutation-disabled state. It
+does not print raw file bodies, issue bodies, comments, prompts, commit
+subjects, author names, author emails, or secret values. This mirrors
+`gitclaw soul provenance` for local review.
 
 When called as `@gitclaw /soul info <path>`, the command posts one focused
 high-authority context metadata card. Supported targets include `soul`,
@@ -4819,6 +4832,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - create a fourth real issue with `@gitclaw /soul risk`,
    - create a fifth real issue with `@gitclaw /soul info soul`,
    - create another real issue with `@gitclaw /soul anchors`,
+   - create another real issue with `@gitclaw /soul provenance`,
    - assert the reply is marked `model="gitclaw/soul"`,
    - assert the report lists loaded identity, policy, user, and memory paths
      with byte counts, line counts, and hashes,
@@ -4831,6 +4845,9 @@ assert the expected comments/labels, and close the issue in cleanup.
      required/loaded/prompt-visible/canonical flags, validation gates, risk
      gates, mutation-disabled gates, and
      `llm_e2e_required_after_soul_anchors_change=true`,
+   - assert the provenance report includes tracked git state, last commit
+     IDs/dates, commit-subject hashes, validation/risk/git-history gates, and
+     no raw commit subjects or author identities,
    - assert the info report includes exactly one matched soul file, normalized
      path, category, source, loaded-for-turn state, short hash, and
      body-free/write-disabled flags,
@@ -5793,6 +5810,13 @@ examples/workflows/gitclaw.yml
   repo-local soul/profile/memory/policy anchors, then posts a normal follow-up
   requiring repo-reader search so GitHub Models proves model inference, prompt
   provenance, selected skills, and prompt-visible tool names.
+- A `gh`-driven soul-provenance E2E harness verifies
+  `@gitclaw /soul provenance` exposes tracked git provenance for loaded
+  high-authority context files, including commit IDs/dates and commit-subject
+  hashes without raw bodies, raw subjects, or author identities. It then posts
+  a normal follow-up requiring repo-reader search so GitHub Models proves
+  model inference, prompt provenance, selected skills, and prompt-visible tool
+  names.
 - A `gh`-driven soul-info E2E harness verifies `@gitclaw /soul info soul`
   exposes one body-free high-authority context metadata card with normalized
   path, category, repo-local source, selected-for-turn state, hashes, and

@@ -868,11 +868,13 @@ func runMemoryValidateCommand(args []string) error {
 
 func runSoulCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw soul anchors|verify|risk|validate|list|edit-plan <path>|info <path>|search <query>")
+		return fmt.Errorf("usage: gitclaw soul anchors|provenance|verify|risk|validate|list|edit-plan <path>|info <path>|search <query>")
 	}
 	switch args[0] {
 	case "anchors", "anchor", "authority", "map":
 		return runSoulAnchorsCommand(args[1:])
+	case "provenance", "history", "timeline":
+		return runSoulProvenanceCommand(args[1:])
 	case "verify":
 		return runSoulVerifyCommand(args[1:])
 	case "risk", "risk-audit":
@@ -921,6 +923,22 @@ func runSoulVerifyCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSoulVerifyReport(repoContext))
+	return nil
+}
+
+func runSoulProvenanceCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown soul provenance argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSoulProvenanceCLIReport(cfg, repoContext))
 	return nil
 }
 

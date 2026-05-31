@@ -58,6 +58,7 @@ High-authority context:
 
 ```bash
 gitclaw soul anchors
+gitclaw soul provenance
 gitclaw soul verify
 gitclaw soul risk
 gitclaw soul validate
@@ -258,6 +259,7 @@ scripts/e2e/github-session-risk-report.sh
 scripts/e2e/github-session-status-report.sh
 scripts/e2e/github-session-stats-report.sh
 scripts/e2e/github-session-coverage.sh
+scripts/e2e/github-soul-provenance-report.sh
 scripts/e2e/github-sandbox-risk-report.sh
 scripts/e2e/github-tasks-risk-report.sh
 scripts/e2e/github-tools-toolsets-report.sh

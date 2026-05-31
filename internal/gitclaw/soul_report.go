@@ -42,6 +42,9 @@ func RenderSoulReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isSoulAnchorsRequest(ev, cfg) {
 		return renderSoulAnchorsReport(ev, repoContext, true)
 	}
+	if isSoulProvenanceRequest(ev, cfg) {
+		return RenderSoulProvenanceReport(ev, cfg, repoContext)
+	}
 	if isSoulVerifyRequest(ev, cfg) {
 		return renderSoulVerifyReport(ev, repoContext, true)
 	}
@@ -226,6 +229,11 @@ func isSoulValidateRequest(ev Event, cfg Config) bool {
 func isSoulVerifyRequest(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && fields[0] == "/soul" && strings.EqualFold(fields[1], "verify")
+}
+
+func isSoulProvenanceRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && fields[0] == "/soul" && (strings.EqualFold(fields[1], "provenance") || strings.EqualFold(fields[1], "history") || strings.EqualFold(fields[1], "timeline"))
 }
 
 func isSoulRiskRequest(ev Event, cfg Config) bool {
