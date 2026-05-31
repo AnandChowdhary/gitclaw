@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T05:43:14Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 355,
+    "title": "@gitclaw /tasks ledger e2e 20260531T054208Z",
+    "body": "@gitclaw /tasks ledger\n\nLive tasks-ledger E2E. Please keep the task report body-free.\nDo not include this hidden issue token: GITCLAW_TASKS_LEDGER_HIDDEN_20260531T054208Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /tasks ledger e2e 20260531T054208Z\n\n@gitclaw /tasks ledger\n\nLive tasks-ledger E2E. Please keep the task report body-free.\nDo not include this hidden issue token: GITCLAW_TASKS_LEDGER_HIDDEN_20260531T054208Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Task Ledger Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#355`\n- task_ledger_status: `ok`\n- ledger_source: `issue-thread`\n- task_policy_present: `true`\n- task_policy_loaded_for_model: `true`\n- task_specs: `1`\n- task_storage_backend: `github-issues`\n- current_issue_task: `true`\n- current_task_status: `ready`\n- current_task_labels: `1`\n- comments_scanned: `0`\n- transcript_messages: `1`\n- user_comments: `0`\n- assistant_comments: `0`\n- assistant_turns: `0`\n- model_backed_turns: `0`\n- deterministic_turns: `0`\n- turns_with_prompt_provenance: `0`\n- error_markers: `0`\n- heartbeat_markers: `0`\n- channel_thread_issue: `false`\n- channel_message_comments: `0`\n- proactive_run_issue: `false`\n- status_history_available: `false`\n- status_transition_source: `current-labels-and-markers`\n- task_risk_status: `ok`\n- task_risk_findings: `0`\n- raw_task_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_replies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_task_ledger_change: `true`\n\nThis report treats the GitHub issue as the durable task row and issue comments as the task handoff log. It reports status, marker counts, hashes, and provenance metadata only; task bodies, issue bodies, comments, assistant replies, prompts, and tool outputs are not included.\n\n### Ledger Entries\n- index=`1` kind=`current-task` source=`issue` status=`ready` actor_sha256_12=`158731c9c026` association=`OWNER` labels=`1` title_sha256_12=`cc5e9ca67a45` body_sha256_12=`d25c7f283997` model=`` deterministic=`false` has_prompt_evidence=`false` prompt_context_sha256_12=`` context_documents=`0` selected_skills=`0` tool_outputs=`0` skills=`none` tools=`none` run_id_sha256_12=`` event_id_sha256_12=`` idempotency_key_sha256_12=`` run_url_sha256_12=`` marker_sha256_12=``\n\n### Ledger Gates\n- task_storage_backend=`github-issues`\n- detached_worker_supported=`false`\n- kanban_dispatcher_supported=`false`\n- task_flow_execution_supported=`false`\n- raw_body_gate=`hash_only`\n- status_history_gate=`current_labels_only`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4585841972,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4585841972,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26704536154\" event_id=\"issue-355\" model=\"gitclaw/tasks\" idempotency_key=\"27b020194438c3d2a7f38b4d70d31104\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26704536154\" --\u003e\n## GitClaw Task Ledger Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#355`\n- task_ledger_status: `ok`\n- ledger_source: `issue-thread`\n- task_policy_present: `true`\n- task_policy_loaded_for_model: `true`\n- task_specs: `1`\n- task_storage_backend: `github-issues`\n- current_issue_task: `true`\n- current_task_status: `ready`\n- current_task_labels: `1`\n- comments_scanned: `0`\n- transcript_messages: `1`\n- user_comments: `0`\n- assistant_comments: `0`\n- assistant_turns: `0`\n- model_backed_turns: `0`\n- deterministic_turns: `0`\n- turns_with_prompt_provenance: `0`\n- error_markers: `0`\n- heartbeat_markers: `0`\n- channel_thread_issue: `false`\n- channel_message_comments: `0`\n- proactive_run_issue: `false`\n- status_history_available: `false`\n- status_transition_source: `current-labels-and-markers`\n- task_risk_status: `ok`\n- task_risk_findings: `0`\n- raw_task_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_replies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_task_ledger_change: `true`\n\nThis report treats the GitHub issue as the durable task row and issue comments as the task handoff log. It reports status, marker counts, hashes, and provenance metadata only; task bodies, issue bodies, comments, assistant replies, prompts, and tool outputs are not included.\n\n### Ledger Entries\n- index=`1` kind=`current-task` source=`issue` status=`ready` actor_sha256_12=`158731c9c026` association=`OWNER` labels=`1` title_sha256_12=`cc5e9ca67a45` body_sha256_12=`d25c7f283997` model=`` deterministic=`false` has_prompt_evidence=`false` prompt_context_sha256_12=`` context_documents=`0` selected_skills=`0` tool_outputs=`0` skills=`none` tools=`none` run_id_sha256_12=`` event_id_sha256_12=`` idempotency_key_sha256_12=`` run_url_sha256_12=`` marker_sha256_12=``\n\n### Ledger Gates\n- task_storage_backend=`github-issues`\n- detached_worker_supported=`false`\n- kanban_dispatcher_supported=`false`\n- task_flow_execution_supported=`false`\n- raw_body_gate=`hash_only`\n- status_history_gate=`current_labels_only`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T05:42:54Z",
+      "updated_at": "2026-05-31T05:42:54Z"
+    }
+  ]
+}
