@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T10:42:59Z",
+  "generated_at": "2026-05-31T10:51:30Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 342,
+  "count": 343,
   "issues": [
     {
       "number": 3,
@@ -4245,6 +4245,18 @@
       ],
       "comment_count": 3,
       "transcript_messages": 4
+    },
+    {
+      "number": 380,
+      "title": "@gitclaw /soul edit-plan soul e2e 20260531T105023Z",
+      "path": "issues/000380.json",
+      "backup_generated_at": "2026-05-31T10:51:29Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }
