@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-05-31T12:15:09Z`
-- issue_count: `351`
+- generated_at: `2026-05-31T12:20:17Z`
+- issue_count: `352`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -356,3 +356,4 @@
 | #387 | GitClaw channel message e2e 20260531T114426Z | `2026-05-31T11:46:03Z` | 2 | 3 | `issues/000387.json` |
 | #388 | GitClaw proactive proactive-e2e-20260531t114620z slot-20260531T114620Z | `2026-05-31T11:49:04Z` | 1 | 2 | `issues/000388.json` |
 | #389 | @gitclaw /backup export-jsonl e2e 20260531T121236Z | `2026-05-31T12:15:09Z` | 3 | 4 | `issues/000389.json` |
+| #390 | @gitclaw /backup search e2e 20260531T121912Z | `2026-05-31T12:20:17Z` | 1 | 2 | `issues/000390.json` |
