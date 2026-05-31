@@ -179,6 +179,22 @@ LLM/tool E2E requirements. Reports must not dump prompts, issue/comment
 bodies, context bodies, skill bodies, tool outputs, credentials, or secret
 values.
 
+2026-05-31 prompt-compression follow-up: Hermes documents context management
+as two independent layers: gateway hygiene around 85% of the context window and
+an in-loop compressor around 50%, with pluggable context engines that decide
+when and how to compact. OpenClaw's token/cache docs separate provider usage
+from live context, explain cache-TTL pruning, and keep cache/usage diagnostics
+as explicit operator surfaces. GitClaw should add the same observability
+without adding hidden mutable state: `@gitclaw /prompt compression` and
+`gitclaw prompt compression` should report the current prompt envelope against
+Hermes-style compression thresholds and OpenClaw-style pruning boundaries while
+keeping compression disabled in v1. The report should expose only metadata,
+hashes, thresholds, segment actions, truncation/omission counts, and runtime
+gates; it must not create summaries, split sessions, write memory, depend on
+an external session DB, or print prompt/context/tool/transcript bodies. Pair
+the deterministic report with a live GitHub Models repo-reader/search
+follow-up so compression diagnostics do not replace real inference coverage.
+
 2026-05-31 skill-bundle provenance follow-up: Hermes' skills system treats
 bundles as small YAML files that group several existing skills under one slash
 command, skip missing skills rather than failing, and intentionally avoid

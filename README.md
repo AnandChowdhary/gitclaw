@@ -36,6 +36,7 @@ go run ./cmd/gitclaw artifacts risk
 go run ./cmd/gitclaw context risk
 go run ./cmd/gitclaw prompt pack
 go run ./cmd/gitclaw prompt cache
+go run ./cmd/gitclaw prompt compression
 go run ./cmd/gitclaw prompt risk
 go run ./cmd/gitclaw diffs risk
 go run ./cmd/gitclaw profile manifest
@@ -203,6 +204,7 @@ gitclaw context risk
 gitclaw prompt list
 gitclaw prompt pack
 gitclaw prompt cache
+gitclaw prompt compression
 gitclaw prompt risk
 gitclaw diffs summary
 gitclaw diffs risk
@@ -258,6 +260,7 @@ scripts/e2e/github-checkpoints-risk-report.sh
 scripts/e2e/github-context-risk-report.sh
 scripts/e2e/github-prompt-pack-report.sh
 scripts/e2e/github-prompt-cache-report.sh
+scripts/e2e/github-prompt-compression-report.sh
 scripts/e2e/github-prompt-risk-report.sh
 scripts/e2e/github-diffs-risk-report.sh
 scripts/e2e/github-heartbeat-risk-report.sh

@@ -781,7 +781,8 @@ GitHub issue/comment event
   `orders list`, `orders verify`, `orders risk`,
   `profile show`, `profile verify`,
   `context list`, `context risk`, `context info`,
-  `prompt list`, `prompt pack`, `prompt cache`, `prompt risk`,
+  `prompt list`, `prompt pack`, `prompt cache`, `prompt compression`,
+  `prompt risk`,
   `runs current`, `runs verify`, `runs history`,
   `sandbox explain`, `sandbox verify`, `sandbox risk`,
   `memory verify`, `memory risk`, `memory validate`, `memory timeline`,
@@ -2506,6 +2507,7 @@ memory/context posture:
 @gitclaw /prompt list
 @gitclaw /prompt pack
 @gitclaw /prompt cache
+@gitclaw /prompt compression
 @gitclaw /prompt risk
 ```
 
@@ -2586,6 +2588,31 @@ values. Any change to this surface requires a live E2E that first verifies the
 deterministic report and then performs a normal GitHub Models follow-up with a
 selected skill and `gitclaw.search_files`.
 
+When called as `@gitclaw /prompt compression`, the command posts a body-free
+compression-readiness report for the same prompt envelope. It does not create
+lossy summaries, does not split issue sessions, does not write memory, and does
+not persist compressed state. Instead it audits the current stateless
+GitHub-issue prompt shape against the context-management lessons from Hermes
+and OpenClaw:
+
+- Hermes-style 50% in-loop compression and 85% gateway-hygiene thresholds,
+- OpenClaw-style session-pruning/cache-boundary discipline without enabling
+  provider-specific pruning knobs,
+- final head/tail truncation state from GitClaw's existing prompt packer,
+- bounded transcript messages, omitted older messages, and per-message body
+  truncation counts,
+- whether GitClaw would need an actual reviewed compression engine before
+  claiming lossy summarization support,
+- canonical storage stance: GitHub issue threads plus `gitclaw-backups` replay,
+  not an external session database.
+
+The report emits segment kinds, names, compression regions/actions, pack
+statuses, byte/line/token estimates, hashes, and findings. It never prints
+prompt text, issue/comment bodies, context bodies, skill bodies, tool outputs,
+credentials, or secret values. Any change to this surface requires a live E2E
+that first verifies the deterministic report and then performs a normal GitHub
+Models follow-up with a selected skill and `gitclaw.search_files`.
+
 When called as `@gitclaw /prompt risk`, the command posts a body-free risk
 audit for the same prompt envelope. It scans the prompt-visible transcript,
 loaded context files, selected skills, and deterministic tool outputs for
@@ -2605,6 +2632,7 @@ without opening an issue:
 gitclaw prompt list
 gitclaw prompt pack
 gitclaw prompt cache
+gitclaw prompt compression
 gitclaw prompt risk
 ```
 
@@ -4964,6 +4992,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - create a real issue with `@gitclaw /prompt list` as the explicit alias,
    - create a real issue with `@gitclaw /prompt pack`,
    - create a real issue with `@gitclaw /prompt cache`,
+   - create a real issue with `@gitclaw /prompt compression`,
    - ask for a concrete file read, selected skill, and search fixture phrase,
    - assert the reply is marked `model="gitclaw/prompt"`,
    - assert the report lists prompt budget settings, final prompt size/hash,
@@ -4975,6 +5004,9 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the prompt-cache report lists stable-prefix bytes/tokens,
      cache-control request gaps, usage-counter gaps, dynamic suffix boundary,
      heartbeat keep-warm workflow presence, and body-free segment hashes,
+   - assert the prompt-compression report lists 50% and 85% threshold gates,
+     disabled lossy-summary/session-split/write-memory gates, issue-thread
+     canonical storage, backup replay posture, and body-free segment hashes,
    - assert the report does not dump prompt text, issue body tokens, context
      bodies, skill bodies, or tool output bodies,
    - assert deterministic report runs succeed without requiring a model
@@ -6368,6 +6400,12 @@ examples/workflows/gitclaw.yml
   reports body-free stable-prefix/cache-control/telemetry gap metadata without
   a model call, then posts a normal GitHub Models follow-up that proves
   selected skill and `gitclaw.search_files` tool usage.
+- A `gh`-driven prompt-compression E2E harness verifies
+  `@gitclaw /prompt compression` reports body-free compression thresholds,
+  disabled lossy-summary/session-split gates, issue-thread canonical storage,
+  backup replay posture, segment hashes, and truncation metadata without a
+  model call, then posts a normal GitHub Models follow-up that proves selected
+  skill and `gitclaw.search_files` tool usage.
 - A `gh`-driven prompt-artifact E2E harness verifies opt-in redacted prompt
   artifacts against a real Actions artifact download.
 - A `gh`-driven write-request E2E harness verifies deterministic write-intent
