@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T02:47:23Z",
+  "generated_at": "2026-05-31T03:03:56Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 306,
+  "count": 307,
   "issues": [
     {
       "number": 3,
@@ -3777,6 +3777,18 @@
       ],
       "comment_count": 3,
       "transcript_messages": 4
+    },
+    {
+      "number": 344,
+      "title": "@gitclaw /tools provenance e2e 20260531T030244Z",
+      "path": "issues/000344.json",
+      "backup_generated_at": "2026-05-31T03:03:55Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }
