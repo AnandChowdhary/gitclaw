@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T09:01:36Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 369,
+    "title": "@gitclaw model cost e2e 20260531T090026Z",
+    "body": "Use the repo-reader skill and search the repository for `model cost unique search fixture phrase`.\n\nReply with only the exact GITCLAW_MODEL_COST token from the matching repository search result line.\nDo not include this hidden issue token: GITCLAW_MODEL_COST_SEED_HIDDEN_20260531T090026Z\nKeep the answer under 30 words.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw model cost e2e 20260531T090026Z\n\nUse the repo-reader skill and search the repository for `model cost unique search fixture phrase`.\n\nReply with only the exact GITCLAW_MODEL_COST token from the matching repository search result line.\nDo not include this hidden issue token: GITCLAW_MODEL_COST_SEED_HIDDEN_20260531T090026Z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_MODEL_COST_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4586240104,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4586240104,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26708351973\" event_id=\"issue-369\" model=\"openai/gpt-5-nano\" idempotency_key=\"6c0f499fac4cd712e84b826f5d41a39c\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26708351973\" prompt_context_sha256_12=\"b46f78ef2a17\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10303\" usage_completion_tokens=\"531\" usage_total_tokens=\"10834\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_MODEL_COST_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T09:01:15Z",
+      "updated_at": "2026-05-31T09:01:15Z"
+    }
+  ]
+}
