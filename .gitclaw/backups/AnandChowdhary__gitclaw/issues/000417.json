@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T15:28:23Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "workflow_dispatch",
+  "issue": {
+    "number": 417,
+    "title": "GitClaw workflow_dispatch e2e 20260531T152641Z",
+    "body": "Live workflow_dispatch E2E.\n\nWhen GitClaw is manually dispatched for this issue, reply with exact token `GITCLAW_WORKFLOW_DISPATCH_E2E_20260531T152641Z`.\nAlso include the exact word `workflow_dispatch`.\n",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw",
+      "gitclaw:e2e",
+      "gitclaw:done"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw workflow_dispatch e2e 20260531T152641Z\n\nLive workflow_dispatch E2E.\n\nWhen GitClaw is manually dispatched for this issue, reply with exact token `GITCLAW_WORKFLOW_DISPATCH_E2E_20260531T152641Z`.\nAlso include the exact word `workflow_dispatch`.\n",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_WORKFLOW_DISPATCH_E2E_20260531T152641Z",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4587152856,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4587152856,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26716635687\" event_id=\"dispatch-workflow-dispatch-e2e-20260531T152641Z\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"86c8dd2d28d80263d0a5ab2c866c22f8\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26716635687\" prompt_context_sha256_12=\"a040b080472f\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"9183\" usage_completion_tokens=\"20\" usage_total_tokens=\"9203\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_WORKFLOW_DISPATCH_E2E_20260531T152641Z",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T15:27:56Z",
+      "updated_at": "2026-05-31T15:27:56Z"
+    }
+  ]
+}

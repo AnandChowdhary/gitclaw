@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-05-31T15:21:59Z`
-- issue_count: `376`
+- generated_at: `2026-05-31T15:28:24Z`
+- issue_count: `377`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -381,3 +381,4 @@
 | #414 | GitClaw proactive proactive-init-e2e-20260531t150345z slot-20260531T150345Z | `2026-05-31T15:06:35Z` | 3 | 4 | `issues/000414.json` |
 | #415 | GitClaw proactive proactive-not-before-e2e-20260531t151151z due-20260531T151151Z | `2026-05-31T15:15:08Z` | 3 | 4 | `issues/000415.json` |
 | #416 | @gitclaw /heartbeat e2e 20260531T151940Z | `2026-05-31T15:21:58Z` | 3 | 4 | `issues/000416.json` |
+| #417 | GitClaw workflow_dispatch e2e 20260531T152641Z | `2026-05-31T15:28:23Z` | 1 | 2 | `issues/000417.json` |
