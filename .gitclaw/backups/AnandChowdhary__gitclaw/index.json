@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T20:11:34Z",
+  "generated_at": "2026-05-31T20:24:49Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 408,
+  "count": 409,
   "issues": [
     {
       "number": 3,
@@ -5108,6 +5108,18 @@
       "labels": [
         "gitclaw",
         "gitclaw:done"
+      ],
+      "comment_count": 3,
+      "transcript_messages": 4
+    },
+    {
+      "number": 449,
+      "title": "@gitclaw /bundles search questions e2e 20260531T202340Z",
+      "path": "issues/000449.json",
+      "backup_generated_at": "2026-05-31T20:24:49Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
       ],
       "comment_count": 3,
       "transcript_messages": 4
