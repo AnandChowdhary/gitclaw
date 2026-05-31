@@ -121,6 +121,87 @@ func TestRenderMemoryVerifyReportShowsTrustEnvelopeWithoutBodies(t *testing.T) {
 	}
 }
 
+func TestRenderMemoryCatalogReportShowsCompactCatalogWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/MEMORY.md", "MEMORY_CATALOG_LONG_TERM_SECRET\n")
+	writeTestFile(t, root, ".gitclaw/memory/2026-05-27.md", "MEMORY_CATALOG_OLDER_NOTE_SECRET\n")
+	writeTestFile(t, root, ".gitclaw/memory/2026-05-29.md", "MEMORY_CATALOG_LATEST_NOTE_SECRET\n")
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	ctx, err := LoadRepoContextWithConfig(root, []TranscriptMessage{{Role: "user", Body: "memory catalog"}}, cfg)
+	if err != nil {
+		t.Fatalf("LoadRepoContextWithConfig returned error: %v", err)
+	}
+	body := RenderMemoryCatalogCLIReport(cfg, ctx)
+	for _, want := range []string{
+		"GitClaw Memory Catalog Report",
+		"scope: `local-cli`",
+		"memory_catalog_status: `ok`",
+		"catalog_strategy: `compact-durable-memory-discovery`",
+		"catalog_scope: `repo-local-memory-notes-session-search`",
+		"memory_model: `repo-local-reviewed-markdown`",
+		"hermes_memory_layers: `durable-memory, procedural-skills, session-search`",
+		"durable_memory_layer: `git-backed-markdown`",
+		"procedural_memory_layer: `skills-catalog-separate`",
+		"session_search_layer: `github-issues-and-backups`",
+		"cataloged_entries: `3`",
+		"long_term_entries: `1`",
+		"dated_note_entries: `2`",
+		"memory_note_entries: `0`",
+		"prompt_visible_entries: `3`",
+		"loaded_memory_entries: `3`",
+		"omitted_memory_entries: `0`",
+		"memory_files: `3`",
+		"long_term_memory_present: `true`",
+		"long_term_memory_loaded: `true`",
+		"dated_memory_notes: `2`",
+		"canonical_dated_memory_notes: `2`",
+		"noncanonical_dated_memory_notes: `0`",
+		"loaded_memory_notes: `2`",
+		"first_memory_note: `.gitclaw/memory/2026-05-27.md`",
+		"latest_memory_note: `.gitclaw/memory/2026-05-29.md`",
+		"timeline_span_days: `2`",
+		"largest_gap_days: `2`",
+		"raw_memory_bodies_included: `false`",
+		"raw_issue_bodies_included: `false`",
+		"raw_comment_bodies_included: `false`",
+		"raw_prompt_bodies_included: `false`",
+		"raw_session_bodies_included: `false`",
+		"embedding_vectors_included: `false`",
+		"external_provider_accessed: `false`",
+		"memory_writes_allowed: `false`",
+		"background_promotion_active: `false`",
+		"llm_e2e_required_after_memory_catalog_change: `true`",
+		"memory_validation_status: `ok`",
+		"memory_risk_status: `ok`",
+		"### Memory Catalog Entries",
+		"position=`1` kind=`long-term` path=`.gitclaw/MEMORY.md` memory_layer=`durable-memory`",
+		"role=`stable-summary` date=`long-term`",
+		"load_mode=`prompt-visible`",
+		"reason_codes=`below_context_limit, canonical, durable_memory, loaded, long_term, no_risk_findings, no_validation_findings, not_latest, present, prompt_visible, stable_summary`",
+		"position=`3` kind=`dated-note` path=`.gitclaw/memory/2026-05-29.md`",
+		"role=`latest-daily-note` date=`2026-05-29`",
+		"reason_codes=`below_context_limit, canonical, dated_note, durable_memory, latest, latest_daily_note, loaded, no_risk_findings, no_validation_findings, present, prompt_visible`",
+		"### Catalog Gates",
+		"validation_gate=`pass`",
+		"risk_gate=`pass`",
+		"memory_write_gate=`disabled`",
+		"external_provider_gate=`not_configured`",
+		"session_search_gate=`github-issues-and-backups`",
+		"background_promotion_gate=`disabled`",
+		"body_hash_gate=`sha256_12`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("memory catalog report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"MEMORY_CATALOG_LONG_TERM_SECRET", "MEMORY_CATALOG_OLDER_NOTE_SECRET", "MEMORY_CATALOG_LATEST_NOTE_SECRET"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("memory catalog report leaked body token %q:\n%s", leaked, body)
+		}
+	}
+}
+
 func TestRenderMemorySearchReportFindsMemoryWithoutBodies(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/MEMORY.md", "Durable deployment preference with MEMORY_SEARCH_LONG_TERM_SECRET.\n")

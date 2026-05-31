@@ -2867,6 +2867,16 @@ provenance still work.
 
 ## Sources
 
+2026-05-31 memory-catalog follow-up: OpenClaw's memory-file convention favors
+compact, reviewed Markdown state over hidden mutable memory, and Hermes frames
+memory as layered durable facts, procedural skills, and searchable session
+recall. GitClaw should add `@gitclaw /memory catalog` and
+`gitclaw memory catalog` as a body-free discovery surface that reports durable
+memory entries, procedural-memory boundaries, session-search boundaries,
+prompt visibility, load modes, reason codes, hashes, validation/risk gates,
+and the required live LLM/tool E2E proof without dumping memory, prompt, issue,
+comment, session, embedding, credential, or secret bodies.
+
 2026-05-31 memory-timeline follow-up: OpenClaw's memory docs continue to frame
 memory as editable, reviewed Markdown context, while the sessions/transcripts
 docs keep conversation history as an inspectable surface rather than hidden

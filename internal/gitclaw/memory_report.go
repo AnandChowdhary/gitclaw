@@ -53,6 +53,9 @@ func RenderMemoryReport(ev Event, cfg Config, repoContext RepoContext, transcrip
 	if len(transcript) > 0 {
 		messages = transcript[0]
 	}
+	if isMemoryCatalogRequest(ev, cfg) {
+		return RenderMemoryCatalogReport(ev, cfg, repoContext)
+	}
 	if isMemoryVerifyRequest(ev, cfg) {
 		return RenderMemoryVerifyReport(ev, cfg, repoContext)
 	}
@@ -79,6 +82,19 @@ func RenderMemoryReport(ev Event, cfg Config, repoContext RepoContext, transcrip
 
 func RenderMemoryCLIReport(cfg Config, repoContext RepoContext) string {
 	return renderMemoryListReport(Event{}, cfg, repoContext, false)
+}
+
+func isMemoryCatalogRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 || (fields[0] != "/memory" && fields[0] != "/memories") {
+		return false
+	}
+	switch strings.ToLower(fields[1]) {
+	case "catalog", "index", "memory-catalog", "discovery", "eligible":
+		return true
+	default:
+		return false
+	}
 }
 
 func RenderMemoryInfoCLIReport(cfg Config, repoContext RepoContext, path string) string {

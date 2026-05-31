@@ -105,9 +105,11 @@ func RunCLI(ctx context.Context, args []string) error {
 
 func runMemoryCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw memory verify|risk|validate|timeline|list|promote-plan [target]|info <path>|search <query>")
+		return fmt.Errorf("usage: gitclaw memory catalog|verify|risk|validate|timeline|list|promote-plan [target]|info <path>|search <query>")
 	}
 	switch args[0] {
+	case "catalog", "index", "memory-catalog", "discovery", "eligible":
+		return runMemoryCatalogCommand(args[1:])
 	case "verify":
 		return runMemoryVerifyCommand(args[1:])
 	case "risk", "risk-audit":
@@ -127,6 +129,22 @@ func runMemoryCommand(args []string) error {
 	default:
 		return fmt.Errorf("unknown memory command %q", args[0])
 	}
+}
+
+func runMemoryCatalogCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown memory catalog argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderMemoryCatalogCLIReport(cfg, repoContext))
+	return nil
 }
 
 func runProfileCommand(args []string) error {

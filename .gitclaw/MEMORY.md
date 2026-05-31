@@ -138,6 +138,10 @@
   catalog metadata for direct tools, repo-reviewed toolsets, and MCP allowlists
   with no schemas, instructions, args, inputs, outputs, bodies, prompts, or
   secrets, plus a normal model/tool follow-up proving live repo-reader search.
+- Memory catalog changes need two proofs: body-free memory-layer catalog
+  metadata with durable/procedural/session boundaries, load modes, reason
+  codes, hashes, and disabled mutation/provider gates, plus a normal
+  model/tool follow-up proving live repo-reader search.
 - Context-reference chat changes need two proofs: bounded `@file:` line ranges
   must not be widened by `read_file`, plus a normal model/tool follow-up.
 - Git-reference chat changes need two proofs: bounded `@git:N` recall first,

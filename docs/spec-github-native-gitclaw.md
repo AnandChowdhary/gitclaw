@@ -846,8 +846,8 @@ GitHub issue/comment event
   `prompt risk`,
   `runs current`, `runs verify`, `runs history`,
   `sandbox explain`, `sandbox verify`, `sandbox risk`,
-  `memory verify`, `memory risk`, `memory validate`, `memory timeline`,
-  `memory list`, `memory promote-plan`, `memory info`, `memory search`,
+  `memory catalog`, `memory verify`, `memory risk`, `memory validate`,
+  `memory timeline`, `memory list`, `memory promote-plan`, `memory info`, `memory search`,
   `skills validate`,
   `skills list`, `skills catalog`, `skills provenance`, `skills select-plan`, `skills refresh-plan`,
   `skills proposals`, `skills proposal-plan`, `skills install-plan`,
@@ -1216,6 +1216,7 @@ larger session recall:
 ```text
 @gitclaw /memory
 @gitclaw /memory list
+@gitclaw /memory catalog
 @gitclaw /memory verify
 @gitclaw /memory risk
 @gitclaw /memory validate
@@ -1244,6 +1245,19 @@ It never dumps memory file bodies, issue bodies, or comments. Memory remains
 read-only during assistant turns; edits require normal reviewed git changes.
 `@gitclaw /memory list` is an explicit inventory alias for the same report,
 matching the local `gitclaw memory list` helper.
+
+When called as `@gitclaw /memory catalog`, the command posts a compact
+body-free discovery catalog for repo-local memory. It follows the OpenClaw and
+Hermes split between durable memory, procedural skills, and searchable session
+recall: `.gitclaw/MEMORY.md` and dated `.gitclaw/memory/*.md` notes are
+reported as durable-memory entries, procedural memory stays in the skills
+catalog, and session recall stays in GitHub issues/backups. The report includes
+prompt-visible/load-mode metadata, memory roles, reason codes, validation/risk
+rollups, short hashes, disabled write/provider/background-promotion gates, and
+`llm_e2e_required_after_memory_catalog_change: true`. It never includes raw
+memory bodies, issue bodies, comments, prompts, session transcripts, embedding
+vectors, credentials, or secret values. Local operators can run the same report
+with `gitclaw memory catalog`.
 
 When called as `@gitclaw /memory timeline`, the command posts a body-free
 chronology of `.gitclaw/MEMORY.md` and `.gitclaw/memory/*.md`. It reports
@@ -1302,6 +1316,7 @@ When called as `@gitclaw /memory validate`, the command renders only the
 memory-hygiene report. Local operators can run the same validation with:
 
 ```bash
+gitclaw memory catalog
 gitclaw memory verify
 gitclaw memory risk
 gitclaw memory validate
@@ -5407,6 +5422,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - create a third real issue with `@gitclaw /memory verify`,
    - create a fourth real issue with `@gitclaw /memory info latest`,
    - create a fifth real issue with `@gitclaw /memory timeline`,
+   - create a sixth real issue with `@gitclaw /memory catalog`,
    - assert the reply is marked `model="gitclaw/memory"`,
    - assert the report lists `.gitclaw/MEMORY.md`, dated memory note counts,
      loaded/omitted note counts, and memory file hashes,
@@ -5418,8 +5434,16 @@ assert the expected comments/labels, and close the issue in cleanup.
      body,
    - assert the timeline report includes first/latest note, span/gap metadata,
      prompt-visible state, validation/risk gates, and body-free file hashes,
+   - assert the catalog report includes memory-layer roles, prompt-visible
+     load modes, reason codes, validation/risk gates, body-hash gates, and the
+     live-LLM E2E requirement,
    - assert the report does not dump memory file bodies or issue body tokens,
-   - assert the run succeeds without requiring a model provider response.
+   - assert the deterministic report succeeds without requiring a model
+     provider response,
+   - post a normal follow-up on the catalog issue that requires repo-reader
+     search and assert the second assistant turn is model-backed by GitHub
+     Models with prompt context, selected skill, prompt-visible tool markers,
+     and usage telemetry.
 
 19. **Memory search inspection**
 
@@ -6699,6 +6723,15 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven memory-list E2E harness verifies `@gitclaw /memory list`
   is an explicit inventory alias with the same body-free memory-file,
   loaded-note, hash, and validation metadata.
+- A `gh`-driven memory-catalog E2E harness verifies
+  `@gitclaw /memory catalog` exposes the OpenClaw/Hermes-inspired compact
+  memory-layer catalog with durable/procedural/session boundaries,
+  prompt-visible/load-mode metadata, reason codes, hashes, validation/risk
+  gates, no raw memory/session/prompt/body leakage, and
+  `llm_e2e_required_after_memory_catalog_change: true`. It then posts a normal
+  issue-comment follow-up that must make a GitHub Models call, select
+  `repo-reader`, expose `gitclaw.search_files`, recover a bounded
+  repository-search fixture token, and publish usage telemetry.
 - A `gh`-driven memory-timeline E2E harness verifies
   `@gitclaw /memory timeline` reports repo-local memory chronology, prompt
   visibility, dated-note gaps, validation/risk gates, and hashes without a
