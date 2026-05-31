@@ -119,6 +119,8 @@
   turn.
 - Context-reference chat changes need two proofs: bounded `@file:` line ranges
   must not be widened by `read_file`, plus a normal model/tool follow-up.
+- Git-reference chat changes need two proofs: bounded `@git:N` recall first,
+  plus a normal repo-reader/search follow-up in the same issue.
 - Soul, memory, and profile files are high-authority git-reviewed context:
   edit/promote plans are dry-run, body-free, and review-first; planner changes
   need live model/tool E2E, and validation must stay prompt-fit and green.

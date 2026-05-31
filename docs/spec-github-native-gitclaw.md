@@ -6436,7 +6436,11 @@ examples/workflows/gitclaw.yml
   `@gitclaw /context ... @git:1` reports body-free commit-reference metadata
   without dumping commit subjects, patches, or issue text.
 - A `gh`-driven git-reference chat E2E harness verifies a normal model turn can
-  answer from an explicit `@git:1` reference by copying the latest commit hash.
+  answer from an explicit `@git:1` reference by copying the latest commit hash,
+  then continue in the same issue with a second model-backed repo-reader search
+  turn that recovers a distinct high-entropy fixture token and records prompt
+  provenance, selected skill metadata, `gitclaw.search_files`, and usage
+  telemetry.
 - A `gh`-driven prompt-report E2E harness verifies `@gitclaw /prompt`
   produces a deterministic prompt budget, hash, truncation, context, and tool
   metadata report without a model call or prompt/body leakage. The same live

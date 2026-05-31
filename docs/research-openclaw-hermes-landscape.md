@@ -1344,6 +1344,11 @@ subset now because GitHub Actions already checks out a repo: `@diff` and
 should expose a bounded recent commit log with patches, clamped to 10 commits.
 The issue-visible `/context` report should remain body-free and show only kind,
 count, status, sizes, and hashes.
+2026-05-31 git-reference chat hardening: the live `@git:1` chat proof should
+not stop at copying a commit hash. It should continue in the same issue with a
+normal repo-reader/search turn, proving that Git reference context composes
+with ordinary conversational model/tool usage instead of being a one-shot
+transcript fixture.
 
 2026-05-29 memory-validation follow-up: OpenClaw's memory CLI exposes
 status/index/search/promotion surfaces and treats deep writes to `MEMORY.md` as
