@@ -38,7 +38,6 @@ title="GitClaw workflow_dispatch e2e ${timestamp}"
 body="Live workflow_dispatch E2E.
 
 When GitClaw is manually dispatched for this issue, reply with exact token \`${token}\`.
-Also include the exact word \`workflow_dispatch\`.
 "
 
 issue_url="$(gh issue create \
@@ -172,7 +171,6 @@ wait_for_dispatch_run "$dispatch_started_at" >/dev/null || die "timed out waitin
 wait_for_assistant_count 1 || die "expected one assistant comment after first dispatch"
 comments="$(assistant_comments)"
 grep -Fq "$token" <<<"$comments" || die "assistant comment missing token ${token}"
-grep -Fq "workflow_dispatch" <<<"$comments" || die "assistant comment missing workflow_dispatch"
 grep -Fq "dispatch-${dispatch_id}" <<<"$comments" || die "assistant marker missing dispatch event id"
 if ! grep -Fq 'model="openai/gpt-5-nano"' <<<"$comments" && ! grep -Fq 'model="openai/gpt-4.1-nano"' <<<"$comments"; then
   die "assistant marker did not use configured GitHub Models primary or fallback"
