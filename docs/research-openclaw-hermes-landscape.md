@@ -1683,6 +1683,16 @@ surface inspectable with `@gitclaw /tools`: list deterministic tool contracts,
 show which tool outputs were produced for the current turn, and publish
 input/size/hash metadata without dumping output bodies.
 
+2026-05-31 tools-report E2E hardening: OpenClaw's current capabilities docs
+still separate tools as typed actions, skills as prompt instructions, and
+plugins as runtime capability packages, while Hermes' current tools docs keep
+core tools/toolsets explicit and reserve Tool Search-style deferral for large
+or non-core catalogs. GitClaw should keep `/tools` body-free and
+GitHub-native: report deterministic contracts, gate state, validation counts,
+and active-output hashes, then require a normal GitHub Models follow-up that
+selects `repo-reader`, exposes `gitclaw.search_files`, and recovers a fixture
+token through actual prompt-visible tool output.
+
 2026-05-30 tools-list follow-up: make the tool inventory surface explicit in
 both channels. `@gitclaw /tools` already lists deterministic contracts and
 active output metadata, but `@gitclaw /tools list` and `gitclaw tools list`

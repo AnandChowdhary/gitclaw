@@ -302,6 +302,10 @@ The live prompt-report and prompt-list harnesses now use that gate for prompt
 diagnostics: prompt size, hash, truncation, context, skill, and tool metadata
 stay body-free, then a normal GitHub Models repo-reader/search follow-up proves
 prompt inspection has not replaced real model/tool execution.
+The live tools-report harness applies the same rule to the tool surface: tool
+contracts, gate state, validation, and active-output hashes stay body-free,
+then a normal GitHub Models repo-reader/search follow-up proves real
+prompt-visible tool usage.
 
 ## Testing
 

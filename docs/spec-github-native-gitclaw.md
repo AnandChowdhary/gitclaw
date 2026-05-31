@@ -2298,6 +2298,11 @@ It never dumps full tool output bodies. Tool output bodies remain prompt inputs
 only; the issue-visible report exposes enough metadata to debug whether
 `gitclaw.list_files`, `gitclaw.search_files`, `gitclaw.read_file`,
 `gitclaw.skill_index`, or `gitclaw.policy` ran for the turn.
+The report includes `llm_e2e_required_after_tool_report_change=true`; changes
+to this surface must be paired with a live GitHub Models follow-up that selects
+`repo-reader`, exposes `gitclaw.search_files`, and recovers a bounded
+repository-search fixture token without echoing tool-output or issue-body
+sentinels.
 `@gitclaw /tools list` is an explicit inventory alias for the same report,
 matching the local `gitclaw tools list` helper.
 
@@ -6648,7 +6653,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven tools-report E2E harness verifies `@gitclaw /tools` produces a
   deterministic tool contract and active-output audit with validation metadata,
   repo-reviewed tool-gate metadata, without a model call or output-body
-  leakage.
+  leakage. The same live issue then receives a normal issue-comment follow-up
+  that must make a GitHub Models call, select `repo-reader`, expose
+  `gitclaw.search_files`, recover the tools-report repository-search fixture
+  token, and avoid hidden sentinel leakage.
 - A `gh`-driven tools-list E2E harness verifies `@gitclaw /tools list`
   is an explicit inventory alias with the same body-free tool contract,
   active-output, guidance, gate-state, and validation metadata.

@@ -885,7 +885,7 @@ func TestToolsListCommandReportsInventoryWithoutBodies(t *testing.T) {
 			t.Fatalf("tools list returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Tools Report", "scope: `local-cli`", "available_tools: `5`", "enabled_tools: `5`", "disabled_tools: `0`", "allowlist_blocked_tools: `0`", "active_tool_outputs: `1`", "tool_validation_status: `ok`", "tool_contracts: `5`", "tool_active_outputs: `1`", "tool_guidance_files: `1`", "tool_missing_guidance: `0`", "### Available Tools", "gitclaw.list_files", "gitclaw.search_files", "gitclaw.read_file", "gitclaw.skill_index", "gitclaw.policy", "enabled=`true`", "disabled_by_config=`false`", "blocked_by_allowlist=`false`", "### Tool Guidance Files", ".gitclaw/TOOLS.md", "### Active Tool Outputs", "input=`.`", "sha256_12=", "### Validation", "- none"} {
+	for _, want := range []string{"GitClaw Tools Report", "scope: `local-cli`", "available_tools: `5`", "enabled_tools: `5`", "disabled_tools: `0`", "allowlist_blocked_tools: `0`", "active_tool_outputs: `1`", "llm_e2e_required_after_tool_report_change: `true`", "tool_validation_status: `ok`", "tool_contracts: `5`", "tool_active_outputs: `1`", "tool_guidance_files: `1`", "tool_missing_guidance: `0`", "### Available Tools", "gitclaw.list_files", "gitclaw.search_files", "gitclaw.read_file", "gitclaw.skill_index", "gitclaw.policy", "enabled=`true`", "disabled_by_config=`false`", "blocked_by_allowlist=`false`", "### Tool Guidance Files", ".gitclaw/TOOLS.md", "### Active Tool Outputs", "input=`.`", "sha256_12=", "### Validation", "- none"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("tools list output missing %q:\n%s", want, output)
 		}
