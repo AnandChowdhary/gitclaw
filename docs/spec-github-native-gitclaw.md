@@ -4403,6 +4403,11 @@ The index contains only navigational metadata: issue number, title, backup
 path, backup timestamp, event name, labels, comment count, and transcript
 message count. It intentionally avoids raw issue bodies and comments so humans
 and E2E harnesses can verify backup coverage without opening every transcript.
+Because every downstream backup command depends on this index, index-surface
+changes also require a normal GitHub Models follow-up that proves repo-reader
+skill selection, `gitclaw.search_files` visibility, usage telemetry, and a
+bounded repository-search fixture token without echoing issue/comment
+sentinels.
 
 The backup branch is intentionally separate from `main`:
 
@@ -5415,7 +5420,11 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the backup branch contains the issue JSON backup,
    - assert the repo-scoped `index.json` and `README.md` reference the issue
      number, title, and backup path,
-   - assert the index contains metadata counts but not raw transcript bodies.
+   - assert the index contains metadata counts but not raw transcript bodies,
+   - post a normal model-backed repo-reader/search follow-up using no-echo
+     sentinels with a distinct prefix from the expected search fixture token,
+     then assert the reply returns only the `gitclaw.search_files` token and
+     does not echo issue/comment sentinels.
 
 33. **Backup inspection**
 
@@ -6134,7 +6143,12 @@ examples/workflows/gitclaw.yml
   normal repo-reader follow-up that must make a real GitHub Models call and
   prove prompt provenance, selected skill names, and prompt-visible tool names.
 - A `gh`-driven backup-index E2E harness verifies the dedicated backup branch
-  contains issue JSON plus a repo-scoped `index.json` and `README.md`.
+  contains issue JSON plus a repo-scoped `index.json` and `README.md` after a
+  deterministic context turn, without leaking hidden issue-body tokens. The
+  same harness posts a normal model-backed follow-up that proves repo-reader
+  search, prompt provenance, selected skill metadata, prompt-visible tool
+  names, usage markers, and the bounded backup-index repository-search fixture
+  token.
 - A `gh`-driven backup-report E2E harness verifies `@gitclaw /backup`
   publishes deterministic backup paths without a model call and that the
   backup branch receives the corresponding issue JSON and index entry.

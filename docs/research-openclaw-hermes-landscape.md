@@ -269,6 +269,14 @@ portable artifact. GitClaw should make its backup branch similarly inspectable:
 raw issue transcripts stay in per-issue JSON files, and a repo-scoped
 `index.json`/`README.md` summarizes coverage without exposing every raw message.
 
+2026-05-31 backup-index E2E hardening: OpenClaw's manifest/backup posture and
+Hermes' session-export posture both make the index a trust root for recovery.
+GitClaw index changes therefore need two live proofs: the fetched
+`gitclaw-backups` branch must contain the issue JSON plus body-free index and
+README entries, and a normal GitHub Models follow-up must select repo-reader,
+expose `gitclaw.search_files`, recover the backup-index repository-search
+fixture token, and avoid hidden issue/comment token echoing.
+
 2026-05-30 backup-concurrency follow-up: a git-backed backup branch is a shared
 state ref, so parallel issue runs can race on push even when each issue's
 assistant turn is correctly isolated. GitClaw should serialize the backup job

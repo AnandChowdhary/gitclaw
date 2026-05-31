@@ -202,6 +202,11 @@ the index, README, and issue payload files are tracked, clean, and backed by
 git commits without printing raw backup bodies, commit subjects, or author
 identities.
 
+The live backup-index harness proves every normal assistant turn updates the
+dedicated backup branch with the issue JSON, repo index, and README, then posts
+a normal GitHub Models repo-reader follow-up so index changes keep LLM/tool
+coverage in the loop too.
+
 `gitclaw backup restore-plan` is a dry-run recovery plan for a fetched backup
 payload. Its live harness pairs deterministic restore metadata checks with a
 real GitHub Models repo-reader follow-up so backup changes keep normal LLM and
