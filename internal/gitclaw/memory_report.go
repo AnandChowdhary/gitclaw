@@ -62,6 +62,9 @@ func RenderMemoryReport(ev Event, cfg Config, repoContext RepoContext, transcrip
 	if isMemoryValidateRequest(ev, cfg) {
 		return RenderMemoryValidationReport(ev, cfg, repoContext)
 	}
+	if isMemoryTimelineRequest(ev, cfg) {
+		return RenderMemoryTimelineReport(ev, cfg, repoContext)
+	}
 	if isMemoryPromotePlanRequest(ev, cfg) {
 		return renderMemoryPromotePlanReport(ev, cfg, repoContext, messages, requestedMemoryPromoteTarget(ev, cfg), true)
 	}
@@ -239,6 +242,11 @@ func isMemoryRiskRequest(ev Event, cfg Config) bool {
 func isMemoryVerifyRequest(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && (fields[0] == "/memory" || fields[0] == "/memories") && strings.EqualFold(fields[1], "verify")
+}
+
+func isMemoryTimelineRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && (fields[0] == "/memory" || fields[0] == "/memories") && (strings.EqualFold(fields[1], "timeline") || strings.EqualFold(fields[1], "history") || strings.EqualFold(fields[1], "ledger"))
 }
 
 func requestedMemoryInfoPath(ev Event, cfg Config) string {

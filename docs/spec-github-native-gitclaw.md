@@ -783,8 +783,8 @@ GitHub issue/comment event
   `prompt list`, `prompt risk`,
   `runs current`, `runs verify`, `runs history`,
   `sandbox explain`, `sandbox verify`, `sandbox risk`,
-  `memory verify`, `memory risk`, `memory validate`, `memory list`,
-  `memory promote-plan`, `memory info`, `memory search`,
+  `memory verify`, `memory risk`, `memory validate`, `memory timeline`,
+  `memory list`, `memory promote-plan`, `memory info`, `memory search`,
   `skills validate`,
   `skills list`, `skills select-plan`, `skills refresh-plan`,
   `skills proposals`, `skills proposal-plan`, `skills install-plan`,
@@ -1155,6 +1155,7 @@ larger session recall:
 @gitclaw /memory verify
 @gitclaw /memory risk
 @gitclaw /memory validate
+@gitclaw /memory timeline
 @gitclaw /memory promote-plan long-term
 @gitclaw /memory info .gitclaw/memory/2026-05-29.md
 @gitclaw /memory search backup branch
@@ -1179,6 +1180,15 @@ It never dumps memory file bodies, issue bodies, or comments. Memory remains
 read-only during assistant turns; edits require normal reviewed git changes.
 `@gitclaw /memory list` is an explicit inventory alias for the same report,
 matching the local `gitclaw memory list` helper.
+
+When called as `@gitclaw /memory timeline`, the command posts a body-free
+chronology of `.gitclaw/MEMORY.md` and `.gitclaw/memory/*.md`. It reports
+repo-local authority, prompt-visible load state, first/latest dated note,
+timeline span, largest dated-note gap, per-file byte/line/hash metadata,
+validation/risk gates, and the explicit LLM-backed E2E requirement for changes
+to the timeline surface. It never includes raw memory bodies, issue bodies,
+comments, prompts, or secret values. Local operators can run the same report
+with `gitclaw memory timeline`; `history` and `ledger` are accepted CLI aliases.
 
 When called as `@gitclaw /memory info <path>`, the command posts a focused
 body-free card for one memory file. It accepts `.gitclaw/MEMORY.md`,
@@ -1227,6 +1237,7 @@ memory-hygiene report. Local operators can run the same validation with:
 gitclaw memory verify
 gitclaw memory risk
 gitclaw memory validate
+gitclaw memory timeline
 gitclaw memory list
 gitclaw memory promote-plan [long-term|daily-note]
 gitclaw memory info <path>
@@ -4689,6 +4700,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - create a second real issue with `@gitclaw /memory list`,
    - create a third real issue with `@gitclaw /memory verify`,
    - create a fourth real issue with `@gitclaw /memory info latest`,
+   - create a fifth real issue with `@gitclaw /memory timeline`,
    - assert the reply is marked `model="gitclaw/memory"`,
    - assert the report lists `.gitclaw/MEMORY.md`, dated memory note counts,
      loaded/omitted note counts, and memory file hashes,
@@ -4698,6 +4710,8 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the info report includes the normalized memory path, match status,
      kind/source/canonical/latest/loaded metadata, and file hash without a
      body,
+   - assert the timeline report includes first/latest note, span/gap metadata,
+     prompt-visible state, validation/risk gates, and body-free file hashes,
    - assert the report does not dump memory file bodies or issue body tokens,
    - assert the run succeeds without requiring a model provider response.
 
@@ -5642,6 +5656,11 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven memory-list E2E harness verifies `@gitclaw /memory list`
   is an explicit inventory alias with the same body-free memory-file,
   loaded-note, hash, and validation metadata.
+- A `gh`-driven memory-timeline E2E harness verifies
+  `@gitclaw /memory timeline` reports repo-local memory chronology, prompt
+  visibility, dated-note gaps, validation/risk gates, and hashes without a
+  model call or body leakage. It also posts a normal follow-up that must use
+  GitHub Models and repo-reader search.
 - A `gh`-driven memory-info E2E harness verifies `@gitclaw /memory info
   latest` returns one focused body-free memory file card with normalized path,
   kind/source/canonical/latest/loaded metadata, and hashes.

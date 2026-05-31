@@ -2211,6 +2211,17 @@ provenance still work.
 
 ## Sources
 
+2026-05-31 memory-timeline follow-up: OpenClaw's memory docs continue to frame
+memory as editable, reviewed Markdown context, while the sessions/transcripts
+docs keep conversation history as an inspectable surface rather than hidden
+agent state. Hermes' memory design keeps prompt memory compact and separates
+larger searchable/session recall, which reinforces the GitClaw choice to expose
+`.gitclaw/MEMORY.md` and dated `.gitclaw/memory/*.md` notes as a body-free
+chronology. Add `@gitclaw /memory timeline` and `gitclaw memory timeline` so a
+maintainer can inspect repo-local memory ordering, prompt visibility,
+first/latest note, dated-note gaps, validation/risk gates, hashes, and the
+LLM-backed E2E requirement without dumping memory bodies.
+
 - OpenClaw official docs: https://docs.openclaw.ai/llms.txt
 - OpenClaw default AGENTS.md template: https://docs.openclaw.ai/reference/AGENTS.default
 - OpenClaw about page: https://openclawlab.com/en/about/

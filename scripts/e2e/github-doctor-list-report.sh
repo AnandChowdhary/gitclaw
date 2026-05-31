@@ -166,11 +166,11 @@ for expected in \
   'context_files_present: `6`' \
   'memory_notes: `1`' \
   'skill_files: `1`' \
-  'e2e_scripts: `153`' \
-  'e2e_live_issue_scripts: `146`' \
-  'e2e_cleanup_scripts: `153`' \
-  'e2e_model_coverage_scripts: `64`' \
-  'e2e_model_followup_scripts: `50`' \
+  'e2e_scripts: `154`' \
+  'e2e_live_issue_scripts: `147`' \
+  'e2e_cleanup_scripts: `154`' \
+  'e2e_model_coverage_scripts: `65`' \
+  'e2e_model_followup_scripts: `51`' \
   'e2e_session_coverage_scripts: `2`' \
   'e2e_backup_gate_scripts: `23`' \
   'e2e_workflow_dispatch_scripts: `21`' \

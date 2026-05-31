@@ -105,7 +105,7 @@ func RunCLI(ctx context.Context, args []string) error {
 
 func runMemoryCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw memory verify|risk|validate|list|promote-plan [target]|info <path>|search <query>")
+		return fmt.Errorf("usage: gitclaw memory verify|risk|validate|timeline|list|promote-plan [target]|info <path>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -114,6 +114,8 @@ func runMemoryCommand(args []string) error {
 		return runMemoryRiskCommand(args[1:])
 	case "validate":
 		return runMemoryValidateCommand(args[1:])
+	case "timeline", "history", "ledger":
+		return runMemoryTimelineCommand(args[1:])
 	case "list":
 		return runMemoryListCommand(args[1:])
 	case "promote-plan", "promote", "remember-plan":
@@ -730,6 +732,22 @@ func runMemoryListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderMemoryCLIReport(cfg, repoContext))
+	return nil
+}
+
+func runMemoryTimelineCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown memory timeline argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderMemoryTimelineCLIReport(cfg, repoContext))
 	return nil
 }
 

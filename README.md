@@ -73,6 +73,7 @@ Memory:
 gitclaw memory verify
 gitclaw memory risk
 gitclaw memory validate
+gitclaw memory timeline
 gitclaw memory list
 gitclaw memory promote-plan [target]
 gitclaw memory info <path>
@@ -236,6 +237,7 @@ scripts/e2e/github-prompt-risk-report.sh
 scripts/e2e/github-diffs-risk-report.sh
 scripts/e2e/github-heartbeat-risk-report.sh
 scripts/e2e/github-hooks-risk-report.sh
+scripts/e2e/github-memory-timeline-report.sh
 scripts/e2e/github-memory-risk-report.sh
 scripts/e2e/github-migration-risk-report.sh
 scripts/e2e/github-model-risk-report.sh
