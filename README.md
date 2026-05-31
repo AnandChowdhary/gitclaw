@@ -329,6 +329,9 @@ The live migration-plan harness now follows the same two-proof rule: the
 Hermes migration plan stays deterministic, body-free, and non-mutating, then a
 normal issue-comment turn proves GitHub Models, repo-reader, and
 `gitclaw.search_files` still work in that migration thread.
+The core issue-chat harness now applies that standard to ordinary
+conversation: the follow-up comment must preserve transcript continuity and
+also recover a fresh search fixture with prompt provenance and usage telemetry.
 
 ## Testing
 

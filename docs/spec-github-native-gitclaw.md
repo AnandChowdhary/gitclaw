@@ -5008,6 +5008,10 @@ lives in GitHub's event, permission, and workflow runtime semantics.
    tools, context loading, memory, skills, hooks, standing orders, prompts, or
    policy, prefer `scripts/e2e/github-search-tool-chat.sh` because it proves a
    real model turn consumed deterministic repository tool output.
+   For ordinary issue conversation changes, `scripts/e2e/github-issue-chat.sh`
+   is the baseline proof: the second comment must preserve transcript
+   continuity and also force a fresh repo-reader/search result with prompt
+   provenance, usage telemetry, and no fallback to whole-file reads.
 
 ### Live E2E Harness
 
@@ -5070,7 +5074,14 @@ assert the expected comments/labels, and close the issue in cleanup.
    - comment on the same issue,
    - wait for second workflow run,
    - assert exactly one new assistant comment exists,
-   - assert transcript includes prior assistant reply.
+   - assert transcript includes prior assistant reply,
+   - assert the second turn is a real GitHub Models call with usage telemetry,
+   - assert the second turn selects `repo-reader`, exposes prompt-context
+     provenance, and includes `gitclaw.search_files` in the assistant marker,
+   - assert the second turn can recover a fresh repository-search fixture token
+     from the follow-up comment, not only echo tokens from the original issue,
+   - assert the follow-up fixture is recovered through bounded search rather
+     than whole-file `gitclaw.read_file` output.
 
 3. **Bot loop prevention**
 

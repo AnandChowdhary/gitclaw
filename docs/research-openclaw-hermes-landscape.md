@@ -1201,6 +1201,12 @@ visibility but not conversational continuity. The live search-tool harness
 should use two distinct search needles across the issue body and a later
 comment, matching the GitClaw design goal that GitHub issues are durable
 threads where grounded tool context remains available turn after turn.
+2026-05-31 issue-chat hardening: the baseline conversation harness should meet
+that same bar. The second issue-comment turn should prove transcript continuity
+with earlier tokens and also force a new repo-reader/search result from the
+follow-up text, with prompt-context provenance and usage telemetry in the
+assistant marker. This keeps ordinary GitHub-native chat from becoming a thin
+token echo test while report-specific harnesses grow more rigorous.
 
 2026-05-29 workflow-runtime follow-up: GitClaw's serverless runtime is GitHub
 Actions itself, so action runtime deprecations are part of product reliability.
