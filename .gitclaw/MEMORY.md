@@ -134,6 +134,10 @@
   with authority layers, load modes, reason codes, body/description exclusion,
   and disabled mutation/profile-export gates, plus a normal model/tool
   follow-up proving live repo-reader search.
+- Tools catalog changes need two proofs: body-free progressive-disclosure
+  catalog metadata for direct tools, repo-reviewed toolsets, and MCP allowlists
+  with no schemas, instructions, args, inputs, outputs, bodies, prompts, or
+  secrets, plus a normal model/tool follow-up proving live repo-reader search.
 - Context-reference chat changes need two proofs: bounded `@file:` line ranges
   must not be widened by `read_file`, plus a normal model/tool follow-up.
 - Git-reference chat changes need two proofs: bounded `@git:N` recall first,

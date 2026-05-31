@@ -15,6 +15,12 @@ Reviewed toolsets live in `.gitclaw/toolsets/*.yaml`. They are planning and
 audit profiles only in v1; they do not activate tools, grant permissions, or
 execute provider APIs.
 
+Use `gitclaw tools catalog` or `@gitclaw /tools catalog` to inspect the compact
+progressive-disclosure catalog across built-in tools, repo-reviewed toolsets,
+and MCP allowlist entries. The report must stay body-free: no schemas,
+instructions, args, inputs, outputs, issue/comment bodies, prompts,
+credentials, or secrets.
+
 Use `gitclaw tools defer-plan` or `@gitclaw /tools defer-plan` to inspect the
 advisory progressive-disclosure plan for built-in tools, repo-reviewed
 toolsets, and MCP allowlist entries. The report must stay body-free and must

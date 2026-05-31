@@ -172,6 +172,84 @@ func TestRenderToolSearchReportFindsContractsAndOutputsWithoutBodies(t *testing.
 	}
 }
 
+func TestRenderToolCatalogReportShowsCompactProgressiveDisclosureWithoutBodies(t *testing.T) {
+	cfg := DefaultConfig()
+	cfg.Workdir = t.TempDir()
+	repoContext := RepoContext{
+		Documents: []ContextDocument{{Path: ".gitclaw/TOOLS.md", Body: "TOOL_CATALOG_GUIDANCE_SECRET: read-only tools."}},
+		ToolOutputs: []ToolOutput{
+			{Name: "gitclaw.list_files", Input: ". TOOL_CATALOG_LIST_INPUT_SECRET", Output: "go.mod\nREADME.md\nTOOL_CATALOG_LIST_OUTPUT_SECRET"},
+			{Name: "gitclaw.search_files", Input: "catalog TOOL_CATALOG_SEARCH_INPUT_SECRET", Output: "docs/search-fixture.md:1:GITCLAW_TOOLS_CATALOG_CONTEXT_V1 TOOL_CATALOG_SEARCH_OUTPUT_SECRET"},
+		},
+	}
+	body := RenderToolCatalogCLIReport(cfg, repoContext)
+	for _, want := range []string{
+		"GitClaw Tools Catalog Report",
+		"scope: `local-cli`",
+		"tool_catalog_status: `ok`",
+		"catalog_strategy: `compact-progressive-disclosure`",
+		"catalog_scope: `deterministic-tools-toolsets-mcp`",
+		"cataloged_entries: `5`",
+		"direct_core_entries: `5`",
+		"enabled_core_entries: `5`",
+		"deferrable_candidate_entries: `0`",
+		"toolset_catalog_entries: `0`",
+		"mcp_catalog_entries: `0`",
+		"planned_direct_entries: `5`",
+		"planned_deferred_entries: `0`",
+		"candidate_bridge_tools: `3`",
+		"planned_bridge_tools: `0`",
+		"activation_decision: `direct`",
+		"activation_reason: `no_deferrable_catalog_entries`",
+		"available_tools: `5`",
+		"enabled_tools: `5`",
+		"disabled_tools: `0`",
+		"allowlist_blocked_tools: `0`",
+		"active_tool_outputs: `2`",
+		"model_callable_structured_tools: `false`",
+		"tool_search_bridge_runtime_enabled: `false`",
+		"schema_describe_required: `false`",
+		"dynamic_mcp_discovery_allowed: `false`",
+		"mcp_server_launch_allowed: `false`",
+		"toolset_activation_supported: `false`",
+		"raw_tool_schemas_included: `false`",
+		"raw_toolset_bodies_included: `false`",
+		"raw_toolset_instructions_included: `false`",
+		"raw_mcp_bodies_included: `false`",
+		"raw_mcp_command_args_included: `false`",
+		"raw_inputs_included: `false`",
+		"raw_outputs_included: `false`",
+		"llm_e2e_required_after_tool_catalog_change: `true`",
+		"tool_validation_status: `ok`",
+		"tool_risk_status: `ok`",
+		"### Catalog Entries",
+		"kind=`builtin-contract` name=`gitclaw.list_files` source=`builtin-gitclaw` path=`builtin` mode=`read-only` enabled=`true` direct_core=`true` deferrable_candidate=`false` planned_deferred=`false` catalog_mode=`direct-core` schema_visibility=`direct-contract` active_outputs=`1`",
+		"reason_codes=`active_outputs, builtin_contract, direct_core, enabled, not_deferrable, planned_direct`",
+		"kind=`builtin-contract` name=`gitclaw.policy`",
+		"schema_visibility=`direct-contract` active_outputs=`0`",
+		"reason_codes=`builtin_contract, direct_core, enabled, no_active_outputs, not_deferrable, planned_direct`",
+		"### Catalog Gates",
+		"validation_gate=`pass`",
+		"risk_gate=`pass`",
+		"activation_gate=`direct`",
+		"tool_search_bridge_gate=`disabled`",
+		"structured_tool_gate=`disabled`",
+		"mcp_runtime_gate=`disabled`",
+		"toolset_activation_gate=`disabled`",
+		"schema_body_gate=`sha256_12`",
+		"mutation_gate=`disabled`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("tool catalog report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"TOOL_CATALOG_GUIDANCE_SECRET", "TOOL_CATALOG_LIST_INPUT_SECRET", "TOOL_CATALOG_SEARCH_INPUT_SECRET", "TOOL_CATALOG_LIST_OUTPUT_SECRET", "TOOL_CATALOG_SEARCH_OUTPUT_SECRET", "GITCLAW_TOOLS_CATALOG_CONTEXT_V1", "go.mod"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("tool catalog report leaked body/input/output token %q:\n%s", leaked, body)
+		}
+	}
+}
+
 func TestRenderToolInfoReportShowsOneContractWithoutBodies(t *testing.T) {
 	repoContext := RepoContext{
 		Documents: []ContextDocument{{Path: ".gitclaw/TOOLS.md", Body: "TOOL_INFO_GUIDANCE_SECRET"}},

@@ -153,6 +153,7 @@ gitclaw migrate risk <source>
 Tools:
 
 ```bash
+gitclaw tools catalog
 gitclaw tools verify
 gitclaw tools risk
 gitclaw tools validate
@@ -171,6 +172,12 @@ gitclaw tools run-plan <name>
 gitclaw tools info <name>
 gitclaw tools search <query>
 ```
+
+`gitclaw tools catalog` is the compact progressive-disclosure index for the
+tool surface. It reports direct core tools, repo-reviewed toolsets, and
+metadata-only MCP allowlist entries with gate state, reason codes, counts, and
+hashes, without printing raw schemas, toolset instructions, MCP args, tool
+inputs, tool outputs, issue bodies, comments, prompts, credentials, or secrets.
 
 Security:
 
@@ -438,6 +445,7 @@ scripts/e2e/github-soul-provenance-report.sh
 scripts/e2e/github-sandbox-risk-report.sh
 scripts/e2e/github-tasks-ledger-report.sh
 scripts/e2e/github-tasks-risk-report.sh
+scripts/e2e/github-tools-catalog-report.sh
 scripts/e2e/github-tools-toolsets-report.sh
 scripts/e2e/github-tools-exposure-report.sh
 scripts/e2e/github-tools-defer-plan-report.sh

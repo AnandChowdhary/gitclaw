@@ -58,6 +58,9 @@ func IsToolsReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderToolsReport(ev Event, cfg Config, repoContext RepoContext) string {
+	if isToolCatalogRequest(ev, cfg) {
+		return renderToolCatalogReport(ev, cfg, repoContext, true)
+	}
 	if isToolsVerifyRequest(ev, cfg) {
 		return renderToolVerifyReport(ev, repoContext, true)
 	}
@@ -272,6 +275,19 @@ func requestedToolSearchQuery(ev Event, cfg Config) string {
 		return ""
 	}
 	return cleanMemorySearchQuery(strings.Join(fields[2:], " "))
+}
+
+func isToolCatalogRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 || fields[0] != "/tools" {
+		return false
+	}
+	switch strings.ToLower(fields[1]) {
+	case "catalog", "index", "tool-catalog", "discovery", "eligible":
+		return true
+	default:
+		return false
+	}
 }
 
 func isToolsValidateRequest(ev Event, cfg Config) bool {

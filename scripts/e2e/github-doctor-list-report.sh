@@ -166,11 +166,11 @@ for expected in \
   'context_files_present: `6`' \
   'memory_notes: `1`' \
   'skill_files: `1`' \
-  'e2e_scripts: `177`' \
-  'e2e_live_issue_scripts: `170`' \
-  'e2e_cleanup_scripts: `177`' \
-  'e2e_model_coverage_scripts: `120`' \
-  'e2e_model_followup_scripts: `120`' \
+  'e2e_scripts: `178`' \
+  'e2e_live_issue_scripts: `171`' \
+  'e2e_cleanup_scripts: `178`' \
+  'e2e_model_coverage_scripts: `121`' \
+  'e2e_model_followup_scripts: `121`' \
   'e2e_session_coverage_scripts: `2`' \
   'e2e_backup_gate_scripts: `26`' \
   'e2e_workflow_dispatch_scripts: `21`' \
@@ -201,6 +201,7 @@ for expected in \
   '.gitclaw/proactive/repo-hygiene.md' \
   "### E2E Harnesses" \
   'e2e_coverage_status=`ok`' \
+  'path=`scripts/e2e/github-tools-catalog-report.sh`' \
   'path=`scripts/e2e/github-doctor-report.sh`' \
   'model_coverage=`true`' \
   'model_followup=`true`' \

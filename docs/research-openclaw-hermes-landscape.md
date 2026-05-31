@@ -1058,6 +1058,17 @@ tools, repo-reviewed toolsets, and MCP allowlist entries, estimates direct vs
 deferred catalog entries, records bridge non-goals, and proves the change with
 live GitHub Models repo-search E2E.
 
+2026-05-31 tool-catalog follow-up: the same OpenClaw/Hermes split points to a
+smaller always-available catalog before any bridge exists. GitClaw should add
+`@gitclaw /tools catalog` and `gitclaw tools catalog` as a body-free compact
+index over built-in deterministic contracts, repo-reviewed toolset profiles,
+and MCP allowlist entries. The report should show direct/deferred mode,
+schema-visibility mode, activation decision, gate state, reason codes, counts,
+and hashes, while excluding raw schemas, toolset instructions, MCP command
+args, tool inputs, tool outputs, issue bodies, comments, prompts, credentials,
+and secrets. The live proof should pair the deterministic catalog issue with a
+GitHub Models repo-reader/search follow-up.
+
 2026-05-30 task-risk follow-up: OpenClaw Task Flow composes work by creating
 background tasks and advancing the flow as tasks complete, while Hermes Kanban
 uses durable task boards, dispatchers, workers, and a dedicated kanban toolset.

@@ -2270,6 +2270,7 @@ safety split between callable tools, procedural skills, plugins, and toolsets:
 Validation is visible in the `/tools` report and locally through:
 
 ```bash
+gitclaw tools catalog
 gitclaw tools verify
 gitclaw tools risk
 gitclaw tools validate
@@ -2299,6 +2300,7 @@ OpenClaw's tool policy visibility and Hermes' toolset inventory:
 
 ```text
 @gitclaw /tools
+@gitclaw /tools catalog
 @gitclaw /tools list
 @gitclaw /tools verify
 @gitclaw /tools risk
@@ -2349,6 +2351,19 @@ repository-search fixture token without echoing tool-output or issue-body
 sentinels.
 `@gitclaw /tools list` is an explicit inventory alias for the same report,
 matching the local `gitclaw tools list` helper.
+
+`@gitclaw /tools catalog` and `gitclaw tools catalog` expose the compact
+progressive-disclosure catalog inspired by OpenClaw's tool policy visibility
+and Hermes' Tool Search catalog. It combines built-in deterministic contracts,
+repo-reviewed toolset profiles, and MCP allowlist entries into one body-free
+index with direct/deferred mode, schema-visibility mode, activation decision,
+reason codes, gate state, counts, and hashes. It never prints raw tool schemas,
+toolset instructions, MCP command args, tool inputs, tool outputs, issue
+bodies, comments, prompts, credentials, or secret values. The report includes
+`llm_e2e_required_after_tool_catalog_change=true`; every change must ship with
+a live GitHub issue E2E for the catalog plus a GitHub Models follow-up that
+selects `repo-reader`, exposes `gitclaw.search_files`, and recovers a fresh
+repository-search fixture token.
 
 `@gitclaw /tools exposure` and `gitclaw tools exposure` make the model-visible
 tool boundary explicit. Inspired by OpenClaw's tool allow/deny/profile
