@@ -6424,7 +6424,10 @@ examples/workflows/gitclaw.yml
   metadata without dumping referenced bodies, issue text, or fixture tokens.
 - A `gh`-driven context-reference chat E2E harness verifies a normal model turn
   can answer from an explicit `@file:` reference while ignoring a hidden issue
-  token.
+  token. The referenced path must not also be widened through `read_file`; a
+  second normal issue-comment turn must select `repo-reader`, expose
+  `gitclaw.search_files`, recover a distinct high-entropy repository-search
+  fixture token, and avoid hidden sentinel leakage.
 - A `gh`-driven search-tool chat E2E harness verifies a normal model turn can
   recover a token from `gitclaw.search_files` output without explicit `@file`
   or `@folder` context references. This keeps the live E2E suite honest about

@@ -315,6 +315,10 @@ normal GitHub Models repo-reader/search follow-up proves the selected skill
 actually reaches inference. Its search proof uses a distinct high-entropy
 needle and avoids explicit fixture-file reads, so the answer has to come from
 `gitclaw.search_files`.
+The live context-reference chat harness now proves both halves of context use:
+an `@file:` line-range turn must answer from the bounded reference, and a
+second normal issue-comment turn must recover a distinct repository-search
+needle without falling back to a whole-file `read_file`.
 
 ## Testing
 

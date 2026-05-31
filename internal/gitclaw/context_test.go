@@ -130,6 +130,9 @@ func TestLoadRepoContextExpandsContextReferences(t *testing.T) {
 	if hasContextDoc(ctx.Documents, "docs/ref.md:2", "first line") || hasContextDoc(ctx.Documents, "docs/ref.md:2", "third line") {
 		t.Fatalf("file context reference did not honor line range: %#v", ctx.Documents)
 	}
+	if hasToolOutput(ctx.ToolOutputs, "gitclaw.read_file", "docs/ref.md", "first line") {
+		t.Fatalf("explicit @file reference should not also expose the full file through read_file: %#v", ctx.ToolOutputs)
+	}
 	if !hasContextDoc(ctx.Documents, "@folder:docs", "path=docs/ref.md") || !hasContextDoc(ctx.Documents, "@folder:docs", "sha256_12=") {
 		t.Fatalf("folder context reference was not loaded as metadata: %#v", ctx.Documents)
 	}

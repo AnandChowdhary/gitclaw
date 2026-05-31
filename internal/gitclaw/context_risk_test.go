@@ -52,7 +52,7 @@ Use read-only files.`)
 		"unsupported_url_references: `0`",
 		"selected_skills: `1`",
 		"skill_summaries: `1`",
-		"active_tool_outputs: `4`",
+		"active_tool_outputs: `3`",
 		"max_context_reference_bytes: `12000`",
 		"max_context_folder_entries: `120`",
 		"max_context_git_commits: `10`",

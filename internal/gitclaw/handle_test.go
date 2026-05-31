@@ -301,7 +301,7 @@ Skill token.`)
 		"context_references: `1`",
 		"loaded_context_references: `1`",
 		"selected_skills: `1`",
-		"active_tool_outputs: `4`",
+		"active_tool_outputs: `3`",
 		"context_risk_findings: `0`",
 		"context_file_bodies_included: `false`",
 		"context_reference_bodies_included: `false`",

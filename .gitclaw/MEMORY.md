@@ -117,6 +117,8 @@
   metadata, plus a normal model/tool follow-up. Search proofs should use a
   distinct needle, avoid fixture-file reads, and prioritize the newest user
   turn.
+- Context-reference chat changes need two proofs: bounded `@file:` line ranges
+  must not be widened by `read_file`, plus a normal model/tool follow-up.
 - Soul, memory, and profile files are high-authority git-reviewed context:
   edit/promote plans are dry-run, body-free, and review-first; planner changes
   need live model/tool E2E, and validation must stay prompt-fit and green.

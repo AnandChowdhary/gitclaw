@@ -1328,6 +1328,13 @@ metadata listings only, block credential-ish paths, and surface body-free
 reference metadata in `@gitclaw /context` reports. Leave `@url` for later
 because fetching web content expands the network and prompt-injection surface.
 
+2026-05-31 context-reference chat hardening: explicit `@file:` line ranges
+must remain the prompt boundary and should not be widened by an automatic
+whole-file `gitclaw.read_file` output. Live E2E should prove the bounded
+reference answer first, then continue the same issue with a normal
+repo-reader/search turn so context-reference support is tested as conversation,
+not as a one-shot fixture echo.
+
 2026-05-30 git-context follow-up: Hermes' reference surface also makes current
 git state first-class through `@diff`, `@staged`, and `@git:N`; OpenClaw's
 diffs plugin frames patches as read-only artifacts that agents can inspect or

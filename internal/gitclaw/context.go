@@ -1617,16 +1617,31 @@ func shouldSkipFile(name string) bool {
 
 func mentionedRepoFiles(files []string, transcript []TranscriptMessage) []string {
 	text := strings.ToLower(transcriptText(transcript))
+	explicitFileRefs := explicitFileContextReferencePaths(transcript)
 	var mentioned []string
 	for _, file := range files {
 		if len(mentioned) >= maxToolFilesRead {
 			break
+		}
+		if explicitFileRefs[strings.ToLower(file)] {
+			continue
 		}
 		if strings.Contains(text, strings.ToLower(file)) {
 			mentioned = append(mentioned, file)
 		}
 	}
 	return mentioned
+}
+
+func explicitFileContextReferencePaths(transcript []TranscriptMessage) map[string]bool {
+	paths := map[string]bool{}
+	for _, token := range contextReferenceTokens(transcriptText(transcript)) {
+		ref, ok := parseContextReference(token)
+		if ok && ref.Kind == "file" {
+			paths[strings.ToLower(ref.Path)] = true
+		}
+	}
+	return paths
 }
 
 func transcriptText(transcript []TranscriptMessage) string {
