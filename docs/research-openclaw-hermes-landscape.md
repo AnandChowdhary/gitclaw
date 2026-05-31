@@ -709,6 +709,16 @@ explicit `workflow_dispatch` wakeup path. The useful OpenClaw/Hermes analogue is
 not a socket loop; it is an auditable issue-number dispatch with a stable
 external event ID used as the idempotency key.
 
+2026-05-31 channels-info E2E follow-up: current OpenClaw channel docs continue
+to frame Slack and Telegram as gateway-owned channel adapters, while GitClaw's
+serverless version keeps GitHub issues as the canonical session and wakes the
+handler through `workflow_dispatch`. The provider-info surface should stay
+metadata-only: secret names, offset/thread/message keys, workflow bridge
+presence, and command shapes. Because channel contracts are easy to break while
+still looking fine in a dry run, changes to this surface should also run a real
+GitHub Models follow-up that selects `repo-reader`, exposes bounded search, and
+recovers only a fixture token.
+
 2026-05-29 proactive usefulness follow-up: OpenClaw's automation categories and
 Hermes' cron/goals both point to a useful GitClaw feature that is not just
 heartbeat. Proactive jobs should be normal scheduled GitHub Actions workflows

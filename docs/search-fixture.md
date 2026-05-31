@@ -35,3 +35,4 @@ skills upgrade plan unique search fixture phrase => GITCLAW_SKILLS_UPGRADE_PLAN_
 soul edit plan unique search fixture phrase => GITCLAW_SOUL_EDIT_PLAN_CONTEXT_V1
 memory promote plan unique search fixture phrase => GITCLAW_MEMORY_PROMOTE_PLAN_CONTEXT_V1
 proactive info unique search fixture phrase => GITCLAW_PROACTIVE_INFO_CONTEXT_V1
+channels info unique search fixture phrase => GITCLAW_CHANNELS_INFO_CONTEXT_V1

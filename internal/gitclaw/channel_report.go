@@ -268,6 +268,7 @@ func renderChannelInfoReport(ev Event, cfg Config, comments []Comment, provider 
 	fmt.Fprintf(&b, "- gateway_runtime: `%s`\n", "GitHub Actions workflow_dispatch")
 	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- credential_values_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_channel_info_change: `%t`\n", true)
 	if ok {
 		fmt.Fprintf(&b, "- required_secrets: `%s`\n", inlineList(info.RequiredSecrets))
 		fmt.Fprintf(&b, "- offset_key: `%s`\n", info.OffsetKey)

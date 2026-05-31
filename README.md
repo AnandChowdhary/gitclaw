@@ -256,6 +256,7 @@ gitclaw tasks ledger --backup <issue.json>
 gitclaw orders risk
 gitclaw channels verify
 gitclaw channels risk
+gitclaw channels info telegram
 gitclaw proactive list
 gitclaw proactive risk
 gitclaw proactive info repo-hygiene
@@ -324,6 +325,7 @@ scripts/e2e/github-secrets-risk-report.sh
 scripts/e2e/github-plugins-risk-report.sh
 scripts/e2e/github-plugins-mcp-report.sh
 scripts/e2e/github-profile-risk-report.sh
+scripts/e2e/github-channels-info-report.sh
 scripts/e2e/github-proactive-info-report.sh
 scripts/e2e/github-proactive-risk-report.sh
 scripts/e2e/github-session-risk-report.sh

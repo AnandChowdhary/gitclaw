@@ -3903,6 +3903,16 @@ The hard constraint: Slack and Telegram cannot directly call
 write permission, and Slack/Telegram webhooks cannot safely attach the required
 GitHub Authorization header themselves. That leaves four viable tiers.
 
+`@gitclaw /channels info <provider>` is the body-free operator view for one
+provider contract. It reports secret names, offset/thread/message keys,
+workflow-dispatch bridge metadata, gateway runtime, state storage, and command
+shapes only, and carries
+`llm_e2e_required_after_channel_info_change=true`. Changes to this surface must
+pair the deterministic report with a normal GitHub Models follow-up that uses
+`repo-reader` plus bounded repository search, so the Slack/Telegram bridge path
+keeps proving real model/tool context without exposing credentials or mirrored
+message bodies.
+
 ### Tier 0: GitHub-Only Core
 
 This is v0 and must stay independently useful. GitHub issue/comment support must
@@ -5885,7 +5895,12 @@ examples/workflows/gitclaw.yml
   `@gitclaw /channels info <provider>` and local
   `gitclaw channels info <provider>` expose one provider's secret names,
   offset/thread/message keys, workflow metadata, gateway strategy, and command
-  shapes without a model call or body/credential leakage.
+  shapes, including `llm_e2e_required_after_channel_info_change: true`,
+  without a model call or body/credential leakage. The same live harness then
+  posts a normal issue-comment follow-up that must make a GitHub Models call,
+  select `repo-reader`, expose `gitclaw.search_files`, recover a bounded
+  repository-search fixture token, and publish usage telemetry without leaking
+  hidden issue tokens.
 - A `gh`-driven proactive E2E harness verifies the generic proactive enqueue
   workflow end to end.
 - A `gh`-driven proactive-init E2E harness verifies
