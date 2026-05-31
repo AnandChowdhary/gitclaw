@@ -5418,7 +5418,11 @@ assert the expected comments/labels, and close the issue in cleanup.
    - run `gitclaw backup verify --root <fetched>/.gitclaw/backups --repo
      <owner/repo>`,
    - assert `backup_verify_status: ok`, zero verification failures, zero
-     unindexed issue files, and an index entry for the just-created issue.
+     unindexed issue files, and an index entry for the just-created issue,
+   - post a normal model-backed repo-reader/search follow-up using no-echo
+     sentinels with a distinct prefix from the expected search fixture token,
+     then assert the reply returns only the `gitclaw.search_files` token and
+     does not echo issue/comment sentinels.
 
 35. **Backup risk audit**
 

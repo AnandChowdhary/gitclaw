@@ -357,7 +357,10 @@ Live E2E scripts create a real GitHub issue, wait for the GitHub Actions run,
 assert the assistant marker and body-free report contract, then close or label
 the issue for retention. Feature batches should include a deterministic
 feature-specific E2E plus a normal GitHub Models conversation E2E that proves
-inference, prompt context, selected skills, and prompt-visible tools.
+inference, prompt context, selected skills, and prompt-visible tools. When a
+model E2E asks for a repository-search fixture token, hidden issue/comment
+sentinels must use a distinct prefix so the assertion proves tool-output
+grounding rather than transcript echoing.
 `gitclaw doctor list` also inventories checked-in E2E harnesses by count,
 cleanup coverage, live issue coverage, model marker coverage, real model
 follow-up coverage, session coverage, backup gates, and workflow-dispatch

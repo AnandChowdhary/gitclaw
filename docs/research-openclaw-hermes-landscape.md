@@ -298,6 +298,9 @@ before downstream coverage, search, restore, retention, or export commands run.
 GitClaw now treats backup-verify changes as needing two proofs: a real fetched
 `gitclaw-backups` branch audit and a normal GitHub Models repo-reader/search
 follow-up so the model path still has tool provenance and usage telemetry.
+The follow-up must keep hidden issue/comment sentinels on a distinct prefix
+from the repository search fixture token; otherwise the test can accidentally
+reward transcript echoing instead of tool-output grounding.
 
 2026-05-30 backup-command follow-up: OpenClaw exposes backup verification as a
 local command over an archive, while Hermes exposes session export as a local

@@ -34,8 +34,8 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_BACKUP_VERIFY_E2E_${timestamp}"
-followup_hidden_token="GITCLAW_BACKUP_VERIFY_FOLLOWUP_HIDDEN_${timestamp}"
+token="NOECHO_BACKUPVERIFY_ISSUE_${timestamp}"
+followup_hidden_token="NOECHO_BACKUPVERIFY_FOLLOWUP_${timestamp}"
 expected_token="GITCLAW_BACKUP_VERIFY_CONTEXT_V1"
 search_phrase="backup verify unique search fixture phrase"
 title="@gitclaw /backup verify e2e ${timestamp}"
@@ -239,7 +239,9 @@ gh issue comment "$issue_number" \
   --repo "$repo" \
   --body "Use the repo-reader skill and search the repository for \`${search_phrase}\`.
 
-Reply with only the exact GITCLAW_BACKUP_VERIFY token from the matching repository search result line.
+The matching repository search result line has the form \`${search_phrase} => <token>\`.
+Reply with only the token after the arrow from the matching gitclaw.search_files tool output line.
+Do not answer with any token from this issue or its comments.
 Do not include this hidden follow-up token: ${followup_hidden_token}
 Keep the answer under 30 words." >/dev/null
 
