@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T04:40:07Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 350,
+    "title": "@gitclaw /skills provenance e2e 20260531T043901Z",
+    "body": "@gitclaw /skills provenance\n\nLive skills-provenance E2E.\nDo not include this hidden issue token: GITCLAW_SKILL_PROVENANCE_HIDDEN_20260531T043901Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /skills provenance e2e 20260531T043901Z\n\n@gitclaw /skills provenance\n\nLive skills-provenance E2E.\nDo not include this hidden issue token: GITCLAW_SKILL_PROVENANCE_HIDDEN_20260531T043901Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Skill Provenance Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#350`\n- skill_provenance_status: `ok`\n- provenance_scope: `repo-local-skill-git-history`\n- available_skills: `1`\n- enabled_skills: `1`\n- disabled_skills: `0`\n- allowlist_blocked_skills: `0`\n- selected_skills: `1`\n- repo_local_skills: `1`\n- compat_root_skills: `0`\n- unknown_source_skills: `0`\n- git_tracked_skills: `1`\n- untracked_skills: `0`\n- working_tree_dirty_skills: `0`\n- skills_with_commits: `1`\n- skills_without_commits: `0`\n- git_available: `true`\n- git_history_available: `true`\n- installer_scripts_run: `false`\n- repository_mutation_allowed: `false`\n- raw_bodies_included: `false`\n- raw_git_subjects_included: `false`\n- author_identities_included: `false`\n- llm_e2e_required_after_skill_provenance_change: `true`\n- skill_validation_status: `ok`\n- skill_validation_errors: `0`\n- skill_validation_warnings: `0`\n- skill_duplicate_names: `0`\n- skill_invalid_names: `0`\n- skill_name_folder_mismatches: `0`\n- skill_risk_status: `ok`\n- available_skills: `1`\n- scanned_skills: `1`\n- skills_with_risk_findings: `0`\n- skill_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- registry_verification: `not_configured`\n- installer_scripts_run: `false`\n- raw_bodies_included: `false`\n- llm_e2e_required_after_skill_risk_change: `true`\n- issue_title_sha256_12: `ec92203c1222`\n\nThis report maps repo-local skills to body-free git provenance. It reports skill metadata, hashes, tracked state, dirty state, last commit IDs/dates, and commit-subject hashes only; raw skill bodies, issue bodies, comments, prompts, git subjects, author identities, installer output, and secret values are not included.\n\n### Skill Provenance Cards\n- name=`repo-reader` path=`.gitclaw/SKILLS/repo-reader/SKILL.md` folder=`repo-reader` source=`repo-local` enabled=`true` selected_for_this_turn=`true` frontmatter=`true` description=`true` bytes=`699` lines=`18` sha256_12=`2f9e68a57bd6` requires_env=`0` requires_bins=`0` missing_env=`0` missing_bins=`0` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` git_tracked=`true` working_tree_dirty=`false` commit_available=`true` last_commit_sha256_12=`08239531055b` last_commit_short=`0823953` last_commit_date=`2026-05-31T06:38:43+02:00` subject_sha256_12=`86be80d6199a`\n\n### Provenance Gates\n- validation_gate=`pass`\n- risk_gate=`pass`\n- git_history_gate=`pass`\n- mutation_gate=`disabled`\n- installer_gate=`disabled`\n\n### Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4585719169,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4585719169,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26703401140\" event_id=\"issue-350\" model=\"gitclaw/skills\" idempotency_key=\"fb9f34ed26139a6f530f61753ad2550c\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26703401140\" --\u003e\n## GitClaw Skill Provenance Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#350`\n- skill_provenance_status: `ok`\n- provenance_scope: `repo-local-skill-git-history`\n- available_skills: `1`\n- enabled_skills: `1`\n- disabled_skills: `0`\n- allowlist_blocked_skills: `0`\n- selected_skills: `1`\n- repo_local_skills: `1`\n- compat_root_skills: `0`\n- unknown_source_skills: `0`\n- git_tracked_skills: `1`\n- untracked_skills: `0`\n- working_tree_dirty_skills: `0`\n- skills_with_commits: `1`\n- skills_without_commits: `0`\n- git_available: `true`\n- git_history_available: `true`\n- installer_scripts_run: `false`\n- repository_mutation_allowed: `false`\n- raw_bodies_included: `false`\n- raw_git_subjects_included: `false`\n- author_identities_included: `false`\n- llm_e2e_required_after_skill_provenance_change: `true`\n- skill_validation_status: `ok`\n- skill_validation_errors: `0`\n- skill_validation_warnings: `0`\n- skill_duplicate_names: `0`\n- skill_invalid_names: `0`\n- skill_name_folder_mismatches: `0`\n- skill_risk_status: `ok`\n- available_skills: `1`\n- scanned_skills: `1`\n- skills_with_risk_findings: `0`\n- skill_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- registry_verification: `not_configured`\n- installer_scripts_run: `false`\n- raw_bodies_included: `false`\n- llm_e2e_required_after_skill_risk_change: `true`\n- issue_title_sha256_12: `ec92203c1222`\n\nThis report maps repo-local skills to body-free git provenance. It reports skill metadata, hashes, tracked state, dirty state, last commit IDs/dates, and commit-subject hashes only; raw skill bodies, issue bodies, comments, prompts, git subjects, author identities, installer output, and secret values are not included.\n\n### Skill Provenance Cards\n- name=`repo-reader` path=`.gitclaw/SKILLS/repo-reader/SKILL.md` folder=`repo-reader` source=`repo-local` enabled=`true` selected_for_this_turn=`true` frontmatter=`true` description=`true` bytes=`699` lines=`18` sha256_12=`2f9e68a57bd6` requires_env=`0` requires_bins=`0` missing_env=`0` missing_bins=`0` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` git_tracked=`true` working_tree_dirty=`false` commit_available=`true` last_commit_sha256_12=`08239531055b` last_commit_short=`0823953` last_commit_date=`2026-05-31T06:38:43+02:00` subject_sha256_12=`86be80d6199a`\n\n### Provenance Gates\n- validation_gate=`pass`\n- risk_gate=`pass`\n- git_history_gate=`pass`\n- mutation_gate=`disabled`\n- installer_gate=`disabled`\n\n### Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T04:39:44Z",
+      "updated_at": "2026-05-31T04:39:44Z"
+    }
+  ]
+}
