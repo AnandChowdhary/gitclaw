@@ -44,6 +44,7 @@ type doctorE2ESurface struct {
 	LiveIssueScripts        int
 	CleanupScripts          int
 	ModelCoverageScripts    int
+	ModelFollowupScripts    int
 	SessionCoverageScripts  int
 	BackupGateScripts       int
 	WorkflowDispatchScripts int
@@ -57,6 +58,7 @@ type doctorE2EScript struct {
 	CreatesIssue     bool
 	HasCleanup       bool
 	ModelCoverage    bool
+	ModelFollowup    bool
 	SessionCoverage  bool
 	BackupGate       bool
 	WorkflowDispatch bool
@@ -105,6 +107,7 @@ func renderDoctorReport(ev Event, cfg Config, repoContext RepoContext, includeIs
 	fmt.Fprintf(&b, "- e2e_live_issue_scripts: `%d`\n", surface.E2E.LiveIssueScripts)
 	fmt.Fprintf(&b, "- e2e_cleanup_scripts: `%d`\n", surface.E2E.CleanupScripts)
 	fmt.Fprintf(&b, "- e2e_model_coverage_scripts: `%d`\n", surface.E2E.ModelCoverageScripts)
+	fmt.Fprintf(&b, "- e2e_model_followup_scripts: `%d`\n", surface.E2E.ModelFollowupScripts)
 	fmt.Fprintf(&b, "- e2e_session_coverage_scripts: `%d`\n", surface.E2E.SessionCoverageScripts)
 	fmt.Fprintf(&b, "- e2e_backup_gate_scripts: `%d`\n", surface.E2E.BackupGateScripts)
 	fmt.Fprintf(&b, "- e2e_workflow_dispatch_scripts: `%d`\n", surface.E2E.WorkflowDispatchScripts)
@@ -260,7 +263,8 @@ func inspectDoctorE2ESurface(root string) doctorE2ESurface {
 			SHA:              shortDocumentHash(text),
 			CreatesIssue:     strings.Contains(text, "gh issue create"),
 			HasCleanup:       strings.Contains(text, "trap cleanup EXIT") && strings.Contains(text, "gh issue close"),
-			ModelCoverage:    strings.Contains(text, "prompt_context_sha256_12") || strings.Contains(text, `model="openai/`) || strings.Contains(text, "GitHub Models") || strings.Contains(text, "gitclaw.search_files"),
+			ModelCoverage:    doctorScriptHasModelCoverage(text),
+			ModelFollowup:    doctorScriptHasModelFollowupCoverage(text),
 			SessionCoverage:  strings.Contains(lower, "session coverage") || strings.Contains(text, "gitclaw session coverage"),
 			BackupGate:       strings.Contains(text, "gitclaw-backups") || strings.Contains(text, "backup_checkout") || strings.Contains(text, "gitclaw backup coverage"),
 			WorkflowDispatch: doctorScriptHasWorkflowDispatchCoverage(text),
@@ -276,6 +280,9 @@ func inspectDoctorE2ESurface(root string) doctorE2ESurface {
 		if script.ModelCoverage {
 			surface.ModelCoverageScripts++
 		}
+		if script.ModelFollowup {
+			surface.ModelFollowupScripts++
+		}
 		if script.SessionCoverage {
 			surface.SessionCoverageScripts++
 		}
@@ -287,6 +294,21 @@ func inspectDoctorE2ESurface(root string) doctorE2ESurface {
 		}
 	}
 	return surface
+}
+
+func doctorScriptHasModelCoverage(text string) bool {
+	return strings.Contains(text, "prompt_context_sha256_12") ||
+		strings.Contains(text, `model="openai/`) ||
+		strings.Contains(text, "GitHub Models") ||
+		strings.Contains(text, "gitclaw.search_files")
+}
+
+func doctorScriptHasModelFollowupCoverage(text string) bool {
+	return strings.Contains(text, "gh issue comment") &&
+		strings.Contains(text, "issue_comment") &&
+		strings.Contains(text, "wait_for_assistant_count 2") &&
+		strings.Contains(text, "prompt_context_sha256_12") &&
+		strings.Contains(text, "gitclaw.search_files")
 }
 
 func doctorScriptHasWorkflowDispatchCoverage(text string) bool {
@@ -365,7 +387,7 @@ func doctorChecks(surface doctorSurface) []doctorCheck {
 		{
 			Name:   "e2e_harnesses",
 			Status: doctorStatus(doctorE2EHealthy(surface.E2E)),
-			Detail: fmt.Sprintf("%d script(s), %d model coverage, %d session coverage, %d backup gates", surface.E2E.ScriptCount, surface.E2E.ModelCoverageScripts, surface.E2E.SessionCoverageScripts, surface.E2E.BackupGateScripts),
+			Detail: fmt.Sprintf("%d script(s), %d model coverage, %d model follow-up, %d session coverage, %d backup gates", surface.E2E.ScriptCount, surface.E2E.ModelCoverageScripts, surface.E2E.ModelFollowupScripts, surface.E2E.SessionCoverageScripts, surface.E2E.BackupGateScripts),
 		},
 		{
 			Name:   "skill_validation",
@@ -397,7 +419,7 @@ func doctorE2EHealthy(surface doctorE2ESurface) bool {
 	if surface.CleanupScripts != surface.ScriptCount {
 		return false
 	}
-	return surface.ModelCoverageScripts > 0 && surface.SessionCoverageScripts > 0 && surface.BackupGateScripts > 0
+	return surface.ModelCoverageScripts > 0 && surface.ModelFollowupScripts > 0 && surface.SessionCoverageScripts > 0 && surface.BackupGateScripts > 0
 }
 
 func doctorHealthStatus(checks []doctorCheck) string {
@@ -451,22 +473,23 @@ func writeDoctorFileList(b *strings.Builder, files []configSurfaceFile) {
 }
 
 func writeDoctorE2ESurface(b *strings.Builder, surface doctorE2ESurface) {
-	fmt.Fprintf(b, "- e2e_coverage_status=`%s` scripts=`%d` live_issue_scripts=`%d` cleanup_scripts=`%d` model_coverage_scripts=`%d` session_coverage_scripts=`%d` backup_gate_scripts=`%d` workflow_dispatch_scripts=`%d`\n",
+	fmt.Fprintf(b, "- e2e_coverage_status=`%s` scripts=`%d` live_issue_scripts=`%d` cleanup_scripts=`%d` model_coverage_scripts=`%d` model_followup_scripts=`%d` session_coverage_scripts=`%d` backup_gate_scripts=`%d` workflow_dispatch_scripts=`%d`\n",
 		doctorStatus(doctorE2EHealthy(surface)),
 		surface.ScriptCount,
 		surface.LiveIssueScripts,
 		surface.CleanupScripts,
 		surface.ModelCoverageScripts,
+		surface.ModelFollowupScripts,
 		surface.SessionCoverageScripts,
 		surface.BackupGateScripts,
 		surface.WorkflowDispatchScripts,
 	)
 	wrote := false
 	for _, script := range surface.Scripts {
-		if !script.ModelCoverage && !script.SessionCoverage && !script.BackupGate && !script.WorkflowDispatch {
+		if !script.ModelCoverage && !script.ModelFollowup && !script.SessionCoverage && !script.BackupGate && !script.WorkflowDispatch {
 			continue
 		}
-		fmt.Fprintf(b, "- path=`%s` bytes=`%d` lines=`%d` sha256_12=`%s` live_issue=`%t` cleanup=`%t` model_coverage=`%t` session_coverage=`%t` backup_gate=`%t` workflow_dispatch=`%t`\n",
+		fmt.Fprintf(b, "- path=`%s` bytes=`%d` lines=`%d` sha256_12=`%s` live_issue=`%t` cleanup=`%t` model_coverage=`%t` model_followup=`%t` session_coverage=`%t` backup_gate=`%t` workflow_dispatch=`%t`\n",
 			script.Path,
 			script.Bytes,
 			script.Lines,
@@ -474,6 +497,7 @@ func writeDoctorE2ESurface(b *strings.Builder, surface doctorE2ESurface) {
 			script.CreatesIssue,
 			script.HasCleanup,
 			script.ModelCoverage,
+			script.ModelFollowup,
 			script.SessionCoverage,
 			script.BackupGate,
 			script.WorkflowDispatch,

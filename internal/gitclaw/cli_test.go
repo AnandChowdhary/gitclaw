@@ -1814,6 +1814,9 @@ SKILL_DOCTOR_LIST_SECRET
 trap cleanup EXIT
 gh issue create
 gh issue close
+gh issue comment
+issue_comment
+wait_for_assistant_count 2
 prompt_context_sha256_12
 gitclaw.search_files
 gitclaw session coverage
@@ -1827,7 +1830,7 @@ E2E_DOCTOR_LIST_SECRET
 			t.Fatalf("doctor list returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Doctor Report", "scope: `local-cli`", "Generated without a model call", "health_status: `ok`", "config_source: `defaults+repo+environment`", "config_valid: `true`", "config_file_present: `true`", "model: `openai/gpt-5-nano`", "run_mode: `read-only`", "workflows_present: `7`", "context_files_present: `6`", "memory_notes: `1`", "skill_files: `1`", "e2e_scripts: `1`", "e2e_live_issue_scripts: `1`", "e2e_cleanup_scripts: `1`", "e2e_model_coverage_scripts: `1`", "e2e_session_coverage_scripts: `1`", "e2e_backup_gate_scripts: `1`", "e2e_workflow_dispatch_scripts: `1`", "enabled_skills: `1`", "disabled_skills: `0`", "allowlist_blocked_skills: `0`", "enabled_tools: `5`", "disabled_tools: `0`", "allowlist_blocked_tools: `0`", "proactive_prompt_files: `1`", "managed_labels: `9`", "validation_errors: `0`", "validation_warnings: `0`", "skill_validation_status: `ok`", "soul_validation_status: `ok`", "memory_validation_status: `ok`", "tool_validation_status: `ok`", "`config_validation`: `ok`", "`workflow_set`: `ok`", "`identity_context`: `ok`", "`local_skills`: `ok`", "`proactive_prompt`: `ok`", "`e2e_harnesses`: `ok`", "### E2E Harnesses", "e2e_coverage_status=`ok`", "path=`scripts/e2e/github-session-coverage.sh`", "live_issue=`true`", "cleanup=`true`", "model_coverage=`true`", "session_coverage=`true`", "backup_gate=`true`", "workflow_dispatch=`true`", ".gitclaw/config.yml", ".github/workflows/gitclaw.yml", ".gitclaw/SOUL.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", ".gitclaw/proactive/repo-hygiene.md", "sha256_12="} {
+	for _, want := range []string{"GitClaw Doctor Report", "scope: `local-cli`", "Generated without a model call", "health_status: `ok`", "config_source: `defaults+repo+environment`", "config_valid: `true`", "config_file_present: `true`", "model: `openai/gpt-5-nano`", "run_mode: `read-only`", "workflows_present: `7`", "context_files_present: `6`", "memory_notes: `1`", "skill_files: `1`", "e2e_scripts: `1`", "e2e_live_issue_scripts: `1`", "e2e_cleanup_scripts: `1`", "e2e_model_coverage_scripts: `1`", "e2e_model_followup_scripts: `1`", "e2e_session_coverage_scripts: `1`", "e2e_backup_gate_scripts: `1`", "e2e_workflow_dispatch_scripts: `1`", "enabled_skills: `1`", "disabled_skills: `0`", "allowlist_blocked_skills: `0`", "enabled_tools: `5`", "disabled_tools: `0`", "allowlist_blocked_tools: `0`", "proactive_prompt_files: `1`", "managed_labels: `9`", "validation_errors: `0`", "validation_warnings: `0`", "skill_validation_status: `ok`", "soul_validation_status: `ok`", "memory_validation_status: `ok`", "tool_validation_status: `ok`", "`config_validation`: `ok`", "`workflow_set`: `ok`", "`identity_context`: `ok`", "`local_skills`: `ok`", "`proactive_prompt`: `ok`", "`e2e_harnesses`: `ok`", "### E2E Harnesses", "e2e_coverage_status=`ok`", "model_followup_scripts=`1`", "path=`scripts/e2e/github-session-coverage.sh`", "live_issue=`true`", "cleanup=`true`", "model_coverage=`true`", "model_followup=`true`", "session_coverage=`true`", "backup_gate=`true`", "workflow_dispatch=`true`", ".gitclaw/config.yml", ".github/workflows/gitclaw.yml", ".gitclaw/SOUL.md", ".gitclaw/SKILLS/repo-reader/SKILL.md", ".gitclaw/proactive/repo-hygiene.md", "sha256_12="} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("doctor list output missing %q:\n%s", want, output)
 		}

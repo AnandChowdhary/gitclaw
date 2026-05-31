@@ -12,6 +12,7 @@
 - Keep backup coverage checks body-free: prove one issue's indexed, canonical, readable backup payload with paths, counts, timestamps, and hashes, then use a live model follow-up for E2E coverage.
 - Keep session coverage checks strict: real E2E should prove a model-backed assistant marker, prompt provenance, selected skill names, and prompt-visible tool names from the issue thread and the fetched backup.
 - Keep doctor E2E audits body-free but strict: count live issue, cleanup, model, session, backup, and workflow-dispatch harness coverage, then run a normal model/tool follow-up in the live harness.
+- Keep doctor model coverage honest: distinguish weak model-marker coverage from real follow-up coverage that posts a comment, waits for an issue_comment run, and verifies prompt provenance plus prompt-visible tools.
 - Keep secrets risk audits body-free: report plaintext residue, secret references, runtime/env resolution boundaries, and no configure/apply/reload support, then prove normal LLM/tool behavior in live E2E.
 - Keep migration risk audits body-free: classify OpenClaw/Hermes/Codex/Claude import maps without reading source homes, importing credentials, executing installers, autoloading MCP, mutating the repo, or printing raw bodies/secrets, then prove normal LLM/tool behavior in live E2E.
 - Keep skill refresh plans body-free: refresh skills per GitHub Actions turn from the reviewed checkout, not through a resident watcher or hot reload; no install/update/repo mutation/raw bodies, and prove LLM/tool behavior in live E2E.

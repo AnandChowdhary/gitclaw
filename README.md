@@ -239,8 +239,9 @@ the issue for retention. Feature batches should include a deterministic
 feature-specific E2E plus a normal GitHub Models conversation E2E that proves
 inference, prompt context, selected skills, and prompt-visible tools.
 `gitclaw doctor list` also inventories checked-in E2E harnesses by count,
-cleanup coverage, live issue coverage, model coverage, session coverage, backup
-gates, and workflow-dispatch coverage.
+cleanup coverage, live issue coverage, model marker coverage, real model
+follow-up coverage, session coverage, backup gates, and workflow-dispatch
+coverage.
 
 ## Design Docs
 

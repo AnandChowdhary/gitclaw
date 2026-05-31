@@ -170,6 +170,7 @@ for expected in \
   'e2e_live_issue_scripts: `131`' \
   'e2e_cleanup_scripts: `138`' \
   'e2e_model_coverage_scripts: `49`' \
+  'e2e_model_followup_scripts: `35`' \
   'e2e_session_coverage_scripts: `2`' \
   'e2e_backup_gate_scripts: `21`' \
   'e2e_workflow_dispatch_scripts: `21`' \
@@ -202,6 +203,7 @@ for expected in \
   'e2e_coverage_status=`ok`' \
   'path=`scripts/e2e/github-doctor-report.sh`' \
   'model_coverage=`true`' \
+  'model_followup=`true`' \
   'sha256_12='; do
   grep -Fq "$expected" <<<"$comments" || die "doctor list report missing ${expected}"
 done

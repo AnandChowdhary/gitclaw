@@ -933,6 +933,15 @@ must remain body-free and no-model; the live doctor harness should pair that
 deterministic report with a normal GitHub Models repo-reader follow-up so the
 feature batch still proves inference and prompt-visible tool grounding.
 
+2026-05-31 doctor-model-followup follow-up: OpenClaw transcript/session CLIs
+and Hermes' saved-session database both make actual conversation history
+auditable, not just test intent. GitClaw's doctor inventory should make the
+same distinction for E2E harnesses: marker-only model coverage is useful, but
+real model follow-up coverage must require a posted issue comment, an
+`issue_comment` Actions run, a second assistant turn, prompt provenance, and
+prompt-visible tool evidence. This prevents docs text such as "GitHub Models"
+from being counted as proof of a live LLM call.
+
 2026-05-30 tools-validate follow-up: validation should be addressable as its
 own issue command, not only embedded inside `/tools`. Add
 `@gitclaw /tools validate` as the issue-side mirror of

@@ -3083,8 +3083,8 @@ inference. It posts a `gitclaw:assistant-turn` comment with
 - dated memory note count,
 - local skill count,
 - E2E harness counts for checked-in scripts, live issue scripts, cleanup
-  coverage, model-backed coverage, session coverage, backup gates, and
-  workflow-dispatch coverage,
+  coverage, model-backed coverage, real model follow-up coverage, session
+  coverage, backup gates, and workflow-dispatch coverage,
 - proactive prompt count,
 - managed label count,
 - validation error/warning totals,
@@ -3098,9 +3098,13 @@ canonical issue log without introducing an auto-repair mode.
 
 The E2E harness check is intentionally conservative. It warns if the repository
 has no harness scripts, no live issue harnesses, any harness without cleanup, or
-no evidence of model-backed, session-coverage, or backup-gate tests. The report
-lists only harness paths, byte/line counts, short hashes, and boolean coverage
-flags; it never prints script bodies or test prompt text.
+no evidence of model-backed, model-follow-up, session-coverage, or backup-gate
+tests. `model_coverage` means the script asserts model/provenance evidence;
+`model_followup` is stricter and requires a real follow-up comment path that
+waits for an `issue_comment` run and a second assistant turn with prompt
+provenance and prompt-visible tool evidence. The report lists only harness
+paths, byte/line counts, short hashes, and boolean coverage flags; it never
+prints script bodies or test prompt text.
 
 Local operators can run the same body-free health check before opening an
 issue:
@@ -5351,8 +5355,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven tools-run-plan E2E harness verifies
   `@gitclaw /tools run-plan search_files` exposes one body-free dry-run plan,
   gate-state metadata, active-output hashes, no shell/network/repository/model
-  execution flags, and explicit reminder coverage that tool-behavior changes
-  must also run a live GitHub Models conversation E2E.
+  execution flags, and explicit reminder coverage. The same harness then posts
+  a normal follow-up comment that requires repo-reader search so GitHub Models
+  performs a real LLM call with prompt context, selected skill, and
+  prompt-visible tool provenance.
 - A `gh`-driven sandbox-report E2E harness verifies `@gitclaw /sandbox`
   exposes the current GitHub Actions runtime boundary, denied host exec,
   read-only tool modes, workflow permission cards, and backup-job-only write
