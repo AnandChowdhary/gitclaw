@@ -59,6 +59,15 @@ func IsPluginReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderPluginReport(ev Event, cfg Config) string {
+	if isMCPRiskRequest(ev, cfg) {
+		return renderMCPRiskReport(ev, cfg, true)
+	}
+	if mcpName := requestedMCPInfoName(ev, cfg); mcpName != "" {
+		return renderMCPInfoReport(ev, cfg, mcpName, true)
+	}
+	if isMCPListRequest(ev, cfg) {
+		return renderMCPReport(ev, cfg, true)
+	}
 	if isPluginRiskRequest(ev, cfg) {
 		return renderPluginRiskReport(ev, cfg, true)
 	}

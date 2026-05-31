@@ -21,3 +21,4 @@
 - Keep skill proposal plans review-first: hash proposal requests, name repo-reviewed proposal paths, never auto-create or auto-improve skills, and prove accepted skill-path changes with live LLM/tool E2E.
 - Keep skill proposal inventories inert: scan `.gitclaw/skill-proposals/*/PROPOSAL.md` for metadata and risk hashes only, never activate proposal bodies or mutate skills, and pair changes with live LLM/tool E2E.
 - Keep toolsets advisory in v1: `.gitclaw/toolsets/*.yaml` can group deterministic tools for review, but must not activate tools, execute providers, mutate repositories, or print raw instructions.
+- Keep MCP specs metadata-only in v1: `.gitclaw/mcp/*.yaml` can describe reviewed server intent and tool filters, but must not launch servers, expose MCP tools, pass raw env, or print commands, URLs, args, bodies, or credentials.

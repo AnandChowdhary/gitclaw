@@ -1,0 +1,16 @@
+name: github-read
+description: Metadata-only placeholder for a future reviewed GitHub MCP read surface.
+transport: stdio
+source: github-mcp-read
+activation: metadata-only
+tool_allowlist:
+  - issues.read
+  - contents.read
+  - pull_requests.read
+tool_denylist:
+  - contents.write
+  - actions.write
+requires_secrets:
+  - GITHUB_TOKEN
+resources_enabled: false
+prompts_enabled: false

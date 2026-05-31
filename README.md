@@ -10,7 +10,7 @@ The current implementation focuses on a conservative, inspectable MVP:
 - GitHub issues and comments as the transcript.
 - Deterministic slash-command reports for operational visibility.
 - Repo-local `.gitclaw/` identity, memory, skills, tools, proactive, channel,
-  backup, and policy files.
+  backup, plugin, MCP metadata, and policy files.
 - Body-free reports: audits expose counts, paths, names, hashes, and findings,
   not raw issue bodies, comments, prompts, tool outputs, skill bodies, or secret
   values.
@@ -180,6 +180,9 @@ gitclaw agents risk
 gitclaw nodes risk
 gitclaw hooks risk
 gitclaw plugins risk
+gitclaw plugins mcp
+gitclaw plugins mcp risk
+gitclaw plugins mcp info github-read
 gitclaw tasks risk
 gitclaw orders risk
 gitclaw channels verify
@@ -229,6 +232,7 @@ scripts/e2e/github-policy-risk-report.sh
 scripts/e2e/github-approvals-risk-report.sh
 scripts/e2e/github-secrets-risk-report.sh
 scripts/e2e/github-plugins-risk-report.sh
+scripts/e2e/github-plugins-mcp-report.sh
 scripts/e2e/github-profile-risk-report.sh
 scripts/e2e/github-proactive-risk-report.sh
 scripts/e2e/github-session-risk-report.sh

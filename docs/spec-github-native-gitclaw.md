@@ -1017,6 +1017,7 @@ AGENTS.md                    # existing coding-agent instructions, if present
 .gitclaw/hooks/*.md          # declarative hook specs, metadata-only in v1
 .gitclaw/PLUGINS.md          # declarative plugin safety policy
 .gitclaw/plugins/*.md        # declarative plugin specs, metadata-only in v1
+.gitclaw/mcp/*.yaml          # declarative MCP server specs, metadata-only in v1
 .gitclaw/TASKS.md            # declarative task/flow safety policy
 .gitclaw/tasks/*.md          # declarative task/flow specs, issue-native in v1
 .gitclaw/AGENTS.md           # declarative agent/routing safety policy
@@ -2891,6 +2892,9 @@ runtime extension model, and by Hermes' toolset/MCP filtering:
 ```text
 @gitclaw /plugins
 @gitclaw /plugins risk
+@gitclaw /plugins mcp
+@gitclaw /plugins mcp risk
+@gitclaw /plugins mcp info github-read
 @gitclaw /plugin
 ```
 
@@ -2899,6 +2903,7 @@ The command runs after preflight and before model inference. It posts a
 
 - whether `.gitclaw/PLUGINS.md` exists and is loaded into model context,
 - declarative plugin specs in `.gitclaw/plugins/*.md`,
+- declarative MCP server specs in `.gitclaw/mcp/*.yaml`,
 - plugin kind, source, and metadata-only activation state,
 - declared capability and optional capability counts,
 - whether specs require approval before side effects or new tool exposure,
@@ -2912,6 +2917,25 @@ mutates the repo, calls the model, or prints raw plugin policy, plugin spec,
 issue, comment, config, credential, or provider payload bodies. Future
 executable plugins require reviewed workflows, explicit permissions, approval
 gates, and audit cards before any runtime can activate.
+
+MCP specs are a narrower plugin-adjacent inventory surface. They live in
+`.gitclaw/mcp/*.yaml` and can declare a reviewed name, transport, source,
+metadata-only activation, tool allowlist/denylist, secret-name refs, and prompt
+or resource gates. In v1, `@gitclaw /plugins mcp` and
+`gitclaw plugins mcp` list these specs by path, counts, hashes, filters, and
+runtime gates. `@gitclaw /plugins mcp risk` and
+`gitclaw plugins mcp risk` scan the YAML for unsafe activation, command/url
+launch surfaces, missing tool allowlists, mutating tool refs, env passthrough,
+prompt/resource exposure, prompt-boundary overrides, credential material, host
+execution, repository mutation, remote exfiltration, and unbounded loops.
+`@gitclaw /plugins mcp info <name>` and
+`gitclaw plugins mcp info <name>` show one spec. These reports are metadata
+only: they do not launch MCP servers, connect clients, dynamically discover
+tools, expose MCP tools to the model, mutate the repository, or print raw spec
+bodies, command values, URL values, args, env values, issue bodies, comments,
+prompts, provider payloads, credentials, or secret values. The reports include
+`llm_e2e_required_after_mcp_change=true`; every MCP metadata change must ship
+with a live GitHub Models follow-up E2E that makes an actual model call.
 
 The risk form:
 
@@ -2938,6 +2962,9 @@ Local operators can inspect the same surface with:
 gitclaw plugins list
 gitclaw plugins risk
 gitclaw plugins verify
+gitclaw plugins mcp
+gitclaw plugins mcp risk
+gitclaw plugins mcp info <name>
 ```
 
 ### Tasks Command
@@ -5162,6 +5189,12 @@ examples/workflows/gitclaw.yml
   risk metadata, then runs a real GitHub Models follow-up conversation that
   proves model inference, prompt provenance, selected skills, and
   prompt-visible tool usage.
+- A `gh`-driven plugins-MCP E2E harness verifies
+  `@gitclaw /plugins mcp risk` and local `gitclaw plugins mcp risk` expose
+  body-free MCP spec metadata, no-launch/no-connect runtime gates, tool filters,
+  secret-name refs, risk counts, and hashes, then runs a real GitHub Models
+  follow-up conversation that proves model inference, prompt provenance,
+  selected skills, and prompt-visible tool usage.
 - A `gh`-driven tasks-report E2E harness verifies `@gitclaw /tasks` reports
   task policy metadata, model-context loading, declarative task/flow spec
   metadata, issue-native status/label mapping, current issue task status,

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "doctor-report-e2e: $*" >&2
+  echo "plugins-mcp-report-e2e: $*" >&2
 }
 
 die() {
@@ -33,15 +33,29 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_DOCTOR_REPORT_E2E_${timestamp}"
-followup_hidden_token="GITCLAW_DOCTOR_REPORT_FOLLOWUP_E2E_${timestamp}"
+hidden_token="GITCLAW_MCP_E2E_${timestamp}"
+followup_hidden_token="GITCLAW_MCP_FOLLOWUP_E2E_${timestamp}"
 expected_token="GITCLAW_SEARCH_CONTEXT_V1"
 search_phrase="bounded repository search fixture phrase"
-title="@gitclaw /doctor e2e ${timestamp}"
-body="Live doctor-report E2E.
+title="@gitclaw /plugins mcp risk e2e ${timestamp}"
+body="@gitclaw /plugins mcp risk
 
-Hidden doctor body token: ${token}
-This should produce a deterministic health report without a model call."
+Live plugins MCP E2E.
+Do not include this hidden MCP token: ${hidden_token}"
+
+local_report="$(go run ./cmd/gitclaw plugins mcp risk)"
+for expected in \
+  "GitClaw MCP Risk Report" \
+  'mcp_status: `ok`' \
+  'mcp_specs_dir: `.gitclaw/mcp`' \
+  'mcp_specs: `1`' \
+  'parsed_mcp_specs: `1`' \
+  'mcp_specs_with_risk_findings: `0`' \
+  'mcp_risk_findings: `0`' \
+  'raw_mcp_bodies_included: `false`' \
+  'llm_e2e_required_after_mcp_change: `true`'; do
+  grep -Fq -- "$expected" <<<"$local_report" || die "local MCP risk report missing ${expected}"
+done
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -55,7 +69,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "doctor-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "plugins-mcp-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -77,11 +91,11 @@ wait_for_run() {
       --json databaseId,status,conclusion,url,createdAt,displayTitle \
       --jq '. as $runs | $runs | map(select(.displayTitle == "'"${title}"'")) | sort_by(.createdAt) | reverse | .[0] // empty')"
     if [[ -n "$run_json" && "$run_json" != "null" ]]; then
-      local run_status conclusion url
-      run_status="$(jq -r '.status' <<<"$run_json")"
+      local status conclusion url
+      status="$(jq -r '.status' <<<"$run_json")"
       conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
       url="$(jq -r '.url' <<<"$run_json")"
-      if [[ "$run_status" == "completed" ]]; then
+      if [[ "$status" == "completed" ]]; then
         [[ "$conclusion" == "success" ]] || die "${event_name} run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
@@ -92,11 +106,11 @@ wait_for_run() {
   return 1
 }
 
-assistant_comments() {
+assistant_count() {
   gh issue view "$issue_number" \
     --repo "$repo" \
     --json comments \
-    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | join("\n---GITCLAW-COMMENT---\n")'
+    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length'
 }
 
 latest_assistant_comment() {
@@ -104,13 +118,6 @@ latest_assistant_comment() {
     --repo "$repo" \
     --json comments \
     --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | .[-1] // ""'
-}
-
-assistant_count() {
-  gh issue view "$issue_number" \
-    --repo "$repo" \
-    --json comments \
-    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length'
 }
 
 error_count() {
@@ -159,80 +166,62 @@ wait_for_done_status() {
   return 1
 }
 
-run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one doctor report comment"
-comments="$(assistant_comments)"
+mcp_run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
+wait_for_assistant_count 1 || die "expected one plugins MCP report comment"
+mcp_comment="$(latest_assistant_comment)"
 
 for expected in \
-  'model="gitclaw/doctor"' \
-  "GitClaw Doctor Report" \
+  'model="gitclaw/plugins"' \
+  "GitClaw MCP Risk Report" \
   "Generated without a model call" \
-  'health_status: `ok`' \
-  'config_source: `defaults+repo+environment`' \
-  'config_valid: `true`' \
-  'config_file_present: `true`' \
-  'model: `openai/gpt-5-nano`' \
-  'run_mode: `read-only`' \
-  'workflows_present: `7`' \
-  'context_files_present: `6`' \
-  'memory_notes: `1`' \
-  'skill_files: `1`' \
-  'e2e_scripts: `144`' \
-  'e2e_live_issue_scripts: `137`' \
-  'e2e_cleanup_scripts: `144`' \
-  'e2e_model_coverage_scripts: `55`' \
-  'e2e_model_followup_scripts: `41`' \
-  'e2e_session_coverage_scripts: `2`' \
-  'e2e_backup_gate_scripts: `21`' \
-  'e2e_workflow_dispatch_scripts: `21`' \
-  'enabled_skills: `1`' \
-  'disabled_skills: `0`' \
-  'allowlist_blocked_skills: `0`' \
-  'enabled_tools: `5`' \
-  'disabled_tools: `0`' \
-  'allowlist_blocked_tools: `0`' \
-  'proactive_prompt_files: `1`' \
-  'managed_labels: `9`' \
-  'validation_errors: `0`' \
-  'validation_warnings: `0`' \
-  'skill_validation_status: `ok`' \
-  'skill_validation_errors: `0`' \
-  'skill_validation_warnings: `0`' \
-  'soul_validation_status: `ok`' \
-  'soul_validation_errors: `0`' \
-  'soul_validation_warnings: `0`' \
-  'memory_validation_status: `ok`' \
-  'memory_validation_errors: `0`' \
-  'memory_validation_warnings: `0`' \
-  'tool_validation_status: `ok`' \
-  'tool_validation_errors: `0`' \
-  'tool_validation_warnings: `0`' \
-  '`config_validation`: `ok`' \
-  '`workflow_set`: `ok`' \
-  '`identity_context`: `ok`' \
-  '`local_skills`: `ok`' \
-  '`e2e_harnesses`: `ok`' \
-  '`skill_validation`: `ok`' \
-  '`soul_validation`: `ok`' \
-  '`memory_validation`: `ok`' \
-  '`tool_validation`: `ok`' \
-  '.gitclaw/config.yml' \
-  '.github/workflows/gitclaw.yml' \
-  '.gitclaw/SOUL.md' \
-  '.gitclaw/SKILLS/repo-reader/SKILL.md' \
-  '.gitclaw/proactive/repo-hygiene.md' \
-  "### E2E Harnesses" \
-  'e2e_coverage_status=`ok`' \
-  'path=`scripts/e2e/github-doctor-report.sh`' \
-  'model_coverage=`true`' \
-  'model_followup=`true`' \
-  'sha256_12='; do
-  grep -Fq "$expected" <<<"$comments" || die "doctor report missing ${expected}"
+  'mcp_status: `ok`' \
+  'mcp_specs_dir: `.gitclaw/mcp`' \
+  'mcp_specs: `1`' \
+  'parsed_mcp_specs: `1`' \
+  'mcp_specs_with_command: `0`' \
+  'mcp_specs_with_url: `0`' \
+  'mcp_specs_with_tool_allowlist: `1`' \
+  'mcp_tool_allowlist_refs: `3`' \
+  'mcp_tool_denylist_refs: `2`' \
+  'mcp_required_secret_refs: `1`' \
+  'mcp_env_passthrough_refs: `0`' \
+  'mcp_specs_with_resources_enabled: `0`' \
+  'mcp_specs_with_prompts_enabled: `0`' \
+  'mcp_specs_with_risk_findings: `0`' \
+  'mcp_risk_findings: `0`' \
+  'high_risk_findings: `0`' \
+  'warning_risk_findings: `0`' \
+  'info_risk_findings: `0`' \
+  'mcp_connection_supported: `false`' \
+  'mcp_server_launch_allowed: `false`' \
+  'mcp_tool_exposure_allowed: `false`' \
+  'dynamic_tool_discovery_allowed: `false`' \
+  'repository_mutation_allowed: `false`' \
+  'raw_mcp_bodies_included: `false`' \
+  'raw_command_args_included: `false`' \
+  'credential_values_included: `false`' \
+  'llm_e2e_required_after_mcp_change: `true`' \
+  'mcp_name=`github-read`' \
+  'path=`.gitclaw/mcp/github-read.yaml`' \
+  'transport=`stdio`' \
+  'source=`github-mcp-read`' \
+  'activation=`metadata-only`' \
+  'tool_allowlist=`contents.read, issues.read, pull_requests.read`' \
+  'tool_denylist=`actions.write, contents.write`' \
+  'requires_secrets=`GITHUB_TOKEN`' \
+  'env_passthrough=`none`' \
+  'risk_findings=`0`' \
+  'risk_codes=`none`' \
+  "### Risk Findings" \
+  "- none"; do
+  grep -Fq -- "$expected" <<<"$mcp_comment" || die "plugins MCP report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "doctor report leaked issue body token"
-fi
+for leaked in "$hidden_token" "Live plugins MCP E2E" "Metadata-only placeholder" "bounded repository search fixture phrase" "GITCLAW_SEARCH_CONTEXT_V1"; do
+  if grep -Fq "$leaked" <<<"$mcp_comment"; then
+    die "plugins MCP report leaked ${leaked}"
+  fi
+done
 
 comment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \
@@ -256,13 +245,13 @@ grep -Fq 'skills="repo-reader"' <<<"$model_comment" || die "assistant marker mis
 grep -Fq 'tools="' <<<"$model_comment" || die "assistant marker missing prompt-visible tools"
 grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant marker did not prove search_files was prompt-visible"
 
-for leaked in "$token" "$followup_hidden_token"; do
+for leaked in "$hidden_token" "$followup_hidden_token"; do
   if grep -Fq "$leaked" <<<"$model_comment"; then
     die "model follow-up leaked ${leaked}"
   fi
 done
 
 wait_for_done_status || die "expected gitclaw:done without running/error"
-url="$(jq -r '.url' <<<"$run_json")"
+mcp_url="$(jq -r '.url' <<<"$mcp_run_json")"
 model_url="$(jq -r '.url' <<<"$model_run_json")"
-log "passed for issue #${issue_number}: ${url} (model follow-up: ${model_url})"
+log "passed for issue #${issue_number}: ${mcp_url} (model follow-up: ${model_url})"

@@ -618,6 +618,19 @@ approval/metadata-only gates, and unbounded loops. Acceptance should mirror the
 other risk reports: deterministic body-free audit plus a real GitHub Models
 follow-up proving inference and repo-search tool exposure.
 
+2026-05-31 MCP metadata follow-up: Hermes' MCP support and OpenClaw's plugin
+contracts both make external capability discovery tempting, but GitClaw's
+serverless issue loop should treat MCP as reviewed metadata before runtime.
+Add `.gitclaw/mcp/*.yaml` specs and expose them through
+`@gitclaw /plugins mcp`, `@gitclaw /plugins mcp risk`, and
+`gitclaw plugins mcp ...`. The report can show spec names, paths, transport,
+activation state, tool allowlist/denylist refs, secret-name refs, hashes, and
+risk codes, but must not launch servers, connect clients, discover dynamic
+tools, expose MCP tools to the model, pass env, mutate repositories, or print
+raw command/URL/arg/spec bodies. Acceptance should include the deterministic
+MCP audit plus a real GitHub Models follow-up proving ordinary repo-reader
+tool behavior still works.
+
 2026-05-30 task-risk follow-up: OpenClaw Task Flow composes work by creating
 background tasks and advancing the flow as tasks complete, while Hermes Kanban
 uses durable task boards, dispatchers, workers, and a dedicated kanban toolset.

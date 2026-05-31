@@ -384,9 +384,44 @@ func runPluginsCommand(args []string) error {
 		return runPluginsListCommand(args[1:])
 	case "risk", "risk-audit":
 		return runPluginsRiskCommand(args[1:])
+	case "mcp", "mcps":
+		return runPluginsMCPCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw plugins [list|risk|verify]")
+		return fmt.Errorf("usage: gitclaw plugins [list|risk|verify|mcp [list|risk|info <name>]]")
 	}
+}
+
+func runPluginsMCPCommand(args []string) error {
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	if len(args) == 0 || args[0] == "list" {
+		if len(args) > 1 {
+			return fmt.Errorf("unknown plugins mcp list argument %q", args[1])
+		}
+		fmt.Println(RenderMCPCLIReport(cfg))
+		return nil
+	}
+	if args[0] == "risk" || args[0] == "risk-audit" {
+		if len(args) > 1 {
+			return fmt.Errorf("unknown plugins mcp risk argument %q", args[1])
+		}
+		fmt.Println(RenderMCPRiskCLIReport(cfg))
+		return nil
+	}
+	if args[0] == "info" || args[0] == "show" {
+		if len(args) != 2 {
+			return fmt.Errorf("usage: gitclaw plugins mcp info <name>")
+		}
+		report := RenderMCPInfoCLIReport(cfg, args[1])
+		fmt.Println(report)
+		if len(matchingMCPCards(BuildMCPReport(cfg).Cards, args[1])) == 0 {
+			return fmt.Errorf("MCP spec %q not found", args[1])
+		}
+		return nil
+	}
+	return fmt.Errorf("usage: gitclaw plugins mcp [list|risk|info <name>]")
 }
 
 func runPluginsListCommand(args []string) error {

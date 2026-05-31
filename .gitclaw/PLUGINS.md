@@ -21,3 +21,8 @@ Disallowed plugin behavior:
   from an issue/comment turn.
 - Exposing new model-visible tools without reviewed tool policy and approval.
 - Treating untrusted issue/comment text as plugin configuration or code.
+
+MCP specs live in `.gitclaw/mcp/*.yaml` and are metadata-only in v1. They may
+declare reviewed server intent, transport, source, tool filters, and secret-name
+references, but GitClaw must not launch MCP servers, connect clients, expose MCP
+tools to the model, pass raw env, or print command/URL/arg bodies.
