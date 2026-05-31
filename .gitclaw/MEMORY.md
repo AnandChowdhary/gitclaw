@@ -34,6 +34,9 @@
   and prompt inventory, plus a normal GitHub Models issue-comment follow-up
   that selects `repo-reader`, exposes `gitclaw.search_files`, and recovers a
   repository-search fixture token.
+- Proactive init changes need two proofs: reviewed prompt/workflow generation
+  without prompt-body leakage, plus a real dispatched proactive issue that
+  continues with a normal model/tool follow-up.
 - Channel-message and proactive workflow-dispatch E2E must prove repo-reader
   search/tool grounding, model provenance, and usage telemetry, not just nonce
   echoing from the mirrored prompt.

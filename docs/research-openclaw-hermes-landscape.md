@@ -1007,6 +1007,17 @@ generator that writes `.gitclaw/proactive/<name>.md` and
 git for review. This borrows OpenClaw/Hermes' durable job-definition idea
 without allowing an agent turn to silently install new scheduled automation.
 
+2026-05-31 proactive-init E2E follow-up: [OpenClaw scheduled tasks](https://docs.openclaw.ai/cron-jobs)
+store durable job definitions and run them as isolated scheduled work, while
+[Hermes cron](https://hermes-agent.nousresearch.com/docs/user-guide/features/cron/)
+lets a scheduled job attach explicit skills or run in no-agent mode. GitClaw's
+generator should keep that distinction legible: local `proactive init` writes
+reviewed prompt/workflow files and prints only hashes, then live acceptance
+must dispatch a real proactive issue and continue it with a normal GitHub
+Models repo-reader/search turn. That proves the generated scheduled job is not
+just syntactically valid, but conversationally usable once GitHub Actions wakes
+it.
+
 2026-05-29 model resilience follow-up: OpenClaw cron records model/provider
 failures as job errors instead of treating empty replies as success, and Hermes
 cron documents fresh sessions plus provider recovery/fallback behavior for

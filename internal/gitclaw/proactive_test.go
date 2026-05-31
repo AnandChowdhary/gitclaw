@@ -182,6 +182,7 @@ func TestProactiveInitWritesWorkflowAndPrompt(t *testing.T) {
 		"workflow_written: `true`",
 		"prompt_body_sha256_12:",
 		"workflow_body_sha256_12:",
+		"llm_e2e_required_after_proactive_init_change: `true`",
 	} {
 		if !strings.Contains(report, want) {
 			t.Fatalf("init report missing %q:\n%s", want, report)

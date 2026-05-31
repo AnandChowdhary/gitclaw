@@ -361,6 +361,7 @@ scripts/e2e/github-profile-risk-report.sh
 scripts/e2e/github-channel-message.sh
 scripts/e2e/github-channels-info-report.sh
 scripts/e2e/github-proactive.sh
+scripts/e2e/github-proactive-init.sh
 scripts/e2e/github-proactive-report.sh
 scripts/e2e/github-proactive-list-report.sh
 scripts/e2e/github-proactive-info-report.sh
@@ -419,6 +420,10 @@ The proactive-report and proactive-list harnesses now require the deterministic
 scheduled-job inventory to be followed by a real issue-comment GitHub Models
 turn that selects `repo-reader`, exposes `gitclaw.search_files`, and recovers a
 fixture token from repository search.
+The proactive-init harness now applies the same gate to generated scheduled
+jobs: it verifies body-free prompt/workflow creation, dispatches a real
+proactive issue, then continues that issue with a model-backed repo-reader
+search turn.
 `gitclaw doctor list` also inventories checked-in E2E harnesses by count,
 cleanup coverage, live issue coverage, model marker coverage, real model
 follow-up coverage, session coverage, backup gates, and workflow-dispatch

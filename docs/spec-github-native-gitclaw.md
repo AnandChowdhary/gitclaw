@@ -404,11 +404,16 @@ workflow file is supplied, it defaults to
 `.github/workflows/gitclaw-proactive-<name>.yml`. The command refuses to
 overwrite differing files unless `--force` is used, supports `--dry-run`, and
 prints a body-free `GitClaw Proactive Init Report` with file paths, write
-status, skill-hint counts, byte counts, and hashes. `--skill <name>` can be
-passed more than once, and `--skills a,b` is accepted for comma-separated skill
-hints. The generated prompt file records the hints in a
-`gitclaw:proactive-skills` marker and a short "Suggested GitClaw skills"
-section. When the proactive issue is later created, those skill names are part
+status, skill-hint counts, byte counts, hashes, and
+`llm_e2e_required_after_proactive_init_change=true`. Changes to the generator
+must be paired with a live GitHub workflow-dispatch run that creates a
+proactive issue, posts the deterministic proactive report, then continues with
+a normal GitHub Models follow-up using `repo-reader` and bounded repository
+search. `--skill <name>` can be passed more than once, and `--skills a,b` is
+accepted for comma-separated skill hints. The generated prompt file records
+the hints in a `gitclaw:proactive-skills` marker and a short
+"Suggested GitClaw skills" section. When the proactive issue is later created,
+those skill names are part
 of the canonical issue transcript, so GitClaw's normal progressive skill
 loading can select the corresponding local `SKILL.md` files without a hidden
 cron database or runtime-specific state. Generated files are:
@@ -5749,10 +5754,12 @@ assert the expected comments/labels, and close the issue in cleanup.
    - lint the generated workflow when `actionlint` is available,
    - dispatch the real generic proactive workflow with the generated job name
      and a `/proactive` prompt body,
-   - assert it creates a real proactive issue and receives one model-backed
-     assistant turn that uses `repo-reader` and `gitclaw.search_files`, returns
-     the bounded repository-search fixture token, includes model/prompt/usage
-     telemetry, and does not leak the hidden prompt token.
+   - assert it creates a real proactive issue and receives the deterministic
+     `gitclaw/proactive` report without leaking the hidden prompt token,
+   - post a normal issue-comment follow-up that uses `repo-reader` and
+     `gitclaw.search_files`, returns the bounded repository-search fixture
+     token, includes model/prompt/usage telemetry, and does not leak hidden
+     prompt/comment tokens.
 
 47. **Proactive info report**
 
@@ -5839,8 +5846,8 @@ MVP is not complete until:
   create their own work issues idempotently and drive repo-reader search
   through the model-backed main handler,
 - the proactive-init harness verifies the generator writes ordinary repo files
-  without leaking prompt bodies and backs that up with a real deterministic
-  proactive issue conversation,
+  without leaking prompt bodies, dispatches a real proactive issue conversation,
+  and then proves a normal model/tool follow-up on that generated job issue,
 - the backup-manifest harness verifies a real backed-up issue has a compact
   file-level manifest with hashes and counts but no raw body leakage,
 - the backup JSONL export harness verifies a real backed-up issue can be
@@ -6055,7 +6062,12 @@ examples/workflows/gitclaw.yml
   workflow end to end.
 - A `gh`-driven proactive-init E2E harness verifies
   `gitclaw proactive init` generates a scheduled workflow and prompt file
-  without leaking prompt bodies, then dispatches a real proactive conversation.
+  without leaking prompt bodies and includes
+  `llm_e2e_required_after_proactive_init_change: true`; it then dispatches a
+  real proactive conversation and posts a normal GitHub Models follow-up that
+  must select `repo-reader`, expose `gitclaw.search_files`, recover a bounded
+  repository-search fixture token, and publish usage telemetry without leaking
+  hidden prompt or comment tokens.
 - A `gh`-driven proactive-report E2E harness verifies `@gitclaw /proactive`
   reports workflow triggers, prompt metadata, and
   `llm_e2e_required_after_proactive_report_change: true` without a model call;
