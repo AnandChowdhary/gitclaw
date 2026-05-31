@@ -5042,8 +5042,10 @@ assert the expected comments/labels, and close the issue in cleanup.
    - add the `gitclaw` label after the mirrored comment is written,
    - dispatch the main workflow with `dispatch_id` equal to the channel message
      ID,
-   - assert the assistant sees the mirrored message body and returns its exact
-     nonce token.
+   - assert the assistant sees the mirrored message body, uses `repo-reader`
+     and `gitclaw.search_files`, returns the bounded repository-search fixture
+     token, includes model/prompt/usage telemetry, and does not echo the hidden
+     channel sentinel.
 
 12. **Channel ingest workflow**
 
@@ -5652,8 +5654,10 @@ assert the expected comments/labels, and close the issue in cleanup.
    - lint the generated workflow when `actionlint` is available,
    - dispatch the real generic proactive workflow with the generated job name
      and a `/proactive` prompt body,
-   - assert it creates a real proactive issue and receives one deterministic
-     proactive report without leaking the hidden prompt token.
+   - assert it creates a real proactive issue and receives one model-backed
+     assistant turn that uses `repo-reader` and `gitclaw.search_files`, returns
+     the bounded repository-search fixture token, includes model/prompt/usage
+     telemetry, and does not leak the hidden prompt token.
 
 47. **Proactive info report**
 
@@ -5728,11 +5732,13 @@ MVP is not complete until:
 - the workflow-dispatch harness dispatches the main handler against a real
   issue and proves same-dispatch-id idempotency,
 - the channel-message harness verifies a hidden `gitclaw:channel-message`
-  comment is reconstructed as user input during a dispatched run,
+  comment is reconstructed as user input during a dispatched run and can drive
+  repo-reader search with model/prompt/usage telemetry,
 - the channel-ingest harness verifies the generic bridge workflow mirrors a
   message into an issue and dispatches the main handler,
 - the proactive enqueue harness verifies manual/scheduled job primitives can
-  create their own work issues idempotently,
+  create their own work issues idempotently and drive repo-reader search
+  through the model-backed main handler,
 - the proactive-init harness verifies the generator writes ordinary repo files
   without leaking prompt bodies and backs that up with a real deterministic
   proactive issue conversation,
@@ -5871,7 +5877,9 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven workflow-dispatch E2E harness verifies the main handler can be
   woken for a specific issue and deduped by dispatch ID.
 - A `gh`-driven channel-message E2E harness verifies a mirrored channel
-  comment is included in the dispatched conversation transcript.
+  comment is included in the dispatched conversation transcript and can force a
+  real GitHub Models repo-reader/search turn with prompt provenance and usage
+  telemetry.
 - A `gh`-driven channel-ingest E2E harness verifies the generic channel ingress
   workflow end to end, including duplicate provider-message retries.
 - A `gh`-driven channel-state E2E harness verifies real GitHub issue-backed

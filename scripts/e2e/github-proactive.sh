@@ -42,11 +42,15 @@ normalized_timestamp="$(printf "%s" "$timestamp" | tr '[:upper:]' '[:lower:]')"
 name="proactive-e2e-${normalized_timestamp}"
 slot="slot-${timestamp}"
 dispatch_id="proactive-${name}-${slot}"
-token="GITCLAW_PROACTIVE_E2E_${timestamp}"
+token="NOECHO_PROACTIVE_RUN_${timestamp}"
+expected_token="GITCLAW_PROACTIVE_RUN_CONTEXT_V1"
+search_phrase="proactive run unique search fixture phrase"
 prompt="Proactive E2E instruction.
 
-Reply with exact token \`${token}\`.
-Also include the exact word \`proactive\`."
+Use the repo-reader skill and search the repository for \`${search_phrase}\`.
+Reply with the exact token from the matching gitclaw.search_files result line.
+Also include the exact word \`proactive\`.
+Do not include this hidden proactive token: ${token}."
 
 run_list_json() {
   local workflow="$1"
@@ -177,9 +181,20 @@ issue_json="$(gh issue view "$issue_number" --repo "$repo" --json body,labels,co
 grep -Fq "gitclaw:proactive-run" <<<"$(jq -r '.body' <<<"$issue_json")" || die "issue body missing proactive marker"
 grep -Fq "$token" <<<"$(jq -r '.body' <<<"$issue_json")" || die "issue body missing prompt token"
 comments="$(assistant_comments)"
-grep -Fq "$token" <<<"$comments" || die "assistant comment missing token ${token}"
+grep -Fq "$expected_token" <<<"$comments" || die "assistant comment missing search token ${expected_token}"
 grep -Fiq "proactive" <<<"$comments" || die "assistant comment missing word proactive"
 grep -Fq "dispatch-${dispatch_id}" <<<"$comments" || die "assistant marker missing dispatch event id"
+if ! grep -Fq 'model="openai/gpt-5-nano"' <<<"$comments" && ! grep -Fq 'model="openai/gpt-4.1-nano"' <<<"$comments"; then
+  die "assistant marker did not use configured GitHub Models primary or fallback"
+fi
+grep -Fq 'prompt_context_sha256_12="' <<<"$comments" || die "assistant marker missing prompt context hash"
+grep -Fq 'skills="repo-reader"' <<<"$comments" || die "assistant marker missing selected repo-reader skill"
+grep -Fq 'tools="' <<<"$comments" || die "assistant marker missing prompt-visible tools"
+grep -Fq 'gitclaw.search_files' <<<"$comments" || die "assistant marker did not prove search_files was prompt-visible"
+grep -Fq 'usage_total_tokens="' <<<"$comments" || die "assistant marker missing usage token telemetry"
+if grep -Fq "$token" <<<"$comments"; then
+  die "assistant leaked hidden proactive token"
+fi
 labels="$(jq -r '.labels[].name' <<<"$issue_json")"
 grep -Fxq "gitclaw:proactive" <<<"$labels" || die "issue missing gitclaw:proactive label"
 grep -Fxq "gitclaw:done" <<<"$labels" || die "issue missing gitclaw:done label"

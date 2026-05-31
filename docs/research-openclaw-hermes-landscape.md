@@ -740,6 +740,9 @@ heartbeat. Proactive jobs should be normal scheduled GitHub Actions workflows
 that create or reuse GitHub issues, then dispatch the main issue handler. This
 preserves the no-daemon architecture while allowing email triage, reminders,
 watchers, and reports to initiate their own visible issue threads.
+Because proactive runs are easy to fake with prompt echoing, live proactive
+E2E should also prove repo-reader search, selected-skill metadata,
+prompt-visible tool names, model provenance, and usage telemetry.
 
 2026-05-30 standing-orders follow-up: OpenClaw distinguishes standing orders
 from cron, heartbeat, hooks, and task flow: they are durable authority programs
@@ -1915,6 +1918,10 @@ message be the active request. GitClaw should do the same for
 `gitclaw:channel-message` marker. That allows model-free slash commands from
 Telegram/Slack and gives channel E2E tests a stable path during model
 rate-limit spikes.
+Model-backed channel-message E2E should not stop at transcript reconstruction:
+it should force repo-reader search from the mirrored message and assert model,
+prompt, tool, and usage markers while keeping hidden channel sentinels out of
+the response.
 
 2026-05-30 channel state follow-up: Telegram long polling and Slack gateway
 experiments need durable offset/dedupe state before any runner loop can be

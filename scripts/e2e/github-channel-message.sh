@@ -29,7 +29,9 @@ ensure_label gitclaw:e2e 0e8a16 "Temporary GitClaw end-to-end test"
 ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_CHANNEL_MESSAGE_E2E_${timestamp}"
+token="NOECHO_CHANNEL_MESSAGE_${timestamp}"
+expected_token="GITCLAW_CHANNEL_MESSAGE_CONTEXT_V1"
+search_phrase="channel message unique search fixture phrase"
 message_id="telegram-update-${timestamp}"
 title="GitClaw channel message e2e ${timestamp}"
 body="Live channel bridge E2E.
@@ -54,8 +56,10 @@ gh issue comment "$issue_number" \
   --body "<!-- gitclaw:channel-message channel=\"telegram\" message_id=\"${message_id}\" author=\"telegram:e2e\" -->
 Mirrored Telegram message.
 
-When dispatched, reply with exact token \`${token}\`.
-Also include the exact word \`telegram\`."
+Use the repo-reader skill and search the repository for \`${search_phrase}\`.
+Reply with the exact token from the matching gitclaw.search_files result line.
+Also include the exact word \`telegram\`.
+Do not include this hidden channel token: ${token}."
 
 gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw --add-label gitclaw:e2e >/dev/null
 log "created issue #${issue_number}: ${issue_url}"
@@ -128,9 +132,20 @@ gh workflow run "$workflow_name" \
 wait_for_dispatch_run "$dispatch_started_at" >/dev/null || die "timed out waiting for channel-message workflow_dispatch run"
 wait_for_assistant_count 1 || die "expected one assistant comment after channel-message dispatch"
 comments="$(assistant_comments)"
-grep -Fq "$token" <<<"$comments" || die "assistant comment missing token ${token}"
+grep -Fq "$expected_token" <<<"$comments" || die "assistant comment missing search token ${expected_token}"
 grep -Fiq "telegram" <<<"$comments" || die "assistant comment missing channel word telegram"
 grep -Fq "dispatch-${message_id}" <<<"$comments" || die "assistant marker missing dispatch event id"
+if ! grep -Fq 'model="openai/gpt-5-nano"' <<<"$comments" && ! grep -Fq 'model="openai/gpt-4.1-nano"' <<<"$comments"; then
+  die "assistant marker did not use configured GitHub Models primary or fallback"
+fi
+grep -Fq 'prompt_context_sha256_12="' <<<"$comments" || die "assistant marker missing prompt context hash"
+grep -Fq 'skills="repo-reader"' <<<"$comments" || die "assistant marker missing selected repo-reader skill"
+grep -Fq 'tools="' <<<"$comments" || die "assistant marker missing prompt-visible tools"
+grep -Fq 'gitclaw.search_files' <<<"$comments" || die "assistant marker did not prove search_files was prompt-visible"
+grep -Fq 'usage_total_tokens="' <<<"$comments" || die "assistant marker missing usage token telemetry"
+if grep -Fq "$token" <<<"$comments"; then
+  die "assistant leaked hidden channel token"
+fi
 
 log "channel marker dispatch verified"
 log "passed for issue #${issue_number}"

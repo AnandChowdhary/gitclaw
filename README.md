@@ -327,7 +327,9 @@ scripts/e2e/github-secrets-risk-report.sh
 scripts/e2e/github-plugins-risk-report.sh
 scripts/e2e/github-plugins-mcp-report.sh
 scripts/e2e/github-profile-risk-report.sh
+scripts/e2e/github-channel-message.sh
 scripts/e2e/github-channels-info-report.sh
+scripts/e2e/github-proactive.sh
 scripts/e2e/github-proactive-info-report.sh
 scripts/e2e/github-proactive-risk-report.sh
 scripts/e2e/github-session-risk-report.sh

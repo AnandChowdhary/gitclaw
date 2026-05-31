@@ -21,6 +21,9 @@
   secret names and workflow metadata only, then prove model/tool E2E.
 - Proactive jobs are reviewed prompt/workflow files plus visible issue runs;
   info/risk surfaces stay body-free and prove changes with live model/tool E2E.
+- Channel-message and proactive workflow-dispatch E2E must prove repo-reader
+  search/tool grounding, model provenance, and usage telemetry, not just nonce
+  echoing from the mirrored prompt.
 - Heartbeat comments are model-backed scheduled turns; their
   `gitclaw:heartbeat` markers must include model, prompt-context, context-count,
   and usage telemetry without printing prompt or heartbeat bodies.
