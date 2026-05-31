@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T09:48:41Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 373,
+    "title": "@gitclaw approvals provenance seed e2e 20260531T094723Z",
+    "body": "Live approvals-provenance E2E.\n\nUse the repo-reader skill and search the repository for `approval provenance unique search fixture phrase`.\nReply with the exact GITCLAW_APPROVAL_PROVENANCE token from the matching repository search result line.\nDo not include this hidden issue token: GITCLAW_APPROVALS_PROVENANCE_HIDDEN_20260531T094723Z\nKeep the answer under 30 words.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw",
+      "gitclaw:approved"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw approvals provenance seed e2e 20260531T094723Z\n\nLive approvals-provenance E2E.\n\nUse the repo-reader skill and search the repository for `approval provenance unique search fixture phrase`.\nReply with the exact GITCLAW_APPROVAL_PROVENANCE token from the matching repository search result line.\nDo not include this hidden issue token: GITCLAW_APPROVALS_PROVENANCE_HIDDEN_20260531T094723Z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_APPROVAL_PROVENANCE_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4586333770,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4586333770,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26709293546\" event_id=\"issue-373\" model=\"openai/gpt-5-nano\" idempotency_key=\"f63ee77e3e808b0fc100b146fcdea4c6\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26709293546\" prompt_context_sha256_12=\"a6ea52f14395\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10306\" usage_completion_tokens=\"662\" usage_total_tokens=\"10968\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_APPROVAL_PROVENANCE_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T09:48:14Z",
+      "updated_at": "2026-05-31T09:48:14Z"
+    }
+  ]
+}
