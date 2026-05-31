@@ -201,7 +201,7 @@ SECRET_SKILLS_INSTALL_PLAN_CLI_BODY
 			t.Fatalf("skills install-plan returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Skill Install Plan Report", "scope: `local-cli`", "install_plan_status: `needs_review`", "operation: `install-plan`", "target_type: `registry-name`", "safe_name_candidate: `repo-reader`", "destination_path: `.gitclaw/SKILLS/repo-reader/SKILL.md`", "destination_exists: `true`", "existing_skill_matches: `1`", "remote_fetch_allowed: `false`", "installer_scripts_run: `false`", "repository_mutation_allowed: `false`", "llm_e2e_required_after_change: `true`", "raw_skill_body_included: `false`", "skill_name=`repo-reader`", "code=`existing_skill_found`"} {
+	for _, want := range []string{"GitClaw Skill Install Plan Report", "scope: `local-cli`", "install_plan_status: `needs_review`", "operation: `install-plan`", "target_type: `registry-name`", "safe_name_candidate: `repo-reader`", "destination_path: `.gitclaw/SKILLS/repo-reader/SKILL.md`", "destination_exists: `true`", "existing_skill_matches: `1`", "existing_skill_hashes:", "upgrade_target_required: `false`", "existing_skill_required: `false`", "remote_fetch_allowed: `false`", "installer_scripts_run: `false`", "repository_mutation_allowed: `false`", "llm_e2e_required_after_change: `true`", "raw_skill_body_included: `false`", "skill_name=`repo-reader`", "code=`existing_skill_found`"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("skills install-plan output missing %q:\n%s", want, output)
 		}
@@ -215,10 +215,24 @@ SECRET_SKILLS_INSTALL_PLAN_CLI_BODY
 			t.Fatalf("skills upgrade-plan returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"operation: `upgrade-plan`", "install_plan_status: `blocked`", "destination_path: `.gitclaw/SKILLS/missing-skill/SKILL.md`", "existing_skill_matches: `0`", "code=`upgrade_target_missing`"} {
+	for _, want := range []string{"operation: `upgrade-plan`", "install_plan_status: `blocked`", "destination_path: `.gitclaw/SKILLS/missing-skill/SKILL.md`", "existing_skill_matches: `0`", "existing_skill_hashes: `none`", "upgrade_target_required: `true`", "existing_skill_required: `true`", "llm_e2e_required_after_skill_upgrade_plan_change: `true`", "code=`upgrade_target_missing`"} {
 		if !strings.Contains(upgradeOutput, want) {
 			t.Fatalf("skills upgrade-plan output missing %q:\n%s", want, upgradeOutput)
 		}
+	}
+
+	existingUpgradeOutput := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"skills", "upgrade-plan", "repo-reader"}); err != nil {
+			t.Fatalf("skills upgrade-plan returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"operation: `upgrade-plan`", "install_plan_status: `needs_review`", "destination_path: `.gitclaw/SKILLS/repo-reader/SKILL.md`", "destination_exists: `true`", "existing_skill_matches: `1`", "existing_skill_hashes:", "upgrade_target_required: `true`", "existing_skill_required: `true`", "remote_fetch_allowed: `false`", "installer_scripts_run: `false`", "repository_mutation_allowed: `false`", "llm_e2e_required_after_skill_upgrade_plan_change: `true`", "raw_skill_body_included: `false`", "skill_name=`repo-reader`", "code=`existing_skill_found`"} {
+		if !strings.Contains(existingUpgradeOutput, want) {
+			t.Fatalf("skills upgrade-plan existing output missing %q:\n%s", want, existingUpgradeOutput)
+		}
+	}
+	if strings.Contains(existingUpgradeOutput, "SECRET_SKILLS_INSTALL_PLAN_CLI_BODY") {
+		t.Fatalf("skills upgrade-plan leaked skill body:\n%s", existingUpgradeOutput)
 	}
 }
 

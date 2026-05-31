@@ -51,6 +51,9 @@ func renderSkillInstallPlanReport(ev Event, repoContext RepoContext, operation, 
 	fmt.Fprintf(&b, "- destination_path: `%s`\n", destinationPath)
 	fmt.Fprintf(&b, "- destination_exists: `%t`\n", destinationExists)
 	fmt.Fprintf(&b, "- existing_skill_matches: `%d`\n", len(matches))
+	fmt.Fprintf(&b, "- existing_skill_hashes: `%s`\n", inlineListOrNone(skillInstallExistingSkillHashes(matches)))
+	fmt.Fprintf(&b, "- upgrade_target_required: `%t`\n", operation == "upgrade-plan")
+	fmt.Fprintf(&b, "- existing_skill_required: `%t`\n", operation == "upgrade-plan")
 	fmt.Fprintf(&b, "- available_skills: `%d`\n", availableSkillCount(repoContext))
 	fmt.Fprintf(&b, "- run_mode: `%s`\n", "read-only")
 	fmt.Fprintf(&b, "- remote_fetch_allowed: `%t`\n", false)
@@ -59,6 +62,9 @@ func renderSkillInstallPlanReport(ev Event, repoContext RepoContext, operation, 
 	fmt.Fprintf(&b, "- repository_mutation_allowed: `%t`\n", false)
 	fmt.Fprintf(&b, "- manual_review_required: `%t`\n", true)
 	fmt.Fprintf(&b, "- llm_e2e_required_after_change: `%t`\n", true)
+	if operation == "upgrade-plan" {
+		fmt.Fprintf(&b, "- llm_e2e_required_after_skill_upgrade_plan_change: `%t`\n", true)
+	}
 	fmt.Fprintf(&b, "- raw_target_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_manifest_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_skill_body_included: `%t`\n", false)
@@ -262,6 +268,20 @@ func matchingInstallPlanSkillSummaries(skills []SkillSummary, target skillInstal
 		}
 	}
 	return matches
+}
+
+func skillInstallExistingSkillHashes(matches []SkillSummary) []string {
+	var hashes []string
+	seen := map[string]bool{}
+	for _, match := range matches {
+		hash := strings.TrimSpace(match.SHA)
+		if hash == "" || seen[hash] {
+			continue
+		}
+		seen[hash] = true
+		hashes = append(hashes, hash)
+	}
+	return hashes
 }
 
 func skillInstallPlanFindings(operation string, target skillInstallPlanTarget, matches []SkillSummary, validation SkillValidationReport) []skillInstallPlanFinding {

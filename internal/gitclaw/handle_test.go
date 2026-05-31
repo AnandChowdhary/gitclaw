@@ -1465,7 +1465,7 @@ SKILL_INSTALL_PLAN_HANDLER_SECRET
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Skill Install Plan Report", "Generated without a model call", "model=\"gitclaw/skills\"", "repository: `owner/repo`", "issue: `#137`", "install_plan_status: `needs_review`", "operation: `install-plan`", "target_type: `registry-name`", "safe_name_candidate: `repo-reader`", "destination_path: `.gitclaw/SKILLS/repo-reader/SKILL.md`", "destination_exists: `true`", "existing_skill_matches: `1`", "remote_fetch_allowed: `false`", "installer_scripts_run: `false`", "repository_mutation_allowed: `false`", "raw_skill_body_included: `false`", "skill_name=`repo-reader`", "code=`existing_skill_found`"} {
+	for _, want := range []string{"GitClaw Skill Install Plan Report", "Generated without a model call", "model=\"gitclaw/skills\"", "repository: `owner/repo`", "issue: `#137`", "install_plan_status: `needs_review`", "operation: `install-plan`", "target_type: `registry-name`", "safe_name_candidate: `repo-reader`", "destination_path: `.gitclaw/SKILLS/repo-reader/SKILL.md`", "destination_exists: `true`", "existing_skill_matches: `1`", "existing_skill_hashes:", "upgrade_target_required: `false`", "existing_skill_required: `false`", "remote_fetch_allowed: `false`", "installer_scripts_run: `false`", "repository_mutation_allowed: `false`", "raw_skill_body_included: `false`", "skill_name=`repo-reader`", "code=`existing_skill_found`"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("skills install-plan report missing %q:\n%s", want, body)
 		}
@@ -1477,6 +1477,60 @@ SKILL_INSTALL_PLAN_HANDLER_SECRET
 	}
 	if !hasLabel(github.IssueLabels[137], "gitclaw:done") || hasLabel(github.IssueLabels[137], "gitclaw:running") || hasLabel(github.IssueLabels[137], "gitclaw:error") {
 		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[137])
+	}
+}
+
+func TestHandleSkillsUpgradePlanCommandPostsReportWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Use read-only repository files.
+---
+
+SKILL_UPGRADE_PLAN_HANDLER_SECRET
+`)
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 148,
+			"title": "@gitclaw /skills upgrade-plan repo-reader",
+			"body": "Hidden skill upgrade plan body token: SKILL_UPGRADE_PLAN_HANDLER_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{148: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic skills upgrade-plan command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Skill Install Plan Report", "Generated without a model call", "model=\"gitclaw/skills\"", "repository: `owner/repo`", "issue: `#148`", "install_plan_status: `needs_review`", "operation: `upgrade-plan`", "target_type: `registry-name`", "safe_name_candidate: `repo-reader`", "destination_path: `.gitclaw/SKILLS/repo-reader/SKILL.md`", "destination_exists: `true`", "existing_skill_matches: `1`", "existing_skill_hashes:", "upgrade_target_required: `true`", "existing_skill_required: `true`", "remote_fetch_allowed: `false`", "installer_scripts_run: `false`", "repository_mutation_allowed: `false`", "llm_e2e_required_after_skill_upgrade_plan_change: `true`", "raw_skill_body_included: `false`", "skill_name=`repo-reader`", "code=`existing_skill_found`"} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("skills upgrade-plan report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SKILL_UPGRADE_PLAN_HANDLER_SECRET", "SKILL_UPGRADE_PLAN_HANDLER_BODY_SECRET"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("skills upgrade-plan report leaked %q:\n%s", leaked, body)
+		}
+	}
+	if !hasLabel(github.IssueLabels[148], "gitclaw:done") || hasLabel(github.IssueLabels[148], "gitclaw:running") || hasLabel(github.IssueLabels[148], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[148])
 	}
 }
 

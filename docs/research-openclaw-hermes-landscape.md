@@ -148,6 +148,20 @@ outputs. Any change to this surface should be paired with a live GitHub Models
 conversation E2E so the deterministic audit does not become a substitute for
 testing real skill selection and tool usage.
 
+2026-05-31 skill-upgrade-plan follow-up: OpenClaw's current skills CLI
+documents `openclaw skills update <slug>` / `update --all` for tracked
+ClawHub installs, while Hermes' skills guide tells users to update skills when
+they go stale and describes installed skills as persistent, on-demand
+procedural knowledge. GitClaw should keep the maintenance pressure but avoid
+the risky parts in Actions: `@gitclaw /skills upgrade-plan <target>` and
+`gitclaw skills upgrade-plan <target>` should require an existing repo-local
+skill match, report only safe target/match metadata and hashes, never fetch
+registries or remote URLs, never run installers, never mutate
+`.gitclaw/SKILLS`, and require a live GitHub Models repo-reader/tool E2E after
+planner changes or accepted skill edits. Sources: OpenClaw skills CLI
+reference (`https://docs.openclaw.ai/cli/skills`) and Hermes Working with
+Skills guide (`https://hermes-agent.nousresearch.com/docs/guides/work-with-skills/`).
+
 2026-05-31 prompt-pack follow-up: OpenClaw's token-use docs make context
 diagnostics a first-class operator surface: system prompt pieces, conversation
 history, tool results, attachments, compaction summaries, and provider wrappers
