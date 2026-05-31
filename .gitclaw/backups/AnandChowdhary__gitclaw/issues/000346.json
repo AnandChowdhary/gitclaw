@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T03:40:30Z",
+  "generated_at": "2026-05-31T03:41:44Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 346,
     "title": "@gitclaw session status seed e2e 20260531T033928Z",
@@ -10,7 +10,8 @@
     "author": "AnandChowdhary",
     "author_association": "OWNER",
     "labels": [
-      "gitclaw"
+      "gitclaw",
+      "gitclaw:done"
     ]
   },
   "transcript": [
@@ -31,6 +32,24 @@
       "CommentID": 4585609520,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /session status\n\nPlease show the body-free session status.\nHidden status request token: GITCLAW_SESSION_STATUS_COMMENT_HIDDEN_20260531T033928Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4585610542,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Session Status Report\n\nGenerated without a model call.\n\n- scope: `issue-thread`\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#346`\n- event_kind: `issue_comment`\n- active_command: `/session status`\n- session_status: `ok`\n- label_names: `gitclaw, gitclaw:done`\n- raw_comments: `2`\n- transcript_messages: `3`\n- user_messages: `2`\n- assistant_messages: `1`\n- assistant_turn_comments: `1`\n- model_backed_assistant_turns: `1`\n- deterministic_assistant_turns: `0`\n- model_names: `openai/gpt-4.1-nano`\n- prompt_visible_skill_names: `repo-reader`\n- prompt_visible_tool_names: `gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index`\n- latest_user_message_present: `true`\n- latest_assistant_message_present: `true`\n- latest_assistant_model: `openai/gpt-4.1-nano`\n- latest_assistant_prompt_context_sha256_12: `442cc8287d9a`\n- channel_thread_issue: `false`\n- proactive_run_issue: `false`\n- raw_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_session_status_change: `true`\n\nThis Hermes-inspired status readback summarizes the current GitHub issue session without replaying bodies. It reports labels, counts, model names, latest-message hashes, and assistant-marker provenance only; issue bodies, comment bodies, assistant replies, prompts, search queries, and tool outputs are not included.\n\n### Latest Message Hashes\n- kind=`user` present=`true` source=`comment:4585610542` actor=`AnandChowdhary` trusted=`true` edited=`false` bytes=`151` lines=`4` sha256_12=`87602e07db78`\n- kind=`assistant` present=`true` source=`comment:4585609520` actor=`github-actions[bot]` trusted=`true` edited=`false` bytes=`25` lines=`1` sha256_12=`1eb3886519bc`\n\n### Latest Assistant Marker\n- model=`openai/gpt-4.1-nano` prompt_context_sha256_12=`442cc8287d9a` context_documents=`16` selected_skills=`1` tool_outputs=`3` skills=`repo-reader` tools=`gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index`\n\n### Prompt Surface Counts\n- kind=`skill` name=`repo-reader` turns=`1`\n- kind=`tool` name=`gitclaw.list_files` turns=`1`\n- kind=`tool` name=`gitclaw.search_files` turns=`1`\n- kind=`tool` name=`gitclaw.skill_index` turns=`1`\n\n### Status Notes\n- issue comments remain the canonical session log\n- assistant markers remain the canonical model/provenance index\n- backup JSON can replay the same body-free status locally\n- raw issue bodies, comment bodies, assistant replies, prompts, and tool outputs are excluded",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4585612150,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -41,6 +60,22 @@
       "author_association": "NONE",
       "created_at": "2026-05-31T03:40:10Z",
       "updated_at": "2026-05-31T03:40:10Z"
+    },
+    {
+      "id": 4585610542,
+      "body": "@gitclaw /session status\n\nPlease show the body-free session status.\nHidden status request token: GITCLAW_SESSION_STATUS_COMMENT_HIDDEN_20260531T033928Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-05-31T03:40:43Z",
+      "updated_at": "2026-05-31T03:40:43Z"
+    },
+    {
+      "id": 4585612150,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26702365334\" event_id=\"comment-4585610542\" model=\"gitclaw/session\" idempotency_key=\"1a885386dbd64566873aeaca9ffcb9cb\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26702365334\" --\u003e\n## GitClaw Session Status Report\n\nGenerated without a model call.\n\n- scope: `issue-thread`\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#346`\n- event_kind: `issue_comment`\n- active_command: `/session status`\n- session_status: `ok`\n- label_names: `gitclaw, gitclaw:done`\n- raw_comments: `2`\n- transcript_messages: `3`\n- user_messages: `2`\n- assistant_messages: `1`\n- assistant_turn_comments: `1`\n- model_backed_assistant_turns: `1`\n- deterministic_assistant_turns: `0`\n- model_names: `openai/gpt-4.1-nano`\n- prompt_visible_skill_names: `repo-reader`\n- prompt_visible_tool_names: `gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index`\n- latest_user_message_present: `true`\n- latest_assistant_message_present: `true`\n- latest_assistant_model: `openai/gpt-4.1-nano`\n- latest_assistant_prompt_context_sha256_12: `442cc8287d9a`\n- channel_thread_issue: `false`\n- proactive_run_issue: `false`\n- raw_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_session_status_change: `true`\n\nThis Hermes-inspired status readback summarizes the current GitHub issue session without replaying bodies. It reports labels, counts, model names, latest-message hashes, and assistant-marker provenance only; issue bodies, comment bodies, assistant replies, prompts, search queries, and tool outputs are not included.\n\n### Latest Message Hashes\n- kind=`user` present=`true` source=`comment:4585610542` actor=`AnandChowdhary` trusted=`true` edited=`false` bytes=`151` lines=`4` sha256_12=`87602e07db78`\n- kind=`assistant` present=`true` source=`comment:4585609520` actor=`github-actions[bot]` trusted=`true` edited=`false` bytes=`25` lines=`1` sha256_12=`1eb3886519bc`\n\n### Latest Assistant Marker\n- model=`openai/gpt-4.1-nano` prompt_context_sha256_12=`442cc8287d9a` context_documents=`16` selected_skills=`1` tool_outputs=`3` skills=`repo-reader` tools=`gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index`\n\n### Prompt Surface Counts\n- kind=`skill` name=`repo-reader` turns=`1`\n- kind=`tool` name=`gitclaw.list_files` turns=`1`\n- kind=`tool` name=`gitclaw.search_files` turns=`1`\n- kind=`tool` name=`gitclaw.skill_index` turns=`1`\n\n### Status Notes\n- issue comments remain the canonical session log\n- assistant markers remain the canonical model/provenance index\n- backup JSON can replay the same body-free status locally\n- raw issue bodies, comment bodies, assistant replies, prompts, and tool outputs are excluded",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T03:41:23Z",
+      "updated_at": "2026-05-31T03:41:23Z"
     }
   ]
 }
