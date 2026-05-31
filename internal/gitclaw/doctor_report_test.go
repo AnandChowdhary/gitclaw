@@ -22,4 +22,15 @@ grep -Fq 'gitclaw.search_files' <<<"$model_comment"
 	if !doctorScriptHasModelFollowupCoverage(real) {
 		t.Fatalf("real issue_comment follow-up script should count as model follow-up coverage")
 	}
+
+	heartbeatStyle := `
+gh issue comment "$issue_number" --body "@gitclaw continue"
+wait_for_issue_comment_run "$comment_started_at"
+wait_for_assistant_count 1
+grep -Fq 'prompt_context_sha256_12="' <<<"$assistant_comment"
+grep -Fq 'gitclaw.search_files' <<<"$assistant_comment"
+`
+	if !doctorScriptHasModelFollowupCoverage(heartbeatStyle) {
+		t.Fatalf("heartbeat-style issue_comment follow-up should count even when it is the first assistant-turn marker")
+	}
 }

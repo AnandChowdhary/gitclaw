@@ -809,6 +809,14 @@ with a normal issue-comment model/tool turn. That proves the no-daemon
 heartbeat surface can still rejoin the ordinary GitHub issue conversation path
 after the operator has inspected it.
 
+2026-05-31 heartbeat runtime E2E follow-up: the heartbeat runner itself needs
+the same continuation proof, not only the `/heartbeat` report. After a real
+workflow-dispatch heartbeat and duplicate-slot suppression, the live harness
+should post a normal `@gitclaw` comment in the same heartbeat issue and require
+a GitHub Models repo-reader/search answer. That proves scheduled wakeups can
+hand the issue back to ordinary conversation without a resident daemon or
+socket loop.
+
 2026-05-30 heartbeat-risk follow-up: Current OpenClaw heartbeat docs frame
 heartbeat as scheduled proactive awareness, `HEARTBEAT.md` context, and
 `HEARTBEAT_OK` quiet suppression, while Hermes cron docs emphasize fresh

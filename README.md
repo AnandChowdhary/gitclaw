@@ -441,6 +441,10 @@ The heartbeat-report harness now checks the body-free scheduled heartbeat
 inventory and then posts a normal GitHub Models repo-reader/search follow-up,
 so `/heartbeat` changes prove both operator visibility and regular
 conversation continuity.
+The heartbeat runtime harness now does the same after a real workflow-dispatch
+heartbeat and duplicate-slot check, proving scheduled wakeups can hand the
+issue back to ordinary `@gitclaw` conversation with repo-reader/search
+grounding.
 The channel-message harness now proves both sides of the Slack/Telegram bridge:
 the mirrored channel comment can wake a model-backed repo-reader/search turn by
 `workflow_dispatch`, and the same issue can continue with a normal

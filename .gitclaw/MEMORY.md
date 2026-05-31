@@ -68,6 +68,8 @@
 - Heartbeat comments are model-backed scheduled turns; their
   `gitclaw:heartbeat` markers must include model, prompt-context, context-count,
   and usage telemetry without printing prompt or heartbeat bodies.
+- Heartbeat runtime changes need two proofs: workflow-dispatch heartbeat plus
+  same-slot idempotency, then a normal model/tool issue-comment follow-up.
 - Heartbeat report changes need two proofs: body-free workflow/context/marker
   inventory, plus a normal model/tool issue-comment follow-up.
 - Checkpoint report changes need two proofs: body-free HEAD/worktree/backup

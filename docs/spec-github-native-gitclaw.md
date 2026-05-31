@@ -5137,7 +5137,13 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the marker includes the GitHub Models model id, prompt-context
      hash, context counts, and usage telemetry,
    - dispatch the same slot again,
-   - assert no duplicate heartbeat comment is created.
+   - assert no duplicate heartbeat comment is created,
+   - post a normal `@gitclaw` issue-comment follow-up requiring `repo-reader`
+     and bounded repository search,
+   - assert the follow-up assistant turn is GitHub Models-backed, selects
+     `repo-reader`, exposes `gitclaw.search_files`, recovers
+     `GITCLAW_HEARTBEAT_FOLLOWUP_CONTEXT_V1`, and includes prompt provenance
+     plus usage telemetry.
 
 10. **Workflow dispatch wakeup**
 
@@ -6038,7 +6044,10 @@ examples/workflows/gitclaw.yml
 - Bot-loop prevention, PR-comment ignore, disabled-label behavior, and idempotent retry behavior are covered by automated tests; bot-loop prevention is verified live.
 - A `gh`-driven heartbeat E2E harness verifies a real scheduled-workflow path
   via `workflow_dispatch`, including issue transcript context,
-  `.gitclaw/HEARTBEAT.md`, exact token content, and same-slot idempotency.
+  `.gitclaw/HEARTBEAT.md`, exact token content, and same-slot idempotency. The
+  same live issue then receives a normal `@gitclaw` follow-up that must make a
+  GitHub Models call, select `repo-reader`, expose `gitclaw.search_files`, and
+  recover a heartbeat follow-up repository-search fixture token.
 - A `gh`-driven heartbeat-report E2E harness verifies `@gitclaw /heartbeat`
   reports workflow triggers, permissions, heartbeat context metadata, label
   state, marker counts, and the runner/model-call contract without a model call

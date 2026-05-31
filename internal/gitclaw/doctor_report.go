@@ -306,9 +306,18 @@ func doctorScriptHasModelCoverage(text string) bool {
 func doctorScriptHasModelFollowupCoverage(text string) bool {
 	return strings.Contains(text, "gh issue comment") &&
 		strings.Contains(text, "issue_comment") &&
-		strings.Contains(text, "wait_for_assistant_count 2") &&
+		doctorScriptWaitsForAssistantCount(text) &&
 		strings.Contains(text, "prompt_context_sha256_12") &&
 		strings.Contains(text, "gitclaw.search_files")
+}
+
+func doctorScriptWaitsForAssistantCount(text string) bool {
+	for count := 1; count <= 9; count++ {
+		if strings.Contains(text, fmt.Sprintf("wait_for_assistant_count %d", count)) {
+			return true
+		}
+	}
+	return false
 }
 
 func doctorScriptHasWorkflowDispatchCoverage(text string) bool {
