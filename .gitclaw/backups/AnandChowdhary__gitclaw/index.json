@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T17:20:50Z",
+  "generated_at": "2026-05-31T17:25:40Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 392,
+  "count": 393,
   "issues": [
     {
       "number": 3,
@@ -4902,6 +4902,18 @@
       ],
       "comment_count": 3,
       "transcript_messages": 4
+    },
+    {
+      "number": 433,
+      "title": "@gitclaw /migrate plan hermes e2e 20260531T172434Z",
+      "path": "issues/000433.json",
+      "backup_generated_at": "2026-05-31T17:25:39Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }
