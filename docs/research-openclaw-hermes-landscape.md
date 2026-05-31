@@ -198,6 +198,17 @@ counts, codes, severities, and hashes. Issue-side `/backup risk` stays a
 deferred intent because the raw backup branch is only written after the
 assistant turn.
 
+2026-05-31 backup-provenance follow-up: OpenClaw's backup verify surface and
+Hermes' checkpoint/session export docs both assume operators can prove state
+before recovery. GitClaw's git-native backup store can add a stronger branch
+provenance check: `gitclaw backup provenance` verifies the fetched
+`gitclaw-backups` tree, then reports whether the index, README, and issue
+payload files are tracked, clean, and backed by git commits. The report should
+hash file contents and commit subjects, include short commit IDs and commit
+dates, and explicitly omit raw backup bodies, raw commit subject text, and
+author identities. Issue-side `/backup provenance` remains a deferred command
+intent, and its live E2E should include a second GitHub Models/tool follow-up.
+
 2026-05-29 backup-manifest follow-up: OpenClaw's manifest-centered backup
 verification and Hermes' portable session export both point to a compact
 provenance view. GitClaw should expose a local `backup manifest` command over

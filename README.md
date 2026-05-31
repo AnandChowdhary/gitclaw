@@ -147,6 +147,7 @@ gitclaw backup verify
 gitclaw backup coverage --issue <number>
 gitclaw backup drill --issue <number>
 gitclaw backup risk
+gitclaw backup provenance
 gitclaw backup manifest
 gitclaw backup list
 gitclaw backup timeline
@@ -166,6 +167,12 @@ gitclaw runs current
 gitclaw runs verify
 gitclaw runs history --backup <issue.json>
 ```
+
+`gitclaw backup provenance` is the body-free git-history audit for fetched
+`gitclaw-backups` branches. It verifies the backup tree, then reports whether
+the index, README, and issue payload files are tracked, clean, and backed by
+git commits without printing raw backup bodies, commit subjects, or author
+identities.
 
 Operational surfaces:
 
@@ -229,6 +236,7 @@ Run a live E2E harness against the current GitHub repository:
 ```bash
 scripts/e2e/github-backup-risk-report.sh
 scripts/e2e/github-backup-coverage.sh
+scripts/e2e/github-backup-provenance.sh
 scripts/e2e/github-backup-timeline.sh
 scripts/e2e/github-agents-risk-report.sh
 scripts/e2e/github-nodes-risk-report.sh

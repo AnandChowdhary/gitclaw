@@ -61,6 +61,9 @@ func RenderBackupReport(ev Event, cfg Config, comments []Comment, transcript []T
 	if request.Name == "risk" {
 		writeBackupIssueRiskSummary(&b)
 	}
+	if request.Name == "provenance" {
+		writeBackupIssueProvenanceSummary(&b)
+	}
 	if request.Name == "drill" {
 		writeBackupIssueDrillSummary(&b)
 	}
@@ -81,10 +84,11 @@ func RenderBackupReport(ev Event, cfg Config, comments []Comment, transcript []T
 	b.WriteString("- `gitclaw backup coverage --root .gitclaw/backups --repo <owner/repo> --issue <number>`\n")
 	b.WriteString("- `gitclaw backup drill --root .gitclaw/backups --repo <owner/repo> --issue <number>`\n")
 	b.WriteString("- `gitclaw backup risk --root .gitclaw/backups --repo <owner/repo>`\n")
+	b.WriteString("- `gitclaw backup provenance --root .gitclaw/backups --repo <owner/repo>`\n")
 	b.WriteString("- `gitclaw backup timeline --root .gitclaw/backups --repo <owner/repo> --limit 20`\n")
 	b.WriteString("- `gitclaw backup search --root .gitclaw/backups --repo <owner/repo> <query>`\n")
 	b.WriteString("- `gitclaw backup retention-plan --root .gitclaw/backups --repo <owner/repo> --keep-latest 50`\n")
-	b.WriteString("- validates the repo-scoped index, README, canonical issue paths, JSON schema version, counts, timestamps, and traversal-safe payload paths; search reports hashes and metadata without printing raw backup bodies\n")
+	b.WriteString("- validates the repo-scoped index, README, canonical issue paths, JSON schema version, counts, timestamps, traversal-safe payload paths, and git provenance; search reports hashes and metadata without printing raw backup bodies\n")
 
 	return strings.TrimSpace(b.String())
 }
@@ -137,6 +141,12 @@ func requestedBackupIssueCommand(ev Event, cfg Config) backupIssueCommand {
 			Name:         "risk",
 			Status:       "ok",
 			LocalCommand: fmt.Sprintf("gitclaw backup risk --root %s --repo %s", defaultBackupRoot, backupReportRepo(ev.Repo)),
+		}
+	case "provenance", "git-provenance":
+		return backupIssueCommand{
+			Name:         "provenance",
+			Status:       "ok",
+			LocalCommand: fmt.Sprintf("gitclaw backup provenance --root %s --repo %s", defaultBackupRoot, backupReportRepo(ev.Repo)),
 		}
 	case "manifest":
 		return backupIssueCommand{
@@ -225,7 +235,7 @@ func writeBackupIssueCommandSummary(b *strings.Builder, request backupIssueComma
 			b.WriteString("- raw search query is not printed; only query hash and term count are shown\n")
 		}
 	case "unknown":
-		b.WriteString("- unknown backup subcommand; supported issue intents are `verify`, `coverage`, `drill`, `risk`, `manifest`, `list`, `timeline`, `info`, `stats`, `search`, `export-jsonl`, `restore-plan`, and `retention-plan`\n")
+		b.WriteString("- unknown backup subcommand; supported issue intents are `verify`, `coverage`, `drill`, `risk`, `provenance`, `manifest`, `list`, `timeline`, `info`, `stats`, `search`, `export-jsonl`, `restore-plan`, and `retention-plan`\n")
 	case "invalid_issue":
 		b.WriteString("- invalid backup issue number; use `@gitclaw /backup info <issue-number>`, `@gitclaw /backup coverage <issue-number>`, `@gitclaw /backup drill <issue-number>`, or inspect the current issue without an explicit issue number\n")
 	default:
@@ -240,6 +250,16 @@ func writeBackupIssueRiskSummary(b *strings.Builder) {
 	b.WriteString("- backup_risk_categories: `integrity, path-safety, credential-handling, prompt-boundary, restore-safety, retention`\n")
 	b.WriteString("- raw_backup_payloads_scanned_issue_side: `false`\n")
 	b.WriteString("- llm_e2e_required_after_backup_risk_change: `true`\n")
+}
+
+func writeBackupIssueProvenanceSummary(b *strings.Builder) {
+	b.WriteString("- backup_provenance_status: `deferred`\n")
+	b.WriteString("- backup_provenance_execution: `local_fetched_backup_branch`\n")
+	b.WriteString("- backup_provenance_gates: `verify, git-history, body-free-output`\n")
+	b.WriteString("- raw_backup_payloads_scanned_issue_side: `false`\n")
+	b.WriteString("- raw_git_subjects_included: `false`\n")
+	b.WriteString("- author_identities_included: `false`\n")
+	b.WriteString("- llm_e2e_required_after_backup_provenance_change: `true`\n")
 }
 
 func writeBackupIssueDrillSummary(b *strings.Builder) {

@@ -184,6 +184,52 @@ func TestRenderBackupTimelineIssueCommandRecordsDeferredIntentWithoutBodies(t *t
 	}
 }
 
+func TestRenderBackupProvenanceIssueCommandRecordsDeferredIntentWithoutBodies(t *testing.T) {
+	ev := Event{
+		Repo: "owner/repo",
+		Issue: Issue{
+			Number: 97,
+			Title:  "@gitclaw /backup provenance e2e",
+			Body:   "BACKUP_PROVENANCE_INTENT_SECRET",
+		},
+	}
+	comments := []Comment{{
+		ID:   23,
+		Body: "<!-- gitclaw:assistant-turn idempotency_key=old -->\nBACKUP_PROVENANCE_COMMENT_SECRET",
+		User: User{Login: "github-actions[bot]", Type: "Bot"},
+	}}
+	transcript := []TranscriptMessage{
+		{Role: "user", Body: "BACKUP_PROVENANCE_TRANSCRIPT_SECRET"},
+	}
+
+	report := RenderBackupReport(ev, DefaultConfig(), comments, transcript)
+	for _, want := range []string{
+		"GitClaw Backup Report",
+		"requested_backup_command: `provenance`",
+		"backup_command_status: `ok`",
+		"requested_local_command: `gitclaw backup provenance --root .gitclaw/backups --repo owner/repo`",
+		"run `gitclaw backup provenance --root .gitclaw/backups --repo owner/repo` after fetching `gitclaw-backups`",
+		"backup_provenance_status: `deferred`",
+		"backup_provenance_execution: `local_fetched_backup_branch`",
+		"backup_provenance_gates: `verify, git-history, body-free-output`",
+		"raw_backup_payloads_scanned_issue_side: `false`",
+		"raw_git_subjects_included: `false`",
+		"author_identities_included: `false`",
+		"llm_e2e_required_after_backup_provenance_change: `true`",
+		"raw_bodies_included: `false`",
+		"`gitclaw backup provenance --root .gitclaw/backups --repo <owner/repo>`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("backup provenance report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"BACKUP_PROVENANCE_INTENT_SECRET", "BACKUP_PROVENANCE_COMMENT_SECRET", "BACKUP_PROVENANCE_TRANSCRIPT_SECRET", "@gitclaw /backup provenance e2e"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("backup provenance report leaked %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestRenderBackupDrillIssueCommandRecordsDeferredIntentWithoutBodies(t *testing.T) {
 	ev := Event{
 		Repo: "owner/repo",
