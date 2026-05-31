@@ -1924,6 +1924,16 @@ as the body-free dry run for progressive disclosure: one skill, selected state,
 gate state, bundle/request/always selection reasons, validation summary, no
 model call, no repo mutation, no raw request text, and no `SKILL.md` body dump.
 
+2026-05-31 skills-select-plan E2E hardening: OpenClaw's current skills docs
+frame skills as `SKILL.md` instruction packs loaded from bounded roots with
+allowlists and safety gates, while Hermes' current skills docs emphasize
+progressive disclosure through compact skill lists and on-demand `skill_view`
+loads. GitClaw's skill selection plan should therefore prove both halves after
+changes: the deterministic report remains metadata/hash-only and body-free,
+and a normal GitHub Models follow-up still selects `repo-reader`, exposes
+`gitclaw.search_files`, and recovers a fixture token through actual
+prompt-visible tool output.
+
 2026-05-31 skill-refresh-plan follow-up: OpenClaw's skill surface is built for
 a resident gateway that can maintain skill snapshots and refresh through local
 runtime control, while Hermes documents explicit skill lifecycle operations

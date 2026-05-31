@@ -179,6 +179,7 @@ SECRET_SKILL_SELECT_PLAN_BODY_TOKEN
 		"raw_request_text_included: `false`",
 		"raw_skill_body_included: `false`",
 		"llm_e2e_required_after_change: `true`",
+		"llm_e2e_required_after_skill_select_plan_change: `true`",
 		"skill_validation_status: `ok`",
 		"### Skill Match",
 		"skill_name=`repo-reader`",

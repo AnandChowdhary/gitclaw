@@ -65,6 +65,7 @@ func renderSkillSelectPlanReport(ev Event, repoContext RepoContext, name string,
 	fmt.Fprintf(&b, "- raw_request_text_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_skill_body_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- llm_e2e_required_after_change: `%t`\n", true)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_skill_select_plan_change: `%t`\n", true)
 	writeSkillValidationSummary(&b, validation)
 	if includeIssue {
 		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))

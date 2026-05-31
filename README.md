@@ -309,6 +309,10 @@ prompt-visible tool usage.
 The live tools-verify harness extends that gate to the stricter trust envelope:
 contract modes, registry/runtime-attestation non-goals, and input/output hashes
 stay body-free, then the model follow-up proves ordinary repo-reader search.
+The live skills-select-plan harness now applies the same two-proof rule to
+skill selection: selected-for-turn and gate metadata stay body-free, then a
+normal GitHub Models repo-reader/search follow-up proves the selected skill
+actually reaches inference.
 
 ## Testing
 

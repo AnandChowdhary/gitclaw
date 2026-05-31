@@ -1591,6 +1591,11 @@ raw requested skill string, prints raw request text, or dumps full `SKILL.md`
 bodies. It includes `llm_e2e_required_after_change=true` because skill
 selection changes must be proven with a live GitHub Models conversation E2E,
 not only deterministic report tests.
+It also includes `llm_e2e_required_after_skill_select_plan_change=true`;
+changes to the selection planner must be paired with a live follow-up that
+selects `repo-reader`, exposes `gitclaw.search_files`, and recovers a bounded
+repository-search fixture token without echoing skill-body, request-text, or
+issue-body sentinels.
 
 When called as `@gitclaw /skills refresh-plan` or
 `gitclaw skills refresh-plan`, GitClaw posts a body-free refresh-boundary
@@ -6520,6 +6525,10 @@ examples/workflows/gitclaw.yml
   `@gitclaw /skills select-plan repo-reader` explains selected-for-turn state,
   gate metadata, selection reasons, validation status, and the live-LLM E2E
   rule without a model call, raw request text, or full `SKILL.md` body leakage.
+  The same live issue then receives a normal issue-comment follow-up that must
+  make a GitHub Models call, select `repo-reader`, expose
+  `gitclaw.search_files`, recover the skills-select-plan repository-search
+  fixture token, and avoid hidden sentinel leakage.
 - A `gh`-driven skills-refresh-plan E2E harness verifies
   `@gitclaw /skills refresh-plan` explains per-turn skill discovery,
   current-checkout snapshot metadata, no resident watcher, no mid-run hot
