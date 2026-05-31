@@ -215,7 +215,9 @@ gh issue comment "$issue_number" \
   --repo "$repo" \
   --body "Use the repo-reader skill and search the repository for \`${search_phrase}\`.
 
-Reply with only the exact GITCLAW_SOUL_CATALOG token from the matching repository search result line.
+The matching repository search result line in \`docs/search-fixture.md\` has the form \`${search_phrase} => <token>\`.
+Reply with only the uppercase fixture token immediately after \`=>\`, including the \`_CONTEXT_V1\` suffix.
+Do not abbreviate the token to a prefix.
 Do not include this hidden follow-up token: ${followup_hidden_token}
 Keep the answer under 30 words." >/dev/null
 
