@@ -35,8 +35,8 @@ ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
 hidden_token="GITCLAW_TASKS_LEDGER_HIDDEN_${timestamp}"
 followup_hidden_token="GITCLAW_TASKS_LEDGER_FOLLOWUP_HIDDEN_${timestamp}"
-expected_token="GITCLAW_SEARCH_CONTEXT_V1"
-search_phrase="bounded repository search fixture phrase"
+expected_token="GITCLAW_TASKS_LEDGER_CONTEXT_V1"
+search_phrase="task ledger unique search fixture phrase"
 title="@gitclaw /tasks ledger e2e ${timestamp}"
 body="@gitclaw /tasks ledger
 
