@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-05-31T07:50:33Z`
-- issue_count: `327`
+- generated_at: `2026-05-31T08:02:35Z`
+- issue_count: `328`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -332,3 +332,4 @@
 | #362 | @gitclaw /plugins mcp provenance e2e 20260531T071314Z | `2026-05-31T07:15:39Z` | 3 | 4 | `issues/000362.json` |
 | #363 | @gitclaw /tools defer-plan e2e 20260531T072935Z | `2026-05-31T07:32:12Z` | 3 | 4 | `issues/000363.json` |
 | #364 | @gitclaw /prompt pack e2e 20260531T074748Z | `2026-05-31T07:50:32Z` | 3 | 4 | `issues/000364.json` |
+| #365 | @gitclaw /prompt cache e2e 20260531T080117Z | `2026-05-31T08:02:35Z` | 1 | 2 | `issues/000365.json` |
