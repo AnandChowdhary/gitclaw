@@ -41,7 +41,10 @@ channel="telegram"
 thread_id="channel-ingest-e2e-${timestamp}"
 message_id="message-${timestamp}"
 dispatch_id="${channel}-${message_id}"
-token="GITCLAW_CHANNEL_INGEST_E2E_${timestamp}"
+token="NOECHO_CHANNEL_INGEST_${timestamp}"
+followup_hidden_token="NOECHO_CHANNEL_INGEST_FOLLOWUP_${timestamp}"
+expected_token="GITCLAW_CHANNEL_INGEST_CONTEXT_V1"
+search_phrase="channel ingest unique search fixture phrase"
 body="@gitclaw /channels
 
 Mirrored Telegram ingest message.
@@ -73,6 +76,34 @@ wait_for_run() {
       url="$(jq -r '.url' <<<"$run_json")"
       if [[ "$status" == "completed" ]]; then
         [[ "$conclusion" == "success" ]] || die "${workflow} run failed with conclusion ${conclusion}: ${url}"
+        echo "$run_json"
+        return 0
+      fi
+    fi
+    sleep 5
+  done
+  return 1
+}
+
+wait_for_issue_comment_run() {
+  local started_at="$1"
+  for _ in {1..90}; do
+    local run_json
+    run_json="$(gh run list \
+      --repo "$repo" \
+      --workflow "$main_workflow" \
+      --event issue_comment \
+      --created ">=$started_at" \
+      --limit 10 \
+      --json databaseId,status,conclusion,createdAt,url,displayTitle \
+      --jq '. as $runs | $runs | map(select(.displayTitle == "'"${issue_title}"'")) | sort_by(.createdAt) | reverse | .[0] // empty')"
+    if [[ -n "$run_json" && "$run_json" != "null" ]]; then
+      local status conclusion url
+      status="$(jq -r '.status' <<<"$run_json")"
+      conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
+      url="$(jq -r '.url' <<<"$run_json")"
+      if [[ "$status" == "completed" ]]; then
+        [[ "$conclusion" == "success" ]] || die "issue_comment run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
       fi
@@ -116,11 +147,43 @@ assistant_comments() {
     --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | join("\n---GITCLAW-COMMENT---\n")'
 }
 
+latest_assistant_comment() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json comments \
+    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | .[-1] // ""'
+}
+
 assistant_count() {
   gh issue view "$issue_number" \
     --repo "$repo" \
     --json comments \
     --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length'
+}
+
+error_count() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json comments \
+    --jq '[.comments[] | select(.body | contains("<!-- gitclaw:error"))] | length'
+}
+
+wait_for_assistant_count() {
+  local want="$1"
+  for _ in {1..90}; do
+    local errors
+    errors="$(error_count)"
+    if [[ "$errors" != "0" ]]; then
+      die "assistant run posted ${errors} error marker comment(s)"
+    fi
+    local got
+    got="$(assistant_count)"
+    if [[ "$got" == "$want" ]]; then
+      return 0
+    fi
+    sleep 5
+  done
+  return 1
 }
 
 channel_message_count() {
@@ -176,6 +239,7 @@ gh workflow run "$ingest_workflow" \
 
 wait_for_run "$ingest_workflow" "$ingest_started_at" >/dev/null || die "timed out waiting for channel ingest workflow"
 issue_number="$(wait_for_issue_number)" || die "timed out finding channel issue for ${thread_id}"
+issue_title="GitClaw ${channel} thread ${thread_id}"
 log "channel ingest created issue #${issue_number}"
 
 wait_for_run "$main_workflow" "$ingest_started_at" >/dev/null || die "timed out waiting for dispatched main workflow"
@@ -192,6 +256,9 @@ grep -Fq 'workflow_dispatch_trigger: `true`' <<<"$comments" || die "channel repo
 grep -Fq "dispatch-${dispatch_id}" <<<"$comments" || die "assistant marker missing dispatch event id"
 if grep -Fq "$token" <<<"$comments" || grep -Fq "@gitclaw /channels" <<<"$comments"; then
   die "channel report leaked mirrored channel body"
+fi
+if grep -Fq "$expected_token" <<<"$comments" || grep -Fq "$search_phrase" <<<"$comments"; then
+  die "channel ingest report leaked follow-up fixture context"
 fi
 labels="$(jq -r '.labels[].name' <<<"$issue_json")"
 grep -Fxq "gitclaw:channel" <<<"$labels" || die "issue missing gitclaw:channel label"
@@ -215,4 +282,37 @@ issue_count="$(find_issue_numbers | wc -l | tr -d ' ')"
 [[ "$(assistant_count)" == "1" ]] || die "duplicate ingest created another assistant comment"
 log "duplicate retry verified"
 
-log "passed for issue #${issue_number}"
+comment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+gh issue comment "$issue_number" \
+  --repo "$repo" \
+  --body "@gitclaw Continue after the generic channel-ingest workflow and use the repo-reader skill.
+
+Search the repository for \`${search_phrase}\`.
+The matching repository search result line has the form \`${search_phrase} => <token>\`.
+Reply with only the token after the arrow from the matching gitclaw.search_files tool output line.
+Do not answer with any token from this issue or its comments.
+Do not include this hidden follow-up token: ${followup_hidden_token}
+Keep the answer under 30 words." >/dev/null
+
+model_run_json="$(wait_for_issue_comment_run "$comment_started_at")" || die "timed out waiting for channel-ingest issue_comment follow-up"
+wait_for_assistant_count 2 || die "expected model-backed follow-up assistant comment"
+model_comment="$(latest_assistant_comment)"
+
+grep -Fq "$expected_token" <<<"$model_comment" || die "assistant did not include search_files token ${expected_token}"
+if ! grep -Fq 'model="openai/gpt-5-nano"' <<<"$model_comment" && ! grep -Fq 'model="openai/gpt-4.1-nano"' <<<"$model_comment"; then
+  die "assistant marker did not use configured GitHub Models primary or fallback"
+fi
+grep -Fq 'prompt_context_sha256_12="' <<<"$model_comment" || die "assistant marker missing prompt context hash"
+grep -Fq 'skills="repo-reader"' <<<"$model_comment" || die "assistant marker missing selected repo-reader skill"
+grep -Fq 'tools="' <<<"$model_comment" || die "assistant marker missing prompt-visible tools"
+grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant marker did not prove search_files was prompt-visible"
+grep -Fq 'usage_total_tokens="' <<<"$model_comment" || die "assistant marker missing usage token telemetry"
+
+for leaked in "$token" "$followup_hidden_token"; do
+  if grep -Fq "$leaked" <<<"$model_comment"; then
+    die "model follow-up leaked ${leaked}"
+  fi
+done
+
+model_url="$(jq -r '.url' <<<"$model_run_json")"
+log "passed for issue #${issue_number} (model follow-up: ${model_url})"

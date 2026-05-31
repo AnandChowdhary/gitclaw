@@ -36,6 +36,9 @@
 - Channel-message E2E also needs a normal issue-comment follow-up after the
   workflow-dispatch turn, proving the mirrored channel thread can continue as
   an ordinary GitHub conversation.
+- Channel-ingest E2E needs three proofs: real workflow-dispatch mirroring,
+  duplicate provider-message suppression, and a normal model/tool follow-up on
+  the created canonical issue.
 - Heartbeat comments are model-backed scheduled turns; their
   `gitclaw:heartbeat` markers must include model, prompt-context, context-count,
   and usage telemetry without printing prompt or heartbeat bodies.

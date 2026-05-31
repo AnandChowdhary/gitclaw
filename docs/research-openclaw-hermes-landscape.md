@@ -1991,6 +1991,13 @@ accepts normalized channel/thread/message fields, writes the canonical issue
 state, and dispatches the normal handler. This mirrors the gateway boundary in
 OpenClaw while staying serverless and testable with GitHub Actions alone.
 
+2026-05-31 channel-ingest E2E hardening: the generic bridge is the serverless
+stand-in for an OpenClaw/Hermes gateway. Its live harness should therefore
+prove the whole control path: workflow-dispatch mirroring into a canonical
+GitHub issue, duplicate provider-message suppression, and then a normal GitHub
+Models repo-reader/search follow-up on that canonical issue without leaking
+hidden channel payload tokens.
+
 2026-05-30 channel dedupe follow-up: real Telegram/Slack bridges must tolerate
 provider retries. A repeated `channel + message_id` should be visible as a
 deduped ingest result, not another mirrored comment or agent wakeup. The

@@ -180,8 +180,8 @@ for expected in \
   'e2e_scripts: `173`' \
   'e2e_live_issue_scripts: `166`' \
   'e2e_cleanup_scripts: `173`' \
-  'e2e_model_coverage_scripts: `103`' \
-  'e2e_model_followup_scripts: `90`' \
+  'e2e_model_coverage_scripts: `104`' \
+  'e2e_model_followup_scripts: `91`' \
   'e2e_session_coverage_scripts: `2`' \
   'e2e_backup_gate_scripts: `24`' \
   'e2e_workflow_dispatch_scripts: `21`' \

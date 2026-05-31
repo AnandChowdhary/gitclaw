@@ -5819,7 +5819,9 @@ MVP is not complete until:
   issue through a normal issue-comment follow-up that proves repo-reader search
   again,
 - the channel-ingest harness verifies the generic bridge workflow mirrors a
-  message into an issue and dispatches the main handler,
+  message into an issue, dispatches the main handler, suppresses duplicate
+  provider-message retries, and then proves a normal model/tool follow-up on
+  the canonical issue,
 - the proactive enqueue harness verifies manual/scheduled job primitives can
   create their own work issues idempotently and drive repo-reader search
   through the model-backed main handler,
@@ -5969,7 +5971,10 @@ examples/workflows/gitclaw.yml
   `gitclaw.search_files`, recover a distinct channel-message follow-up fixture
   token, and avoid hidden channel/comment sentinels.
 - A `gh`-driven channel-ingest E2E harness verifies the generic channel ingress
-  workflow end to end, including duplicate provider-message retries.
+  workflow end to end, including duplicate provider-message retries. The same
+  harness then posts a normal issue-comment follow-up that must make a GitHub
+  Models call, select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-ingest fixture token, and avoid hidden channel/message sentinels.
 - A `gh`-driven channel-state E2E harness verifies real GitHub issue-backed
   channel offset storage, duplicate offset suppression, `gitclaw:channel`
   labeling, and no raw account/offset leakage.
