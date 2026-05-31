@@ -1527,6 +1527,20 @@ search result bodies, file bodies, issue/comment bodies, prompts, credentials,
 or secrets, and every change should be paired with a live GitHub Models
 follow-up that proves the hashed tool outputs still feed a real model call.
 
+2026-05-31 tool-boundary follow-up: Hermes' prompt/tool boundary guidance and
+OpenClaw's tool policy posture point to a narrower audit than provenance:
+whether prompt-visible tool output can masquerade as instructions. GitClaw
+should expose `@gitclaw /tools boundary` and `gitclaw tools boundary [query]`
+as a body-free prompt-boundary report: deterministic `[tool_output ...]`
+delimiter strategy, active tool names, known/unknown output counts, read-only
+versus metadata-only modes, prompt-injection finding counts, hash-only
+input/output gates, disabled model-callable structured tools, disabled shell/
+network/mutation gates, and per-output risk codes plus line hashes. The report
+must never print raw tool inputs, outputs, search queries, issue/comment bodies,
+prompts, credentials, or secrets, and every change should include both the
+deterministic issue-command E2E and a real GitHub Models follow-up using
+repo-reader/search.
+
 2026-05-30 prompt-list follow-up: prompt-budget visibility should also be
 available before opening an issue. Add `gitclaw prompt list` as the local
 mirror of `/prompt`: provider/model, prompt size/hash, configured budgets,

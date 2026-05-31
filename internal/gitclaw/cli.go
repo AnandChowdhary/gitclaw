@@ -1617,7 +1617,7 @@ func runSessionSearchCommand(args []string) error {
 
 func runToolsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw tools verify|risk|validate|list|exposure [risk]|provenance [query]|toolsets [risk|info <name>]|run-plan <name>|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw tools verify|risk|validate|list|exposure [risk]|boundary [query]|provenance [query]|toolsets [risk|info <name>]|run-plan <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -1630,6 +1630,8 @@ func runToolsCommand(args []string) error {
 		return runToolsListCommand(args[1:])
 	case "exposure", "expose":
 		return runToolsExposureCommand(args[1:])
+	case "boundary", "prompt-boundary", "promptware":
+		return runToolsBoundaryCommand(args[1:])
 	case "provenance", "outputs", "trace", "lineage":
 		return runToolsProvenanceCommand(args[1:])
 	case "toolsets", "toolset":
@@ -1643,6 +1645,41 @@ func runToolsCommand(args []string) error {
 	default:
 		return fmt.Errorf("unknown tools command %q", args[0])
 	}
+}
+
+func runToolsBoundaryCommand(args []string) error {
+	queryFlag := ""
+	var queryParts []string
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--query":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--query requires a value")
+			}
+			queryFlag = args[i+1]
+			i++
+		default:
+			queryParts = append(queryParts, args[i])
+		}
+	}
+	query := strings.TrimSpace(strings.Join(queryParts, " "))
+	if strings.TrimSpace(queryFlag) != "" {
+		query = strings.TrimSpace(queryFlag)
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	var transcript []TranscriptMessage
+	if query != "" {
+		transcript = []TranscriptMessage{{Role: "user", Body: "tools boundary " + query}}
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, transcript, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderToolBoundaryCLIReport(repoContext))
+	return nil
 }
 
 func runToolsProvenanceCommand(args []string) error {

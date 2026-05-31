@@ -794,7 +794,7 @@ GitHub issue/comment event
   `soul provenance`, `soul verify`, `soul risk`, `soul validate`, `soul list`,
   `soul edit-plan`, `soul info`, `soul search`,
   `tools verify`, `tools risk`, `tools validate`, `tools list`,
-  `tools exposure`, `tools exposure risk`, `tools provenance`,
+  `tools exposure`, `tools exposure risk`, `tools boundary`, `tools provenance`,
   `tools run-plan`, `tools info`, `tools search`, `doctor`,
   `policy verify`, `policy risk`,
   `secrets audit`, `secrets scan`, `secrets list`,
@@ -2097,6 +2097,7 @@ gitclaw tools validate
 gitclaw tools list
 gitclaw tools exposure
 gitclaw tools exposure risk
+gitclaw tools boundary [query]
 gitclaw tools provenance [query]
 gitclaw tools toolsets
 gitclaw tools toolsets risk
@@ -2122,6 +2123,7 @@ OpenClaw's tool policy visibility and Hermes' toolset inventory:
 @gitclaw /tools validate
 @gitclaw /tools exposure
 @gitclaw /tools exposure risk
+@gitclaw /tools boundary
 @gitclaw /tools provenance
 @gitclaw /tools toolsets
 @gitclaw /tools toolsets risk
@@ -2174,6 +2176,21 @@ static/bridge boundary. They never print raw tool schemas, tool inputs, tool
 outputs, issue bodies, comments, prompts, credentials, or secret values. The
 report includes `llm_e2e_required_after_tool_exposure_change=true`; every
 change to this surface must ship with a live GitHub Models follow-up E2E.
+
+`@gitclaw /tools boundary` and `gitclaw tools boundary [query]` focus on the
+prompt-side delimiter between deterministic tool output and model instructions.
+The report treats active tool outputs as untrusted prompt-visible data, scans
+tool inputs/outputs/guidance for prompt-boundary override, credential,
+exfiltration, host-exec, mutation, network, and loop-risk phrases, and emits
+only counts, tool names, modes, hashes, risk codes, gate results, and line
+hashes. It records that GitClaw v1 uses `[tool_output ...]` prompt blocks,
+does not expose model-callable structured tools, and does not allow shell,
+network, or repository-mutation tools. Raw tool inputs, raw outputs, search
+queries, issue bodies, comments, prompts, credentials, and secrets are never
+included. The report includes
+`llm_e2e_required_after_tool_boundary_change=true`; every change to this surface
+must pair the deterministic issue-command E2E with a live GitHub Models
+follow-up that proves prompt-visible tool outputs still reach inference.
 
 `@gitclaw /tools provenance` and `gitclaw tools provenance [query]` provide
 the turn-level audit of which deterministic tool outputs fed the prompt. The
@@ -5960,6 +5977,13 @@ examples/workflows/gitclaw.yml
   suppression, and the live-LLM E2E requirement. The same harness then posts a
   normal follow-up comment that requires repo-reader search so GitHub Models
   performs a real LLM call with prompt context, selected skill, and
+  prompt-visible tool provenance.
+- A `gh`-driven tools-boundary E2E harness verifies
+  `@gitclaw /tools boundary` exposes the body-free prompt-side tool-output
+  boundary, delimiter strategy, prompt-injection scan, hash-only raw
+  input/output gates, and the live-LLM E2E requirement. The same harness then
+  posts a normal follow-up comment that requires repo-reader search so GitHub
+  Models performs a real LLM call with prompt context, selected skill, and
   prompt-visible tool provenance.
 - A `gh`-driven tools-provenance E2E harness verifies
   `@gitclaw /tools provenance` exposes the body-free current-turn tool

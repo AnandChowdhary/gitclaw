@@ -15,6 +15,10 @@ Reviewed toolsets live in `.gitclaw/toolsets/*.yaml`. They are planning and
 audit profiles only in v1; they do not activate tools, grant permissions, or
 execute provider APIs.
 
+Use `gitclaw tools boundary` or `@gitclaw /tools boundary` to audit the
+prompt-side boundary around active tool outputs. The report must stay
+body-free: names, modes, hashes, risk codes, and gate results only.
+
 For search requests, prefer the provided `gitclaw.search_files` output over
 guessing. If a matching line contains an exact verification token, copy that
 token verbatim and do not substitute a different token from the issue thread.
