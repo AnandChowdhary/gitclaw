@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T03:23:42Z",
+  "generated_at": "2026-05-31T03:25:03Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 345,
     "title": "@gitclaw run history seed e2e 20260531T032237Z",
@@ -10,7 +10,8 @@
     "author": "AnandChowdhary",
     "author_association": "OWNER",
     "labels": [
-      "gitclaw"
+      "gitclaw",
+      "gitclaw:done"
     ]
   },
   "transcript": [
@@ -31,6 +32,24 @@
       "CommentID": 4585576988,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /runs history\n\nPlease show the body-free run history.\nHidden history request token: GITCLAW_RUNS_HISTORY_COMMENT_HIDDEN_20260531T032237Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4585577972,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Run History Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#345`\n- run_history_status: `ok`\n- history_source: `issue-thread`\n- comments_scanned: `2`\n- assistant_turns: `1`\n- model_backed_turns: `1`\n- deterministic_turns: `0`\n- turns_with_prompt_provenance: `1`\n- turns_missing_prompt_provenance: `0`\n- unique_run_ids: `1`\n- model_names: `openai/gpt-4.1-nano`\n- prompt_visible_skill_names: `repo-reader`\n- prompt_visible_tool_names: `gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index`\n- raw_bodies_included: `false`\n- raw_run_payloads_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_prompts_included: `false`\n- llm_e2e_required_after_run_history_change: `true`\n\nThis report reconstructs a body-free run timeline from GitClaw assistant markers. It reports model names, marker counts, and hashes only; assistant replies, prompts, tool outputs, issue bodies, and workflow payloads are excluded.\n\n### Run History Entries\n- index=`1` source=`comment:4585576988` run_id=`26702045414` event_id=`issue-345` model=`openai/gpt-4.1-nano` deterministic=`false` has_prompt_evidence=`true` prompt_context_sha256_12=`4cd2c0fce63e` context_documents=`16` selected_skills=`1` tool_outputs=`3` skills=`repo-reader` tools=`gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index` idempotency_key_sha256_12=`eeaa731364b0` run_url_sha256_12=`706b5d6864ca` comment_sha256_12=`09c34398bfcf`\n\n### History Notes\n- issue comments remain the canonical run history\n- assistant markers provide the replayable turn index\n- backup JSON can replay the same body-free history locally\n- raw assistant replies, prompts, tool outputs, issue bodies, and workflow payloads are excluded",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4585579941,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -41,6 +60,22 @@
       "author_association": "NONE",
       "created_at": "2026-05-31T03:23:20Z",
       "updated_at": "2026-05-31T03:23:20Z"
+    },
+    {
+      "id": 4585577972,
+      "body": "@gitclaw /runs history\n\nPlease show the body-free run history.\nHidden history request token: GITCLAW_RUNS_HISTORY_COMMENT_HIDDEN_20260531T032237Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-05-31T03:23:52Z",
+      "updated_at": "2026-05-31T03:23:52Z"
+    },
+    {
+      "id": 4585579941,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26702067266\" event_id=\"comment-4585577972\" model=\"gitclaw/runs\" idempotency_key=\"d3785e9d2900a64f911d1200d7b36e07\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26702067266\" --\u003e\n## GitClaw Run History Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#345`\n- run_history_status: `ok`\n- history_source: `issue-thread`\n- comments_scanned: `2`\n- assistant_turns: `1`\n- model_backed_turns: `1`\n- deterministic_turns: `0`\n- turns_with_prompt_provenance: `1`\n- turns_missing_prompt_provenance: `0`\n- unique_run_ids: `1`\n- model_names: `openai/gpt-4.1-nano`\n- prompt_visible_skill_names: `repo-reader`\n- prompt_visible_tool_names: `gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index`\n- raw_bodies_included: `false`\n- raw_run_payloads_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_prompts_included: `false`\n- llm_e2e_required_after_run_history_change: `true`\n\nThis report reconstructs a body-free run timeline from GitClaw assistant markers. It reports model names, marker counts, and hashes only; assistant replies, prompts, tool outputs, issue bodies, and workflow payloads are excluded.\n\n### Run History Entries\n- index=`1` source=`comment:4585576988` run_id=`26702045414` event_id=`issue-345` model=`openai/gpt-4.1-nano` deterministic=`false` has_prompt_evidence=`true` prompt_context_sha256_12=`4cd2c0fce63e` context_documents=`16` selected_skills=`1` tool_outputs=`3` skills=`repo-reader` tools=`gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index` idempotency_key_sha256_12=`eeaa731364b0` run_url_sha256_12=`706b5d6864ca` comment_sha256_12=`09c34398bfcf`\n\n### History Notes\n- issue comments remain the canonical run history\n- assistant markers provide the replayable turn index\n- backup JSON can replay the same body-free history locally\n- raw assistant replies, prompts, tool outputs, issue bodies, and workflow payloads are excluded",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T03:24:39Z",
+      "updated_at": "2026-05-31T03:24:39Z"
     }
   ]
 }
