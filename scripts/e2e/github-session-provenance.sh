@@ -166,7 +166,7 @@ grep -Fq 'gitclaw.search_files' <<<"$first_comment" || die "assistant marker did
 comment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \
   --repo "$repo" \
-  --body "@gitclaw /session
+  --body "@gitclaw /session provenance
 
 Please audit assistant-turn prompt provenance.
 Hidden comment token: ${comment_token}" >/dev/null
@@ -177,18 +177,40 @@ session_comment="$(latest_assistant_comment)"
 
 for expected in \
   'model="gitclaw/session"' \
-  "GitClaw Session Report" \
+  "GitClaw Session Provenance Report" \
   "Generated without a model call" \
+  'session_provenance_status: `ok`' \
+  'provenance_scope: `assistant-turn-marker-prompt-context`' \
+  'session_store: `github-issue-thread`' \
   'assistant_turn_comments: `1`' \
   'assistant_turns_with_prompt_provenance: `1`' \
   'assistant_turns_missing_prompt_provenance: `0`' \
   'unique_prompt_context_hashes: `1`' \
+  'model_backed_assistant_turns: `1`' \
+  'deterministic_assistant_turns: `0`' \
   'prompt_visible_skill_names: `repo-reader`' \
   'prompt_visible_tool_names: `gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files`' \
+  'usage_total_tokens:' \
+  'raw_bodies_included: `false`' \
+  'raw_issue_bodies_included: `false`' \
+  'raw_comment_bodies_included: `false`' \
+  'raw_assistant_replies_included: `false`' \
+  'raw_prompts_included: `false`' \
+  'raw_tool_outputs_included: `false`' \
+  'raw_search_queries_included: `false`' \
+  'repository_mutation_allowed: `false`' \
+  'llm_e2e_required_after_session_provenance_change: `true`' \
   "### Assistant Turn Provenance" \
   'prompt_context_sha256_12=' \
   'skills=`repo-reader`' \
-  'tools=`gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files`'; do
+  'tools=`gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files`' \
+  'usage_present=`true`' \
+  'prompt_provenance_gate=`pass`' \
+  'model_backed_gate=`pass`' \
+  'skill_tool_gate=`pass`' \
+  'usage_telemetry_gate=`pass`' \
+  'raw_body_gate=`hashes-and-marker-attributes-only`' \
+  'mutation_gate=`disabled`'; do
   grep -Fq "$expected" <<<"$session_comment" || die "session provenance report missing ${expected}"
 done
 

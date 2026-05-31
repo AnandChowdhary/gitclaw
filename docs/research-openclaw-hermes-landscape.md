@@ -595,6 +595,23 @@ per assistant turn. This lets a later issue comment verify that a previous
 model answer actually saw `gitclaw.search_files` or a selected skill without
 replaying raw prompts.
 
+2026-06-01 named-session-provenance follow-up: OpenClaw's session CLI now
+documents bounded session listing plus redacted trajectory tails, and Hermes'
+sessions/checkpoints docs frame saved conversations as resumable and
+auditable. GitClaw should make prompt provenance a first-class session command,
+not only a section of the default report: add `@gitclaw /session provenance`
+and `gitclaw session provenance --backup <issue.json>`. The report should read
+only assistant-turn marker attributes and backup JSON metadata, then publish
+model names, prompt-context hashes, prompt-visible skills/tools, tool-output
+counts, token usage telemetry, and pass/warn gates. It must not print issue
+bodies, comments, assistant replies, prompts, raw search queries, tool outputs,
+credentials, or provider payloads. Sources: OpenClaw sessions
+(`https://docs.openclaw.ai/cli/sessions`), OpenClaw transcripts
+(`https://docs.openclaw.ai/cli/transcripts`), Hermes sessions
+(`https://hermes-agent.nousresearch.com/docs/user-guide/sessions`), and Hermes
+checkpoints/rollback
+(`https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback`).
+
 2026-05-31 session-coverage follow-up: OpenClaw and Hermes both separate
 operator-facing session inspection from the raw transcript store, but live E2E
 needs a sharper gate than "a deterministic report ran." GitClaw should add

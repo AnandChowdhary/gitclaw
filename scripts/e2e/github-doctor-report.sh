@@ -238,6 +238,7 @@ for expected in \
   'path=`scripts/e2e/github-skills-sources-provenance-report.sh`' \
   'path=`scripts/e2e/github-profile-catalog-report.sh`' \
   'path=`scripts/e2e/github-session-catalog-report.sh`' \
+  'path=`scripts/e2e/github-session-provenance.sh`' \
   'path=`scripts/e2e/github-tools-catalog-report.sh`' \
   'path=`scripts/e2e/github-workspace-catalog-report.sh`' \
   'path=`scripts/e2e/github-doctor-report.sh`' \

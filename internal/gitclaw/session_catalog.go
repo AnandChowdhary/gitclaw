@@ -100,6 +100,7 @@ func renderSessionCatalogReport(opts sessionCatalogRenderOptions) string {
 	b.WriteString("- issue_thread_gate=`canonical-session-is-github-issue-thread`\n")
 	b.WriteString("- local_backup_gate=`fetched-backup-json-required-for-local-transcript-inspection`\n")
 	b.WriteString("- raw_body_gate=`hashes-counts-and-metadata-only`\n")
+	b.WriteString("- provenance_gate=`assistant-turn-marker-prompt-context`\n")
 	b.WriteString("- search_gate=`query-hash-and-line-hash-metadata`\n")
 	b.WriteString("- coverage_gate=`prompt-provenance-skill-tool-telemetry`\n")
 	b.WriteString("- channel_boundary_gate=`provider-session-keys-collapse-to-canonical-github-issue`\n")
@@ -111,6 +112,7 @@ func sessionCatalogEntries() []sessionCatalogEntry {
 	return []sessionCatalogEntry{
 		{Name: "catalog", IssueIntent: "@gitclaw /session catalog", LocalCommand: "gitclaw session catalog", Execution: "metadata-only", Gate: "body-free-output"},
 		{Name: "list", IssueIntent: "@gitclaw /session list", LocalCommand: "gitclaw session list --backup <issue.json>", Execution: "current-issue-or-local-backup", Gate: "hash-only-message-list"},
+		{Name: "provenance", IssueIntent: "@gitclaw /session provenance", LocalCommand: "gitclaw session provenance --backup <issue.json>", Execution: "current-issue-or-local-backup", Gate: "assistant-turn-marker-prompt-context"},
 		{Name: "status", IssueIntent: "@gitclaw /session status", LocalCommand: "gitclaw session status --backup <issue.json>", Execution: "current-issue-or-local-backup", Gate: "latest-message-hashes"},
 		{Name: "stats", IssueIntent: "@gitclaw /session stats", LocalCommand: "gitclaw session stats --backup <issue.json>", Execution: "current-issue-or-local-backup", Gate: "aggregate-counts-and-provenance"},
 		{Name: "coverage", IssueIntent: "@gitclaw /session coverage", LocalCommand: "gitclaw session coverage --backup <issue.json>", Execution: "current-issue-or-local-backup", Gate: "model-skill-tool-provenance"},

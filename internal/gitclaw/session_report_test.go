@@ -35,9 +35,9 @@ func TestRenderSessionCatalogReportListsBodyFreeSessionSurface(t *testing.T) {
 		"session_model: `github-issue-thread-plus-backup-json`",
 		"canonical_session_store: `github-issue-thread`",
 		"local_backup_store: `gitclaw-backups issue JSON`",
-		"catalog_entries: `7`",
-		"issue_side_commands: `7`",
-		"local_backup_commands: `6`",
+		"catalog_entries: `8`",
+		"issue_side_commands: `8`",
+		"local_backup_commands: `7`",
 		"raw_bodies_included: `false`",
 		"raw_tool_outputs_included: `false`",
 		"repository_mutation_allowed: `false`",
@@ -45,8 +45,10 @@ func TestRenderSessionCatalogReportListsBodyFreeSessionSurface(t *testing.T) {
 		"session_export_allowed_issue_side: `false`",
 		"llm_e2e_required_after_session_catalog_change: `true`",
 		"command=`catalog` issue_intent=`@gitclaw /session catalog` local_command=`gitclaw session catalog` execution=`metadata-only` gate=`body-free-output` raw_bodies_included=`false` mutation_allowed=`false`",
+		"command=`provenance` issue_intent=`@gitclaw /session provenance` local_command=`gitclaw session provenance --backup <issue.json>` execution=`current-issue-or-local-backup` gate=`assistant-turn-marker-prompt-context`",
 		"command=`search` issue_intent=`@gitclaw /session search <query>` local_command=`gitclaw session search <query> --backup <issue.json>`",
 		"issue_thread_gate=`canonical-session-is-github-issue-thread`",
+		"provenance_gate=`assistant-turn-marker-prompt-context`",
 		"search_gate=`query-hash-and-line-hash-metadata`",
 		"coverage_gate=`prompt-provenance-skill-tool-telemetry`",
 	} {
@@ -147,6 +149,100 @@ func TestRenderSessionReportShowsAssistantTurnProvenanceWithoutBodies(t *testing
 	}
 	if strings.Contains(body, "SESSION_PROVENANCE_ASSISTANT_SECRET") {
 		t.Fatalf("session report leaked assistant body:\n%s", body)
+	}
+}
+
+func TestRenderSessionProvenanceReportShowsPromptEvidenceWithoutBodies(t *testing.T) {
+	comments := []Comment{{
+		ID:                53,
+		Body:              "<!-- gitclaw:assistant-turn run_id=\"run-1\" model=\"openai/gpt-4.1-nano\" prompt_context_sha256_12=\"abc123abc123\" context_documents=\"2\" selected_skills=\"1\" tool_outputs=\"2\" skills=\"repo-reader\" tools=\"gitclaw.search_files,gitclaw.read_file\" usage_prompt_tokens=\"100\" usage_completion_tokens=\"9\" usage_total_tokens=\"109\" usage_cache_read_tokens=\"7\" usage_cache_write_tokens=\"0\" -->\nSESSION_PROVENANCE_NAMED_ASSISTANT_SECRET",
+		User:              User{Login: "github-actions[bot]", Type: "Bot"},
+		AuthorAssociation: "NONE",
+	}}
+	transcript := []TranscriptMessage{{
+		Role:      "assistant",
+		Body:      "SESSION_PROVENANCE_NAMED_ASSISTANT_SECRET",
+		Actor:     "github-actions[bot]",
+		CommentID: 53,
+		Trusted:   true,
+	}}
+	body := RenderSessionProvenanceReport(BuildSessionProvenanceReport("issue-thread", "", Event{Repo: "owner/repo", Kind: "issue_comment", Issue: Issue{Number: 6}}, comments, transcript))
+	for _, want := range []string{
+		"GitClaw Session Provenance Report",
+		"scope: `issue-thread`",
+		"repository: `owner/repo`",
+		"issue: `#6`",
+		"event_kind: `issue_comment`",
+		"session_provenance_status: `ok`",
+		"provenance_scope: `assistant-turn-marker-prompt-context`",
+		"session_store: `github-issue-thread`",
+		"raw_comments: `1`",
+		"transcript_messages: `1`",
+		"assistant_turn_comments: `1`",
+		"assistant_turns_with_prompt_provenance: `1`",
+		"assistant_turns_missing_prompt_provenance: `0`",
+		"unique_prompt_context_hashes: `1`",
+		"model_backed_assistant_turns: `1`",
+		"deterministic_assistant_turns: `0`",
+		"model_names: `openai/gpt-4.1-nano`",
+		"prompt_visible_skill_count: `1`",
+		"prompt_visible_tool_count: `2`",
+		"prompt_visible_skill_names: `repo-reader`",
+		"prompt_visible_tool_names: `gitclaw.search_files, gitclaw.read_file`",
+		"usage_prompt_tokens: `100`",
+		"usage_completion_tokens: `9`",
+		"usage_total_tokens: `109`",
+		"usage_cache_read_tokens: `7`",
+		"raw_bodies_included: `false`",
+		"raw_issue_bodies_included: `false`",
+		"raw_comment_bodies_included: `false`",
+		"raw_assistant_replies_included: `false`",
+		"raw_prompts_included: `false`",
+		"raw_tool_outputs_included: `false`",
+		"raw_search_queries_included: `false`",
+		"repository_mutation_allowed: `false`",
+		"llm_e2e_required_after_session_provenance_change: `true`",
+		"### Assistant Turn Provenance",
+		"source=`comment:53`",
+		"prompt_context_sha256_12=`abc123abc123`",
+		"usage_present=`true`",
+		"usage_total_tokens=`109`",
+		"### Provenance Gates",
+		"prompt_provenance_gate=`pass`",
+		"model_backed_gate=`pass`",
+		"skill_tool_gate=`pass`",
+		"usage_telemetry_gate=`pass`",
+		"raw_body_gate=`hashes-and-marker-attributes-only`",
+		"mutation_gate=`disabled`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("session provenance report missing %q:\n%s", want, body)
+		}
+	}
+	if strings.Contains(body, "SESSION_PROVENANCE_NAMED_ASSISTANT_SECRET") {
+		t.Fatalf("session provenance report leaked assistant body:\n%s", body)
+	}
+}
+
+func TestRenderSessionReportRoutesProvenanceCommandWithoutBodies(t *testing.T) {
+	comments := []Comment{{
+		ID:   54,
+		Body: "<!-- gitclaw:assistant-turn model=\"openai/gpt-4.1-nano\" prompt_context_sha256_12=\"abc123abc123\" context_documents=\"1\" selected_skills=\"1\" tool_outputs=\"1\" skills=\"repo-reader\" tools=\"gitclaw.search_files\" usage_total_tokens=\"12\" -->\nSESSION_PROVENANCE_ROUTE_SECRET",
+	}}
+	body := RenderSessionReport(Event{
+		Repo:  "owner/repo",
+		Kind:  "issue_comment",
+		Issue: Issue{Number: 7, Title: "@gitclaw /session provenance", Body: "SESSION_PROVENANCE_ROUTE_ISSUE_SECRET"},
+	}, DefaultConfig(), comments, nil)
+	for _, want := range []string{"GitClaw Session Provenance Report", "session_provenance_status: `ok`", "provenance_scope: `assistant-turn-marker-prompt-context`", "prompt_visible_skill_names: `repo-reader`", "prompt_visible_tool_names: `gitclaw.search_files`", "usage_total_tokens: `12`"} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("session provenance route missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SESSION_PROVENANCE_ROUTE_SECRET", "SESSION_PROVENANCE_ROUTE_ISSUE_SECRET"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("session provenance route leaked %q:\n%s", leaked, body)
+		}
 	}
 }
 

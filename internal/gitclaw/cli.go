@@ -1681,13 +1681,15 @@ func isPromptCLISubcommand(arg string) bool {
 
 func runSessionCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw session catalog | gitclaw session list --backup <issue.json> | gitclaw session status --backup <issue.json> | gitclaw session stats --backup <issue.json> | gitclaw session coverage --backup <issue.json> | gitclaw session risk --backup <issue.json> | gitclaw session search <query> --backup <issue.json>")
+		return fmt.Errorf("usage: gitclaw session catalog | gitclaw session list --backup <issue.json> | gitclaw session provenance --backup <issue.json> | gitclaw session status --backup <issue.json> | gitclaw session stats --backup <issue.json> | gitclaw session coverage --backup <issue.json> | gitclaw session risk --backup <issue.json> | gitclaw session search <query> --backup <issue.json>")
 	}
 	switch args[0] {
 	case "catalog", "commands", "capabilities":
 		return runSessionCatalogCommand(args[1:])
 	case "list":
 		return runSessionListCommand(args[1:])
+	case "provenance", "prompt-provenance", "evidence", "lineage":
+		return runSessionProvenanceCommand(args[1:])
 	case "status", "readback":
 		return runSessionStatusCommand(args[1:])
 	case "stats", "summary":
@@ -1733,6 +1735,31 @@ func runSessionListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSessionCLIReport(backupPath, backup))
+	return nil
+}
+
+func runSessionProvenanceCommand(args []string) error {
+	backupPath := ""
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--backup":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--backup requires a value")
+			}
+			backupPath = args[i+1]
+			i++
+		default:
+			return fmt.Errorf("unknown session provenance argument %q", args[i])
+		}
+	}
+	if backupPath == "" {
+		return fmt.Errorf("usage: gitclaw session provenance --backup <issue.json>")
+	}
+	backup, err := ReadIssueBackupFile(backupPath)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSessionProvenanceCLIReport(backupPath, backup))
 	return nil
 }
 

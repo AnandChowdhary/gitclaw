@@ -821,7 +821,7 @@ GitHub issue/comment event
 - Subcommands: `preflight`, `handle`, `backup`, `backup coverage`,
   `backup search`, `backup provenance`, `backup timeline`, `backup info`,
   `backup freshness`, `backup continuity`, `backup retention-plan`,
-  `session status`, `session coverage`,
+  `session provenance`, `session status`, `session coverage`,
   `heartbeat`, `heartbeat status`, `heartbeat risk`,
   `channel-ingest`, `channel-state`, `channel-gateway`, `channel-delivery`,
   `channels list`, `channels verify`, `channels risk`, `channels info`,
@@ -964,6 +964,7 @@ transcript/session CLIs and Hermes' saved/searchable sessions:
 @gitclaw /session
 @gitclaw /session catalog
 @gitclaw /session list
+@gitclaw /session provenance
 @gitclaw /session status
 @gitclaw /session readback
 @gitclaw /session stats
@@ -997,6 +998,7 @@ Local operators can inspect a backed-up issue session without calling GitHub:
 ```bash
 gitclaw session catalog
 gitclaw session list --backup .gitclaw/backups/owner/repo/issues/000123.json
+gitclaw session provenance --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session status --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session stats --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session coverage --backup .gitclaw/backups/owner/repo/issues/000123.json
@@ -1016,6 +1018,16 @@ publishes the same command/gate map for the current issue before model
 inference and carries `llm_e2e_required_after_session_catalog_change: true`.
 Catalog changes require a live deterministic issue-command E2E plus a normal
 GitHub Models repo-reader/search follow-up.
+
+`gitclaw session provenance --backup <issue.json>` is the named
+OpenClaw/Hermes-inspired prompt provenance surface. It emits assistant-turn
+marker counts, prompt-context hashes, model-backed versus deterministic turn
+counts, model names, prompt-visible skill/tool names, tool-output counts, and
+token usage telemetry. The issue-side `@gitclaw /session provenance` form runs
+before model inference and audits the current GitHub issue thread using the
+same marker attributes. It never prints issue bodies, comment bodies, assistant
+replies, prompts, raw search queries, or tool outputs, and carries
+`llm_e2e_required_after_session_provenance_change: true`.
 
 `gitclaw session status --backup <issue.json>` is the compact Hermes-inspired
 readback surface. It emits session labels, transcript/comment counts, latest
@@ -1049,6 +1061,7 @@ Backed-up sessions can also be searched locally without a GitHub API call:
 
 ```bash
 gitclaw session coverage --backup .gitclaw/backups/owner/repo/issues/000123.json --require-tool gitclaw.search_files
+gitclaw session provenance --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session status --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session stats --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session risk --backup .gitclaw/backups/owner/repo/issues/000123.json
@@ -7496,6 +7509,11 @@ examples/workflows/gitclaw.yml
   `gitclaw session catalog` exposes the same surface without issue metadata.
   The same harness posts a normal GitHub Models repo-reader/search follow-up
   that recovers the bounded session-catalog repository-search fixture token.
+- A `gh`-driven session-provenance E2E harness first runs a normal GitHub
+  Models repo-reader/search conversation, then verifies
+  `@gitclaw /session provenance` reports assistant-turn marker provenance,
+  prompt-context hashes, selected skill/tool telemetry, model names, and token
+  usage without leaking hidden issue or comment tokens.
 - A `gh`-driven session-stats E2E harness first runs a normal GitHub Models
   conversation with repo-reader and `gitclaw.search_files`, then verifies
   `@gitclaw /session stats` reports model/provenance/session totals without
