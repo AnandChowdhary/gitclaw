@@ -41,7 +41,7 @@ hidden_token="NOECHO_BUNDLE_SEARCH_${timestamp}"
 followup_hidden_token="NOECHO_BUNDLE_SEARCH_FOLLOWUP_${timestamp}"
 expected_token="GITCLAW_BUNDLE_SEARCH_CONTEXT_V1"
 search_phrase="bundle search unique search fixture phrase"
-title="@gitclaw /bundles search questions e2e ${timestamp}"
+title="GitClaw bundles search e2e ${timestamp}"
 body="@gitclaw /bundles search questions
 
 Live bundle-search E2E.
