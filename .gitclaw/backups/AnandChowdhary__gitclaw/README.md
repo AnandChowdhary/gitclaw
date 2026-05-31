@@ -1,6 +1,6 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-05-31T01:33:46Z`
+- generated_at: `2026-05-31T01:35:04Z`
 - issue_count: `301`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
@@ -305,4 +305,4 @@
 | #335 | @gitclaw /skills proposal-plan repo-reader e2e 20260531T004556Z | `2026-05-31T00:48:22Z` | 3 | 4 | `issues/000335.json` |
 | #336 | @gitclaw /skills proposals risk e2e 20260531T005743Z | `2026-05-31T01:00:14Z` | 3 | 4 | `issues/000336.json` |
 | #337 | @gitclaw /tools toolsets risk e2e 20260531T011606Z | `2026-05-31T01:18:33Z` | 3 | 4 | `issues/000337.json` |
-| #338 | @gitclaw /plugins mcp risk e2e 20260531T013240Z | `2026-05-31T01:33:45Z` | 1 | 2 | `issues/000338.json` |
+| #338 | @gitclaw /plugins mcp risk e2e 20260531T013240Z | `2026-05-31T01:35:04Z` | 3 | 4 | `issues/000338.json` |
