@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T06:40:54Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 359,
+    "title": "@gitclaw /hooks provenance e2e 20260531T063949Z",
+    "body": "@gitclaw /hooks provenance\n\nLive hook provenance E2E. Please keep the provenance report body-free.\nDo not include this hidden hook provenance sentinel: NOECHO_HOOK_PROVENANCE_SENTINEL_20260531T063949Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /hooks provenance e2e 20260531T063949Z\n\n@gitclaw /hooks provenance\n\nLive hook provenance E2E. Please keep the provenance report body-free.\nDo not include this hidden hook provenance sentinel: NOECHO_HOOK_PROVENANCE_SENTINEL_20260531T063949Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Hook Provenance Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#359`\n- hook_provenance_status: `ok`\n- provenance_scope: `repo-local-hook-git-history`\n- hooks_status: `ok`\n- hook_risk_status: `ok`\n- hook_policy_present: `true`\n- hook_policy_loaded_for_model: `true`\n- hook_specs: `1`\n- hook_specs_with_frontmatter: `1`\n- hook_events: `2`\n- hook_specs_requiring_approval: `1`\n- hook_specs_audit_only: `1`\n- executable_handlers_present: `0`\n- provenance_surfaces: `2`\n- git_tracked_surfaces: `2`\n- untracked_surfaces: `0`\n- working_tree_dirty_surfaces: `0`\n- surfaces_with_commits: `2`\n- surfaces_without_commits: `0`\n- git_available: `true`\n- git_history_available: `true`\n- hook_execution_allowed: `false`\n- repository_mutation_allowed: `false`\n- raw_hook_bodies_included: `false`\n- raw_handler_bodies_included: `false`\n- raw_git_subjects_included: `false`\n- author_identities_included: `false`\n- llm_e2e_required_after_hook_provenance_change: `true`\n- issue_title_sha256_12: `290d8877c413`\n\nThis report maps repo-local hook policy, hook specs, and ignored executable-looking handlers to body-free git provenance. It reports paths, counts, hashes, tracked state, dirty state, last commit IDs/dates, and commit-subject hashes only; hook bodies, handler bodies, issue bodies, comments, prompts, git subjects, author identities, provider payloads, and secret values are not included.\n\n### Hook Provenance Cards\n- kind=`hook-policy` name=`hooks-policy` path=`.gitclaw/HOOKS.md` present=`true` loaded_for_model=`true` frontmatter=`false` events=`0` mode=`policy` delivery=`context` requires_approval=`false` ignored_handler=`false` bytes=`882` lines=`23` sha256_12=`ec07027d7e51` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` git_tracked=`true` working_tree_dirty=`false` commit_available=`true` last_commit_sha256_12=`cb744612b1bd` last_commit_short=`cb74461` last_commit_date=`2026-05-31T08:39:29+02:00` subject_sha256_12=`a6d0ba562c80`\n- kind=`hook-spec` name=`repo-hygiene-audit` path=`.gitclaw/hooks/repo-hygiene.md` present=`true` loaded_for_model=`false` frontmatter=`true` events=`2` mode=`audit-only` delivery=`issue-comment` requires_approval=`true` ignored_handler=`false` bytes=`319` lines=`14` sha256_12=`10ca73c60997` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` git_tracked=`true` working_tree_dirty=`false` commit_available=`true` last_commit_sha256_12=`cb744612b1bd` last_commit_short=`cb74461` last_commit_date=`2026-05-31T08:39:29+02:00` subject_sha256_12=`a6d0ba562c80`\n\n### Provenance Gates\n- validation_gate=`pass`\n- risk_gate=`pass`\n- git_history_gate=`pass`\n- execution_gate=`disabled`\n- mutation_gate=`disabled`\n- raw_body_gate=`hash_only`\n\n### Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4585956081,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4585956081,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26705588119\" event_id=\"issue-359\" model=\"gitclaw/hooks\" idempotency_key=\"8f7af55446116af798743dd108ed70be\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26705588119\" --\u003e\n## GitClaw Hook Provenance Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#359`\n- hook_provenance_status: `ok`\n- provenance_scope: `repo-local-hook-git-history`\n- hooks_status: `ok`\n- hook_risk_status: `ok`\n- hook_policy_present: `true`\n- hook_policy_loaded_for_model: `true`\n- hook_specs: `1`\n- hook_specs_with_frontmatter: `1`\n- hook_events: `2`\n- hook_specs_requiring_approval: `1`\n- hook_specs_audit_only: `1`\n- executable_handlers_present: `0`\n- provenance_surfaces: `2`\n- git_tracked_surfaces: `2`\n- untracked_surfaces: `0`\n- working_tree_dirty_surfaces: `0`\n- surfaces_with_commits: `2`\n- surfaces_without_commits: `0`\n- git_available: `true`\n- git_history_available: `true`\n- hook_execution_allowed: `false`\n- repository_mutation_allowed: `false`\n- raw_hook_bodies_included: `false`\n- raw_handler_bodies_included: `false`\n- raw_git_subjects_included: `false`\n- author_identities_included: `false`\n- llm_e2e_required_after_hook_provenance_change: `true`\n- issue_title_sha256_12: `290d8877c413`\n\nThis report maps repo-local hook policy, hook specs, and ignored executable-looking handlers to body-free git provenance. It reports paths, counts, hashes, tracked state, dirty state, last commit IDs/dates, and commit-subject hashes only; hook bodies, handler bodies, issue bodies, comments, prompts, git subjects, author identities, provider payloads, and secret values are not included.\n\n### Hook Provenance Cards\n- kind=`hook-policy` name=`hooks-policy` path=`.gitclaw/HOOKS.md` present=`true` loaded_for_model=`true` frontmatter=`false` events=`0` mode=`policy` delivery=`context` requires_approval=`false` ignored_handler=`false` bytes=`882` lines=`23` sha256_12=`ec07027d7e51` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` git_tracked=`true` working_tree_dirty=`false` commit_available=`true` last_commit_sha256_12=`cb744612b1bd` last_commit_short=`cb74461` last_commit_date=`2026-05-31T08:39:29+02:00` subject_sha256_12=`a6d0ba562c80`\n- kind=`hook-spec` name=`repo-hygiene-audit` path=`.gitclaw/hooks/repo-hygiene.md` present=`true` loaded_for_model=`false` frontmatter=`true` events=`2` mode=`audit-only` delivery=`issue-comment` requires_approval=`true` ignored_handler=`false` bytes=`319` lines=`14` sha256_12=`10ca73c60997` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` git_tracked=`true` working_tree_dirty=`false` commit_available=`true` last_commit_sha256_12=`cb744612b1bd` last_commit_short=`cb74461` last_commit_date=`2026-05-31T08:39:29+02:00` subject_sha256_12=`a6d0ba562c80`\n\n### Provenance Gates\n- validation_gate=`pass`\n- risk_gate=`pass`\n- git_history_gate=`pass`\n- execution_gate=`disabled`\n- mutation_gate=`disabled`\n- raw_body_gate=`hash_only`\n\n### Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T06:40:34Z",
+      "updated_at": "2026-05-31T06:40:34Z"
+    }
+  ]
+}
