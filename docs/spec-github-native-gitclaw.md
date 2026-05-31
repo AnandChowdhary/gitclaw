@@ -3007,6 +3007,11 @@ gitclaw rollback risk
 The aliases intentionally return the same body-free report in v1. Reviewed
 recovery still happens through ordinary git history, pull requests, and fetched
 backup manifests.
+The report includes
+`llm_e2e_required_after_checkpoint_report_change=true`; changes to this surface
+must be paired with a live GitHub Models follow-up that selects `repo-reader`,
+exposes `gitclaw.search_files`, and recovers a bounded repository-search
+fixture token without echoing issue-body sentinels.
 
 When called as `@gitclaw /checkpoints risk` or `@gitclaw /rollback risk`, the
 command posts a `GitClaw Checkpoint Risk Report`. It scans git checkpoint
@@ -6747,7 +6752,10 @@ examples/workflows/gitclaw.yml
   `@gitclaw /rollback` inspects the real checked-out repository's git
   checkpoint state, reports HEAD/worktree/backup-branch metadata, and does not
   leak issue body text, diffs, file bodies, commit subjects, or perform restore
-  operations.
+  operations. The same live issue then receives a normal issue-comment
+  follow-up that must make a GitHub Models call, select `repo-reader`, expose
+  `gitclaw.search_files`, recover the checkpoints-report repository-search
+  fixture token, and avoid hidden sentinel leakage.
 - A `gh`-driven checkpoints-risk E2E harness verifies
   `@gitclaw /rollback risk` exposes body-free checkpoint risk metadata, then
   runs a real GitHub Models follow-up conversation that proves model inference,

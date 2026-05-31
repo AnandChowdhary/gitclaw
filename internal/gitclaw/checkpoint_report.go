@@ -162,6 +162,7 @@ func renderCheckpointReport(ev Event, report CheckpointReport, includeIssue bool
 	fmt.Fprintf(&b, "- raw_diffs_included: `%t`\n", report.RawDiffsIncluded)
 	fmt.Fprintf(&b, "- raw_file_bodies_included: `%t`\n", report.RawFileBodiesIncluded)
 	fmt.Fprintf(&b, "- restore_operations_enabled: `%t`\n", report.RestoreOperationsEnabled)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_checkpoint_report_change: `%t`\n", true)
 	if report.ErrorReason != "" {
 		fmt.Fprintf(&b, "- error_reason: `%s`\n", report.ErrorReason)
 	}

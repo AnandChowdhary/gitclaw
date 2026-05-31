@@ -2504,6 +2504,18 @@ running `reset`, `restore`, or checkout commands. This gives future write-mode
 turns a visible checkpoint gate while keeping rollback itself a reviewed human
 operation.
 
+2026-05-31 checkpoint-report E2E hardening: Hermes' current checkpoint docs
+describe an opt-in shadow git store, checkpoint creation before file writes or
+destructive terminal commands, `/rollback diff` preview, and restore as a
+separate explicit action. OpenClaw memory/backup docs keep durable state as
+plain workspace files and operator-managed backups. GitClaw's checkpoint report
+should therefore prove two things after every change: the deterministic issue
+report remains a body-free, inspect-only map of HEAD/worktree/backup-branch
+state, and a normal GitHub Models follow-up can still select `repo-reader`,
+use bounded repository search, and recover the checkpoints-report fixture token
+without echoing issue-body sentinels. That keeps rollback evidence visible
+without turning issue chat into an implicit restore channel.
+
 2026-05-30 checkpoint-risk follow-up: Hermes' rollback model treats restore as
 dangerous enough to require preview and checkpoint evidence, while OpenClaw's
 write approval posture keeps mutation separate from inspection. GitClaw should

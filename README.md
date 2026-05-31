@@ -413,6 +413,10 @@ generic wakeup path: dispatch-id idempotency first, then a normal GitHub Models
 repo-reader/search follow-up on the same issue. It also waits for the initial
 untriggered issue-opened workflow before labeling, so label timing cannot steal
 the first assistant turn from the manual dispatch proof.
+The checkpoints-report harness now applies the same rule to rollback readiness:
+the issue-visible report stays body-free and inspect-only, then a normal
+GitHub Models repo-reader/search follow-up proves ordinary tool-grounded
+conversation still works after checkpoint metadata changes.
 The channel-ingest harness proves the generic no-server bridge end to end:
 workflow-dispatch mirroring, duplicate provider-message suppression, and a
 normal model/tool follow-up on the canonical channel issue.

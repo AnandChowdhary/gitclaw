@@ -52,6 +52,7 @@ func TestBuildCheckpointReportReportsDirtyGitStateWithoutBodies(t *testing.T) {
 		"raw_diffs_included: `false`",
 		"raw_file_bodies_included: `false`",
 		"restore_operations_enabled: `false`",
+		"llm_e2e_required_after_checkpoint_report_change: `true`",
 		"subject_sha256_12=",
 		"gitclaw rollback list",
 	} {

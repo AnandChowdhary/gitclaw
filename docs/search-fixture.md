@@ -36,6 +36,7 @@ soul edit plan unique search fixture phrase => GITCLAW_SOUL_EDIT_PLAN_CONTEXT_V1
 memory promote plan unique search fixture phrase => GITCLAW_MEMORY_PROMOTE_PLAN_CONTEXT_V1
 heartbeat report unique search fixture phrase => GITCLAW_HEARTBEAT_REPORT_CONTEXT_V1
 workflow dispatch unique search fixture phrase => GITCLAW_WORKFLOW_DISPATCH_CONTEXT_V1
+checkpoints report unique search fixture phrase => GITCLAW_CHECKPOINTS_REPORT_CONTEXT_V1
 proactive info unique search fixture phrase => GITCLAW_PROACTIVE_INFO_CONTEXT_V1
 proactive report unique search fixture phrase => GITCLAW_PROACTIVE_REPORT_CONTEXT_V1
 proactive list unique search fixture phrase => GITCLAW_PROACTIVE_LIST_CONTEXT_V1
