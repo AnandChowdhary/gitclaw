@@ -1031,6 +1031,7 @@ AGENTS.md                    # existing coding-agent instructions, if present
 .gitclaw/WORKSPACE.md        # declarative workspace/checkout safety policy
 .gitclaw/workspaces/*.md     # declarative workspace specs, metadata-only in v1
 .gitclaw/SKILLS/*.md         # optional read-only local skills, v1+
+.gitclaw/skill-sources/*.yaml # reviewed local skill provenance pins
 .gitclaw/toolsets/*.yaml     # reviewed deterministic tool profiles, advisory in v1
 .gitclaw/MEMORY.md           # optional curated repo memory, human-reviewed only
 .gitclaw/memory/YYYY-MM-DD.md # dated working memory notes, human-reviewed only
@@ -1305,6 +1306,9 @@ gitclaw skills check
 gitclaw skills list
 gitclaw skills select-plan <name>
 gitclaw skills refresh-plan
+gitclaw skills sources
+gitclaw skills sources risk
+gitclaw skills sources info <name>
 gitclaw skills proposals [risk]
 gitclaw skills proposal-plan <name>
 gitclaw skills install-plan <target>
@@ -1339,6 +1343,9 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills check
 @gitclaw /skills select-plan repo-reader
 @gitclaw /skills refresh-plan
+@gitclaw /skills sources
+@gitclaw /skills sources risk
+@gitclaw /skills sources info repo-reader
 @gitclaw /skills proposals
 @gitclaw /skills proposals risk
 @gitclaw /skills proposal-plan repo-reader
@@ -1366,6 +1373,8 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
   count, folder/name mismatch count, and body-free findings.
 - risk-audit status, risky-instruction category counts, finding codes, and
   line hashes without raw `SKILL.md` text.
+- source-pin counts, expected/current skill hashes, source kind, trust level,
+  install mode, no-fetch gates, and body-free provenance risk findings.
 - dry-run selection planning metadata when explicitly requested.
 - skill refresh-boundary planning metadata when explicitly requested.
 - dry-run install/upgrade planning metadata when explicitly requested.
@@ -1472,6 +1481,42 @@ they land in the branch used by the next Actions checkout. Any change to skill
 refresh behavior must be paired with `gitclaw skills validate`, `gitclaw skills
 verify`, `gitclaw skills risk`, and a live GitHub Models conversation E2E that
 proves normal skill selection and tool usage still work.
+
+Skill source pins are the no-registry GitClaw analogue of OpenClaw ClawHub
+trust envelopes and Hermes Hub/tap provenance. Files live in
+`.gitclaw/skill-sources/*.yaml`:
+
+```yaml
+name: repo-reader
+skill_path: .gitclaw/SKILLS/repo-reader/SKILL.md
+source_kind: repo-local
+source_ref: .gitclaw/SKILLS/repo-reader/SKILL.md
+trust_level: repo-local
+install_mode: manual-review
+expected_sha256_12: 2f9e68a57bd6
+requires_approval: true
+remote_fetch_allowed: false
+```
+
+`@gitclaw /skills sources` and `gitclaw skills sources` list source pins by
+path, normalized name, skill path, source kind, trust level, install mode,
+expected/current skill hash, match state, and no-fetch/no-install runtime
+gates. `@gitclaw /skills sources risk` and
+`gitclaw skills sources risk` scan source-pin YAML for parse errors, missing
+skill matches, missing or mismatched hashes, unsafe remote-fetch gates,
+installer-like install modes, missing approval gates, untrusted source kinds,
+credential material, prompt-boundary overrides, host execution, repository
+mutation, remote exfiltration, and unbounded loops. `@gitclaw /skills sources
+info <name>` and `gitclaw skills sources info <name>` show one focused source
+pin.
+
+Skill source reports never contact ClawHub, Hermes Hub, skills.sh, GitHub, or
+well-known endpoints; never fetch remote sources; never run installers; never
+install dependencies; never write `.gitclaw/SKILLS`; and never print raw
+source refs, raw source-pin bodies, raw skill bodies, issue bodies, comments,
+prompts, provider payloads, credentials, or secret values. The reports include
+`llm_e2e_required_after_skill_source_change=true`; every source-pin behavior
+change must ship with a live GitHub Models follow-up E2E.
 
 When called as `@gitclaw /skills proposal-plan <name>` or
 `gitclaw skills proposal-plan <name>`, GitClaw posts a non-mutating proposal
@@ -5405,6 +5450,12 @@ examples/workflows/gitclaw.yml
   issue/comment/prompt/skill body leakage. It then runs a live GitHub Models
   follow-up conversation that proves repo-local skill selection and tool usage
   still work.
+- A `gh`-driven skills-sources E2E harness verifies
+  `@gitclaw /skills sources risk` and local `gitclaw skills sources risk`
+  expose body-free source-pin provenance, expected/current skill hashes,
+  no-registry/no-fetch/no-install runtime gates, and risk counts, then runs a
+  real GitHub Models follow-up conversation that proves repo-local skill
+  selection and prompt-visible tool usage still work.
 - A `gh`-driven skills-proposal-plan E2E harness verifies
   `@gitclaw /skills proposal-plan repo-reader` produces a body-free,
   non-mutating OpenClaw Skills Workshop-style proposal plan with review paths,

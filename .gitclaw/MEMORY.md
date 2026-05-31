@@ -22,3 +22,4 @@
 - Keep skill proposal inventories inert: scan `.gitclaw/skill-proposals/*/PROPOSAL.md` for metadata and risk hashes only, never activate proposal bodies or mutate skills, and pair changes with live LLM/tool E2E.
 - Keep toolsets advisory in v1: `.gitclaw/toolsets/*.yaml` can group deterministic tools for review, but must not activate tools, execute providers, mutate repositories, or print raw instructions.
 - Keep MCP specs metadata-only in v1: `.gitclaw/mcp/*.yaml` can describe reviewed server intent and tool filters, but must not launch servers, expose MCP tools, pass raw env, or print commands, URLs, args, bodies, or credentials.
+- Keep skill source pins body-free: `.gitclaw/skill-sources/*.yaml` records reviewed provenance and expected skill hashes without registry contact, remote fetch, installers, skill writes, or raw source/skill body output.

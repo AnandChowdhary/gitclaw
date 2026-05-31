@@ -1798,7 +1798,7 @@ func runMigrateRiskCommand(args []string) error {
 
 func runSkillsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw skills verify|risk|validate|check|list|select-plan <name>|refresh-plan|proposals [risk]|proposal-plan <name>|install-plan <target>|upgrade-plan <target>|bundles [risk]|bundle <name>|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw skills verify|risk|validate|check|list|select-plan <name>|refresh-plan|sources [risk|info <name>]|proposals [risk]|proposal-plan <name>|install-plan <target>|upgrade-plan <target>|bundles [risk]|bundle <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -1813,6 +1813,8 @@ func runSkillsCommand(args []string) error {
 		return runSkillsSelectPlanCommand(args[1:])
 	case "refresh-plan", "refresh", "reload-plan", "snapshot":
 		return runSkillsRefreshPlanCommand(args[1:])
+	case "sources", "source":
+		return runSkillsSourcesCommand(args[1:])
 	case "proposals", "proposal-list", "workshop-list":
 		return runSkillsProposalsCommand(args[1:])
 	case "proposal-plan", "propose-plan", "workshop-plan":
@@ -1885,6 +1887,43 @@ func runSkillsProposalsCommand(args []string) error {
 	}
 	fmt.Println(RenderSkillProposalsCLIReport(cfg))
 	return nil
+}
+
+func runSkillsSourcesCommand(args []string) error {
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	if len(args) == 0 || args[0] == "list" {
+		if len(args) > 1 {
+			return fmt.Errorf("unknown skills sources list argument %q", args[1])
+		}
+		fmt.Println(RenderSkillSourcesCLIReport(cfg, repoContext))
+		return nil
+	}
+	if args[0] == "risk" || args[0] == "risk-audit" {
+		if len(args) > 1 {
+			return fmt.Errorf("unknown skills sources risk argument %q", args[1])
+		}
+		fmt.Println(RenderSkillSourcesRiskCLIReport(cfg, repoContext))
+		return nil
+	}
+	if args[0] == "info" || args[0] == "show" {
+		if len(args) != 2 {
+			return fmt.Errorf("usage: gitclaw skills sources info <name>")
+		}
+		report := RenderSkillSourceInfoCLIReport(cfg, repoContext, args[1])
+		fmt.Println(report)
+		if len(matchingSkillSourceCards(BuildSkillSourceReport(cfg, repoContext).Cards, args[1])) == 0 {
+			return fmt.Errorf("skill source %q not found", args[1])
+		}
+		return nil
+	}
+	return fmt.Errorf("usage: gitclaw skills sources [list|risk|info <name>]")
 }
 
 func runSkillsProposalPlanCommand(args []string, requestedAction string) error {

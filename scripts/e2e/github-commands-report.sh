@@ -138,7 +138,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `33`' \
   'aliases: `31`' \
-  'local_cli_helpers: `138`' \
+  'local_cli_helpers: `141`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/agents' \

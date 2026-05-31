@@ -1,0 +1,9 @@
+name: repo-reader
+skill_path: .gitclaw/SKILLS/repo-reader/SKILL.md
+source_kind: repo-local
+source_ref: .gitclaw/SKILLS/repo-reader/SKILL.md
+trust_level: repo-local
+install_mode: manual-review
+expected_sha256_12: 2f9e68a57bd6
+requires_approval: true
+remote_fetch_allowed: false

@@ -77,6 +77,15 @@ func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if bundleName := requestedSkillBundleInfoName(ev, cfg); bundleName != "" {
 		return renderSkillBundleInfoReport(ev, repoContext, bundleName, true)
 	}
+	if isSkillSourcesRiskRequest(ev, cfg) {
+		return renderSkillSourcesRiskReport(ev, cfg, repoContext, true)
+	}
+	if sourceName := requestedSkillSourceInfoName(ev, cfg); sourceName != "" {
+		return renderSkillSourceInfoReport(ev, cfg, repoContext, sourceName, true)
+	}
+	if isSkillSourcesListRequest(ev, cfg) {
+		return renderSkillSourcesReport(ev, cfg, repoContext, true)
+	}
 	if isSkillProposalsReportRequest(ev, cfg) {
 		return renderSkillProposalsReport(ev, cfg, true)
 	}

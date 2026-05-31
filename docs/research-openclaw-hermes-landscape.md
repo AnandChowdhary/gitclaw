@@ -109,6 +109,21 @@ only counts, categories, finding codes, paths, and line hashes. This gives
 maintainers an issue-visible risk envelope without executing skills, contacting
 registries, dumping skill bodies, or trusting third-party install metadata.
 
+2026-05-31 skill-source follow-up: OpenClaw's ClawHub skill format treats
+runtime metadata, install specs, and trust verification as review inputs, while
+Hermes exposes official/community skill sources, taps, direct GitHub installs,
+well-known indexes, and trust levels. GitClaw should keep the provenance
+pressure without adding a live registry client: add reviewed
+`.gitclaw/skill-sources/*.yaml` source pins and expose
+`@gitclaw /skills sources`, `@gitclaw /skills sources risk`, and
+`gitclaw skills sources ...`. Reports should compare expected/current skill
+hashes, show source kind, trust level, install mode, approval and no-fetch
+gates, and publish only metadata, hashes, and risk codes. They must not contact
+ClawHub, Hermes Hub, skills.sh, GitHub, or well-known endpoints; fetch remote
+skills; run installers; mutate `.gitclaw/SKILLS`; or dump raw source refs,
+source YAML, skill bodies, issue bodies, comments, prompts, credentials, or
+provider payloads.
+
 ### Memory
 
 OpenClaw's default memory model is file-centric:
