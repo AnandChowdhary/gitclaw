@@ -77,6 +77,9 @@ func IsArtifactReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderArtifactReport(ev Event, cfg Config) string {
+	if isArtifactCatalogRequest(ev, cfg) {
+		return RenderArtifactCatalogReport(ev, cfg)
+	}
 	if isArtifactRiskRequest(ev, cfg) {
 		return renderArtifactRiskReport(ev, cfg, true)
 	}
@@ -536,4 +539,21 @@ func isArtifactRiskRequest(ev Event, cfg Config) bool {
 		return false
 	}
 	return strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit")
+}
+
+func isArtifactCatalogRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 {
+		return false
+	}
+	command := fields[0]
+	if command != "/artifacts" && command != "/artifact" {
+		return false
+	}
+	switch strings.ToLower(fields[1]) {
+	case "catalog", "commands", "index", "uploads":
+		return true
+	default:
+		return false
+	}
 }

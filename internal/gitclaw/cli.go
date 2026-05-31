@@ -745,13 +745,27 @@ func runArtifactsCommand(args []string) error {
 		return runArtifactsListCommand(nil)
 	}
 	switch args[0] {
+	case "catalog", "commands", "index", "uploads":
+		return runArtifactsCatalogCommand(args[1:])
 	case "list", "verify":
 		return runArtifactsListCommand(args[1:])
 	case "risk", "risk-audit":
 		return runArtifactsRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw artifacts [list|risk|verify]")
+		return fmt.Errorf("usage: gitclaw artifacts [catalog|list|risk|verify]")
 	}
+}
+
+func runArtifactsCatalogCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown artifacts catalog argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderArtifactCatalogCLIReport(cfg))
+	return nil
 }
 
 func runArtifactsListCommand(args []string) error {

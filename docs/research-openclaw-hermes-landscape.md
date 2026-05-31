@@ -1712,6 +1712,28 @@ search fixture token. Sources: https://docs.openclaw.ai/nodes,
 https://docs.openclaw.ai/cli/gateway, and
 https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation.
 
+2026-05-31 artifacts-catalog follow-up: OpenClaw's current assistant setup,
+workspace, and FAQ docs treat media/file sends as explicit outbound evidence
+with safe document/media type limits, workspace-only path restrictions, and
+private git-backed workspace memory. Hermes' session and checkpoint docs split
+durable history/checkpoints from exported files: sessions can export full JSONL
+transcripts, while checkpoints live in a shadow git store and are pruned by
+retention/size gates. GitClaw should expose the same separation with
+`@gitclaw /artifacts catalog` and `gitclaw artifacts catalog`: list artifact
+commands, `.gitclaw/ARTIFACTS.md`, `.gitclaw/artifacts/*.md`, reviewed
+`actions/upload-artifact` workflow steps, GitHub Actions artifact storage,
+redaction, explicit short retention, durable backup branch boundaries, and
+no-hidden-state/no-external-storage/no-raw-payload gates without printing
+artifact payloads, prompt bodies, issue/comment bodies, tool outputs,
+credentials, channel payloads, backup payloads, or sessions. Acceptance requires
+a real issue E2E, a local CLI assertion, and a GitHub Models repo-reader/search
+follow-up that recovers a distinct artifacts-catalog repository-search fixture
+token. Sources: https://docs.openclaw.ai/start/openclaw,
+https://docs.openclaw.ai/agent-workspace,
+https://docs.openclaw.ai/help/faq,
+https://hermes-agent.nousresearch.com/docs/user-guide/sessions, and
+https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback.
+
 2026-05-30 nodes-runtime follow-up: OpenClaw's node host docs expose a separate
 execution plane: a headless node service connects to the Gateway WebSocket,
 pairs as `role: node`, advertises capabilities, and can run approved

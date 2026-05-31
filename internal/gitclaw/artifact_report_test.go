@@ -146,6 +146,98 @@ func TestRenderArtifactReportAuditsArtifactSpecsWithoutBodies(t *testing.T) {
 	}
 }
 
+func TestRenderArtifactCatalogReportShowsCommandAndLayerSurfaceWithoutBodies(t *testing.T) {
+	t.Setenv("GITCLAW_PROMPT_ARTIFACT_PATH", "")
+	dir := t.TempDir()
+	writeTestFile(t, dir, artifactPolicyPath, artifactPolicyTestBody)
+	writeTestFile(t, dir, ".gitclaw/artifacts/prompt-artifact.md", artifactSpecTestBody)
+	writeTestFile(t, dir, ".github/workflows/gitclaw.yml", artifactWorkflowTestBody)
+	cfg := DefaultConfig()
+	cfg.Workdir = dir
+
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 127,
+			"title": "@gitclaw /artifacts catalog",
+			"body": "Hidden artifacts catalog body token: ARTIFACTS_CATALOG_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	report := RenderArtifactReport(ev, cfg)
+	for _, want := range []string{
+		"GitClaw Artifacts Catalog Report",
+		"Generated without a model call",
+		"requested_artifacts_command: `catalog`",
+		"artifacts_command_status: `ok`",
+		"issue_side_execution: `github_actions_artifact_metadata`",
+		"artifacts_catalog_status: `ok`",
+		"catalog_strategy: `compact-github-actions-artifact-discovery`",
+		"artifact_model: `github-actions-artifact-metadata`",
+		"artifact_scope: `repository-run-evidence`",
+		"artifact_policy_path: `.gitclaw/ARTIFACTS.md`",
+		"artifact_policy_present: `true`",
+		"artifact_policy_loaded_for_model: `true`",
+		"artifact_specs_dir: `.gitclaw/artifacts`",
+		"artifact_specs: `1`",
+		"artifact_specs_with_frontmatter: `1`",
+		"artifact_specs_requiring_approval: `1`",
+		"artifact_specs_requiring_redaction: `1`",
+		"artifact_retention_days_declared: `7`",
+		"github_actions_artifact_uploaders: `1`",
+		"upload_artifact_versions: `actions/upload-artifact@v6`",
+		"prompt_artifact_default_enabled: `false`",
+		"artifact_storage_backend: `github-actions-artifacts`",
+		"durable_backup_backend: `git-backup-branch`",
+		"catalog_entries: `4`",
+		"artifact_layers: `8`",
+		"artifact_body_printing_allowed: `false`",
+		"artifact_as_hidden_state_allowed: `false`",
+		"external_artifact_storage_allowed: `false`",
+		"long_term_artifact_memory_supported: `false`",
+		"unredacted_prompt_artifact_allowed: `false`",
+		"raw_artifact_bodies_included: `false`",
+		"raw_issue_bodies_included: `false`",
+		"raw_tool_outputs_included: `false`",
+		"credential_values_included: `false`",
+		"llm_e2e_required_after_artifacts_catalog_change: `true`",
+		"### Catalog Entries",
+		"command=`catalog` issue_intent=`@gitclaw /artifacts catalog` local_command=`gitclaw artifacts catalog` execution=`metadata-only` gate=`body-free-output`",
+		"command=`list` issue_intent=`@gitclaw /artifacts` local_command=`gitclaw artifacts list`",
+		"command=`risk` issue_intent=`@gitclaw /artifacts risk` local_command=`gitclaw artifacts risk`",
+		"### Artifact Layers",
+		"layer=`policy` store=`.gitclaw/ARTIFACTS.md`",
+		"layer=`specs` store=`.gitclaw/artifacts/*.md`",
+		"layer=`workflow` store=`.github/workflows/*.yml`",
+		"layer=`storage` store=`GitHub Actions artifacts`",
+		"layer=`redaction` store=`artifact spec redaction_required`",
+		"layer=`durable-backup` store=`git backup branch`",
+		"layer=`payloads` store=`unsupported in reports`",
+		"### Catalog Gates",
+		"artifact_policy_gate=`repo-reviewed-policy-file`",
+		"workflow_upload_gate=`reviewed-github-actions-upload-step`",
+		"hidden_state_gate=`artifacts-not-agent-memory`",
+		"external_storage_gate=`disabled-github-actions-artifacts-only`",
+		"model_e2e_gate=`required`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("artifact catalog report missing %q:\n%s", want, report)
+		}
+	}
+	for _, notWant := range []string{"ARTIFACT_POLICY_BODY_SECRET", "ARTIFACT_SPEC_BODY_SECRET", "ARTIFACTS_CATALOG_BODY_SECRET", "GITCLAW_ARTIFACTS_CONTEXT_V1", "This declarative artifact record"} {
+		if strings.Contains(report, notWant) {
+			t.Fatalf("artifact catalog report leaked %q:\n%s", notWant, report)
+		}
+	}
+}
+
 func TestArtifactsListCommandReportsArtifacts(t *testing.T) {
 	t.Setenv("GITCLAW_PROMPT_ARTIFACT_PATH", "")
 	dir := t.TempDir()
@@ -167,6 +259,30 @@ func TestArtifactsListCommandReportsArtifacts(t *testing.T) {
 	}
 	if strings.Contains(output, "ARTIFACT_POLICY_BODY_SECRET") || strings.Contains(output, "ARTIFACT_SPEC_BODY_SECRET") || strings.Contains(output, "issue: `#0`") {
 		t.Fatalf("artifacts list leaked body or issue metadata:\n%s", output)
+	}
+}
+
+func TestArtifactsCatalogCommandReportsSurfaceWithoutBodies(t *testing.T) {
+	t.Setenv("GITCLAW_PROMPT_ARTIFACT_PATH", "")
+	dir := t.TempDir()
+	writeTestFile(t, dir, artifactPolicyPath, artifactPolicyTestBody)
+	writeTestFile(t, dir, ".gitclaw/artifacts/prompt-artifact.md", artifactSpecTestBody)
+	writeTestFile(t, dir, ".github/workflows/gitclaw.yml", artifactWorkflowTestBody)
+	t.Setenv("GITCLAW_WORKDIR", dir)
+	t.Setenv("GITCLAW_LLM_API_KEY", "")
+
+	output := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"artifacts", "catalog"}); err != nil {
+			t.Fatalf("artifacts catalog returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"GitClaw Artifacts Catalog Report", "scope: `local-cli`", "artifacts_catalog_status: `ok`", "catalog_entries: `4`", "artifact_layers: `8`", "command=`catalog` issue_intent=`@gitclaw /artifacts catalog` local_command=`gitclaw artifacts catalog`", "layer=`redaction` store=`artifact spec redaction_required`", "raw_artifact_bodies_included: `false`", "model_e2e_gate=`required`"} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("artifacts catalog output missing %q:\n%s", want, output)
+		}
+	}
+	if strings.Contains(output, "ARTIFACT_POLICY_BODY_SECRET") || strings.Contains(output, "ARTIFACT_SPEC_BODY_SECRET") || strings.Contains(output, "issue: `#0`") {
+		t.Fatalf("artifacts catalog leaked body or issue metadata:\n%s", output)
 	}
 }
 
@@ -218,6 +334,57 @@ func TestHandleArtifactsCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 	if !hasLabel(github.IssueLabels[126], "gitclaw:done") || hasLabel(github.IssueLabels[126], "gitclaw:running") || hasLabel(github.IssueLabels[126], "gitclaw:error") {
 		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[126])
+	}
+}
+
+func TestHandleArtifactsCatalogCommandPostsReportWithoutLLM(t *testing.T) {
+	t.Setenv("GITCLAW_PROMPT_ARTIFACT_PATH", "")
+	dir := t.TempDir()
+	writeTestFile(t, dir, artifactPolicyPath, artifactPolicyTestBody)
+	writeTestFile(t, dir, ".gitclaw/artifacts/prompt-artifact.md", artifactSpecTestBody)
+	writeTestFile(t, dir, ".github/workflows/gitclaw.yml", artifactWorkflowTestBody)
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 128,
+			"title": "@gitclaw /artifact uploads",
+			"body": "Hidden artifacts catalog handler token: ARTIFACTS_CATALOG_HANDLER_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	cfg := DefaultConfig()
+	cfg.Workdir = dir
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{128: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic artifacts catalog command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"GitClaw Artifacts Catalog Report", "Generated without a model call", "model=\"gitclaw/artifacts\"", "requested_artifacts_command: `catalog`", "artifacts_catalog_status: `ok`", "catalog_entries: `4`", "artifact_layers: `8`", "command=`catalog` issue_intent=`@gitclaw /artifacts catalog`", "layer=`policy` store=`.gitclaw/ARTIFACTS.md`", "raw_artifact_bodies_included: `false`"} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("artifacts catalog handler report missing %q:\n%s", want, body)
+		}
+	}
+	for _, notWant := range []string{"ARTIFACTS_CATALOG_HANDLER_BODY_SECRET", "ARTIFACT_POLICY_BODY_SECRET", "ARTIFACT_SPEC_BODY_SECRET", "This declarative artifact record"} {
+		if strings.Contains(body, notWant) {
+			t.Fatalf("artifacts catalog handler report leaked %q:\n%s", notWant, body)
+		}
+	}
+	if !hasLabel(github.IssueLabels[128], "gitclaw:done") || hasLabel(github.IssueLabels[128], "gitclaw:running") || hasLabel(github.IssueLabels[128], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[128])
 	}
 }
 

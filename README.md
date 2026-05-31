@@ -306,6 +306,7 @@ gitclaw policy verify
 gitclaw policy risk
 gitclaw approvals provenance
 gitclaw approvals risk
+gitclaw artifacts catalog
 gitclaw artifacts list
 gitclaw artifacts risk
 gitclaw artifacts verify
@@ -383,6 +384,13 @@ paths, conversation boundary, capability names, approval gates, and explicit
 no-gateway/no-pairing/no-remote-exec boundaries without printing node files,
 issue/comment bodies, prompts, tool outputs, channel payloads, worker payloads,
 or credentials.
+
+`gitclaw artifacts catalog` is the compact discovery view for short-lived
+Actions evidence bundles. It maps artifact commands, policy/spec files,
+reviewed upload workflow steps, storage, redaction, retention, durable-backup
+boundaries, and no-hidden-state gates without printing artifact payloads,
+prompts, tool outputs, issue/comment bodies, channel payloads, backup payloads,
+sessions, or credentials.
 
 The live channels-report harness verifies the GitHub-native Slack/Telegram
 bridge contract, workflow-dispatch wake strategy, and mirrored message counts
@@ -464,6 +472,7 @@ scripts/e2e/github-agents-catalog-report.sh
 scripts/e2e/github-agents-risk-report.sh
 scripts/e2e/github-nodes-catalog-report.sh
 scripts/e2e/github-nodes-risk-report.sh
+scripts/e2e/github-artifacts-catalog-report.sh
 scripts/e2e/github-artifacts-risk-report.sh
 scripts/e2e/github-checkpoints-risk-report.sh
 scripts/e2e/github-context-risk-report.sh
