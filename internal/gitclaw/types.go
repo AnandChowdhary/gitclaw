@@ -295,6 +295,7 @@ type SkillBundleSummary struct {
 	MissingSkills      []string
 	Selected           bool
 	InstructionPresent bool
+	InstructionSHA     string
 	Bytes              int
 	Lines              int
 	SHA                string

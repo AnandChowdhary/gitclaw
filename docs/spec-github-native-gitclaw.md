@@ -1344,6 +1344,7 @@ gitclaw skills install-plan <target>
 gitclaw skills upgrade-plan <target>
 gitclaw bundles list
 gitclaw bundles risk
+gitclaw bundles provenance
 gitclaw bundles info <name>
 gitclaw skills info <name>
 gitclaw skills search <query>
@@ -1386,6 +1387,7 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills upgrade-plan repo-reader
 @gitclaw /bundles
 @gitclaw /bundles risk
+@gitclaw /bundles provenance
 @gitclaw /bundles info repo-context
 @gitclaw /skills info repo-reader
 @gitclaw /skills search repository context
@@ -1451,6 +1453,18 @@ counts, and short hash. `@gitclaw /bundles info <name>` and
 `gitclaw bundles info <name>` show one focused bundle card. Bundle YAML bodies,
 bundle instructions, skill bodies, issue bodies, comments, prompts, and secret
 values are never printed in reports.
+
+`@gitclaw /bundles provenance`, `@gitclaw /bundles history`,
+`@gitclaw /bundles timeline`, and `gitclaw bundles provenance` map
+repo-local bundle YAML files to body-free git provenance. The report shows
+bundle and skill-ref counts, instruction hashes, bundle body hashes, tracked
+state, dirty state, last commit IDs/dates, commit-subject hashes, and explicit
+no-mutation gates. It never prints bundle YAML, bundle instructions, skill
+bodies, issue/comment bodies, prompts, commit subjects, author names, author
+emails, provider payloads, credentials, or secret values. This is the
+GitHub-native adaptation of Hermes' bundle lifecycle: bundles are useful
+task-profile aliases, but in GitClaw they remain reviewed files whose history
+is inspectable before they influence a model turn.
 
 `@gitclaw /bundles risk` and `gitclaw bundles risk` scan repo-local bundle YAML
 and optional bundle instructions internally for prompt-boundary overrides,
@@ -5928,6 +5942,13 @@ examples/workflows/gitclaw.yml
   hashes, inert install gates, and no raw skill/env/install body leakage. It
   then runs a real GitHub Models follow-up conversation that proves repo-local
   skill selection and prompt-visible repository search tool usage.
+- A `gh`-driven skill-bundle provenance E2E harness verifies
+  `@gitclaw /bundles provenance` and local `gitclaw bundles provenance`
+  expose body-free bundle git history, instruction hashes, tracked/dirty state,
+  commit-subject hashes, no agent-authored mutation gates, and no raw
+  bundle/skill/issue body leakage. It then runs a real GitHub Models follow-up
+  conversation that proves repo-local skill selection and prompt-visible
+  repository search tool usage.
 - A `gh`-driven skills-proposal-plan E2E harness verifies
   `@gitclaw /skills proposal-plan repo-reader` produces a body-free,
   non-mutating OpenClaw Skills Workshop-style proposal plan with review paths,

@@ -138,7 +138,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `33`' \
   'aliases: `31`' \
-  'local_cli_helpers: `158`' \
+  'local_cli_helpers: `159`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/agents' \
@@ -204,6 +204,7 @@ for expected in \
   'gitclaw approvals risk' \
   'gitclaw bundles list' \
   'gitclaw bundles risk' \
+  'gitclaw bundles provenance' \
   'gitclaw bundles info <name>' \
   'gitclaw channels verify' \
   'gitclaw channels risk' \

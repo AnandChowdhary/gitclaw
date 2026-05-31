@@ -2058,7 +2058,7 @@ func runMigrateRiskCommand(args []string) error {
 
 func runSkillsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw skills verify|risk|runtime|validate|check|list|provenance|select-plan <name>|refresh-plan|sources [risk|info <name>]|proposals [risk]|proposal-plan <name>|install-plan <target>|upgrade-plan <target>|bundles [risk]|bundle <name>|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw skills verify|risk|runtime|validate|check|list|provenance|select-plan <name>|refresh-plan|sources [risk|info <name>]|proposals [risk]|proposal-plan <name>|install-plan <target>|upgrade-plan <target>|bundles [risk|provenance]|bundle <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -2095,9 +2095,14 @@ func runSkillsCommand(args []string) error {
 		if len(args) > 1 && (args[1] == "risk" || args[1] == "risk-audit") {
 			return runBundlesRiskCommand(args[2:])
 		}
+		if len(args) > 1 && (args[1] == "provenance" || args[1] == "history" || args[1] == "timeline") {
+			return runBundlesProvenanceCommand(args[2:])
+		}
 		return runBundlesListCommand(args[1:])
 	case "bundle-risk", "bundles-risk":
 		return runBundlesRiskCommand(args[1:])
+	case "bundle-provenance", "bundles-provenance":
+		return runBundlesProvenanceCommand(args[1:])
 	case "bundle", "bundle-info":
 		return runBundlesInfoCommand(args[1:])
 	case "info":
@@ -2215,10 +2220,12 @@ func runBundlesCommand(args []string) error {
 		return runBundlesListCommand(args[1:])
 	case "risk", "risk-audit":
 		return runBundlesRiskCommand(args[1:])
+	case "provenance", "history", "timeline":
+		return runBundlesProvenanceCommand(args[1:])
 	case "info", "show":
 		return runBundlesInfoCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw bundles [list|risk|info <name>]")
+		return fmt.Errorf("usage: gitclaw bundles [list|risk|provenance|info <name>]")
 	}
 }
 
@@ -2347,6 +2354,22 @@ func runBundlesRiskCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSkillBundlesRiskCLIReport(repoContext))
+	return nil
+}
+
+func runBundlesProvenanceCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown bundles provenance argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSkillBundleProvenanceCLIReport(cfg, repoContext))
 	return nil
 }
 

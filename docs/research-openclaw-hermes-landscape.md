@@ -138,6 +138,20 @@ outputs. Any change to this surface should be paired with a live GitHub Models
 conversation E2E so the deterministic audit does not become a substitute for
 testing real skill selection and tool usage.
 
+2026-05-31 skill-bundle provenance follow-up: Hermes' skills system treats
+bundles as small YAML files that group several existing skills under one slash
+command, skip missing skills rather than failing, and intentionally avoid
+mutating the system prompt cache. That maps well to GitClaw's repo-native
+model, but the bundle YAML itself becomes prompt-influencing state. GitClaw
+should therefore add `@gitclaw /bundles provenance` and
+`gitclaw bundles provenance`: report bundle counts, skill-ref resolution,
+instruction hashes, git tracked/dirty state, commit IDs/dates, and
+commit-subject hashes without printing raw bundle YAML, instructions, skill
+bodies, issue/comment bodies, prompts, author identities, provider payloads,
+credentials, or secret values. This keeps team-wide task profiles reviewable
+as ordinary git files while rejecting Hermes-style agent-managed bundle writes
+in the v1 GitHub-native runtime.
+
 ### Memory
 
 OpenClaw's default memory model is file-centric:

@@ -104,6 +104,7 @@ gitclaw skills info <name>
 gitclaw skills search <query>
 gitclaw bundles list
 gitclaw bundles risk
+gitclaw bundles provenance
 gitclaw bundles info <name>
 ```
 
@@ -259,6 +260,7 @@ scripts/e2e/github-skills-proposals-report.sh
 scripts/e2e/github-skills-refresh-plan-report.sh
 scripts/e2e/github-skills-sources-report.sh
 scripts/e2e/github-skills-runtime-report.sh
+scripts/e2e/github-bundles-provenance-report.sh
 scripts/e2e/github-bundles-risk-report.sh
 scripts/e2e/github-orders-risk-report.sh
 scripts/e2e/github-policy-risk-report.sh
