@@ -2093,9 +2093,13 @@ comments, prompts, or secret values.
 The soul edit planner never writes `.gitclaw/` files, creates branches,
 applies patches, commits, pushes, or lets the model rewrite its own identity,
 memory, tools, heartbeat, or policy context. The report includes
-`llm_e2e_required_after_change=true` to make the release rule explicit: after
-a soul file is actually changed, maintainers must run a live GitHub Models
-conversation E2E in addition to deterministic soul-report tests.
+`llm_e2e_required_after_change=true` and
+`llm_e2e_required_after_soul_edit_plan_change=true` to make the release rule
+explicit: after a soul file is actually changed, maintainers must run a live
+GitHub Models conversation E2E in addition to deterministic soul-report tests.
+Changes to the planner itself must also run the live follow-up that proves
+selected skill metadata, prompt-context provenance, `gitclaw.search_files`,
+and token-usage markers.
 
 When called as `@gitclaw /soul validate`, the command posts only the
 validation report: status, error/warning totals, required-file counts,
@@ -6336,8 +6340,9 @@ examples/workflows/gitclaw.yml
   `@gitclaw /soul edit-plan soul` produces a body-free, non-mutating plan for
   a high-authority context change with edit operations, branch creation,
   commits, pushes, model self-modification, raw targets, raw requested changes,
-  and raw context bodies disabled. This deterministic check must be paired in
-  the same implementation batch with a live GitHub Models conversation E2E.
+  and raw context bodies disabled. The same harness then posts a live GitHub
+  Models follow-up proving selected `repo-reader` context, prompt-context
+  provenance, `gitclaw.search_files`, and usage telemetry.
 - A `gh`-driven soul-validate E2E harness verifies
   `@gitclaw /soul validate` exposes the body-free validation report without
   falling back to the full context inventory.

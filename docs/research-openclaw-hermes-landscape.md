@@ -573,6 +573,16 @@ echoing, and model self-modification. Any real soul edit should happen as a
 reviewed git diff and be followed by both deterministic soul verification and
 a live GitHub Models conversation E2E.
 
+2026-05-31 soul-edit-plan E2E hardening follow-up: OpenClaw's identity
+cascade means `SOUL.md` edits are prompt-shaping changes, and Hermes profiles
+also keep `SOUL.md` beside memory/user state as durable agent behavior. The
+planner must therefore stay non-mutating and body-free while the E2E proves the
+normal runtime still performs a real model turn after the deterministic audit.
+GitClaw's soul edit-plan harness should post a second issue comment that uses
+repo-reader search and verifies prompt provenance, selected skills,
+prompt-visible tools, and usage telemetry before a soul-planner change is
+accepted.
+
 2026-05-30 soul-verify follow-up: OpenClaw's `SOUL.md` convention and Hermes'
 profile/memory boundary suggest a second audit surface beyond validation:
 provenance. GitClaw should add `@gitclaw /soul verify` and

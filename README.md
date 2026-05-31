@@ -74,6 +74,11 @@ gitclaw soul info <path>
 gitclaw soul search <query>
 ```
 
+`gitclaw soul edit-plan <path>` is a dry-run planner for high-authority
+context changes. It reports normalized target metadata and write-disabled
+gates only, and its live harness now proves a real GitHub Models repo-reader
+follow-up after the deterministic report.
+
 Memory:
 
 ```bash

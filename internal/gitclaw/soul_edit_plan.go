@@ -61,6 +61,7 @@ func renderSoulEditPlanReport(ev Event, cfg Config, repoContext RepoContext, tar
 	fmt.Fprintf(&b, "- model_self_modification_allowed: `%t`\n", false)
 	fmt.Fprintf(&b, "- manual_review_required: `%t`\n", true)
 	fmt.Fprintf(&b, "- llm_e2e_required_after_change: `%t`\n", true)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_soul_edit_plan_change: `%t`\n", true)
 	fmt.Fprintf(&b, "- raw_target_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_requested_change_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", false)

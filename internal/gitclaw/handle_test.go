@@ -2040,7 +2040,7 @@ func TestHandleSoulEditPlanCommandPostsReportWithoutLLM(t *testing.T) {
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Soul Edit Plan Report", "Generated without a model call", "model=\"gitclaw/soul\"", "repository: `owner/repo`", "issue: `#139`", "soul_edit_plan_status: `needs_review`", "target_allowed: `true`", "normalized_soul_path: `.gitclaw/SOUL.md`", "target_category: `soul`", "target_present: `true`", "target_required: `true`", "matched_soul_files: `1`", "edit_operations_allowed: `false`", "repository_mutation_allowed: `false`", "model_self_modification_allowed: `false`", "raw_requested_change_included: `false`", "soul_validation_status: `ok`", "category=`soul` path=`.gitclaw/SOUL.md`", "code=`high_authority_context_change`"} {
+	for _, want := range []string{"GitClaw Soul Edit Plan Report", "Generated without a model call", "model=\"gitclaw/soul\"", "repository: `owner/repo`", "issue: `#139`", "soul_edit_plan_status: `needs_review`", "target_allowed: `true`", "normalized_soul_path: `.gitclaw/SOUL.md`", "target_category: `soul`", "target_present: `true`", "target_required: `true`", "matched_soul_files: `1`", "edit_operations_allowed: `false`", "repository_mutation_allowed: `false`", "model_self_modification_allowed: `false`", "llm_e2e_required_after_soul_edit_plan_change: `true`", "raw_requested_change_included: `false`", "soul_validation_status: `ok`", "category=`soul` path=`.gitclaw/SOUL.md`", "code=`high_authority_context_change`"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("soul edit-plan report missing %q:\n%s", want, body)
 		}

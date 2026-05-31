@@ -32,3 +32,4 @@ backup restore plan unique search fixture phrase => GITCLAW_BACKUP_RESTORE_PLAN_
 backup retention plan unique search fixture phrase => GITCLAW_BACKUP_RETENTION_PLAN_CONTEXT_V1
 skills install plan unique search fixture phrase => GITCLAW_SKILLS_INSTALL_PLAN_CONTEXT_V1
 skills upgrade plan unique search fixture phrase => GITCLAW_SKILLS_UPGRADE_PLAN_CONTEXT_V1
+soul edit plan unique search fixture phrase => GITCLAW_SOUL_EDIT_PLAN_CONTEXT_V1
