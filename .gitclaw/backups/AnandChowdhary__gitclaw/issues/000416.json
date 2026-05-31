@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T15:20:41Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 416,
+    "title": "@gitclaw /heartbeat e2e 20260531T151940Z",
+    "body": "Live heartbeat-report E2E.\n\nHidden heartbeat report body token: NOECHO_HEARTBEAT_REPORT_20260531T151940Z\nThis should produce a deterministic heartbeat operator report without a model call.\nThe report must not print .gitclaw/HEARTBEAT.md contents.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw",
+      "gitclaw:heartbeat"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /heartbeat e2e 20260531T151940Z\n\nLive heartbeat-report E2E.\n\nHidden heartbeat report body token: NOECHO_HEARTBEAT_REPORT_20260531T151940Z\nThis should produce a deterministic heartbeat operator report without a model call.\nThe report must not print .gitclaw/HEARTBEAT.md contents.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Heartbeat Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#416`\n- heartbeat_report_status: `ok`\n- heartbeat_label: `gitclaw:heartbeat`\n- trigger_label: `gitclaw`\n- disabled_label: `gitclaw:disabled`\n- workflow_path: `.github/workflows/gitclaw-heartbeat.yml`\n- workflow_present: `true`\n- workflow_dispatch_trigger: `true`\n- schedule_trigger: `true`\n- schedule_entries: `1`\n- permissions_contents_read: `true`\n- permissions_issues_write: `true`\n- permissions_models_read: `true`\n- workflow_inputs: `3`\n- heartbeat_context_path: `.gitclaw/HEARTBEAT.md`\n- heartbeat_context_present: `true`\n- default_limit: `3`\n- slot_strategy: `utc-hour-or-explicit`\n- idempotency_marker: `gitclaw:heartbeat`\n- heartbeat_marker_model_telemetry: `true`\n- heartbeat_marker_prompt_provenance: `true`\n- heartbeat_marker_usage_telemetry: `true`\n- quiet_response: `HEARTBEAT_OK`\n- model_call_required: `false`\n- runner_model_call_required: `true`\n- repository_mutation_allowed: `false`\n- issue_scan_performed: `false`\n- raw_bodies_included: `false`\n- raw_heartbeat_body_included: `false`\n- llm_e2e_required_after_change: `true`\n- llm_e2e_required_after_heartbeat_marker_change: `true`\n- heartbeat_label_present: `true`\n- disabled_label_present: `false`\n- heartbeat_comments_now: `0`\n- issue_title_sha256_12: `5cda773a305a`\n\nThis report audits the checked-in heartbeat surface. It does not scan heartbeat issues or call a model; the scheduled runner does both through GitHub Actions and GitHub Models. Workflow bodies, issue bodies, comments, and heartbeat context bodies are not included.\n\n### Workflow\n- `.github/workflows/gitclaw-heartbeat.yml` present=`true` bytes=`1882` lines=`65` workflow_dispatch=`true` schedule=`true` schedule_entries=`1` contents_read=`true` issues_write=`true` models_read=`true` inputs=`3` sha256_12=`c354982765fb`\n\n### Heartbeat Context\n- `.gitclaw/HEARTBEAT.md` present=`true` bytes=`595` lines=`14` sha256_12=`18c511b8d61b`\n\n### Runtime Contract\n- `gitclaw heartbeat --repo \u003cowner/repo\u003e` runs the actual heartbeat scanner and may call the configured model\n- `gitclaw heartbeat status` renders this read-only report and never calls the model\n- `.github/workflows/gitclaw-heartbeat.yml` supports manual `workflow_dispatch` and scheduled UTC cron dispatch\n- the runner lists open issues with the heartbeat label, skips disabled issues and pull requests, and writes at most one heartbeat comment per slot\n- model output `HEARTBEAT_OK` suppresses visible comments for quiet turns\n\n### Verification Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4587135344,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4587135344,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26716476143\" event_id=\"issue-416\" model=\"gitclaw/heartbeat\" idempotency_key=\"8c938f3c24619a5a63ab732d9dedb4c2\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26716476143\" --\u003e\n## GitClaw Heartbeat Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#416`\n- heartbeat_report_status: `ok`\n- heartbeat_label: `gitclaw:heartbeat`\n- trigger_label: `gitclaw`\n- disabled_label: `gitclaw:disabled`\n- workflow_path: `.github/workflows/gitclaw-heartbeat.yml`\n- workflow_present: `true`\n- workflow_dispatch_trigger: `true`\n- schedule_trigger: `true`\n- schedule_entries: `1`\n- permissions_contents_read: `true`\n- permissions_issues_write: `true`\n- permissions_models_read: `true`\n- workflow_inputs: `3`\n- heartbeat_context_path: `.gitclaw/HEARTBEAT.md`\n- heartbeat_context_present: `true`\n- default_limit: `3`\n- slot_strategy: `utc-hour-or-explicit`\n- idempotency_marker: `gitclaw:heartbeat`\n- heartbeat_marker_model_telemetry: `true`\n- heartbeat_marker_prompt_provenance: `true`\n- heartbeat_marker_usage_telemetry: `true`\n- quiet_response: `HEARTBEAT_OK`\n- model_call_required: `false`\n- runner_model_call_required: `true`\n- repository_mutation_allowed: `false`\n- issue_scan_performed: `false`\n- raw_bodies_included: `false`\n- raw_heartbeat_body_included: `false`\n- llm_e2e_required_after_change: `true`\n- llm_e2e_required_after_heartbeat_marker_change: `true`\n- heartbeat_label_present: `true`\n- disabled_label_present: `false`\n- heartbeat_comments_now: `0`\n- issue_title_sha256_12: `5cda773a305a`\n\nThis report audits the checked-in heartbeat surface. It does not scan heartbeat issues or call a model; the scheduled runner does both through GitHub Actions and GitHub Models. Workflow bodies, issue bodies, comments, and heartbeat context bodies are not included.\n\n### Workflow\n- `.github/workflows/gitclaw-heartbeat.yml` present=`true` bytes=`1882` lines=`65` workflow_dispatch=`true` schedule=`true` schedule_entries=`1` contents_read=`true` issues_write=`true` models_read=`true` inputs=`3` sha256_12=`c354982765fb`\n\n### Heartbeat Context\n- `.gitclaw/HEARTBEAT.md` present=`true` bytes=`595` lines=`14` sha256_12=`18c511b8d61b`\n\n### Runtime Contract\n- `gitclaw heartbeat --repo \u003cowner/repo\u003e` runs the actual heartbeat scanner and may call the configured model\n- `gitclaw heartbeat status` renders this read-only report and never calls the model\n- `.github/workflows/gitclaw-heartbeat.yml` supports manual `workflow_dispatch` and scheduled UTC cron dispatch\n- the runner lists open issues with the heartbeat label, skips disabled issues and pull requests, and writes at most one heartbeat comment per slot\n- model output `HEARTBEAT_OK` suppresses visible comments for quiet turns\n\n### Verification Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T15:20:21Z",
+      "updated_at": "2026-05-31T15:20:21Z"
+    }
+  ]
+}
