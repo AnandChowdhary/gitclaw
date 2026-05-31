@@ -2538,7 +2538,7 @@ func TestBackupStatsCommandReportsFetchedBackupTree(t *testing.T) {
 			t.Fatalf("backup stats returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Backup Stats Report", "backup_stats_status: `ok`", "backup_verify_status: `ok`", "issue_count: `1`", "transcript_messages: `1`", "latest_issue: `#7`", "raw_bodies_included: `false`"} {
+	for _, want := range []string{"GitClaw Backup Stats Report", "backup_stats_status: `ok`", "backup_verify_status: `ok`", "issue_count: `1`", "transcript_messages: `1`", "latest_issue: `#7`", "raw_bodies_included: `false`", "llm_e2e_required_after_backup_stats_change: `true`"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("backup stats output missing %q:\n%s", want, output)
 		}

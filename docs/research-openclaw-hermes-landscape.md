@@ -369,6 +369,13 @@ tree, summarize issue/comment/transcript/message counts, latest backup
 metadata, payload bytes, and event types, and avoid printing raw titles or
 bodies.
 
+2026-05-31 backup-stats E2E hardening: Repo-wide stats can guide backup-health
+decisions, so changes must be proven beyond deterministic rendering. The live
+harness should verify the fetched backup tree stats report, then post a normal
+issue-comment follow-up that makes a GitHub Models call, selects repo-reader,
+exposes `gitclaw.search_files`, recovers the backup-stats repository-search
+fixture token, and avoids echoing hidden issue/comment tokens.
+
 2026-05-30 backup-list follow-up: Hermes' session list and OpenClaw's backup
 inspection surfaces both point to a compact index-first view before export or
 restore. GitClaw should add `gitclaw backup list`: verify the fetched

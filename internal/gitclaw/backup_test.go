@@ -335,7 +335,7 @@ func TestBuildBackupStatsSummarizesBackupsWithoutBodies(t *testing.T) {
 		t.Fatalf("unexpected backup stats: %#v", stats)
 	}
 	report := RenderBackupStats(stats)
-	for _, want := range []string{"GitClaw Backup Stats Report", "repository: `owner/repo`", "backup_stats_status: `ok`", "backup_verify_status: `ok`", "verification_failures: `0`", "backup_schema_version: `1`", "issue_count: `2`", "comment_count: `2`", "transcript_messages: `3`", "user_messages: `2`", "assistant_messages: `1`", "assistant_turn_comments: `1`", "error_comments: `1`", "event_types: `2`", "latest_issue: `#8`", "latest_issue_path: `issues/000008.json`", "latest_issue_title_sha256_12:", "raw_bodies_included: `false`", "`issues`: `1`", "`issue_comment`: `1`"} {
+	for _, want := range []string{"GitClaw Backup Stats Report", "repository: `owner/repo`", "backup_stats_status: `ok`", "backup_verify_status: `ok`", "verification_failures: `0`", "backup_schema_version: `1`", "issue_count: `2`", "comment_count: `2`", "transcript_messages: `3`", "user_messages: `2`", "assistant_messages: `1`", "assistant_turn_comments: `1`", "error_comments: `1`", "event_types: `2`", "latest_issue: `#8`", "latest_issue_path: `issues/000008.json`", "latest_issue_title_sha256_12:", "raw_bodies_included: `false`", "llm_e2e_required_after_backup_stats_change: `true`", "`issues`: `1`", "`issue_comment`: `1`"} {
 		if !strings.Contains(report, want) {
 			t.Fatalf("stats report missing %q:\n%s", want, report)
 		}

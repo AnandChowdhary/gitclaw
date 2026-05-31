@@ -148,31 +148,32 @@ type BackupManifestPayload struct {
 }
 
 type BackupStats struct {
-	Root                 string
-	Repo                 string
-	RepoDir              string
-	IndexPath            string
-	ReadmePath           string
-	SchemaVersion        int
-	IndexGeneratedAt     string
-	BackupStatsStatus    string
-	BackupVerifyStatus   string
-	VerificationFailures int
-	IssueCount           int
-	CommentCount         int
-	TranscriptMessages   int
-	UserMessages         int
-	AssistantMessages    int
-	AssistantTurns       int
-	ErrorComments        int
-	TotalPayloadBytes    int
-	EventCounts          []BackupStatsEvent
-	LatestIssueNumber    int
-	LatestIssuePath      string
-	LatestGeneratedAt    string
-	LatestEventName      string
-	LatestIssueTitleSHA  string
-	RawBodiesIncluded    bool
+	Root                      string
+	Repo                      string
+	RepoDir                   string
+	IndexPath                 string
+	ReadmePath                string
+	SchemaVersion             int
+	IndexGeneratedAt          string
+	BackupStatsStatus         string
+	BackupVerifyStatus        string
+	VerificationFailures      int
+	IssueCount                int
+	CommentCount              int
+	TranscriptMessages        int
+	UserMessages              int
+	AssistantMessages         int
+	AssistantTurns            int
+	ErrorComments             int
+	TotalPayloadBytes         int
+	EventCounts               []BackupStatsEvent
+	LatestIssueNumber         int
+	LatestIssuePath           string
+	LatestGeneratedAt         string
+	LatestEventName           string
+	LatestIssueTitleSHA       string
+	RawBodiesIncluded         bool
+	LLME2ERequiredAfterChange bool
 }
 
 type BackupStatsEvent struct {
@@ -682,18 +683,19 @@ func BuildBackupStats(root, repo string) (BackupStats, error) {
 		return BackupStats{}, err
 	}
 	stats := BackupStats{
-		Root:                 filepath.ToSlash(root),
-		Repo:                 repo,
-		RepoDir:              filepath.ToSlash(repoDir),
-		IndexPath:            filepath.ToSlash(filepath.Join(repoDir, "index.json")),
-		ReadmePath:           filepath.ToSlash(filepath.Join(repoDir, "README.md")),
-		SchemaVersion:        index.Version,
-		IndexGeneratedAt:     index.GeneratedAt,
-		BackupStatsStatus:    "ok",
-		BackupVerifyStatus:   "ok",
-		VerificationFailures: len(verify.VerificationFailures),
-		IssueCount:           len(index.Issues),
-		RawBodiesIncluded:    false,
+		Root:                      filepath.ToSlash(root),
+		Repo:                      repo,
+		RepoDir:                   filepath.ToSlash(repoDir),
+		IndexPath:                 filepath.ToSlash(filepath.Join(repoDir, "index.json")),
+		ReadmePath:                filepath.ToSlash(filepath.Join(repoDir, "README.md")),
+		SchemaVersion:             index.Version,
+		IndexGeneratedAt:          index.GeneratedAt,
+		BackupStatsStatus:         "ok",
+		BackupVerifyStatus:        "ok",
+		VerificationFailures:      len(verify.VerificationFailures),
+		IssueCount:                len(index.Issues),
+		RawBodiesIncluded:         false,
+		LLME2ERequiredAfterChange: true,
 	}
 	if !verify.OK() {
 		stats.BackupStatsStatus = "warn"
@@ -1447,7 +1449,8 @@ func RenderBackupStats(stats BackupStats) string {
 	} else {
 		b.WriteString("- latest_issue: `none`\n")
 	}
-	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n\n", stats.RawBodiesIncluded)
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", stats.RawBodiesIncluded)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_backup_stats_change: `%t`\n\n", stats.LLME2ERequiredAfterChange)
 	b.WriteString("This report summarizes a fetched backup branch index and payload metadata. It does not print raw issue, comment, or transcript bodies.\n\n")
 
 	b.WriteString("### Event Types\n")
