@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T09:06:08Z",
+  "generated_at": "2026-05-31T09:07:26Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 370,
     "title": "@gitclaw model cost e2e 20260531T090452Z",
@@ -10,7 +10,8 @@
     "author": "AnandChowdhary",
     "author_association": "OWNER",
     "labels": [
-      "gitclaw"
+      "gitclaw",
+      "gitclaw:done"
     ]
   },
   "transcript": [
@@ -31,6 +32,24 @@
       "CommentID": 4586249575,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /models cost\n\nDo not include this hidden cost-report token: GITCLAW_MODEL_COST_REPORT_HIDDEN_20260531T090452Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4586250743,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Model Cost Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#370`\n- event_kind: `issue_comment`\n- event_name: `issue_comment`\n- model_cost_status: `warn`\n- verification_scope: `github_models_direct_cost_catalog`\n- provider: `github-models`\n- model: `openai/gpt-5-nano`\n- fallback_models: `openai/gpt-4.1-nano`\n- endpoint_host: `models.github.ai`\n- token_source: `GITHUB_TOKEN`\n- pricing_source: `github_models_direct_costs_snapshot`\n- pricing_source_url: `https://docs.github.com/en/billing/reference/costs-for-github-models`\n- pricing_snapshot_date: `2026-05-31`\n- token_unit_price_usd: `0.00001`\n- catalog_entries: `15`\n- current_model_catalog_entry_present: `false`\n- current_model_catalog_name: ``\n- current_model_input_multiplier: `0`\n- current_model_cached_input_multiplier: `0`\n- current_model_cached_input_multiplier_set: `false`\n- current_model_output_multiplier: `0`\n- current_model_cost_estimation_supported: `false`\n- projected_input_tokens: `11285`\n- projected_output_tokens: `4000`\n- projected_token_units: `0`\n- projected_usd: `unavailable`\n- recorded_usage_cost_estimation_supported: `false`\n- assistant_turn_markers: `1`\n- model_backed_assistant_turns: `1`\n- deterministic_assistant_turns: `0`\n- usage_bearing_assistant_turns: `1`\n- costed_usage_turns: `0`\n- uncosted_usage_turns: `1`\n- model_names: `openai/gpt-5-nano`\n- uncosted_model_names: `openai/gpt-5-nano`\n- recorded_prompt_tokens: `10303`\n- recorded_completion_tokens: `851`\n- recorded_total_tokens: `11154`\n- recorded_cache_read_tokens: `0`\n- recorded_cache_write_tokens: `0`\n- recorded_token_units: `0`\n- recorded_estimated_usd: `unavailable`\n- billing_api_probe_performed: `false`\n- live_inference_probe_performed: `false`\n- billing_account_state_known: `false`\n- paid_usage_opt_in_state_known: `false`\n- github_budget_state_known: `false`\n- raw_provider_usage_included: `false`\n- raw_provider_response_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompt_bodies_included: `false`\n- raw_tool_outputs_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_model_cost_change: `true`\n- issue_title_sha256_12: `08aa1286ec18`\n\nThis report maps normalized assistant-marker usage onto GitHub Models' direct-use token-unit billing model. It estimates costs only for models present in GitClaw's reviewed GitHub Models multiplier snapshot. It does not perform a live inference probe, query billing APIs, inspect account budgets, or print provider responses, prompts, issue bodies, comments, tool outputs, credentials, or secret values.\n\n### Cost Cards\n- kind=`current-model-cost` model=`openai/gpt-5-nano` catalog_entry_present=`false` catalog_model_name=`` input_multiplier=`0` cached_input_multiplier=`0` cached_input_multiplier_set=`false` output_multiplier=`0` projected_input_tokens=`11285` projected_output_tokens=`4000` projected_token_units=`0` projected_usd=`unavailable`\n- kind=`recorded-usage-cost` usage_bearing_assistant_turns=`1` costed_usage_turns=`0` uncosted_usage_turns=`1` recorded_prompt_tokens=`10303` recorded_completion_tokens=`851` recorded_total_tokens=`11154` recorded_cache_read_tokens=`0` recorded_token_units=`0` recorded_estimated_usd=`unavailable` uncosted_model_names=`openai/gpt-5-nano`\n\n### Usage Cost Lines\n- source=`comment:4586249575` model=`openai/gpt-5-nano` prompt_tokens=`10303` completion_tokens=`851` total_tokens=`11154` cache_read_tokens=`0` cache_write_tokens=`0` catalog_entry_present=`false` catalog_model_name=`` token_units=`0` estimated_usd=`unavailable`\n\n### Findings\n- severity=`info` code=`github_models_token_unit_pricing_modeled` detail=`direct GitHub Models pricing uses token units, fixed unit price, and model multipliers`\n- severity=`info` code=`openclaw_usage_cost_surface_modeled` detail=`token usage and cost diagnostics are separated from raw prompts and transcripts`\n- severity=`info` code=`hermes_api_token_count_boundary_modeled` detail=`only provider-reported usage markers are treated as recorded token evidence`\n- severity=`info` code=`billing_api_not_queried` detail=`account billing, paid opt-in, and budget state are not queried by this report`\n- severity=`warning` code=`current_model_multiplier_unknown` detail=`current model is not present in the reviewed GitHub Models multiplier snapshot`\n- severity=`warning` code=`uncosted_usage_markers_seen` detail=`some usage-bearing assistant turns used models without reviewed cost multipliers`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4586252347,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -41,6 +60,22 @@
       "author_association": "NONE",
       "created_at": "2026-05-31T09:05:47Z",
       "updated_at": "2026-05-31T09:05:47Z"
+    },
+    {
+      "id": 4586250743,
+      "body": "@gitclaw /models cost\n\nDo not include this hidden cost-report token: GITCLAW_MODEL_COST_REPORT_HIDDEN_20260531T090452Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-05-31T09:06:19Z",
+      "updated_at": "2026-05-31T09:06:19Z"
+    },
+    {
+      "id": 4586252347,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26708472688\" event_id=\"comment-4586250743\" model=\"gitclaw/models\" idempotency_key=\"963721601b231c8baf20f42625fe0994\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26708472688\" --\u003e\n## GitClaw Model Cost Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#370`\n- event_kind: `issue_comment`\n- event_name: `issue_comment`\n- model_cost_status: `warn`\n- verification_scope: `github_models_direct_cost_catalog`\n- provider: `github-models`\n- model: `openai/gpt-5-nano`\n- fallback_models: `openai/gpt-4.1-nano`\n- endpoint_host: `models.github.ai`\n- token_source: `GITHUB_TOKEN`\n- pricing_source: `github_models_direct_costs_snapshot`\n- pricing_source_url: `https://docs.github.com/en/billing/reference/costs-for-github-models`\n- pricing_snapshot_date: `2026-05-31`\n- token_unit_price_usd: `0.00001`\n- catalog_entries: `15`\n- current_model_catalog_entry_present: `false`\n- current_model_catalog_name: ``\n- current_model_input_multiplier: `0`\n- current_model_cached_input_multiplier: `0`\n- current_model_cached_input_multiplier_set: `false`\n- current_model_output_multiplier: `0`\n- current_model_cost_estimation_supported: `false`\n- projected_input_tokens: `11285`\n- projected_output_tokens: `4000`\n- projected_token_units: `0`\n- projected_usd: `unavailable`\n- recorded_usage_cost_estimation_supported: `false`\n- assistant_turn_markers: `1`\n- model_backed_assistant_turns: `1`\n- deterministic_assistant_turns: `0`\n- usage_bearing_assistant_turns: `1`\n- costed_usage_turns: `0`\n- uncosted_usage_turns: `1`\n- model_names: `openai/gpt-5-nano`\n- uncosted_model_names: `openai/gpt-5-nano`\n- recorded_prompt_tokens: `10303`\n- recorded_completion_tokens: `851`\n- recorded_total_tokens: `11154`\n- recorded_cache_read_tokens: `0`\n- recorded_cache_write_tokens: `0`\n- recorded_token_units: `0`\n- recorded_estimated_usd: `unavailable`\n- billing_api_probe_performed: `false`\n- live_inference_probe_performed: `false`\n- billing_account_state_known: `false`\n- paid_usage_opt_in_state_known: `false`\n- github_budget_state_known: `false`\n- raw_provider_usage_included: `false`\n- raw_provider_response_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompt_bodies_included: `false`\n- raw_tool_outputs_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_model_cost_change: `true`\n- issue_title_sha256_12: `08aa1286ec18`\n\nThis report maps normalized assistant-marker usage onto GitHub Models' direct-use token-unit billing model. It estimates costs only for models present in GitClaw's reviewed GitHub Models multiplier snapshot. It does not perform a live inference probe, query billing APIs, inspect account budgets, or print provider responses, prompts, issue bodies, comments, tool outputs, credentials, or secret values.\n\n### Cost Cards\n- kind=`current-model-cost` model=`openai/gpt-5-nano` catalog_entry_present=`false` catalog_model_name=`` input_multiplier=`0` cached_input_multiplier=`0` cached_input_multiplier_set=`false` output_multiplier=`0` projected_input_tokens=`11285` projected_output_tokens=`4000` projected_token_units=`0` projected_usd=`unavailable`\n- kind=`recorded-usage-cost` usage_bearing_assistant_turns=`1` costed_usage_turns=`0` uncosted_usage_turns=`1` recorded_prompt_tokens=`10303` recorded_completion_tokens=`851` recorded_total_tokens=`11154` recorded_cache_read_tokens=`0` recorded_token_units=`0` recorded_estimated_usd=`unavailable` uncosted_model_names=`openai/gpt-5-nano`\n\n### Usage Cost Lines\n- source=`comment:4586249575` model=`openai/gpt-5-nano` prompt_tokens=`10303` completion_tokens=`851` total_tokens=`11154` cache_read_tokens=`0` cache_write_tokens=`0` catalog_entry_present=`false` catalog_model_name=`` token_units=`0` estimated_usd=`unavailable`\n\n### Findings\n- severity=`info` code=`github_models_token_unit_pricing_modeled` detail=`direct GitHub Models pricing uses token units, fixed unit price, and model multipliers`\n- severity=`info` code=`openclaw_usage_cost_surface_modeled` detail=`token usage and cost diagnostics are separated from raw prompts and transcripts`\n- severity=`info` code=`hermes_api_token_count_boundary_modeled` detail=`only provider-reported usage markers are treated as recorded token evidence`\n- severity=`info` code=`billing_api_not_queried` detail=`account billing, paid opt-in, and budget state are not queried by this report`\n- severity=`warning` code=`current_model_multiplier_unknown` detail=`current model is not present in the reviewed GitHub Models multiplier snapshot`\n- severity=`warning` code=`uncosted_usage_markers_seen` detail=`some usage-bearing assistant turns used models without reviewed cost multipliers`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T09:07:01Z",
+      "updated_at": "2026-05-31T09:07:01Z"
     }
   ]
 }
