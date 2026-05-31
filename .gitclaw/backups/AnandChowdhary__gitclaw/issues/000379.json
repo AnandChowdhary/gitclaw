@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T10:41:41Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 379,
+    "title": "@gitclaw /skills install-plan repo-reader e2e 20260531T104026Z",
+    "body": "Live skills install-plan E2E.\n\nHidden skills install plan token: GITCLAW_SKILLS_INSTALL_PLAN_E2E_20260531T104026Z\nThis should produce a deterministic dry-run plan without fetching remote code or dumping the full SKILL.md body.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /skills install-plan repo-reader e2e 20260531T104026Z\n\nLive skills install-plan E2E.\n\nHidden skills install plan token: GITCLAW_SKILLS_INSTALL_PLAN_E2E_20260531T104026Z\nThis should produce a deterministic dry-run plan without fetching remote code or dumping the full SKILL.md body.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Skill Install Plan Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#379`\n- install_plan_status: `needs_review`\n- operation: `install-plan`\n- target_type: `registry-name`\n- target_sha256_12: `ba915a2978d8`\n- target_terms: `1`\n- safe_name_candidate: `repo-reader`\n- destination_path: `.gitclaw/SKILLS/repo-reader/SKILL.md`\n- destination_exists: `true`\n- existing_skill_matches: `1`\n- existing_skill_hashes: `2f9e68a57bd6`\n- upgrade_target_required: `false`\n- existing_skill_required: `false`\n- available_skills: `1`\n- run_mode: `read-only`\n- remote_fetch_allowed: `false`\n- installer_scripts_run: `false`\n- dependency_install_allowed: `false`\n- repository_mutation_allowed: `false`\n- manual_review_required: `true`\n- llm_e2e_required_after_change: `true`\n- llm_e2e_required_after_skill_install_plan_change: `true`\n- raw_target_included: `false`\n- raw_manifest_included: `false`\n- raw_skill_body_included: `false`\n- skill_validation_status: `ok`\n- skill_validation_errors: `0`\n- skill_validation_warnings: `0`\n- skill_duplicate_names: `0`\n- skill_invalid_names: `0`\n- skill_name_folder_mismatches: `0`\n- issue_title_sha256_12: `68613ad11d6b`\n\nThis is a dry-run planner only. It classifies the requested skill source and shows the repo-local review path without fetching registries, running installers, installing dependencies, mutating `.gitclaw/SKILLS`, or dumping skill bodies.\n\n### Existing Skill Matches\n- skill_name=`repo-reader` path=`.gitclaw/SKILLS/repo-reader/SKILL.md` folder=`repo-reader` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` selected_for_this_turn=`true` always=`false` frontmatter=`true` description=`true` bytes=`699` lines=`18` sha256_12=`2f9e68a57bd6` requires_env=`0` requires_bins=`0` missing_env=`0` missing_bins=`0` description=`Use GitClaw's read-only repository context and tool outputs to answer file-aw...`\n  - required_env=`none`\n  - required_bins=`none`\n  - missing_env=`none`\n  - missing_bins=`none`\n\n### Review Steps\n1. Review the source outside the Actions job and ignore installer scripts by default.\n2. If accepted, add or update `.gitclaw/SKILLS/repo-reader/SKILL.md` on a reviewed branch.\n3. Run `gitclaw skills validate` and `gitclaw skills verify` before merging.\n4. Run a live GitHub Models conversation E2E after the skill change, not only deterministic report tests.\n\n### Findings\n- severity=`info` code=`manual_review_required` detail=`skill changes must be reviewed as repository code before they affect model co...`\n- severity=`info` code=`installer_scripts_disabled` detail=`install planning never runs remote scripts or local installer hooks`\n- severity=`info` code=`repository_mutation_disabled` detail=`install planning does not create, update, delete, commit, or push files`\n- severity=`warning` code=`existing_skill_found` detail=`the candidate already maps to a repo-local skill; review overwrite/upgrade in...`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4586443193,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4586443193,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26710355931\" event_id=\"issue-379\" model=\"gitclaw/skills\" idempotency_key=\"ac652a87f105c652b058cac24767fa13\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26710355931\" --\u003e\n## GitClaw Skill Install Plan Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#379`\n- install_plan_status: `needs_review`\n- operation: `install-plan`\n- target_type: `registry-name`\n- target_sha256_12: `ba915a2978d8`\n- target_terms: `1`\n- safe_name_candidate: `repo-reader`\n- destination_path: `.gitclaw/SKILLS/repo-reader/SKILL.md`\n- destination_exists: `true`\n- existing_skill_matches: `1`\n- existing_skill_hashes: `2f9e68a57bd6`\n- upgrade_target_required: `false`\n- existing_skill_required: `false`\n- available_skills: `1`\n- run_mode: `read-only`\n- remote_fetch_allowed: `false`\n- installer_scripts_run: `false`\n- dependency_install_allowed: `false`\n- repository_mutation_allowed: `false`\n- manual_review_required: `true`\n- llm_e2e_required_after_change: `true`\n- llm_e2e_required_after_skill_install_plan_change: `true`\n- raw_target_included: `false`\n- raw_manifest_included: `false`\n- raw_skill_body_included: `false`\n- skill_validation_status: `ok`\n- skill_validation_errors: `0`\n- skill_validation_warnings: `0`\n- skill_duplicate_names: `0`\n- skill_invalid_names: `0`\n- skill_name_folder_mismatches: `0`\n- issue_title_sha256_12: `68613ad11d6b`\n\nThis is a dry-run planner only. It classifies the requested skill source and shows the repo-local review path without fetching registries, running installers, installing dependencies, mutating `.gitclaw/SKILLS`, or dumping skill bodies.\n\n### Existing Skill Matches\n- skill_name=`repo-reader` path=`.gitclaw/SKILLS/repo-reader/SKILL.md` folder=`repo-reader` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` selected_for_this_turn=`true` always=`false` frontmatter=`true` description=`true` bytes=`699` lines=`18` sha256_12=`2f9e68a57bd6` requires_env=`0` requires_bins=`0` missing_env=`0` missing_bins=`0` description=`Use GitClaw's read-only repository context and tool outputs to answer file-aw...`\n  - required_env=`none`\n  - required_bins=`none`\n  - missing_env=`none`\n  - missing_bins=`none`\n\n### Review Steps\n1. Review the source outside the Actions job and ignore installer scripts by default.\n2. If accepted, add or update `.gitclaw/SKILLS/repo-reader/SKILL.md` on a reviewed branch.\n3. Run `gitclaw skills validate` and `gitclaw skills verify` before merging.\n4. Run a live GitHub Models conversation E2E after the skill change, not only deterministic report tests.\n\n### Findings\n- severity=`info` code=`manual_review_required` detail=`skill changes must be reviewed as repository code before they affect model co...`\n- severity=`info` code=`installer_scripts_disabled` detail=`install planning never runs remote scripts or local installer hooks`\n- severity=`info` code=`repository_mutation_disabled` detail=`install planning does not create, update, delete, commit, or push files`\n- severity=`warning` code=`existing_skill_found` detail=`the candidate already maps to a repo-local skill; review overwrite/upgrade in...`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T10:41:19Z",
+      "updated_at": "2026-05-31T10:41:19Z"
+    }
+  ]
+}
