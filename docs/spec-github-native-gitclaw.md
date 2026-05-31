@@ -820,7 +820,7 @@ GitHub issue/comment event
 - CLI entry point.
 - Subcommands: `preflight`, `handle`, `backup`, `backup coverage`,
   `backup search`, `backup provenance`, `backup timeline`, `backup info`,
-  `backup retention-plan`,
+  `backup freshness`, `backup retention-plan`,
   `session status`, `session coverage`,
   `heartbeat`, `heartbeat status`, `heartbeat risk`,
   `channel-ingest`, `channel-state`, `channel-gateway`, `channel-delivery`,
@@ -4753,6 +4753,37 @@ every raw JSON file would be noisy. Stats-surface changes carry
 `llm_e2e_required_after_backup_stats_change: true` and require a fetched-branch
 stats proof plus a normal GitHub Models repo-reader/search follow-up.
 
+## Backup Freshness Command
+
+GitClaw supports a local backup freshness command inspired by OpenClaw's
+verify-before-restore posture and Hermes' session-freshness operational checks:
+
+```bash
+gitclaw backup freshness --root .gitclaw/backups --repo <owner/repo> --max-age-hours 24
+```
+
+The command reads a fetched `gitclaw-backups` tree, verifies it, finds the
+latest indexed backup by backup generation time, and prints a deterministic
+`GitClaw Backup Freshness Report` with:
+
+- backup freshness and verify status,
+- freshness gate result (`pass` when the latest verified backup is within the
+  configured max age),
+- schema version and index generation time,
+- indexed issue count, max-age seconds, and `as_of` timestamp,
+- latest issue path, backup timestamp, age seconds, clock-skew seconds,
+  payload byte count, payload hash, event name, and title hash.
+
+It never prints raw issue titles, issue bodies, comments, transcript messages,
+prompts, search queries, or tool outputs. The issue-side `/backup freshness`
+report is metadata-only because the backup branch is written after the current
+assistant turn; it records the concrete local command and a deferred
+`latest-backup-age <= max-age` gate for a later fetched-branch check.
+Freshness-surface changes carry
+`llm_e2e_required_after_backup_freshness_change: true` and require a
+fetched-branch freshness proof plus a normal GitHub Models repo-reader/search
+follow-up.
+
 ## Backup List Command
 
 GitClaw supports a local backup list command inspired by Hermes' `sessions
@@ -5666,7 +5697,30 @@ assert the expected comments/labels, and close the issue in cleanup.
      selected skill, prompt-visible `gitclaw.search_files`, usage telemetry,
      and the backup-stats repository-search fixture token.
 
-39. **Backup list**
+39. **Backup freshness**
+
+   - create a real issue with `@gitclaw /backup freshness`,
+   - assert the issue-side report lists `requested_backup_command: freshness`,
+     the deferred execution marker, the concrete local freshness command, and
+     the deferred `latest-backup-age <= max-age` gate without dumping
+     body/title tokens,
+   - assert the issue-visible report includes
+     `llm_e2e_required_after_backup_freshness_change: true`,
+   - wait for the successful backup job,
+   - fetch the real `gitclaw-backups` branch,
+   - run `gitclaw backup freshness --root <fetched>/.gitclaw/backups --repo
+     <owner/repo> --max-age-hours 24`,
+   - assert the report is marked `backup_freshness_status: ok`,
+     `backup_verify_status: ok`, and `freshness_gate: pass`,
+   - assert it lists the latest issue path, backup timestamp, age seconds,
+     max-age seconds, payload hash, and title hash,
+   - assert it does not dump the issue body token or raw title,
+   - post a normal follow-up that requires repo-reader search and assert the
+     second assistant turn is GitHub Models-backed with prompt context,
+     selected skill, prompt-visible `gitclaw.search_files`, usage telemetry,
+     and the backup-freshness repository-search fixture token.
+
+40. **Backup list**
 
    - create a real issue with `@gitclaw /backup list`,
    - assert the issue-side report lists `requested_backup_command: list`,
@@ -5688,7 +5742,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      selected skill, prompt-visible `gitclaw.search_files`, usage telemetry,
      and the backup-list repository-search fixture token.
 
-40. **Backup timeline**
+41. **Backup timeline**
 
    - create a real issue with `@gitclaw /backup timeline`,
    - assert the issue-side report lists `requested_backup_command: timeline`,
@@ -5707,7 +5761,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      second assistant turn is GitHub Models-backed with prompt context,
      selected skill, and prompt-visible tool markers.
 
-41. **Backup info**
+42. **Backup info**
 
    - create a real issue with `@gitclaw /backup info`,
    - assert the issue-side report lists `requested_backup_command: info`, the
@@ -5730,7 +5784,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      selected skill, prompt-visible `gitclaw.search_files`, usage telemetry,
      and the backup-info repository-search fixture token.
 
-42. **Backup JSONL export**
+43. **Backup JSONL export**
 
    - create a real issue with `@gitclaw /backup export-jsonl`,
    - assert the issue-side report lists `requested_backup_command:
@@ -5748,7 +5802,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      provenance, selected skill metadata, prompt-visible `gitclaw.search_files`,
      usage telemetry, and no hidden issue/comment sentinel leakage.
 
-43. **Backup restore plan**
+44. **Backup restore plan**
 
    - create a real issue with `@gitclaw /backup restore-plan`,
    - assert the issue-side report lists `requested_backup_command:
@@ -5766,7 +5820,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      assert the next assistant turn used GitHub Models with prompt provenance,
      selected skills, prompt-visible tool names, and usage markers.
 
-44. **Backup drill**
+45. **Backup drill**
 
    - create a real issue with `@gitclaw /backup drill`,
    - assert the issue-side report lists `requested_backup_command: drill`, the
@@ -5783,7 +5837,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      assert the next assistant turn used GitHub Models with prompt provenance,
      selected skills, and prompt-visible tool names.
 
-45. **Backup retention plan**
+46. **Backup retention plan**
 
    - create a real issue with `@gitclaw /backup retention-plan`,
    - assert the issue-side report lists `requested_backup_command:
@@ -5803,7 +5857,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      assert the next assistant turn used GitHub Models with prompt provenance,
      selected skills, prompt-visible tool names, and usage markers.
 
-46. **Backup search**
+47. **Backup search**
 
    - create a real issue with `@gitclaw /backup search <query>`,
    - include a unique hidden token in the issue body,
@@ -5824,7 +5878,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      provenance, selected skill metadata, prompt-visible `gitclaw.search_files`,
      usage telemetry, and no hidden issue/comment sentinel leakage.
 
-46. **Proactive init generator**
+48. **Proactive init generator**
 
    - run `gitclaw proactive init` against a temporary repo root,
    - assert it writes the expected prompt file and scheduled workflow,
@@ -5840,7 +5894,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      token, includes model/prompt/usage telemetry, and does not leak hidden
      prompt/comment tokens.
 
-47. **Proactive info report**
+49. **Proactive info report**
 
    - create a real issue with `@gitclaw /proactive info repo-hygiene`,
    - include a unique hidden token in the issue body,
@@ -5851,7 +5905,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      candidate, trigger metadata, and enqueue command hashes/paths,
    - assert no issue body, prompt body, or workflow body content is leaked.
 
-48. **Proactive risk report with model follow-up**
+50. **Proactive risk report with model follow-up**
 
    - create a real issue with `@gitclaw /proactive risk`,
    - include a unique hidden token in the issue body,
@@ -6394,6 +6448,14 @@ examples/workflows/gitclaw.yml
   harness posts a normal model-backed follow-up that proves repo-reader search,
   prompt provenance, selected skill metadata, prompt-visible tool names, usage
   markers, and the bounded backup-stats repository-search fixture token.
+- A `gh`-driven backup-freshness E2E harness verifies
+  `@gitclaw /backup freshness` records the deferred issue-side command intent,
+  then verifies the fetched `gitclaw-backups` branch can produce a body-free
+  latest-backup freshness report with verify status, max-age seconds, latest
+  backup age, payload hash, and `freshness_gate: pass`. The same harness posts
+  a normal model-backed follow-up that proves repo-reader search, prompt
+  provenance, selected skill metadata, prompt-visible tool names, usage
+  markers, and the bounded backup-freshness repository-search fixture token.
 - A `gh`-driven backup-list E2E harness verifies
   `@gitclaw /backup list` records the deferred issue-side command intent, then
   verifies the fetched `gitclaw-backups` branch can produce a timestamp-sorted

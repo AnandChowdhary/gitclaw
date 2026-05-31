@@ -347,6 +347,60 @@ func TestBuildBackupStatsSummarizesBackupsWithoutBodies(t *testing.T) {
 	}
 }
 
+func TestBuildBackupFreshnessReportsLatestAgeWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T12:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue: IssueBackupIssue{
+			Number: 7,
+			Title:  "@gitclaw freshness old FRESHNESS_OLD_TITLE",
+			Body:   "FRESHNESS_OLD_BODY",
+			Labels: []string{"gitclaw"},
+		},
+		Transcript: []TranscriptMessage{{Role: "user", Body: "FRESHNESS_OLD_TRANSCRIPT"}},
+		Comments:   []IssueBackupComment{{ID: 12, Body: "FRESHNESS_OLD_COMMENT"}},
+	})
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T13:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issue_comment",
+		Issue: IssueBackupIssue{
+			Number: 8,
+			Title:  "@gitclaw freshness new FRESHNESS_NEW_TITLE",
+			Body:   "FRESHNESS_NEW_BODY",
+			Labels: []string{"gitclaw", "gitclaw:e2e"},
+		},
+		Transcript: []TranscriptMessage{{Role: "user", Body: "FRESHNESS_NEW_TRANSCRIPT"}, {Role: "assistant", Body: "FRESHNESS_ASSISTANT"}},
+		Comments:   []IssueBackupComment{{ID: 13, Body: "FRESHNESS_NEW_COMMENT"}},
+	})
+	if _, err := WriteBackupIndex(root, "owner/repo", time.Date(2026, 5, 29, 14, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+
+	freshness, err := BuildBackupFreshness(root, "owner/repo", 3*time.Hour, time.Date(2026, 5, 29, 14, 0, 0, 0, time.UTC))
+	if err != nil {
+		t.Fatalf("BuildBackupFreshness returned error: %v", err)
+	}
+	if freshness.BackupFreshnessStatus != "ok" || freshness.FreshnessGate != "pass" || freshness.LatestIssueNumber != 8 || freshness.LatestAgeSeconds != 3600 {
+		t.Fatalf("unexpected backup freshness: %#v", freshness)
+	}
+	report := RenderBackupFreshness(freshness)
+	for _, want := range []string{"GitClaw Backup Freshness Report", "repository: `owner/repo`", "backup_freshness_status: `ok`", "backup_verify_status: `ok`", "verification_failures: `0`", "backup_schema_version: `1`", "issue_count: `2`", "max_age_seconds: `10800`", "as_of: `2026-05-29T14:00:00Z`", "latest_issue: `#8`", "latest_issue_path: `issues/000008.json`", "latest_backup_generated_at: `2026-05-29T13:00:00Z`", "latest_age_seconds: `3600`", "clock_skew_seconds: `0`", "latest_payload_bytes:", "latest_payload_sha256_12:", "latest_event_name: `issue_comment`", "latest_issue_title_sha256_12:", "freshness_gate: `pass`", "raw_bodies_included: `false`", "llm_e2e_required_after_backup_freshness_change: `true`"} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("freshness report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"FRESHNESS_OLD_TITLE", "FRESHNESS_OLD_BODY", "FRESHNESS_OLD_TRANSCRIPT", "FRESHNESS_OLD_COMMENT", "FRESHNESS_NEW_TITLE", "FRESHNESS_NEW_BODY", "FRESHNESS_NEW_TRANSCRIPT", "FRESHNESS_ASSISTANT", "FRESHNESS_NEW_COMMENT", "@gitclaw freshness"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("freshness report leaked body/title token %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestBuildBackupListListsNewestBackupsWithoutBodies(t *testing.T) {
 	root := t.TempDir()
 	writeBackupFixture(t, root, IssueBackup{

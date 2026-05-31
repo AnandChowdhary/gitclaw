@@ -229,6 +229,40 @@ func TestRenderBackupStatsIssueCommandRecordsDeferredIntentWithoutBodies(t *test
 	}
 }
 
+func TestRenderBackupFreshnessIssueCommandRecordsDeferredIntentWithoutBodies(t *testing.T) {
+	ev := Event{
+		Repo: "owner/repo",
+		Issue: Issue{
+			Number: 98,
+			Title:  "@gitclaw /backup freshness e2e",
+			Body:   "BACKUP_FRESHNESS_INTENT_SECRET",
+		},
+	}
+
+	report := RenderBackupReport(ev, DefaultConfig(), nil, nil)
+	for _, want := range []string{
+		"requested_backup_command: `freshness`",
+		"backup_command_status: `ok`",
+		"requested_local_command: `gitclaw backup freshness --root .gitclaw/backups --repo owner/repo --max-age-hours 24`",
+		"run `gitclaw backup freshness --root .gitclaw/backups --repo owner/repo --max-age-hours 24` after fetching `gitclaw-backups`",
+		"issue_side_execution: `deferred_to_post_turn_backup_branch`",
+		"backup_freshness_status: `deferred`",
+		"backup_freshness_execution: `local_fetched_backup_branch`",
+		"backup_freshness_gate: `latest-backup-age <= max-age`",
+		"raw_backup_payloads_scanned_issue_side: `false`",
+		"raw_bodies_included: `false`",
+		"llm_e2e_required_after_backup_freshness_change: `true`",
+		"`gitclaw backup freshness --root .gitclaw/backups --repo <owner/repo> --max-age-hours 24`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("backup freshness report missing %q:\n%s", want, report)
+		}
+	}
+	if strings.Contains(report, "BACKUP_FRESHNESS_INTENT_SECRET") || strings.Contains(report, "@gitclaw /backup freshness e2e") {
+		t.Fatalf("backup freshness report leaked request text:\n%s", report)
+	}
+}
+
 func TestRenderBackupListIssueCommandRecordsDeferredIntentWithoutBodies(t *testing.T) {
 	ev := Event{
 		Repo: "owner/repo",

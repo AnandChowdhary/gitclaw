@@ -66,6 +66,9 @@ func RenderBackupReport(ev Event, cfg Config, comments []Comment, transcript []T
 	if request.Name == "stats" {
 		fmt.Fprintf(&b, "- llm_e2e_required_after_backup_stats_change: `%t`\n", true)
 	}
+	if request.Name == "freshness" {
+		writeBackupIssueFreshnessSummary(&b)
+	}
 	if request.Name == "list" {
 		fmt.Fprintf(&b, "- llm_e2e_required_after_backup_list_change: `%t`\n", true)
 	}
@@ -114,6 +117,7 @@ func RenderBackupReport(ev Event, cfg Config, comments []Comment, transcript []T
 	b.WriteString("- `gitclaw backup risk --root .gitclaw/backups --repo <owner/repo>`\n")
 	b.WriteString("- `gitclaw backup provenance --root .gitclaw/backups --repo <owner/repo>`\n")
 	b.WriteString("- `gitclaw backup timeline --root .gitclaw/backups --repo <owner/repo> --limit 20`\n")
+	b.WriteString("- `gitclaw backup freshness --root .gitclaw/backups --repo <owner/repo> --max-age-hours 24`\n")
 	b.WriteString("- `gitclaw backup search --root .gitclaw/backups --repo <owner/repo> <query>`\n")
 	b.WriteString("- `gitclaw backup retention-plan --root .gitclaw/backups --repo <owner/repo> --keep-latest 50`\n")
 	b.WriteString("- validates the repo-scoped index, README, canonical issue paths, JSON schema version, counts, timestamps, traversal-safe payload paths, and git provenance; search reports hashes and metadata without printing raw backup bodies\n")
@@ -217,6 +221,12 @@ func requestedBackupIssueCommand(ev Event, cfg Config) backupIssueCommand {
 			Status:       "ok",
 			LocalCommand: fmt.Sprintf("gitclaw backup stats --root %s --repo %s", defaultBackupRoot, backupReportRepo(ev.Repo)),
 		}
+	case "freshness", "fresh", "staleness":
+		return backupIssueCommand{
+			Name:         "freshness",
+			Status:       "ok",
+			LocalCommand: fmt.Sprintf("gitclaw backup freshness --root %s --repo %s --max-age-hours 24", defaultBackupRoot, backupReportRepo(ev.Repo)),
+		}
 	case "search":
 		query := cleanBackupSearchQuery(strings.Join(fields[2:], " "))
 		return backupIssueCommand{
@@ -263,7 +273,7 @@ func writeBackupIssueCommandSummary(b *strings.Builder, request backupIssueComma
 			b.WriteString("- raw search query is not printed; only query hash and term count are shown\n")
 		}
 	case "unknown":
-		b.WriteString("- unknown backup subcommand; supported issue intents are `verify`, `coverage`, `drill`, `risk`, `provenance`, `manifest`, `list`, `timeline`, `info`, `stats`, `search`, `export-jsonl`, `restore-plan`, and `retention-plan`\n")
+		b.WriteString("- unknown backup subcommand; supported issue intents are `verify`, `coverage`, `drill`, `risk`, `provenance`, `manifest`, `list`, `timeline`, `info`, `stats`, `freshness`, `search`, `export-jsonl`, `restore-plan`, and `retention-plan`\n")
 	case "invalid_issue":
 		b.WriteString("- invalid backup issue number; use `@gitclaw /backup info <issue-number>`, `@gitclaw /backup coverage <issue-number>`, `@gitclaw /backup drill <issue-number>`, or inspect the current issue without an explicit issue number\n")
 	default:
@@ -319,6 +329,14 @@ func writeBackupIssueRetentionPlanSummary(b *strings.Builder) {
 	b.WriteString("- branch_deletion_allowed_issue_side: `false`\n")
 	b.WriteString("- github_api_calls_performed_issue_side: `false`\n")
 	b.WriteString("- llm_e2e_required_after_backup_retention_plan_change: `true`\n")
+}
+
+func writeBackupIssueFreshnessSummary(b *strings.Builder) {
+	b.WriteString("- backup_freshness_status: `deferred`\n")
+	b.WriteString("- backup_freshness_execution: `local_fetched_backup_branch`\n")
+	b.WriteString("- backup_freshness_gate: `latest-backup-age <= max-age`\n")
+	b.WriteString("- raw_backup_payloads_scanned_issue_side: `false`\n")
+	b.WriteString("- llm_e2e_required_after_backup_freshness_change: `true`\n")
 }
 
 func writeBackupIssueExportJSONLSummary(b *strings.Builder) {

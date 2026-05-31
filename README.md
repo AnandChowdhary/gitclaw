@@ -181,6 +181,7 @@ gitclaw backup list
 gitclaw backup timeline
 gitclaw backup info --issue <number>
 gitclaw backup stats
+gitclaw backup freshness
 gitclaw backup search <query>
 gitclaw backup export-jsonl
 gitclaw backup restore-plan

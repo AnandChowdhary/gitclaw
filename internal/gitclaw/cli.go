@@ -2612,6 +2612,9 @@ func runBackup(ctx context.Context, args []string) error {
 	if len(args) > 0 && args[0] == "info" {
 		return runBackupInfo(args[1:])
 	}
+	if len(args) > 0 && (args[0] == "freshness" || args[0] == "fresh" || args[0] == "staleness") {
+		return runBackupFreshness(args[1:])
+	}
 	if len(args) > 0 && args[0] == "stats" {
 		return runBackupStats(args[1:])
 	}
@@ -3183,6 +3186,73 @@ func runBackupStats(args []string) error {
 	fmt.Println(RenderBackupStats(stats))
 	if stats.BackupStatsStatus != "ok" {
 		return fmt.Errorf("backup stats reported %s", stats.BackupStatsStatus)
+	}
+	return nil
+}
+
+func runBackupFreshness(args []string) error {
+	root := filepath.Join(".gitclaw", "backups")
+	repo := os.Getenv("GITHUB_REPOSITORY")
+	maxAge := 24 * time.Hour
+	var now time.Time
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--root":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--root requires a value")
+			}
+			root = args[i+1]
+			i++
+		case "--repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--repo requires a value")
+			}
+			repo = args[i+1]
+			i++
+		case "--max-age-hours":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--max-age-hours requires a value")
+			}
+			parsed, err := strconv.Atoi(args[i+1])
+			if err != nil || parsed <= 0 {
+				return fmt.Errorf("invalid --max-age-hours: %q", args[i+1])
+			}
+			maxAge = time.Duration(parsed) * time.Hour
+			i++
+		case "--max-age-seconds":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--max-age-seconds requires a value")
+			}
+			parsed, err := strconv.Atoi(args[i+1])
+			if err != nil || parsed <= 0 {
+				return fmt.Errorf("invalid --max-age-seconds: %q", args[i+1])
+			}
+			maxAge = time.Duration(parsed) * time.Second
+			i++
+		case "--now":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--now requires a value")
+			}
+			parsed, err := time.Parse(time.RFC3339, args[i+1])
+			if err != nil {
+				return fmt.Errorf("invalid --now: %q", args[i+1])
+			}
+			now = parsed
+			i++
+		default:
+			return fmt.Errorf("unknown backup freshness argument %q", args[i])
+		}
+	}
+	if repo == "" {
+		return fmt.Errorf("missing --repo or GITHUB_REPOSITORY")
+	}
+	freshness, err := BuildBackupFreshness(root, repo, maxAge, now)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderBackupFreshness(freshness))
+	if freshness.FreshnessGate != "pass" || freshness.BackupFreshnessStatus != "ok" {
+		return fmt.Errorf("backup freshness reported %s", freshness.BackupFreshnessStatus)
 	}
 	return nil
 }

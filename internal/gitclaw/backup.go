@@ -182,6 +182,34 @@ type BackupStatsEvent struct {
 	Count int
 }
 
+type BackupFreshness struct {
+	Root                      string
+	Repo                      string
+	RepoDir                   string
+	IndexPath                 string
+	ReadmePath                string
+	SchemaVersion             int
+	IndexGeneratedAt          string
+	BackupFreshnessStatus     string
+	BackupVerifyStatus        string
+	VerificationFailures      int
+	IssueCount                int
+	MaxAgeSeconds             int64
+	AsOf                      string
+	LatestIssueNumber         int
+	LatestIssuePath           string
+	LatestGeneratedAt         string
+	LatestAgeSeconds          int64
+	ClockSkewSeconds          int64
+	LatestPayloadBytes        int
+	LatestPayloadSHA          string
+	LatestEventName           string
+	LatestIssueTitleSHA       string
+	FreshnessGate             string
+	RawBodiesIncluded         bool
+	LLME2ERequiredAfterChange bool
+}
+
 type BackupList struct {
 	Root                      string
 	Repo                      string
@@ -750,6 +778,92 @@ func BuildBackupStats(root, repo string) (BackupStats, error) {
 	}
 	sort.Slice(stats.EventCounts, func(i, j int) bool { return stats.EventCounts[i].Name < stats.EventCounts[j].Name })
 	return stats, nil
+}
+
+func BuildBackupFreshness(root, repo string, maxAge time.Duration, now time.Time) (BackupFreshness, error) {
+	if maxAge <= 0 {
+		return BackupFreshness{}, fmt.Errorf("max age must be positive")
+	}
+	if now.IsZero() {
+		now = time.Now().UTC()
+	}
+	now = now.UTC()
+	if err := validateRepoName(repo); err != nil {
+		return BackupFreshness{}, err
+	}
+	repoDir, index, err := readBackupIndex(root, repo)
+	if err != nil {
+		return BackupFreshness{}, err
+	}
+	if root == "" {
+		root = filepath.Join(".gitclaw", "backups")
+	}
+	verify, err := VerifyBackupTree(root, repo)
+	if err != nil {
+		return BackupFreshness{}, err
+	}
+	freshness := BackupFreshness{
+		Root:                      filepath.ToSlash(root),
+		Repo:                      repo,
+		RepoDir:                   filepath.ToSlash(repoDir),
+		IndexPath:                 filepath.ToSlash(filepath.Join(repoDir, "index.json")),
+		ReadmePath:                filepath.ToSlash(filepath.Join(repoDir, "README.md")),
+		SchemaVersion:             index.Version,
+		IndexGeneratedAt:          index.GeneratedAt,
+		BackupFreshnessStatus:     "ok",
+		BackupVerifyStatus:        "ok",
+		VerificationFailures:      len(verify.VerificationFailures),
+		IssueCount:                len(index.Issues),
+		MaxAgeSeconds:             int64(maxAge.Seconds()),
+		AsOf:                      now.Format(time.RFC3339),
+		FreshnessGate:             "pass",
+		RawBodiesIncluded:         false,
+		LLME2ERequiredAfterChange: true,
+	}
+	if !verify.OK() {
+		freshness.BackupFreshnessStatus = "warn"
+		freshness.BackupVerifyStatus = "warn"
+		freshness.FreshnessGate = "fail"
+	}
+	if len(index.Issues) == 0 {
+		freshness.BackupFreshnessStatus = "empty"
+		freshness.FreshnessGate = "fail"
+		return freshness, nil
+	}
+
+	var latestIssue BackupIndexIssue
+	var latest time.Time
+	for i, issue := range index.Issues {
+		generatedAt, err := time.Parse(time.RFC3339, issue.BackupGeneratedAt)
+		if err != nil {
+			return BackupFreshness{}, fmt.Errorf("parse backup timestamp for issue #%d: %w", issue.Number, err)
+		}
+		if i == 0 || generatedAt.After(latest) {
+			latest = generatedAt
+			latestIssue = issue
+		}
+	}
+	backup, payload, err := manifestPayload(repoDir, repo, latestIssue)
+	if err != nil {
+		return BackupFreshness{}, err
+	}
+	freshness.LatestIssueNumber = backup.Issue.Number
+	freshness.LatestIssuePath = filepath.ToSlash(latestIssue.Path)
+	freshness.LatestGeneratedAt = backup.GeneratedAt
+	freshness.LatestAgeSeconds = int64(now.Sub(latest).Seconds())
+	freshness.LatestPayloadBytes = payload.Bytes
+	freshness.LatestPayloadSHA = payload.SHA
+	freshness.LatestEventName = backup.EventName
+	freshness.LatestIssueTitleSHA = shortDocumentHash(backup.Issue.Title)
+	if freshness.LatestAgeSeconds < 0 {
+		freshness.ClockSkewSeconds = -freshness.LatestAgeSeconds
+		freshness.BackupFreshnessStatus = "warn"
+		freshness.FreshnessGate = "fail"
+	} else if freshness.LatestAgeSeconds > freshness.MaxAgeSeconds {
+		freshness.BackupFreshnessStatus = "stale"
+		freshness.FreshnessGate = "fail"
+	}
+	return freshness, nil
 }
 
 func BuildBackupList(root, repo string, limit int) (BackupList, error) {
@@ -1492,6 +1606,45 @@ func RenderBackupList(list BackupList) string {
 
 	b.WriteString("### Indexed Backups\n")
 	writeBackupListIssues(&b, list.Issues)
+	return strings.TrimSpace(b.String())
+}
+
+func RenderBackupFreshness(freshness BackupFreshness) string {
+	var b strings.Builder
+	b.WriteString("## GitClaw Backup Freshness Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	fmt.Fprintf(&b, "- repository: `%s`\n", freshness.Repo)
+	fmt.Fprintf(&b, "- backup_freshness_status: `%s`\n", freshness.BackupFreshnessStatus)
+	fmt.Fprintf(&b, "- backup_verify_status: `%s`\n", freshness.BackupVerifyStatus)
+	fmt.Fprintf(&b, "- verification_failures: `%d`\n", freshness.VerificationFailures)
+	fmt.Fprintf(&b, "- backup_root: `%s`\n", freshness.Root)
+	fmt.Fprintf(&b, "- repo_backup_dir: `%s`\n", freshness.RepoDir)
+	fmt.Fprintf(&b, "- index_path: `%s`\n", freshness.IndexPath)
+	fmt.Fprintf(&b, "- readme_path: `%s`\n", freshness.ReadmePath)
+	fmt.Fprintf(&b, "- backup_schema_version: `%d`\n", freshness.SchemaVersion)
+	fmt.Fprintf(&b, "- index_generated_at: `%s`\n", freshness.IndexGeneratedAt)
+	fmt.Fprintf(&b, "- issue_count: `%d`\n", freshness.IssueCount)
+	fmt.Fprintf(&b, "- max_age_seconds: `%d`\n", freshness.MaxAgeSeconds)
+	fmt.Fprintf(&b, "- as_of: `%s`\n", freshness.AsOf)
+	if freshness.LatestIssueNumber > 0 {
+		fmt.Fprintf(&b, "- latest_issue: `#%d`\n", freshness.LatestIssueNumber)
+		fmt.Fprintf(&b, "- latest_issue_path: `%s`\n", freshness.LatestIssuePath)
+		fmt.Fprintf(&b, "- latest_backup_generated_at: `%s`\n", freshness.LatestGeneratedAt)
+		fmt.Fprintf(&b, "- latest_age_seconds: `%d`\n", freshness.LatestAgeSeconds)
+		fmt.Fprintf(&b, "- clock_skew_seconds: `%d`\n", freshness.ClockSkewSeconds)
+		fmt.Fprintf(&b, "- latest_payload_bytes: `%d`\n", freshness.LatestPayloadBytes)
+		fmt.Fprintf(&b, "- latest_payload_sha256_12: `%s`\n", freshness.LatestPayloadSHA)
+		fmt.Fprintf(&b, "- latest_event_name: `%s`\n", freshness.LatestEventName)
+		fmt.Fprintf(&b, "- latest_issue_title_sha256_12: `%s`\n", freshness.LatestIssueTitleSHA)
+	} else {
+		b.WriteString("- latest_issue: `none`\n")
+		b.WriteString("- latest_age_seconds: `0`\n")
+		b.WriteString("- clock_skew_seconds: `0`\n")
+	}
+	fmt.Fprintf(&b, "- freshness_gate: `%s`\n", freshness.FreshnessGate)
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", freshness.RawBodiesIncluded)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_backup_freshness_change: `%t`\n\n", freshness.LLME2ERequiredAfterChange)
+	b.WriteString("This report checks whether the fetched `gitclaw-backups` branch has a recent verified backup. It reports only timestamps, age, counts, paths, and hashes; raw issue titles, issue bodies, comments, transcript messages, prompts, and tool outputs are not included.")
 	return strings.TrimSpace(b.String())
 }
 

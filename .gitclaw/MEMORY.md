@@ -98,6 +98,9 @@
   metadata inspection, plus a normal model/tool follow-up.
 - Backup stats changes need two proofs: fetched-branch body-free aggregate
   backup-health report, plus a normal model/tool follow-up.
+- Backup freshness changes need two proofs: fetched-branch body-free
+  latest-backup-age gate with verify status, plus a normal model/tool
+  follow-up.
 - Backup list changes need two proofs: fetched-branch body-free indexed backup
   navigation, plus a normal model/tool follow-up.
 - Backup manifest changes need two proofs: fetched-branch body-free control and
