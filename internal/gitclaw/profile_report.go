@@ -11,6 +11,9 @@ func IsProfileReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderProfileReport(ev Event, cfg Config, repoContext RepoContext) string {
+	if isProfileManifestRequest(ev, cfg) {
+		return renderProfileManifestReport(ev, cfg, repoContext, true)
+	}
 	if isProfileRiskRequest(ev, cfg) {
 		return renderProfileRiskReport(ev, cfg, repoContext, true)
 	}

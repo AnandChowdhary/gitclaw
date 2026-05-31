@@ -14,6 +14,7 @@
 - Keep session coverage checks strict: real E2E should prove a model-backed assistant marker, prompt provenance, selected skill names, and prompt-visible tool names from the issue thread and the fetched backup.
 - Keep session stats body-free: summarize roles, trust, model/provenance totals, prompt-visible skill/tool names, and marker counts without printing issue bodies, comment bodies, assistant replies, prompts, or tool outputs.
 - Keep soul anchor maps body-free: expose repo-local authority roles, loaded/prompt-visible/canonical flags, hashes, validation gates, and risk gates, then pair changes with live GitHub Models repo-reader/tool E2E.
+- Keep profile manifests body-free: map repo-reviewed profile files, skills, bundles, proactive prompts, toolsets, MCP specs, and tool contracts by metadata only, explicitly excluding credentials, sessions, backup payloads, external homes, and mutation paths.
 - Keep sandbox risk audits body-free: report runtime, tool, workflow, skill, backup, and raw-body leak gates with stable finding codes, then prove normal LLM/tool behavior in live E2E.
 - Keep doctor E2E audits body-free but strict: count live issue, cleanup, model, session, backup, and workflow-dispatch harness coverage, then run a normal model/tool follow-up in the live harness.
 - Keep doctor model coverage honest: distinguish weak model-marker coverage from real follow-up coverage that posts a comment, waits for an issue_comment run, and verifies prompt provenance plus prompt-visible tools.

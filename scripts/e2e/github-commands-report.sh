@@ -138,7 +138,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `33`' \
   'aliases: `31`' \
-  'local_cli_helpers: `145`' \
+  'local_cli_helpers: `147`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/agents' \
@@ -241,6 +241,8 @@ for expected in \
   'gitclaw plugins mcp info <name>' \
   'gitclaw profile show' \
   'gitclaw profile verify' \
+  'gitclaw profile manifest' \
+  'gitclaw profile export-plan' \
   'gitclaw profile risk' \
   'gitclaw tasks list' \
   'gitclaw tasks risk' \

@@ -809,6 +809,19 @@ confusing profile-as-sandbox claims. Add `@gitclaw /profile risk` and
 hashes only, followed by a live GitHub Models E2E that proves normal
 conversation/tool behavior still works.
 
+2026-05-31 profile-manifest follow-up: Hermes profile docs now make the
+portability split explicit: shared profile distributions can package SOUL,
+config, skills, cron jobs, and MCP connections, while credentials, memories,
+and sessions stay local to the machine. OpenClaw workspace docs make the same
+lesson file-shaped by recommending a git-backed workspace of soul, user,
+identity, tools, heartbeat, memory, and skills. GitClaw should expose this as a
+dry-run profile manifest rather than a packager: list repo-reviewed profile
+files, skills, bundles, proactive prompts, toolsets, MCP specs, and tool
+contracts by path/hash/counts only, then explicitly exclude credentials,
+external homes, sessions, backup payloads, and mutation/install/switch
+operations. The harness must include a real GitHub Models repo-reader/search
+follow-up so the deterministic manifest does not replace LLM/tool coverage.
+
 2026-05-30 config-list follow-up: config inspection should also exist outside
 issue chat. Add `gitclaw config list` as the local mirror of `/config`: report
 effective config source, labels, trusted associations, model/prompt budgets,

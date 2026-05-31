@@ -88,3 +88,140 @@ SKILL_PROFILE_SECRET`)
 		}
 	}
 }
+
+func TestRenderProfileManifestReportShowsPortabilityPlanWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/config.yml", "model:\n  provider: github-models\n  name: openai/gpt-5-nano\n")
+	writeTestFile(t, root, ".gitclaw/SOUL.md", "SOUL_PROFILE_MANIFEST_SECRET")
+	writeTestFile(t, root, ".gitclaw/IDENTITY.md", "IDENTITY_PROFILE_MANIFEST_SECRET")
+	writeTestFile(t, root, ".gitclaw/USER.md", "USER_PROFILE_MANIFEST_SECRET")
+	writeTestFile(t, root, ".gitclaw/TOOLS.md", "TOOLS_PROFILE_MANIFEST_SECRET")
+	writeTestFile(t, root, ".gitclaw/MEMORY.md", "MEMORY_PROFILE_MANIFEST_SECRET")
+	writeTestFile(t, root, ".gitclaw/HEARTBEAT.md", "HEARTBEAT_PROFILE_MANIFEST_SECRET")
+	writeTestFile(t, root, ".gitclaw/memory/2026-05-30.md", "MEMORY_NOTE_PROFILE_MANIFEST_SECRET")
+	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Use read-only repository context.
+---
+
+SKILL_PROFILE_MANIFEST_SECRET`)
+	writeTestFile(t, root, ".gitclaw/skill-bundles/repo-context.yaml", "name: repo-context\nskills:\n  - repo-reader\n")
+	writeTestFile(t, root, ".gitclaw/proactive/repo-hygiene.md", "PROACTIVE_PROFILE_MANIFEST_SECRET")
+	writeTestFile(t, root, ".gitclaw/toolsets/repo-read.yaml", "name: repo-read\ntools:\n  - gitclaw.list_files\n")
+
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	ctx, err := LoadRepoContextWithConfig(root, []TranscriptMessage{{Role: "user", Body: "Use repo-reader for profile manifest."}}, cfg)
+	if err != nil {
+		t.Fatalf("LoadRepoContextWithConfig returned error: %v", err)
+	}
+	report := renderProfileManifestReport(Event{}, cfg, ctx, false)
+	for _, want := range []string{
+		"GitClaw Profile Manifest Report",
+		"Generated without a model call",
+		"scope: `local-cli`",
+		"profile_manifest_status: `ok`",
+		"profile_strategy: `repo-local-git-profile`",
+		"manifest_strategy: `dry-run-metadata-only`",
+		"manifest_supported: `true`",
+		"profile_export_supported: `false`",
+		"profile_import_supported: `false`",
+		"profile_switching_supported: `false`",
+		"profile_distribution_install_supported: `false`",
+		"profile_mutation_allowed: `false`",
+		"profile_documents_loaded: `7`",
+		"required_profile_documents: `6`",
+		"required_profile_documents_present: `6`",
+		"required_profile_documents_missing: `0`",
+		"available_skills: `1`",
+		"selected_skills: `1`",
+		"skill_bundles: `1`",
+		"available_tools: `5`",
+		"config_file_present: `true`",
+		"manifest_entries:",
+		"manifest_sha256_12:",
+		"credentials_included: `false`",
+		"sessions_included: `false`",
+		"backup_payloads_included: `false`",
+		"raw_bodies_included: `false`",
+		"raw_config_bodies_included: `false`",
+		"raw_issue_bodies_included: `false`",
+		"raw_comment_bodies_included: `false`",
+		"llm_e2e_required_after_profile_manifest_change: `true`",
+		"### Manifest Entries",
+		"kind=`profile-config` name=`config` path=`.gitclaw/config.yml` category=`config` source=`repo-local` include_policy=`metadata-only`",
+		"kind=`profile-document` name=`soul` path=`.gitclaw/SOUL.md` category=`soul` source=`repo-local` include_policy=`repo-reviewed-source` portable=`true` required=`true` present=`true` selected=`true` enabled=`true` body_in_report=`false`",
+		"kind=`profile-document` name=`memory-note` path=`.gitclaw/memory/2026-05-30.md`",
+		"kind=`skill` name=`repo-reader` path=`.gitclaw/SKILLS/repo-reader/SKILL.md`",
+		"kind=`skill-bundle` name=`repo-context` path=`.gitclaw/skill-bundles/repo-context.yaml`",
+		"kind=`proactive-prompt` name=`repo-hygiene` path=`.gitclaw/proactive/repo-hygiene.md`",
+		"kind=`toolset-spec` name=`repo-read` path=`.gitclaw/toolsets/repo-read.yaml`",
+		"kind=`tool-contract` name=`gitclaw.search_files` path=`tool:gitclaw.search_files` category=`tool` source=`runtime-contract` include_policy=`contract-only` portable=`false`",
+		"### Excluded State",
+		"kind=`credentials`",
+		"kind=`sessions`",
+		"kind=`backup-payloads`",
+		"kind=`external-profile-home`",
+		"kind=`profile-mutation`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("profile manifest report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"SOUL_PROFILE_MANIFEST_SECRET", "IDENTITY_PROFILE_MANIFEST_SECRET", "USER_PROFILE_MANIFEST_SECRET", "TOOLS_PROFILE_MANIFEST_SECRET", "MEMORY_PROFILE_MANIFEST_SECRET", "HEARTBEAT_PROFILE_MANIFEST_SECRET", "MEMORY_NOTE_PROFILE_MANIFEST_SECRET", "SKILL_PROFILE_MANIFEST_SECRET", "PROACTIVE_PROFILE_MANIFEST_SECRET"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("profile manifest leaked %q:\n%s", leaked, report)
+		}
+	}
+}
+
+func TestRenderProfileReportRoutesManifestWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SOUL.md", "SOUL_PROFILE_MANIFEST_ROUTE_SECRET")
+	writeTestFile(t, root, ".gitclaw/IDENTITY.md", "Identity.")
+	writeTestFile(t, root, ".gitclaw/USER.md", "USER_PROFILE_MANIFEST_ROUTE_SECRET")
+	writeTestFile(t, root, ".gitclaw/TOOLS.md", "Tools.")
+	writeTestFile(t, root, ".gitclaw/MEMORY.md", "Memory.")
+	writeTestFile(t, root, ".gitclaw/HEARTBEAT.md", "Heartbeat.")
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	ctx, err := LoadRepoContextWithConfig(root, nil, cfg)
+	if err != nil {
+		t.Fatalf("LoadRepoContextWithConfig returned error: %v", err)
+	}
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 177,
+			"title": "@gitclaw /profile manifest",
+			"body": "Hidden profile manifest route token: PROFILE_MANIFEST_ROUTE_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	body := RenderProfileReport(ev, cfg, ctx)
+	for _, want := range []string{
+		"GitClaw Profile Manifest Report",
+		"repository: `owner/repo`",
+		"issue: `#177`",
+		"profile_manifest_status: `ok`",
+		"issue_title_sha256_12:",
+		"kind=`profile-document` name=`soul` path=`.gitclaw/SOUL.md`",
+		"raw_bodies_included: `false`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("profile manifest route report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SOUL_PROFILE_MANIFEST_ROUTE_SECRET", "USER_PROFILE_MANIFEST_ROUTE_SECRET", "PROFILE_MANIFEST_ROUTE_BODY_SECRET"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("profile manifest route report leaked %q:\n%s", leaked, body)
+		}
+	}
+}

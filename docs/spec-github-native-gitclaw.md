@@ -1603,6 +1603,8 @@ Hermes profiles and OpenClaw workspace files:
 ```text
 @gitclaw /profile
 @gitclaw /profiles
+@gitclaw /profile manifest
+@gitclaw /profile export-plan
 @gitclaw /profile risk
 ```
 
@@ -1622,21 +1624,49 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
   counts,
 - available and selected skills plus skill bundle count,
 - deterministic tool contract and active-output counts,
-- soul, skill, and tool validation rollups.
+- soul, skill, and tool validation rollups,
+- body-free profile portability manifest metadata when explicitly requested.
 
 It never dumps profile file bodies, skill bodies, tool outputs, issue/comment
-bodies, prompts, or secrets. It is an operator confidence surface, not a
-profile export or profile mutation command.
+bodies, prompts, or secrets. It is an operator confidence surface; the
+manifest view is a dry-run metadata plan, not a packaging, install, switch, or
+mutation command.
 
 Local operators can inspect the same profile envelope without opening an issue:
 
 ```bash
 gitclaw profile show
 gitclaw profile verify
+gitclaw profile manifest
+gitclaw profile export-plan
 gitclaw profile risk
 ```
 
-The aliases intentionally return the same body-free report in v1.
+`show`, `verify`, and `list` intentionally return the same body-free envelope
+in v1. `manifest` and `export-plan` return the same body-free portability
+manifest.
+
+`@gitclaw /profile manifest`, `@gitclaw /profile portability`, and
+`@gitclaw /profile export-plan` produce a deterministic dry-run manifest for
+the repo-local profile. The manifest maps the reviewed `.gitclaw/` profile
+surface into metadata-only cards:
+
+- config metadata,
+- loaded soul/user/identity/tool/memory/heartbeat/policy files,
+- dated memory notes,
+- local skills and skill bundles,
+- reviewed proactive prompts, hook specs, MCP specs, toolsets, task specs,
+  node specs, artifact specs, diff specs, agent specs, and workspace specs,
+- deterministic tool contracts.
+
+It also names state that is deliberately excluded: credentials, external
+profile homes, sessions, backup payloads, and profile mutation/install/switch
+operations. It reports paths, categories, inclusion policies, portability
+flags, selected/enabled flags, counts, and short hashes only. Raw profile
+files, config bodies, issue/comment bodies, prompts, sessions, backups, and
+credential values are never printed. Any change to the manifest surface must
+include live GitHub issue E2E with a normal GitHub Models follow-up proving
+repo-reader and prompt-visible tool provenance.
 
 `@gitclaw /profile risk` and `gitclaw profile risk` add a deterministic
 profile-isolation audit on top of the visibility report. The audit is inspired
@@ -5584,6 +5614,13 @@ examples/workflows/gitclaw.yml
   produces a deterministic repo-local profile envelope across identity,
   memory, skills, tools, model, and validation state without a model call or
   profile-body leakage.
+- A `gh`-driven profile-manifest E2E harness verifies
+  `@gitclaw /profile manifest` produces a body-free portability manifest for
+  repo-local profile files, skills, bundles, proactive prompts, toolsets, and
+  deterministic tool contracts while excluding credentials, sessions, backup
+  payloads, external profile homes, and mutation/install/switch operations. It
+  then runs a live GitHub Models follow-up conversation that proves repo-reader
+  selection and prompt-visible repository search tool usage.
 - A `gh`-driven migration-plan E2E harness verifies
   `@gitclaw /migrate plan hermes` produces a body-free, non-mutating import
   plan for OpenClaw/Hermes/Codex/Claude-style state, with source scanning,

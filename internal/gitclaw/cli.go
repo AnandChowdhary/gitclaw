@@ -134,10 +134,12 @@ func runProfileCommand(args []string) error {
 	switch args[0] {
 	case "show", "verify", "list":
 		return runProfileShowCommand(args[1:])
+	case "manifest", "portability", "portable", "export-plan", "export", "package-plan", "distribution":
+		return runProfileManifestCommand(args[1:])
 	case "risk", "risk-audit":
 		return runProfileRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw profile [show|verify|list|risk]")
+		return fmt.Errorf("usage: gitclaw profile [show|verify|list|manifest|export-plan|risk]")
 	}
 }
 
@@ -170,6 +172,22 @@ func runProfileRiskCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderProfileRiskCLIReport(cfg, repoContext))
+	return nil
+}
+
+func runProfileManifestCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown profile manifest argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderProfileManifestCLIReport(cfg, repoContext))
 	return nil
 }
 

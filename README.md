@@ -36,6 +36,7 @@ go run ./cmd/gitclaw artifacts risk
 go run ./cmd/gitclaw context risk
 go run ./cmd/gitclaw prompt risk
 go run ./cmd/gitclaw diffs risk
+go run ./cmd/gitclaw profile manifest
 go run ./cmd/gitclaw profile risk
 go run ./cmd/gitclaw models risk
 go run ./cmd/gitclaw heartbeat risk
@@ -198,6 +199,9 @@ gitclaw proactive list
 gitclaw proactive risk
 gitclaw workspace risk
 gitclaw workspace verify
+gitclaw profile show
+gitclaw profile manifest
+gitclaw profile export-plan
 gitclaw profile risk
 gitclaw sandbox verify
 gitclaw sandbox risk
