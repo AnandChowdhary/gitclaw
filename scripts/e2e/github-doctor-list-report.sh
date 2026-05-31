@@ -166,11 +166,11 @@ for expected in \
   'context_files_present: `6`' \
   'memory_notes: `1`' \
   'skill_files: `1`' \
-  'e2e_scripts: `188`' \
-  'e2e_live_issue_scripts: `181`' \
-  'e2e_cleanup_scripts: `188`' \
-  'e2e_model_coverage_scripts: `131`' \
-  'e2e_model_followup_scripts: `131`' \
+  'e2e_scripts: `189`' \
+  'e2e_live_issue_scripts: `182`' \
+  'e2e_cleanup_scripts: `189`' \
+  'e2e_model_coverage_scripts: `132`' \
+  'e2e_model_followup_scripts: `132`' \
   'e2e_session_coverage_scripts: `2`' \
   'e2e_backup_gate_scripts: `27`' \
   'e2e_workflow_dispatch_scripts: `21`' \
@@ -203,6 +203,7 @@ for expected in \
   'e2e_coverage_status=`ok`' \
   'path=`scripts/e2e/github-agents-catalog-report.sh`' \
   'path=`scripts/e2e/github-nodes-catalog-report.sh`' \
+  'path=`scripts/e2e/github-approvals-catalog-report.sh`' \
   'path=`scripts/e2e/github-artifacts-catalog-report.sh`' \
   'path=`scripts/e2e/github-backup-catalog-report.sh`' \
   'path=`scripts/e2e/github-bundles-catalog-report.sh`' \

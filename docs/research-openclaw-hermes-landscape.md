@@ -2819,6 +2819,21 @@ E2E must seed a real model-backed turn first, run the deterministic provenance
 report, and then run a second real model/tool follow-up so provenance testing
 does not replace inference coverage.
 
+2026-06-01 approvals-catalog follow-up: OpenClaw's current approval docs expose
+both the policy stack and the operator CLI (`openclaw approvals`) for inspecting
+local, gateway, and node approval state, while Hermes' current security docs
+frame dangerous-command approval as one layer in a broader defense-in-depth
+model. GitClaw should add the equivalent lightweight catalog before enabling
+any mutation: `@gitclaw /approvals catalog` and local
+`gitclaw approvals catalog` should enumerate the approval commands, trusted
+association source, write-request label, per-issue approval labels,
+managed-label collision audit, assistant-marker evidence, read-only GitHub
+Actions runtime, and body-free payload gate. The report must be metadata-only:
+no approvals granted, no command execution, no repository mutation, no model
+call, and no raw issue/comment/prompt/tool/approval payloads. Acceptance
+requires a live deterministic catalog issue and then a real GitHub Models
+follow-up that uses the repo-reader skill and `gitclaw.search_files`.
+
 Main attack pattern: an untrusted input enters through one surface, persists into memory/skills/cron/filesystem, then fires later through a different surface when the attacker is no longer present.
 
 Design requirements for `gitclaw`:
@@ -3074,6 +3089,7 @@ bodies, raw descriptions, env names, issue bodies, prompts, and tool outputs.
 - OpenClaw migration guide: https://docs.openclaw.ai/install/migrating
 - OpenClaw sandbox vs tool policy vs elevated: https://docs.openclaw.ai/gateway/sandbox-vs-tool-policy-vs-elevated
 - OpenClaw exec approvals: https://docs.openclaw.ai/tools/exec-approvals
+- OpenClaw approvals CLI docs: https://docs.openclaw.ai/cli/approvals
 - OpenClaw sandboxing docs: https://docs.openclaw.ai/gateway/sandboxing
 - OpenClaw agent workspace docs: https://docs.openclaw.ai/agent-workspace
 - OpenClaw migrating from Hermes: https://docs.openclaw.ai/install/migrating-hermes
@@ -3109,6 +3125,7 @@ bodies, raw descriptions, env names, issue bodies, prompts, and tool outputs.
 - Hermes skills docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/skills.md
 - Hermes working with skills docs: https://hermes-agent.nousresearch.com/docs/guides/work-with-skills/
 - Hermes tools docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/tools/
+- Hermes security docs: https://hermes-agent.nousresearch.com/docs/user-guide/security
 - Hermes Tool Search docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-search
 - Hermes context compression and caching docs: https://hermes-agent.nousresearch.com/docs/developer-guide/context-compression-and-caching/
 - Hermes features overview: https://hermes-agent.nousresearch.com/docs/user-guide/features/overview/

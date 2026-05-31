@@ -349,6 +349,8 @@ func runApprovalsCommand(args []string) error {
 		return runApprovalsListCommand(nil)
 	}
 	switch args[0] {
+	case "catalog", "commands", "gates", "index":
+		return runApprovalsCatalogCommand(args[1:])
 	case "list", "verify":
 		return runApprovalsListCommand(args[1:])
 	case "provenance", "trace", "evidence":
@@ -356,8 +358,20 @@ func runApprovalsCommand(args []string) error {
 	case "risk", "risk-audit":
 		return runApprovalsRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw approvals [list|verify|provenance|risk]")
+		return fmt.Errorf("usage: gitclaw approvals [catalog|list|verify|provenance|risk]")
 	}
+}
+
+func runApprovalsCatalogCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown approvals catalog argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderApprovalCatalogCLIReport(cfg))
+	return nil
 }
 
 func runApprovalsListCommand(args []string) error {

@@ -20,6 +20,9 @@ func RenderApprovalReport(ev Event, cfg Config, decision PreflightDecision, tran
 }
 
 func RenderApprovalReportWithComments(ev Event, cfg Config, decision PreflightDecision, comments []Comment, transcript []TranscriptMessage, writeRequested bool) string {
+	if isApprovalCatalogRequest(ev, cfg) {
+		return RenderApprovalCatalogReport(ev, cfg)
+	}
 	if isApprovalRiskRequest(ev, cfg) {
 		return renderApprovalRiskReport(ev, cfg, decision, transcript, writeRequested, true)
 	}

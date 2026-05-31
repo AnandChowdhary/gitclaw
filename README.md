@@ -49,6 +49,7 @@ go run ./cmd/gitclaw heartbeat risk
 go run ./cmd/gitclaw config risk
 go run ./cmd/gitclaw orders risk
 go run ./cmd/gitclaw policy risk
+go run ./cmd/gitclaw approvals catalog
 go run ./cmd/gitclaw approvals provenance
 go run ./cmd/gitclaw approvals risk
 ```
@@ -304,6 +305,7 @@ gitclaw doctor
 gitclaw doctor list
 gitclaw policy verify
 gitclaw policy risk
+gitclaw approvals catalog
 gitclaw approvals provenance
 gitclaw approvals risk
 gitclaw artifacts catalog
@@ -507,6 +509,7 @@ scripts/e2e/github-bundles-provenance-report.sh
 scripts/e2e/github-bundles-risk-report.sh
 scripts/e2e/github-orders-risk-report.sh
 scripts/e2e/github-policy-risk-report.sh
+scripts/e2e/github-approvals-catalog-report.sh
 scripts/e2e/github-approvals-provenance-report.sh
 scripts/e2e/github-approvals-risk-report.sh
 scripts/e2e/github-secrets-risk-report.sh

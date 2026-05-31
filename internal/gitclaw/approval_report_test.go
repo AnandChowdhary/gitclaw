@@ -55,6 +55,112 @@ func TestRenderApprovalReportShowsGatesWithoutBodies(t *testing.T) {
 	}
 }
 
+func TestRenderApprovalCatalogReportShowsCommandAndGateSurfaceWithoutBodies(t *testing.T) {
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 131,
+			"title": "@gitclaw /approvals catalog",
+			"body": "Hidden approvals catalog body token: APPROVALS_CATALOG_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}, {"name": "gitclaw:approved"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	transcript := BuildTranscript(ev, nil)
+	report := RenderApprovalReport(ev, DefaultConfig(), Preflight(ev, DefaultConfig()), transcript, DetectWriteRequest(transcript))
+	for _, want := range []string{
+		"GitClaw Approvals Catalog Report",
+		"Generated without a model call",
+		"repository: `owner/repo`",
+		"issue: `#131`",
+		"requested_approvals_command: `catalog`",
+		"approvals_command_status: `ok`",
+		"current_issue_labels_available: `true`",
+		"current_issue_labels: `2`",
+		"approvals_catalog_status: `ok`",
+		"catalog_strategy: `compact-github-issue-approval-discovery`",
+		"approval_model: `github-actions-issue-label-approval-boundary`",
+		"approval_store: `github-issue-labels`",
+		"approval_scope: `per-issue`",
+		"trusted_associations: `3`",
+		"approval_labels_configured: `3`",
+		"managed_labels_configured: `9`",
+		"catalog_entries: `5`",
+		"approval_layers: `7`",
+		"write_actions_supported: `false`",
+		"repository_mutation_allowed: `false`",
+		"approval_payloads_included: `false`",
+		"raw_bodies_included: `false`",
+		"raw_issue_bodies_included: `false`",
+		"raw_comment_bodies_included: `false`",
+		"raw_prompt_bodies_included: `false`",
+		"llm_e2e_required_after_approvals_catalog_change: `true`",
+		"command=`catalog` issue_intent=`@gitclaw /approvals catalog` local_command=`gitclaw approvals catalog` execution=`metadata-only` gate=`body-free-approval-command-map`",
+		"command=`list` issue_intent=`@gitclaw /approvals` local_command=`gitclaw approvals list`",
+		"command=`verify` issue_intent=`@gitclaw /approvals verify` local_command=`gitclaw approvals verify`",
+		"command=`provenance` issue_intent=`@gitclaw /approvals provenance` local_command=`gitclaw approvals provenance`",
+		"command=`risk` issue_intent=`@gitclaw /approvals risk` local_command=`gitclaw approvals risk`",
+		"layer=`authorization` store=`authorization.allowed_associations`",
+		"layer=`write-request` store=`gitclaw:write-requested`",
+		"layer=`approval-labels` store=`gitclaw:approved/gitclaw:needs-human`",
+		"layer=`managed-labels` store=`GitClaw managed labels`",
+		"layer=`evidence` store=`assistant-turn markers`",
+		"layer=`runtime` store=`GitHub Actions workflow`",
+		"layer=`payloads` store=`unsupported in reports`",
+		"approval_catalog_gate=`ok`",
+		"preflight_gate=`trusted-association-required`",
+		"write_request_gate=`heuristic-plus-label-evidence`",
+		"approval_label_gate=`per-issue-github-label`",
+		"provenance_gate=`assistant-turn-marker-hashes`",
+		"risk_gate=`collision-and-broad-trust-audit`",
+		"write_mode_gate=`blocked-read-only-v1`",
+		"raw_body_gate=`hashes-counts-labels-and-metadata-only`",
+		"model_e2e_gate=`required`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("approval catalog report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"APPROVALS_CATALOG_BODY_SECRET", "Hidden approvals catalog"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("approval catalog report leaked %q:\n%s", leaked, report)
+		}
+	}
+}
+
+func TestApprovalsCatalogCommandReportsSurfaceWithoutBodies(t *testing.T) {
+	output := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"approvals", "catalog"}); err != nil {
+			t.Fatalf("approvals catalog returned error: %v", err)
+		}
+	})
+	for _, want := range []string{
+		"GitClaw Approvals Catalog Report",
+		"scope: `local-cli`",
+		"current_issue_labels_available: `false`",
+		"approvals_catalog_status: `ok`",
+		"catalog_strategy: `compact-github-issue-approval-discovery`",
+		"catalog_entries: `5`",
+		"approval_layers: `7`",
+		"command=`catalog` issue_intent=`@gitclaw /approvals catalog` local_command=`gitclaw approvals catalog`",
+		"command=`provenance` issue_intent=`@gitclaw /approvals provenance` local_command=`gitclaw approvals provenance`",
+		"layer=`authorization` store=`authorization.allowed_associations`",
+		"layer=`approval-labels` store=`gitclaw:approved/gitclaw:needs-human`",
+		"raw_bodies_included: `false`",
+		"model_e2e_gate=`required`",
+	} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("approvals catalog output missing %q:\n%s", want, output)
+		}
+	}
+}
+
 func TestRenderApprovalRiskReportShowsBoundaryWithoutBodies(t *testing.T) {
 	ev, err := ParseEvent("issues", []byte(`{
 		"action": "opened",
@@ -380,5 +486,61 @@ func TestHandleApprovalProvenanceCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 	if !hasLabel(github.IssueLabels[129], "gitclaw:done") || !hasLabel(github.IssueLabels[129], "gitclaw:write-requested") || hasLabel(github.IssueLabels[129], "gitclaw:running") || hasLabel(github.IssueLabels[129], "gitclaw:error") {
 		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[129])
+	}
+}
+
+func TestHandleApprovalCatalogCommandPostsReportWithoutLLM(t *testing.T) {
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 132,
+			"title": "@gitclaw /approvals catalog",
+			"body": "Hidden approvals catalog handler token: APPROVALS_CATALOG_HANDLER_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{IssueLabels: map[int][]string{132: []string{"gitclaw"}}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, DefaultConfig(), github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic approvals catalog command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{
+		"GitClaw Approvals Catalog Report",
+		"Generated without a model call",
+		"model=\"gitclaw/approvals\"",
+		"requested_approvals_command: `catalog`",
+		"approvals_catalog_status: `ok`",
+		"catalog_entries: `5`",
+		"approval_layers: `7`",
+		"command=`catalog` issue_intent=`@gitclaw /approvals catalog`",
+		"layer=`authorization` store=`authorization.allowed_associations`",
+		"raw_bodies_included: `false`",
+		"llm_e2e_required_after_approvals_catalog_change: `true`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("approval catalog handler report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"APPROVALS_CATALOG_HANDLER_BODY_SECRET", "Hidden approvals catalog"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("approval catalog handler report leaked %q:\n%s", leaked, body)
+		}
+	}
+	if !hasLabel(github.IssueLabels[132], "gitclaw:done") || hasLabel(github.IssueLabels[132], "gitclaw:running") || hasLabel(github.IssueLabels[132], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[132])
 	}
 }

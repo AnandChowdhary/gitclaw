@@ -2912,6 +2912,7 @@ OpenClaw's exec-approval gates and Hermes' explicit command approval posture:
 ```text
 @gitclaw /approvals
 @gitclaw /approval
+@gitclaw /approvals catalog
 @gitclaw /approvals provenance
 ```
 
@@ -2934,6 +2935,7 @@ remains blocked until a later reviewed write-mode implementation exists.
 Local operators can inspect the static approval shape without opening an issue:
 
 ```bash
+gitclaw approvals catalog
 gitclaw approvals list
 gitclaw approvals verify
 gitclaw approvals provenance
@@ -2943,6 +2945,21 @@ gitclaw approvals risk
 The local report omits repository, issue, actor, trigger, and write-intent
 state. It still reports the approval label names, trusted association source,
 per-issue GitHub-label approval store, and read-only write-mode gate.
+
+`@gitclaw /approvals catalog` and local `gitclaw approvals catalog` switch
+from per-issue readiness to a compact approval command and layer map. The
+catalog exposes the available approval commands, trusted-association layer,
+write-request label layer, approval-label layer, managed-label collision audit,
+assistant-marker evidence layer, GitHub Actions runtime boundary, and explicit
+payload/body-free gate. It is modeled after OpenClaw's split between requested
+exec policy, host-local approvals, allowlists, and human decisions, plus
+Hermes' defense-in-depth approval boundary. The catalog never approves,
+executes, mutates, calls a model, prints issue/comment bodies, dumps approval
+payloads, or exposes prompt/tool output bodies. It includes
+`llm_e2e_required_after_approvals_catalog_change=true`; every change to this
+surface must pass a deterministic live approvals-catalog issue plus a real
+GitHub Models follow-up proving prompt context hashing, selected skills,
+prompt-visible repository search tools, and usage telemetry.
 
 `@gitclaw /approvals provenance` and local
 `gitclaw approvals provenance` switch from gate inventory to body-free evidence
@@ -7265,6 +7282,13 @@ examples/workflows/gitclaw.yml
   `@gitclaw /approvals` detects real write intent, observes
   `gitclaw:approved`, reports the approval gates as read-only, applies
   `gitclaw:write-requested`, and avoids issue body leakage.
+- A `gh`-driven approvals-catalog E2E harness verifies
+  `@gitclaw /approvals catalog` exposes the compact approval command map,
+  approval layers, collision/risk gates, and read-only runtime boundary without
+  leaking issue bodies or approval payloads. The same harness must then run a
+  real GitHub Models follow-up conversation that proves model inference,
+  prompt provenance, selected skills, prompt-visible repository search tool
+  usage, and usage markers.
 - A `gh`-driven approvals-provenance E2E harness verifies
   `@gitclaw /approvals provenance` runs after a real model-backed seed turn,
   exposes the body-free approval evidence chain, counts current labels,
