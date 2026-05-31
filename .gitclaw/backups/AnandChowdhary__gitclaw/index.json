@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T11:08:42Z",
+  "generated_at": "2026-05-31T11:10:08Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 345,
   "issues": [
@@ -4276,13 +4276,14 @@
       "number": 382,
       "title": "@gitclaw /proactive info repo-hygiene e2e 20260531T110733Z",
       "path": "issues/000382.json",
-      "backup_generated_at": "2026-05-31T11:08:41Z",
-      "event_name": "issues",
+      "backup_generated_at": "2026-05-31T11:10:06Z",
+      "event_name": "issue_comment",
       "labels": [
-        "gitclaw"
+        "gitclaw",
+        "gitclaw:done"
       ],
-      "comment_count": 1,
-      "transcript_messages": 2
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }

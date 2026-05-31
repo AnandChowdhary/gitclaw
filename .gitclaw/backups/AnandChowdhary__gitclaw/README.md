@@ -1,6 +1,6 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-05-31T11:08:42Z`
+- generated_at: `2026-05-31T11:10:08Z`
 - issue_count: `345`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
@@ -349,4 +349,4 @@
 | #379 | @gitclaw /skills install-plan repo-reader e2e 20260531T104026Z | `2026-05-31T10:42:59Z` | 3 | 4 | `issues/000379.json` |
 | #380 | @gitclaw /soul edit-plan soul e2e 20260531T105023Z | `2026-05-31T10:53:00Z` | 3 | 4 | `issues/000380.json` |
 | #381 | @gitclaw /memory promote-plan long-term e2e 20260531T110012Z | `2026-05-31T11:02:44Z` | 3 | 4 | `issues/000381.json` |
-| #382 | @gitclaw /proactive info repo-hygiene e2e 20260531T110733Z | `2026-05-31T11:08:41Z` | 1 | 2 | `issues/000382.json` |
+| #382 | @gitclaw /proactive info repo-hygiene e2e 20260531T110733Z | `2026-05-31T11:10:06Z` | 3 | 4 | `issues/000382.json` |
