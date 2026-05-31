@@ -848,7 +848,7 @@ GitHub issue/comment event
   `prompt risk`,
   `runs current`, `runs verify`, `runs history`,
   `sandbox explain`, `sandbox verify`, `sandbox risk`,
-  `memory catalog`, `memory verify`, `memory risk`, `memory validate`,
+  `memory catalog`, `memory provenance`, `memory verify`, `memory risk`, `memory validate`,
   `memory timeline`, `memory list`, `memory promote-plan`, `memory info`, `memory search`,
   `skills validate`,
   `skills list`, `skills catalog`, `skills provenance`, `skills select-plan`, `skills refresh-plan`,
@@ -1231,6 +1231,7 @@ larger session recall:
 @gitclaw /memory
 @gitclaw /memory list
 @gitclaw /memory catalog
+@gitclaw /memory provenance
 @gitclaw /memory verify
 @gitclaw /memory risk
 @gitclaw /memory validate
@@ -1272,6 +1273,17 @@ rollups, short hashes, disabled write/provider/background-promotion gates, and
 memory bodies, issue bodies, comments, prompts, session transcripts, embedding
 vectors, credentials, or secret values. Local operators can run the same report
 with `gitclaw memory catalog`.
+
+When called as `@gitclaw /memory provenance`, the command posts a body-free git
+history map for repo-local memory files. It reports durable memory counts,
+prompt-visible load state, validation/risk rollups, repo-local source counts,
+tracked/untracked/dirty state, last commit IDs/dates, commit-subject hashes,
+disabled write/provider/background-promotion gates, and
+`llm_e2e_required_after_memory_provenance_change: true`. It never includes raw
+memory bodies, issue bodies, comments, prompts, git subjects, author identities,
+provider payloads, credentials, or secret values. Local operators can run the
+same report with `gitclaw memory provenance`; `git-history` is accepted as a
+CLI alias.
 
 When called as `@gitclaw /memory timeline`, the command posts a body-free
 chronology of `.gitclaw/MEMORY.md` and `.gitclaw/memory/*.md`. It reports
@@ -1331,6 +1343,7 @@ memory-hygiene report. Local operators can run the same validation with:
 
 ```bash
 gitclaw memory catalog
+gitclaw memory provenance
 gitclaw memory verify
 gitclaw memory risk
 gitclaw memory validate
@@ -5615,6 +5628,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - create a fourth real issue with `@gitclaw /memory info latest`,
    - create a fifth real issue with `@gitclaw /memory timeline`,
    - create a sixth real issue with `@gitclaw /memory catalog`,
+   - create a seventh real issue with `@gitclaw /memory provenance`,
    - assert the reply is marked `model="gitclaw/memory"`,
    - assert the report lists `.gitclaw/MEMORY.md`, dated memory note counts,
      loaded/omitted note counts, and memory file hashes,
@@ -5629,10 +5643,13 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the catalog report includes memory-layer roles, prompt-visible
      load modes, reason codes, validation/risk gates, body-hash gates, and the
      live-LLM E2E requirement,
+   - assert the provenance report includes git-tracked/dirty state, commit
+     hashes/dates, commit-subject hashes, disabled write/provider gates, and no
+     raw memory or git subject bodies,
    - assert the report does not dump memory file bodies or issue body tokens,
    - assert the deterministic report succeeds without requiring a model
      provider response,
-   - post a normal follow-up on the catalog issue that requires repo-reader
+   - post normal follow-ups on the catalog and provenance issues that require repo-reader
      search and assert the second assistant turn is model-backed by GitHub
      Models with prompt context, selected skill, prompt-visible tool markers,
      and usage telemetry.
@@ -6980,6 +6997,15 @@ examples/workflows/gitclaw.yml
   issue-comment follow-up that must make a GitHub Models call, select
   `repo-reader`, expose `gitclaw.search_files`, recover a bounded
   repository-search fixture token, and publish usage telemetry.
+- A `gh`-driven memory-provenance E2E harness verifies
+  `@gitclaw /memory provenance` maps repo-local memory files to body-free git
+  history with tracked/dirty state, commit IDs/dates, subject hashes,
+  validation/risk gates, disabled write/provider/background-promotion gates,
+  no raw memory/git-subject leakage, and
+  `llm_e2e_required_after_memory_provenance_change: true`. It then posts a
+  normal issue-comment follow-up that must make a GitHub Models call, select
+  `repo-reader`, expose `gitclaw.search_files`, recover a bounded repository
+  search fixture token, and publish usage telemetry.
 - A `gh`-driven memory-timeline E2E harness verifies
   `@gitclaw /memory timeline` reports repo-local memory chronology, prompt
   visibility, dated-note gaps, validation/risk gates, and hashes without a

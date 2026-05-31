@@ -92,6 +92,7 @@ Memory:
 
 ```bash
 gitclaw memory catalog
+gitclaw memory provenance
 gitclaw memory verify
 gitclaw memory risk
 gitclaw memory validate
@@ -107,6 +108,12 @@ reports OpenClaw/Hermes-inspired memory layers, prompt visibility, load modes,
 reason codes, counts, hashes, validation/risk gates, and disabled mutation
 gates without printing raw memory, issue, comment, prompt, session, or
 embedding bodies.
+
+`gitclaw memory provenance` maps repo-local memory files to body-free git
+history. It reports tracked/dirty state, last commit IDs/dates, commit-subject
+hashes, validation/risk rollups, and disabled provider/write gates without
+printing raw memory bodies, issue/comment text, prompts, git subjects, or
+author identities.
 
 `gitclaw memory promote-plan [target]` is a dry-run planner for durable memory
 promotion. It stays body-free and write-disabled, and its live harness now
@@ -518,6 +525,7 @@ scripts/e2e/github-hooks-catalog-report.sh
 scripts/e2e/github-hooks-risk-report.sh
 scripts/e2e/github-hooks-provenance-report.sh
 scripts/e2e/github-memory-catalog-report.sh
+scripts/e2e/github-memory-provenance-report.sh
 scripts/e2e/github-memory-timeline-report.sh
 scripts/e2e/github-memory-risk-report.sh
 scripts/e2e/github-migration-risk-report.sh

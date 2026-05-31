@@ -105,11 +105,13 @@ func RunCLI(ctx context.Context, args []string) error {
 
 func runMemoryCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw memory catalog|verify|risk|validate|timeline|list|promote-plan [target]|info <path>|search <query>")
+		return fmt.Errorf("usage: gitclaw memory catalog|provenance|verify|risk|validate|timeline|list|promote-plan [target]|info <path>|search <query>")
 	}
 	switch args[0] {
 	case "catalog", "index", "memory-catalog", "discovery", "eligible":
 		return runMemoryCatalogCommand(args[1:])
+	case "provenance", "git-history":
+		return runMemoryProvenanceCommand(args[1:])
 	case "verify":
 		return runMemoryVerifyCommand(args[1:])
 	case "risk", "risk-audit":
@@ -144,6 +146,22 @@ func runMemoryCatalogCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderMemoryCatalogCLIReport(cfg, repoContext))
+	return nil
+}
+
+func runMemoryProvenanceCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown memory provenance argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderMemoryProvenanceCLIReport(cfg, repoContext))
 	return nil
 }
 

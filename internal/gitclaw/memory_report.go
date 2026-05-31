@@ -56,6 +56,9 @@ func RenderMemoryReport(ev Event, cfg Config, repoContext RepoContext, transcrip
 	if isMemoryCatalogRequest(ev, cfg) {
 		return RenderMemoryCatalogReport(ev, cfg, repoContext)
 	}
+	if isMemoryProvenanceRequest(ev, cfg) {
+		return RenderMemoryProvenanceReport(ev, cfg, repoContext)
+	}
 	if isMemoryVerifyRequest(ev, cfg) {
 		return RenderMemoryVerifyReport(ev, cfg, repoContext)
 	}

@@ -1502,6 +1502,17 @@ issue-side mirror of `gitclaw memory verify`, returning memory-file trust
 cards, repo-local provenance, loaded/omitted state, hashes, hygiene rollup, and
 external memory-provider/indexing non-goals without exposing raw memory text.
 
+2026-06-01 memory-provenance follow-up: OpenClaw's memory guidance treats
+`MEMORY.md` as durable prompt context and `memory/YYYY-MM-DD.md` as the working
+layer, with action-sensitive notes needing source/authority boundaries. Hermes
+keeps bounded built-in memory files separate from session search and optional
+external providers. GitClaw should therefore add `@gitclaw /memory provenance`
+and `gitclaw memory provenance` as a body-free git-history view: report
+repo-local memory paths, loaded/prompt-visible state, validation/risk rollups,
+tracked/dirty state, last commit IDs/dates, and commit-subject hashes, while
+excluding raw memory bodies, git subjects, author identities, issue/comment
+text, prompts, provider payloads, and credentials.
+
 2026-05-29 memory-search follow-up: OpenClaw's memory search accepts positional
 or `--query` input plus `--max-results`, and its memory-search concept combines
 semantic/vector recall with BM25-style lexical fallback. Hermes likewise treats
