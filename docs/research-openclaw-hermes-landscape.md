@@ -163,6 +163,22 @@ outputs, raw tool inputs, or credentials. The feature should be paired with a
 live GitHub Models follow-up E2E that proves actual selected-skill and
 repository-search tool behavior.
 
+2026-05-31 prompt-cache follow-up: OpenClaw's prompt-caching reference shows
+that cache usefulness depends less on a magic toggle and more on stable
+prefixes, provider-specific request fields, usage counters, cache-boundary
+ordering, context-pruning after TTL windows, and heartbeat intervals that keep
+valuable caches warm. Hermes' context compression/caching docs reinforce the
+same interaction: compression, tool-result pruning, and prompt caching share a
+context-management boundary. GitClaw should not claim cache support that
+GitHub Models does not expose to the current client, but it can still make the
+boundary inspectable: add `@gitclaw /prompt cache` and `gitclaw prompt cache`
+as an observe-only, body-free report for stable same-issue prefix bytes,
+dynamic tool/transcript suffixes, missing cache-control request fields, missing
+cache read/write telemetry, heartbeat keep-warm workflow presence, and
+LLM/tool E2E requirements. Reports must not dump prompts, issue/comment
+bodies, context bodies, skill bodies, tool outputs, credentials, or secret
+values.
+
 2026-05-31 skill-bundle provenance follow-up: Hermes' skills system treats
 bundles as small YAML files that group several existing skills under one slash
 command, skip missing skills rather than failing, and intentionally avoid
@@ -2381,6 +2397,7 @@ names, commit subjects, author identities, or installer output.
 - OpenClaw heartbeat docs: https://openclawlab.com/en/docs/agent/heartbeat/
 - OpenClaw memory docs: https://docs.openclaw.ai/concepts/memory
 - OpenClaw tools overview: https://docs.openclaw.ai/tools
+- OpenClaw prompt caching docs: https://docs.openclaw.ai/reference/prompt-caching
 - OpenClaw token use and cost diagnostics: https://docs.openclaw.ai/reference/token-use
 - OpenClaw automation hooks docs: https://docs.openclaw.ai/automation/hooks
 - OpenClaw plugin hooks docs: https://docs.openclaw.ai/plugins/hooks

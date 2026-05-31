@@ -781,7 +781,7 @@ GitHub issue/comment event
   `orders list`, `orders verify`, `orders risk`,
   `profile show`, `profile verify`,
   `context list`, `context risk`, `context info`,
-  `prompt list`, `prompt pack`, `prompt risk`,
+  `prompt list`, `prompt pack`, `prompt cache`, `prompt risk`,
   `runs current`, `runs verify`, `runs history`,
   `sandbox explain`, `sandbox verify`, `sandbox risk`,
   `memory verify`, `memory risk`, `memory validate`, `memory timeline`,
@@ -2505,6 +2505,7 @@ memory/context posture:
 @gitclaw /prompt
 @gitclaw /prompt list
 @gitclaw /prompt pack
+@gitclaw /prompt cache
 @gitclaw /prompt risk
 ```
 
@@ -2558,6 +2559,33 @@ that uses GitHub Models, a selected skill, and `gitclaw.search_files`. This
 keeps the deterministic budget map from becoming a substitute for testing real
 model/tool behavior.
 
+When called as `@gitclaw /prompt cache`, the command posts a body-free
+cache-readiness report for the same prompt envelope. It does not enable
+provider cache controls, does not infer cache hits from headers, and does not
+pretend GitHub Models exposes cache telemetry to the current client. Instead it
+models the stable same-issue prefix and dynamic suffix that affect exact-prefix
+cache reuse:
+
+- system prompt as a separate stable model prefix,
+- run header plus repo context and selected skills as same-issue stable user
+  prefix,
+- deterministic tool outputs and transcript history as dynamic suffix,
+- provider cache mode as observe-only,
+- request-field gaps for `prompt_cache_key`, retention, and cache-control
+  markers,
+- usage-counter gaps for cache read/write token accounting,
+- heartbeat workflow presence as a possible keep-warm surface, not proof of a
+  warm cache.
+
+This adapts OpenClaw's cache-boundary and keep-warm lessons and Hermes'
+compression/cache interaction to GitClaw's serverless shape. Reports emit only
+component names, sizes, estimated token counts, hashes, cache regions,
+boundary roles, and findings. They never print prompt text, issue/comment
+bodies, context bodies, skill bodies, tool outputs, credentials, or secret
+values. Any change to this surface requires a live E2E that first verifies the
+deterministic report and then performs a normal GitHub Models follow-up with a
+selected skill and `gitclaw.search_files`.
+
 When called as `@gitclaw /prompt risk`, the command posts a body-free risk
 audit for the same prompt envelope. It scans the prompt-visible transcript,
 loaded context files, selected skills, and deterministic tool outputs for
@@ -2576,14 +2604,15 @@ without opening an issue:
 ```bash
 gitclaw prompt list
 gitclaw prompt pack
+gitclaw prompt cache
 gitclaw prompt risk
 ```
 
 The local report omits repository and issue metadata, reports zero transcript
 messages, and still summarizes provider/model, prompt hash/size, prompt
 budgets, context file metadata, selected always-on skills, deterministic
-tool-output metadata, prompt packing/truncation projection, and prompt-risk
-posture without dumping prompt text or any loaded bodies.
+tool-output metadata, prompt packing/truncation projection, cache-readiness
+gaps, and prompt-risk posture without dumping prompt text or any loaded bodies.
 
 ## Labels
 
@@ -4934,6 +4963,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - create a real issue with `@gitclaw /prompt`,
    - create a real issue with `@gitclaw /prompt list` as the explicit alias,
    - create a real issue with `@gitclaw /prompt pack`,
+   - create a real issue with `@gitclaw /prompt cache`,
    - ask for a concrete file read, selected skill, and search fixture phrase,
    - assert the reply is marked `model="gitclaw/prompt"`,
    - assert the report lists prompt budget settings, final prompt size/hash,
@@ -4942,6 +4972,9 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the prompt-pack report lists fixed component order, head/tail
      projection status, 50% and 85% threshold findings, and body-free component
      ranges/hashes,
+   - assert the prompt-cache report lists stable-prefix bytes/tokens,
+     cache-control request gaps, usage-counter gaps, dynamic suffix boundary,
+     heartbeat keep-warm workflow presence, and body-free segment hashes,
    - assert the report does not dump prompt text, issue body tokens, context
      bodies, skill bodies, or tool output bodies,
    - assert deterministic report runs succeed without requiring a model
@@ -6331,6 +6364,10 @@ examples/workflows/gitclaw.yml
   reports body-free component order, threshold findings, and truncation
   projection metadata without a model call, then posts a normal GitHub Models
   follow-up that proves selected skill and `gitclaw.search_files` tool usage.
+- A `gh`-driven prompt-cache E2E harness verifies `@gitclaw /prompt cache`
+  reports body-free stable-prefix/cache-control/telemetry gap metadata without
+  a model call, then posts a normal GitHub Models follow-up that proves
+  selected skill and `gitclaw.search_files` tool usage.
 - A `gh`-driven prompt-artifact E2E harness verifies opt-in redacted prompt
   artifacts against a real Actions artifact download.
 - A `gh`-driven write-request E2E harness verifies deterministic write-intent
@@ -6396,6 +6433,7 @@ examples/workflows/gitclaw.yml
 - OpenClaw config CLI docs: https://docs.openclaw.ai/cli/config
 - OpenClaw configure docs: https://docs.openclaw.ai/cli/configure
 - OpenClaw doctor docs: https://docs.openclaw.ai/doctor
+- OpenClaw prompt caching docs: https://docs.openclaw.ai/reference/prompt-caching
 - OpenClaw token use and costs docs: https://docs.openclaw.ai/reference/token-use
 - OpenClaw backup docs: https://docs.openclaw.ai/cli/backup
 - OpenClaw exec approvals docs: https://docs.openclaw.ai/tools/exec-approvals

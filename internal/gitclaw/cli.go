@@ -1408,8 +1408,8 @@ func runWorkspaceRiskCommand(args []string) error {
 }
 
 func runPromptCommand(args []string) error {
-	if len(args) > 1 || (len(args) == 1 && args[0] != "list" && args[0] != "risk" && args[0] != "risk-audit" && args[0] != "pack" && args[0] != "pack-plan" && args[0] != "packing" && args[0] != "context-pack") {
-		return fmt.Errorf("usage: gitclaw prompt [list|risk|pack]")
+	if len(args) > 1 || (len(args) == 1 && !isPromptCLISubcommand(args[0])) {
+		return fmt.Errorf("usage: gitclaw prompt [list|pack|cache|risk]")
 	}
 	cfg, err := LoadEffectiveConfig()
 	if err != nil {
@@ -1427,8 +1427,21 @@ func runPromptCommand(args []string) error {
 		fmt.Println(RenderPromptPackCLIReport(cfg, repoContext))
 		return nil
 	}
+	if len(args) == 1 && (args[0] == "cache" || args[0] == "cache-plan" || args[0] == "cache-status" || args[0] == "cache-readiness") {
+		fmt.Println(RenderPromptCacheCLIReport(cfg, repoContext))
+		return nil
+	}
 	fmt.Println(RenderPromptCLIReport(cfg, repoContext))
 	return nil
+}
+
+func isPromptCLISubcommand(arg string) bool {
+	switch arg {
+	case "list", "risk", "risk-audit", "pack", "pack-plan", "packing", "context-pack", "cache", "cache-plan", "cache-status", "cache-readiness":
+		return true
+	default:
+		return false
+	}
 }
 
 func runSessionCommand(args []string) error {
