@@ -1728,7 +1728,7 @@ func runMigrateRiskCommand(args []string) error {
 
 func runSkillsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw skills verify|risk|validate|check|list|select-plan <name>|refresh-plan|install-plan <target>|upgrade-plan <target>|bundles [risk]|bundle <name>|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw skills verify|risk|validate|check|list|select-plan <name>|refresh-plan|proposal-plan <name>|install-plan <target>|upgrade-plan <target>|bundles [risk]|bundle <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -1743,6 +1743,12 @@ func runSkillsCommand(args []string) error {
 		return runSkillsSelectPlanCommand(args[1:])
 	case "refresh-plan", "refresh", "reload-plan", "snapshot":
 		return runSkillsRefreshPlanCommand(args[1:])
+	case "proposal-plan", "propose-plan", "workshop-plan":
+		return runSkillsProposalPlanCommand(args[1:], "auto")
+	case "proposal-create-plan", "propose-create":
+		return runSkillsProposalPlanCommand(args[1:], "propose-create")
+	case "proposal-update-plan", "propose-update":
+		return runSkillsProposalPlanCommand(args[1:], "propose-update")
 	case "install-plan", "plan":
 		return runSkillsInstallPlanCommand(args[1:], "install-plan")
 	case "upgrade-plan":
@@ -1794,6 +1800,22 @@ func runSkillsRefreshPlanCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSkillRefreshPlanCLIReport(cfg, repoContext))
+	return nil
+}
+
+func runSkillsProposalPlanCommand(args []string, requestedAction string) error {
+	if len(args) != 1 {
+		return fmt.Errorf("usage: gitclaw skills proposal-plan <name>")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "skills proposal-plan " + args[0]}}, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSkillProposalPlanCLIReport(repoContext, requestedAction, args[0]))
 	return nil
 }
 

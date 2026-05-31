@@ -786,8 +786,9 @@ GitHub issue/comment event
   `memory verify`, `memory risk`, `memory validate`, `memory list`,
   `memory promote-plan`, `memory info`, `memory search`,
   `skills validate`,
-  `skills list`, `skills select-plan`, `skills refresh-plan`, `skills info`,
-  `skills search`,
+  `skills list`, `skills select-plan`, `skills refresh-plan`,
+  `skills proposal-plan`, `skills install-plan`, `skills upgrade-plan`,
+  `skills info`, `skills search`,
   `bundles list`, `bundles risk`, `bundles info`,
   `soul verify`, `soul risk`, `soul validate`, `soul list`,
   `soul edit-plan`, `soul info`, `soul search`,
@@ -1302,6 +1303,7 @@ gitclaw skills check
 gitclaw skills list
 gitclaw skills select-plan <name>
 gitclaw skills refresh-plan
+gitclaw skills proposal-plan <name>
 gitclaw skills install-plan <target>
 gitclaw skills upgrade-plan <target>
 gitclaw bundles list
@@ -1334,6 +1336,7 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills check
 @gitclaw /skills select-plan repo-reader
 @gitclaw /skills refresh-plan
+@gitclaw /skills proposal-plan repo-reader
 @gitclaw /skills install-plan repo-reader
 @gitclaw /skills upgrade-plan repo-reader
 @gitclaw /bundles
@@ -1464,6 +1467,25 @@ they land in the branch used by the next Actions checkout. Any change to skill
 refresh behavior must be paired with `gitclaw skills validate`, `gitclaw skills
 verify`, `gitclaw skills risk`, and a live GitHub Models conversation E2E that
 proves normal skill selection and tool usage still work.
+
+When called as `@gitclaw /skills proposal-plan <name>` or
+`gitclaw skills proposal-plan <name>`, GitClaw posts a non-mutating proposal
+planner inspired by OpenClaw's Skills Workshop proposal lifecycle and Hermes'
+reviewable skill reuse model. The planner derives a safe lower hyphen-case
+candidate, reports the proposal path
+`.gitclaw/skill-proposals/<name>/PROPOSAL.md`, the future active
+`.gitclaw/SKILLS/<name>/SKILL.md` path, whether the plan is a proposed create
+or update, existing skill matches, request hashes, validation rollups, and
+review steps.
+
+The proposal planner never writes proposal files, never updates active skills,
+never fetches remote sources, never runs installers or dependency setup, never
+creates commits, never auto-applies a proposal, and never performs autonomous
+skill creation or self-improvement. It reports only metadata, hashes, counts,
+safe paths, and finding codes; raw proposal text, issue/comment bodies, and
+full skill bodies stay out of the issue-visible report. Accepted proposal work
+must land through normal reviewed git changes and then pass skill validation,
+skill risk checks, and a live GitHub Models conversation E2E.
 
 When called as `@gitclaw /skills install-plan <target>` or
 `@gitclaw /skills upgrade-plan <target>`, the command switches to a
@@ -5284,6 +5306,13 @@ examples/workflows/gitclaw.yml
   issue/comment/prompt/skill body leakage. It then runs a live GitHub Models
   follow-up conversation that proves repo-local skill selection and tool usage
   still work.
+- A `gh`-driven skills-proposal-plan E2E harness verifies
+  `@gitclaw /skills proposal-plan repo-reader` produces a body-free,
+  non-mutating OpenClaw Skills Workshop-style proposal plan with review paths,
+  request hashes, existing skill matches, no autonomous skill creation or
+  improvement, no proposal/skill writes, and no raw body leakage. It then runs
+  a live GitHub Models follow-up conversation that proves repo-local skill
+  selection and prompt-visible repository search tool usage.
 - A `gh`-driven skills-install-plan E2E harness verifies
   `@gitclaw /skills install-plan repo-reader` produces a body-free,
   non-mutating install/upgrade plan with remote fetches, installer scripts,

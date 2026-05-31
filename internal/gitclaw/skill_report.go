@@ -86,6 +86,9 @@ func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isSkillsRefreshPlanRequest(ev, cfg) {
 		return renderSkillRefreshPlanReport(ev, cfg, repoContext, true)
 	}
+	if requestedAction, target, ok := requestedSkillProposalPlan(ev, cfg); ok {
+		return renderSkillProposalPlanReport(ev, repoContext, requestedAction, target, true)
+	}
 	if operation, target, ok := requestedSkillInstallPlan(ev, cfg); ok {
 		return renderSkillInstallPlanReport(ev, repoContext, operation, target, true)
 	}
@@ -421,6 +424,52 @@ func requestedSkillInstallPlan(ev Event, cfg Config) (operation string, target s
 		target = cleanSkillInstallTarget(fields[2])
 	}
 	return operation, target, true
+}
+
+func requestedSkillProposalPlan(ev Event, cfg Config) (requestedAction string, target string, ok bool) {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 || fields[0] != "/skills" {
+		return "", "", false
+	}
+	switch strings.ToLower(fields[1]) {
+	case "proposal-plan", "propose-plan", "workshop-plan":
+		if len(fields) >= 3 {
+			target = cleanSkillInstallTarget(fields[2])
+		}
+		return "auto", target, true
+	case "proposal-create-plan", "propose-create":
+		if len(fields) >= 3 {
+			target = cleanSkillInstallTarget(fields[2])
+		}
+		return "propose-create", target, true
+	case "proposal-update-plan", "propose-update":
+		if len(fields) >= 3 {
+			target = cleanSkillInstallTarget(fields[2])
+		}
+		return "propose-update", target, true
+	case "workshop":
+		if len(fields) < 3 {
+			return "", "", false
+		}
+		switch strings.ToLower(fields[2]) {
+		case "proposal-plan", "propose-plan":
+			if len(fields) >= 4 {
+				target = cleanSkillInstallTarget(fields[3])
+			}
+			return "auto", target, true
+		case "propose-create", "proposal-create-plan":
+			if len(fields) >= 4 {
+				target = cleanSkillInstallTarget(fields[3])
+			}
+			return "propose-create", target, true
+		case "propose-update", "proposal-update-plan":
+			if len(fields) >= 4 {
+				target = cleanSkillInstallTarget(fields[3])
+			}
+			return "propose-update", target, true
+		}
+	}
+	return "", "", false
 }
 
 func isSkillsValidateRequest(ev Event, cfg Config) bool {

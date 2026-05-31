@@ -1372,6 +1372,18 @@ keeps install/update/mutation/model calls/raw bodies disabled. Pair any refresh
 behavior change with a live GitHub Models E2E that proves selected skills and
 tool usage still work.
 
+2026-05-31 skill-proposal-plan follow-up: OpenClaw's current skills CLI adds a
+Skills Workshop proposal lifecycle where drafts are durable but not active
+until applied, and Hermes' skills posture emphasizes reusable procedural
+memory while GitClaw explicitly avoids autonomous self-improvement. GitClaw's
+matching feature should be a review-first `@gitclaw /skills proposal-plan
+<name>` and `gitclaw skills proposal-plan <name>`: hash the request, derive a
+safe proposal path, distinguish proposed create versus update, report existing
+skill matches and validation rollups, but never fetch sources, run installers,
+write proposal files, update active skills, auto-apply, or self-improve. The
+E2E harness must pair the deterministic body-free plan with a real GitHub
+Models repo-reader/search follow-up.
+
 2026-05-30 tool-gating follow-up: Hermes/OpenClaw toolsets are useful partly
 because the operator can see and constrain what the agent may call. GitClaw
 should mirror that with repo-reviewed `tools.allowed` and `tools.disabled`
@@ -2080,6 +2092,7 @@ GitHub issues and git-backed backups as the canonical storage layer.
 - OpenClaw secrets CLI docs: https://docs.openclaw.ai/cli/secrets
 - OpenClaw secrets management docs: https://docs.openclaw.ai/gateway/secrets
 - OpenClaw skills docs: https://docs.openclaw.ai/tools/skills
+- OpenClaw skills CLI docs: https://docs.openclaw.ai/cli/skills
 - GitHub Actions artifact storage docs: https://docs.github.com/en/actions/how-tos/writing-workflows/choosing-what-your-workflow-does/storing-and-sharing-data-from-a-workflow
 - `actions/upload-artifact` action: https://github.com/actions/upload-artifact
 - GitHub Models quickstart: https://docs.github.com/en/github-models/quickstart
