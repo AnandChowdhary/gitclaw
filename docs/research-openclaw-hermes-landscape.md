@@ -2047,6 +2047,13 @@ CLI. Provider pollers, manual bridge experiments, and future self-renewing
 gateway jobs can then update state with the repository `GITHUB_TOKEN`, keeping
 the bridge architecture GitHub-native rather than webhook/socket-hosted.
 
+2026-05-31 channel-state workflow E2E hardening: OpenClaw's disk-backed channel
+routing state and Hermes' long-running messaging gateway both imply durable
+provider cursor state. GitClaw's GitHub-native substitute should prove that
+state through live Actions: hash-only account/offset records, duplicate offset
+suppression, and normal GitHub Models repo-reader/search issue-comment turns on
+the state issue without exposing raw provider cursors.
+
 2026-05-30 channel gateway follow-up: OpenClaw's gateway and Slack Socket Mode
 loop can be approximated in GitHub Actions as a renewable lease rather than a
 server. A `gitclaw channel-gateway` command should first record one

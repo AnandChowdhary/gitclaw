@@ -33,15 +33,25 @@ sha256_12() {
   printf "%s" "$1" | shasum -a 256 | awk '{print substr($1, 1, 12)}'
 }
 
+ensure_label gitclaw 5319e7 "Handled by GitClaw"
 ensure_label gitclaw:channel 1d76db "GitClaw mirrored channel thread"
+ensure_label gitclaw:running fbca04 "GitClaw run is active"
+ensure_label gitclaw:done 0e8a16 "Latest GitClaw run completed"
+ensure_label gitclaw:error b60205 "Latest GitClaw run failed"
 ensure_label gitclaw:e2e 0e8a16 "Temporary GitClaw end-to-end test"
 ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
 channel="telegram"
-account_id="telegram-workflow-account-GITCLAW_CHANNEL_STATE_E2E_${timestamp}"
-offset="telegram-workflow-offset-GITCLAW_CHANNEL_STATE_OFFSET_${timestamp}"
+account_id="telegram-workflow-account-NOECHO_CHANNEL_STATE_${timestamp}"
+offset="telegram-workflow-offset-NOECHO_CHANNEL_STATE_OFFSET_${timestamp}"
 lease_run_id="channel-state-workflow-e2e-${timestamp}"
+followup_hidden_token="NOECHO_CHANNEL_STATE_FOLLOWUP_${timestamp}"
+second_followup_hidden_token="NOECHO_CHANNEL_STATE_SECOND_FOLLOWUP_${timestamp}"
+expected_token="GITCLAW_CHANNEL_STATE_CONTEXT_V1"
+second_expected_token="GITCLAW_CHANNEL_STATE_FOLLOWUP_CONTEXT_V1"
+search_phrase="channel state unique search fixture phrase"
+second_search_phrase="channel state followup unique search fixture phrase"
 account_hash="$(sha256_12 "$account_id")"
 offset_hash="$(sha256_12 "$offset")"
 
@@ -76,6 +86,34 @@ wait_for_run() {
   return 1
 }
 
+wait_for_issue_comment_run() {
+  local started_at="$1"
+  for _ in {1..90}; do
+    local run_json
+    run_json="$(gh run list \
+      --repo "$repo" \
+      --workflow .github/workflows/gitclaw.yml \
+      --event issue_comment \
+      --created ">=$started_at" \
+      --limit 10 \
+      --json databaseId,status,conclusion,createdAt,url,displayTitle \
+      --jq '. as $runs | $runs | map(select(.displayTitle == "'"${issue_title}"'")) | sort_by(.createdAt) | reverse | .[0] // empty')"
+    if [[ -n "$run_json" && "$run_json" != "null" ]]; then
+      local status conclusion url
+      status="$(jq -r '.status' <<<"$run_json")"
+      conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
+      url="$(jq -r '.url' <<<"$run_json")"
+      if [[ "$status" == "completed" ]]; then
+        [[ "$conclusion" == "success" ]] || die "issue_comment run failed with conclusion ${conclusion}: ${url}"
+        echo "$run_json"
+        return 0
+      fi
+    fi
+    sleep 5
+  done
+  return 1
+}
+
 find_issue_numbers() {
   gh issue list \
     --repo "$repo" \
@@ -95,6 +133,45 @@ wait_for_issue_number() {
       return 0
     fi
     sleep 2
+  done
+  return 1
+}
+
+assistant_count() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json comments \
+    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length'
+}
+
+latest_assistant_comment() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json comments \
+    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | .[-1] // ""'
+}
+
+error_count() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json comments \
+    --jq '[.comments[] | select(.body | contains("<!-- gitclaw:error"))] | length'
+}
+
+wait_for_assistant_count() {
+  local want="$1"
+  for _ in {1..90}; do
+    local errors
+    errors="$(error_count)"
+    if [[ "$errors" != "0" ]]; then
+      die "assistant run posted ${errors} error marker comment(s)"
+    fi
+    local got
+    got="$(assistant_count)"
+    if [[ "$got" == "$want" ]]; then
+      return 0
+    fi
+    sleep 5
   done
   return 1
 }
@@ -123,6 +200,7 @@ gh workflow run "$state_workflow" \
 
 run_json="$(wait_for_run "$first_started_at")" || die "timed out waiting for channel-state workflow"
 issue_number="$(wait_for_issue_number)" || die "timed out finding channel state issue"
+issue_title="GitClaw ${channel} channel state ${account_hash}"
 log "state workflow created issue #${issue_number}"
 
 issue_json="$(gh issue view "$issue_number" --repo "$repo" --json title,body,labels,comments)"
@@ -137,6 +215,12 @@ grep -Fq "offset_sha256_12=\"${offset_hash}\"" <<<"$comments" || die "state upda
 visible="$(jq -r '[.title, .body, (.comments[].body)] | join("\n")' <<<"$issue_json")"
 if grep -Fq "$account_id" <<<"$visible" || grep -Fq "$offset" <<<"$visible"; then
   die "state workflow leaked raw account or offset"
+fi
+if grep -Fq "$expected_token" <<<"$visible" || grep -Fq "$search_phrase" <<<"$visible"; then
+  die "state workflow leaked follow-up fixture context"
+fi
+if grep -Fq "$second_expected_token" <<<"$visible" || grep -Fq "$second_search_phrase" <<<"$visible"; then
+  die "state workflow leaked second follow-up fixture context"
 fi
 
 duplicate_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
@@ -154,5 +238,71 @@ issue_json="$(gh issue view "$issue_number" --repo "$repo" --json comments)"
 state_update_count="$(jq -r '[.comments[] | select(.body | contains("gitclaw:channel-state-update"))] | length' <<<"$issue_json")"
 [[ "$state_update_count" == "1" ]] || die "duplicate state workflow produced ${state_update_count} state update comments"
 
+comment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+gh issue comment "$issue_number" \
+  --repo "$repo" \
+  --body "@gitclaw Continue after the channel-state workflow and use the repo-reader skill.
+
+Search the repository for \`${search_phrase}\`.
+The matching repository search result line has the form \`${search_phrase} => <token>\`.
+Reply with only the token after the arrow from the matching gitclaw.search_files tool output line.
+Do not answer with any token from this issue or its comments.
+Do not include this hidden follow-up token: ${followup_hidden_token}
+Keep the answer under 30 words." >/dev/null
+
+model_run_json="$(wait_for_issue_comment_run "$comment_started_at")" || die "timed out waiting for channel-state issue_comment follow-up"
+wait_for_assistant_count 1 || die "expected model-backed follow-up assistant comment"
+model_comment="$(latest_assistant_comment)"
+
+grep -Fq "$expected_token" <<<"$model_comment" || die "assistant did not include search_files token ${expected_token}"
+if ! grep -Fq 'model="openai/gpt-5-nano"' <<<"$model_comment" && ! grep -Fq 'model="openai/gpt-4.1-nano"' <<<"$model_comment"; then
+  die "assistant marker did not use configured GitHub Models primary or fallback"
+fi
+grep -Fq 'prompt_context_sha256_12="' <<<"$model_comment" || die "assistant marker missing prompt context hash"
+grep -Fq 'skills="repo-reader"' <<<"$model_comment" || die "assistant marker missing selected repo-reader skill"
+grep -Fq 'tools="' <<<"$model_comment" || die "assistant marker missing prompt-visible tools"
+grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant marker did not prove search_files was prompt-visible"
+grep -Fq 'usage_total_tokens="' <<<"$model_comment" || die "assistant marker missing usage token telemetry"
+
+for leaked in "$account_id" "$offset" "$followup_hidden_token"; do
+  if grep -Fq "$leaked" <<<"$model_comment"; then
+    die "model follow-up leaked ${leaked}"
+  fi
+done
+
+second_comment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+gh issue comment "$issue_number" \
+  --repo "$repo" \
+  --body "@gitclaw Continue this channel-state issue conversation.
+
+Use the repo-reader skill and search the repository for \`${second_search_phrase}\`.
+The matching repository search result line has the form \`${second_search_phrase} => <token>\`.
+Reply with only the token after the arrow from the matching gitclaw.search_files tool output line.
+Do not answer with any token from this issue or its comments.
+Do not include this hidden follow-up token: ${second_followup_hidden_token}
+Keep the answer under 30 words." >/dev/null
+
+second_model_run_json="$(wait_for_issue_comment_run "$second_comment_started_at")" || die "timed out waiting for channel-state second issue_comment follow-up"
+wait_for_assistant_count 2 || die "expected second model-backed follow-up assistant comment"
+second_model_comment="$(latest_assistant_comment)"
+
+grep -Fq "$second_expected_token" <<<"$second_model_comment" || die "assistant did not include second search_files token ${second_expected_token}"
+if ! grep -Fq 'model="openai/gpt-5-nano"' <<<"$second_model_comment" && ! grep -Fq 'model="openai/gpt-4.1-nano"' <<<"$second_model_comment"; then
+  die "assistant second marker did not use configured GitHub Models primary or fallback"
+fi
+grep -Fq 'prompt_context_sha256_12="' <<<"$second_model_comment" || die "assistant second marker missing prompt context hash"
+grep -Fq 'skills="repo-reader"' <<<"$second_model_comment" || die "assistant second marker missing selected repo-reader skill"
+grep -Fq 'tools="' <<<"$second_model_comment" || die "assistant second marker missing prompt-visible tools"
+grep -Fq 'gitclaw.search_files' <<<"$second_model_comment" || die "assistant second marker did not prove search_files was prompt-visible"
+grep -Fq 'usage_total_tokens="' <<<"$second_model_comment" || die "assistant second marker missing usage token telemetry"
+
+for leaked in "$account_id" "$offset" "$followup_hidden_token" "$second_followup_hidden_token"; do
+  if grep -Fq "$leaked" <<<"$second_model_comment"; then
+    die "second model follow-up leaked ${leaked}"
+  fi
+done
+
 url="$(jq -r '.url' <<<"$run_json")"
-log "passed for issue #${issue_number}: ${url}"
+model_url="$(jq -r '.url' <<<"$model_run_json")"
+second_model_url="$(jq -r '.url' <<<"$second_model_run_json")"
+log "passed for issue #${issue_number}: ${url} (model follow-up: ${model_url}; second follow-up: ${second_model_url})"

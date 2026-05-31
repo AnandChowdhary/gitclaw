@@ -4054,7 +4054,10 @@ Provider pollers or manually dispatched bridge jobs can call it with
 `workflow_dispatch` inputs for `channel`, `account_id`, `offset`, and optional
 `lease_run_id`. The workflow writes the same body-free issue state through
 `gitclaw channel-state`, so bridge state updates do not need a server-side
-webhook endpoint or a local machine with credentials.
+webhook endpoint or a local machine with credentials. Changes to this workflow
+must prove three things in live E2E: hash-only state issue contents, duplicate
+offset suppression, and two normal GitHub Models repo-reader/search turns on
+the state issue to prove continued conversation.
 
 ### Channel Gateway Command
 
@@ -5977,7 +5980,10 @@ examples/workflows/gitclaw.yml
   channel-ingest fixture token, and avoid hidden channel/message sentinels.
 - A `gh`-driven channel-state E2E harness verifies real GitHub issue-backed
   channel offset storage, duplicate offset suppression, `gitclaw:channel`
-  labeling, and no raw account/offset leakage.
+  labeling, and no raw account/offset leakage. The workflow harness then posts
+  normal issue-comment follow-ups that must make GitHub Models calls, select
+  `repo-reader`, expose `gitclaw.search_files`, recover distinct channel-state
+  fixture tokens, and avoid hidden account/offset/comment sentinels.
 - A `gh`-driven channel-state-workflow E2E harness dispatches
   `.github/workflows/gitclaw-channel-state.yml`, verifies the state issue and
   update comment, then dispatches the same offset again to prove retry

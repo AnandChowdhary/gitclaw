@@ -399,6 +399,10 @@ issue-comment follow-up that proves repo-reader/search again.
 The channel-ingest harness proves the generic no-server bridge end to end:
 workflow-dispatch mirroring, duplicate provider-message suppression, and a
 normal model/tool follow-up on the canonical channel issue.
+The channel-state workflow harness now proves hash-only provider offset state,
+duplicate offset suppression, and two normal model/tool issue-comment turns on
+the state issue, keeping gateway cursors auditable without storing raw provider
+IDs.
 `gitclaw doctor list` also inventories checked-in E2E harnesses by count,
 cleanup coverage, live issue coverage, model marker coverage, real model
 follow-up coverage, session coverage, backup gates, and workflow-dispatch

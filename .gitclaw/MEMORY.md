@@ -39,6 +39,9 @@
 - Channel-ingest E2E needs three proofs: real workflow-dispatch mirroring,
   duplicate provider-message suppression, and a normal model/tool follow-up on
   the created canonical issue.
+- Channel-state workflow E2E needs hash-only offset storage, duplicate offset
+  suppression, and two normal model/tool issue-comment turns on the state issue
+  to prove continued conversation.
 - Heartbeat comments are model-backed scheduled turns; their
   `gitclaw:heartbeat` markers must include model, prompt-context, context-count,
   and usage telemetry without printing prompt or heartbeat bodies.
