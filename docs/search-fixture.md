@@ -48,6 +48,7 @@ gclaw-selectplan-e2e-needle => GITCLAW_SKILLS_SELECT_PLAN_CONTEXT_V1
 gclaw-contextref-followup-needle => GITCLAW_CONTEXT_REFERENCE_FOLLOWUP_CONTEXT_V1
 gclaw-gitref-followup-needle => GITCLAW_GIT_REFERENCE_FOLLOWUP_CONTEXT_V1
 gclaw-searchtool-followup-needle => GITCLAW_SEARCH_TOOL_FOLLOWUP_CONTEXT_V1
+gclaw-migration-plan-followup-needle => GITCLAW_MIGRATION_PLAN_FOLLOWUP_CONTEXT_V1
 proactive info unique search fixture phrase => GITCLAW_PROACTIVE_INFO_CONTEXT_V1
 proactive report unique search fixture phrase => GITCLAW_PROACTIVE_REPORT_CONTEXT_V1
 proactive list unique search fixture phrase => GITCLAW_PROACTIVE_LIST_CONTEXT_V1

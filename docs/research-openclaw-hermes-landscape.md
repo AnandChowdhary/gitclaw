@@ -1866,6 +1866,12 @@ home directories from an issue, import secrets, execute hooks/plugins/MCP
 servers/installers, mutate the repository, or call a model. Any implementation
 batch for migration behavior must pair the deterministic migration E2E with a
 live GitHub Models conversation E2E that performs an actual LLM call.
+2026-05-31 migration-plan E2E hardening: the paired model proof should run in
+the same issue as the deterministic report, not as a separate generic chat.
+That keeps OpenClaw's preview-first migration idea tied to GitClaw's canonical
+GitHub-thread conversation model: first prove the import map is body-free and
+non-mutating, then prove the same thread can continue with repo-reader and
+bounded repository search.
 
 2026-05-31 migration-risk follow-up: OpenClaw's current migrate CLI documents
 provider-owned migrations with `--dry-run`, redacted itemized plans,

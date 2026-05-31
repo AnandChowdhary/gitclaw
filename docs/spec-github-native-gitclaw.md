@@ -6625,9 +6625,10 @@ examples/workflows/gitclaw.yml
   `@gitclaw /migrate plan hermes` produces a body-free, non-mutating import
   plan for OpenClaw/Hermes/Codex/Claude-style state, with source scanning,
   credential import, executable-state import, repository mutation, and model
-  calls disabled. This deterministic check must be paired in the same
-  implementation batch with a live GitHub Models conversation E2E that makes
-  an actual LLM call, such as `github-search-tool-chat.sh`.
+  calls disabled. The same issue must then receive a normal issue-comment
+  follow-up that makes a GitHub Models call, selects `repo-reader`, exposes
+  `gitclaw.search_files`, recovers a distinct high-entropy repository-search
+  fixture token, and avoids hidden sentinel leakage.
 - A `gh`-driven migration-risk E2E harness verifies
   `@gitclaw /migrate risk hermes` produces a body-free import-boundary risk
   report for OpenClaw/Hermes/Codex/Claude-style state, including credential,

@@ -123,6 +123,8 @@
   plus a normal repo-reader/search follow-up in the same issue.
 - Search-tool chat changes need two repo-search proofs with distinct needles:
   initial issue turn plus normal issue-comment follow-up.
+- Migration-plan changes need two proofs: body-free dry-run import map, plus a
+  normal model/tool follow-up in the same issue.
 - Soul, memory, and profile files are high-authority git-reviewed context:
   edit/promote plans are dry-run, body-free, and review-first; planner changes
   need live model/tool E2E, and validation must stay prompt-fit and green.

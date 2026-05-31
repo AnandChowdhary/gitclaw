@@ -325,6 +325,10 @@ and `gitclaw.search_files` in a second issue-comment turn.
 The live search-tool chat harness also uses two distinct search needles now, so
 tool grounding has to survive a continued issue conversation and cannot be only
 a first-turn fixture recovery.
+The live migration-plan harness now follows the same two-proof rule: the
+Hermes migration plan stays deterministic, body-free, and non-mutating, then a
+normal issue-comment turn proves GitHub Models, repo-reader, and
+`gitclaw.search_files` still work in that migration thread.
 
 ## Testing
 
