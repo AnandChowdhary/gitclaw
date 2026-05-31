@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T05:38:25Z",
+  "generated_at": "2026-05-31T05:39:49Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 317,
   "issues": [
@@ -3911,13 +3911,14 @@
       "number": 354,
       "title": "@gitclaw /tasks ledger e2e 20260531T053721Z",
       "path": "issues/000354.json",
-      "backup_generated_at": "2026-05-31T05:38:25Z",
-      "event_name": "issues",
+      "backup_generated_at": "2026-05-31T05:39:48Z",
+      "event_name": "issue_comment",
       "labels": [
-        "gitclaw"
+        "gitclaw",
+        "gitclaw:done"
       ],
-      "comment_count": 1,
-      "transcript_messages": 2
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
