@@ -25,3 +25,4 @@ prompt pack unique search fixture phrase => GITCLAW_PROMPT_PACK_CONTEXT_V1
 prompt cache unique search fixture phrase => GITCLAW_PROMPT_CACHE_CONTEXT_V1
 prompt compression unique search fixture phrase => GITCLAW_PROMPT_COMPRESSION_CONTEXT_V1
 model usage unique search fixture phrase => GITCLAW_MODEL_USAGE_CONTEXT_V1
+model cost unique search fixture phrase => GITCLAW_MODEL_COST_CONTEXT_V1

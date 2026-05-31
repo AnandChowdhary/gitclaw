@@ -42,6 +42,7 @@ go run ./cmd/gitclaw diffs risk
 go run ./cmd/gitclaw profile manifest
 go run ./cmd/gitclaw profile risk
 go run ./cmd/gitclaw models usage
+go run ./cmd/gitclaw models cost
 go run ./cmd/gitclaw models risk
 go run ./cmd/gitclaw heartbeat risk
 go run ./cmd/gitclaw config risk
@@ -188,6 +189,7 @@ Operational surfaces:
 ```bash
 gitclaw models list
 gitclaw models usage
+gitclaw models cost
 gitclaw models risk
 gitclaw heartbeat risk
 gitclaw config list
@@ -272,6 +274,7 @@ scripts/e2e/github-memory-timeline-report.sh
 scripts/e2e/github-memory-risk-report.sh
 scripts/e2e/github-migration-risk-report.sh
 scripts/e2e/github-model-usage-report.sh
+scripts/e2e/github-model-cost-report.sh
 scripts/e2e/github-model-risk-report.sh
 scripts/e2e/github-skills-proposal-plan-report.sh
 scripts/e2e/github-skills-proposals-report.sh

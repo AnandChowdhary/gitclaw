@@ -1238,7 +1238,7 @@ func runModelsCommand(args []string) error {
 		fmt.Println(RenderModelRiskCLIReport(cfg))
 		return nil
 	}
-	if args[0] == "usage" || args[0] == "tokens" || args[0] == "token-use" || args[0] == "cost" || args[0] == "costs" || args[0] == "spend" {
+	if args[0] == "usage" || args[0] == "tokens" || args[0] == "token-use" {
 		if len(args) > 1 {
 			return fmt.Errorf("unknown models usage argument %q", args[1])
 		}
@@ -1253,7 +1253,22 @@ func runModelsCommand(args []string) error {
 		fmt.Println(RenderModelUsageCLIReport(cfg, repoContext))
 		return nil
 	}
-	return fmt.Errorf("usage: gitclaw models [list|risk|usage]")
+	if args[0] == "cost" || args[0] == "costs" || args[0] == "spend" || args[0] == "billing" || args[0] == "bill" || args[0] == "budget" {
+		if len(args) > 1 {
+			return fmt.Errorf("unknown models cost argument %q", args[1])
+		}
+		cfg, err := LoadEffectiveConfig()
+		if err != nil {
+			return err
+		}
+		repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+		if err != nil {
+			return err
+		}
+		fmt.Println(RenderModelCostCLIReport(cfg, repoContext))
+		return nil
+	}
+	return fmt.Errorf("usage: gitclaw models [list|usage|cost|risk]")
 }
 
 func runConfigCommand(args []string) error {

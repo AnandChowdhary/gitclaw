@@ -882,6 +882,19 @@ unknown fallbacks, credential material in `.gitclaw/config.yml`, raw prompt
 logging, live-probe requirements, and raw provider-error leakage, then pair the
 deterministic audit with a real GitHub Models follow-up conversation E2E.
 
+2026-05-31 model-cost follow-up: GitHub's direct GitHub Models billing docs now
+publish a token-unit cost model: usage is converted through model-specific
+input/cached-input/output multipliers, then multiplied by the fixed token unit
+price. The direct-cost table at
+`https://docs.github.com/en/billing/reference/costs-for-github-models` does not
+list GitClaw's current smallest default, `openai/gpt-5-nano`, so GitClaw should
+separate `/models cost` from `/models usage`, keep a reviewed local multiplier
+snapshot, estimate only known recorded usage markers, and print `unavailable`
+instead of inventing a price for unknown models. The report should also state
+that it does not query billing APIs, inspect account paid-usage/budget state, or
+perform a live inference probe; live E2E still needs model calls before and
+after the deterministic cost audit.
+
 2026-05-31 model-usage follow-up: OpenClaw's token-use reference treats
 per-response usage, cached-token counters, and cost estimates as separate
 operational surfaces, while Hermes' context engine tracks API-reported token
@@ -891,8 +904,8 @@ is rate-limited and production billing details live outside an individual
 inference response. GitClaw should therefore normalize provider response usage
 into assistant-marker attributes when present, add `@gitclaw /models usage`
 and `gitclaw models usage` as the deterministic readback, keep raw provider
-payloads and prompt bodies out of the report, and mark dollar cost estimation
-unsupported until a reviewed pricing catalog or billing API integration exists.
+payloads and prompt bodies out of the report, and route dollar estimation to the
+separate reviewed-catalog `/models cost` surface.
 
 2026-05-30 session-risk follow-up: OpenClaw-style assistants treat transcripts
 and assistant-turn metadata as operational state, while Hermes emphasizes saved
@@ -2459,6 +2472,7 @@ names, commit subjects, author identities, or installer output.
 - GitHub Models catalog REST API: https://docs.github.com/en/rest/models/catalog
 - GitHub Models REST inference API: https://docs.github.com/en/rest/models/inference
 - GitHub Models billing and rate-limit notes: https://docs.github.com/en/billing/concepts/product-billing/github-models
+- GitHub Models direct-use costs and multipliers: https://docs.github.com/en/billing/reference/costs-for-github-models
 - Hermes docs index: https://hermes-agent.nousresearch.com/docs/llms.txt
 - Hermes GitHub and README: https://github.com/NousResearch/hermes-agent
 - Hermes architecture docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/developer-guide/architecture.md

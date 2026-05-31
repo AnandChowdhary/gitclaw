@@ -80,7 +80,7 @@ func IsModelUsageRequest(ev Event, cfg Config) bool {
 		return false
 	}
 	switch strings.ToLower(strings.Trim(fields[1], " \t\r\n.,:;!?")) {
-	case "usage", "tokens", "token-use", "cost", "costs", "spend":
+	case "usage", "tokens", "token-use":
 		return true
 	default:
 		return false

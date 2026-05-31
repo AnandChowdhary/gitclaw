@@ -674,6 +674,7 @@ GitClaw supports a deterministic model/provider audit command:
 @gitclaw /models
 @gitclaw /models list
 @gitclaw /models usage
+@gitclaw /models cost
 @gitclaw /models risk
 ```
 
@@ -712,11 +713,17 @@ and caching docs (`https://hermes-agent.nousresearch.com/docs/developer-guide/co
 and GitHub Models Actions quickstart
 (`https://docs.github.com/en/github-models/quickstart`).
 
-Cost estimation is deliberately off in v1. GitHub Models can be called in
-Actions with `models: read` and the workflow `GITHUB_TOKEN`, but GitClaw does
-not yet maintain a reviewed local pricing catalog or query billing APIs.
-Therefore `/models usage` reports token counts and cost-estimation gaps without
-guessing dollars.
+`@gitclaw /models cost` is the separate body-free cost surface. GitHub's direct
+GitHub Models billing docs define token units, a fixed `$0.00001` unit price,
+and per-model input/cached-input/output multipliers
+(`https://docs.github.com/en/billing/reference/costs-for-github-models`;
+`https://docs.github.com/en/enterprise-cloud@latest/billing/concepts/product-billing/github-models`).
+GitClaw keeps a reviewed multiplier snapshot and estimates only when a usage
+marker's model appears in that snapshot. The current smallest default,
+`openai/gpt-5-nano`, is intentionally reported as `projected_usd: unavailable`
+until GitHub publishes a matching direct-use multiplier. The report does not
+query billing APIs, inspect account paid-usage or budget state, or run a live
+inference probe.
 
 It never dumps issue/comment bodies, API keys, full prompts, or raw provider
 error bodies. This gives operators a safe way to inspect GitHub Models and
@@ -728,6 +735,7 @@ Local operators can inspect the same model wiring without opening an issue:
 ```bash
 gitclaw models list
 gitclaw models usage
+gitclaw models cost
 gitclaw models risk
 ```
 
@@ -5830,6 +5838,12 @@ examples/workflows/gitclaw.yml
   projection, raw-payload exclusion, and cost-estimation gaps without a model
   call, then runs a real GitHub Models follow-up that proves repo-reader search
   and normalized usage-marker persistence on the model-backed turn.
+- A `gh`-driven model-cost E2E harness first runs a real GitHub Models
+  repo-reader/tool turn, then verifies `@gitclaw /models cost` and local
+  `gitclaw models cost` convert recorded usage only through the reviewed
+  GitHub Models multiplier snapshot, refuse unknown default-model dollar
+  estimates, exclude raw bodies/payloads, and finally run another real
+  GitHub Models follow-up conversation.
 - A `gh`-driven config-report E2E harness verifies `@gitclaw /config` reports
   effective labels, prompt budgets, commands, and workflow metadata without a
   model call.
@@ -6476,6 +6490,7 @@ examples/workflows/gitclaw.yml
 - GitHub Models REST inference API: https://docs.github.com/en/rest/models/inference
 - GitHub Models for Actions issue summaries: https://docs.github.com/en/github-models/github-models-at-scale/use-models-at-scale
 - GitHub Models billing and rate-limit notes: https://docs.github.com/en/billing/concepts/product-billing/github-models
+- GitHub Models direct-use costs and multipliers: https://docs.github.com/en/billing/reference/costs-for-github-models
 - GitHub Models `models:read` changelog: https://github.blog/changelog/2025-05-15-modelsread-now-required-for-github-models-access/
 - OpenClaw secrets CLI docs: https://docs.openclaw.ai/cli/secrets
 - OpenClaw secrets management docs: https://docs.openclaw.ai/gateway/secrets
