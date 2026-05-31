@@ -1365,6 +1365,16 @@ the bundle slash command is invoked. This preserves Hermes' ergonomic workflow
 packs while keeping OpenClaw-style supply-chain caution: bundles do not install
 skills, execute scripts, contact registries, or mutate the system prompt.
 
+2026-05-31 bundle-search follow-up: Once bundles become the unit of
+task-profile orchestration, operators need the same compact discovery affordance
+that OpenClaw and Hermes expose for skills. GitClaw should keep this search
+body-free and local: `@gitclaw /bundles search <query>` and
+`gitclaw bundles search <query>` should search only bundle names, paths,
+descriptions, skill refs, resolved/missing refs, and instruction hashes. Raw
+queries should appear only as a hash and term count, and the live acceptance
+must pair the deterministic report with a real GitHub Models repo-reader search
+turn.
+
 2026-05-30 bundle-risk follow-up: Hermes loads every skill in an invoked bundle
 plus the bundle's optional instruction text into the same user-message turn,
 while OpenClaw's current skill docs explicitly treat third-party skill content

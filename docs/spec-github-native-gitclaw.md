@@ -1430,6 +1430,7 @@ gitclaw bundles list
 gitclaw bundles risk
 gitclaw bundles provenance
 gitclaw bundles info <name>
+gitclaw bundles search <query>
 gitclaw skills info <name>
 gitclaw skills search <query>
 ```
@@ -1554,6 +1555,13 @@ counts, and short hash. `@gitclaw /bundles info <name>` and
 `gitclaw bundles info <name>` show one focused bundle card. Bundle YAML bodies,
 bundle instructions, skill bodies, issue bodies, comments, prompts, and secret
 values are never printed in reports.
+
+`@gitclaw /bundles search <query>` and `gitclaw bundles search <query>` provide
+the bundle-level analogue to skills search. They search only repo-local bundle
+metadata and skill references, represent the raw query by hash and term count,
+and report match fields, paths, skill refs, instruction hashes, and bundle
+hashes without printing raw bundle YAML, instructions, skills, issue text,
+comments, prompts, or query text.
 
 `@gitclaw /bundles catalog`, `@gitclaw /bundles index`, and
 `gitclaw bundles catalog` produce the compact orchestration catalog for
@@ -6899,6 +6907,11 @@ examples/workflows/gitclaw.yml
   `@gitclaw /bundles info repo-context` produces focused repo-local bundle
   metadata, resolved/missing skill refs, instruction presence, hashes, and no
   bundle instruction or skill body leakage.
+- A `gh`-driven skill-bundle search E2E harness verifies
+  `@gitclaw /bundles search questions` searches repo-local bundle metadata by
+  query hash/term count, returns match fields and bundle hashes without raw
+  query or body leakage, and pairs the deterministic report with a real GitHub
+  Models follow-up that proves selected skills and repo-search tool usage.
 - A `gh`-driven skill-bundle risk E2E harness verifies
   `@gitclaw /bundles risk` scans repo-local bundle YAML and instructions for
   body-free risk categories, reports zero findings for the current

@@ -2427,8 +2427,10 @@ func runBundlesCommand(args []string) error {
 		return runBundlesProvenanceCommand(args[1:])
 	case "info", "show":
 		return runBundlesInfoCommand(args[1:])
+	case "search":
+		return runBundlesSearchCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw bundles [catalog|list|risk|provenance|info <name>]")
+		return fmt.Errorf("usage: gitclaw bundles [catalog|list|risk|provenance|info <name>|search <query>]")
 	}
 }
 
@@ -2609,6 +2611,23 @@ func runBundlesInfoCommand(args []string) error {
 	if len(matchingSkillBundleSummaries(repoContext.SkillBundles, args[0])) == 0 {
 		return fmt.Errorf("skill bundle %q not found", args[0])
 	}
+	return nil
+}
+
+func runBundlesSearchCommand(args []string) error {
+	query := strings.TrimSpace(strings.Join(args, " "))
+	if query == "" {
+		return fmt.Errorf("usage: gitclaw bundles search <query>")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "bundles search " + query}}, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSkillBundleSearchCLIReport(repoContext, query))
 	return nil
 }
 

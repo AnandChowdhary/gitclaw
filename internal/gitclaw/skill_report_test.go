@@ -1081,6 +1081,81 @@ instruction: |
 	}
 }
 
+func TestRenderSkillBundleSearchReportSearchesMetadataWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Use read-only repository context.
+---
+
+SECRET_BUNDLE_SEARCH_SKILL_BODY_TOKEN`)
+	writeTestFile(t, root, ".gitclaw/skill-bundles/repo-context.yaml", `name: repo-context
+description: Repository context workflow.
+skills:
+  - repo-reader
+instruction: |
+  SECRET_BUNDLE_SEARCH_INSTRUCTION_TOKEN
+`)
+	writeTestFile(t, root, ".gitclaw/skill-bundles/other.yaml", `name: other
+description: Different workflow.
+skills:
+  - missing-skill
+`)
+	ctx, err := LoadRepoContext(root, nil)
+	if err != nil {
+		t.Fatalf("LoadRepoContext returned error: %v", err)
+	}
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 136,
+			"title": "@gitclaw /bundles search repo reader",
+			"body": "Hidden bundle search token: BUNDLE_SEARCH_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	report := RenderSkillsReport(ev, DefaultConfig(), ctx)
+	for _, want := range []string{
+		"GitClaw Skill Bundle Search Report",
+		"Generated without a model call",
+		"bundle_search_status: `ok`",
+		"query_terms: `2`",
+		"available_bundles: `2`",
+		"matched_bundles: `1`",
+		"available_skills: `1`",
+		"run_mode: `read-only`",
+		"raw_bodies_included: `false`",
+		"raw_queries_included: `false`",
+		"llm_e2e_required_after_bundle_search_change: `true`",
+		"bundle_name=`repo-context`",
+		"path=`.gitclaw/skill-bundles/repo-context.yaml`",
+		"match_fields=`description, name, path, resolved_skills, skills`",
+		"skills=`repo-reader`",
+		"resolved_skills=`repo-reader`",
+		"missing_skills=`none`",
+		"selected_for_this_turn=`false`",
+		"instruction=`true`",
+		"sha256_12=",
+		"query_sha256_12:",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("skill bundle search report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"SECRET_BUNDLE_SEARCH_SKILL_BODY_TOKEN", "SECRET_BUNDLE_SEARCH_INSTRUCTION_TOKEN", "BUNDLE_SEARCH_BODY_SECRET", "repo reader"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("skill bundle search report leaked %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestRequestedSkillInfoNameRequiresInfoSubcommand(t *testing.T) {
 	ev, err := ParseEvent("issues", []byte(`{
 		"action": "opened",

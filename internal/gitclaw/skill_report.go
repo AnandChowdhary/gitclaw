@@ -12,6 +12,12 @@ type SkillSearchResult struct {
 	Score       int
 }
 
+type SkillBundleSearchResult struct {
+	Bundle      SkillBundleSummary
+	MatchFields []string
+	Score       int
+}
+
 func IsSkillsReportRequest(ev Event, cfg Config) bool {
 	command := activeSlashCommand(ev, cfg)
 	return command == "/skills" || command == "/bundles"
@@ -82,6 +88,9 @@ func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	}
 	if bundleName := requestedSkillBundleInfoName(ev, cfg); bundleName != "" {
 		return renderSkillBundleInfoReport(ev, repoContext, bundleName, true)
+	}
+	if query := requestedSkillBundleSearchQuery(ev, cfg); query != "" {
+		return renderSkillBundleSearchReport(ev, repoContext, query, true)
 	}
 	if isSkillSourcesRiskRequest(ev, cfg) {
 		return renderSkillSourcesRiskReport(ev, cfg, repoContext, true)
@@ -292,6 +301,10 @@ func RenderSkillBundleInfoCLIReport(repoContext RepoContext, name string) string
 	return renderSkillBundleInfoReport(Event{}, repoContext, name, false)
 }
 
+func RenderSkillBundleSearchCLIReport(repoContext RepoContext, query string) string {
+	return renderSkillBundleSearchReport(Event{}, repoContext, query, false)
+}
+
 func RenderSkillInstallPlanCLIReport(repoContext RepoContext, operation, target string) string {
 	return renderSkillInstallPlanReport(Event{}, repoContext, operation, target, false)
 }
@@ -373,6 +386,59 @@ func renderSkillBundleInfoReport(ev Event, repoContext RepoContext, name string,
 		}
 	}
 	if len(matches) == 0 && len(repoContext.SkillBundles) > 0 {
+		b.WriteString("\n### Available Bundles\n")
+		for _, bundle := range repoContext.SkillBundles {
+			fmt.Fprintf(&b, "- `%s` path=`%s`\n", inlineCode(bundle.Name), bundle.Path)
+		}
+	}
+	return strings.TrimSpace(b.String())
+}
+
+func renderSkillBundleSearchReport(ev Event, repoContext RepoContext, query string, includeIssue bool) string {
+	query = cleanSkillSearchQuery(query)
+	results := searchSkillBundleSummaries(repoContext.SkillBundles, query)
+	status := "ok"
+	if query == "" {
+		status = "no_query"
+	} else if len(results) == 0 {
+		status = "no_matches"
+	}
+
+	var b strings.Builder
+	b.WriteString("## GitClaw Skill Bundle Search Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
+	fmt.Fprintf(&b, "- bundle_search_status: `%s`\n", status)
+	fmt.Fprintf(&b, "- query_sha256_12: `%s`\n", shortDocumentHash(query))
+	fmt.Fprintf(&b, "- query_terms: `%d`\n", len(skillSearchTerms(query)))
+	fmt.Fprintf(&b, "- available_bundles: `%d`\n", len(repoContext.SkillBundles))
+	fmt.Fprintf(&b, "- matched_bundles: `%d`\n", len(results))
+	fmt.Fprintf(&b, "- available_skills: `%d`\n", availableSkillCount(repoContext))
+	fmt.Fprintf(&b, "- run_mode: `%s`\n", "read-only")
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_queries_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_bundle_search_change: `%t`\n", true)
+	if includeIssue {
+		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
+	}
+	b.WriteByte('\n')
+	b.WriteString("This report searches only skill-bundle metadata: name, path, description presence, skill references, resolved skill references, missing skill references, and instruction hashes. Raw bundle YAML, bundle instructions, skill bodies, issue bodies, comments, prompts, raw queries, and secret values are not included.\n\n")
+
+	b.WriteString("### Matches\n")
+	if len(results) == 0 {
+		b.WriteString("- none\n")
+	} else {
+		for _, result := range results {
+			writeSkillBundleSearchResult(&b, result)
+		}
+	}
+
+	if len(results) == 0 && len(repoContext.SkillBundles) > 0 {
 		b.WriteString("\n### Available Bundles\n")
 		for _, bundle := range repoContext.SkillBundles {
 			fmt.Fprintf(&b, "- `%s` path=`%s`\n", inlineCode(bundle.Name), bundle.Path)
@@ -502,6 +568,25 @@ func requestedSkillBundleInfoName(ev Event, cfg Config) string {
 	}
 	if fields[0] == "/skills" && len(fields) >= 3 && (strings.EqualFold(fields[1], "bundle") || strings.EqualFold(fields[1], "bundle-info")) {
 		return cleanSkillLookupName(fields[2])
+	}
+	return ""
+}
+
+func requestedSkillBundleSearchQuery(ev Event, cfg Config) string {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 3 {
+		return ""
+	}
+	if fields[0] == "/bundles" && strings.EqualFold(fields[1], "search") {
+		return cleanSkillSearchQuery(strings.Join(fields[2:], " "))
+	}
+	if fields[0] == "/skills" {
+		if strings.EqualFold(fields[1], "bundle-search") || strings.EqualFold(fields[1], "bundles-search") {
+			return cleanSkillSearchQuery(strings.Join(fields[2:], " "))
+		}
+		if len(fields) >= 4 && (strings.EqualFold(fields[1], "bundles") || strings.EqualFold(fields[1], "bundle-list")) && strings.EqualFold(fields[2], "search") {
+			return cleanSkillSearchQuery(strings.Join(fields[3:], " "))
+		}
 	}
 	return ""
 }
@@ -741,6 +826,33 @@ func searchSkillSummaries(skills []SkillSummary, query string) []SkillSearchResu
 	return results
 }
 
+func searchSkillBundleSummaries(bundles []SkillBundleSummary, query string) []SkillBundleSearchResult {
+	query = strings.ToLower(cleanSkillSearchQuery(query))
+	if query == "" {
+		return nil
+	}
+	terms := skillSearchTerms(query)
+	var results []SkillBundleSearchResult
+	for _, bundle := range bundles {
+		score, fields := skillBundleSearchScore(bundle, query, terms)
+		if score == 0 {
+			continue
+		}
+		results = append(results, SkillBundleSearchResult{
+			Bundle:      bundle,
+			MatchFields: fields,
+			Score:       score,
+		})
+	}
+	sort.Slice(results, func(i, j int) bool {
+		if results[i].Score != results[j].Score {
+			return results[i].Score > results[j].Score
+		}
+		return results[i].Bundle.Path < results[j].Bundle.Path
+	})
+	return results
+}
+
 func skillSearchScore(skill SkillSummary, query string, terms []string) (int, []string) {
 	fields := map[string]string{
 		"name":        skill.Name,
@@ -753,6 +865,59 @@ func skillSearchScore(skill SkillSummary, query string, terms []string) (int, []
 		"folder":      70,
 		"path":        30,
 		"description": 20,
+	}
+	score := 0
+	matchedFields := map[string]bool{}
+	for field, value := range fields {
+		value = strings.ToLower(strings.TrimSpace(value))
+		if value == "" {
+			continue
+		}
+		if value == query {
+			score += weights[field] * 2
+			matchedFields[field] = true
+			continue
+		}
+		if strings.Contains(value, query) {
+			score += weights[field]
+			matchedFields[field] = true
+		}
+		for _, term := range terms {
+			if strings.Contains(value, term) {
+				score += weights[field] / 2
+				matchedFields[field] = true
+			}
+		}
+	}
+	if score == 0 {
+		return 0, nil
+	}
+	var out []string
+	for field := range matchedFields {
+		out = append(out, field)
+	}
+	sort.Strings(out)
+	return score, out
+}
+
+func skillBundleSearchScore(bundle SkillBundleSummary, query string, terms []string) (int, []string) {
+	fields := map[string]string{
+		"name":            bundle.Name,
+		"path":            bundle.Path,
+		"description":     bundle.Description,
+		"skills":          strings.Join(bundle.Skills, " "),
+		"resolved_skills": strings.Join(bundle.ResolvedSkills, " "),
+		"missing_skills":  strings.Join(bundle.MissingSkills, " "),
+		"instruction_sha": bundle.InstructionSHA,
+	}
+	weights := map[string]int{
+		"name":            80,
+		"path":            30,
+		"description":     25,
+		"skills":          50,
+		"resolved_skills": 45,
+		"missing_skills":  15,
+		"instruction_sha": 5,
 	}
 	score := 0
 	matchedFields := map[string]bool{}
@@ -873,6 +1038,24 @@ func writeSkillSearchResult(b *strings.Builder, result SkillSearchResult, select
 		len(skill.RequiredBins),
 		len(skill.MissingEnv),
 		len(skill.MissingBins),
+	)
+}
+
+func writeSkillBundleSearchResult(b *strings.Builder, result SkillBundleSearchResult) {
+	bundle := result.Bundle
+	fmt.Fprintf(b, "- bundle_name=`%s` path=`%s` match_fields=`%s` skills=`%s` resolved_skills=`%s` missing_skills=`%s` selected_for_this_turn=`%t` instruction=`%t` instruction_sha256_12=`%s` bytes=`%d` lines=`%d` sha256_12=`%s`\n",
+		inlineCode(bundle.Name),
+		bundle.Path,
+		inlineList(result.MatchFields),
+		inlineList(bundle.Skills),
+		inlineList(bundle.ResolvedSkills),
+		inlineList(bundle.MissingSkills),
+		bundle.Selected,
+		bundle.InstructionPresent,
+		bundle.InstructionSHA,
+		bundle.Bytes,
+		bundle.Lines,
+		bundle.SHA,
 	)
 }
 

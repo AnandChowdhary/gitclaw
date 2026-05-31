@@ -138,6 +138,7 @@ gitclaw bundles list
 gitclaw bundles risk
 gitclaw bundles provenance
 gitclaw bundles info <name>
+gitclaw bundles search <query>
 ```
 
 `gitclaw skills install-plan <target>` and `gitclaw skills upgrade-plan
@@ -156,6 +157,11 @@ skill bundles. It reports repo-local bundle roles, selected/load state,
 skill-ref resolution, instruction hashes, risk rollups, reason codes, and
 disabled registry/install/mutation gates without printing raw bundle YAML,
 bundle instructions, skill bodies, prompts, issue text, or credentials.
+
+`gitclaw bundles search <query>` searches the same repo-local bundle metadata by
+hashing the raw query and reporting only match fields, paths, skill refs, and
+instruction hashes. Its live harness proves the deterministic body-free search
+report, then posts a normal GitHub Models repo-reader/search follow-up.
 
 Migration:
 
@@ -432,6 +438,7 @@ scripts/e2e/github-skills-catalog-report.sh
 scripts/e2e/github-skills-install-plan-report.sh
 scripts/e2e/github-skills-upgrade-plan-report.sh
 scripts/e2e/github-bundles-catalog-report.sh
+scripts/e2e/github-bundles-search-report.sh
 scripts/e2e/github-bundles-provenance-report.sh
 scripts/e2e/github-bundles-risk-report.sh
 scripts/e2e/github-orders-risk-report.sh

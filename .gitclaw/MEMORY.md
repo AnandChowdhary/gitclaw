@@ -134,6 +134,10 @@
   repo-local skill bundles, including skill-ref gates, instruction hashes,
   reason codes, and disabled registry/install/mutation gates, plus a normal
   model/tool follow-up proving live repo-reader search.
+- Bundle search changes need two proofs: body-free, query-hashed metadata
+  search over repo-local bundle names, paths, descriptions, skill refs, and
+  instruction hashes, plus a normal model/tool follow-up proving live
+  repo-reader search.
 - Soul catalog changes need two proofs: body-free authority catalog metadata
   with authority layers, load modes, reason codes, body/description exclusion,
   and disabled mutation/profile-export gates, plus a normal model/tool
