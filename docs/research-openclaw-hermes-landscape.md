@@ -1687,11 +1687,11 @@ input/size/hash metadata without dumping output bodies.
 still separate tools as typed actions, skills as prompt instructions, and
 plugins as runtime capability packages, while Hermes' current tools docs keep
 core tools/toolsets explicit and reserve Tool Search-style deferral for large
-or non-core catalogs. GitClaw should keep `/tools` body-free and
-GitHub-native: report deterministic contracts, gate state, validation counts,
-and active-output hashes, then require a normal GitHub Models follow-up that
-selects `repo-reader`, exposes `gitclaw.search_files`, and recovers a fixture
-token through actual prompt-visible tool output.
+or non-core catalogs. GitClaw should keep `/tools` and `/tools list`
+body-free and GitHub-native: report deterministic contracts, gate state,
+validation counts, and active-output hashes, then require a normal GitHub
+Models follow-up that selects `repo-reader`, exposes `gitclaw.search_files`,
+and recovers a fixture token through actual prompt-visible tool output.
 
 2026-05-30 tools-list follow-up: make the tool inventory surface explicit in
 both channels. `@gitclaw /tools` already lists deterministic contracts and

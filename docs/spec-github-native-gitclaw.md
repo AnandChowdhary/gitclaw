@@ -6659,7 +6659,10 @@ examples/workflows/gitclaw.yml
   token, and avoid hidden sentinel leakage.
 - A `gh`-driven tools-list E2E harness verifies `@gitclaw /tools list`
   is an explicit inventory alias with the same body-free tool contract,
-  active-output, guidance, gate-state, and validation metadata.
+  active-output, guidance, gate-state, and validation metadata. The live alias
+  harness also posts a normal GitHub Models follow-up that must select
+  `repo-reader`, expose `gitclaw.search_files`, recover the tools-list
+  repository-search fixture token, and avoid hidden sentinel leakage.
 - A `gh`-driven tools-validate E2E harness verifies
   `@gitclaw /tools validate` exposes the body-free validation report without
   falling back to the full inventory.
