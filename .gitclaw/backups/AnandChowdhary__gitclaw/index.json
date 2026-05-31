@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T01:51:21Z",
+  "generated_at": "2026-05-31T02:03:21Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 302,
+  "count": 303,
   "issues": [
     {
       "number": 3,
@@ -3725,6 +3725,18 @@
       ],
       "comment_count": 3,
       "transcript_messages": 4
+    },
+    {
+      "number": 340,
+      "title": "@gitclaw /tools exposure risk e2e 20260531T020215Z",
+      "path": "issues/000340.json",
+      "backup_generated_at": "2026-05-31T02:03:20Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }

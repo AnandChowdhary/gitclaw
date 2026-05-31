@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T02:03:20Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 340,
+    "title": "@gitclaw /tools exposure risk e2e 20260531T020215Z",
+    "body": "@gitclaw /tools exposure risk\n\nLive tools exposure E2E.\nDo not include this hidden issue token: GITCLAW_TOOLS_EXPOSURE_HIDDEN_20260531T020215Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /tools exposure risk e2e 20260531T020215Z\n\n@gitclaw /tools exposure risk\n\nLive tools exposure E2E.\nDo not include this hidden issue token: GITCLAW_TOOLS_EXPOSURE_HIDDEN_20260531T020215Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Tool Exposure Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#340`\n- tool_exposure_status: `ok`\n- exposure_strategy: `static-pre-model-context`\n- bridge_strategy: `not_enabled_in_v1`\n- available_tools: `5`\n- enabled_tool_contracts: `5`\n- disabled_tool_contracts: `0`\n- allowlist_blocked_tool_contracts: `0`\n- explicit_allowlist_configured: `false`\n- allowed_tool_names_configured: `0`\n- disabled_tool_names_configured: `0`\n- allowed_tool_names: `none`\n- disabled_tool_names: `none`\n- exposed_read_only_contracts: `3`\n- exposed_metadata_only_contracts: `2`\n- mutating_tool_contracts: `0`\n- active_tool_outputs: `3`\n- known_active_tool_outputs: `3`\n- unknown_active_tool_outputs: `0`\n- prompt_visible_tool_outputs: `3`\n- model_callable_structured_tools: `false`\n- deferred_tool_schemas: `0`\n- tool_search_bridge_tools: `0`\n- fail_closed_required: `false`\n- tool_validation_status: `ok`\n- tool_validation_errors: `0`\n- tool_validation_warnings: `0`\n- tool_exposure_findings: `3`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `3`\n- shell_execution_allowed: `false`\n- repository_mutation_allowed: `false`\n- network_tool_execution_allowed: `false`\n- raw_tool_schemas_included: `false`\n- raw_tool_inputs_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_issue_bodies_included: `false`\n- llm_e2e_required_after_tool_exposure_change: `true`\n- issue_title_sha256_12: `ba0656d7440a`\n\nThis report audits the prompt-visible tool boundary for explicit allowlists, denylist precedence, unknown active outputs, mutating contracts, and fail-closed conditions. It reports names, modes, counts, hashes, codes, and severities only.\n\n### Exposure Risk Cards\n- tool_name=`gitclaw.list_files` mode=`read-only` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` exposed_for_prompt=`true` mutating=`false` active_outputs=`1` trigger=`always` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` exposure_codes=`none`\n- tool_name=`gitclaw.search_files` mode=`read-only` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` exposed_for_prompt=`true` mutating=`false` active_outputs=`1` trigger=`explicit quoted phrase or identifier` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` exposure_codes=`none`\n- tool_name=`gitclaw.read_file` mode=`read-only` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` exposed_for_prompt=`true` mutating=`false` active_outputs=`0` trigger=`explicit repository-relative path` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` exposure_codes=`none`\n- tool_name=`gitclaw.skill_index` mode=`metadata-only` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` exposed_for_prompt=`true` mutating=`false` active_outputs=`1` trigger=`local skills exist` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` exposure_codes=`none`\n- tool_name=`gitclaw.policy` mode=`metadata-only` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` exposed_for_prompt=`true` mutating=`false` active_outputs=`0` trigger=`write intent detected` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` exposure_codes=`none`\n\n### Exposure Findings\n- severity=`info` code=`hermes_tool_search_bridge_not_enabled` category=`progressive-disclosure` kind=`tool-exposure` name=`gitclaw` field=`bridge_strategy` line_sha256_12=`484d3983d65c`\n- severity=`info` code=`structured_model_tools_disabled` category=`tool-exposure` kind=`tool-exposure` name=`gitclaw` field=`model_callable_structured_tools` line_sha256_12=`fcbcf165908d`\n- severity=`info` code=`static_pre_model_tool_context` category=`tool-exposure` kind=`tool-exposure` name=`gitclaw` field=`strategy` line_sha256_12=`ea1d4fba2230`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4585432304,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4585432304,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26700593876\" event_id=\"issue-340\" model=\"gitclaw/tools\" idempotency_key=\"4ad2e66debdfb89afdf6ffd24adedbd9\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26700593876\" --\u003e\n## GitClaw Tool Exposure Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#340`\n- tool_exposure_status: `ok`\n- exposure_strategy: `static-pre-model-context`\n- bridge_strategy: `not_enabled_in_v1`\n- available_tools: `5`\n- enabled_tool_contracts: `5`\n- disabled_tool_contracts: `0`\n- allowlist_blocked_tool_contracts: `0`\n- explicit_allowlist_configured: `false`\n- allowed_tool_names_configured: `0`\n- disabled_tool_names_configured: `0`\n- allowed_tool_names: `none`\n- disabled_tool_names: `none`\n- exposed_read_only_contracts: `3`\n- exposed_metadata_only_contracts: `2`\n- mutating_tool_contracts: `0`\n- active_tool_outputs: `3`\n- known_active_tool_outputs: `3`\n- unknown_active_tool_outputs: `0`\n- prompt_visible_tool_outputs: `3`\n- model_callable_structured_tools: `false`\n- deferred_tool_schemas: `0`\n- tool_search_bridge_tools: `0`\n- fail_closed_required: `false`\n- tool_validation_status: `ok`\n- tool_validation_errors: `0`\n- tool_validation_warnings: `0`\n- tool_exposure_findings: `3`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `3`\n- shell_execution_allowed: `false`\n- repository_mutation_allowed: `false`\n- network_tool_execution_allowed: `false`\n- raw_tool_schemas_included: `false`\n- raw_tool_inputs_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_issue_bodies_included: `false`\n- llm_e2e_required_after_tool_exposure_change: `true`\n- issue_title_sha256_12: `ba0656d7440a`\n\nThis report audits the prompt-visible tool boundary for explicit allowlists, denylist precedence, unknown active outputs, mutating contracts, and fail-closed conditions. It reports names, modes, counts, hashes, codes, and severities only.\n\n### Exposure Risk Cards\n- tool_name=`gitclaw.list_files` mode=`read-only` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` exposed_for_prompt=`true` mutating=`false` active_outputs=`1` trigger=`always` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` exposure_codes=`none`\n- tool_name=`gitclaw.search_files` mode=`read-only` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` exposed_for_prompt=`true` mutating=`false` active_outputs=`1` trigger=`explicit quoted phrase or identifier` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` exposure_codes=`none`\n- tool_name=`gitclaw.read_file` mode=`read-only` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` exposed_for_prompt=`true` mutating=`false` active_outputs=`0` trigger=`explicit repository-relative path` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` exposure_codes=`none`\n- tool_name=`gitclaw.skill_index` mode=`metadata-only` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` exposed_for_prompt=`true` mutating=`false` active_outputs=`1` trigger=`local skills exist` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` exposure_codes=`none`\n- tool_name=`gitclaw.policy` mode=`metadata-only` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` exposed_for_prompt=`true` mutating=`false` active_outputs=`0` trigger=`write intent detected` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` exposure_codes=`none`\n\n### Exposure Findings\n- severity=`info` code=`hermes_tool_search_bridge_not_enabled` category=`progressive-disclosure` kind=`tool-exposure` name=`gitclaw` field=`bridge_strategy` line_sha256_12=`484d3983d65c`\n- severity=`info` code=`structured_model_tools_disabled` category=`tool-exposure` kind=`tool-exposure` name=`gitclaw` field=`model_callable_structured_tools` line_sha256_12=`fcbcf165908d`\n- severity=`info` code=`static_pre_model_tool_context` category=`tool-exposure` kind=`tool-exposure` name=`gitclaw` field=`strategy` line_sha256_12=`ea1d4fba2230`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T02:03:00Z",
+      "updated_at": "2026-05-31T02:03:00Z"
+    }
+  ]
+}
