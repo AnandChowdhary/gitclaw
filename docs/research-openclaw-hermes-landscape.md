@@ -1384,6 +1384,19 @@ write proposal files, update active skills, auto-apply, or self-improve. The
 E2E harness must pair the deterministic body-free plan with a real GitHub
 Models repo-reader/search follow-up.
 
+2026-05-31 skill-proposals-store follow-up: OpenClaw's Skill Workshop exposes
+status, pending, quarantine, inspect, apply, and reject actions over gateway
+state, while Hermes keeps skills mutable in a profile home and supports hub
+audit/quarantine state. GitClaw should keep the same operator visibility but
+move the state into git review: `.gitclaw/skill-proposals/*/PROPOSAL.md`.
+`@gitclaw /skills proposals risk` and `gitclaw skills proposals [risk]`
+should inventory proposal files by lifecycle status, scan proposal bodies for
+risk internally, and publish only metadata, counts, finding codes, and line
+hashes. It must not activate, apply, reject, quarantine, fetch, write support
+files, update `.gitclaw/SKILLS`, or dump proposal bodies. The harness should
+pair the deterministic report with a live GitHub Models repo-reader/search
+follow-up.
+
 2026-05-30 tool-gating follow-up: Hermes/OpenClaw toolsets are useful partly
 because the operator can see and constrain what the agent may call. GitClaw
 should mirror that with repo-reviewed `tools.allowed` and `tools.disabled`
@@ -2093,6 +2106,7 @@ GitHub issues and git-backed backups as the canonical storage layer.
 - OpenClaw secrets management docs: https://docs.openclaw.ai/gateway/secrets
 - OpenClaw skills docs: https://docs.openclaw.ai/tools/skills
 - OpenClaw skills CLI docs: https://docs.openclaw.ai/cli/skills
+- OpenClaw Skill Workshop plugin docs: https://docs.openclaw.ai/plugins/skill-workshop
 - GitHub Actions artifact storage docs: https://docs.github.com/en/actions/how-tos/writing-workflows/choosing-what-your-workflow-does/storing-and-sharing-data-from-a-workflow
 - `actions/upload-artifact` action: https://github.com/actions/upload-artifact
 - GitHub Models quickstart: https://docs.github.com/en/github-models/quickstart

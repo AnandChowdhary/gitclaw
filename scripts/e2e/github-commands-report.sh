@@ -138,7 +138,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `33`' \
   'aliases: `31`' \
-  'local_cli_helpers: `131`' \
+  'local_cli_helpers: `132`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/agents' \
@@ -306,6 +306,7 @@ for expected in \
   'gitclaw skills list' \
   'gitclaw skills select-plan <name>' \
   'gitclaw skills refresh-plan' \
+  'gitclaw skills proposals [risk]' \
   'gitclaw skills proposal-plan <name>' \
   'gitclaw skills install-plan <target>' \
   'gitclaw skills upgrade-plan <target>' \

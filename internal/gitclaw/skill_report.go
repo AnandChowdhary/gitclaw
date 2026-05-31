@@ -77,6 +77,9 @@ func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if bundleName := requestedSkillBundleInfoName(ev, cfg); bundleName != "" {
 		return renderSkillBundleInfoReport(ev, repoContext, bundleName, true)
 	}
+	if isSkillProposalsReportRequest(ev, cfg) {
+		return renderSkillProposalsReport(ev, cfg, true)
+	}
 	if skillName := requestedSkillSelectPlanName(ev, cfg); skillName != "" {
 		if skillName == "__missing__" {
 			skillName = ""
@@ -470,6 +473,21 @@ func requestedSkillProposalPlan(ev Event, cfg Config) (requestedAction string, t
 		}
 	}
 	return "", "", false
+}
+
+func isSkillProposalsReportRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 || fields[0] != "/skills" {
+		return false
+	}
+	switch strings.ToLower(fields[1]) {
+	case "proposals", "proposal-list", "workshop-list":
+		return true
+	case "workshop":
+		return len(fields) >= 3 && (strings.EqualFold(fields[2], "list") || strings.EqualFold(fields[2], "status") || strings.EqualFold(fields[2], "risk") || strings.EqualFold(fields[2], "quarantine"))
+	default:
+		return false
+	}
 }
 
 func isSkillsValidateRequest(ev Event, cfg Config) bool {

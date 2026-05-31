@@ -787,8 +787,8 @@ GitHub issue/comment event
   `memory promote-plan`, `memory info`, `memory search`,
   `skills validate`,
   `skills list`, `skills select-plan`, `skills refresh-plan`,
-  `skills proposal-plan`, `skills install-plan`, `skills upgrade-plan`,
-  `skills info`, `skills search`,
+  `skills proposals`, `skills proposal-plan`, `skills install-plan`,
+  `skills upgrade-plan`, `skills info`, `skills search`,
   `bundles list`, `bundles risk`, `bundles info`,
   `soul verify`, `soul risk`, `soul validate`, `soul list`,
   `soul edit-plan`, `soul info`, `soul search`,
@@ -1303,6 +1303,7 @@ gitclaw skills check
 gitclaw skills list
 gitclaw skills select-plan <name>
 gitclaw skills refresh-plan
+gitclaw skills proposals [risk]
 gitclaw skills proposal-plan <name>
 gitclaw skills install-plan <target>
 gitclaw skills upgrade-plan <target>
@@ -1336,6 +1337,8 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills check
 @gitclaw /skills select-plan repo-reader
 @gitclaw /skills refresh-plan
+@gitclaw /skills proposals
+@gitclaw /skills proposals risk
 @gitclaw /skills proposal-plan repo-reader
 @gitclaw /skills install-plan repo-reader
 @gitclaw /skills upgrade-plan repo-reader
@@ -1486,6 +1489,20 @@ safe paths, and finding codes; raw proposal text, issue/comment bodies, and
 full skill bodies stay out of the issue-visible report. Accepted proposal work
 must land through normal reviewed git changes and then pass skill validation,
 skill risk checks, and a live GitHub Models conversation E2E.
+
+When called as `@gitclaw /skills proposals`, `@gitclaw /skills proposals
+risk`, or `gitclaw skills proposals [risk]`, GitClaw inventories the reviewed
+proposal store at `.gitclaw/skill-proposals/*/PROPOSAL.md`. This is the
+GitHub-native analogue of OpenClaw Skills Workshop `status`, `list_pending`,
+and `list_quarantine`, but backed by ordinary repo files instead of gateway
+state. The report publishes proposal counts by lifecycle status, safe path and
+frontmatter metadata, proposal hashes, risk finding codes, and line hashes.
+
+The proposal inventory never activates proposals, never writes proposal files,
+never updates active skills, never runs support scripts, never fetches remote
+sources, and never dumps proposal or skill bodies. It treats the proposal
+store as inert review material until a maintainer manually converts an accepted
+proposal into `.gitclaw/SKILLS/<name>/SKILL.md` on a reviewed branch.
 
 When called as `@gitclaw /skills install-plan <target>` or
 `@gitclaw /skills upgrade-plan <target>`, the command switches to a
@@ -5312,6 +5329,12 @@ examples/workflows/gitclaw.yml
   request hashes, existing skill matches, no autonomous skill creation or
   improvement, no proposal/skill writes, and no raw body leakage. It then runs
   a live GitHub Models follow-up conversation that proves repo-local skill
+  selection and prompt-visible repository search tool usage.
+- A `gh`-driven skills-proposals E2E harness verifies
+  `@gitclaw /skills proposals risk` inventories the repo-local proposal store,
+  reports lifecycle counts, risk gates, no auto-apply support, no proposal or
+  active-skill mutation, and no raw proposal/skill/issue body leakage. It then
+  runs a live GitHub Models follow-up conversation that proves repo-local skill
   selection and prompt-visible repository search tool usage.
 - A `gh`-driven skills-install-plan E2E harness verifies
   `@gitclaw /skills install-plan repo-reader` produces a body-free,

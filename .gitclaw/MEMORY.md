@@ -19,3 +19,4 @@
 - Keep migration risk audits body-free: classify OpenClaw/Hermes/Codex/Claude import maps without reading source homes, importing credentials, executing installers, autoloading MCP, mutating the repo, or printing raw bodies/secrets, then prove normal LLM/tool behavior in live E2E.
 - Keep skill refresh plans body-free: refresh skills per GitHub Actions turn from the reviewed checkout, not through a resident watcher or hot reload; no install/update/repo mutation/raw bodies, and prove LLM/tool behavior in live E2E.
 - Keep skill proposal plans review-first: hash proposal requests, name repo-reviewed proposal paths, never auto-create or auto-improve skills, and prove accepted skill-path changes with live LLM/tool E2E.
+- Keep skill proposal inventories inert: scan `.gitclaw/skill-proposals/*/PROPOSAL.md` for metadata and risk hashes only, never activate proposal bodies or mutate skills, and pair changes with live LLM/tool E2E.

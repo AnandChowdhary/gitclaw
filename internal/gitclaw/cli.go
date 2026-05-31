@@ -1728,7 +1728,7 @@ func runMigrateRiskCommand(args []string) error {
 
 func runSkillsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw skills verify|risk|validate|check|list|select-plan <name>|refresh-plan|proposal-plan <name>|install-plan <target>|upgrade-plan <target>|bundles [risk]|bundle <name>|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw skills verify|risk|validate|check|list|select-plan <name>|refresh-plan|proposals [risk]|proposal-plan <name>|install-plan <target>|upgrade-plan <target>|bundles [risk]|bundle <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -1743,6 +1743,8 @@ func runSkillsCommand(args []string) error {
 		return runSkillsSelectPlanCommand(args[1:])
 	case "refresh-plan", "refresh", "reload-plan", "snapshot":
 		return runSkillsRefreshPlanCommand(args[1:])
+	case "proposals", "proposal-list", "workshop-list":
+		return runSkillsProposalsCommand(args[1:])
 	case "proposal-plan", "propose-plan", "workshop-plan":
 		return runSkillsProposalPlanCommand(args[1:], "auto")
 	case "proposal-create-plan", "propose-create":
@@ -1800,6 +1802,18 @@ func runSkillsRefreshPlanCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSkillRefreshPlanCLIReport(cfg, repoContext))
+	return nil
+}
+
+func runSkillsProposalsCommand(args []string) error {
+	if len(args) > 1 || (len(args) == 1 && args[0] != "risk" && args[0] != "list" && args[0] != "status" && args[0] != "quarantine") {
+		return fmt.Errorf("usage: gitclaw skills proposals [risk]")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSkillProposalsCLIReport(cfg))
 	return nil
 }
 

@@ -87,6 +87,7 @@ gitclaw skills check
 gitclaw skills list
 gitclaw skills select-plan <name>
 gitclaw skills refresh-plan
+gitclaw skills proposals [risk]
 gitclaw skills proposal-plan <name>
 gitclaw skills install-plan <target>
 gitclaw skills upgrade-plan <target>
@@ -217,6 +218,7 @@ scripts/e2e/github-memory-risk-report.sh
 scripts/e2e/github-migration-risk-report.sh
 scripts/e2e/github-model-risk-report.sh
 scripts/e2e/github-skills-proposal-plan-report.sh
+scripts/e2e/github-skills-proposals-report.sh
 scripts/e2e/github-skills-refresh-plan-report.sh
 scripts/e2e/github-bundles-risk-report.sh
 scripts/e2e/github-orders-risk-report.sh

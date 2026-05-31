@@ -465,6 +465,89 @@ SECRET_SKILL_PROPOSAL_EXISTING_BODY
 	}
 }
 
+func TestRenderSkillProposalsReportInventoriesProposalStoreWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/skill-proposals/repo-reader/PROPOSAL.md", `---
+name: repo-reader
+status: pending
+action: propose-update
+title: Improve repo reader
+reason: Make repeated repository inspections clearer.
+---
+
+# Proposal
+SECRET_SKILL_PROPOSAL_STORE_BODY
+`)
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	ctx, err := LoadRepoContext(root, nil)
+	if err != nil {
+		t.Fatalf("LoadRepoContext returned error: %v", err)
+	}
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 117,
+			"title": "@gitclaw /skills proposals risk e2e",
+			"body": "Hidden proposal-store token: SKILL_PROPOSAL_STORE_ISSUE_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	report := RenderSkillsReport(ev, cfg, ctx)
+	for _, want := range []string{
+		"GitClaw Skill Proposals Report",
+		"Generated without a model call",
+		"proposal_store_status: `ok`",
+		"proposal_store_path: `.gitclaw/skill-proposals`",
+		"proposal_files: `1`",
+		"proposal_frontmatter_files: `1`",
+		"proposal_status_pending: `1`",
+		"proposal_status_unknown: `0`",
+		"proposal_files_with_findings: `0`",
+		"proposal_risk_findings: `0`",
+		"review_pr_required: `true`",
+		"proposal_apply_supported: `false`",
+		"proposal_mutation_allowed: `false`",
+		"active_skill_write_allowed: `false`",
+		"repository_mutation_allowed: `false`",
+		"autonomous_skill_creation: `false`",
+		"autonomous_skill_improvement: `false`",
+		"remote_fetch_allowed: `false`",
+		"installer_scripts_run: `false`",
+		"dependency_install_allowed: `false`",
+		"raw_proposal_bodies_included: `false`",
+		"raw_skill_bodies_included: `false`",
+		"raw_issue_bodies_included: `false`",
+		"raw_comment_bodies_included: `false`",
+		"llm_e2e_required_after_proposal_change: `true`",
+		"### Proposal Files",
+		"proposal_name=`repo-reader`",
+		"path=`.gitclaw/skill-proposals/repo-reader/PROPOSAL.md`",
+		"status=`pending`",
+		"action=`propose-update`",
+		"risk_findings=`0`",
+		"risk_codes=`none`",
+		"### Risk Findings",
+		"- none",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("skill proposals report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"SECRET_SKILL_PROPOSAL_STORE_BODY", "SKILL_PROPOSAL_STORE_ISSUE_SECRET", "Improve repo reader", "Make repeated repository inspections clearer"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("skill proposals report leaked %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestRenderSkillInstallPlanReportDoesNotLeakRemoteURLSecrets(t *testing.T) {
 	root := t.TempDir()
 	ctx, err := LoadRepoContext(root, nil)
