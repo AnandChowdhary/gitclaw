@@ -39,6 +39,9 @@ func IsSoulReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderSoulReport(ev Event, cfg Config, repoContext RepoContext) string {
+	if isSoulCatalogRequest(ev, cfg) {
+		return renderSoulCatalogReport(ev, repoContext, true)
+	}
 	if isSoulAnchorsRequest(ev, cfg) {
 		return renderSoulAnchorsReport(ev, repoContext, true)
 	}
@@ -71,6 +74,10 @@ func RenderSoulReport(ev Event, cfg Config, repoContext RepoContext) string {
 
 func RenderSoulCLIReport(repoContext RepoContext) string {
 	return renderSoulListReport(Event{}, repoContext, false)
+}
+
+func RenderSoulCatalogCLIReport(repoContext RepoContext) string {
+	return renderSoulCatalogReport(Event{}, repoContext, false)
 }
 
 func RenderSoulInfoCLIReport(cfg Config, repoContext RepoContext, path string) string {
@@ -219,6 +226,19 @@ func requestedSoulSearchQuery(ev Event, cfg Config) string {
 		return ""
 	}
 	return cleanMemorySearchQuery(strings.Join(fields[2:], " "))
+}
+
+func isSoulCatalogRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 || fields[0] != "/soul" {
+		return false
+	}
+	switch strings.ToLower(fields[1]) {
+	case "catalog", "index", "profile-catalog", "authority-catalog":
+		return true
+	default:
+		return false
+	}
 }
 
 func isSoulValidateRequest(ev Event, cfg Config) bool {

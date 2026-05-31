@@ -853,8 +853,8 @@ GitHub issue/comment event
   `skills proposals`, `skills proposal-plan`, `skills install-plan`,
   `skills upgrade-plan`, `skills info`, `skills search`,
   `bundles list`, `bundles risk`, `bundles info`,
-  `soul provenance`, `soul verify`, `soul risk`, `soul validate`, `soul list`,
-  `soul edit-plan`, `soul info`, `soul search`,
+  `soul catalog`, `soul provenance`, `soul verify`, `soul risk`,
+  `soul validate`, `soul list`, `soul edit-plan`, `soul info`, `soul search`,
   `tools verify`, `tools risk`, `tools validate`, `tools list`,
   `tools exposure`, `tools exposure risk`, `tools defer-plan`,
   `tools boundary`, `tools provenance`, `tools approval-plan`,
@@ -2047,6 +2047,7 @@ agents rely on for durable identity and policy:
 Validation is visible in the `/soul` report and locally through:
 
 ```bash
+gitclaw soul catalog
 gitclaw soul anchors
 gitclaw soul provenance
 gitclaw soul verify
@@ -2068,6 +2069,7 @@ by OpenClaw and Hermes' portable workspace files:
 
 ```text
 @gitclaw /soul
+@gitclaw /soul catalog
 @gitclaw /soul anchors
 @gitclaw /soul provenance
 @gitclaw /soul list
@@ -2095,6 +2097,9 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
   automation-amplification, host-execution, and credential persistence risks.
 - high-authority anchor roles, authority layers, prompt-visible flags,
   canonical path flags, and mutation-disabled gates when explicitly requested.
+- compact high-authority catalog metadata with load modes, reason codes,
+  profile/export gates, and body/description-free hash boundaries when
+  explicitly requested.
 - high-authority git provenance with tracked state, last commit IDs/dates, and
   commit-subject hashes when explicitly requested.
 - high-authority edit planning metadata when explicitly requested.
@@ -2118,6 +2123,21 @@ frontmatter/description presence, validation gates, risk gates, and mutation
 gates only. It never emits raw file, issue, comment, prompt, or secret bodies.
 Changes to this report must be paired with a live GitHub Models follow-up E2E
 that proves normal inference and prompt-visible tool provenance.
+
+When called as `@gitclaw /soul catalog`, `@gitclaw /soul index`,
+`@gitclaw /soul profile-catalog`, or `@gitclaw /soul authority-catalog`, the
+command posts a compact authority-discovery catalog. The report reuses the
+soul anchor graph, then adds catalog-level counts, authority-layer names, load
+modes, reason codes, profile isolation metadata, `raw_bodies_included=false`,
+`raw_descriptions_included=false`, `profile_export_allowed=false`, and
+mutation-disabled gates. It is the OpenClaw/Hermes-inspired progressive
+disclosure view: maintainers can see which high-authority files exist, which
+ones are loaded for the turn, and which authority layer each anchor belongs
+to without printing raw soul, identity, user, memory, tool, heartbeat, issue,
+comment, prompt, description, or secret bodies. This mirrors
+`gitclaw soul catalog` for local review and must ship with a live GitHub
+Models follow-up E2E that proves repo-reader search, selected skill metadata,
+prompt-visible tools, and usage telemetry.
 
 When called as `@gitclaw /soul provenance`, `@gitclaw /soul history`, or
 `@gitclaw /soul timeline`, the command posts a body-free git provenance map
@@ -5502,6 +5522,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - create a third real issue with `@gitclaw /soul verify`,
    - create a fourth real issue with `@gitclaw /soul risk`,
    - create a fifth real issue with `@gitclaw /soul info soul`,
+   - create another real issue with `@gitclaw /soul catalog`,
    - create another real issue with `@gitclaw /soul anchors`,
    - create another real issue with `@gitclaw /soul provenance`,
    - assert the reply is marked `model="gitclaw/soul"`,
@@ -5516,6 +5537,10 @@ assert the expected comments/labels, and close the issue in cleanup.
      required/loaded/prompt-visible/canonical flags, validation gates, risk
      gates, mutation-disabled gates, and
      `llm_e2e_required_after_soul_anchors_change=true`,
+   - assert the catalog report includes compact authority-discovery counts,
+     authority-layer names, load modes, reason codes, raw-body/raw-description
+     exclusion gates, profile-export-disabled state, validation/risk gates, and
+     `llm_e2e_required_after_soul_catalog_change=true`,
    - assert the provenance report includes tracked git state, last commit
      IDs/dates, commit-subject hashes, validation/risk/git-history gates, and
      no raw commit subjects or author identities,
@@ -6840,6 +6865,13 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven soul-list E2E harness verifies `@gitclaw /soul list` is an
   explicit inventory alias with the same body-free context file, memory-note,
   hash, and validation metadata.
+- A `gh`-driven soul-catalog E2E harness verifies
+  `@gitclaw /soul catalog` exposes the compact body-free authority catalog
+  across repo-local soul/profile/memory/policy anchors, including load modes,
+  reason codes, authority-layer names, raw-description exclusion, and disabled
+  mutation/profile-export gates. It then posts a normal follow-up requiring
+  repo-reader search so GitHub Models proves model inference, prompt
+  provenance, selected skills, prompt-visible tool names, and usage telemetry.
 - A `gh`-driven soul-anchors E2E harness verifies
   `@gitclaw /soul anchors` exposes the body-free authority map across
   repo-local soul/profile/memory/policy anchors, then posts a normal follow-up

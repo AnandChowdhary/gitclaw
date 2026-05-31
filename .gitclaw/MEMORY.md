@@ -130,6 +130,10 @@
 - Skills catalog changes need two proofs: body-free eligibility/load-mode
   metadata with description hashes instead of raw descriptions, plus a normal
   model/tool follow-up proving live repo-reader search.
+- Soul catalog changes need two proofs: body-free authority catalog metadata
+  with authority layers, load modes, reason codes, body/description exclusion,
+  and disabled mutation/profile-export gates, plus a normal model/tool
+  follow-up proving live repo-reader search.
 - Context-reference chat changes need two proofs: bounded `@file:` line ranges
   must not be widened by `read_file`, plus a normal model/tool follow-up.
 - Git-reference chat changes need two proofs: bounded `@git:N` recall first,

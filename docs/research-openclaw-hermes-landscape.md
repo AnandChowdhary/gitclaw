@@ -2876,6 +2876,14 @@ git provenance report for loaded soul/profile files that shows tracked state,
 last commit IDs/dates, subject hashes, validation/risk gates, and no raw file
 bodies, commit subjects, or author identities.
 
+2026-05-31 soul-catalog follow-up: OpenClaw's workspace-file model and Hermes'
+profile isolation both point to a compact discovery surface before raw context
+loading. GitClaw should add `@gitclaw /soul catalog` and
+`gitclaw soul catalog` as the body-free authority catalog: anchor names,
+authority layers, load modes, reason codes, short hashes, validation/risk
+gates, and disabled mutation/profile-export gates, with no raw soul,
+identity, user, memory, tool, prompt, issue, comment, or description bodies.
+
 2026-05-31 skill-provenance follow-up: OpenClaw's skills CLI can list, check,
 install, update, verify, and workshop proposed skills, while its skills
 security docs warn that third-party skills are trusted code and should be

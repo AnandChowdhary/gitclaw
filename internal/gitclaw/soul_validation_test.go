@@ -182,6 +182,114 @@ func TestRenderSoulAnchorsReportShowsAuthorityMapWithoutBodies(t *testing.T) {
 	}
 }
 
+func TestRenderSoulCatalogReportShowsAuthorityCatalogWithoutBodies(t *testing.T) {
+	repoContext := RepoContext{Documents: []ContextDocument{
+		{Path: ".gitclaw/SOUL.md", Body: "---\ndescription: Repo-local soul.\n---\nSOUL_CATALOG_BODY_TOKEN"},
+		{Path: ".gitclaw/IDENTITY.md", Body: "Identity."},
+		{Path: ".gitclaw/USER.md", Body: "USER_CATALOG_BODY_TOKEN"},
+		{Path: ".gitclaw/TOOLS.md", Body: "Tools."},
+		{Path: ".gitclaw/MEMORY.md", Body: "Memory."},
+		{Path: ".gitclaw/HEARTBEAT.md", Body: "Heartbeat."},
+		{Path: ".gitclaw/STANDING_ORDERS.md", Body: "Orders."},
+		{Path: ".gitclaw/memory/2026-05-29.md", Body: "Memory note."},
+	}}
+	body := RenderSoulCatalogCLIReport(repoContext)
+	for _, want := range []string{
+		"GitClaw Soul Catalog Report",
+		"scope: `local-cli`",
+		"soul_catalog_status: `ok`",
+		"catalog_strategy: `compact-authority-discovery`",
+		"catalog_scope: `soul-identity-memory-policy`",
+		"authority_model: `repo-local-workspace-files`",
+		"profile_model: `github-repo-profile`",
+		"cataloged_anchors: `17`",
+		"loaded_anchors: `8`",
+		"prompt_visible_anchors: `8`",
+		"required_anchors: `6`",
+		"required_anchors_loaded: `6`",
+		"required_anchors_missing: `0`",
+		"optional_anchors: `11`",
+		"optional_anchors_loaded: `2`",
+		"memory_note_anchors: `1`",
+		"authority_layers: `10`",
+		"authority_layer_names:",
+		"raw_bodies_included: `false`",
+		"raw_descriptions_included: `false`",
+		"soul_writes_allowed: `false`",
+		"profile_export_allowed: `false`",
+		"llm_e2e_required_after_soul_catalog_change: `true`",
+		"soul_validation_status: `ok`",
+		"soul_risk_status: `ok`",
+		"### Authority Catalog",
+		"name=`soul` path=`.gitclaw/SOUL.md` category=`soul` authority=`core` role=`persona-boundaries` required=`true` loaded=`true` prompt_visible=`true` load_mode=`required-loaded`",
+		"reason_codes=`canonical, loaded, prompt_visible, required`",
+		"name=`agent-instructions` path=`AGENTS.md` category=`context` authority=`workspace` role=`operating-instructions` required=`false` loaded=`false` prompt_visible=`false` load_mode=`optional-missing`",
+		"reason_codes=`canonical, not_loaded, not_prompt_visible, optional`",
+		"name=`memory-note` path=`.gitclaw/memory/2026-05-29.md` category=`memory-note` authority=`memory` role=`working-memory-note` required=`false` loaded=`true` prompt_visible=`true` load_mode=`optional-loaded`",
+		"reason_codes=`canonical, latest_memory_note, loaded, optional, prompt_visible`",
+		"### Catalog Gates",
+		"validation_gate=`pass`",
+		"risk_gate=`pass`",
+		"profile_export_gate=`disabled`",
+		"mutation_gate=`disabled`",
+		"body_hash_gate=`sha256_12`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("soul catalog report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SOUL_CATALOG_BODY_TOKEN", "USER_CATALOG_BODY_TOKEN", "Repo-local soul"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("soul catalog report leaked body token %q:\n%s", leaked, body)
+		}
+	}
+}
+
+func TestRenderSoulReportRoutesCatalogWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SOUL.md", "SOUL_CATALOG_ROUTE_BODY_TOKEN")
+	writeTestFile(t, root, ".gitclaw/IDENTITY.md", "Identity.")
+	writeTestFile(t, root, ".gitclaw/USER.md", "USER_CATALOG_ROUTE_BODY_TOKEN")
+	writeTestFile(t, root, ".gitclaw/TOOLS.md", "Tools.")
+	writeTestFile(t, root, ".gitclaw/MEMORY.md", "Memory.")
+	writeTestFile(t, root, ".gitclaw/HEARTBEAT.md", "Heartbeat.")
+	writeTestFile(t, root, ".gitclaw/memory/2026-05-29.md", "Memory note.")
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	ctx, err := LoadRepoContext(root, []TranscriptMessage{{Role: "user", Body: "soul catalog"}})
+	if err != nil {
+		t.Fatalf("LoadRepoContext returned error: %v", err)
+	}
+	ev := Event{
+		Repo: "owner/repo",
+		Issue: Issue{
+			Number: 45,
+			Title:  "@gitclaw /soul catalog",
+			Body:   "Hidden soul catalog issue token: SOUL_CATALOG_ROUTE_ISSUE_SECRET.",
+		},
+	}
+	body := RenderSoulReport(ev, cfg, ctx)
+	for _, want := range []string{
+		"GitClaw Soul Catalog Report",
+		"repository: `owner/repo`",
+		"issue: `#45`",
+		"soul_catalog_status: `ok`",
+		"issue_title_sha256_12:",
+		"name=`soul` path=`.gitclaw/SOUL.md`",
+		"raw_bodies_included: `false`",
+		"raw_descriptions_included: `false`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("soul catalog route report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SOUL_CATALOG_ROUTE_BODY_TOKEN", "USER_CATALOG_ROUTE_BODY_TOKEN", "SOUL_CATALOG_ROUTE_ISSUE_SECRET"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("soul catalog route report leaked %q:\n%s", leaked, body)
+		}
+	}
+}
+
 func TestRenderSoulReportRoutesAnchorsWithoutBodies(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/SOUL.md", "SOUL_ANCHOR_ROUTE_BODY_TOKEN")

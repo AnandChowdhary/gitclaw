@@ -63,6 +63,7 @@ stricter shared repos can use `label-only` or `prefix-only`.
 High-authority context:
 
 ```bash
+gitclaw soul catalog
 gitclaw soul anchors
 gitclaw soul provenance
 gitclaw soul verify
@@ -73,6 +74,12 @@ gitclaw soul edit-plan <path>
 gitclaw soul info <path>
 gitclaw soul search <query>
 ```
+
+`gitclaw soul catalog` is the compact discovery view for high-authority
+context. It reports anchor names, authority layers, load modes, reason codes,
+counts, short hashes, and disabled mutation/profile-export gates without
+printing raw soul, user, memory, tool, prompt, issue, comment, or description
+bodies.
 
 `gitclaw soul edit-plan <path>` is a dry-run planner for high-authority
 context changes. It reports normalized target metadata and write-disabled
@@ -426,6 +433,7 @@ scripts/e2e/github-session-status-report.sh
 scripts/e2e/github-session-stats-report.sh
 scripts/e2e/github-session-coverage.sh
 scripts/e2e/github-skills-provenance-report.sh
+scripts/e2e/github-soul-catalog-report.sh
 scripts/e2e/github-soul-provenance-report.sh
 scripts/e2e/github-sandbox-risk-report.sh
 scripts/e2e/github-tasks-ledger-report.sh
