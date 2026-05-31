@@ -159,6 +159,9 @@ func renderChannelReport(ev Event, cfg Config, comments []Comment, includeIssue 
 	fmt.Fprintf(&b, "- supported_providers: `%s`\n", strings.Join(channelReportProviders, ", "))
 	fmt.Fprintf(&b, "- wake_strategy: `%s`\n", "workflow_dispatch")
 	fmt.Fprintf(&b, "- llm_e2e_required_after_channel_report_change: `%t`\n", true)
+	if includeIssue && isChannelListRequest(ev, cfg) {
+		fmt.Fprintf(&b, "- llm_e2e_required_after_channel_list_change: `%t`\n", true)
+	}
 	if includeIssue {
 		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
 	}
@@ -470,6 +473,11 @@ func isChannelVerifyRequest(ev Event, cfg Config) bool {
 func isChannelRiskRequest(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && (fields[0] == "/channel" || fields[0] == "/channels") && (strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit"))
+}
+
+func isChannelListRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && (fields[0] == "/channel" || fields[0] == "/channels") && strings.EqualFold(fields[1], "list")
 }
 
 func requestedChannelInfoProvider(ev Event, cfg Config) string {

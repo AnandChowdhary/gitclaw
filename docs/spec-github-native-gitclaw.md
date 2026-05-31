@@ -3918,6 +3918,14 @@ uses `repo-reader` plus bounded repository search, so Slack/Telegram bridge
 metadata changes keep proving real model/tool context without exposing channel
 message bodies or provider credentials.
 
+`@gitclaw /channels list` is the explicit alias for the same body-free bridge
+inventory. It also carries
+`llm_e2e_required_after_channel_list_change=true`, and changes to that alias
+must pair the deterministic workflow-dispatch inventory with a normal GitHub
+Models follow-up that selects `repo-reader`, exposes `gitclaw.search_files`,
+and recovers the bounded channels-list repository-search fixture token without
+echoing hidden issue/comment sentinels.
+
 `@gitclaw /channels info <provider>` is the body-free operator view for one
 provider contract. It reports secret names, offset/thread/message keys,
 workflow-dispatch bridge metadata, gateway runtime, state storage, and command
@@ -5983,7 +5991,11 @@ examples/workflows/gitclaw.yml
   hidden issue/message tokens.
 - A `gh`-driven channels-list E2E harness verifies `@gitclaw /channels list`
   is an explicit report alias, while local `gitclaw channels list` exposes the
-  same bridge contract without issue-only fields.
+  same bridge contract without issue-only fields. The live harness then posts a
+  normal issue-comment follow-up that must make a GitHub Models call, select
+  `repo-reader`, expose `gitclaw.search_files`, recover the channels-list
+  repository-search fixture token, and publish usage telemetry without leaking
+  hidden issue tokens.
 - A `gh`-driven channels-verify E2E harness verifies
   `@gitclaw /channels verify` reports the workflow-dispatch channel bridge
   health, permissions, required inputs, provider keys, and marker counts

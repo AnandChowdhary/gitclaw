@@ -1384,6 +1384,14 @@ workflow-dispatch trigger, workflow permissions, normalized inputs, supported
 provider keys, labels, and dispatch-id contract, with issue-only marker counts
 omitted in CLI mode.
 
+2026-05-31 channel-list E2E hardening: OpenClaw-style channel routing treats
+channel inventory as part of the routing contract, while Hermes-style gateways
+make the messaging runtime visible before delivery code depends on it. The
+explicit `/channels list` alias should therefore prove the same two facts as
+the root channel report: a deterministic GitHub workflow-dispatch inventory and
+a real GitHub Models repo-reader/search follow-up that recovers the bounded
+channels-list fixture token without echoing issue/comment sentinels.
+
 2026-05-30 channel-verify follow-up: channel support needs a positive health
 check, not only inventory. Add `/channels verify` and `gitclaw channels verify`
 as a body-free bridge verifier for the GitHub-native equivalent of a gateway

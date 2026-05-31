@@ -24,6 +24,8 @@
   secret names and workflow metadata only, then prove model/tool E2E.
 - Channel report changes need two proofs: body-free workflow-dispatch bridge
   metadata and mirrored message counts, plus a normal model/tool follow-up.
+- Channel list changes need two proofs: body-free bridge inventory through the
+  explicit list alias, plus a normal model/tool follow-up.
 - Channel verify changes need two proofs: body-free workflow-dispatch health
   gates and provider/input readiness, plus a normal model/tool follow-up.
 - Proactive jobs are reviewed prompt/workflow files plus visible issue runs;

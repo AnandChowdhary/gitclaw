@@ -264,6 +264,7 @@ gitclaw tasks risk
 gitclaw tasks ledger --backup <issue.json>
 gitclaw orders risk
 gitclaw channels
+gitclaw channels list
 gitclaw channels verify
 gitclaw channels risk
 gitclaw channels info telegram
@@ -288,6 +289,9 @@ The live channels-report harness verifies the GitHub-native Slack/Telegram
 bridge contract, workflow-dispatch wake strategy, and mirrored message counts
 without printing channel bodies, then requires a normal GitHub Models
 repo-reader/search follow-up.
+The live channels-list harness applies the same two-proof gate to the explicit
+inventory alias, so `/channels list` stays equivalent to the bridge report and
+still proves real repo-reader search.
 The live channels-verify harness applies the same model/tool gate to the
 positive bridge health check, so workflow permission/input changes prove both
 deterministic readiness and real repo-reader search.
