@@ -162,6 +162,18 @@ planner changes or accepted skill edits. Sources: OpenClaw skills CLI
 reference (`https://docs.openclaw.ai/cli/skills`) and Hermes Working with
 Skills guide (`https://hermes-agent.nousresearch.com/docs/guides/work-with-skills/`).
 
+2026-05-31 skill-install-plan E2E follow-up: OpenClaw's skills system allows
+ClawHub, Git, and local directory installs, but its own docs also frame
+third-party skills as untrusted code and note that installer/dependency paths
+are a separate dangerous surface. Hermes similarly supports hub and direct URL
+skill installs while relying on progressive disclosure and user-visible skill
+lists. For GitClaw's serverless Actions model, the right v1 behavior is a
+planner, not an installer: classify the requested target, derive a safe
+repo-local path, show hashes and review gates, never fetch remote code or run
+installers, and require a real GitHub Models repo-reader/tool follow-up after
+planner changes so deterministic safety reports do not replace actual
+conversation coverage.
+
 2026-05-31 prompt-pack follow-up: OpenClaw's token-use docs make context
 diagnostics a first-class operator surface: system prompt pieces, conversation
 history, tool results, attachments, compaction summaries, and provider wrappers

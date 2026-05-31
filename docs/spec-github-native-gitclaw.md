@@ -1694,11 +1694,14 @@ The install planner never fetches remote targets, never contacts a registry,
 never runs installer scripts, never installs dependencies, never writes
 `.gitclaw/SKILLS`, and never commits or pushes. Remote URLs are classified only
 and require manual review. Existing skill matches are reported as upgrade or
-overwrite risk. For `upgrade-plan`, an existing repo-local skill match is
-required, the report includes `existing_skill_required=true` and
-`llm_e2e_required_after_skill_upgrade_plan_change=true`, and the live E2E must
-post a model-backed follow-up that proves selected skill metadata,
-prompt-context provenance, `gitclaw.search_files`, and token-usage markers.
+overwrite risk. For `install-plan`, the report includes
+`llm_e2e_required_after_skill_install_plan_change=true`; for `upgrade-plan`,
+an existing repo-local skill match is required, the report includes
+`existing_skill_required=true` and
+`llm_e2e_required_after_skill_upgrade_plan_change=true`. The live E2E for
+each planner must post a model-backed follow-up that proves selected skill
+metadata, prompt-context provenance, `gitclaw.search_files`, and token-usage
+markers.
 The report includes `llm_e2e_required_after_change=true` to make the release
 rule explicit: after a skill is actually changed, maintainers must run a live
 GitHub Models conversation E2E in addition to deterministic skill-report
@@ -6260,8 +6263,9 @@ examples/workflows/gitclaw.yml
   `@gitclaw /skills install-plan repo-reader` produces a body-free,
   non-mutating install/upgrade plan with remote fetches, installer scripts,
   dependency installs, repository mutations, raw targets, manifests, and skill
-  bodies all disabled. This deterministic check must be paired in the same
-  implementation batch with a live GitHub Models conversation E2E.
+  bodies all disabled. The same harness then posts a live GitHub Models
+  follow-up proving selected `repo-reader` context, prompt-context provenance,
+  `gitclaw.search_files`, and usage telemetry.
 - A `gh`-driven skills-upgrade-plan E2E harness verifies
   `@gitclaw /skills upgrade-plan repo-reader` requires an existing repo-local
   skill match, publishes only target/match metadata and hashes, disables

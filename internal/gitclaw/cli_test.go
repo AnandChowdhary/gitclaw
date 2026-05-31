@@ -201,7 +201,7 @@ SECRET_SKILLS_INSTALL_PLAN_CLI_BODY
 			t.Fatalf("skills install-plan returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Skill Install Plan Report", "scope: `local-cli`", "install_plan_status: `needs_review`", "operation: `install-plan`", "target_type: `registry-name`", "safe_name_candidate: `repo-reader`", "destination_path: `.gitclaw/SKILLS/repo-reader/SKILL.md`", "destination_exists: `true`", "existing_skill_matches: `1`", "existing_skill_hashes:", "upgrade_target_required: `false`", "existing_skill_required: `false`", "remote_fetch_allowed: `false`", "installer_scripts_run: `false`", "repository_mutation_allowed: `false`", "llm_e2e_required_after_change: `true`", "raw_skill_body_included: `false`", "skill_name=`repo-reader`", "code=`existing_skill_found`"} {
+	for _, want := range []string{"GitClaw Skill Install Plan Report", "scope: `local-cli`", "install_plan_status: `needs_review`", "operation: `install-plan`", "target_type: `registry-name`", "safe_name_candidate: `repo-reader`", "destination_path: `.gitclaw/SKILLS/repo-reader/SKILL.md`", "destination_exists: `true`", "existing_skill_matches: `1`", "existing_skill_hashes:", "upgrade_target_required: `false`", "existing_skill_required: `false`", "remote_fetch_allowed: `false`", "installer_scripts_run: `false`", "repository_mutation_allowed: `false`", "llm_e2e_required_after_change: `true`", "llm_e2e_required_after_skill_install_plan_change: `true`", "raw_skill_body_included: `false`", "skill_name=`repo-reader`", "code=`existing_skill_found`"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("skills install-plan output missing %q:\n%s", want, output)
 		}

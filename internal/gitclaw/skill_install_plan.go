@@ -62,6 +62,9 @@ func renderSkillInstallPlanReport(ev Event, repoContext RepoContext, operation, 
 	fmt.Fprintf(&b, "- repository_mutation_allowed: `%t`\n", false)
 	fmt.Fprintf(&b, "- manual_review_required: `%t`\n", true)
 	fmt.Fprintf(&b, "- llm_e2e_required_after_change: `%t`\n", true)
+	if operation == "install-plan" {
+		fmt.Fprintf(&b, "- llm_e2e_required_after_skill_install_plan_change: `%t`\n", true)
+	}
 	if operation == "upgrade-plan" {
 		fmt.Fprintf(&b, "- llm_e2e_required_after_skill_upgrade_plan_change: `%t`\n", true)
 	}
