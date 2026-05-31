@@ -149,7 +149,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `33`' \
   'aliases: `31`' \
-  'local_cli_helpers: `181`' \
+  'local_cli_helpers: `182`' \
   'run_mode: `read-only`' \
   'llm_e2e_required_after_commands_report_change: `true`' \
   "### Slash Commands" \
@@ -378,6 +378,7 @@ for expected in \
   'gitclaw tools run-plan <name>' \
   'gitclaw tools info <name>' \
   'gitclaw tools search <query>' \
+  'gitclaw workspace catalog' \
   'gitclaw workspace summary' \
   'gitclaw workspace risk' \
   'gitclaw workspace verify'; do

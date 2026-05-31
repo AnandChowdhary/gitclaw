@@ -2645,6 +2645,18 @@ publishing only metadata, paths, counts, codes, severities, and line hashes.
 Acceptance requires deterministic body-free coverage plus a live GitHub Models
 follow-up E2E that proves actual model inference and tool visibility.
 
+2026-05-31 workspace-catalog follow-up: OpenClaw's workspace docs make the
+workspace file map the agent's durable operating surface, while Hermes keeps
+profile state, working directory, and sandbox boundaries separate. GitClaw
+should make that same separation visible with `@gitclaw /workspace catalog`
+and `gitclaw workspace catalog`: list workspace commands, policy/spec stores,
+git/workflow/context/repository-inventory layers, runtime and durable-state
+layers, private-memory/external-mount/daemon/socket suppression, and raw-body
+gates without printing workspace file bodies, workflow bodies, issue/comment
+bodies, prompts, tool outputs, or credentials. Acceptance requires a real issue
+E2E, a local CLI assertion, and a GitHub Models repo-reader/search follow-up
+that recovers a distinct workspace-catalog repository-search fixture token.
+
 2026-05-29 policy-inspection follow-up: OpenClaw's security docs separate
 sandbox location, tool allow/deny policy, and elevated host execution, and
 Hermes' docs frame safety around authorization, command approval, and container

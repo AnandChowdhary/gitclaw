@@ -93,6 +93,9 @@ func IsWorkspaceReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderWorkspaceReport(ev Event, cfg Config) string {
+	if isWorkspaceCatalogRequest(ev, cfg) {
+		return RenderWorkspaceCatalogReport(ev, cfg)
+	}
 	if isWorkspaceRiskRequest(ev, cfg) {
 		return renderWorkspaceRiskReport(ev, cfg, true)
 	}
@@ -575,6 +578,23 @@ func isWorkspaceRiskRequest(ev Event, cfg Config) bool {
 		return false
 	}
 	return strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit")
+}
+
+func isWorkspaceCatalogRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 {
+		return false
+	}
+	command := fields[0]
+	if command != "/workspace" && command != "/workdir" && command != "/repo" {
+		return false
+	}
+	switch strings.ToLower(fields[1]) {
+	case "catalog", "commands", "capabilities", "index":
+		return true
+	default:
+		return false
+	}
 }
 
 func workspaceActionMatches(text, action string) []string {

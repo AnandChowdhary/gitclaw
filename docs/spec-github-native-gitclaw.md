@@ -832,7 +832,8 @@ GitHub issue/comment event
   `approvals risk`,
   `artifacts list`, `artifacts risk`, `artifacts verify`,
   `diffs summary`, `diffs risk`, `diffs verify`,
-  `workspace summary`, `workspace risk`, `workspace verify`,
+  `workspace catalog`, `workspace summary`, `workspace risk`,
+  `workspace verify`,
   `hooks list`, `hooks risk`, `hooks verify`,
   `plugins list`, `plugins risk`, `plugins verify`,
   `tasks list`, `tasks risk`, `tasks verify`, `tasks ledger`,
@@ -3224,6 +3225,9 @@ workspace and Hermes' git-worktree isolation model:
 @gitclaw /workspace
 @gitclaw /workdir
 @gitclaw /repo
+@gitclaw /workspace catalog
+@gitclaw /workdir catalog
+@gitclaw /repo catalog
 @gitclaw /workspace risk
 @gitclaw /workdir risk
 @gitclaw /repo risk
@@ -3249,6 +3253,18 @@ backup payloads, workflow bodies, or secrets. It also never writes files,
 cleans directories, changes refs, dispatches workflows, mounts external
 workspaces, or treats the Actions checkout as private durable memory.
 
+When called as `@gitclaw /workspace catalog`, `@gitclaw /workdir catalog`, or
+`@gitclaw /repo catalog`, the command posts a `GitClaw Workspace Catalog
+Report`. The catalog is a compact command/layer/gate map for the GitHub Actions
+checkout workspace: catalog, summary, verify, and risk commands; policy/spec
+stores; git/workflow/context/repository-inventory layers; runtime and
+durable-state boundaries; private-memory, external-mount, daemon, and
+long-running socket suppression; and body-free output gates. It exists so
+operators can see the workspace surface without printing workspace file bodies,
+workflow bodies, issue/comment bodies, prompts, tool outputs, credentials, or
+secret values. Changes to this surface must include deterministic tests plus a
+live GitHub Models follow-up E2E that makes an actual model call.
+
 When called as `@gitclaw /workspace risk` or `@gitclaw /workspace risk-audit`,
 the command posts a `GitClaw Workspace Risk Report`. It scans workspace policy,
 workspace specs, and workflow checkout metadata for prompt-boundary overrides,
@@ -3265,6 +3281,7 @@ Local operators can inspect the same workspace surface without opening an
 issue:
 
 ```bash
+gitclaw workspace catalog
 gitclaw workspace summary
 gitclaw workspace risk
 gitclaw workspace verify
@@ -5706,7 +5723,25 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the run succeeds without requiring a model provider response,
    - run a real GitHub Models conversation E2E in the same feature batch.
 
-30. **Workspace risk inspection**
+30. **Workspace catalog inspection**
+
+   - create a real issue with `@gitclaw /workspace catalog`,
+   - assert the reply is marked `model="gitclaw/workspace"`,
+   - assert the catalog lists catalog/summary/verify/risk commands, workspace
+     policy/spec stores, git/workflow/context/repository-inventory layers,
+     runtime/durable-state layers, and private-memory, external-mount, daemon,
+     socket, raw-body, mutation, and model-E2E gates,
+   - assert workspace policy/spec body tokens, workflow bodies, file bodies,
+     issue body tokens, prompts, tool outputs, and secret values are not
+     printed,
+   - assert local `gitclaw workspace catalog` exposes the same body-free
+     command/layer/gate surface,
+   - run a real GitHub Models follow-up conversation that proves model
+     inference, prompt provenance, selected skills, prompt-visible
+     `gitclaw.search_files`, usage telemetry, and recovery of the
+     workspace-catalog repository-search fixture token.
+
+31. **Workspace risk inspection**
 
    - create a real issue with `@gitclaw /workspace risk`,
    - assert the reply is marked `model="gitclaw/workspace"`,
@@ -7201,6 +7236,12 @@ examples/workflows/gitclaw.yml
   git repository state, context counts, checkout/setup-go action versions,
   fetch-depth metadata, and private-memory/external-mount suppression without
   leaking issue body text, workflow bodies, or file bodies.
+- A `gh`-driven workspace-catalog E2E harness verifies
+  `@gitclaw /workspace catalog` and local `gitclaw workspace catalog` expose
+  body-free workspace command, layer, and gate metadata, then runs a real
+  GitHub Models follow-up conversation that proves model inference, prompt
+  provenance, selected skills, prompt-visible tool usage, usage telemetry, and
+  recovery of the bounded workspace-catalog repository-search fixture token.
 - A `gh`-driven workspace-risk E2E harness verifies
   `@gitclaw /workspace risk` and local `gitclaw workspace risk` expose
   body-free workspace policy/spec/workflow risk metadata, then runs a real

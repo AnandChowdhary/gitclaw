@@ -1472,13 +1472,27 @@ func runWorkspaceCommand(args []string) error {
 		return runWorkspaceSummaryCommand(nil)
 	}
 	switch args[0] {
+	case "catalog", "commands", "capabilities", "index":
+		return runWorkspaceCatalogCommand(args[1:])
 	case "summary", "list", "verify":
 		return runWorkspaceSummaryCommand(args[1:])
 	case "risk", "risk-audit":
 		return runWorkspaceRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw workspace [summary|risk|verify]")
+		return fmt.Errorf("usage: gitclaw workspace [catalog|summary|risk|verify]")
 	}
+}
+
+func runWorkspaceCatalogCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown workspace catalog argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderWorkspaceCatalogCLIReport(cfg))
+	return nil
 }
 
 func runWorkspaceSummaryCommand(args []string) error {

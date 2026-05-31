@@ -343,6 +343,7 @@ gitclaw proactive risk
 gitclaw proactive info repo-hygiene
 gitclaw proactive init --name email-triage --cron "17 8 * * 1-5"
 gitclaw proactive enqueue --name repo-hygiene --slot "$(date -u +%F)"
+gitclaw workspace catalog
 gitclaw workspace risk
 gitclaw workspace verify
 gitclaw profile catalog
@@ -361,6 +362,12 @@ agent profile. It maps profile commands and layers across identity, soul,
 memory, skills, tools, models, proactive jobs, channels, backups, and sessions
 while keeping raw profile files, issue/comment bodies, prompts, tool outputs,
 credentials, sessions, and backup payloads out of the report.
+
+`gitclaw workspace catalog` is the compact discovery view for the GitHub
+Actions checkout workspace. It maps workspace commands, policy/spec files, git
+metadata, workflow setup, repository inventory, runtime, durable-state, and
+body-free gates without printing workspace file bodies, issue/comment bodies,
+prompts, tool outputs, workflow bodies, or credentials.
 
 The live channels-report harness verifies the GitHub-native Slack/Telegram
 bridge contract, workflow-dispatch wake strategy, and mirrored message counts
@@ -508,6 +515,7 @@ scripts/e2e/github-tools-defer-plan-report.sh
 scripts/e2e/github-tools-boundary-report.sh
 scripts/e2e/github-tools-approval-plan-report.sh
 scripts/e2e/github-tools-risk-report.sh
+scripts/e2e/github-workspace-catalog-report.sh
 scripts/e2e/github-workspace-risk-report.sh
 scripts/e2e/github-channels-risk-report.sh
 scripts/e2e/github-config-risk-report.sh
