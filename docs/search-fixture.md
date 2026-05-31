@@ -13,6 +13,7 @@ skill runtime unique search fixture phrase => GITCLAW_SKILL_RUNTIME_CONTEXT_V1
 bundle provenance unique search fixture phrase => GITCLAW_BUNDLE_PROVENANCE_CONTEXT_V1
 
 hook provenance unique search fixture phrase => GITCLAW_HOOK_PROVENANCE_CONTEXT_V1
+hook catalog unique search fixture phrase => GITCLAW_HOOK_CATALOG_CONTEXT_V1
 
 toolset provenance unique search fixture phrase => GITCLAW_TOOLSET_PROVENANCE_CONTEXT_V1
 

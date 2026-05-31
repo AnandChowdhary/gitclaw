@@ -951,6 +951,20 @@ and `gitclaw hooks list|verify` without executing handlers. This preserves the
 event-driven design lesson while keeping all side effects behind reviewed
 GitHub workflows and approval gates.
 
+2026-06-01 hooks-catalog follow-up: OpenClaw's current hook docs treat
+file-based hooks as discoverable operator automation and distinguish them from
+external webhooks and plugin-owned hook surfaces. Hermes' hook docs similarly
+make hook visibility and synthetic testing explicit, with hook scripts kept in
+auditable directories. GitClaw should add a compact hook catalog before any
+runtime hook execution exists: `@gitclaw /hooks catalog` and
+`gitclaw hooks catalog` should enumerate hook list/verify/risk/provenance
+commands, policy/spec/event/approval/provenance layers, ignored handler files,
+provider-payload non-ingest, and disabled execution/mutation gates. Reports
+must never print hook bodies, handler bodies, provider payload bodies, issue or
+comment bodies, prompts, tool outputs, credentials, or secrets. Acceptance
+requires a live deterministic hooks-catalog issue plus a real GitHub Models
+follow-up proving repo-reader search and token telemetry.
+
 2026-05-30 plugins/toolsets follow-up: OpenClaw's capabilities docs draw a
 clean line between tools, skills, and plugins: plugins add runtime capabilities
 such as tools, providers, channels, hooks, and packaged skills, while tool

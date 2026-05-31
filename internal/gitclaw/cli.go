@@ -455,6 +455,8 @@ func runHooksCommand(args []string) error {
 		return runHooksListCommand(nil)
 	}
 	switch args[0] {
+	case "catalog", "commands", "index", "map":
+		return runHooksCatalogCommand(args[1:])
 	case "list", "verify":
 		return runHooksListCommand(args[1:])
 	case "risk", "risk-audit":
@@ -462,8 +464,20 @@ func runHooksCommand(args []string) error {
 	case "provenance", "history", "timeline":
 		return runHooksProvenanceCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw hooks [list|risk|verify|provenance]")
+		return fmt.Errorf("usage: gitclaw hooks [catalog|list|risk|verify|provenance]")
 	}
+}
+
+func runHooksCatalogCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown hooks catalog argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderHookCatalogCLIReport(cfg))
+	return nil
 }
 
 func runHooksListCommand(args []string) error {

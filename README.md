@@ -172,6 +172,22 @@ gitclaw migrate plan <source>
 gitclaw migrate risk <source>
 ```
 
+Hooks:
+
+```bash
+gitclaw hooks catalog
+gitclaw hooks list
+gitclaw hooks risk
+gitclaw hooks verify
+gitclaw hooks provenance
+```
+
+`gitclaw hooks catalog` is the compact event-automation discovery view. It maps
+hook commands, policy/spec/event/approval/provenance layers, ignored handler
+state, and disabled execution/payload gates without printing raw hook files,
+handler files, provider payloads, issue/comment bodies, prompts, tool outputs,
+credentials, or secrets.
+
 Tools:
 
 ```bash
@@ -329,6 +345,7 @@ gitclaw agents catalog
 gitclaw agents risk
 gitclaw nodes catalog
 gitclaw nodes risk
+gitclaw hooks catalog
 gitclaw hooks risk
 gitclaw hooks provenance
 gitclaw tools toolsets provenance
@@ -496,6 +513,8 @@ scripts/e2e/github-diffs-risk-report.sh
 scripts/e2e/github-heartbeat.sh
 scripts/e2e/github-heartbeat-report.sh
 scripts/e2e/github-heartbeat-risk-report.sh
+scripts/e2e/github-hooks-report.sh
+scripts/e2e/github-hooks-catalog-report.sh
 scripts/e2e/github-hooks-risk-report.sh
 scripts/e2e/github-hooks-provenance-report.sh
 scripts/e2e/github-memory-catalog-report.sh

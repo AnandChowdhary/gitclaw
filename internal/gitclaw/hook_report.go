@@ -55,6 +55,9 @@ func IsHookReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderHookReport(ev Event, cfg Config) string {
+	if isHookCatalogRequest(ev, cfg) {
+		return renderHookCatalogReport(ev, cfg, true)
+	}
 	if isHookRiskRequest(ev, cfg) {
 		return renderHookRiskReport(ev, cfg, true)
 	}

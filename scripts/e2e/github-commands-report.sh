@@ -149,7 +149,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `33`' \
   'aliases: `31`' \
-  'local_cli_helpers: `188`' \
+  'local_cli_helpers: `189`' \
   'run_mode: `read-only`' \
   'llm_e2e_required_after_commands_report_change: `true`' \
   "### Slash Commands" \
@@ -252,6 +252,7 @@ for expected in \
   'gitclaw doctor list' \
   'gitclaw heartbeat status' \
   'gitclaw heartbeat risk' \
+  'gitclaw hooks catalog' \
   'gitclaw hooks list' \
   'gitclaw hooks risk' \
   'gitclaw hooks verify' \

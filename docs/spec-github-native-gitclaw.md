@@ -835,7 +835,7 @@ GitHub issue/comment event
   `diffs summary`, `diffs risk`, `diffs verify`,
   `workspace catalog`, `workspace summary`, `workspace risk`,
   `workspace verify`,
-  `hooks list`, `hooks risk`, `hooks verify`,
+  `hooks catalog`, `hooks list`, `hooks risk`, `hooks verify`,
   `plugins list`, `plugins risk`, `plugins verify`,
   `tasks list`, `tasks risk`, `tasks verify`, `tasks ledger`,
   `agents catalog`, `agents list`, `agents risk`, `agents verify`,
@@ -3566,6 +3566,7 @@ surface:
 
 ```text
 @gitclaw /hooks
+@gitclaw /hooks catalog
 @gitclaw /hooks risk
 @gitclaw /hooks provenance
 @gitclaw /hook
@@ -3587,6 +3588,26 @@ metadata, not runtime code. The report never dispatches workflows, mutates the
 repo, calls the model, or prints raw hook policy, hook spec, issue, comment, or
 provider payload bodies. Future executable hooks require explicit workflow
 permissions, approval gates, and audit cards before any handler can run.
+
+The catalog form:
+
+```text
+@gitclaw /hooks catalog
+@gitclaw /hook catalog
+```
+
+posts a `GitClaw Hooks Catalog Report` without model inference. It maps the
+hook command surface, repo-reviewed hook policy, declarative specs, frontmatter
+events, approval gates, ignored executable-looking handler files, git
+provenance, and explicit provider-payload negative capability. The catalog is
+the GitHub-native adaptation of OpenClaw/Hermes hook discovery: hooks are
+useful event-automation metadata, but GitClaw v1 does not run handlers, ingest
+external provider payloads, dispatch workflows from hook specs, mutate the
+repository, or print raw hook/payload/issue/comment/prompt/tool bodies. It
+includes `llm_e2e_required_after_hook_catalog_change=true`; changes to this
+surface must pass a deterministic live hooks-catalog issue plus a real GitHub
+Models follow-up proving prompt provenance, selected skills, prompt-visible
+repository search tools, and usage telemetry.
 
 The risk form:
 
@@ -3627,6 +3648,7 @@ hash-only provenance boundary.
 Local operators can inspect the same surface with:
 
 ```bash
+gitclaw hooks catalog
 gitclaw hooks list
 gitclaw hooks risk
 gitclaw hooks verify
@@ -6630,6 +6652,13 @@ examples/workflows/gitclaw.yml
   approval/audit-only gates, ignored executable handler state, and body-free
   findings without a model call or hook body leakage. Each hooks feature batch
   must still run a live GitHub Models conversation E2E.
+- A `gh`-driven hooks-catalog E2E harness verifies `@gitclaw /hooks catalog`
+  and local `gitclaw hooks catalog` expose hook command and layer metadata,
+  policy/spec/event/approval/provenance gates, disabled handler execution,
+  provider-payload non-ingest, and no hook/provider/issue/comment body leakage.
+  It then posts a real GitHub Models follow-up proving prompt provenance,
+  selected skill, prompt-visible repository search tool usage, and usage
+  telemetry.
 - A `gh`-driven hooks-risk E2E harness verifies `@gitclaw /hooks risk` and
   local `gitclaw hooks risk` expose body-free hook risk metadata, then runs a
   real GitHub Models follow-up conversation that proves model inference,
