@@ -575,10 +575,10 @@ LLM/tool execution still works after run-provenance changes.
 most useful when it reports budgets, hashes, and truncation pressure without
 printing raw prompt text. Hermes-style bounded context has the same lesson:
 diagnostics should make the envelope auditable without becoming a second
-conversation channel. GitClaw's `/prompt` report should therefore ship with a
-live follow-up proof that a normal GitHub Models turn can still select
-`repo-reader`, expose `gitclaw.search_files`, and recover a fixture token after
-the deterministic prompt report runs.
+conversation channel. GitClaw's `/prompt` and `/prompt list` reports should
+therefore ship with live follow-up proof that a normal GitHub Models turn can
+still select `repo-reader`, expose `gitclaw.search_files`, and recover a
+fixture token after the deterministic prompt report or alias runs.
 
 2026-05-31 run-history follow-up: OpenClaw's trajectory/progress framing is
 useful, but GitClaw should keep the first history surface narrower than a full

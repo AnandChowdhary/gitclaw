@@ -298,9 +298,9 @@ deterministic readiness and real repo-reader search.
 The live proactive-report and proactive-list harnesses use the same two-proof
 shape for scheduled work: body-free workflow/prompt metadata first, then a
 normal GitHub Models repo-reader/search follow-up.
-The live prompt-report harness now uses that gate for prompt diagnostics:
-prompt size, hash, truncation, context, skill, and tool metadata stay
-body-free, then a normal GitHub Models repo-reader/search follow-up proves
+The live prompt-report and prompt-list harnesses now use that gate for prompt
+diagnostics: prompt size, hash, truncation, context, skill, and tool metadata
+stay body-free, then a normal GitHub Models repo-reader/search follow-up proves
 prompt inspection has not replaced real model/tool execution.
 
 ## Testing

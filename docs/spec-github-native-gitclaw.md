@@ -6427,7 +6427,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven prompt-list E2E harness verifies `@gitclaw /prompt list` is an
   explicit report alias, while local `gitclaw prompt list` exposes the same
   body-free prompt-budget, prompt-input, context, skill, and tool metadata
-  without issue-only fields.
+  without issue-only fields. The live alias harness also posts a normal
+  GitHub Models follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the prompt-list repository-search fixture
+  token, and avoid hidden sentinel leakage.
 - A `gh`-driven prompt-risk E2E harness verifies `@gitclaw /prompt risk`
   reports body-free prompt budget, transcript, context contributor, selected
   skill, deterministic tool-output, prompt artifact, and runtime-boundary risk
