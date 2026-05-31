@@ -1,6 +1,6 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-05-31T08:39:10Z`
+- generated_at: `2026-05-31T08:40:42Z`
 - issue_count: `330`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
@@ -334,4 +334,4 @@
 | #364 | @gitclaw /prompt pack e2e 20260531T074748Z | `2026-05-31T07:50:32Z` | 3 | 4 | `issues/000364.json` |
 | #365 | @gitclaw /prompt cache e2e 20260531T080117Z | `2026-05-31T08:04:03Z` | 3 | 4 | `issues/000365.json` |
 | #366 | @gitclaw /prompt compression e2e 20260531T081454Z | `2026-05-31T08:17:51Z` | 3 | 4 | `issues/000366.json` |
-| #367 | @gitclaw /models usage e2e 20260531T083802Z | `2026-05-31T08:39:09Z` | 1 | 2 | `issues/000367.json` |
+| #367 | @gitclaw /models usage e2e 20260531T083802Z | `2026-05-31T08:40:40Z` | 3 | 4 | `issues/000367.json` |
