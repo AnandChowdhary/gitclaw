@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T16:59:46Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 429,
+    "title": "@gitclaw /skills select-plan repo-reader e2e 20260531T165835Z",
+    "body": "Live skills-select-plan E2E.\n\nHidden skills select-plan token: NOECHO_SKILLS_SELECT_PLAN_20260531T165835Z\nThis should explain why the repo-reader skill is selected without dumping the full SKILL.md body.\nAny skill selection behavior change must also run a live GitHub Models conversation E2E.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /skills select-plan repo-reader e2e 20260531T165835Z\n\nLive skills-select-plan E2E.\n\nHidden skills select-plan token: NOECHO_SKILLS_SELECT_PLAN_20260531T165835Z\nThis should explain why the repo-reader skill is selected without dumping the full SKILL.md body.\nAny skill selection behavior change must also run a live GitHub Models conversation E2E.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Skill Select Plan Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#429`\n- skill_select_plan_status: `ok`\n- requested_skill_sha256_12: `ba915a2978d8`\n- request_text_sha256_12: `7d017d0c323c`\n- request_terms: `33`\n- available_skills: `1`\n- enabled_skills: `1`\n- matched_skills: `1`\n- selected_skills: `1`\n- selected_bundles: `0`\n- selected_for_this_turn: `true`\n- skill_enabled: `true`\n- disabled_by_config: `false`\n- blocked_by_allowlist: `false`\n- always_on: `false`\n- run_mode: `read-only`\n- model_call_required: `false`\n- repository_mutation_allowed: `false`\n- raw_requested_skill_included: `false`\n- raw_request_text_included: `false`\n- raw_skill_body_included: `false`\n- llm_e2e_required_after_change: `true`\n- llm_e2e_required_after_skill_select_plan_change: `true`\n- skill_validation_status: `ok`\n- skill_validation_errors: `0`\n- skill_validation_warnings: `0`\n- skill_duplicate_names: `0`\n- skill_invalid_names: `0`\n- skill_name_folder_mismatches: `0`\n- issue_title_sha256_12: `5eb995019aba`\n\nThis report explains whether one repo-local skill is selected for the current turn. It uses only metadata, hashes, and gate state; full skill bodies, issue bodies, comments, prompts, and raw request text are not included.\n\n### Skill Match\n- skill_name=`repo-reader` path=`.gitclaw/SKILLS/repo-reader/SKILL.md` folder=`repo-reader` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` selected_for_this_turn=`true` always=`false` frontmatter=`true` description=`true` bytes=`699` lines=`18` sha256_12=`2f9e68a57bd6` requires_env=`0` requires_bins=`0` missing_env=`0` missing_bins=`0` description=`Use GitClaw's read-only repository context and tool outputs to answer file-aw...`\n  - required_env=`none`\n  - required_bins=`none`\n  - missing_env=`none`\n  - missing_bins=`none`\n\n### Selection Reasons\n- skill_name=`repo-reader` selected_for_this_turn=`true` reasons=`request_metadata_match`\n\n### Review Steps\n1. Confirm the skill is enabled by config and not blocked by the allowlist.\n2. Confirm selection comes from `always`, a selected bundle, or bounded issue/comment text.\n3. Inspect the content hash and validation findings before changing skill behavior.\n4. Use a live GitHub Models conversation E2E when changing skill selection or skill contents, not only deterministic reports.\n\n### Findings\n- severity=`info` code=`progressive_disclosure` detail=`GitClaw loads skill bodies only when selected by always-on metadata, current ...`\n- severity=`info` code=`repository_mutation_disabled` detail=`skill selection planning does not create, update, delete, commit, push, or ap...`\n- severity=`info` code=`skill_selected_for_turn` detail=`matched skill body is selected for this turn`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4587421957,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4587421957,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26718779150\" event_id=\"issue-429\" model=\"gitclaw/skills\" idempotency_key=\"49549289f5216a2129e48e0d1fda2223\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26718779150\" --\u003e\n## GitClaw Skill Select Plan Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#429`\n- skill_select_plan_status: `ok`\n- requested_skill_sha256_12: `ba915a2978d8`\n- request_text_sha256_12: `7d017d0c323c`\n- request_terms: `33`\n- available_skills: `1`\n- enabled_skills: `1`\n- matched_skills: `1`\n- selected_skills: `1`\n- selected_bundles: `0`\n- selected_for_this_turn: `true`\n- skill_enabled: `true`\n- disabled_by_config: `false`\n- blocked_by_allowlist: `false`\n- always_on: `false`\n- run_mode: `read-only`\n- model_call_required: `false`\n- repository_mutation_allowed: `false`\n- raw_requested_skill_included: `false`\n- raw_request_text_included: `false`\n- raw_skill_body_included: `false`\n- llm_e2e_required_after_change: `true`\n- llm_e2e_required_after_skill_select_plan_change: `true`\n- skill_validation_status: `ok`\n- skill_validation_errors: `0`\n- skill_validation_warnings: `0`\n- skill_duplicate_names: `0`\n- skill_invalid_names: `0`\n- skill_name_folder_mismatches: `0`\n- issue_title_sha256_12: `5eb995019aba`\n\nThis report explains whether one repo-local skill is selected for the current turn. It uses only metadata, hashes, and gate state; full skill bodies, issue bodies, comments, prompts, and raw request text are not included.\n\n### Skill Match\n- skill_name=`repo-reader` path=`.gitclaw/SKILLS/repo-reader/SKILL.md` folder=`repo-reader` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` selected_for_this_turn=`true` always=`false` frontmatter=`true` description=`true` bytes=`699` lines=`18` sha256_12=`2f9e68a57bd6` requires_env=`0` requires_bins=`0` missing_env=`0` missing_bins=`0` description=`Use GitClaw's read-only repository context and tool outputs to answer file-aw...`\n  - required_env=`none`\n  - required_bins=`none`\n  - missing_env=`none`\n  - missing_bins=`none`\n\n### Selection Reasons\n- skill_name=`repo-reader` selected_for_this_turn=`true` reasons=`request_metadata_match`\n\n### Review Steps\n1. Confirm the skill is enabled by config and not blocked by the allowlist.\n2. Confirm selection comes from `always`, a selected bundle, or bounded issue/comment text.\n3. Inspect the content hash and validation findings before changing skill behavior.\n4. Use a live GitHub Models conversation E2E when changing skill selection or skill contents, not only deterministic reports.\n\n### Findings\n- severity=`info` code=`progressive_disclosure` detail=`GitClaw loads skill bodies only when selected by always-on metadata, current ...`\n- severity=`info` code=`repository_mutation_disabled` detail=`skill selection planning does not create, update, delete, commit, push, or ap...`\n- severity=`info` code=`skill_selected_for_turn` detail=`matched skill body is selected for this turn`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T16:59:21Z",
+      "updated_at": "2026-05-31T16:59:21Z"
+    }
+  ]
+}
