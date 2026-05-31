@@ -243,8 +243,8 @@ for expected in \
   'enabled=`true`' \
   'description_present=`true`' \
   'description_sha256_12=' \
-  'required_env=`0`' \
-  'required_bins=`0`' \
+  'requires_env=`0`' \
+  'requires_bins=`0`' \
   'missing_env=`0`' \
   'missing_bins=`0`' \
   'risk_findings=`0`' \
