@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T11:46:03Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "workflow_dispatch",
+  "issue": {
+    "number": 387,
+    "title": "GitClaw channel message e2e 20260531T114426Z",
+    "body": "Live channel bridge E2E.\n\nThis issue starts untriggered. A mirrored channel message comment contains the actual request.\n",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw",
+      "gitclaw:e2e",
+      "gitclaw:done"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel message e2e 20260531T114426Z\n\nLive channel bridge E2E.\n\nThis issue starts untriggered. A mirrored channel message comment contains the actual request.\n",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "Mirrored Telegram message.\n\nUse the repo-reader skill and search the repository for `channel message unique search fixture phrase`.\nReply with the exact token from the matching gitclaw.search_files result line.\nAlso include the exact word `telegram`.\nDo not include this hidden channel token: NOECHO_CHANNEL_MESSAGE_20260531T114426Z.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4586586518,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_MESSAGE_CONTEXT_V1 telegram",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4586588987,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4586586518,
+      "body": "\u003c!-- gitclaw:channel-message channel=\"telegram\" message_id=\"telegram-update-20260531T114426Z\" author=\"telegram:e2e\" --\u003e\nMirrored Telegram message.\n\nUse the repo-reader skill and search the repository for `channel message unique search fixture phrase`.\nReply with the exact token from the matching gitclaw.search_files result line.\nAlso include the exact word `telegram`.\nDo not include this hidden channel token: NOECHO_CHANNEL_MESSAGE_20260531T114426Z.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-05-31T11:44:27Z",
+      "updated_at": "2026-05-31T11:44:27Z"
+    },
+    {
+      "id": 4586588987,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26711684649\" event_id=\"dispatch-telegram-update-20260531T114426Z\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"04b060425a050946513bc7913e119116\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26711684649\" prompt_context_sha256_12=\"ffae9803af30\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"8472\" usage_completion_tokens=\"11\" usage_total_tokens=\"8483\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_MESSAGE_CONTEXT_V1 telegram",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T11:45:42Z",
+      "updated_at": "2026-05-31T11:45:42Z"
+    }
+  ]
+}
