@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T01:17:15Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 337,
+    "title": "@gitclaw /tools toolsets risk e2e 20260531T011606Z",
+    "body": "@gitclaw /tools toolsets risk\n\nLive tools toolsets E2E.\nDo not include this hidden toolset token: GITCLAW_TOOLSETS_E2E_20260531T011606Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /tools toolsets risk e2e 20260531T011606Z\n\n@gitclaw /tools toolsets risk\n\nLive tools toolsets E2E.\nDo not include this hidden toolset token: GITCLAW_TOOLSETS_E2E_20260531T011606Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Toolsets Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#337`\n- toolset_store_status: `ok`\n- toolset_store_path: `.gitclaw/toolsets`\n- toolset_files: `1`\n- scanned_toolsets: `1`\n- toolset_tool_refs: `5`\n- resolved_tool_refs: `5`\n- unknown_tool_refs: `0`\n- disabled_tool_refs: `0`\n- allowlist_blocked_tool_refs: `0`\n- toolsets_with_instruction: `1`\n- toolsets_with_risk_findings: `0`\n- toolset_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- runtime_toolset_selection: `not_active_in_v1`\n- registry_verification: `static_builtin_contracts_only`\n- toolset_activation_supported: `false`\n- repository_mutation_allowed: `false`\n- shell_execution_allowed: `false`\n- network_tool_execution_allowed: `false`\n- raw_toolset_bodies_included: `false`\n- raw_toolset_instructions_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_toolset_change: `true`\n- issue_title_sha256_12: `e38b91820cd7`\n\nThis report scans repo-local toolset profiles for unsafe references and risky instructions without activating tools, executing shell commands, calling provider APIs, mutating repository state, or printing raw toolset bodies, instructions, tool outputs, issue bodies, comments, prompts, credentials, or secret values.\n\n### Toolset Risk Cards\n- toolset_name=`repo-read` path=`.gitclaw/toolsets/repo-read.yaml` mode=`read-only` tools=`gitclaw.list_files, gitclaw.policy, gitclaw.read_file, gitclaw.search_files, ...` resolved_tools=`gitclaw.list_files, gitclaw.policy, gitclaw.read_file, gitclaw.search_files, ...` unknown_tools=`none` disabled_tools=`none` allowlist_blocked_tools=`none` instruction=`true` description=`true` bytes=`394` lines=`12` sha256_12=`c8e9afb4dced` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Risk Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4585351709,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4585351709,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26699762640\" event_id=\"issue-337\" model=\"gitclaw/tools\" idempotency_key=\"1fb278baa3ee2409f0ea4c5b46ab2ab3\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26699762640\" --\u003e\n## GitClaw Toolsets Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#337`\n- toolset_store_status: `ok`\n- toolset_store_path: `.gitclaw/toolsets`\n- toolset_files: `1`\n- scanned_toolsets: `1`\n- toolset_tool_refs: `5`\n- resolved_tool_refs: `5`\n- unknown_tool_refs: `0`\n- disabled_tool_refs: `0`\n- allowlist_blocked_tool_refs: `0`\n- toolsets_with_instruction: `1`\n- toolsets_with_risk_findings: `0`\n- toolset_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- runtime_toolset_selection: `not_active_in_v1`\n- registry_verification: `static_builtin_contracts_only`\n- toolset_activation_supported: `false`\n- repository_mutation_allowed: `false`\n- shell_execution_allowed: `false`\n- network_tool_execution_allowed: `false`\n- raw_toolset_bodies_included: `false`\n- raw_toolset_instructions_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_toolset_change: `true`\n- issue_title_sha256_12: `e38b91820cd7`\n\nThis report scans repo-local toolset profiles for unsafe references and risky instructions without activating tools, executing shell commands, calling provider APIs, mutating repository state, or printing raw toolset bodies, instructions, tool outputs, issue bodies, comments, prompts, credentials, or secret values.\n\n### Toolset Risk Cards\n- toolset_name=`repo-read` path=`.gitclaw/toolsets/repo-read.yaml` mode=`read-only` tools=`gitclaw.list_files, gitclaw.policy, gitclaw.read_file, gitclaw.search_files, ...` resolved_tools=`gitclaw.list_files, gitclaw.policy, gitclaw.read_file, gitclaw.search_files, ...` unknown_tools=`none` disabled_tools=`none` allowlist_blocked_tools=`none` instruction=`true` description=`true` bytes=`394` lines=`12` sha256_12=`c8e9afb4dced` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Risk Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T01:16:53Z",
+      "updated_at": "2026-05-31T01:16:53Z"
+    }
+  ]
+}
