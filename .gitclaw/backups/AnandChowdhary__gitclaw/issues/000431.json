@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T17:12:57Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 431,
+    "title": "@gitclaw git reference chat e2e 20260531T171135Z",
+    "body": "Live git-reference chat E2E.\n\nUse @git:1.\nReply with the exact full commit hash after commit= in the attached git context, and include the word git-reference.\nDo not include this hidden issue token: GITCLAW_GIT_REFERENCE_CHAT_HIDDEN_20260531T171135Z\nKeep the answer under 30 words.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw git reference chat e2e 20260531T171135Z\n\nLive git-reference chat E2E.\n\nUse @git:1.\nReply with the exact full commit hash after commit= in the attached git context, and include the word git-reference.\nDo not include this hidden issue token: GITCLAW_GIT_REFERENCE_CHAT_HIDDEN_20260531T171135Z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "commit=358ccb1adab090ca77ce20d109b43a47bccd4c81 git-reference",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4587453834,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4587453834,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26719073845\" event_id=\"issue-431\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"bf011a68c87146340f898f740acb3b91\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26719073845\" prompt_context_sha256_12=\"09a548215886\" context_documents=\"17\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"12888\" usage_completion_tokens=\"26\" usage_total_tokens=\"12914\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\ncommit=358ccb1adab090ca77ce20d109b43a47bccd4c81 git-reference",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T17:12:32Z",
+      "updated_at": "2026-05-31T17:12:32Z"
+    }
+  ]
+}
