@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-05-31T23:07:21Z`
-- issue_count: `422`
+- generated_at: `2026-05-31T23:22:44Z`
+- issue_count: `423`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -427,3 +427,4 @@
 | #460 | @gitclaw /checkpoints catalog e2e 20260531T223640Z | `2026-05-31T22:39:16Z` | 3 | 4 | `issues/000460.json` |
 | #461 | @gitclaw /hooks catalog e2e 20260531T224958Z | `2026-05-31T22:52:24Z` | 3 | 4 | `issues/000461.json` |
 | #462 | @gitclaw /memory provenance e2e 20260531T230450Z | `2026-05-31T23:07:21Z` | 3 | 4 | `issues/000462.json` |
+| #463 | @gitclaw /agents provenance e2e 20260531T232138Z | `2026-05-31T23:22:43Z` | 1 | 2 | `issues/000463.json` |
