@@ -287,7 +287,7 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 			Model:          "gitclaw/checkpoints",
 			IdempotencyKey: key,
 			RunURL:         actionRunURL(ev),
-		}, RenderCheckpointReport(ev, report))
+		}, RenderCheckpointReportWithConfig(ev, cfg, report))
 		if isCheckpointRiskRequest(ev, cfg) {
 			body = RenderAssistantComment(Marker{
 				RunID:          envFirst("GITHUB_RUN_ID", "local"),

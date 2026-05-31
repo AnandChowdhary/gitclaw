@@ -149,7 +149,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `33`' \
   'aliases: `31`' \
-  'local_cli_helpers: `186`' \
+  'local_cli_helpers: `188`' \
   'run_mode: `read-only`' \
   'llm_e2e_required_after_commands_report_change: `true`' \
   "### Slash Commands" \
@@ -232,10 +232,12 @@ for expected in \
   'gitclaw channel-state' \
   'gitclaw channel-gateway' \
   'gitclaw channel-delivery' \
+  'gitclaw checkpoints catalog' \
   'gitclaw checkpoints status' \
   'gitclaw checkpoints list' \
   'gitclaw checkpoints risk' \
   'gitclaw checkpoints verify' \
+  'gitclaw rollback catalog' \
   'gitclaw rollback list' \
   'gitclaw rollback risk' \
   'gitclaw config list' \

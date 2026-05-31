@@ -38,6 +38,7 @@ memory promote plan unique search fixture phrase => GITCLAW_MEMORY_PROMOTE_PLAN_
 heartbeat report unique search fixture phrase => GITCLAW_HEARTBEAT_REPORT_CONTEXT_V1
 heartbeat followup unique search fixture phrase => GITCLAW_HEARTBEAT_FOLLOWUP_CONTEXT_V1
 workflow dispatch unique search fixture phrase => GITCLAW_WORKFLOW_DISPATCH_CONTEXT_V1
+checkpoints catalog unique search fixture phrase => GITCLAW_CHECKPOINTS_CATALOG_CONTEXT_V1
 checkpoints report unique search fixture phrase => GITCLAW_CHECKPOINTS_REPORT_CONTEXT_V1
 commands report unique search fixture phrase => GITCLAW_COMMANDS_REPORT_CONTEXT_V1
 runs report unique search fixture phrase => GITCLAW_RUNS_REPORT_CONTEXT_V1

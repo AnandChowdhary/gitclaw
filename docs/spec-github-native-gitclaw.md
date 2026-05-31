@@ -825,8 +825,9 @@ GitHub issue/comment event
   `heartbeat`, `heartbeat status`, `heartbeat risk`,
   `channel-ingest`, `channel-state`, `channel-gateway`, `channel-delivery`,
   `channels list`, `channels verify`, `channels risk`, `channels info`,
-  `checkpoints status`, `checkpoints list`, `checkpoints risk`,
-  `checkpoints verify`, `rollback list`, `rollback risk`,
+  `checkpoints catalog`, `checkpoints status`, `checkpoints list`,
+  `checkpoints risk`, `checkpoints verify`, `rollback catalog`,
+  `rollback list`, `rollback risk`,
   `proactive enqueue`, `proactive init`, `proactive info`, `proactive risk`,
   `approvals list`, `approvals verify`, `approvals provenance`,
   `approvals risk`,
@@ -3127,6 +3128,8 @@ approval, sandboxing, and mutation:
 @gitclaw /checkpoints
 @gitclaw /checkpoint
 @gitclaw /rollback
+@gitclaw /checkpoints catalog
+@gitclaw /rollback catalog
 @gitclaw /checkpoints risk
 @gitclaw /rollback risk
 ```
@@ -3152,10 +3155,12 @@ readiness report, not a restore command.
 Local operators can inspect the same checkpoint state without opening an issue:
 
 ```bash
+gitclaw checkpoints catalog
 gitclaw checkpoints status
 gitclaw checkpoints list
 gitclaw checkpoints risk
 gitclaw checkpoints verify
+gitclaw rollback catalog
 gitclaw rollback list
 gitclaw rollback risk
 ```
@@ -3168,6 +3173,24 @@ The report includes
 must be paired with a live GitHub Models follow-up that selects `repo-reader`,
 exposes `gitclaw.search_files`, and recovers a bounded repository-search
 fixture token without echoing issue-body sentinels.
+
+`@gitclaw /checkpoints catalog`, `@gitclaw /rollback catalog`, and local
+`gitclaw checkpoints catalog`/`gitclaw rollback catalog` switch from readiness
+state to a compact rollback command and layer map. The catalog exposes
+checkpoint/status/list/verify/risk commands, rollback catalog/list/risk aliases,
+git history metadata, worktree status counts, backup-branch evidence, recent
+commit metadata, future restore-preview gates, inspect-only operation
+boundaries, and the disabled reset/clean/checkout gate. It follows Hermes'
+checkpoint manager posture: shadow-store rollback is useful only when preview,
+scope, and restore boundaries are explicit. It also follows OpenClaw backup
+verification: restore-like operations should require manifest evidence before
+mutation. The catalog never restores, resets, cleans, checks out, prints diffs,
+prints file bodies, prints commit subjects, calls a model, or exposes issue,
+comment, prompt, tool-output, credential, or secret bodies. It includes
+`llm_e2e_required_after_checkpoint_catalog_change=true`; changes to this surface
+must pass a deterministic live checkpoints-catalog issue plus a real GitHub
+Models follow-up proving prompt context hashing, selected skills,
+prompt-visible repository search tools, and usage telemetry.
 
 When called as `@gitclaw /checkpoints risk` or `@gitclaw /rollback risk`, the
 command posts a `GitClaw Checkpoint Risk Report`. It scans git checkpoint
@@ -7323,6 +7346,13 @@ examples/workflows/gitclaw.yml
   follow-up that must make a GitHub Models call, select `repo-reader`, expose
   `gitclaw.search_files`, recover the checkpoints-report repository-search
   fixture token, and avoid hidden sentinel leakage.
+- A `gh`-driven checkpoints-catalog E2E harness verifies
+  `@gitclaw /checkpoints catalog` and local `gitclaw checkpoints catalog` /
+  `gitclaw rollback catalog` expose body-free checkpoint and rollback commands,
+  git/worktree/backup/recent-commit/operation-boundary layers, disabled restore
+  gates, and no raw diffs or file bodies. The same issue must then run a real
+  GitHub Models follow-up proving model inference, prompt provenance, selected
+  skills, prompt-visible repository search tool usage, and usage markers.
 - A `gh`-driven checkpoints-risk E2E harness verifies
   `@gitclaw /rollback risk` exposes body-free checkpoint risk metadata, then
   runs a real GitHub Models follow-up conversation that proves model inference,

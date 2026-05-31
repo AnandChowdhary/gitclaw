@@ -119,7 +119,14 @@ func BuildCheckpointReport(root string) CheckpointReport {
 }
 
 func RenderCheckpointReport(ev Event, report CheckpointReport) string {
-	if isCheckpointRiskRequest(ev, DefaultConfig()) {
+	return RenderCheckpointReportWithConfig(ev, DefaultConfig(), report)
+}
+
+func RenderCheckpointReportWithConfig(ev Event, cfg Config, report CheckpointReport) string {
+	if isCheckpointCatalogRequest(ev, cfg) {
+		return RenderCheckpointCatalogReport(ev, report)
+	}
+	if isCheckpointRiskRequest(ev, cfg) {
 		return RenderCheckpointRiskReport(ev, report)
 	}
 	return renderCheckpointReport(ev, report, true)

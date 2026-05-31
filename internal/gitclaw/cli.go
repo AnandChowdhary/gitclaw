@@ -335,12 +335,14 @@ func runCheckpointsCommand(args []string) error {
 		return runCheckpointsStatusCommand(nil)
 	}
 	switch args[0] {
+	case "catalog", "commands", "index", "map":
+		return runCheckpointsCatalogCommand(args[1:])
 	case "status", "list", "verify":
 		return runCheckpointsStatusCommand(args[1:])
 	case "risk", "risk-audit":
 		return runCheckpointsRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw checkpoints [status|list|risk|verify]")
+		return fmt.Errorf("usage: gitclaw checkpoints [catalog|status|list|risk|verify]")
 	}
 }
 
@@ -811,13 +813,28 @@ func runRollbackCommand(args []string) error {
 		return runCheckpointsStatusCommand(nil)
 	}
 	switch args[0] {
+	case "catalog", "commands", "index", "map":
+		return runCheckpointsCatalogCommand(args[1:])
 	case "list", "status":
 		return runCheckpointsStatusCommand(args[1:])
 	case "risk", "risk-audit":
 		return runCheckpointsRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("gitclaw rollback is inspect-only; use: gitclaw rollback [list|risk]")
+		return fmt.Errorf("gitclaw rollback is inspect-only; use: gitclaw rollback [catalog|list|risk]")
 	}
+}
+
+func runCheckpointsCatalogCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown checkpoints catalog argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	report := BuildCheckpointReport(cfg.Workdir)
+	fmt.Println(RenderCheckpointCatalogCLIReport(report))
+	return nil
 }
 
 func runCheckpointsStatusCommand(args []string) error {

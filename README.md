@@ -312,7 +312,9 @@ gitclaw artifacts catalog
 gitclaw artifacts list
 gitclaw artifacts risk
 gitclaw artifacts verify
+gitclaw checkpoints catalog
 gitclaw checkpoints risk
+gitclaw rollback catalog
 gitclaw rollback risk
 gitclaw context risk
 gitclaw prompt list
@@ -393,6 +395,13 @@ reviewed upload workflow steps, storage, redaction, retention, durable-backup
 boundaries, and no-hidden-state gates without printing artifact payloads,
 prompts, tool outputs, issue/comment bodies, channel payloads, backup payloads,
 sessions, or credentials.
+
+`gitclaw checkpoints catalog` is the compact discovery view for rollback
+readiness. It maps checkpoint and rollback commands, git history, worktree
+state, backup-branch evidence, recent-commit metadata, restore-preview
+requirements, and disabled destructive-git gates without printing diffs, file
+bodies, commit subjects, issue/comment bodies, prompts, tool outputs, or
+credentials.
 
 The live channels-report harness verifies the GitHub-native Slack/Telegram
 bridge contract, workflow-dispatch wake strategy, and mirrored message counts
@@ -476,6 +485,7 @@ scripts/e2e/github-nodes-catalog-report.sh
 scripts/e2e/github-nodes-risk-report.sh
 scripts/e2e/github-artifacts-catalog-report.sh
 scripts/e2e/github-artifacts-risk-report.sh
+scripts/e2e/github-checkpoints-catalog-report.sh
 scripts/e2e/github-checkpoints-risk-report.sh
 scripts/e2e/github-context-risk-report.sh
 scripts/e2e/github-prompt-pack-report.sh

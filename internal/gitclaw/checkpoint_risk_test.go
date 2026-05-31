@@ -194,6 +194,66 @@ func TestHandleCheckpointRiskCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 }
 
+func TestHandleCheckpointCatalogCommandPostsReportWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	initCheckpointRiskRepo(t, root)
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 134,
+			"title": "@gitclaw /rollback catalog",
+			"body": "Hidden checkpoint catalog handler token: CHECKPOINT_CATALOG_HANDLER_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{134: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic checkpoint catalog command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{
+		"GitClaw Checkpoints Catalog Report",
+		"Generated without a model call",
+		"model=\"gitclaw/checkpoints\"",
+		"requested_checkpoints_command: `catalog`",
+		"checkpoint_catalog_status: `ok`",
+		"catalog_entries: `8`",
+		"checkpoint_layers: `7`",
+		"command=`rollback-catalog` issue_intent=`@gitclaw /rollback catalog`",
+		"layer=`git-history` store=`repository .git metadata`",
+		"restore_gate=`disabled-inspect-only-v1`",
+		"llm_e2e_required_after_checkpoint_catalog_change: `true`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("checkpoint catalog handler report missing %q:\n%s", want, body)
+		}
+	}
+	for _, notWant := range []string{"CHECKPOINT_CATALOG_HANDLER_BODY_SECRET", "CHECKPOINT_COMMIT_SECRET", "CHECKPOINT_FILE_SECRET"} {
+		if strings.Contains(body, notWant) {
+			t.Fatalf("checkpoint catalog handler report leaked %q:\n%s", notWant, body)
+		}
+	}
+	if !hasLabel(github.IssueLabels[134], "gitclaw:done") || hasLabel(github.IssueLabels[134], "gitclaw:running") || hasLabel(github.IssueLabels[134], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[134])
+	}
+}
+
 func initCheckpointRiskRepo(t *testing.T, root string) {
 	t.Helper()
 	runCheckpointTestGit(t, root, "init")

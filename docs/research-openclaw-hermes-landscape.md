@@ -2785,6 +2785,22 @@ leakage, and missing rollback safety gates while reporting only metadata,
 counts, commit hashes, risk codes, and severities. Acceptance requires
 deterministic body-free coverage plus a live GitHub Models follow-up E2E.
 
+2026-06-01 checkpoint-catalog follow-up: Hermes' current checkpoint docs make
+rollback inspectability a first-class command surface (`/rollback`,
+`/rollback diff`, `hermes checkpoints status/list/prune/clear`) and emphasize
+the shadow git store, per-project refs, preview-before-restore, worktree
+isolation, and no-op behavior when checkpoints are disabled. OpenClaw's backup
+docs similarly require explicit manifests and verification before restore-like
+recovery. GitClaw should add a compact body-free catalog before any restore
+mode exists: `@gitclaw /checkpoints catalog`, `@gitclaw /rollback catalog`,
+`gitclaw checkpoints catalog`, and `gitclaw rollback catalog` should enumerate
+checkpoint and rollback commands, git-history metadata, worktree counts,
+backup-branch evidence, recent-commit hash metadata, future restore-preview
+requirements, and disabled reset/clean/checkout gates. It must never print
+diffs, file bodies, commit subjects, issue/comment/prompt/tool bodies, shadow
+store paths, credentials, or secrets. Acceptance requires a live deterministic
+catalog issue plus a real GitHub Models follow-up using repo-reader search.
+
 2026-05-30 approval-readiness follow-up: OpenClaw's exec approvals treat command
 execution as a policy decision layered with user approval, while Hermes frames
 dangerous commands as an explicit authorization boundary. GitClaw should expose
