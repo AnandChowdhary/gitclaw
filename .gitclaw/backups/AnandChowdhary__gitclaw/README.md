@@ -1,6 +1,6 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-05-31T09:27:10Z`
+- generated_at: `2026-05-31T09:28:32Z`
 - issue_count: `335`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
@@ -339,4 +339,4 @@
 | #369 | @gitclaw model cost e2e 20260531T090026Z | `2026-05-31T09:04:12Z` | 6 | 7 | `issues/000369.json` |
 | #370 | @gitclaw model cost e2e 20260531T090452Z | `2026-05-31T09:08:52Z` | 5 | 6 | `issues/000370.json` |
 | #371 | @gitclaw /tools approval-plan e2e 20260531T092226Z | `2026-05-31T09:23:36Z` | 1 | 2 | `issues/000371.json` |
-| #372 | @gitclaw /tools approval-plan e2e 20260531T092557Z | `2026-05-31T09:27:09Z` | 1 | 2 | `issues/000372.json` |
+| #372 | @gitclaw /tools approval-plan e2e 20260531T092557Z | `2026-05-31T09:28:32Z` | 3 | 4 | `issues/000372.json` |

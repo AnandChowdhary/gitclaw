@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T09:27:10Z",
+  "generated_at": "2026-05-31T09:28:32Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 335,
   "issues": [
@@ -4143,13 +4143,14 @@
       "number": 372,
       "title": "@gitclaw /tools approval-plan e2e 20260531T092557Z",
       "path": "issues/000372.json",
-      "backup_generated_at": "2026-05-31T09:27:09Z",
-      "event_name": "issues",
+      "backup_generated_at": "2026-05-31T09:28:32Z",
+      "event_name": "issue_comment",
       "labels": [
-        "gitclaw"
+        "gitclaw",
+        "gitclaw:done"
       ],
-      "comment_count": 1,
-      "transcript_messages": 2
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
