@@ -876,6 +876,11 @@ watchers, and reports to initiate their own visible issue threads.
 Because proactive runs are easy to fake with prompt echoing, live proactive
 E2E should also prove repo-reader search, selected-skill metadata,
 prompt-visible tool names, model provenance, and usage telemetry.
+2026-05-31 proactive runtime E2E follow-up: the base proactive harness should
+continue the created issue after duplicate-slot idempotency with a normal
+`@gitclaw` comment. The follow-up must use a distinct repository-search
+fixture so it proves the proactive issue can become an ordinary conversation,
+not merely that the initial scheduled prompt produced one model answer.
 
 2026-05-30 standing-orders follow-up: OpenClaw distinguishes standing orders
 from cron, heartbeat, hooks, and task flow: they are durable authority programs

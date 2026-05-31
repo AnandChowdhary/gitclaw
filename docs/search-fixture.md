@@ -73,6 +73,7 @@ channel gateway followup unique search fixture phrase => GITCLAW_CHANNEL_GATEWAY
 channel delivery unique search fixture phrase => GITCLAW_CHANNEL_DELIVERY_CONTEXT_V1
 channel delivery followup unique search fixture phrase => GITCLAW_CHANNEL_DELIVERY_FOLLOWUP_CONTEXT_V1
 proactive run unique search fixture phrase => GITCLAW_PROACTIVE_RUN_CONTEXT_V1
+proactive run followup unique search fixture phrase => GITCLAW_PROACTIVE_RUN_FOLLOWUP_CONTEXT_V1
 backup export jsonl unique search fixture phrase => GITCLAW_BACKUP_EXPORT_JSONL_CONTEXT_V1
 backup search unique search fixture phrase => GITCLAW_BACKUP_SEARCH_CONTEXT_V1
 backup info unique search fixture phrase => GITCLAW_BACKUP_INFO_CONTEXT_V1

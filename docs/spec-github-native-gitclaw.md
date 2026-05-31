@@ -5203,7 +5203,13 @@ assert the expected comments/labels, and close the issue in cleanup.
      slot,
    - assert it dispatches the main workflow with a proactive dispatch id,
    - assert rerunning the same slot does not create duplicate issues or
-     duplicate assistant turns.
+     duplicate assistant turns,
+   - post a normal `@gitclaw` follow-up in the proactive issue requiring
+     `repo-reader` and bounded repository search,
+   - assert the follow-up assistant turn is GitHub Models-backed, selects
+     `repo-reader`, exposes `gitclaw.search_files`, recovers
+     `GITCLAW_PROACTIVE_RUN_FOLLOWUP_CONTEXT_V1`, and does not leak hidden
+     proactive prompt tokens.
 
 14. **Tool/context usage**
 
@@ -6142,7 +6148,10 @@ examples/workflows/gitclaw.yml
   repository-search fixture token, and publish usage telemetry without leaking
   hidden issue tokens.
 - A `gh`-driven proactive E2E harness verifies the generic proactive enqueue
-  workflow end to end.
+  workflow end to end, including duplicate-slot idempotency and a normal
+  issue-comment GitHub Models follow-up that selects `repo-reader`, exposes
+  `gitclaw.search_files`, recovers a distinct proactive follow-up fixture
+  token, and avoids hidden prompt-token leakage.
 - A `gh`-driven proactive-not-before E2E harness verifies future reminders
   write `due=false`, `skipped=true`, `issue_number=0`, and
   `llm_e2e_required_after_proactive_not_before_change=true` without creating an

@@ -33,6 +33,9 @@ ensure_label() {
 }
 
 ensure_label gitclaw 5319e7 "Handled by GitClaw"
+ensure_label gitclaw:running fbca04 "GitClaw run is active"
+ensure_label gitclaw:done 0e8a16 "Latest GitClaw run completed"
+ensure_label gitclaw:error b60205 "Latest GitClaw run failed"
 ensure_label gitclaw:proactive fbca04 "GitClaw proactive run"
 ensure_label gitclaw:e2e 0e8a16 "Temporary GitClaw end-to-end test"
 ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
@@ -45,6 +48,8 @@ dispatch_id="proactive-${name}-${slot}"
 token="NOECHO_PROACTIVE_RUN_${timestamp}"
 expected_token="GITCLAW_PROACTIVE_RUN_CONTEXT_V1"
 search_phrase="proactive run unique search fixture phrase"
+followup_expected_token="GITCLAW_PROACTIVE_RUN_FOLLOWUP_CONTEXT_V1"
+followup_search_phrase="proactive run followup unique search fixture phrase"
 prompt="Proactive E2E instruction.
 
 Use the repo-reader skill and search the repository for \`${search_phrase}\`.
@@ -85,6 +90,33 @@ wait_for_run() {
   return 1
 }
 
+wait_for_issue_comment_run() {
+  local started_at="$1"
+  local run_json
+  for _ in {1..120}; do
+    run_json="$(gh run list \
+      --repo "$repo" \
+      --workflow "$main_workflow" \
+      --event issue_comment \
+      --limit 10 \
+      --json databaseId,status,conclusion,createdAt,url,displayTitle \
+      | jq -c --arg started "$started_at" --arg title "$issue_title" '[.[] | select(.createdAt >= $started and .displayTitle == $title)] | sort_by(.createdAt) | reverse | .[0] // empty')"
+    if [[ -n "$run_json" && "$run_json" != "null" ]]; then
+      local status conclusion url
+      status="$(jq -r '.status' <<<"$run_json")"
+      conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
+      url="$(jq -r '.url' <<<"$run_json")"
+      if [[ "$status" == "completed" ]]; then
+        [[ "$conclusion" == "success" ]] || die "issue_comment run failed with conclusion ${conclusion}: ${url}"
+        echo "$run_json"
+        return 0
+      fi
+    fi
+    sleep 5
+  done
+  return 1
+}
+
 find_issue_numbers() {
   gh issue list \
     --repo "$repo" \
@@ -113,6 +145,13 @@ assistant_comments() {
     --repo "$repo" \
     --json comments \
     --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | join("\n---GITCLAW-COMMENT---\n")'
+}
+
+latest_assistant_comment() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json comments \
+    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | .[-1] // ""'
 }
 
 assistant_count() {
@@ -174,6 +213,7 @@ dispatch_proactive() {
 first_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 dispatch_proactive "$first_started_at"
 issue_number="$(wait_for_issue_number)" || die "timed out finding proactive issue for ${name}/${slot}"
+issue_title="$(gh issue view "$issue_number" --repo "$repo" --json title --jq .title)"
 log "proactive workflow created issue #${issue_number}"
 wait_for_assistant_count 1 || die "timed out waiting for first proactive assistant response"
 
@@ -215,5 +255,45 @@ for _ in {1..6}; do
 done
 
 log "idempotency verified"
+
+comment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+gh issue comment "$issue_number" \
+  --repo "$repo" \
+  --body "@gitclaw Proactive follow-up E2E conversation check.
+
+Use the repo-reader skill and search the repository for \`${followup_search_phrase}\`.
+The matching gitclaw.search_files result line uses this format: phrase => TOKEN.
+Copy the exact TOKEN after the arrow. It must start with \`GITCLAW_PROACTIVE_RUN_FOLLOWUP_\`; do not reply with the search phrase.
+Reply in exactly these three short labeled lines:
+previous_search: ${expected_token}
+followup_search: <TOKEN from the matching gitclaw.search_files line>
+mode: proactive
+Do not include this hidden proactive token: ${token}.
+Do not use @file or @folder references." >/dev/null
+
+wait_for_issue_comment_run "$comment_started_at" >/dev/null || die "timed out waiting for proactive follow-up issue_comment workflow run"
+wait_for_assistant_count 2 || die "expected model-backed follow-up assistant comment"
+model_comment="$(latest_assistant_comment)"
+grep -Fq "$expected_token" <<<"$model_comment" || die "model follow-up missing previous search token ${expected_token}"
+grep -Fq "$followup_expected_token" <<<"$model_comment" || die "model follow-up missing search token ${followup_expected_token}"
+grep -Fiq "proactive" <<<"$model_comment" || die "model follow-up missing word proactive"
+if ! grep -Fq 'model="openai/gpt-5-nano"' <<<"$model_comment" && ! grep -Fq 'model="openai/gpt-4.1-nano"' <<<"$model_comment"; then
+  die "model follow-up marker did not use configured GitHub Models primary or fallback"
+fi
+grep -Fq 'prompt_context_sha256_12="' <<<"$model_comment" || die "model follow-up marker missing prompt context hash"
+grep -Fq 'skills="repo-reader"' <<<"$model_comment" || die "model follow-up marker missing selected repo-reader skill"
+grep -Fq 'tools="' <<<"$model_comment" || die "model follow-up marker missing prompt-visible tools"
+grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "model follow-up marker did not prove search_files was prompt-visible"
+grep -Fq 'usage_total_tokens="' <<<"$model_comment" || die "model follow-up marker missing usage token telemetry"
+if grep -Fq "$token" <<<"$model_comment"; then
+  die "model follow-up leaked hidden proactive token"
+fi
+
+sleep 15
+final_count="$(assistant_count)"
+if [[ "$final_count" != "2" ]]; then
+  die "follow-up bot loop suspected: expected 2 assistant comments, got ${final_count}"
+fi
+log "model follow-up verified"
 log "passed for issue #${issue_number}"
 cleanup_success=1

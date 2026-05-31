@@ -437,6 +437,10 @@ inference, prompt context, selected skills, and prompt-visible tools. When a
 model E2E asks for a repository-search fixture token, hidden issue/comment
 sentinels must use a distinct prefix so the assertion proves tool-output
 grounding rather than transcript echoing.
+The base proactive harness now verifies the whole proactive lifecycle: generic
+workflow dispatch creates or reuses a visible issue, duplicate slots stay
+idempotent, and the same issue then continues with a normal GitHub Models
+repo-reader/search follow-up.
 The heartbeat-report harness now checks the body-free scheduled heartbeat
 inventory and then posts a normal GitHub Models repo-reader/search follow-up,
 so `/heartbeat` changes prove both operator visibility and regular

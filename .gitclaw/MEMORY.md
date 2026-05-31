@@ -30,6 +30,8 @@
   gates and provider/input readiness, plus a normal model/tool follow-up.
 - Proactive jobs are reviewed prompt/workflow files plus visible issue runs;
   info/risk surfaces stay body-free and prove changes with live model/tool E2E.
+- Proactive runtime changes need a real enqueue, duplicate-slot idempotency,
+  and a normal issue-comment model/tool follow-up on the created issue.
 - Proactive report/list changes need two proofs: body-free scheduled workflow
   and prompt inventory, plus a normal GitHub Models issue-comment follow-up
   that selects `repo-reader`, exposes `gitclaw.search_files`, and recovers a
