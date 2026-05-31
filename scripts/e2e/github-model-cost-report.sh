@@ -222,7 +222,7 @@ for expected in \
   "Generated without a model call" \
   'repository: `'"$repo"'`' \
   'issue: `#'"$issue_number"'`' \
-  'event_kind: `issue_comment_created`' \
+  'event_kind: `issue_comment`' \
   'event_name: `issue_comment`' \
   'model_cost_status: `warn`' \
   'verification_scope: `github_models_direct_cost_catalog`' \
