@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T00:20:00Z",
+  "generated_at": "2026-05-31T00:21:19Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 333,
     "title": "@gitclaw session stats e2e 20260531T001851Z",
@@ -10,7 +10,8 @@
     "author": "AnandChowdhary",
     "author_association": "OWNER",
     "labels": [
-      "gitclaw"
+      "gitclaw",
+      "gitclaw:done"
     ]
   },
   "transcript": [
@@ -31,6 +32,24 @@
       "CommentID": 4585243656,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /session stats\n\nPlease summarize assistant-turn session stats.\nHidden comment token: GITCLAW_SESSION_STATS_COMMENT_20260531T001851Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4585244810,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Session Stats Report\n\nGenerated without a model call.\n\n- scope: `issue-thread`\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#333`\n- event_kind: `issue_comment`\n- session_stats_status: `ok`\n- raw_comments: `2`\n- transcript_messages: `3`\n- user_messages: `2`\n- assistant_messages: `1`\n- trusted_messages: `3`\n- untrusted_messages: `0`\n- edited_messages: `0`\n- transcript_body_bytes: `548`\n- transcript_body_lines: `13`\n- assistant_turn_comments: `1`\n- assistant_turns_with_prompt_provenance: `1`\n- assistant_turns_missing_prompt_provenance: `0`\n- unique_prompt_context_hashes: `1`\n- model_backed_assistant_turns: `1`\n- deterministic_assistant_turns: `0`\n- model_names: `openai/gpt-4.1-nano`\n- prompt_visible_skill_count: `1`\n- prompt_visible_tool_count: `3`\n- prompt_visible_skill_names: `repo-reader`\n- prompt_visible_tool_names: `gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files`\n- heartbeat_comments: `0`\n- error_marker_comments: `0`\n- channel_message_comments: `0`\n- channel_thread_issue: `false`\n- proactive_run_issue: `false`\n- raw_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n\nThis report is a compact, body-free session summary. It reports counts, model names, prompt-visible skill/tool names, and provenance totals only; issue bodies, comment bodies, assistant replies, prompts, search queries, and tool outputs are not included.\n\n### Stats Cards\n- kind=`transcript-shape` transcript_messages=`3` user_messages=`2` assistant_messages=`1` trusted_messages=`3` untrusted_messages=`0` edited_messages=`0` body_bytes=`548` body_lines=`13`\n- kind=`assistant-provenance` assistant_turn_comments=`1` with_prompt_provenance=`1` missing_prompt_provenance=`0` unique_prompt_context_hashes=`1` model_backed_turns=`1` deterministic_turns=`0` model_names=`openai/gpt-4.1-nano`\n- kind=`prompt-surface` prompt_visible_skill_count=`1` prompt_visible_tool_count=`3` prompt_visible_skill_names=`repo-reader` prompt_visible_tool_names=`gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files`\n- kind=`session-markers` heartbeat_comments=`0` error_marker_comments=`0` channel_message_comments=`0` channel_thread_issue=`false` proactive_run_issue=`false`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4585246387,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -41,6 +60,22 @@
       "author_association": "NONE",
       "created_at": "2026-05-31T00:19:35Z",
       "updated_at": "2026-05-31T00:19:35Z"
+    },
+    {
+      "id": 4585244810,
+      "body": "@gitclaw /session stats\n\nPlease summarize assistant-turn session stats.\nHidden comment token: GITCLAW_SESSION_STATS_COMMENT_20260531T001851Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-05-31T00:20:11Z",
+      "updated_at": "2026-05-31T00:20:11Z"
+    },
+    {
+      "id": 4585246387,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26698762912\" event_id=\"comment-4585244810\" model=\"gitclaw/session\" idempotency_key=\"c8f87fb64bccfbaa8ae4a69e068c0022\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26698762912\" --\u003e\n## GitClaw Session Stats Report\n\nGenerated without a model call.\n\n- scope: `issue-thread`\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#333`\n- event_kind: `issue_comment`\n- session_stats_status: `ok`\n- raw_comments: `2`\n- transcript_messages: `3`\n- user_messages: `2`\n- assistant_messages: `1`\n- trusted_messages: `3`\n- untrusted_messages: `0`\n- edited_messages: `0`\n- transcript_body_bytes: `548`\n- transcript_body_lines: `13`\n- assistant_turn_comments: `1`\n- assistant_turns_with_prompt_provenance: `1`\n- assistant_turns_missing_prompt_provenance: `0`\n- unique_prompt_context_hashes: `1`\n- model_backed_assistant_turns: `1`\n- deterministic_assistant_turns: `0`\n- model_names: `openai/gpt-4.1-nano`\n- prompt_visible_skill_count: `1`\n- prompt_visible_tool_count: `3`\n- prompt_visible_skill_names: `repo-reader`\n- prompt_visible_tool_names: `gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files`\n- heartbeat_comments: `0`\n- error_marker_comments: `0`\n- channel_message_comments: `0`\n- channel_thread_issue: `false`\n- proactive_run_issue: `false`\n- raw_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n\nThis report is a compact, body-free session summary. It reports counts, model names, prompt-visible skill/tool names, and provenance totals only; issue bodies, comment bodies, assistant replies, prompts, search queries, and tool outputs are not included.\n\n### Stats Cards\n- kind=`transcript-shape` transcript_messages=`3` user_messages=`2` assistant_messages=`1` trusted_messages=`3` untrusted_messages=`0` edited_messages=`0` body_bytes=`548` body_lines=`13`\n- kind=`assistant-provenance` assistant_turn_comments=`1` with_prompt_provenance=`1` missing_prompt_provenance=`0` unique_prompt_context_hashes=`1` model_backed_turns=`1` deterministic_turns=`0` model_names=`openai/gpt-4.1-nano`\n- kind=`prompt-surface` prompt_visible_skill_count=`1` prompt_visible_tool_count=`3` prompt_visible_skill_names=`repo-reader` prompt_visible_tool_names=`gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files`\n- kind=`session-markers` heartbeat_comments=`0` error_marker_comments=`0` channel_message_comments=`0` channel_thread_issue=`false` proactive_run_issue=`false`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T00:20:59Z",
+      "updated_at": "2026-05-31T00:20:59Z"
     }
   ]
 }
