@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T16:59:47Z",
+  "generated_at": "2026-05-31T17:01:09Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 389,
   "issues": [
@@ -4855,13 +4855,14 @@
       "number": 429,
       "title": "@gitclaw /skills select-plan repo-reader e2e 20260531T165835Z",
       "path": "issues/000429.json",
-      "backup_generated_at": "2026-05-31T16:59:46Z",
-      "event_name": "issues",
+      "backup_generated_at": "2026-05-31T17:01:08Z",
+      "event_name": "issue_comment",
       "labels": [
-        "gitclaw"
+        "gitclaw",
+        "gitclaw:done"
       ],
-      "comment_count": 1,
-      "transcript_messages": 2
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
