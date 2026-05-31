@@ -3126,6 +3126,7 @@ surface:
 ```text
 @gitclaw /hooks
 @gitclaw /hooks risk
+@gitclaw /hooks provenance
 @gitclaw /hook
 ```
 
@@ -3164,12 +3165,31 @@ payloads, credentials, and secret values are not included. Changes to this risk
 surface must include a live GitHub Models follow-up E2E so deterministic
 coverage does not accidentally replace actual inference coverage.
 
+The provenance form:
+
+```text
+@gitclaw /hooks provenance
+@gitclaw /hooks history
+@gitclaw /hooks timeline
+```
+
+posts a `GitClaw Hook Provenance Report` without model inference. It maps
+`.gitclaw/HOOKS.md`, `.gitclaw/hooks/*.md`, and ignored executable-looking
+handler files to git history. The report shows hook status, risk status,
+approval/audit-only metadata, tracked/dirty state, last commit IDs/dates, and
+commit-subject hashes only. It never prints raw hook policy bodies, hook spec
+bodies, handler bodies, issue bodies, comments, prompts, git subjects, author
+identities, provider payloads, or secret values. This mirrors OpenClaw's
+file-based hook discovery while preserving GitClaw's reviewed-repo and
+hash-only provenance boundary.
+
 Local operators can inspect the same surface with:
 
 ```bash
 gitclaw hooks list
 gitclaw hooks risk
 gitclaw hooks verify
+gitclaw hooks provenance
 ```
 
 ### Plugins Command
@@ -5666,6 +5686,13 @@ examples/workflows/gitclaw.yml
   local `gitclaw hooks risk` expose body-free hook risk metadata, then runs a
   real GitHub Models follow-up conversation that proves model inference,
   prompt provenance, selected skills, and prompt-visible tool usage.
+- A `gh`-driven hooks-provenance E2E harness verifies
+  `@gitclaw /hooks provenance` and local `gitclaw hooks provenance` expose
+  body-free hook git history, hook/risk status, approval/audit-only metadata,
+  commit-subject hashes, execution/mutation gates, and no hook/handler/issue
+  body leakage. It then posts a normal follow-up comment that requires
+  repo-reader search so GitHub Models performs a real LLM call with prompt
+  context, selected skill, and prompt-visible tool provenance.
 - A `gh`-driven plugins-report E2E harness verifies `@gitclaw /plugins`
   reports plugin policy metadata, model-context loading, declarative plugin
   spec metadata, metadata-only activation, approval gates, ignored package or

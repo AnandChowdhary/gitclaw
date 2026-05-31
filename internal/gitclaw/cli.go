@@ -393,8 +393,10 @@ func runHooksCommand(args []string) error {
 		return runHooksListCommand(args[1:])
 	case "risk", "risk-audit":
 		return runHooksRiskCommand(args[1:])
+	case "provenance", "history", "timeline":
+		return runHooksProvenanceCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw hooks [list|risk|verify]")
+		return fmt.Errorf("usage: gitclaw hooks [list|risk|verify|provenance]")
 	}
 }
 
@@ -419,6 +421,18 @@ func runHooksRiskCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderHookRiskCLIReport(cfg))
+	return nil
+}
+
+func runHooksProvenanceCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown hooks provenance argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderHookProvenanceCLIReport(cfg))
 	return nil
 }
 

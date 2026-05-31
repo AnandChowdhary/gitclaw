@@ -204,6 +204,7 @@ gitclaw diffs verify
 gitclaw agents risk
 gitclaw nodes risk
 gitclaw hooks risk
+gitclaw hooks provenance
 gitclaw plugins risk
 gitclaw plugins mcp
 gitclaw plugins mcp risk
@@ -251,6 +252,7 @@ scripts/e2e/github-prompt-risk-report.sh
 scripts/e2e/github-diffs-risk-report.sh
 scripts/e2e/github-heartbeat-risk-report.sh
 scripts/e2e/github-hooks-risk-report.sh
+scripts/e2e/github-hooks-provenance-report.sh
 scripts/e2e/github-memory-timeline-report.sh
 scripts/e2e/github-memory-risk-report.sh
 scripts/e2e/github-migration-risk-report.sh

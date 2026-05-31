@@ -98,6 +98,16 @@ third-party skills. GitClaw's repo-native cut should therefore expose a skill
 index in prompt context and load full local skill bodies only when the issue
 thread selects them or the skill is marked always-on.
 
+2026-05-31 hook-provenance follow-up: OpenClaw splits internal hooks, typed
+plugin hooks, and diagnostic events, and its hook CLI can list and inspect
+file-based hook surfaces. Hermes has lifecycle hooks around tool calls, LLM
+calls, session start/end, and gateway dispatch, with shell-hook consent as an
+explicit review boundary. For GitClaw, the useful v1 slice is not executable
+hooks; it is a body-free git provenance report for reviewed hook policy/spec
+files. The agent should expose hashes, tracked state, approval/audit-only
+metadata, and risk codes, while keeping hook bodies, handler bodies, commit
+subjects, and author identities out of issue-visible output.
+
 2026-05-30 skill-risk follow-up: current OpenClaw plugin-hook docs make prompt,
 model, tool-call, and heartbeat extension points explicit, while Hermes'
 toolsets and MCP docs emphasize filtering exposed capabilities per task. Recent

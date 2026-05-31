@@ -11,3 +11,5 @@ task ledger unique search fixture phrase => GITCLAW_TASKS_LEDGER_CONTEXT_V1
 skill runtime unique search fixture phrase => GITCLAW_SKILL_RUNTIME_CONTEXT_V1
 
 bundle provenance unique search fixture phrase => GITCLAW_BUNDLE_PROVENANCE_CONTEXT_V1
+
+hook provenance unique search fixture phrase => GITCLAW_HOOK_PROVENANCE_CONTEXT_V1
