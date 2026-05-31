@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T07:14:20Z",
+  "generated_at": "2026-05-31T07:15:39Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 325,
   "issues": [
@@ -4014,13 +4014,14 @@
       "number": 362,
       "title": "@gitclaw /plugins mcp provenance e2e 20260531T071314Z",
       "path": "issues/000362.json",
-      "backup_generated_at": "2026-05-31T07:14:19Z",
-      "event_name": "issues",
+      "backup_generated_at": "2026-05-31T07:15:39Z",
+      "event_name": "issue_comment",
       "labels": [
-        "gitclaw"
+        "gitclaw",
+        "gitclaw:done"
       ],
-      "comment_count": 1,
-      "transcript_messages": 2
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
