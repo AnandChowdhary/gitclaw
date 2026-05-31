@@ -1322,25 +1322,55 @@ func uniqueSortedStrings(values []string) []string {
 }
 
 func searchQueriesFromTranscript(transcript []TranscriptMessage) []string {
-	text := transcriptText(transcript)
-	queries := uniqueStrings(append(delimitedSearchQueries(text), commandSearchQueries(text)...))
-	for _, match := range searchIdentifierPattern.FindAllString(text, -1) {
+	var explicit []string
+	var identifiers []string
+	for i := len(transcript) - 1; i >= 0; i-- {
+		msg := transcript[i]
+		if msg.Role != "user" {
+			continue
+		}
+		explicit = appendSearchQueries(explicit, append(delimitedSearchQueries(msg.Body), commandSearchQueries(msg.Body)...), maxSearchQueries)
+		if len(explicit) >= maxSearchQueries {
+			continue
+		}
+		for _, match := range searchIdentifierPattern.FindAllString(msg.Body, -1) {
+			if len(identifiers) >= maxSearchQueries {
+				break
+			}
+			query := sanitizeSearchQuery(match)
+			if query == "" || looksLikeRepoPath(query) || !looksLikeSearchIdentifier(query) || containsStringFold(explicit, query) || containsStringFold(identifiers, query) {
+				continue
+			}
+			if isStopWord(strings.ToLower(query)) {
+				continue
+			}
+			identifiers = append(identifiers, query)
+		}
+	}
+	queries := append([]string{}, explicit...)
+	for _, query := range identifiers {
 		if len(queries) >= maxSearchQueries {
 			break
 		}
-		query := sanitizeSearchQuery(match)
-		if query == "" || looksLikeRepoPath(query) || !looksLikeSearchIdentifier(query) || containsStringFold(queries, query) {
-			continue
+		if !containsStringFold(queries, query) {
+			queries = append(queries, query)
 		}
-		if isStopWord(strings.ToLower(query)) {
-			continue
-		}
-		queries = append(queries, query)
-	}
-	if len(queries) > maxSearchQueries {
-		return queries[:maxSearchQueries]
 	}
 	return queries
+}
+
+func appendSearchQueries(existing []string, candidates []string, limit int) []string {
+	for _, candidate := range candidates {
+		if len(existing) >= limit {
+			break
+		}
+		query := sanitizeSearchQuery(candidate)
+		if query == "" || containsStringFold(existing, query) {
+			continue
+		}
+		existing = append(existing, query)
+	}
+	return existing
 }
 
 func delimitedSearchQueries(text string) []string {
@@ -1369,7 +1399,7 @@ func delimitedSearchQueries(text string) []string {
 
 func commandSearchQueries(text string) []string {
 	lower := strings.ToLower(text)
-	triggers := []string{"search for ", "search repository for ", "find "}
+	triggers := []string{"search for ", "search repository for ", "search the repository for ", "search this repository for ", "find "}
 	var queries []string
 	for _, trigger := range triggers {
 		start := 0

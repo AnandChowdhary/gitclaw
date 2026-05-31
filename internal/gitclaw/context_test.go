@@ -518,6 +518,44 @@ func TestSearchQueriesPreferExplicitPhrasesAndIdentifiers(t *testing.T) {
 	}
 }
 
+func TestSearchQueriesPreferNewestUserTurn(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, "docs/search-fixture.md", strings.Join([]string{
+		"skill runtime unique search fixture phrase => GITCLAW_SKILL_RUNTIME_CONTEXT_V1",
+		"gclaw-selectplan-e2e-needle => GITCLAW_SKILLS_SELECT_PLAN_CONTEXT_V1",
+	}, "\n")+"\n")
+
+	ctx, err := LoadRepoContext(root, []TranscriptMessage{
+		{
+			Role: "user",
+			Body: strings.Join([]string{
+				"Older issue text mentions `one old phrase`.",
+				"Also `two old phrase`.",
+				"Also `three old phrase`.",
+				"Also `four old phrase`.",
+				"Also `skill runtime unique search fixture phrase`.",
+			}, "\n"),
+		},
+		{
+			Role: "user",
+			Body: "Use the repo-reader skill and search the repository for `gclaw-selectplan-e2e-needle`.",
+		},
+	})
+	if err != nil {
+		t.Fatalf("LoadRepoContext returned error: %v", err)
+	}
+	searchOutput := toolOutputByName(ctx.ToolOutputs, "gitclaw.search_files")
+	if searchOutput == nil || !strings.HasPrefix(searchOutput.Input, "gclaw-selectplan-e2e-needle") || !strings.Contains(searchOutput.Output, "GITCLAW_SKILLS_SELECT_PLAN_CONTEXT_V1") {
+		t.Fatalf("search_files should prioritize the newest explicit search request: %#v", ctx.ToolOutputs)
+	}
+	if hasToolOutput(ctx.ToolOutputs, "gitclaw.search_files", "skill runtime unique search fixture phrase", "GITCLAW_SKILL_RUNTIME_CONTEXT_V1") {
+		t.Fatalf("older explicit search request should not crowd the newest request into an ambiguous output: %#v", ctx.ToolOutputs)
+	}
+	if hasToolOutput(ctx.ToolOutputs, "gitclaw.read_file", "docs/search-fixture.md", "GITCLAW_SKILL_RUNTIME_CONTEXT_V1") {
+		t.Fatalf("search fixture should not be exposed through read_file when the prompt only asks for repository search: %#v", ctx.ToolOutputs)
+	}
+}
+
 func TestSearchRepoFilesDoesNotLetBroadQueryStarveLaterExplicitQuery(t *testing.T) {
 	root := t.TempDir()
 	var files []string
@@ -640,6 +678,15 @@ func hasToolOutputBody(outputs []ToolOutput, name, bodyPart string) bool {
 		}
 	}
 	return false
+}
+
+func toolOutputByName(outputs []ToolOutput, name string) *ToolOutput {
+	for i := range outputs {
+		if outputs[i].Name == name {
+			return &outputs[i]
+		}
+	}
+	return nil
 }
 
 func contextDocPaths(docs []ContextDocument) string {

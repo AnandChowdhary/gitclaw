@@ -114,7 +114,9 @@
 - Tools verify changes need two proofs: body-free trust envelope and
   input/output hashes, plus a normal model/tool follow-up.
 - Skills select-plan changes need two proofs: body-free selection/gate
-  metadata, plus a normal model/tool follow-up.
+  metadata, plus a normal model/tool follow-up. Search proofs should use a
+  distinct needle, avoid fixture-file reads, and prioritize the newest user
+  turn.
 - Soul, memory, and profile files are high-authority git-reviewed context:
   edit/promote plans are dry-run, body-free, and review-first; planner changes
   need live model/tool E2E, and validation must stay prompt-fit and green.

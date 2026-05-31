@@ -1932,7 +1932,10 @@ loads. GitClaw's skill selection plan should therefore prove both halves after
 changes: the deterministic report remains metadata/hash-only and body-free,
 and a normal GitHub Models follow-up still selects `repo-reader`, exposes
 `gitclaw.search_files`, and recovers a fixture token through actual
-prompt-visible tool output.
+prompt-visible tool output. The live failure mode to guard against is fixture
+ambiguity: do not mention the fixture file path in the model prompt, use a
+high-entropy search needle, and prioritize the newest user turn when extracting
+bounded search queries.
 
 2026-05-31 skill-refresh-plan follow-up: OpenClaw's skill surface is built for
 a resident gateway that can maintain skill snapshots and refresh through local

@@ -1595,7 +1595,9 @@ It also includes `llm_e2e_required_after_skill_select_plan_change=true`;
 changes to the selection planner must be paired with a live follow-up that
 selects `repo-reader`, exposes `gitclaw.search_files`, and recovers a bounded
 repository-search fixture token without echoing skill-body, request-text, or
-issue-body sentinels.
+issue-body sentinels. Search extraction must prioritize the newest user turn
+so an earlier report command cannot crowd the current search request out of the
+bounded `gitclaw.search_files` output.
 
 When called as `@gitclaw /skills refresh-plan` or
 `gitclaw skills refresh-plan`, GitClaw posts a body-free refresh-boundary
@@ -6528,7 +6530,8 @@ examples/workflows/gitclaw.yml
   The same live issue then receives a normal issue-comment follow-up that must
   make a GitHub Models call, select `repo-reader`, expose
   `gitclaw.search_files`, recover the skills-select-plan repository-search
-  fixture token, and avoid hidden sentinel leakage.
+  fixture token from a distinct high-entropy needle, avoid explicit
+  fixture-file reads, and avoid hidden sentinel leakage.
 - A `gh`-driven skills-refresh-plan E2E harness verifies
   `@gitclaw /skills refresh-plan` explains per-turn skill discovery,
   current-checkout snapshot metadata, no resident watcher, no mid-run hot

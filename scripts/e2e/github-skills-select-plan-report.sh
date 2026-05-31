@@ -36,7 +36,7 @@ timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
 token="NOECHO_SKILLS_SELECT_PLAN_${timestamp}"
 followup_hidden_token="NOECHO_SKILLS_SELECT_PLAN_FOLLOWUP_${timestamp}"
 expected_token="GITCLAW_SKILLS_SELECT_PLAN_CONTEXT_V1"
-search_phrase="skills select plan unique search fixture phrase"
+search_phrase="gclaw-selectplan-e2e-needle"
 title="@gitclaw /skills select-plan repo-reader e2e ${timestamp}"
 body="Live skills-select-plan E2E.
 
@@ -216,7 +216,7 @@ gh issue comment "$issue_number" \
   --body "@gitclaw Use the repo-reader skill and search the repository for \`${search_phrase}\`.
 
 Search for that exact phrase, not shorter words from it.
-The matching repository search result line in \`docs/search-fixture.md\` has the form \`${search_phrase} => <token>\`.
+The matching repository search result line has the form \`${search_phrase} => <token>\`.
 Reply with only the uppercase fixture token after the arrow from the matching gitclaw.search_files tool output line.
 Do not answer with the skill select-plan nonce, issue title, issue number, skill name, skill path, validation status, or any token from this issue/comments.
 Do not include this hidden follow-up token: ${followup_hidden_token}
@@ -234,6 +234,9 @@ grep -Fq 'prompt_context_sha256_12="' <<<"$model_comment" || die "model follow-u
 grep -Fq 'skills="repo-reader"' <<<"$model_comment" || die "model follow-up marker missing selected repo-reader skill"
 grep -Fq 'tools="' <<<"$model_comment" || die "model follow-up marker missing prompt-visible tools"
 grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "model follow-up marker did not prove search_files was prompt-visible"
+if grep -Fq 'gitclaw.read_file' <<<"$model_comment"; then
+  die "model follow-up should recover the fixture through search_files, not read_file"
+fi
 grep -Fq 'usage_total_tokens="' <<<"$model_comment" || die "model follow-up marker missing usage token telemetry"
 
 for leaked in "$token" "$followup_hidden_token"; do

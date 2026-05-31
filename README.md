@@ -312,7 +312,9 @@ stay body-free, then the model follow-up proves ordinary repo-reader search.
 The live skills-select-plan harness now applies the same two-proof rule to
 skill selection: selected-for-turn and gate metadata stay body-free, then a
 normal GitHub Models repo-reader/search follow-up proves the selected skill
-actually reaches inference.
+actually reaches inference. Its search proof uses a distinct high-entropy
+needle and avoids explicit fixture-file reads, so the answer has to come from
+`gitclaw.search_files`.
 
 ## Testing
 
