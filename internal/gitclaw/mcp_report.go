@@ -101,6 +101,16 @@ func RenderMCPInfoCLIReport(cfg Config, name string) string {
 	return renderMCPInfoReport(Event{}, cfg, name, false)
 }
 
+func isMCPProvenanceRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 3 &&
+		(fields[0] == "/plugins" || fields[0] == "/plugin") &&
+		(strings.EqualFold(fields[1], "mcp") || strings.EqualFold(fields[1], "mcps")) &&
+		(strings.EqualFold(fields[2], "provenance") ||
+			strings.EqualFold(fields[2], "history") ||
+			strings.EqualFold(fields[2], "timeline"))
+}
+
 func renderMCPReport(ev Event, cfg Config, includeIssue bool) string {
 	report := BuildMCPReport(cfg)
 	var b strings.Builder

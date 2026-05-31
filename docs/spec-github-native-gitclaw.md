@@ -3210,6 +3210,7 @@ runtime extension model, and by Hermes' toolset/MCP filtering:
 @gitclaw /plugins risk
 @gitclaw /plugins mcp
 @gitclaw /plugins mcp risk
+@gitclaw /plugins mcp provenance
 @gitclaw /plugins mcp info github-read
 @gitclaw /plugin
 ```
@@ -3244,12 +3245,19 @@ runtime gates. `@gitclaw /plugins mcp risk` and
 launch surfaces, missing tool allowlists, mutating tool refs, env passthrough,
 prompt/resource exposure, prompt-boundary overrides, credential material, host
 execution, repository mutation, remote exfiltration, and unbounded loops.
+`@gitclaw /plugins mcp provenance`, `gitclaw plugins mcp provenance`, and the
+`history`/`timeline` aliases map repo-local MCP spec YAML files to git history
+without exposing their bodies. They report server names, paths, transport,
+activation, tool filters, secret/env ref counts and hashes, launch-surface
+hashes, risk codes, tracked/dirty state, last commit IDs/dates, and
+commit-subject hashes only.
 `@gitclaw /plugins mcp info <name>` and
 `gitclaw plugins mcp info <name>` show one spec. These reports are metadata
 only: they do not launch MCP servers, connect clients, dynamically discover
 tools, expose MCP tools to the model, mutate the repository, or print raw spec
-bodies, command values, URL values, args, env values, issue bodies, comments,
-prompts, provider payloads, credentials, or secret values. The reports include
+bodies, command values, URL values, args, env values, git commit subjects,
+author identities, issue bodies, comments, prompts, provider payloads,
+credentials, or secret values. The reports include
 `llm_e2e_required_after_mcp_change=true`; every MCP metadata change must ship
 with a live GitHub Models follow-up E2E that makes an actual model call.
 
@@ -3280,6 +3288,7 @@ gitclaw plugins risk
 gitclaw plugins verify
 gitclaw plugins mcp
 gitclaw plugins mcp risk
+gitclaw plugins mcp provenance
 gitclaw plugins mcp info <name>
 ```
 
@@ -5717,6 +5726,11 @@ examples/workflows/gitclaw.yml
   body-free MCP spec metadata, no-launch/no-connect runtime gates, tool filters,
   secret-name refs, risk counts, and hashes, then runs a real GitHub Models
   follow-up conversation that proves model inference, prompt provenance,
+  selected skills, and prompt-visible tool usage.
+- A `gh`-driven plugins-MCP-provenance E2E harness verifies
+  `@gitclaw /plugins mcp provenance` maps repo-local MCP specs to body-free git
+  history without launching or connecting MCP servers, then runs a real GitHub
+  Models follow-up conversation that proves model inference, prompt provenance,
   selected skills, and prompt-visible tool usage.
 - A `gh`-driven tasks-report E2E harness verifies `@gitclaw /tasks` reports
   task policy metadata, model-context loading, declarative task/flow spec

@@ -730,6 +730,17 @@ raw command/URL/arg/spec bodies. Acceptance should include the deterministic
 MCP audit plus a real GitHub Models follow-up proving ordinary repo-reader
 tool behavior still works.
 
+2026-05-31 MCP-provenance follow-up: Hermes' MCP docs emphasize reviewed
+catalog entries, per-server filtering, runtime toolsets, dynamic discovery, and
+env filtering, while OpenClaw separates tools, skills, and plugins so runtime
+capabilities remain policy-visible. GitClaw should add
+`@gitclaw /plugins mcp provenance` and `gitclaw plugins mcp provenance` as a
+body-free git-history audit over `.gitclaw/mcp/*.yaml`: tracked/dirty state,
+commit IDs/dates, subject hashes, launch-surface hashes, filter counts, risk
+codes, and no raw commands, args, URLs, env values, credential values, git
+subjects, author identities, server launch, MCP connection, dynamic discovery,
+or model-visible MCP tools.
+
 2026-05-30 task-risk follow-up: OpenClaw Task Flow composes work by creating
 background tasks and advancing the flow as tasks complete, while Hermes Kanban
 uses durable task boards, dispatchers, workers, and a dedicated kanban toolset.

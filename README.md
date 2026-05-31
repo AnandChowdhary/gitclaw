@@ -210,6 +210,7 @@ gitclaw tools toolsets provenance
 gitclaw plugins risk
 gitclaw plugins mcp
 gitclaw plugins mcp risk
+gitclaw plugins mcp provenance
 gitclaw plugins mcp info github-read
 gitclaw tasks risk
 gitclaw tasks ledger --backup <issue.json>
@@ -292,6 +293,7 @@ scripts/e2e/github-channels-risk-report.sh
 scripts/e2e/github-config-risk-report.sh
 scripts/e2e/github-doctor-report.sh
 scripts/e2e/github-doctor-list-report.sh
+scripts/e2e/github-plugins-mcp-provenance-report.sh
 scripts/e2e/github-toolsets-provenance-report.sh
 ```
 

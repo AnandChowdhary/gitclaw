@@ -15,3 +15,5 @@ bundle provenance unique search fixture phrase => GITCLAW_BUNDLE_PROVENANCE_CONT
 hook provenance unique search fixture phrase => GITCLAW_HOOK_PROVENANCE_CONTEXT_V1
 
 toolset provenance unique search fixture phrase => GITCLAW_TOOLSET_PROVENANCE_CONTEXT_V1
+
+mcp provenance unique search fixture phrase => GITCLAW_MCP_PROVENANCE_CONTEXT_V1

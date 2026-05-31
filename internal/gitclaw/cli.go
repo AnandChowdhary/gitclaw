@@ -448,7 +448,7 @@ func runPluginsCommand(args []string) error {
 	case "mcp", "mcps":
 		return runPluginsMCPCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw plugins [list|risk|verify|mcp [list|risk|info <name>]]")
+		return fmt.Errorf("usage: gitclaw plugins [list|risk|verify|mcp [list|risk|provenance|info <name>]]")
 	}
 }
 
@@ -471,6 +471,13 @@ func runPluginsMCPCommand(args []string) error {
 		fmt.Println(RenderMCPRiskCLIReport(cfg))
 		return nil
 	}
+	if args[0] == "provenance" || args[0] == "history" || args[0] == "timeline" {
+		if len(args) > 1 {
+			return fmt.Errorf("unknown plugins mcp provenance argument %q", args[1])
+		}
+		fmt.Println(RenderMCPProvenanceCLIReport(cfg))
+		return nil
+	}
 	if args[0] == "info" || args[0] == "show" {
 		if len(args) != 2 {
 			return fmt.Errorf("usage: gitclaw plugins mcp info <name>")
@@ -482,7 +489,7 @@ func runPluginsMCPCommand(args []string) error {
 		}
 		return nil
 	}
-	return fmt.Errorf("usage: gitclaw plugins mcp [list|risk|info <name>]")
+	return fmt.Errorf("usage: gitclaw plugins mcp [list|risk|provenance|info <name>]")
 }
 
 func runPluginsListCommand(args []string) error {

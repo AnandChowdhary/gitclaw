@@ -59,6 +59,9 @@ func IsPluginReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderPluginReport(ev Event, cfg Config) string {
+	if isMCPProvenanceRequest(ev, cfg) {
+		return renderMCPProvenanceReport(ev, cfg, true)
+	}
 	if isMCPRiskRequest(ev, cfg) {
 		return renderMCPRiskReport(ev, cfg, true)
 	}
