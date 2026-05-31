@@ -331,7 +331,8 @@ normal issue-comment turn proves GitHub Models, repo-reader, and
 `gitclaw.search_files` still work in that migration thread.
 The core issue-chat harness now applies that standard to ordinary
 conversation: the follow-up comment must preserve transcript continuity and
-also recover a fresh search fixture with prompt provenance and usage telemetry.
+also recover a fresh search fixture with prompt provenance and usage telemetry,
+while tolerating earlier prompt-visible tools from the continuous issue thread.
 
 ## Testing
 

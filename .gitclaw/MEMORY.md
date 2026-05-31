@@ -126,7 +126,8 @@
 - Migration-plan changes need two proofs: body-free dry-run import map, plus a
   normal model/tool follow-up in the same issue.
 - Issue-chat changes need follow-up continuity plus fresh repo-reader/search
-  grounding, prompt provenance, and usage telemetry on the second turn.
+  grounding, prompt provenance, and usage telemetry on the second turn; do not
+  treat prior-turn prompt-visible tools as failure by themselves.
 - Soul, memory, and profile files are high-authority git-reviewed context:
   edit/promote plans are dry-run, body-free, and review-first; planner changes
   need live model/tool E2E, and validation must stay prompt-fit and green.

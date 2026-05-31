@@ -5011,7 +5011,8 @@ lives in GitHub's event, permission, and workflow runtime semantics.
    For ordinary issue conversation changes, `scripts/e2e/github-issue-chat.sh`
    is the baseline proof: the second comment must preserve transcript
    continuity and also force a fresh repo-reader/search result with prompt
-   provenance, usage telemetry, and no fallback to whole-file reads.
+   provenance and usage telemetry, even when earlier file-reference context
+   remains prompt-visible in the continuous issue thread.
 
 ### Live E2E Harness
 
@@ -5080,8 +5081,9 @@ assert the expected comments/labels, and close the issue in cleanup.
      provenance, and includes `gitclaw.search_files` in the assistant marker,
    - assert the second turn can recover a fresh repository-search fixture token
      from the follow-up comment, not only echo tokens from the original issue,
-   - assert the follow-up fixture is recovered through bounded search rather
-     than whole-file `gitclaw.read_file` output.
+   - allow earlier prompt-visible tools such as `gitclaw.read_file` to remain
+     in the marker when prior turns requested file context, but require
+     `gitclaw.search_files` evidence for the fresh follow-up fixture.
 
 3. **Bot loop prevention**
 

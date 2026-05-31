@@ -293,9 +293,6 @@ grep -Fq 'skills="repo-reader"' <<<"$latest_body" || die "second assistant marke
 grep -Fq 'tools="' <<<"$latest_body" || die "second assistant marker missing prompt-visible tool list"
 grep -Fq 'gitclaw.search_files' <<<"$latest_body" || die "second assistant marker did not prove search_files was prompt-visible"
 grep -Fq 'usage_total_tokens="' <<<"$latest_body" || die "second assistant marker missing usage token telemetry"
-if grep -Fq 'gitclaw.read_file' <<<"$latest_body"; then
-  die "second assistant should recover the follow-up fixture through search_files, not read_file"
-fi
 echo "e2e: follow-up response verified"
 
 if [[ "$expect_backup" == "1" ]]; then
