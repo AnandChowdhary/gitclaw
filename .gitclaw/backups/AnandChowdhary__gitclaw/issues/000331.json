@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-30T23:58:55Z",
+  "generated_at": "2026-05-31T00:00:03Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 331,
     "title": "@gitclaw session coverage e2e 20260530T235749Z",
@@ -10,7 +10,8 @@
     "author": "AnandChowdhary",
     "author_association": "OWNER",
     "labels": [
-      "gitclaw"
+      "gitclaw",
+      "gitclaw:done"
     ]
   },
   "transcript": [
@@ -31,6 +32,24 @@
       "CommentID": 4585200478,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /session coverage\n\nPlease prove this issue has model-backed prompt provenance and tool coverage.\nHidden comment token: GITCLAW_SESSION_COVERAGE_COMMENT_20260530T235749Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4585201489,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Session Coverage Report\n\nGenerated without a model call.\n\n- scope: `issue-thread`\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#331`\n- event_kind: `issue_comment`\n- session_coverage_status: `ok`\n- required_assistant_turns: `1`\n- required_prompt_provenance_turns: `1`\n- required_model_backed_turns: `1`\n- required_skill_names: `none`\n- required_tool_names: `none`\n- raw_comments: `2`\n- transcript_messages: `3`\n- assistant_turn_comments: `1`\n- assistant_turns_with_prompt_provenance: `1`\n- assistant_turns_missing_prompt_provenance: `0`\n- unique_prompt_context_hashes: `1`\n- model_backed_assistant_turns: `1`\n- deterministic_assistant_turns: `0`\n- model_names: `openai/gpt-4.1-nano`\n- prompt_visible_skill_names: `repo-reader`\n- prompt_visible_tool_names: `gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files`\n- missing_required_skill_names: `none`\n- missing_required_tool_names: `none`\n- raw_bodies_included: `false`\n- raw_prompts_included: `false`\n- llm_e2e_required_after_session_coverage_change: `true`\n\nThis report proves whether the session contains enough assistant-turn provenance to count as a real model-backed conversation. It reports counts, model names, prompt-visible skill names, prompt-visible tool names, and hashes already present in assistant markers; raw issue bodies, comment bodies, assistant replies, prompts, and tool outputs are not included.\n\n### Coverage Evidence\n- assistant_turns_met=`true`\n- prompt_provenance_met=`true`\n- model_backed_turns_met=`true`\n- required_skills_met=`true`\n- required_tools_met=`true`\n- mutation_performed=`false`\n- github_api_calls_performed=`false`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4585202558,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -41,6 +60,22 @@
       "author_association": "NONE",
       "created_at": "2026-05-30T23:58:29Z",
       "updated_at": "2026-05-30T23:58:29Z"
+    },
+    {
+      "id": 4585201489,
+      "body": "@gitclaw /session coverage\n\nPlease prove this issue has model-backed prompt provenance and tool coverage.\nHidden comment token: GITCLAW_SESSION_COVERAGE_COMMENT_20260530T235749Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-05-30T23:59:05Z",
+      "updated_at": "2026-05-30T23:59:05Z"
+    },
+    {
+      "id": 4585202558,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26698362212\" event_id=\"comment-4585201489\" model=\"gitclaw/session\" idempotency_key=\"fb497fc1cfbd91ad9f318a9a26f73419\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26698362212\" --\u003e\n## GitClaw Session Coverage Report\n\nGenerated without a model call.\n\n- scope: `issue-thread`\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#331`\n- event_kind: `issue_comment`\n- session_coverage_status: `ok`\n- required_assistant_turns: `1`\n- required_prompt_provenance_turns: `1`\n- required_model_backed_turns: `1`\n- required_skill_names: `none`\n- required_tool_names: `none`\n- raw_comments: `2`\n- transcript_messages: `3`\n- assistant_turn_comments: `1`\n- assistant_turns_with_prompt_provenance: `1`\n- assistant_turns_missing_prompt_provenance: `0`\n- unique_prompt_context_hashes: `1`\n- model_backed_assistant_turns: `1`\n- deterministic_assistant_turns: `0`\n- model_names: `openai/gpt-4.1-nano`\n- prompt_visible_skill_names: `repo-reader`\n- prompt_visible_tool_names: `gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files`\n- missing_required_skill_names: `none`\n- missing_required_tool_names: `none`\n- raw_bodies_included: `false`\n- raw_prompts_included: `false`\n- llm_e2e_required_after_session_coverage_change: `true`\n\nThis report proves whether the session contains enough assistant-turn provenance to count as a real model-backed conversation. It reports counts, model names, prompt-visible skill names, prompt-visible tool names, and hashes already present in assistant markers; raw issue bodies, comment bodies, assistant replies, prompts, and tool outputs are not included.\n\n### Coverage Evidence\n- assistant_turns_met=`true`\n- prompt_provenance_met=`true`\n- model_backed_turns_met=`true`\n- required_skills_met=`true`\n- required_tools_met=`true`\n- mutation_performed=`false`\n- github_api_calls_performed=`false`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-30T23:59:44Z",
+      "updated_at": "2026-05-30T23:59:44Z"
     }
   ]
 }
