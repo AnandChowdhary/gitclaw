@@ -148,6 +148,21 @@ outputs. Any change to this surface should be paired with a live GitHub Models
 conversation E2E so the deterministic audit does not become a substitute for
 testing real skill selection and tool usage.
 
+2026-05-31 prompt-pack follow-up: OpenClaw's token-use docs make context
+diagnostics a first-class operator surface: system prompt pieces, conversation
+history, tool results, attachments, compaction summaries, and provider wrappers
+all contribute to the context window, with a practical 4-chars-per-token
+heuristic for OpenAI-style models. Hermes' context-compression docs add a
+useful two-threshold model: the in-loop context compressor defaults to 50% of
+context, while gateway session hygiene uses an 85% pre-agent safety threshold.
+GitClaw should adapt this as `@gitclaw /prompt pack` and `gitclaw prompt pack`:
+a body-free component map that shows fixed prompt order, byte ranges, hashes,
+head/tail truncation projection, and 50%/85% threshold findings without
+printing raw prompts, issue/comment bodies, context bodies, skill bodies, tool
+outputs, raw tool inputs, or credentials. The feature should be paired with a
+live GitHub Models follow-up E2E that proves actual selected-skill and
+repository-search tool behavior.
+
 2026-05-31 skill-bundle provenance follow-up: Hermes' skills system treats
 bundles as small YAML files that group several existing skills under one slash
 command, skip missing skills rather than failing, and intentionally avoid
@@ -2414,6 +2429,7 @@ names, commit subjects, author identities, or installer output.
 - Hermes working with skills docs: https://hermes-agent.nousresearch.com/docs/guides/work-with-skills/
 - Hermes tools docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/tools/
 - Hermes Tool Search docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-search
+- Hermes context compression and caching docs: https://hermes-agent.nousresearch.com/docs/developer-guide/context-compression-and-caching/
 - Hermes features overview: https://hermes-agent.nousresearch.com/docs/user-guide/features/overview/
 - Hermes tools reference: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/reference/tools-reference.md
 - Hermes subagent delegation docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation

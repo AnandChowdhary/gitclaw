@@ -19,3 +19,5 @@ toolset provenance unique search fixture phrase => GITCLAW_TOOLSET_PROVENANCE_CO
 mcp provenance unique search fixture phrase => GITCLAW_MCP_PROVENANCE_CONTEXT_V1
 
 defer plan unique search fixture phrase => GITCLAW_DEFER_PLAN_CONTEXT_V1
+
+prompt pack unique search fixture phrase => GITCLAW_PROMPT_PACK_CONTEXT_V1

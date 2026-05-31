@@ -781,7 +781,7 @@ GitHub issue/comment event
   `orders list`, `orders verify`, `orders risk`,
   `profile show`, `profile verify`,
   `context list`, `context risk`, `context info`,
-  `prompt list`, `prompt risk`,
+  `prompt list`, `prompt pack`, `prompt risk`,
   `runs current`, `runs verify`, `runs history`,
   `sandbox explain`, `sandbox verify`, `sandbox risk`,
   `memory verify`, `memory risk`, `memory validate`, `memory timeline`,
@@ -2504,6 +2504,7 @@ memory/context posture:
 ```text
 @gitclaw /prompt
 @gitclaw /prompt list
+@gitclaw /prompt pack
 @gitclaw /prompt risk
 ```
 
@@ -2528,6 +2529,35 @@ skill bodies, or tool output bodies into the issue. This gives maintainers a
 low-cost way to debug prompt bloat, missing context, and truncation behavior
 without leaking the exact prompt into a public or long-lived GitHub comment.
 
+When called as `@gitclaw /prompt pack`, the command posts a body-free packing
+projection for the same prompt envelope. It follows the exact deterministic
+user-prompt assembly order used before model inference: run header, repository
+context, selected skill bodies, deterministic tool-output blocks, transcript
+omission marker, and bounded transcript messages. The report emits only
+component kind/name, byte and line counts, short hashes, prompt byte ranges,
+pack status, pack reason, source-size metadata, and body/input inclusion flags.
+It also reports the system-prompt byte/hash metadata separately, because the
+system prompt is a distinct model input and not part of the user-prompt
+head/tail truncation projection.
+
+The packing report borrows OpenClaw's token/context diagnostics and Hermes'
+dual compression thresholds without copying either runtime model wholesale:
+
+- estimate input pressure with the OpenAI-style 4-chars-per-token heuristic,
+- report the configured GitClaw byte budget and output-token budget,
+- evaluate a 50% agent compression warning threshold,
+- evaluate an 85% gateway/session-hygiene warning threshold,
+- project the existing fixed head/tail truncation behavior when the prompt
+  exceeds `model.max_prompt_bytes`,
+- never print raw prompt text, issue/comment bodies, context file bodies, skill
+  bodies, tool outputs, raw tool inputs, credentials, or secret values.
+
+Any change to this surface requires a focused live E2E that first verifies
+`@gitclaw /prompt pack` without an LLM call and then posts a normal follow-up
+that uses GitHub Models, a selected skill, and `gitclaw.search_files`. This
+keeps the deterministic budget map from becoming a substitute for testing real
+model/tool behavior.
+
 When called as `@gitclaw /prompt risk`, the command posts a body-free risk
 audit for the same prompt envelope. It scans the prompt-visible transcript,
 loaded context files, selected skills, and deterministic tool outputs for
@@ -2545,14 +2575,15 @@ without opening an issue:
 
 ```bash
 gitclaw prompt list
+gitclaw prompt pack
 gitclaw prompt risk
 ```
 
 The local report omits repository and issue metadata, reports zero transcript
 messages, and still summarizes provider/model, prompt hash/size, prompt
 budgets, context file metadata, selected always-on skills, deterministic
-tool-output metadata, and prompt-risk posture without dumping prompt text or
-any loaded bodies.
+tool-output metadata, prompt packing/truncation projection, and prompt-risk
+posture without dumping prompt text or any loaded bodies.
 
 ## Labels
 
@@ -4902,14 +4933,22 @@ assert the expected comments/labels, and close the issue in cleanup.
 
    - create a real issue with `@gitclaw /prompt`,
    - create a real issue with `@gitclaw /prompt list` as the explicit alias,
+   - create a real issue with `@gitclaw /prompt pack`,
    - ask for a concrete file read, selected skill, and search fixture phrase,
    - assert the reply is marked `model="gitclaw/prompt"`,
    - assert the report lists prompt budget settings, final prompt size/hash,
      transcript inclusion/truncation counts, selected context files, selected
      skills, and active tool output metadata,
+   - assert the prompt-pack report lists fixed component order, head/tail
+     projection status, 50% and 85% threshold findings, and body-free component
+     ranges/hashes,
    - assert the report does not dump prompt text, issue body tokens, context
      bodies, skill bodies, or tool output bodies,
-   - assert the run succeeds without requiring a model provider response.
+   - assert deterministic report runs succeed without requiring a model
+     provider response,
+   - post a normal follow-up after the pack report that requires repo-reader
+     search and assert the second assistant turn is model-backed by GitHub
+     Models with prompt context, selected skill, and `gitclaw.search_files`.
 
 18. **Memory inspection**
 
@@ -6288,6 +6327,10 @@ examples/workflows/gitclaw.yml
   real Actions/model failure.
 - A `gh`-driven prompt-budget E2E harness verifies a large real issue still
   produces a bounded, correct assistant reply.
+- A `gh`-driven prompt-pack E2E harness verifies `@gitclaw /prompt pack`
+  reports body-free component order, threshold findings, and truncation
+  projection metadata without a model call, then posts a normal GitHub Models
+  follow-up that proves selected skill and `gitclaw.search_files` tool usage.
 - A `gh`-driven prompt-artifact E2E harness verifies opt-in redacted prompt
   artifacts against a real Actions artifact download.
 - A `gh`-driven write-request E2E harness verifies deterministic write-intent
@@ -6353,10 +6396,12 @@ examples/workflows/gitclaw.yml
 - OpenClaw config CLI docs: https://docs.openclaw.ai/cli/config
 - OpenClaw configure docs: https://docs.openclaw.ai/cli/configure
 - OpenClaw doctor docs: https://docs.openclaw.ai/doctor
+- OpenClaw token use and costs docs: https://docs.openclaw.ai/reference/token-use
 - OpenClaw backup docs: https://docs.openclaw.ai/cli/backup
 - OpenClaw exec approvals docs: https://docs.openclaw.ai/tools/exec-approvals
 - OpenClaw sandboxing docs: https://docs.openclaw.ai/gateway/sandboxing
 - Hermes memory docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/memory.md
+- Hermes context compression and caching docs: https://hermes-agent.nousresearch.com/docs/developer-guide/context-compression-and-caching/
 - Hermes checkpoints and rollback docs: https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback
 - Hermes git worktrees docs: https://hermes-agent.nousresearch.com/docs/user-guide/git-worktrees
 - Hermes cron docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/cron.md

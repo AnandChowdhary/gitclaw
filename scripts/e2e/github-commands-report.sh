@@ -138,7 +138,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `33`' \
   'aliases: `31`' \
-  'local_cli_helpers: `163`' \
+  'local_cli_helpers: `164`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/agents' \
@@ -258,6 +258,7 @@ for expected in \
   'gitclaw sandbox verify' \
   'gitclaw sandbox risk' \
   'gitclaw prompt list' \
+  'gitclaw prompt pack' \
   'gitclaw prompt risk' \
   'gitclaw proactive list' \
   'gitclaw proactive risk' \
