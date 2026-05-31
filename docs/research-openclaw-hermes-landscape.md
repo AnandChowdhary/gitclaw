@@ -560,6 +560,17 @@ show event/run IDs, idempotency key, preflight gates, managed labels, marker
 counts, prompt-visible input hashes, and active tool-output hashes without
 printing raw bodies or run payloads.
 
+2026-05-31 runs-report E2E hardening: OpenClaw's current sessions docs make
+stored conversation rows bounded by default, with session exports and cleanup
+as explicit operator actions, while Hermes-style sessions/checkpoints keep
+prior turns inspectable without conflating inspection with mutation. GitClaw's
+current-turn ledger should therefore prove two facts after changes: the
+deterministic `/runs` report remains body-free and read-only, and a normal
+GitHub Models follow-up can still select `repo-reader`, expose bounded
+repository search, and recover the runs-report fixture token. That keeps the
+ledger from becoming a disconnected diagnostic card and proves ordinary
+LLM/tool execution still works after run-provenance changes.
+
 2026-05-31 run-history follow-up: OpenClaw's trajectory/progress framing is
 useful, but GitClaw should keep the first history surface narrower than a full
 trace database. `/runs history` should reconstruct a body-free timeline from

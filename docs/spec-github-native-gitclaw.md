@@ -1961,6 +1961,10 @@ bodies, tool output bodies, workflow payloads, or secrets. The report is a
 read-only ledger view: the canonical conversation log remains GitHub issue
 comments, the canonical execution trace remains GitHub Actions, and the
 canonical post-turn archive remains the `gitclaw-backups` branch when enabled.
+The report includes `llm_e2e_required_after_runs_report_change=true`; changes
+to this surface must be paired with a live GitHub Models follow-up that selects
+`repo-reader`, exposes `gitclaw.search_files`, and recovers a bounded
+repository-search fixture token without echoing issue-body or run sentinels.
 
 Local operators can inspect the same body-free local run envelope without
 opening an issue:
@@ -6257,9 +6261,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven runs-report E2E harness verifies `@gitclaw /runs` reports
   current turn/run provenance, managed labels, marker counts, prompt-visible
   input hashes, and active tool-output hashes without a model call or body
-  leakage. Each run-ledger feature batch must still run at least one
-  LLM-backed GitHub Models conversation E2E in addition to this deterministic
-  report.
+  leakage. The same live issue then receives a normal issue-comment follow-up
+  that must make a GitHub Models call, select `repo-reader`, expose
+  `gitclaw.search_files`, recover the runs-report repository-search fixture
+  token, and avoid hidden sentinel leakage.
 - A `gh`-driven runs-history E2E harness first creates a real GitHub Models
   issue conversation with repo-reader and `gitclaw.search_files`, then posts
   `@gitclaw /runs history` and verifies a body-free timeline of the prior

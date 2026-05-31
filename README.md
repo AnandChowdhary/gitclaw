@@ -421,6 +421,10 @@ The commands-report harness does the same for `/help`: the catalog stays a
 body-free deterministic capability index, then a model-backed repo-reader/search
 follow-up proves the help surface has not replaced ordinary inference and tool
 grounding.
+The runs-report harness now applies that proof to the current-turn ledger:
+issue-visible run provenance stays body-free and read-only, then a normal
+GitHub Models repo-reader/search follow-up proves the live run path still
+executes with prompt, skill, tool, and usage telemetry.
 The channel-ingest harness proves the generic no-server bridge end to end:
 workflow-dispatch mirroring, duplicate provider-message suppression, and a
 normal model/tool follow-up on the canonical channel issue.

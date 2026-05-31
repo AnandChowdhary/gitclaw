@@ -110,6 +110,7 @@ func TestRenderRunReportShowsCurrentTurnProvenanceWithoutBodies(t *testing.T) {
 		"run_ledger_writes_allowed: `false`",
 		"raw_bodies_included: `false`",
 		"raw_run_payloads_included: `false`",
+		"llm_e2e_required_after_runs_report_change: `true`",
 		"issue_title_sha256_12: `",
 		"### Label State",
 		"`gitclaw` present=`true`",

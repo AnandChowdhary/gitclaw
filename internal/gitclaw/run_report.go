@@ -77,6 +77,7 @@ func renderRunReport(ev Event, cfg Config, decision PreflightDecision, comments 
 	fmt.Fprintf(&b, "- run_ledger_writes_allowed: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_run_payloads_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_runs_report_change: `%t`\n", true)
 	if includeIssue {
 		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
 	}
