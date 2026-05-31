@@ -87,8 +87,8 @@ func TestRenderToolsReportRoutesApprovalPlanWithoutBodies(t *testing.T) {
 		"repository": {"full_name": "owner/repo", "default_branch": "main"},
 		"issue": {
 			"number": 191,
-			"title": "@gitclaw /tools approval-plan read_file",
-			"body": "Hidden tools approval route token: TOOL_APPROVAL_ROUTE_SECRET.",
+			"title": "@gitclaw /tools approval-plan e2e",
+			"body": "@gitclaw /tools approval-plan read_file\nHidden tools approval route token: TOOL_APPROVAL_ROUTE_SECRET.",
 			"author_association": "MEMBER",
 			"user": {"login": "alice", "type": "User"},
 			"labels": [{"name": "gitclaw"}]

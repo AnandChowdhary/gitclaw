@@ -122,19 +122,32 @@ func renderToolApprovalPlanReport(ev Event, cfg Config, repoContext RepoContext,
 }
 
 func requestedToolApprovalPlanName(ev Event, cfg Config) string {
-	fields := activeSlashCommandFields(ev, cfg)
-	if len(fields) < 2 || fields[0] != "/tools" {
-		return ""
+	firstCandidate := ""
+	for _, line := range strings.Split(activeRequestText(ev), "\n") {
+		fields := slashCommandFieldsFromLine(line, cfg.TriggerPrefix)
+		if len(fields) < 2 || fields[0] != "/tools" {
+			continue
+		}
+		switch strings.ToLower(fields[1]) {
+		case "approval-plan", "approval", "approve-plan", "approval-gate", "gate":
+		default:
+			continue
+		}
+		candidate := "__missing__"
+		if len(fields) >= 3 {
+			candidate = cleanToolLookupName(fields[2])
+		}
+		if firstCandidate == "" {
+			firstCandidate = candidate
+		}
+		if candidate == "__missing__" {
+			continue
+		}
+		if len(matchingToolContracts(toolReportContracts, candidate)) == 1 {
+			return candidate
+		}
 	}
-	switch strings.ToLower(fields[1]) {
-	case "approval-plan", "approval", "approve-plan", "approval-gate", "gate":
-	default:
-		return ""
-	}
-	if len(fields) < 3 {
-		return "__missing__"
-	}
-	return cleanToolLookupName(fields[2])
+	return firstCandidate
 }
 
 func toolApprovalPlanDecision(requested string, matches []toolContract, enabled, disabled, blocked, mutating bool, validation ToolValidationReport) string {
