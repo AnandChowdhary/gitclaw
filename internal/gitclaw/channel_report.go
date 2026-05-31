@@ -368,6 +368,7 @@ func renderChannelVerifyReport(ev Event, cfg Config, comments []Comment, include
 	fmt.Fprintf(&b, "- delivery_workflow_inputs: `%d`\n", surface.DeliveryWorkflow.Inputs)
 	fmt.Fprintf(&b, "- supported_providers: `%s`\n", strings.Join(channelReportProviders, ", "))
 	fmt.Fprintf(&b, "- wake_strategy: `%s`\n", "workflow_dispatch")
+	fmt.Fprintf(&b, "- llm_e2e_required_after_channel_verify_change: `%t`\n", true)
 	if includeIssue {
 		fmt.Fprintf(&b, "- channel_thread_issue: `%t`\n", HasChannelThreadMarker(ev.Issue.Body))
 		fmt.Fprintf(&b, "- channel_message_comments_now: `%d`\n", channelMessages)

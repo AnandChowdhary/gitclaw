@@ -1392,6 +1392,15 @@ connection check: channel-ingest workflow present, `workflow_dispatch` enabled,
 and Telegram/Slack/generic provider keys visible before real pollers depend on
 them.
 
+2026-05-31 channel-verify E2E hardening: OpenClaw's channel routing docs make
+deterministic routing and channel/account bindings explicit, while Hermes'
+gateway docs make messaging platforms first-class runtimes. GitClaw's
+workflow-dispatch bridge health check should therefore prove both halves:
+deterministic bridge readiness over GitHub workflows and a normal GitHub
+Models follow-up that selects repo-reader, exposes `gitclaw.search_files`,
+recovers the channels-verify repository-search fixture token, and avoids
+hidden channel/command token echoing.
+
 2026-05-30 channel-info follow-up: provider-specific bridges need a narrow
 contract card before pollers land. Add `/channels info <provider>` and local
 `gitclaw channels info <provider>` to expose Telegram/Slack/generic secret

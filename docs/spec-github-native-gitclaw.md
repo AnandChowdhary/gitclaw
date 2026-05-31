@@ -4144,7 +4144,12 @@ channel bridge itself a privileged hidden conversation store.
 inventory to health posture. It reports `channel_verify_status`, confirms the
 channel-ingest workflow has `workflow_dispatch`, `actions: write`,
 `issues: write`, and the five normalized inputs required for channel mirroring,
-then lists body-free verification findings.
+then lists body-free verification findings. It carries
+`llm_e2e_required_after_channel_verify_change=true`; changes to this surface
+must pair the deterministic bridge health report with a normal GitHub Models
+follow-up that selects `repo-reader`, exposes `gitclaw.search_files`, and
+recovers a bounded repository-search fixture token without echoing channel or
+command sentinels.
 
 `@gitclaw /channels risk` and `@gitclaw /channels risk-audit` post a
 body-free risk audit for the Slack/Telegram workflow-dispatch bridge. They scan
@@ -5982,7 +5987,11 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven channels-verify E2E harness verifies
   `@gitclaw /channels verify` reports the workflow-dispatch channel bridge
   health, permissions, required inputs, provider keys, and marker counts
-  without a model call or body leakage.
+  without a model call or body leakage. The same live harness then posts a
+  normal issue-comment follow-up that must make a GitHub Models call, select
+  `repo-reader`, expose `gitclaw.search_files`, recover a bounded
+  repository-search fixture token, and publish usage telemetry without leaking
+  hidden issue tokens.
 - A `gh`-driven channels-risk E2E harness verifies
   `@gitclaw /channels risk` reports provider, workflow, and channel-message
   risk cards with only counts, hashes, codes, and severities, then posts a

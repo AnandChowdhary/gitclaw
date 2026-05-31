@@ -37,6 +37,7 @@ memory promote plan unique search fixture phrase => GITCLAW_MEMORY_PROMOTE_PLAN_
 proactive info unique search fixture phrase => GITCLAW_PROACTIVE_INFO_CONTEXT_V1
 channels info unique search fixture phrase => GITCLAW_CHANNELS_INFO_CONTEXT_V1
 channels report unique search fixture phrase => GITCLAW_CHANNELS_REPORT_CONTEXT_V1
+channels verify unique search fixture phrase => GITCLAW_CHANNELS_VERIFY_CONTEXT_V1
 backup verify unique search fixture phrase => GITCLAW_BACKUP_VERIFY_CONTEXT_V1
 backup index unique search fixture phrase => GITCLAW_BACKUP_INDEX_CONTEXT_V1
 backup report unique search fixture phrase => GITCLAW_BACKUP_REPORT_CONTEXT_V1
