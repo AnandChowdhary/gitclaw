@@ -333,6 +333,14 @@ and session-show ergonomics without adding a daemon or raw transcript store.
 The required E2E should include real GitHub Models turns before and after the
 deterministic report so run history is proven against actual LLM/tool usage.
 
+2026-05-31 session-status follow-up: Hermes' status/readback pattern is useful
+as a compact operator view, but GitClaw should avoid a second transcript display.
+`/session status` should report labels, transcript shape, latest user/assistant
+message hashes, latest assistant marker provenance, and skill/tool turn counts
+without printing the latest request, assistant reply, prompt, search query, or
+tool output. The E2E should start from a real GitHub Models turn, run the
+deterministic status report, and then perform another model/tool follow-up.
+
 2026-05-29 memory follow-up: the right GitClaw cut is read-only memory
 injection, not self-writing memory. Load compact files such as
 `.gitclaw/MEMORY.md`, `.gitclaw/USER.md`, `.gitclaw/IDENTITY.md`, and the

@@ -760,7 +760,7 @@ GitHub issue/comment event
 - CLI entry point.
 - Subcommands: `preflight`, `handle`, `backup`, `backup coverage`,
   `backup search`, `backup info`, `backup retention-plan`,
-  `session coverage`,
+  `session status`, `session coverage`,
   `heartbeat`, `heartbeat status`, `heartbeat risk`,
   `channel-ingest`, `channel-state`, `channel-gateway`, `channel-delivery`,
   `channels list`, `channels verify`, `channels risk`, `channels info`,
@@ -897,6 +897,8 @@ transcript/session CLIs and Hermes' saved/searchable sessions:
 ```text
 @gitclaw /session
 @gitclaw /session list
+@gitclaw /session status
+@gitclaw /session readback
 @gitclaw /session stats
 @gitclaw /session coverage
 @gitclaw /session risk
@@ -927,6 +929,7 @@ Local operators can inspect a backed-up issue session without calling GitHub:
 
 ```bash
 gitclaw session list --backup .gitclaw/backups/owner/repo/issues/000123.json
+gitclaw session status --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session stats --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session coverage --backup .gitclaw/backups/owner/repo/issues/000123.json
 ```
@@ -935,6 +938,16 @@ The local report reads the canonical backup JSON, uses `scope: local-backup`,
 and emits repo/issue backup metadata, marker counts, transcript counts, trust
 states, sources, sizes, and hashes without dumping issue bodies, comment bodies,
 or assistant replies.
+
+`gitclaw session status --backup <issue.json>` is the compact Hermes-inspired
+readback surface. It emits session labels, transcript/comment counts, latest
+user and assistant message sources with sizes and hashes, latest assistant
+marker model/provenance fields, model-backed versus deterministic turn counts,
+prompt-visible skill/tool names, and skill/tool turn counts. It never prints the
+latest user request, assistant reply, issue body, prompt text, search query, or
+tool output body. The issue-side `@gitclaw /session status` form runs before
+model inference and posts the same body-free status for the current GitHub issue
+conversation.
 
 `gitclaw session stats --backup <issue.json>` is the compact Hermes-inspired
 summary surface. It emits counts for comments, transcript roles, trust/edited
@@ -958,6 +971,7 @@ Backed-up sessions can also be searched locally without a GitHub API call:
 
 ```bash
 gitclaw session coverage --backup .gitclaw/backups/owner/repo/issues/000123.json --require-tool gitclaw.search_files
+gitclaw session status --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session stats --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session risk --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session search deployment window --backup .gitclaw/backups/owner/repo/issues/000123.json
@@ -5858,6 +5872,12 @@ examples/workflows/gitclaw.yml
   conversation with repo-reader and `gitclaw.search_files`, then verifies
   `@gitclaw /session stats` reports model/provenance/session totals without
   leaking hidden issue or comment tokens.
+- A `gh`-driven session-status E2E harness first runs a normal GitHub Models
+  conversation with repo-reader and `gitclaw.search_files`, then verifies
+  `@gitclaw /session status` reports latest-message hashes, labels, model
+  provenance, and skill/tool turn counts without leaking hidden issue/comment
+  tokens or assistant reply text. The same harness posts a second normal
+  follow-up to prove fresh LLM/tool usage after the deterministic readback.
 - A `gh`-driven session-coverage E2E harness verifies an actual GitHub Models
   conversation with repo-reader skill and `gitclaw.search_files` tool
   provenance, then checks both issue-side `@gitclaw /session coverage` and

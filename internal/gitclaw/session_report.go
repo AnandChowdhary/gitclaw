@@ -52,6 +52,9 @@ func IsSessionReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderSessionReport(ev Event, cfg Config, comments []Comment, transcript []TranscriptMessage) string {
+	if requestedSessionStatus(ev, cfg) {
+		return RenderSessionStatusReport(ev, cfg, comments, transcript)
+	}
 	if requestedSessionCoverage(ev, cfg) {
 		report := BuildSessionCoverageReport("issue-thread", "", ev, comments, transcript, DefaultSessionCoverageRequirements())
 		return RenderSessionCoverageReport(report)
