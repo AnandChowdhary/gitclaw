@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-05-31T15:39:53Z`
-- issue_count: `379`
+- generated_at: `2026-05-31T15:48:27Z`
+- issue_count: `380`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -384,3 +384,4 @@
 | #417 | GitClaw workflow_dispatch e2e 20260531T152641Z | `2026-05-31T15:28:23Z` | 1 | 2 | `issues/000417.json` |
 | #418 | GitClaw workflow_dispatch e2e 20260531T152923Z | `2026-05-31T15:31:57Z` | 2 | 3 | `issues/000418.json` |
 | #419 | GitClaw workflow_dispatch e2e 20260531T153524Z | `2026-05-31T15:39:52Z` | 3 | 4 | `issues/000419.json` |
+| #420 | @gitclaw /rollback e2e 20260531T154717Z | `2026-05-31T15:48:26Z` | 1 | 2 | `issues/000420.json` |

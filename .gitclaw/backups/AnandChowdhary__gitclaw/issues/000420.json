@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T15:48:26Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 420,
+    "title": "@gitclaw /rollback e2e 20260531T154717Z",
+    "body": "Live checkpoints-report E2E.\n\nHidden checkpoints report body token: NOECHO_CHECKPOINTS_REPORT_20260531T154717Z\nThis should produce a deterministic rollback-readiness report without a model call, diffs, restore, or raw body leakage.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /rollback e2e 20260531T154717Z\n\nLive checkpoints-report E2E.\n\nHidden checkpoints report body token: NOECHO_CHECKPOINTS_REPORT_20260531T154717Z\nThis should produce a deterministic rollback-readiness report without a model call, diffs, restore, or raw body leakage.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Checkpoints Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#420`\n- checkpoint_status: `clean`\n- checkpoint_strategy: `git-history-plus-backup-branch`\n- rollback_mode: `inspect-only`\n- git_available: `true`\n- git_repository: `true`\n- worktree_root: `.`\n- branch: `main`\n- head_commit: `39a325542226`\n- commits_available: `1`\n- recent_commits_returned: `1`\n- worktree_clean: `true`\n- staged_changes: `0`\n- unstaged_changes: `0`\n- untracked_files: `0`\n- backup_branch: `gitclaw-backups`\n- backup_branch_local_ref: `false`\n- raw_diffs_included: `false`\n- raw_file_bodies_included: `false`\n- restore_operations_enabled: `false`\n- llm_e2e_required_after_checkpoint_report_change: `true`\n- issue_title_sha256_12: `858926f15b87`\n\nThis report checks rollback readiness using git metadata already present in the checkout. It does not print diffs, file contents, commit subjects, issue bodies, comments, prompts, or secret values, and it does not restore or reset files.\n\n### Recent Commits\n- commit=`39a3255` date=`2026-05-31` subject_sha256_12=`e14f45b2afac`\n\n### Local Commands\n- `gitclaw checkpoints status`\n- `gitclaw checkpoints list`\n- `gitclaw checkpoints risk`\n- `gitclaw checkpoints verify`\n- `gitclaw rollback list`\n- `gitclaw rollback risk`\n- restore remains disabled in GitClaw v1; use pull requests, git history, and fetched backup manifests for reviewed recovery",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4587202143,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4587202143,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26717112832\" event_id=\"issue-420\" model=\"gitclaw/checkpoints\" idempotency_key=\"056d4c237897c144345722c90fcf78f0\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26717112832\" --\u003e\n## GitClaw Checkpoints Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#420`\n- checkpoint_status: `clean`\n- checkpoint_strategy: `git-history-plus-backup-branch`\n- rollback_mode: `inspect-only`\n- git_available: `true`\n- git_repository: `true`\n- worktree_root: `.`\n- branch: `main`\n- head_commit: `39a325542226`\n- commits_available: `1`\n- recent_commits_returned: `1`\n- worktree_clean: `true`\n- staged_changes: `0`\n- unstaged_changes: `0`\n- untracked_files: `0`\n- backup_branch: `gitclaw-backups`\n- backup_branch_local_ref: `false`\n- raw_diffs_included: `false`\n- raw_file_bodies_included: `false`\n- restore_operations_enabled: `false`\n- llm_e2e_required_after_checkpoint_report_change: `true`\n- issue_title_sha256_12: `858926f15b87`\n\nThis report checks rollback readiness using git metadata already present in the checkout. It does not print diffs, file contents, commit subjects, issue bodies, comments, prompts, or secret values, and it does not restore or reset files.\n\n### Recent Commits\n- commit=`39a3255` date=`2026-05-31` subject_sha256_12=`e14f45b2afac`\n\n### Local Commands\n- `gitclaw checkpoints status`\n- `gitclaw checkpoints list`\n- `gitclaw checkpoints risk`\n- `gitclaw checkpoints verify`\n- `gitclaw rollback list`\n- `gitclaw rollback risk`\n- restore remains disabled in GitClaw v1; use pull requests, git history, and fetched backup manifests for reviewed recovery",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T15:48:00Z",
+      "updated_at": "2026-05-31T15:48:00Z"
+    }
+  ]
+}
