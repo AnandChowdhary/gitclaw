@@ -28,7 +28,8 @@
   plans never execute providers or mutate the repo.
 - Backups stay on `gitclaw-backups`: verify fetched branches before coverage,
   drill, search, stats, timeline, provenance, restore-plan, retention-plan, or
-  export reports; never call GitHub restore/delete APIs or print raw bodies.
+  export reports; verifier changes need branch audit plus live model/tool E2E;
+  never call GitHub restore/delete APIs or print raw bodies.
 - Sessions and run history are reconstructed from issues, backups, and
   `gitclaw:assistant-turn` markers; reports hash markers, labels, model
   provenance, skills, and tools without printing assistant replies or prompts.

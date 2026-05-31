@@ -4480,8 +4480,11 @@ of checking a tarball manifest, it checks the repo-scoped backup tree:
 - every `issues/*.json` file is listed in the index.
 
 The command prints a deterministic `GitClaw Backup Verify Report` with status,
-counts, paths, and failures. It exits non-zero when verification fails. It does
-not print issue bodies, comments, or transcript text.
+counts, paths, failures, and
+`llm_e2e_required_after_backup_verify_change=true`. It exits non-zero when
+verification fails. It does not print issue bodies, comments, or transcript
+text. Verifier changes must be proven with both a fetched-branch backup audit
+and a normal GitHub Models follow-up using repo-reader search.
 
 ## Backup Coverage Command
 
@@ -6076,7 +6079,12 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven backup-verify E2E harness verifies `@gitclaw /backup verify`
   records the deferred issue-side command intent, then verifies the fetched
   `gitclaw-backups` branch with `gitclaw backup verify` after the real backup
-  job succeeds.
+  job succeeds. The issue-side intent and fetched-branch verifier both include
+  `llm_e2e_required_after_backup_verify_change: true`, and the same harness
+  then posts a normal issue-comment follow-up that must make a GitHub Models
+  call, select `repo-reader`, expose `gitclaw.search_files`, recover a bounded
+  repository-search fixture token, and publish usage telemetry without leaking
+  hidden issue tokens.
 - A `gh`-driven backup-risk E2E harness verifies `@gitclaw /backup risk`
   records the deferred issue-side command intent, then scans the fetched
   `gitclaw-backups` branch with `gitclaw backup risk` for integrity,

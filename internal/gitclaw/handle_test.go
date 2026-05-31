@@ -466,7 +466,7 @@ func TestHandleBackupVerifyCommandPostsDeferredIntentWithoutLLM(t *testing.T) {
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"model=\"gitclaw/backup\"", "requested_backup_command: `verify`", "backup_command_status: `ok`", "requested_local_command: `gitclaw backup verify --root .gitclaw/backups --repo owner/repo`", "issue_side_execution: `deferred_to_post_turn_backup_branch`", "raw_bodies_included: `false`"} {
+	for _, want := range []string{"model=\"gitclaw/backup\"", "requested_backup_command: `verify`", "backup_command_status: `ok`", "requested_local_command: `gitclaw backup verify --root .gitclaw/backups --repo owner/repo`", "issue_side_execution: `deferred_to_post_turn_backup_branch`", "raw_bodies_included: `false`", "llm_e2e_required_after_backup_verify_change: `true`"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("backup verify report missing %q:\n%s", want, body)
 		}

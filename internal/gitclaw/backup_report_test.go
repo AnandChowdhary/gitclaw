@@ -32,6 +32,7 @@ func TestRenderBackupVerifyIssueCommandRecordsDeferredIntentWithoutBodies(t *tes
 		"issue_side_execution: `deferred_to_post_turn_backup_branch`",
 		"raw_bodies_included: `false`",
 		"requested_local_command: `gitclaw backup verify --root .gitclaw/backups --repo owner/repo`",
+		"llm_e2e_required_after_backup_verify_change: `true`",
 		"run `gitclaw backup verify --root .gitclaw/backups --repo owner/repo` after fetching `gitclaw-backups`",
 		".gitclaw/backups/owner__repo/issues/000096.json",
 	} {

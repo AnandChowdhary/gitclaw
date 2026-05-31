@@ -286,6 +286,7 @@ Run a live E2E harness against the current GitHub repository:
 
 ```bash
 scripts/e2e/github-backup-risk-report.sh
+scripts/e2e/github-backup-verify.sh
 scripts/e2e/github-backup-coverage.sh
 scripts/e2e/github-backup-provenance.sh
 scripts/e2e/github-backup-timeline.sh

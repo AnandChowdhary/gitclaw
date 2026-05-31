@@ -35,6 +35,9 @@ ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
 token="GITCLAW_BACKUP_VERIFY_E2E_${timestamp}"
+followup_hidden_token="GITCLAW_BACKUP_VERIFY_FOLLOWUP_HIDDEN_${timestamp}"
+expected_token="GITCLAW_BACKUP_VERIFY_CONTEXT_V1"
+search_phrase="backup verify unique search fixture phrase"
 title="@gitclaw /backup verify e2e ${timestamp}"
 body="Live backup-verify E2E.
 
@@ -66,13 +69,14 @@ trap cleanup EXIT
 log "created issue #${issue_number}: ${issue_url}"
 
 wait_for_run() {
-  local started_at="$1"
+  local event_name="$1"
+  local started_at="$2"
   for _ in {1..90}; do
     local run_json
     run_json="$(gh run list \
       --repo "$repo" \
       --workflow "$workflow_name" \
-      --event issues \
+      --event "$event_name" \
       --created ">=$started_at" \
       --limit 10 \
       --json databaseId,status,conclusion,url,createdAt,displayTitle \
@@ -83,7 +87,7 @@ wait_for_run() {
       conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
       url="$(jq -r '.url' <<<"$run_json")"
       if [[ "$status" == "completed" ]]; then
-        [[ "$conclusion" == "success" ]] || die "issues run failed with conclusion ${conclusion}: ${url}"
+        [[ "$conclusion" == "success" ]] || die "${event_name} run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
       fi
@@ -100,6 +104,13 @@ assistant_comments() {
     --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | join("\n---GITCLAW-COMMENT---\n")'
 }
 
+latest_assistant_comment() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json comments \
+    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | .[-1] // ""'
+}
+
 assistant_count() {
   gh issue view "$issue_number" \
     --repo "$repo" \
@@ -112,6 +123,13 @@ error_count() {
     --repo "$repo" \
     --json comments \
     --jq '[.comments[] | select(.body | contains("<!-- gitclaw:error"))] | length'
+}
+
+issue_label_names() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json labels \
+    --jq '.labels[].name'
 }
 
 wait_for_assistant_count() {
@@ -132,7 +150,21 @@ wait_for_assistant_count() {
   return 1
 }
 
-run_json="$(wait_for_run "$issue_started_at")" || die "timed out waiting for issues workflow run"
+wait_for_done_status() {
+  for _ in {1..60}; do
+    local labels
+    labels="$(issue_label_names)"
+    if grep -Fxq "gitclaw:done" <<<"$labels" &&
+      ! grep -Fxq "gitclaw:running" <<<"$labels" &&
+      ! grep -Fxq "gitclaw:error" <<<"$labels"; then
+      return 0
+    fi
+    sleep 5
+  done
+  return 1
+}
+
+run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
 wait_for_assistant_count 1 || die "expected one backup report comment"
 comments="$(assistant_comments)"
 
@@ -147,6 +179,7 @@ for expected in \
   'backup_branch: `gitclaw-backups`' \
   'backup_schema_version: `1`' \
   "requested_local_command: \`gitclaw backup verify --root .gitclaw/backups --repo ${repo}\`" \
+  'llm_e2e_required_after_backup_verify_change: `true`' \
   'gitclaw backup verify --root .gitclaw/backups --repo <owner/repo>' \
   'traversal-safe payload paths'; do
   grep -Fq "$expected" <<<"$comments" || die "backup report missing ${expected}"
@@ -154,6 +187,10 @@ done
 
 if grep -Fq "$token" <<<"$comments"; then
   die "backup report leaked issue body token"
+fi
+
+if grep -Fq "$expected_token" <<<"$comments" || grep -Fq "$search_phrase" <<<"$comments"; then
+  die "backup report leaked follow-up fixture context"
 fi
 
 repo_key="${repo//\//__}"
@@ -183,16 +220,49 @@ for _ in {1..60}; do
       "GitClaw Backup Verify Report" \
       'backup_verify_status: `ok`' \
       'verification_failures: `0`' \
+      'llm_e2e_required_after_backup_verify_change: `true`' \
       'unindexed_issue_files: `0`' \
       "${repo_key}/index.json" \
       "${repo_key}/README.md"; do
       grep -Fq "$expected" <<<"$verify_output" || die "backup verify output missing ${expected}"
     done
     url="$(jq -r '.url' <<<"$run_json")"
-    log "passed for issue #${issue_number}: ${url}"
-    exit 0
+    break
   fi
   sleep 5
 done
 
-die "backup verifier did not observe issue #${issue_number} in ${backup_branch}"
+[[ -n "${url:-}" ]] || die "backup verifier did not observe issue #${issue_number} in ${backup_branch}"
+
+comment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+gh issue comment "$issue_number" \
+  --repo "$repo" \
+  --body "Use the repo-reader skill and search the repository for \`${search_phrase}\`.
+
+Reply with only the exact GITCLAW_BACKUP_VERIFY token from the matching repository search result line.
+Do not include this hidden follow-up token: ${followup_hidden_token}
+Keep the answer under 30 words." >/dev/null
+
+model_run_json="$(wait_for_run issue_comment "$comment_started_at")" || die "timed out waiting for issue_comment workflow run"
+wait_for_assistant_count 2 || die "expected model-backed follow-up assistant comment"
+model_comment="$(latest_assistant_comment)"
+
+grep -Fq "$expected_token" <<<"$model_comment" || die "assistant did not include search_files token ${expected_token}"
+if ! grep -Fq 'model="openai/gpt-5-nano"' <<<"$model_comment" && ! grep -Fq 'model="openai/gpt-4.1-nano"' <<<"$model_comment"; then
+  die "assistant marker did not use configured GitHub Models primary or fallback"
+fi
+grep -Fq 'prompt_context_sha256_12="' <<<"$model_comment" || die "assistant marker missing prompt context hash"
+grep -Fq 'skills="repo-reader"' <<<"$model_comment" || die "assistant marker missing selected repo-reader skill"
+grep -Fq 'tools="' <<<"$model_comment" || die "assistant marker missing prompt-visible tools"
+grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant marker did not prove search_files was prompt-visible"
+grep -Fq 'usage_total_tokens="' <<<"$model_comment" || die "assistant marker missing usage token telemetry"
+
+for leaked in "$token" "$followup_hidden_token"; do
+  if grep -Fq "$leaked" <<<"$model_comment"; then
+    die "model follow-up leaked ${leaked}"
+  fi
+done
+
+wait_for_done_status || die "expected gitclaw:done without running/error"
+model_url="$(jq -r '.url' <<<"$model_run_json")"
+log "passed for issue #${issue_number}: ${url} (model follow-up: ${model_url})"

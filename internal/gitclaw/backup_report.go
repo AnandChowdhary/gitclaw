@@ -54,6 +54,9 @@ func RenderBackupReport(ev Event, cfg Config, comments []Comment, transcript []T
 	if request.LocalCommand != "" {
 		fmt.Fprintf(&b, "- requested_local_command: `%s`\n", backupInlineCommand(request.LocalCommand))
 	}
+	if request.Name == "verify" {
+		fmt.Fprintf(&b, "- llm_e2e_required_after_backup_verify_change: `%t`\n", true)
+	}
 	if request.Name == "search" {
 		fmt.Fprintf(&b, "- query_sha256_12: `%s`\n", request.QueryHash)
 		fmt.Fprintf(&b, "- query_terms: `%d`\n", request.QueryTerms)
@@ -345,7 +348,8 @@ func RenderBackupVerifyReport(result BackupVerifyResult) string {
 	fmt.Fprintf(&b, "- comments_checked: `%d`\n", result.CommentsChecked)
 	fmt.Fprintf(&b, "- transcript_messages_checked: `%d`\n", result.TranscriptMessages)
 	fmt.Fprintf(&b, "- unindexed_issue_files: `%d`\n", result.UnindexedIssueFiles)
-	fmt.Fprintf(&b, "- verification_failures: `%d`\n\n", len(result.VerificationFailures))
+	fmt.Fprintf(&b, "- verification_failures: `%d`\n", len(result.VerificationFailures))
+	fmt.Fprintf(&b, "- llm_e2e_required_after_backup_verify_change: `%t`\n\n", true)
 
 	b.WriteString("### Verification Scope\n")
 	b.WriteString("- repo-scoped `index.json`\n")

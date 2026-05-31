@@ -291,6 +291,14 @@ repo-scoped `index.json`, `README.md`, canonical `issues/000000.json` paths,
 schema version, counts, timestamps, and absence of unindexed issue backups
 before treating the branch as restorable.
 
+2026-05-31 backup-verify E2E follow-up: the backup verifier is a restore gate,
+not just an operator nicety. OpenClaw-style archive validation and Hermes-style
+session export both imply that backup reports should prove branch integrity
+before downstream coverage, search, restore, retention, or export commands run.
+GitClaw now treats backup-verify changes as needing two proofs: a real fetched
+`gitclaw-backups` branch audit and a normal GitHub Models repo-reader/search
+follow-up so the model path still has tool provenance and usage telemetry.
+
 2026-05-30 backup-command follow-up: OpenClaw exposes backup verification as a
 local command over an archive, while Hermes exposes session export as a local
 JSONL artifact. GitClaw's issue handler runs before the backup branch update,

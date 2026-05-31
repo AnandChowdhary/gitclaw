@@ -852,7 +852,7 @@ func TestVerifyBackupTreeAcceptsCanonicalBackupIndex(t *testing.T) {
 		t.Fatalf("unexpected verification counts: %#v", result)
 	}
 	report := RenderBackupVerifyReport(result)
-	for _, want := range []string{"GitClaw Backup Verify Report", "backup_verify_status: `ok`", "issues_checked: `1`", "comments_checked: `1`", "verification_failures: `0`", "canonical `issues/000000.json`"} {
+	for _, want := range []string{"GitClaw Backup Verify Report", "backup_verify_status: `ok`", "issues_checked: `1`", "comments_checked: `1`", "verification_failures: `0`", "llm_e2e_required_after_backup_verify_change: `true`", "canonical `issues/000000.json`"} {
 		if !strings.Contains(report, want) {
 			t.Fatalf("verify report missing %q:\n%s", want, report)
 		}
