@@ -138,7 +138,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `33`' \
   'aliases: `31`' \
-  'local_cli_helpers: `128`' \
+  'local_cli_helpers: `129`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/agents' \
@@ -254,6 +254,7 @@ for expected in \
   'gitclaw proactive init' \
   'gitclaw proactive enqueue' \
   'gitclaw session list --backup <issue.json>' \
+  'gitclaw session stats --backup <issue.json>' \
   'gitclaw session coverage --backup <issue.json>' \
   'gitclaw session risk --backup <issue.json>' \
   'gitclaw session search <query> --backup <issue.json>' \

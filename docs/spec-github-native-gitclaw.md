@@ -895,6 +895,7 @@ transcript/session CLIs and Hermes' saved/searchable sessions:
 ```text
 @gitclaw /session
 @gitclaw /session list
+@gitclaw /session stats
 @gitclaw /session coverage
 @gitclaw /session risk
 @gitclaw /session search deployment window
@@ -909,6 +910,7 @@ comment with `model="gitclaw/session"` and summarizes:
 - GitClaw assistant, heartbeat, error, and channel-message marker counts,
 - assistant-turn prompt provenance counts, unique prompt-context hashes,
   prompt-visible skill names, and prompt-visible tool names,
+- model-backed versus deterministic assistant-turn counts and model names,
 - whether the issue is a channel-thread or proactive-run issue,
 - per-transcript-message source, actor, trust state, size, line count, and
   short hash,
@@ -923,6 +925,7 @@ Local operators can inspect a backed-up issue session without calling GitHub:
 
 ```bash
 gitclaw session list --backup .gitclaw/backups/owner/repo/issues/000123.json
+gitclaw session stats --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session coverage --backup .gitclaw/backups/owner/repo/issues/000123.json
 ```
 
@@ -930,6 +933,14 @@ The local report reads the canonical backup JSON, uses `scope: local-backup`,
 and emits repo/issue backup metadata, marker counts, transcript counts, trust
 states, sources, sizes, and hashes without dumping issue bodies, comment bodies,
 or assistant replies.
+
+`gitclaw session stats --backup <issue.json>` is the compact Hermes-inspired
+summary surface. It emits counts for comments, transcript roles, trust/edited
+state, body byte/line totals, assistant-turn provenance, model-backed versus
+deterministic turns, model names, prompt-visible skill/tool counts, and marker
+origins without listing individual transcript messages or raw message bodies.
+The issue-side `@gitclaw /session stats` form runs before model inference and
+posts the same body-free summary for the current GitHub issue conversation.
 
 `gitclaw session coverage --backup <issue.json>` is the stricter E2E gate. By
 default it requires at least one assistant turn, at least one assistant marker
@@ -945,6 +956,7 @@ Backed-up sessions can also be searched locally without a GitHub API call:
 
 ```bash
 gitclaw session coverage --backup .gitclaw/backups/owner/repo/issues/000123.json --require-tool gitclaw.search_files
+gitclaw session stats --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session risk --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session search deployment window --backup .gitclaw/backups/owner/repo/issues/000123.json
 ```
@@ -5434,6 +5446,10 @@ examples/workflows/gitclaw.yml
   an explicit report alias, while local
   `gitclaw session list --backup <issue.json>` inspects a backed-up issue
   session without dumping raw issue, comment, assistant, or transcript bodies.
+- A `gh`-driven session-stats E2E harness first runs a normal GitHub Models
+  conversation with repo-reader and `gitclaw.search_files`, then verifies
+  `@gitclaw /session stats` reports model/provenance/session totals without
+  leaking hidden issue or comment tokens.
 - A `gh`-driven session-coverage E2E harness verifies an actual GitHub Models
   conversation with repo-reader skill and `gitclaw.search_files` tool
   provenance, then checks both issue-side `@gitclaw /session coverage` and

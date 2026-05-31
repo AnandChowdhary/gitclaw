@@ -1996,6 +1996,26 @@ Recommended non-goals for the first spec:
 - No hidden memory writes from untrusted external content.
 - No long-running unsupervised loops without budget and stop conditions.
 
+### 2026-05-31 Session Stats Follow-Up
+
+OpenClaw keeps stored session discovery and transcript inspection as explicit
+CLI surfaces: `openclaw sessions` lists bounded persisted conversation rows,
+while `openclaw transcripts` exposes read-only selectors, metadata, summaries,
+and transcript paths. Hermes similarly treats sessions as durable, resumable
+conversation state; its resume panel shows compact recent-turn context and
+collapses tool calls without printing internal tool results.
+
+GitClaw should mirror the useful parts without adding a private session
+database. `@gitclaw /session stats` and
+`gitclaw session stats --backup <issue.json>` should summarize the GitHub issue
+conversation in place: comment/transcript role counts, trust and edited counts,
+assistant-turn marker totals, prompt-provenance totals, model-backed versus
+deterministic turns, model names, prompt-visible skill/tool names, channel and
+proactive markers, and byte/line totals. It should not list raw messages,
+prompts, search queries, or tool outputs. This gives operators a Hermes-style
+compact recap and an OpenClaw-style session inspection command while preserving
+GitHub issues and git-backed backups as the canonical storage layer.
+
 ## Open Questions For Speccing
 
 1. Is `gitclaw` primarily for one user's repos, or for teams/organizations?
