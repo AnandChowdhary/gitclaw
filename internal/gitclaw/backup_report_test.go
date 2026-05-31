@@ -216,6 +216,35 @@ func TestRenderBackupListIssueCommandRecordsDeferredIntentWithoutBodies(t *testi
 	}
 }
 
+func TestRenderBackupManifestIssueCommandRecordsDeferredIntentWithoutBodies(t *testing.T) {
+	ev := Event{
+		Repo: "owner/repo",
+		Issue: Issue{
+			Number: 100,
+			Title:  "@gitclaw /backup manifest e2e",
+			Body:   "BACKUP_MANIFEST_INTENT_SECRET",
+		},
+	}
+
+	report := RenderBackupReport(ev, DefaultConfig(), nil, nil)
+	for _, want := range []string{
+		"requested_backup_command: `manifest`",
+		"backup_command_status: `ok`",
+		"requested_local_command: `gitclaw backup manifest --root .gitclaw/backups --repo owner/repo --issue 100`",
+		"run `gitclaw backup manifest --root .gitclaw/backups --repo owner/repo --issue 100` after fetching `gitclaw-backups`",
+		"issue_side_execution: `deferred_to_post_turn_backup_branch`",
+		"raw_bodies_included: `false`",
+		"llm_e2e_required_after_backup_manifest_change: `true`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("backup manifest report missing %q:\n%s", want, report)
+		}
+	}
+	if strings.Contains(report, "BACKUP_MANIFEST_INTENT_SECRET") {
+		t.Fatalf("backup manifest report leaked body:\n%s", report)
+	}
+}
+
 func TestRenderBackupRestorePlanIssueCommandRecordsDeferredIntentWithoutBodies(t *testing.T) {
 	ev := Event{
 		Repo: "owner/repo",

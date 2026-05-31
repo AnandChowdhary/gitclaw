@@ -354,6 +354,15 @@ paths, byte counts, counts, and hashes without dumping raw transcript bodies.
 That gives restore reviews and mirrors a stable checklist without requiring
 operators to open every raw issue JSON file.
 
+2026-05-31 backup-manifest E2E hardening: Current OpenClaw backup docs still
+center `manifest.json` plus payload validation, while Hermes' current skills
+docs emphasize progressive disclosure and portable workflow context. GitClaw's
+git-native manifest surface should therefore require two proofs after changes:
+a live fetched-branch manifest report, and a normal GitHub Models follow-up
+that selects repo-reader, exposes `gitclaw.search_files`, recovers the
+backup-manifest repository-search fixture token, and avoids hidden issue/comment
+token echoing.
+
 2026-05-29 backup-export follow-up: Hermes exposes session export as JSONL.
 GitClaw can get the same portability without a local SQLite store by exporting
 the fetched `gitclaw-backups` branch: read the repo index and canonical issue

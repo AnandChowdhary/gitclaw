@@ -66,6 +66,9 @@ func RenderBackupReport(ev Event, cfg Config, comments []Comment, transcript []T
 	if request.Name == "list" {
 		fmt.Fprintf(&b, "- llm_e2e_required_after_backup_list_change: `%t`\n", true)
 	}
+	if request.Name == "manifest" {
+		fmt.Fprintf(&b, "- llm_e2e_required_after_backup_manifest_change: `%t`\n", true)
+	}
 	if request.Name == "search" {
 		fmt.Fprintf(&b, "- query_sha256_12: `%s`\n", request.QueryHash)
 		fmt.Fprintf(&b, "- query_terms: `%d`\n", request.QueryTerms)

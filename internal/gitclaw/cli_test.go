@@ -2363,6 +2363,45 @@ func TestBackupListCommandReportsFetchedBackupTree(t *testing.T) {
 	}
 }
 
+func TestBackupManifestCommandReportsFetchedBackupTree(t *testing.T) {
+	dir := t.TempDir()
+	writeBackupFixture(t, dir, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T13:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue: IssueBackupIssue{
+			Number: 7,
+			Title:  "@gitclaw cli backup manifest CLI_BACKUP_MANIFEST_TITLE",
+			Body:   "CLI_BACKUP_MANIFEST_BODY",
+			Labels: []string{"gitclaw"},
+		},
+		Transcript: []TranscriptMessage{
+			{Role: "user", Body: "CLI_BACKUP_MANIFEST_TRANSCRIPT"},
+			{Role: "assistant", Body: "CLI_BACKUP_MANIFEST_ASSISTANT"},
+		},
+		Comments: []IssueBackupComment{{ID: 12, Body: "CLI_BACKUP_MANIFEST_COMMENT"}},
+	})
+	if _, err := WriteBackupIndex(dir, "owner/repo", time.Date(2026, 5, 29, 14, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+	output := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"backup", "manifest", "--root", dir, "--repo", "owner/repo", "--issue", "7"}); err != nil {
+			t.Fatalf("backup manifest returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"GitClaw Backup Manifest", "backup_schema_version: `1`", "issue_filter: `#7`", "control_files: `2`", "issue_payload_files: `1`", "total_comments: `1`", "total_transcript_messages: `2`", "raw_bodies_included: `false`", "llm_e2e_required_after_backup_manifest_change: `true`", "`index.json` bytes=", "`README.md` bytes=", "issue=`#7` path=`issues/000007.json`", "sha256_12="} {
+		if !strings.Contains(output, want) {
+			t.Fatalf("backup manifest output missing %q:\n%s", want, output)
+		}
+	}
+	for _, leaked := range []string{"CLI_BACKUP_MANIFEST_TITLE", "CLI_BACKUP_MANIFEST_BODY", "CLI_BACKUP_MANIFEST_TRANSCRIPT", "CLI_BACKUP_MANIFEST_ASSISTANT", "CLI_BACKUP_MANIFEST_COMMENT", "@gitclaw cli backup manifest"} {
+		if strings.Contains(output, leaked) {
+			t.Fatalf("backup manifest leaked body/title token %q:\n%s", leaked, output)
+		}
+	}
+}
+
 func TestBackupTimelineCommandReportsFetchedBackupChronology(t *testing.T) {
 	dir := t.TempDir()
 	writeBackupFixture(t, dir, IssueBackup{

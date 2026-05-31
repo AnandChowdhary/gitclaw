@@ -115,20 +115,21 @@ type BackupRestorePlan struct {
 }
 
 type BackupManifest struct {
-	Root              string
-	Repo              string
-	RepoDir           string
-	IndexPath         string
-	ReadmePath        string
-	SchemaVersion     int
-	IndexGeneratedAt  string
-	IssueFilter       int
-	IssuePayloads     []BackupManifestPayload
-	ControlFiles      []BackupManifestFile
-	TotalPayloadBytes int
-	TotalComments     int
-	TotalTranscript   int
-	RawBodiesIncluded bool
+	Root                      string
+	Repo                      string
+	RepoDir                   string
+	IndexPath                 string
+	ReadmePath                string
+	SchemaVersion             int
+	IndexGeneratedAt          string
+	IssueFilter               int
+	IssuePayloads             []BackupManifestPayload
+	ControlFiles              []BackupManifestFile
+	TotalPayloadBytes         int
+	TotalComments             int
+	TotalTranscript           int
+	RawBodiesIncluded         bool
+	LLME2ERequiredAfterChange bool
 }
 
 type BackupManifestFile struct {
@@ -628,15 +629,16 @@ func BuildBackupManifest(root, repo string, issueNumber int) (BackupManifest, er
 		root = filepath.Join(".gitclaw", "backups")
 	}
 	manifest := BackupManifest{
-		Root:              filepath.ToSlash(root),
-		Repo:              repo,
-		RepoDir:           filepath.ToSlash(repoDir),
-		IndexPath:         filepath.ToSlash(filepath.Join(repoDir, "index.json")),
-		ReadmePath:        filepath.ToSlash(filepath.Join(repoDir, "README.md")),
-		SchemaVersion:     index.Version,
-		IndexGeneratedAt:  index.GeneratedAt,
-		IssueFilter:       issueNumber,
-		RawBodiesIncluded: false,
+		Root:                      filepath.ToSlash(root),
+		Repo:                      repo,
+		RepoDir:                   filepath.ToSlash(repoDir),
+		IndexPath:                 filepath.ToSlash(filepath.Join(repoDir, "index.json")),
+		ReadmePath:                filepath.ToSlash(filepath.Join(repoDir, "README.md")),
+		SchemaVersion:             index.Version,
+		IndexGeneratedAt:          index.GeneratedAt,
+		IssueFilter:               issueNumber,
+		RawBodiesIncluded:         false,
+		LLME2ERequiredAfterChange: true,
 	}
 
 	for _, path := range []string{filepath.Join(repoDir, "index.json"), filepath.Join(repoDir, "README.md")} {
@@ -1388,7 +1390,8 @@ func RenderBackupManifest(manifest BackupManifest) string {
 	fmt.Fprintf(&b, "- total_payload_bytes: `%d`\n", manifest.TotalPayloadBytes)
 	fmt.Fprintf(&b, "- total_comments: `%d`\n", manifest.TotalComments)
 	fmt.Fprintf(&b, "- total_transcript_messages: `%d`\n", manifest.TotalTranscript)
-	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n\n", manifest.RawBodiesIncluded)
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", manifest.RawBodiesIncluded)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_backup_manifest_change: `%t`\n\n", manifest.LLME2ERequiredAfterChange)
 	b.WriteString("This manifest reads a fetched backup tree and reports file-level provenance, counts, and hashes. It does not print raw issue, comment, or transcript bodies.\n\n")
 
 	b.WriteString("### Control Files\n")

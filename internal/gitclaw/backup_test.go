@@ -283,7 +283,7 @@ func TestBuildBackupManifestRendersHashesWithoutBodies(t *testing.T) {
 		t.Fatalf("unexpected manifest payload: %#v", payload)
 	}
 	report := RenderBackupManifest(manifest)
-	for _, want := range []string{"GitClaw Backup Manifest", "repository: `owner/repo`", "backup_schema_version: `1`", "issue_filter: `#7`", "control_files: `2`", "issue_payload_files: `1`", "total_comments: `1`", "total_transcript_messages: `2`", "raw_bodies_included: `false`", "`index.json` bytes=", "`README.md` bytes=", "issue=`#7` path=`issues/000007.json`", "sha256_12="} {
+	for _, want := range []string{"GitClaw Backup Manifest", "repository: `owner/repo`", "backup_schema_version: `1`", "issue_filter: `#7`", "control_files: `2`", "issue_payload_files: `1`", "total_comments: `1`", "total_transcript_messages: `2`", "raw_bodies_included: `false`", "llm_e2e_required_after_backup_manifest_change: `true`", "`index.json` bytes=", "`README.md` bytes=", "issue=`#7` path=`issues/000007.json`", "sha256_12="} {
 		if !strings.Contains(report, want) {
 			t.Fatalf("manifest report missing %q:\n%s", want, report)
 		}

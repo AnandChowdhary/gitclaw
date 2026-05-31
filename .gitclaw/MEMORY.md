@@ -47,6 +47,8 @@
   backup-health report, plus a normal model/tool follow-up.
 - Backup list changes need two proofs: fetched-branch body-free indexed backup
   navigation, plus a normal model/tool follow-up.
+- Backup manifest changes need two proofs: fetched-branch body-free control and
+  payload hash manifest, plus a normal model/tool follow-up.
 - Backup search changes need two proofs: fetched-branch raw-token search that
   does not leak bodies, plus a normal model/tool follow-up.
 - Sessions and run history are reconstructed from issues, backups, and

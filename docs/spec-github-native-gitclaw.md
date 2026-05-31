@@ -4632,7 +4632,10 @@ payload in the fetched backup tree. The command prints a deterministic
 
 It never prints raw issue, comment, or transcript bodies. The manifest is a
 compact provenance view for audits, mirrors, and restore reviews before anyone
-uses the explicit raw `export-jsonl` path.
+uses the explicit raw `export-jsonl` path. Manifest-surface changes carry
+`llm_e2e_required_after_backup_manifest_change: true` and require a
+fetched-branch manifest proof plus a normal GitHub Models repo-reader/search
+follow-up.
 
 ## Backup Stats Command
 
@@ -5489,6 +5492,8 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the issue-side report lists `requested_backup_command: manifest`,
      `issue_side_execution: deferred_to_post_turn_backup_branch`, and the
      concrete local manifest command without dumping body/title tokens,
+   - assert the issue-visible report includes
+     `llm_e2e_required_after_backup_manifest_change: true`,
    - wait for the successful backup job,
    - fetch the real `gitclaw-backups` branch,
    - run `gitclaw backup manifest --root <fetched>/.gitclaw/backups --repo
@@ -5496,51 +5501,55 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the manifest lists index/README control file hashes plus the
      just-created issue payload path, bytes, hash, schema, event, comment
      count, and transcript count,
-   - assert it does not dump the issue body token or raw transcript bodies.
+   - assert it does not dump the issue body token or raw transcript bodies,
+   - post a normal follow-up that requires repo-reader search and assert the
+     second assistant turn is GitHub Models-backed with prompt context,
+     selected skill, prompt-visible `gitclaw.search_files`, usage telemetry,
+     and the backup-manifest repository-search fixture token.
 
 38. **Backup stats**
 
    - create a real issue with `@gitclaw /backup stats`,
-	   - assert the issue-side report lists `requested_backup_command: stats`,
-	     the deferred execution marker, and the concrete local stats command
-	     without dumping body/title tokens,
-	   - assert the issue-visible report includes
-	     `llm_e2e_required_after_backup_stats_change: true`,
-	   - wait for the successful backup job,
-	   - fetch the real `gitclaw-backups` branch,
+   - assert the issue-side report lists `requested_backup_command: stats`,
+     the deferred execution marker, and the concrete local stats command
+     without dumping body/title tokens,
+   - assert the issue-visible report includes
+     `llm_e2e_required_after_backup_stats_change: true`,
+   - wait for the successful backup job,
+   - fetch the real `gitclaw-backups` branch,
    - run `gitclaw backup stats --root <fetched>/.gitclaw/backups --repo
      <owner/repo>`,
-	   - assert the report is marked `backup_stats_status: ok` and
-	     `backup_verify_status: ok`,
-	   - assert it lists aggregate issue/comment/message counts, latest backup
-	     metadata, event counts, and payload bytes,
-	   - assert it does not dump the issue body token or raw title,
-	   - post a normal follow-up that requires repo-reader search and assert the
-	     second assistant turn is GitHub Models-backed with prompt context,
-	     selected skill, prompt-visible `gitclaw.search_files`, usage telemetry,
-	     and the backup-stats repository-search fixture token.
+   - assert the report is marked `backup_stats_status: ok` and
+     `backup_verify_status: ok`,
+   - assert it lists aggregate issue/comment/message counts, latest backup
+     metadata, event counts, and payload bytes,
+   - assert it does not dump the issue body token or raw title,
+   - post a normal follow-up that requires repo-reader search and assert the
+     second assistant turn is GitHub Models-backed with prompt context,
+     selected skill, prompt-visible `gitclaw.search_files`, usage telemetry,
+     and the backup-stats repository-search fixture token.
 
 39. **Backup list**
 
    - create a real issue with `@gitclaw /backup list`,
-	   - assert the issue-side report lists `requested_backup_command: list`,
-	     the deferred execution marker, and the concrete local list command without
-	     dumping body/title tokens,
-	   - assert the issue-visible report includes
-	     `llm_e2e_required_after_backup_list_change: true`,
-	   - wait for the successful backup job,
+   - assert the issue-side report lists `requested_backup_command: list`,
+     the deferred execution marker, and the concrete local list command without
+     dumping body/title tokens,
+   - assert the issue-visible report includes
+     `llm_e2e_required_after_backup_list_change: true`,
+   - wait for the successful backup job,
    - fetch the real `gitclaw-backups` branch,
    - run `gitclaw backup list --root <fetched>/.gitclaw/backups --repo
      <owner/repo> --limit 5`,
-	   - assert the report is marked `backup_list_status: ok` and
-	     `backup_verify_status: ok`,
-	   - assert it lists the just-created issue number, canonical path, timestamp,
-	     event name, label/comment/transcript counts, and title hash,
-	   - assert it does not dump the issue body token or raw title,
-	   - post a normal follow-up that requires repo-reader search and assert the
-	     second assistant turn is GitHub Models-backed with prompt context,
-	     selected skill, prompt-visible `gitclaw.search_files`, usage telemetry,
-	     and the backup-list repository-search fixture token.
+   - assert the report is marked `backup_list_status: ok` and
+     `backup_verify_status: ok`,
+   - assert it lists the just-created issue number, canonical path, timestamp,
+     event name, label/comment/transcript counts, and title hash,
+   - assert it does not dump the issue body token or raw title,
+   - post a normal follow-up that requires repo-reader search and assert the
+     second assistant turn is GitHub Models-backed with prompt context,
+     selected skill, prompt-visible `gitclaw.search_files`, usage telemetry,
+     and the backup-list repository-search fixture token.
 
 40. **Backup timeline**
 
@@ -6155,7 +6164,10 @@ examples/workflows/gitclaw.yml
   `@gitclaw /backup manifest` records the deferred issue-side command intent,
   then verifies the fetched `gitclaw-backups` branch can produce a file-level
   manifest with control-file and issue-payload hashes for one real issue,
-  without dumping raw bodies.
+  without dumping raw bodies. The same harness posts a normal model-backed
+  follow-up that proves repo-reader search, prompt provenance, selected skill
+  metadata, prompt-visible tool names, usage markers, and the bounded
+  backup-manifest repository-search fixture token.
 - A `gh`-driven backup-stats E2E harness verifies
   `@gitclaw /backup stats` records the deferred issue-side command intent,
   then verifies the fetched `gitclaw-backups` branch can produce a repo-wide
