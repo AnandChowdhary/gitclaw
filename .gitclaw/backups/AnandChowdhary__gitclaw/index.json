@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T17:44:40Z",
+  "generated_at": "2026-05-31T17:53:30Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 396,
+  "count": 397,
   "issues": [
     {
       "number": 3,
@@ -4954,6 +4954,18 @@
         "gitclaw",
         "gitclaw:done",
         "gitclaw:e2e-prompt-artifact"
+      ],
+      "comment_count": 3,
+      "transcript_messages": 4
+    },
+    {
+      "number": 437,
+      "title": "GitClaw heartbeat e2e 20260531T175057Z",
+      "path": "issues/000437.json",
+      "backup_generated_at": "2026-05-31T17:53:28Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw:heartbeat"
       ],
       "comment_count": 3,
       "transcript_messages": 4
