@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T14:21:21Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 406,
+    "title": "GitClaw telegram channel state 527af81d71b2",
+    "body": "\u003c!-- gitclaw:channel-state channel=\"telegram\" account_sha256_12=\"527af81d71b2\" --\u003e\nGitClaw channel bridge state.\n\n- channel: telegram\n- account_sha256_12: 527af81d71b2\n- raw_state_bodies_included: false\n\nProvider pollers use this issue as durable GitHub-native state. Raw channel account IDs, offsets, tokens, and message bodies are not written here.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw:channel"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw telegram channel state 527af81d71b2\n\n\u003c!-- gitclaw:channel-state channel=\"telegram\" account_sha256_12=\"527af81d71b2\" --\u003e\nGitClaw channel bridge state.\n\n- channel: telegram\n- account_sha256_12: 527af81d71b2\n- raw_state_bodies_included: false\n\nProvider pollers use this issue as durable GitHub-native state. Raw channel account IDs, offsets, tokens, and message bodies are not written here.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue after the channel-state workflow and use the repo-reader skill.\n\nSearch the repository for `channel state unique search fixture phrase`.\nThe matching repository search result line has the form `channel state unique search fixture phrase =\u003e \u003ctoken\u003e`.\nReply with only the token after the arrow from the matching gitclaw.search_files tool output line.\nDo not answer with any token from this issue or its comments.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_STATE_FOLLOWUP_20260531T141910Z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4586987755,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_STATE_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4586989263,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4586986278,
+      "body": "\u003c!-- gitclaw:channel-state-update channel=\"telegram\" account_sha256_12=\"527af81d71b2\" offset_sha256_12=\"7e0cc76b3e88\" lease_run_id=\"channel-state-workflow-e2e-20260531T141910Z\" --\u003e\nGitClaw channel state update.\n\n- channel: telegram\n- account_sha256_12: 527af81d71b2\n- offset_sha256_12: 7e0cc76b3e88\n- lease_run_id: channel-state-workflow-e2e-20260531T141910Z\n- raw_state_bodies_included: false",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T14:19:39Z",
+      "updated_at": "2026-05-31T14:19:39Z"
+    },
+    {
+      "id": 4586987755,
+      "body": "@gitclaw Continue after the channel-state workflow and use the repo-reader skill.\n\nSearch the repository for `channel state unique search fixture phrase`.\nThe matching repository search result line has the form `channel state unique search fixture phrase =\u003e \u003ctoken\u003e`.\nReply with only the token after the arrow from the matching gitclaw.search_files tool output line.\nDo not answer with any token from this issue or its comments.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_STATE_FOLLOWUP_20260531T141910Z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-05-31T14:20:17Z",
+      "updated_at": "2026-05-31T14:20:17Z"
+    },
+    {
+      "id": 4586989263,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26715106665\" event_id=\"comment-4586987755\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"ecf5823d190cbf60e59e80ea6ee2dc54\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26715106665\" prompt_context_sha256_12=\"dd1e71b22d5e\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"9079\" usage_completion_tokens=\"10\" usage_total_tokens=\"9089\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_STATE_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T14:20:59Z",
+      "updated_at": "2026-05-31T14:20:59Z"
+    }
+  ]
+}
