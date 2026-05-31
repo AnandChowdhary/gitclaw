@@ -45,6 +45,9 @@
 - Channel-gateway workflow E2E needs hash-only lease state, duplicate lease
   suppression, and two normal model/tool issue-comment turns on the lease state
   issue to prove the renewable gateway path stays conversational.
+- Channel-delivery workflow E2E needs source assistant verification, hash-only
+  outbound receipt state, duplicate receipt suppression, and two normal
+  model/tool issue-comment turns that do not leak source reply bodies.
 - Heartbeat comments are model-backed scheduled turns; their
   `gitclaw:heartbeat` markers must include model, prompt-context, context-count,
   and usage telemetry without printing prompt or heartbeat bodies.

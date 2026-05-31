@@ -4122,7 +4122,10 @@ Behavior:
 through `workflow_dispatch`, so a gateway can send a reply through Telegram or
 Slack and then use the repository `GITHUB_TOKEN` to record exactly what GitHub
 assistant comment was delivered without writing channel credentials or reply
-bodies into the state issue.
+bodies into the state issue. Changes to this workflow must prove source
+assistant verification, hash-only outbound receipt state, duplicate receipt
+suppression, and two normal GitHub Models repo-reader/search turns that do not
+leak source assistant bodies or provider message IDs.
 
 ### Channel Inspection Command
 
@@ -6001,7 +6004,10 @@ examples/workflows/gitclaw.yml
   `.github/workflows/gitclaw-channel-delivery.yml`, verifies a source
   `gitclaw:assistant-turn` comment can be recorded as delivered, checks that
   only hashes are stored for channel account/provider message IDs, and repeats
-  the same delivery to prove outbound idempotency.
+  the same delivery to prove outbound idempotency. The same harness then posts
+  normal issue-comment follow-ups that must make GitHub Models calls, select
+  `repo-reader`, expose `gitclaw.search_files`, recover distinct
+  channel-delivery fixture tokens, and avoid hidden source/provider sentinels.
 - A `gh`-driven channels-report E2E harness verifies `@gitclaw /channels`
   reports workflow dispatch, channel labels, provider keys, mirrored message
   marker counts, and `llm_e2e_required_after_channel_report_change: true`

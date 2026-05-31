@@ -2075,6 +2075,14 @@ a GitHub-native receipt: verify the source `gitclaw:assistant-turn`, write one
 message id, and dedupe by source issue/comment. This lets Telegram/Slack
 gateways retry safely without turning channel state into a plaintext transcript.
 
+2026-05-31 channel-delivery workflow E2E hardening: OpenClaw's message routing
+docs describe outbound replies as part of the gateway delivery path, with
+duplicate delivery suppression, and Hermes' Slack gateway routes replies through
+the workspace-specific client. GitClaw's no-server equivalent should prove the
+receipt path live: source assistant verification, hash-only provider receipt
+state, duplicate receipt suppression, and normal GitHub Models repo-reader/search
+continuation on the receipt state issue without leaking source reply bodies.
+
 Hermes' session docs also expose a practical backup primitive:
 `hermes sessions export backup.jsonl` writes conversation metadata and messages
 as durable JSONL. GitClaw should preserve the same principle, but use GitHub
