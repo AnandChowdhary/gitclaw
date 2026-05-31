@@ -34,7 +34,10 @@ ensure_label gitclaw:heartbeat 1d76db "GitClaw heartbeat opt-in"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_HEARTBEAT_REPORT_E2E_${timestamp}"
+token="NOECHO_HEARTBEAT_REPORT_${timestamp}"
+followup_hidden_token="NOECHO_HEARTBEAT_REPORT_FOLLOWUP_${timestamp}"
+expected_token="GITCLAW_HEARTBEAT_REPORT_CONTEXT_V1"
+search_phrase="heartbeat report unique search fixture phrase"
 title="@gitclaw /heartbeat e2e ${timestamp}"
 body="Live heartbeat-report E2E.
 
@@ -64,13 +67,14 @@ trap cleanup EXIT
 log "created issue #${issue_number}: ${issue_url}"
 
 wait_for_run() {
-  local started_at="$1"
+  local event_name="$1"
+  local started_at="$2"
   for _ in {1..90}; do
     local run_json
     run_json="$(gh run list \
       --repo "$repo" \
       --workflow "$workflow_name" \
-      --event issues \
+      --event "$event_name" \
       --created ">=$started_at" \
       --limit 10 \
       --json databaseId,status,conclusion,url,createdAt,displayTitle \
@@ -81,7 +85,7 @@ wait_for_run() {
       conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
       url="$(jq -r '.url' <<<"$run_json")"
       if [[ "$run_status" == "completed" ]]; then
-        [[ "$conclusion" == "success" ]] || die "issues run failed with conclusion ${conclusion}: ${url}"
+        [[ "$conclusion" == "success" ]] || die "${event_name} run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
       fi
@@ -96,6 +100,13 @@ assistant_comments() {
     --repo "$repo" \
     --json comments \
     --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | join("\n---GITCLAW-COMMENT---\n")'
+}
+
+latest_assistant_comment() {
+  gh issue view "$issue_number" \
+    --repo "$repo" \
+    --json comments \
+    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | .[-1] // ""'
 }
 
 assistant_count() {
@@ -130,7 +141,7 @@ wait_for_assistant_count() {
   return 1
 }
 
-run_json="$(wait_for_run "$issue_started_at")" || die "timed out waiting for issues workflow run"
+run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
 wait_for_assistant_count 1 || die "expected one heartbeat report comment"
 comments="$(assistant_comments)"
 
@@ -164,6 +175,7 @@ for expected in \
   'raw_bodies_included: `false`' \
   'raw_heartbeat_body_included: `false`' \
   'llm_e2e_required_after_change: `true`' \
+  'llm_e2e_required_after_heartbeat_marker_change: `true`' \
   'heartbeat_label_present: `true`' \
   'disabled_label_present: `false`' \
   'heartbeat_comments_now: `0`' \
@@ -174,11 +186,46 @@ for expected in \
   grep -Fq -- "$expected" <<<"$comments" || die "heartbeat report missing ${expected}"
 done
 
-for forbidden in "$token" "GITCLAW_HEARTBEAT_CONTEXT_V1"; do
+for forbidden in "$token" "$expected_token" "$search_phrase" "GITCLAW_HEARTBEAT_CONTEXT_V1"; do
   if grep -Fq -- "$forbidden" <<<"$comments"; then
     die "heartbeat report leaked ${forbidden}"
   fi
 done
 
 url="$(jq -r '.url' <<<"$run_json")"
-log "passed for issue #${issue_number}: ${url}"
+log "heartbeat report verified for issue #${issue_number}: ${url}"
+
+comment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+gh issue comment "$issue_number" \
+  --repo "$repo" \
+  --body "@gitclaw Use the repo-reader skill and search the repository for \`${search_phrase}\`.
+
+Search for that exact phrase, not shorter words from it.
+The matching repository search result line in \`docs/search-fixture.md\` has the form \`${search_phrase} => <token>\`.
+Reply with only the uppercase fixture token after the arrow from the matching gitclaw.search_files tool output line.
+Do not answer with the HEARTBEAT.md token, issue title, issue number, or any token from this issue/comments.
+Do not include this hidden follow-up token: ${followup_hidden_token}
+Keep the answer under 30 words." >/dev/null
+
+model_run_json="$(wait_for_run issue_comment "$comment_started_at")" || die "timed out waiting for issue_comment workflow run"
+wait_for_assistant_count 2 || die "expected model-backed follow-up assistant comment"
+model_comment="$(latest_assistant_comment)"
+
+grep -Fq "$expected_token" <<<"$model_comment" || die "assistant did not include search_files token ${expected_token}"
+if ! grep -Fq 'model="openai/gpt-5-nano"' <<<"$model_comment" && ! grep -Fq 'model="openai/gpt-4.1-nano"' <<<"$model_comment"; then
+  die "assistant marker did not use configured GitHub Models primary or fallback"
+fi
+grep -Fq 'prompt_context_sha256_12="' <<<"$model_comment" || die "assistant marker missing prompt context hash"
+grep -Fq 'skills="repo-reader"' <<<"$model_comment" || die "assistant marker missing selected repo-reader skill"
+grep -Fq 'tools="' <<<"$model_comment" || die "assistant marker missing prompt-visible tools"
+grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant marker did not prove search_files was prompt-visible"
+grep -Fq 'usage_total_tokens="' <<<"$model_comment" || die "assistant marker missing usage token telemetry"
+
+for leaked in "$token" "$followup_hidden_token"; do
+  if grep -Fq "$leaked" <<<"$model_comment"; then
+    die "model follow-up leaked ${leaked}"
+  fi
+done
+
+model_url="$(jq -r '.url' <<<"$model_run_json")"
+log "passed for issue #${issue_number}: ${url} (model follow-up: ${model_url})"

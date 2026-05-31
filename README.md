@@ -332,6 +332,7 @@ scripts/e2e/github-prompt-compression-report.sh
 scripts/e2e/github-prompt-risk-report.sh
 scripts/e2e/github-diffs-risk-report.sh
 scripts/e2e/github-heartbeat.sh
+scripts/e2e/github-heartbeat-report.sh
 scripts/e2e/github-heartbeat-risk-report.sh
 scripts/e2e/github-hooks-risk-report.sh
 scripts/e2e/github-hooks-provenance-report.sh
@@ -399,6 +400,10 @@ inference, prompt context, selected skills, and prompt-visible tools. When a
 model E2E asks for a repository-search fixture token, hidden issue/comment
 sentinels must use a distinct prefix so the assertion proves tool-output
 grounding rather than transcript echoing.
+The heartbeat-report harness now checks the body-free scheduled heartbeat
+inventory and then posts a normal GitHub Models repo-reader/search follow-up,
+so `/heartbeat` changes prove both operator visibility and regular
+conversation continuity.
 The channel-message harness now proves both sides of the Slack/Telegram bridge:
 the mirrored channel comment can wake a model-backed repo-reader/search turn by
 `workflow_dispatch`, and the same issue can continue with a normal

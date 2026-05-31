@@ -779,6 +779,16 @@ hash, prompt-visible context counts, and token usage telemetry as ordinary
 assistant turns, so scheduled comments can be audited without exposing prompt
 or heartbeat file bodies.
 
+2026-05-31 heartbeat-report E2E follow-up: Current [OpenClaw heartbeat docs](https://docs.openclaw.ai/heartbeat)
+treat `HEARTBEAT_OK` as a quiet acknowledgement and describe deferral when
+cron or session lanes are busy; [Hermes cron guidance](https://hermes-agent.nousresearch.com/docs/guides/automate-with-cron/)
+emphasizes fresh scheduled runs rather than resident conversation loops.
+GitClaw's heartbeat status report should therefore remain a cheap,
+deterministic inventory, but its live acceptance should immediately continue
+with a normal issue-comment model/tool turn. That proves the no-daemon
+heartbeat surface can still rejoin the ordinary GitHub issue conversation path
+after the operator has inspected it.
+
 2026-05-30 heartbeat-risk follow-up: Current OpenClaw heartbeat docs frame
 heartbeat as scheduled proactive awareness, `HEARTBEAT.md` context, and
 `HEARTBEAT_OK` quiet suppression, while Hermes cron docs emphasize fresh

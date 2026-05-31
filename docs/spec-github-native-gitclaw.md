@@ -331,7 +331,11 @@ or prints issue/comment/workflow/heartbeat context bodies. The report carries
 distinguish the operator report from the real scheduled model-backed runner.
 Heartbeat marker changes also carry
 `llm_e2e_required_after_heartbeat_marker_change: true` and must be proven by
-the live heartbeat workflow-dispatch harness.
+the live heartbeat workflow-dispatch harness. The heartbeat report E2E must
+also pair this deterministic, body-free inventory with a normal GitHub Models
+issue-comment follow-up that selects `repo-reader`, exposes
+`gitclaw.search_files`, and recovers a bounded repository-search fixture token,
+so report changes do not drift away from ordinary conversation behavior.
 
 When called as `@gitclaw /heartbeat risk` or `gitclaw heartbeat risk`, GitClaw
 posts a body-free risk audit for the scheduled heartbeat surface. It scans the
@@ -5978,8 +5982,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven heartbeat-report E2E harness verifies `@gitclaw /heartbeat`
   reports workflow triggers, permissions, heartbeat context metadata, label
   state, marker counts, and the runner/model-call contract without a model call
-  or body leakage. Each heartbeat-report implementation batch must still run a
-  live GitHub Models conversation E2E that makes an actual LLM call.
+  or body leakage. The same live issue then receives a normal GitHub Models
+  follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
+  recover a bounded repository-search fixture token, and publish usage
+  telemetry without leaking hidden issue tokens or `HEARTBEAT.md` contents.
 - A `gh`-driven heartbeat-risk E2E harness verifies
   `@gitclaw /heartbeat risk` reports body-free workflow schedule, permission,
   idempotency, heartbeat context, and runtime-gate risk metadata, then runs a
