@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T08:16:28Z",
+  "generated_at": "2026-05-31T08:17:52Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 329,
   "issues": [
@@ -4066,13 +4066,14 @@
       "number": 366,
       "title": "@gitclaw /prompt compression e2e 20260531T081454Z",
       "path": "issues/000366.json",
-      "backup_generated_at": "2026-05-31T08:16:27Z",
-      "event_name": "issues",
+      "backup_generated_at": "2026-05-31T08:17:51Z",
+      "event_name": "issue_comment",
       "labels": [
-        "gitclaw"
+        "gitclaw",
+        "gitclaw:done"
       ],
-      "comment_count": 1,
-      "transcript_messages": 2
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
