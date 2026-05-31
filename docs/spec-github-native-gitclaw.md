@@ -5093,8 +5093,10 @@ assert the expected comments/labels, and close the issue in cleanup.
 
    - create an issue without the normal trigger label or `@gitclaw` title
      prefix,
-   - add the `gitclaw` label after creation so `issues.opened` does not handle
-     it,
+   - wait for the untriggered `issues.opened` workflow run to complete and
+     assert it produced zero assistant comments,
+   - add the `gitclaw` label only after that preflight run, so the manual
+     dispatch owns the first assistant turn,
    - dispatch the main `gitclaw.yml` workflow with `issue_number` and a stable
      `dispatch_id`,
    - assert one assistant comment with a `dispatch-...` event marker and exact

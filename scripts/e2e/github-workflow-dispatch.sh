@@ -40,6 +40,7 @@ body="Live workflow_dispatch E2E.
 When GitClaw is manually dispatched for this issue, reply with exact token \`${token}\`.
 "
 
+issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
   --repo "$repo" \
   --title "$title" \
@@ -52,7 +53,6 @@ cleanup() {
 }
 trap cleanup EXIT
 
-gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw --add-label gitclaw:e2e >/dev/null
 log "created issue #${issue_number}: ${issue_url}"
 
 run_list_json() {
@@ -77,6 +77,34 @@ wait_for_dispatch_run() {
       url="$(jq -r '.url' <<<"$run_json")"
       if [[ "$status" == "completed" ]]; then
         [[ "$conclusion" == "success" ]] || die "dispatch run failed with conclusion ${conclusion}: ${url}"
+        echo "$run_json"
+        return 0
+      fi
+    fi
+    sleep 5
+  done
+  return 1
+}
+
+wait_for_opened_run() {
+  local started_at="$1"
+  local run_json
+  for _ in {1..90}; do
+    run_json="$(gh run list \
+      --repo "$repo" \
+      --workflow "$workflow_name" \
+      --event issues \
+      --created ">=$started_at" \
+      --limit 10 \
+      --json databaseId,status,conclusion,createdAt,url,displayTitle \
+      --jq '. as $runs | $runs | map(select(.displayTitle == "'"${title}"'")) | sort_by(.createdAt) | reverse | .[0] // empty')"
+    if [[ -n "$run_json" && "$run_json" != "null" ]]; then
+      local status conclusion url
+      status="$(jq -r '.status' <<<"$run_json")"
+      conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
+      url="$(jq -r '.url' <<<"$run_json")"
+      if [[ "$status" == "completed" ]]; then
+        [[ "$conclusion" == "success" ]] || die "issues.opened run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
       fi
@@ -159,6 +187,16 @@ wait_for_assistant_count() {
   done
   return 1
 }
+
+opened_run_json="$(wait_for_opened_run "$issue_started_at")" || die "timed out waiting for initial issues.opened workflow run"
+initial_count="$(assistant_count)"
+if [[ "$initial_count" != "0" ]]; then
+  opened_url="$(jq -r '.url' <<<"$opened_run_json")"
+  die "initial issues.opened run handled the issue before dispatch: ${opened_url}"
+fi
+
+gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw --add-label gitclaw:e2e >/dev/null
+log "initial issues.opened preflight verified"
 
 dispatch_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh workflow run "$workflow_name" \

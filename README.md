@@ -410,7 +410,9 @@ the mirrored channel comment can wake a model-backed repo-reader/search turn by
 issue-comment follow-up that proves repo-reader/search again.
 The workflow-dispatch harness now applies that same two-proof gate to the
 generic wakeup path: dispatch-id idempotency first, then a normal GitHub Models
-repo-reader/search follow-up on the same issue.
+repo-reader/search follow-up on the same issue. It also waits for the initial
+untriggered issue-opened workflow before labeling, so label timing cannot steal
+the first assistant turn from the manual dispatch proof.
 The channel-ingest harness proves the generic no-server bridge end to end:
 workflow-dispatch mirroring, duplicate provider-message suppression, and a
 normal model/tool follow-up on the canonical channel issue.

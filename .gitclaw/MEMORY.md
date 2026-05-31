@@ -44,7 +44,9 @@
   search/tool grounding, model provenance, and usage telemetry, not just nonce
   echoing from the mirrored prompt.
 - Workflow-dispatch E2E needs two proofs: real dispatch-id wakeup/idempotency,
-  then a normal model/tool issue-comment follow-up on the same issue.
+  then a normal model/tool issue-comment follow-up on the same issue. Wait for
+  the initial untriggered `issues.opened` run before adding the trigger label,
+  or label-mutation timing can steal the first assistant turn.
 - Channel-message E2E also needs a normal issue-comment follow-up after the
   workflow-dispatch turn, proving the mirrored channel thread can continue as
   an ordinary GitHub conversation.

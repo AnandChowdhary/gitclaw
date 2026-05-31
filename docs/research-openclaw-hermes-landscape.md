@@ -822,7 +822,10 @@ before routing them to an agent session, while Hermes cron keeps scheduled work
 as fresh agent sessions. GitClaw should keep the GitHub-native version small:
 the generic dispatch harness first proves issue-number wakeup and stable
 dispatch-id idempotency, then proves conversation continuity with a normal
-GitHub Models repo-reader/search follow-up on the same issue. That makes the
+GitHub Models repo-reader/search follow-up on the same issue. The harness must
+also wait for the initial untriggered `issues.opened` run before adding the
+trigger label; otherwise the issue-opened run can race with label mutation and
+steal the first assistant turn from the manual dispatch proof. That makes the
 no-server bridge useful for Slack/Telegram pollers without adding a long-lived
 socket process.
 
