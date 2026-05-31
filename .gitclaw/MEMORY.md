@@ -24,6 +24,7 @@
 - Keep skill proposal plans review-first: hash proposal requests, name repo-reviewed proposal paths, never auto-create or auto-improve skills, and prove accepted skill-path changes with live LLM/tool E2E.
 - Keep skill proposal inventories inert: scan `.gitclaw/skill-proposals/*/PROPOSAL.md` for metadata and risk hashes only, never activate proposal bodies or mutate skills, and pair changes with live LLM/tool E2E.
 - Keep toolsets advisory in v1: `.gitclaw/toolsets/*.yaml` can group deterministic tools for review, but must not activate tools, execute providers, mutate repositories, or print raw instructions.
+- Keep task ledgers issue-native and body-free: GitHub issues are task rows, labels are current state, comments and assistant markers are handoff logs, and reports should emit counts/hashes/provenance only.
 - Keep MCP specs metadata-only in v1: `.gitclaw/mcp/*.yaml` can describe reviewed server intent and tool filters, but must not launch servers, expose MCP tools, pass raw env, or print commands, URLs, args, bodies, or credentials.
 - Keep skill source pins body-free: `.gitclaw/skill-sources/*.yaml` records reviewed provenance and expected skill hashes without registry contact, remote fetch, installers, skill writes, or raw source/skill body output.
 - Keep tool exposure reports body-free: report static tool contracts, config gates, prompt-visible output counts, and fail-closed allowlist findings without raw tool schemas, inputs, outputs, issue/comment bodies, prompts, or secrets.

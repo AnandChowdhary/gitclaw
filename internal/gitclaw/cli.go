@@ -504,8 +504,10 @@ func runTasksCommand(args []string) error {
 		return runTasksListCommand(args[1:])
 	case "risk", "risk-audit":
 		return runTasksRiskCommand(args[1:])
+	case "ledger", "timeline", "history":
+		return runTasksLedgerCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw tasks [list|risk|verify]")
+		return fmt.Errorf("usage: gitclaw tasks [list|risk|verify|ledger [--backup <issue.json>]]")
 	}
 }
 
@@ -530,6 +532,36 @@ func runTasksRiskCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderTaskRiskCLIReport(cfg))
+	return nil
+}
+
+func runTasksLedgerCommand(args []string) error {
+	backupPath := ""
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--backup":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--backup requires a value")
+			}
+			backupPath = args[i+1]
+			i++
+		default:
+			return fmt.Errorf("unknown tasks ledger argument %q", args[i])
+		}
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	if backupPath == "" {
+		fmt.Println(RenderTaskLedgerCLIReport(cfg))
+		return nil
+	}
+	backup, err := ReadIssueBackupFile(backupPath)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderTaskLedgerBackupCLIReport(cfg, backupPath, backup))
 	return nil
 }
 

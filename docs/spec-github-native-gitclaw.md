@@ -774,7 +774,7 @@ GitHub issue/comment event
   `workspace summary`, `workspace risk`, `workspace verify`,
   `hooks list`, `hooks risk`, `hooks verify`,
   `plugins list`, `plugins risk`, `plugins verify`,
-  `tasks list`, `tasks risk`, `tasks verify`,
+  `tasks list`, `tasks risk`, `tasks verify`, `tasks ledger`,
   `agents list`, `agents risk`, `agents verify`,
   `nodes list`, `nodes risk`, `nodes verify`,
   `migrate plan`, `migrate risk`,
@@ -3211,6 +3211,7 @@ background tasks, Task Flow, and Hermes Kanban:
 
 ```text
 @gitclaw /tasks
+@gitclaw /tasks ledger
 @gitclaw /tasks risk
 @gitclaw /task
 ```
@@ -3252,12 +3253,32 @@ values are not included. Changes to this risk surface must include a live
 GitHub Models follow-up E2E so task safety is tested against actual inference
 and prompt-visible tools.
 
+The ledger form:
+
+```text
+@gitclaw /tasks ledger
+@gitclaw /task ledger
+```
+
+posts a `GitClaw Task Ledger Report` without model inference. It treats the
+current GitHub issue as the task row and issue comments as the task handoff log,
+then reports current label-derived status, comment counts, transcript counts,
+assistant-turn marker counts, deterministic versus model-backed turn counts,
+prompt-provenance counts, channel/proactive marker presence, and per-entry
+hashes. It is deliberately not a full historical label timeline because GitHub's
+issue event feed is not in the v1 runtime path; the report says
+`status_history_available=false` and `status_transition_source=current-labels-and-markers`.
+It never prints raw task policy, task spec, issue, comment, transcript, assistant
+reply, prompt, tool-output, or worker-output bodies. Changes to this surface
+must include a live GitHub Models follow-up E2E.
+
 Local operators can inspect the same policy/spec surface with:
 
 ```bash
 gitclaw tasks list
 gitclaw tasks risk
 gitclaw tasks verify
+gitclaw tasks ledger --backup <issue.json>
 ```
 
 ### Agents Command
@@ -5622,6 +5643,12 @@ examples/workflows/gitclaw.yml
   metadata, then runs a real GitHub Models follow-up conversation that proves
   model inference, prompt provenance, selected skills, and prompt-visible tool
   usage.
+- A `gh`-driven tasks-ledger E2E harness verifies `@gitclaw /tasks ledger`
+  exposes the body-free issue-native task ledger, current status, comment and
+  transcript counts, assistant marker counts, hash-only entries, and raw-body
+  gates. The same harness then posts a normal follow-up comment that requires
+  repo-reader search so GitHub Models performs a real LLM call with prompt
+  context, selected skill, and prompt-visible tool provenance.
 - A `gh`-driven agents-risk E2E harness verifies `@gitclaw /agents risk` and
   local `gitclaw agents risk` expose body-free agent policy/spec/request risk
   metadata, then runs a real GitHub Models follow-up conversation that proves

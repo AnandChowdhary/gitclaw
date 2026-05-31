@@ -59,6 +59,9 @@ func RenderTaskReport(ev Event, cfg Config, comments []Comment, transcript []Tra
 	if isTaskRiskRequest(ev, cfg) {
 		return renderTaskRiskReport(ev, cfg, comments, transcript, true)
 	}
+	if isTaskLedgerRequest(ev, cfg) {
+		return renderTaskLedgerReport(BuildTaskLedgerReport("issue-thread", "", cfg, ev, comments, transcript, true), true)
+	}
 	return renderTaskReport(ev, cfg, comments, transcript, true)
 }
 

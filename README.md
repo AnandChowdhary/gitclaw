@@ -207,6 +207,7 @@ gitclaw plugins mcp
 gitclaw plugins mcp risk
 gitclaw plugins mcp info github-read
 gitclaw tasks risk
+gitclaw tasks ledger --backup <issue.json>
 gitclaw orders risk
 gitclaw channels verify
 gitclaw channels risk
@@ -272,6 +273,7 @@ scripts/e2e/github-session-coverage.sh
 scripts/e2e/github-skills-provenance-report.sh
 scripts/e2e/github-soul-provenance-report.sh
 scripts/e2e/github-sandbox-risk-report.sh
+scripts/e2e/github-tasks-ledger-report.sh
 scripts/e2e/github-tasks-risk-report.sh
 scripts/e2e/github-tools-toolsets-report.sh
 scripts/e2e/github-tools-exposure-report.sh

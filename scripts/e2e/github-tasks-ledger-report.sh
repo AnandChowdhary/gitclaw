@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "doctor-report-e2e: $*" >&2
+  echo "tasks-ledger-report-e2e: $*" >&2
 }
 
 die() {
@@ -33,15 +33,49 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_DOCTOR_REPORT_E2E_${timestamp}"
-followup_hidden_token="GITCLAW_DOCTOR_REPORT_FOLLOWUP_E2E_${timestamp}"
+hidden_token="GITCLAW_TASKS_LEDGER_HIDDEN_${timestamp}"
+followup_hidden_token="GITCLAW_TASKS_LEDGER_FOLLOWUP_HIDDEN_${timestamp}"
 expected_token="GITCLAW_SEARCH_CONTEXT_V1"
 search_phrase="bounded repository search fixture phrase"
-title="@gitclaw /doctor e2e ${timestamp}"
-body="Live doctor-report E2E.
+title="@gitclaw /tasks ledger e2e ${timestamp}"
+body="@gitclaw /tasks ledger
 
-Hidden doctor body token: ${token}
-This should produce a deterministic health report without a model call."
+Live tasks-ledger E2E. Please keep the task report body-free.
+Do not include this hidden issue token: ${hidden_token}"
+
+local_report="$(go run ./cmd/gitclaw tasks ledger)"
+for expected in \
+  "GitClaw Task Ledger Report" \
+  'task_ledger_status: `local`' \
+  'ledger_source: `local-cli`' \
+  'task_policy_present: `true`' \
+  'task_policy_loaded_for_model: `true`' \
+  'task_specs: `1`' \
+  'task_storage_backend: `github-issues`' \
+  'current_issue_task: `false`' \
+  'comments_scanned: `0`' \
+  'assistant_turns: `0`' \
+  'status_history_available: `false`' \
+  'task_risk_status: `ok`' \
+  'raw_task_bodies_included: `false`' \
+  'raw_issue_bodies_included: `false`' \
+  'raw_comment_bodies_included: `false`' \
+  'raw_assistant_replies_included: `false`' \
+  'raw_prompts_included: `false`' \
+  'raw_tool_outputs_included: `false`' \
+  'llm_e2e_required_after_task_ledger_change: `true`' \
+  "### Ledger Entries" \
+  "- none" \
+  "### Ledger Gates" \
+  'raw_body_gate=`hash_only`'; do
+  grep -Fq -- "$expected" <<<"$local_report" || die "local tasks ledger report missing ${expected}"
+done
+
+for leaked in "Task policy verification token" "This declarative task board" "$expected_token" "$search_phrase"; do
+  if grep -Fq "$leaked" <<<"$local_report"; then
+    die "local tasks ledger report leaked ${leaked}"
+  fi
+done
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -55,7 +89,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "doctor-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "tasks-ledger-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -77,11 +111,11 @@ wait_for_run() {
       --json databaseId,status,conclusion,url,createdAt,displayTitle \
       --jq '. as $runs | $runs | map(select(.displayTitle == "'"${title}"'")) | sort_by(.createdAt) | reverse | .[0] // empty')"
     if [[ -n "$run_json" && "$run_json" != "null" ]]; then
-      local run_status conclusion url
-      run_status="$(jq -r '.status' <<<"$run_json")"
+      local status conclusion url
+      status="$(jq -r '.status' <<<"$run_json")"
       conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
       url="$(jq -r '.url' <<<"$run_json")"
-      if [[ "$run_status" == "completed" ]]; then
+      if [[ "$status" == "completed" ]]; then
         [[ "$conclusion" == "success" ]] || die "${event_name} run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
@@ -92,11 +126,11 @@ wait_for_run() {
   return 1
 }
 
-assistant_comments() {
+assistant_count() {
   gh issue view "$issue_number" \
     --repo "$repo" \
     --json comments \
-    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | join("\n---GITCLAW-COMMENT---\n")'
+    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length'
 }
 
 latest_assistant_comment() {
@@ -104,13 +138,6 @@ latest_assistant_comment() {
     --repo "$repo" \
     --json comments \
     --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | .[-1] // ""'
-}
-
-assistant_count() {
-  gh issue view "$issue_number" \
-    --repo "$repo" \
-    --json comments \
-    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length'
 }
 
 error_count() {
@@ -159,80 +186,54 @@ wait_for_done_status() {
   return 1
 }
 
-run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one doctor report comment"
-comments="$(assistant_comments)"
+ledger_run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
+wait_for_assistant_count 1 || die "expected one tasks ledger report comment"
+ledger_comment="$(latest_assistant_comment)"
 
 for expected in \
-  'model="gitclaw/doctor"' \
-  "GitClaw Doctor Report" \
+  'model="gitclaw/tasks"' \
+  "GitClaw Task Ledger Report" \
   "Generated without a model call" \
-  'health_status: `ok`' \
-  'config_source: `defaults+repo+environment`' \
-  'config_valid: `true`' \
-  'config_file_present: `true`' \
-  'model: `openai/gpt-5-nano`' \
-  'run_mode: `read-only`' \
-  'workflows_present: `7`' \
-  'context_files_present: `6`' \
-  'memory_notes: `1`' \
-  'skill_files: `1`' \
-  'e2e_scripts: `159`' \
-  'e2e_live_issue_scripts: `152`' \
-  'e2e_cleanup_scripts: `159`' \
-  'e2e_model_coverage_scripts: `70`' \
-  'e2e_model_followup_scripts: `56`' \
-  'e2e_session_coverage_scripts: `2`' \
-  'e2e_backup_gate_scripts: `24`' \
-  'e2e_workflow_dispatch_scripts: `21`' \
-  'enabled_skills: `1`' \
-  'disabled_skills: `0`' \
-  'allowlist_blocked_skills: `0`' \
-  'enabled_tools: `5`' \
-  'disabled_tools: `0`' \
-  'allowlist_blocked_tools: `0`' \
-  'proactive_prompt_files: `1`' \
-  'managed_labels: `9`' \
-  'validation_errors: `0`' \
-  'validation_warnings: `0`' \
-  'skill_validation_status: `ok`' \
-  'skill_validation_errors: `0`' \
-  'skill_validation_warnings: `0`' \
-  'soul_validation_status: `ok`' \
-  'soul_validation_errors: `0`' \
-  'soul_validation_warnings: `0`' \
-  'memory_validation_status: `ok`' \
-  'memory_validation_errors: `0`' \
-  'memory_validation_warnings: `0`' \
-  'tool_validation_status: `ok`' \
-  'tool_validation_errors: `0`' \
-  'tool_validation_warnings: `0`' \
-  '`config_validation`: `ok`' \
-  '`workflow_set`: `ok`' \
-  '`identity_context`: `ok`' \
-  '`local_skills`: `ok`' \
-  '`e2e_harnesses`: `ok`' \
-  '`skill_validation`: `ok`' \
-  '`soul_validation`: `ok`' \
-  '`memory_validation`: `ok`' \
-  '`tool_validation`: `ok`' \
-  '.gitclaw/config.yml' \
-  '.github/workflows/gitclaw.yml' \
-  '.gitclaw/SOUL.md' \
-  '.gitclaw/SKILLS/repo-reader/SKILL.md' \
-  '.gitclaw/proactive/repo-hygiene.md' \
-  "### E2E Harnesses" \
-  'e2e_coverage_status=`ok`' \
-  'path=`scripts/e2e/github-doctor-report.sh`' \
-  'model_coverage=`true`' \
-  'model_followup=`true`' \
-  'sha256_12='; do
-  grep -Fq "$expected" <<<"$comments" || die "doctor report missing ${expected}"
+  'task_ledger_status: `ok`' \
+  'ledger_source: `issue-thread`' \
+  'task_policy_present: `true`' \
+  'task_policy_loaded_for_model: `true`' \
+  'task_specs: `1`' \
+  'task_storage_backend: `github-issues`' \
+  'current_issue_task: `true`' \
+  'current_task_status: `ready`' \
+  'current_task_labels: `1`' \
+  'comments_scanned: `0`' \
+  'transcript_messages: `1`' \
+  'assistant_turns: `0`' \
+  'model_backed_turns: `0`' \
+  'deterministic_turns: `0`' \
+  'status_history_available: `false`' \
+  'status_transition_source: `current-labels-and-markers`' \
+  'task_risk_status: `ok`' \
+  'raw_task_bodies_included: `false`' \
+  'raw_issue_bodies_included: `false`' \
+  'raw_comment_bodies_included: `false`' \
+  'raw_assistant_replies_included: `false`' \
+  'raw_prompts_included: `false`' \
+  'raw_tool_outputs_included: `false`' \
+  'llm_e2e_required_after_task_ledger_change: `true`' \
+  "### Ledger Entries" \
+  'kind=`current-task` source=`issue` status=`ready`' \
+  'body_sha256_12=' \
+  "### Ledger Gates" \
+  'task_storage_backend=`github-issues`' \
+  'detached_worker_supported=`false`' \
+  'raw_body_gate=`hash_only`' \
+  'status_history_gate=`current_labels_only`'; do
+  grep -Fq -- "$expected" <<<"$ledger_comment" || die "tasks ledger report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "doctor report leaked issue body token"
-fi
+for leaked in "$hidden_token" "Task policy verification token" "This declarative task board" "$expected_token" "$search_phrase"; do
+  if grep -Fq "$leaked" <<<"$ledger_comment"; then
+    die "tasks ledger report leaked ${leaked}"
+  fi
+done
 
 comment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \
@@ -256,13 +257,13 @@ grep -Fq 'skills="repo-reader"' <<<"$model_comment" || die "assistant marker mis
 grep -Fq 'tools="' <<<"$model_comment" || die "assistant marker missing prompt-visible tools"
 grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant marker did not prove search_files was prompt-visible"
 
-for leaked in "$token" "$followup_hidden_token"; do
+for leaked in "$hidden_token" "$followup_hidden_token"; do
   if grep -Fq "$leaked" <<<"$model_comment"; then
     die "model follow-up leaked ${leaked}"
   fi
 done
 
 wait_for_done_status || die "expected gitclaw:done without running/error"
-url="$(jq -r '.url' <<<"$run_json")"
+ledger_url="$(jq -r '.url' <<<"$ledger_run_json")"
 model_url="$(jq -r '.url' <<<"$model_run_json")"
-log "passed for issue #${issue_number}: ${url} (model follow-up: ${model_url})"
+log "passed for issue #${issue_number}: ${ledger_url} (model follow-up: ${model_url})"

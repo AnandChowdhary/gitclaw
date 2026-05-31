@@ -1541,6 +1541,18 @@ prompts, credentials, or secrets, and every change should include both the
 deterministic issue-command E2E and a real GitHub Models follow-up using
 repo-reader/search.
 
+2026-05-31 task-ledger follow-up: OpenClaw's background-task surface and
+Hermes' Kanban/session posture both make durable work items inspectable, but
+GitClaw should keep the no-server shape: the GitHub issue is the task row,
+labels are the current state, and comments plus `gitclaw:assistant-turn`
+markers are the handoff log. Add `@gitclaw /tasks ledger` and `gitclaw tasks
+ledger --backup <issue.json>` as a body-free current-thread/backup ledger:
+current label-derived status, comment/transcript counts, assistant marker
+counts, deterministic versus model-backed turn counts, prompt-provenance
+counts, channel/proactive marker presence, hashes, and explicit raw-body gates.
+Do not claim historical label transitions until GitHub issue events are part of
+the runtime input; report `status_history_available=false` instead.
+
 2026-05-30 prompt-list follow-up: prompt-budget visibility should also be
 available before opening an issue. Add `gitclaw prompt list` as the local
 mirror of `/prompt`: provider/model, prompt size/hash, configured budgets,

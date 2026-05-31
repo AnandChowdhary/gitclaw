@@ -14,6 +14,8 @@ Allowed task behavior:
 - Keep task flow specs in git for human review before automation relies on
   them.
 - Use workflow dispatch or scheduled workflows for proactive task creation.
+- Use task ledger reports to inspect the issue/comment handoff log by metadata,
+  marker counts, and hashes instead of raw task or comment bodies.
 
 Disallowed task behavior:
 
