@@ -5081,6 +5081,9 @@ assert the expected comments/labels, and close the issue in cleanup.
      provenance, and includes `gitclaw.search_files` in the assistant marker,
    - assert the second turn can recover a fresh repository-search fixture token
      from the follow-up comment, not only echo tokens from the original issue,
+   - make the follow-up prompt protocol-shaped with fixed output labels and a
+     token-prefix guard so small GitHub Models copy the search-result token
+     instead of the search phrase,
    - allow earlier prompt-visible tools such as `gitclaw.read_file` to remain
      in the marker when prior turns requested file context, but require
      `gitclaw.search_files` evidence for the fresh follow-up fixture.

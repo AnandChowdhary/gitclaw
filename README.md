@@ -333,6 +333,8 @@ The core issue-chat harness now applies that standard to ordinary
 conversation: the follow-up comment must preserve transcript continuity and
 also recover a fresh search fixture with prompt provenance and usage telemetry,
 while tolerating earlier prompt-visible tools from the continuous issue thread.
+The prompt uses fixed labels and a token-prefix guard so small hosted models
+copy the search-result token rather than restating the search phrase.
 
 ## Testing
 

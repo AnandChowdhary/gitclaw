@@ -273,10 +273,13 @@ gh issue comment "$issue_number" \
   --repo "$GITCLAW_E2E_REPO" \
   --body "Follow-up E2E conversation check.
 
-Reply with the exact new token \`${token_b}\`.
-Also mention the earlier token \`${token_a}\` from this issue thread.
 Use the repo-reader skill and search the repository for \`${followup_search_phrase}\`.
-Reply with the exact token after the arrow from the matching gitclaw.search_files result line.
+The matching gitclaw.search_files result line uses this format: phrase => TOKEN.
+Copy the exact TOKEN after the arrow. It must start with \`GITCLAW_ISSUE_CHAT_\`; do not reply with the search phrase.
+Reply in exactly these three short labeled lines:
+new: ${token_b}
+previous: ${token_a}
+followup_search: <TOKEN from the matching gitclaw.search_files line>
 Do not use @file or @folder references." >/dev/null
 
 if ! wait_for_run issue_comment "$comment_started_at" >/dev/null; then

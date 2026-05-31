@@ -1208,9 +1208,11 @@ follow-up text, with prompt-context provenance and usage telemetry in the
 assistant marker. Since continuous GitHub issue threads may keep earlier
 file-reference tools prompt-visible, the harness should require search evidence
 for the fresh follow-up fixture without failing solely because `gitclaw.read_file`
-also appears from prior context. This keeps ordinary GitHub-native chat from
-becoming a thin token echo test while report-specific harnesses grow more
-rigorous.
+also appears from prior context. The follow-up prompt should use fixed labels
+and a token-prefix guard because small hosted models may otherwise describe the
+search phrase even when the prompt includes the correct search-result token.
+This keeps ordinary GitHub-native chat from becoming a thin token echo test
+while report-specific harnesses grow more rigorous.
 
 2026-05-29 workflow-runtime follow-up: GitClaw's serverless runtime is GitHub
 Actions itself, so action runtime deprecations are part of product reliability.
