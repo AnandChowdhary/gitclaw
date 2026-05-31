@@ -838,7 +838,7 @@ GitHub issue/comment event
   `hooks catalog`, `hooks list`, `hooks risk`, `hooks verify`,
   `plugins list`, `plugins risk`, `plugins verify`,
   `tasks list`, `tasks risk`, `tasks verify`, `tasks ledger`,
-  `agents catalog`, `agents list`, `agents risk`, `agents verify`,
+  `agents catalog`, `agents list`, `agents provenance`, `agents risk`, `agents verify`,
   `nodes catalog`, `nodes list`, `nodes risk`, `nodes verify`,
   `migrate plan`, `migrate risk`,
   `orders list`, `orders verify`, `orders risk`,
@@ -3846,6 +3846,7 @@ workers:
 ```text
 @gitclaw /agents
 @gitclaw /agents catalog
+@gitclaw /agents provenance
 @gitclaw /agents risk
 @gitclaw /agent
 @gitclaw /agent catalog
@@ -3886,6 +3887,28 @@ prompts, tool outputs, credentials, channel payloads, or session bodies.
 Changes to this surface must include deterministic tests plus a live GitHub
 Models follow-up E2E that makes an actual model call.
 
+The provenance form:
+
+```text
+@gitclaw /agents provenance
+@gitclaw /agent provenance
+@gitclaw /agents git-history
+```
+
+posts a `GitClaw Agent Provenance Report` without model inference. It maps
+`.gitclaw/AGENTS.md` and `.gitclaw/agents/*.md` to repo-local git history,
+tracked state, dirty state, last commit IDs/dates, risk metadata, validation
+counts, and commit-subject hashes. It is the GitClaw v1 version of the
+OpenClaw/Hermes agent/profile boundary: agent identity and authority live in
+reviewed repository files, while delegation, subagents, gateways, shared
+profile state, and agent-to-agent messaging remain disabled. The report does
+not print agent bodies, issue bodies, comments, prompts, tool outputs, git
+subjects, author identities, channel payloads, or secret values. Changes to
+this provenance surface must include deterministic tests, local CLI assertions,
+and a live GitHub Models follow-up E2E that proves model inference, prompt
+provenance, selected skills, prompt-visible `gitclaw.search_files`, usage
+telemetry, and recovery of a distinct repository-search fixture token.
+
 The risk form:
 
 ```text
@@ -3910,6 +3933,7 @@ Local operators can inspect the same policy/spec surface with:
 ```bash
 gitclaw agents catalog
 gitclaw agents list
+gitclaw agents provenance
 gitclaw agents risk
 gitclaw agents verify
 ```
@@ -6738,6 +6762,14 @@ examples/workflows/gitclaw.yml
   follow-up conversation that proves model inference, prompt provenance,
   selected skills, prompt-visible tool usage, usage telemetry, and recovery of
   the bounded agents-catalog repository-search fixture token.
+- A `gh`-driven agents-provenance E2E harness verifies
+  `@gitclaw /agents provenance` and local `gitclaw agents provenance` expose
+  body-free repo-local git provenance for agent policy/spec files, including
+  tracked state, dirty state, commit availability, risk metadata, validation
+  counts, no-delegation gates, and raw-body gates, then runs a real GitHub
+  Models follow-up conversation that proves model inference, prompt
+  provenance, selected skills, prompt-visible tool usage, usage telemetry, and
+  recovery of the bounded agents-provenance repository-search fixture token.
 - A `gh`-driven nodes-risk E2E harness verifies `@gitclaw /nodes risk` and
   local `gitclaw nodes risk` expose body-free node policy/spec/request risk
   metadata, then runs a real GitHub Models follow-up conversation that proves

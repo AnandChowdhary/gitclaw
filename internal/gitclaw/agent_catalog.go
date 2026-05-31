@@ -134,6 +134,7 @@ func agentCatalogEntries() []agentCatalogEntry {
 	return []agentCatalogEntry{
 		{Name: "catalog", IssueIntent: "@gitclaw /agents catalog", LocalCommand: "gitclaw agents catalog", Execution: "metadata-only", Gate: "body-free-output"},
 		{Name: "list", IssueIntent: "@gitclaw /agents", LocalCommand: "gitclaw agents list", Execution: "metadata-only", Gate: "body-free-agent-envelope"},
+		{Name: "provenance", IssueIntent: "@gitclaw /agents provenance", LocalCommand: "gitclaw agents provenance", Execution: "git-history-audit", Gate: "body-free-agent-git-provenance"},
 		{Name: "verify", IssueIntent: "@gitclaw /agents verify", LocalCommand: "gitclaw agents verify", Execution: "metadata-only", Gate: "policy-spec-validation"},
 		{Name: "risk", IssueIntent: "@gitclaw /agents risk", LocalCommand: "gitclaw agents risk", Execution: "risk-audit", Gate: "single-assistant-boundary"},
 	}

@@ -1718,6 +1718,22 @@ payloads, or sessions. Acceptance requires a real issue E2E, a local CLI
 assertion, and a GitHub Models repo-reader/search follow-up that recovers a
 distinct agents-catalog repository-search fixture token.
 
+2026-06-01 agents-provenance follow-up: OpenClaw's multi-agent and workspace
+model treats agents as isolated identities with their own workspaces and
+sessions, while Hermes profiles isolate state/config and delegation is an
+explicit runtime action rather than a passive file read. GitClaw v1 should
+borrow the audit shape, not the runtime: `@gitclaw /agents provenance` and
+`gitclaw agents provenance` should map `.gitclaw/AGENTS.md` and
+`.gitclaw/agents/*.md` to repo-local git history, tracked/dirty state, commit
+availability, validation counts, risk metadata, and subject hashes only. The
+report must keep delegation, subagents, gateways, shared profile state,
+agent-to-agent messaging, and repository mutation disabled, and it must not
+print agent bodies, issue/comment bodies, prompts, tool outputs, git subjects,
+author identities, channel payloads, or credentials. Acceptance requires
+deterministic tests, local CLI assertions, a real issue E2E, and a GitHub
+Models repo-reader/search follow-up that recovers a distinct
+agents-provenance repository-search fixture token with usage telemetry.
+
 2026-05-31 nodes-catalog follow-up: OpenClaw's current node docs frame nodes as
 paired peripherals connected to the Gateway WebSocket with `role: "node"`,
 declared command/capability surfaces, gateway policy gates, and local exec

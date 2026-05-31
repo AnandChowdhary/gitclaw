@@ -349,6 +349,7 @@ gitclaw diffs summary
 gitclaw diffs risk
 gitclaw diffs verify
 gitclaw agents catalog
+gitclaw agents provenance
 gitclaw agents risk
 gitclaw nodes catalog
 gitclaw nodes risk
@@ -405,6 +406,13 @@ Actions assistant. It maps agent commands, policy/spec files, runtime,
 conversation boundary, tool-name intent, approval gates, and explicit
 no-delegation/no-subagent boundaries without printing agent files,
 issue/comment bodies, prompts, tool outputs, channel payloads, or credentials.
+
+`gitclaw agents provenance` maps `.gitclaw/AGENTS.md` and
+`.gitclaw/agents/*.md` to body-free git provenance. It reports tracked state,
+dirty state, last commit IDs/dates, risk metadata, validation counts, and
+commit-subject hashes while keeping agent files, issue/comment bodies, prompts,
+tool outputs, git subjects, author identities, channel payloads, and
+credentials out of the report.
 
 `gitclaw nodes catalog` is the compact discovery view for the GitHub Actions
 execution node surface. It maps node commands, policy/spec files, runtime, wake
@@ -504,6 +512,7 @@ scripts/e2e/github-backup-catalog-report.sh
 scripts/e2e/github-backup-search.sh
 scripts/e2e/github-backup-export-jsonl.sh
 scripts/e2e/github-agents-catalog-report.sh
+scripts/e2e/github-agents-provenance-report.sh
 scripts/e2e/github-agents-risk-report.sh
 scripts/e2e/github-nodes-catalog-report.sh
 scripts/e2e/github-nodes-risk-report.sh

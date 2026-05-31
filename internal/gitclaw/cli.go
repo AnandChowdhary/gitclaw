@@ -693,10 +693,12 @@ func runAgentsCommand(args []string) error {
 		return runAgentsCatalogCommand(args[1:])
 	case "list", "verify":
 		return runAgentsListCommand(args[1:])
+	case "provenance", "history", "git-history":
+		return runAgentsProvenanceCommand(args[1:])
 	case "risk", "risk-audit":
 		return runAgentsRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw agents [catalog|list|risk|verify]")
+		return fmt.Errorf("usage: gitclaw agents [catalog|list|provenance|risk|verify]")
 	}
 }
 
@@ -721,6 +723,18 @@ func runAgentsListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderAgentCLIReport(cfg))
+	return nil
+}
+
+func runAgentsProvenanceCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown agents provenance argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderAgentProvenanceCLIReport(cfg))
 	return nil
 }
 

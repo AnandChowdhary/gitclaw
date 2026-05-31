@@ -151,7 +151,7 @@ func TestRenderAgentCatalogReportShowsCommandAndLayerSurfaceWithoutBodies(t *tes
 		"agent_specs_requiring_approval: `1`",
 		"agent_specs_single_assistant: `1`",
 		"active_agent_runtime: `github-actions`",
-		"catalog_entries: `4`",
+		"catalog_entries: `5`",
 		"agent_layers: `7`",
 		"multi_agent_delegation_supported: `false`",
 		"subagent_execution_supported: `false`",
@@ -166,6 +166,7 @@ func TestRenderAgentCatalogReportShowsCommandAndLayerSurfaceWithoutBodies(t *tes
 		"### Catalog Entries",
 		"command=`catalog` issue_intent=`@gitclaw /agents catalog` local_command=`gitclaw agents catalog` execution=`metadata-only` gate=`body-free-output`",
 		"command=`list` issue_intent=`@gitclaw /agents` local_command=`gitclaw agents list`",
+		"command=`provenance` issue_intent=`@gitclaw /agents provenance` local_command=`gitclaw agents provenance`",
 		"command=`risk` issue_intent=`@gitclaw /agents risk` local_command=`gitclaw agents risk`",
 		"### Agent Layers",
 		"layer=`policy` store=`.gitclaw/AGENTS.md`",
@@ -222,7 +223,7 @@ func TestAgentsCatalogCommandReportsSurfaceWithoutBodies(t *testing.T) {
 			t.Fatalf("agents catalog returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Agents Catalog Report", "scope: `local-cli`", "agents_catalog_status: `ok`", "catalog_entries: `4`", "agent_layers: `7`", "command=`catalog` issue_intent=`@gitclaw /agents catalog` local_command=`gitclaw agents catalog`", "layer=`tools` store=`agent spec tool names`", "raw_agent_bodies_included: `false`", "model_e2e_gate=`required`"} {
+	for _, want := range []string{"GitClaw Agents Catalog Report", "scope: `local-cli`", "agents_catalog_status: `ok`", "catalog_entries: `5`", "agent_layers: `7`", "command=`catalog` issue_intent=`@gitclaw /agents catalog` local_command=`gitclaw agents catalog`", "command=`provenance` issue_intent=`@gitclaw /agents provenance` local_command=`gitclaw agents provenance`", "layer=`tools` store=`agent spec tool names`", "raw_agent_bodies_included: `false`", "model_e2e_gate=`required`"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("agents catalog output missing %q:\n%s", want, output)
 		}
@@ -315,7 +316,7 @@ func TestHandleAgentsCatalogCommandPostsReportWithoutLLM(t *testing.T) {
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Agents Catalog Report", "Generated without a model call", "model=\"gitclaw/agents\"", "requested_agents_command: `catalog`", "agents_catalog_status: `ok`", "catalog_entries: `4`", "agent_layers: `7`", "command=`catalog` issue_intent=`@gitclaw /agents catalog`", "layer=`policy` store=`.gitclaw/AGENTS.md`", "raw_agent_bodies_included: `false`"} {
+	for _, want := range []string{"GitClaw Agents Catalog Report", "Generated without a model call", "model=\"gitclaw/agents\"", "requested_agents_command: `catalog`", "agents_catalog_status: `ok`", "catalog_entries: `5`", "agent_layers: `7`", "command=`catalog` issue_intent=`@gitclaw /agents catalog`", "command=`provenance` issue_intent=`@gitclaw /agents provenance`", "layer=`policy` store=`.gitclaw/AGENTS.md`", "raw_agent_bodies_included: `false`"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("agents catalog handler report missing %q:\n%s", want, body)
 		}

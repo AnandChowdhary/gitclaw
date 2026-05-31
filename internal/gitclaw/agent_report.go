@@ -59,6 +59,9 @@ func RenderAgentReport(ev Event, cfg Config) string {
 	if isAgentCatalogRequest(ev, cfg) {
 		return RenderAgentCatalogReport(ev, cfg)
 	}
+	if isAgentProvenanceRequest(ev, cfg) {
+		return RenderAgentProvenanceReport(ev, cfg)
+	}
 	if isAgentRiskRequest(ev, cfg) {
 		return renderAgentRiskReport(ev, cfg, true)
 	}

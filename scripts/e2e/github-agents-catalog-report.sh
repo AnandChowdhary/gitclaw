@@ -184,7 +184,7 @@ for expected in \
   'agent_specs_requiring_approval: `1`' \
   'agent_specs_single_assistant: `1`' \
   'active_agent_runtime: `github-actions`' \
-  'catalog_entries: `4`' \
+  'catalog_entries: `5`' \
   'agent_layers: `7`' \
   'multi_agent_routing_supported: `false`' \
   'multi_agent_delegation_supported: `false`' \
@@ -204,6 +204,7 @@ for expected in \
   'llm_e2e_required_after_agents_catalog_change: `true`' \
   'command=`catalog` issue_intent=`@gitclaw /agents catalog` local_command=`gitclaw agents catalog` execution=`metadata-only` gate=`body-free-output` raw_bodies_included=`false` mutation_allowed=`false`' \
   'command=`list` issue_intent=`@gitclaw /agents` local_command=`gitclaw agents list`' \
+  'command=`provenance` issue_intent=`@gitclaw /agents provenance` local_command=`gitclaw agents provenance` execution=`git-history-audit` gate=`body-free-agent-git-provenance`' \
   'command=`verify` issue_intent=`@gitclaw /agents verify` local_command=`gitclaw agents verify`' \
   'command=`risk` issue_intent=`@gitclaw /agents risk` local_command=`gitclaw agents risk`' \
   'layer=`policy` store=`.gitclaw/AGENTS.md`' \
@@ -233,10 +234,11 @@ for expected in \
   'scope: `local-cli`' \
   'agents_catalog_status: `ok`' \
   'catalog_strategy: `compact-single-assistant-agent-discovery`' \
-  'catalog_entries: `4`' \
+  'catalog_entries: `5`' \
   'agent_layers: `7`' \
   'raw_agent_bodies_included: `false`' \
   'command=`catalog` issue_intent=`@gitclaw /agents catalog` local_command=`gitclaw agents catalog`' \
+  'command=`provenance` issue_intent=`@gitclaw /agents provenance` local_command=`gitclaw agents provenance`' \
   'command=`risk` issue_intent=`@gitclaw /agents risk` local_command=`gitclaw agents risk`' \
   'layer=`delegation` store=`unsupported in v1`' \
   'agent_policy_gate=`repo-reviewed-policy-file`'; do
