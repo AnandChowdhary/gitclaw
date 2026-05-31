@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T11:16:47Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 383,
+    "title": "@gitclaw /channels info telegram e2e 20260531T111545Z",
+    "body": "Live channels info E2E.\n\nHidden channels info token: GITCLAW_CHANNELS_INFO_E2E_20260531T111545Z\nThis should produce a deterministic provider contract report without a model call.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels info telegram e2e 20260531T111545Z\n\nLive channels info E2E.\n\nHidden channels info token: GITCLAW_CHANNELS_INFO_E2E_20260531T111545Z\nThis should produce a deterministic provider contract report without a model call.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Info Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#383`\n- requested_provider: `telegram`\n- channel_info_status: `ok`\n- supported_providers: `telegram, slack, generic`\n- channel_label: `gitclaw:channel`\n- trigger_label: `gitclaw`\n- wake_strategy: `workflow_dispatch`\n- state_storage: `gitclaw:channel-state issue`\n- gateway_runtime: `GitHub Actions workflow_dispatch`\n- raw_bodies_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_channel_info_change: `true`\n- required_secrets: `TELEGRAM_BOT_TOKEN`\n- offset_key: `update_id`\n- thread_key: `chat_id`\n- message_key: `update_id or message_id`\n- channel_thread_issue: `false`\n- channel_message_comments_now: `0`\n- issue_title_sha256_12: `0f0f6993f49b`\n\nThis report shows one channel provider bridge contract. Channel message bodies, issue bodies, workflow bodies, provider credentials, and secret values are not included.\n\n### Provider Contract\n- provider=`telegram` ingress=`getUpdates polling or long-running gateway lease`\n- gateway=`self-renewing GitHub Actions gateway with durable offset hashes`\n- outbound=`sendMessage then channel-delivery receipt`\n- offset_key=`update_id` thread_key=`chat_id` message_key=`update_id or message_id`\n- required_secret_names=`TELEGRAM_BOT_TOKEN`\n\n### Workflow Surface\n- `ingest` path=`.github/workflows/gitclaw-channel-ingest.yml` present=`true` bytes=`2263` lines=`71` workflow_dispatch=`true` actions_write=`true` issues_write=`true` inputs=`5` sha256_12=`1b1cde85c6b0`\n- `state` path=`.github/workflows/gitclaw-channel-state.yml` present=`true` bytes=`1437` lines=`50` workflow_dispatch=`true` actions_write=`false` issues_write=`true` inputs=`4` sha256_12=`7be973bbc095`\n- `gateway` path=`.github/workflows/gitclaw-channel-gateway.yml` present=`true` bytes=`3115` lines=`89` workflow_dispatch=`true` actions_write=`true` issues_write=`true` inputs=`6` sha256_12=`6b46ecf0a6b4`\n- `delivery` path=`.github/workflows/gitclaw-channel-delivery.yml` present=`true` bytes=`1755` lines=`55` workflow_dispatch=`true` actions_write=`false` issues_write=`true` inputs=`6` sha256_12=`33be09897bc2`\n\n### Commands\n- `gitclaw channel-ingest --channel telegram --thread-id \u003cthread\u003e --message-id \u003cmessage\u003e --body \u003ctext\u003e`\n- `gitclaw channel-state --channel telegram --account-id \u003caccount\u003e --offset \u003coffset\u003e`\n- `gitclaw channel-gateway --channel telegram --account-id \u003caccount\u003e --renew`\n- `gitclaw channel-delivery --channel telegram --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- dispatch id: `telegram-\u003cmessage_id\u003e`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4586517018,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4586517018,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26711084121\" event_id=\"issue-383\" model=\"gitclaw/channels\" idempotency_key=\"35e8ca69271946646029cac791c113d8\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26711084121\" --\u003e\n## GitClaw Channel Info Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#383`\n- requested_provider: `telegram`\n- channel_info_status: `ok`\n- supported_providers: `telegram, slack, generic`\n- channel_label: `gitclaw:channel`\n- trigger_label: `gitclaw`\n- wake_strategy: `workflow_dispatch`\n- state_storage: `gitclaw:channel-state issue`\n- gateway_runtime: `GitHub Actions workflow_dispatch`\n- raw_bodies_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_channel_info_change: `true`\n- required_secrets: `TELEGRAM_BOT_TOKEN`\n- offset_key: `update_id`\n- thread_key: `chat_id`\n- message_key: `update_id or message_id`\n- channel_thread_issue: `false`\n- channel_message_comments_now: `0`\n- issue_title_sha256_12: `0f0f6993f49b`\n\nThis report shows one channel provider bridge contract. Channel message bodies, issue bodies, workflow bodies, provider credentials, and secret values are not included.\n\n### Provider Contract\n- provider=`telegram` ingress=`getUpdates polling or long-running gateway lease`\n- gateway=`self-renewing GitHub Actions gateway with durable offset hashes`\n- outbound=`sendMessage then channel-delivery receipt`\n- offset_key=`update_id` thread_key=`chat_id` message_key=`update_id or message_id`\n- required_secret_names=`TELEGRAM_BOT_TOKEN`\n\n### Workflow Surface\n- `ingest` path=`.github/workflows/gitclaw-channel-ingest.yml` present=`true` bytes=`2263` lines=`71` workflow_dispatch=`true` actions_write=`true` issues_write=`true` inputs=`5` sha256_12=`1b1cde85c6b0`\n- `state` path=`.github/workflows/gitclaw-channel-state.yml` present=`true` bytes=`1437` lines=`50` workflow_dispatch=`true` actions_write=`false` issues_write=`true` inputs=`4` sha256_12=`7be973bbc095`\n- `gateway` path=`.github/workflows/gitclaw-channel-gateway.yml` present=`true` bytes=`3115` lines=`89` workflow_dispatch=`true` actions_write=`true` issues_write=`true` inputs=`6` sha256_12=`6b46ecf0a6b4`\n- `delivery` path=`.github/workflows/gitclaw-channel-delivery.yml` present=`true` bytes=`1755` lines=`55` workflow_dispatch=`true` actions_write=`false` issues_write=`true` inputs=`6` sha256_12=`33be09897bc2`\n\n### Commands\n- `gitclaw channel-ingest --channel telegram --thread-id \u003cthread\u003e --message-id \u003cmessage\u003e --body \u003ctext\u003e`\n- `gitclaw channel-state --channel telegram --account-id \u003caccount\u003e --offset \u003coffset\u003e`\n- `gitclaw channel-gateway --channel telegram --account-id \u003caccount\u003e --renew`\n- `gitclaw channel-delivery --channel telegram --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- dispatch id: `telegram-\u003cmessage_id\u003e`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T11:16:26Z",
+      "updated_at": "2026-05-31T11:16:26Z"
+    }
+  ]
+}
