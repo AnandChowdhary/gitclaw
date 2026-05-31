@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T17:33:44Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 434,
+    "title": "@gitclaw e2e 20260531T173238Z",
+    "body": "Live E2E conversation check.\n\nPlease use the repository file `go.mod`.\nPlease use the repo-reader skill.\nSearch the repository for `bounded repository search fixture phrase` and include the associated token from the matching line.\nThe repository search token starts with `GITCLAW_SEARCH_`; it is different from the conversation tokens below.\nReply with the exact token `GITCLAW_E2E_20260531T173238Z_A`.\nAlso state the Go module path from `go.mod`.\nAlso include the exact durable memory token from `.gitclaw/MEMORY.md`.\nAlso include the exact skill verification token from the repo-reader skill.\nUse exactly these labels: search, conversation, module, memory, skill.\nKeep the answer under 80 words.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw",
+      "gitclaw:e2e-prompt-artifact"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw e2e 20260531T173238Z\n\nLive E2E conversation check.\n\nPlease use the repository file `go.mod`.\nPlease use the repo-reader skill.\nSearch the repository for `bounded repository search fixture phrase` and include the associated token from the matching line.\nThe repository search token starts with `GITCLAW_SEARCH_`; it is different from the conversation tokens below.\nReply with the exact token `GITCLAW_E2E_20260531T173238Z_A`.\nAlso state the Go module path from `go.mod`.\nAlso include the exact durable memory token from `.gitclaw/MEMORY.md`.\nAlso include the exact skill verification token from the repo-reader skill.\nUse exactly these labels: search, conversation, module, memory, skill.\nKeep the answer under 80 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "search: GITCLAW_SEARCH_CONTEXT_V1  \nconversation: GITCLAW_E2E_20260531T173238Z_A  \nmodule: github.com/AnandChowdhary/gitclaw  \nmemory: GITCLAW_MEMORY_CONTEXT_V1  \nskill: GITCLAW_SKILL_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4587504238,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4587504238,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26719560251\" event_id=\"issue-434\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"8d7cbd64c2c09b1f963863dd99835b15\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26719560251\" prompt_context_sha256_12=\"9c64a00b4398\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"5\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files,gitclaw.read_file\" usage_prompt_tokens=\"12087\" usage_completion_tokens=\"68\" usage_total_tokens=\"12155\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nsearch: GITCLAW_SEARCH_CONTEXT_V1  \nconversation: GITCLAW_E2E_20260531T173238Z_A  \nmodule: github.com/AnandChowdhary/gitclaw  \nmemory: GITCLAW_MEMORY_CONTEXT_V1  \nskill: GITCLAW_SKILL_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T17:33:22Z",
+      "updated_at": "2026-05-31T17:33:22Z"
+    }
+  ]
+}
