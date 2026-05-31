@@ -91,6 +91,36 @@ func TestRenderAssistantCommentIncludesMarker(t *testing.T) {
 	}
 }
 
+func TestRenderHeartbeatCommentIncludesModelTelemetry(t *testing.T) {
+	body := RenderHeartbeatComment(HeartbeatMarker{
+		RunID:               "123",
+		Slot:                "slot-1",
+		RunURL:              "https://github.com/owner/repo/actions/runs/123",
+		Model:               "openai/gpt-5-nano",
+		PromptContextSHA:    "abc123def456",
+		ContextDocuments:    2,
+		SelectedSkills:      1,
+		ToolOutputs:         1,
+		PromptVisibleSkills: []string{"repo-reader"},
+		PromptVisibleTools:  []string{"gitclaw.search_files"},
+		Usage: LLMUsage{
+			Present:          true,
+			PromptTokens:     120,
+			CompletionTokens: 30,
+			TotalTokens:      150,
+			CacheReadTokens:  80,
+		},
+	}, "Heartbeat.")
+	if !HasHeartbeatMarker(body) || !ContainsHeartbeatSlot(body, "slot-1") {
+		t.Fatalf("rendered heartbeat comment missing marker: %s", body)
+	}
+	for _, want := range []string{`model="openai/gpt-5-nano"`, `prompt_context_sha256_12="abc123def456"`, `context_documents="2"`, `selected_skills="1"`, `tool_outputs="1"`, `skills="repo-reader"`, `tools="gitclaw.search_files"`, `usage_prompt_tokens="120"`, `usage_completion_tokens="30"`, `usage_total_tokens="150"`, `usage_cache_read_tokens="80"`, `usage_cache_write_tokens="0"`} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("rendered heartbeat comment missing %q: %s", want, body)
+		}
+	}
+}
+
 func TestRenderErrorCommentIncludesMarkerWithoutIdempotencyKey(t *testing.T) {
 	body := RenderErrorComment(ErrorMarker{
 		RunID:   "123",

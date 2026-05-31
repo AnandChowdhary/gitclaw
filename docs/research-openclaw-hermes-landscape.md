@@ -695,6 +695,10 @@ permissions, context-file metadata, labels, idempotency, and the
 `HEARTBEAT_OK` quiet contract without calling the model or scanning issue
 bodies. That keeps routine heartbeat debugging cheap while still requiring
 live GitHub Models E2E for any feature batch that touches heartbeat behavior.
+The runtime heartbeat marker should carry the same model id, prompt-context
+hash, prompt-visible context counts, and token usage telemetry as ordinary
+assistant turns, so scheduled comments can be audited without exposing prompt
+or heartbeat file bodies.
 
 2026-05-30 heartbeat-risk follow-up: Current OpenClaw heartbeat docs frame
 heartbeat as scheduled proactive awareness, `HEARTBEAT.md` context, and

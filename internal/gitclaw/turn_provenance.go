@@ -16,6 +16,16 @@ func withPromptProvenance(marker Marker, repoContext RepoContext) Marker {
 	return marker
 }
 
+func withHeartbeatPromptProvenance(marker HeartbeatMarker, repoContext RepoContext) HeartbeatMarker {
+	marker.PromptContextSHA = promptContextHash(repoContext)
+	marker.ContextDocuments = len(repoContext.Documents)
+	marker.SelectedSkills = len(repoContext.Skills)
+	marker.ToolOutputs = len(repoContext.ToolOutputs)
+	marker.PromptVisibleSkills = promptVisibleSkillNames(repoContext.Skills)
+	marker.PromptVisibleTools = promptVisibleToolNames(repoContext.ToolOutputs)
+	return marker
+}
+
 func promptContextHash(repoContext RepoContext) string {
 	var b strings.Builder
 	for _, doc := range repoContext.Documents {

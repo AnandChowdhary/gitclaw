@@ -20,7 +20,11 @@ func TestRunHeartbeatPostsOncePerSlot(t *testing.T) {
 		}},
 		CommentsByIssue: map[int][]Comment{7: nil},
 	}
-	llm := &FakeLLM{Response: "Heartbeat noted: HEARTBEAT_TEST_TOKEN."}
+	llm := &FakeLLM{
+		Response:          "Heartbeat noted: HEARTBEAT_TEST_TOKEN.",
+		SelectedModelName: "openai/gpt-5-nano",
+		Usage:             LLMUsage{Present: true, PromptTokens: 120, CompletionTokens: 30, TotalTokens: 150},
+	}
 
 	result, err := RunHeartbeat(context.Background(), cfg, github, llm, HeartbeatOptions{
 		Repo:  "owner/repo",
@@ -39,6 +43,11 @@ func TestRunHeartbeatPostsOncePerSlot(t *testing.T) {
 	}
 	if !strings.Contains(github.Posted[0].Body, "HEARTBEAT_TEST_TOKEN") {
 		t.Fatalf("heartbeat response missing token: %s", github.Posted[0].Body)
+	}
+	for _, want := range []string{`model="openai/gpt-5-nano"`, `prompt_context_sha256_12="`, `context_documents="`, `selected_skills="`, `tool_outputs="`, `usage_prompt_tokens="120"`, `usage_completion_tokens="30"`, `usage_total_tokens="150"`} {
+		if !strings.Contains(github.Posted[0].Body, want) {
+			t.Fatalf("heartbeat marker missing %q: %s", want, github.Posted[0].Body)
+		}
 	}
 
 	result, err = RunHeartbeat(context.Background(), cfg, github, llm, HeartbeatOptions{

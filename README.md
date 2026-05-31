@@ -300,6 +300,7 @@ scripts/e2e/github-prompt-cache-report.sh
 scripts/e2e/github-prompt-compression-report.sh
 scripts/e2e/github-prompt-risk-report.sh
 scripts/e2e/github-diffs-risk-report.sh
+scripts/e2e/github-heartbeat.sh
 scripts/e2e/github-heartbeat-risk-report.sh
 scripts/e2e/github-hooks-risk-report.sh
 scripts/e2e/github-hooks-provenance-report.sh

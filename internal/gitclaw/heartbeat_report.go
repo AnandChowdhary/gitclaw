@@ -89,6 +89,9 @@ func renderHeartbeatReport(ev Event, cfg Config, comments []Comment, includeIssu
 	fmt.Fprintf(&b, "- default_limit: `%d`\n", 3)
 	fmt.Fprintf(&b, "- slot_strategy: `%s`\n", "utc-hour-or-explicit")
 	fmt.Fprintf(&b, "- idempotency_marker: `%s`\n", "gitclaw:heartbeat")
+	fmt.Fprintf(&b, "- heartbeat_marker_model_telemetry: `%t`\n", true)
+	fmt.Fprintf(&b, "- heartbeat_marker_prompt_provenance: `%t`\n", true)
+	fmt.Fprintf(&b, "- heartbeat_marker_usage_telemetry: `%t`\n", true)
 	fmt.Fprintf(&b, "- quiet_response: `%s`\n", "HEARTBEAT_OK")
 	fmt.Fprintf(&b, "- model_call_required: `%t`\n", false)
 	fmt.Fprintf(&b, "- runner_model_call_required: `%t`\n", true)
@@ -97,6 +100,7 @@ func renderHeartbeatReport(ev Event, cfg Config, comments []Comment, includeIssu
 	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_heartbeat_body_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- llm_e2e_required_after_change: `%t`\n", true)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_heartbeat_marker_change: `%t`\n", true)
 	if includeIssue {
 		fmt.Fprintf(&b, "- heartbeat_label_present: `%t`\n", hasLabel(ev.Issue.Labels, cfg.HeartbeatLabel))
 		fmt.Fprintf(&b, "- disabled_label_present: `%t`\n", hasLabel(ev.Issue.Labels, cfg.DisabledLabel))

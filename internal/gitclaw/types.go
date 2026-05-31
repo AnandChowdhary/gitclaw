@@ -150,9 +150,17 @@ type Marker struct {
 }
 
 type HeartbeatMarker struct {
-	RunID  string
-	Slot   string
-	RunURL string
+	RunID               string
+	Slot                string
+	RunURL              string
+	Model               string
+	PromptContextSHA    string
+	ContextDocuments    int
+	SelectedSkills      int
+	ToolOutputs         int
+	PromptVisibleSkills []string
+	PromptVisibleTools  []string
+	Usage               LLMUsage
 }
 
 type ErrorMarker struct {

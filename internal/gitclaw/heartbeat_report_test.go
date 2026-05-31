@@ -84,6 +84,9 @@ func TestRenderHeartbeatReportAuditsWorkflowWithoutBodies(t *testing.T) {
 		"default_limit: `3`",
 		"slot_strategy: `utc-hour-or-explicit`",
 		"idempotency_marker: `gitclaw:heartbeat`",
+		"heartbeat_marker_model_telemetry: `true`",
+		"heartbeat_marker_prompt_provenance: `true`",
+		"heartbeat_marker_usage_telemetry: `true`",
 		"quiet_response: `HEARTBEAT_OK`",
 		"model_call_required: `false`",
 		"runner_model_call_required: `true`",
@@ -92,6 +95,7 @@ func TestRenderHeartbeatReportAuditsWorkflowWithoutBodies(t *testing.T) {
 		"raw_bodies_included: `false`",
 		"raw_heartbeat_body_included: `false`",
 		"llm_e2e_required_after_change: `true`",
+		"llm_e2e_required_after_heartbeat_marker_change: `true`",
 		"heartbeat_label_present: `true`",
 		"disabled_label_present: `false`",
 		"heartbeat_comments_now: `1`",
@@ -126,7 +130,7 @@ func TestHeartbeatStatusCommandReportsWithoutTokenOrModel(t *testing.T) {
 			t.Fatalf("heartbeat status returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Heartbeat Report", "scope: `local-cli`", "Generated without a model call", "heartbeat_report_status: `ok`", "model_call_required: `false`", "runner_model_call_required: `true`", "workflow_dispatch_trigger: `true`", "schedule_trigger: `true`", "permissions_models_read: `true`", "heartbeat_context_present: `true`", "### Verification Findings", "- none"} {
+	for _, want := range []string{"GitClaw Heartbeat Report", "scope: `local-cli`", "Generated without a model call", "heartbeat_report_status: `ok`", "model_call_required: `false`", "runner_model_call_required: `true`", "heartbeat_marker_model_telemetry: `true`", "heartbeat_marker_prompt_provenance: `true`", "heartbeat_marker_usage_telemetry: `true`", "llm_e2e_required_after_heartbeat_marker_change: `true`", "workflow_dispatch_trigger: `true`", "schedule_trigger: `true`", "permissions_models_read: `true`", "heartbeat_context_present: `true`", "### Verification Findings", "- none"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("heartbeat status output missing %q:\n%s", want, output)
 		}
@@ -174,7 +178,7 @@ func TestHandleHeartbeatCommandPostsReportWithoutLLM(t *testing.T) {
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Heartbeat Report", "Generated without a model call", "model=\"gitclaw/heartbeat\"", "heartbeat_report_status: `ok`", "heartbeat_label_present: `true`", "heartbeat_comments_now: `1`", "model_call_required: `false`", "runner_model_call_required: `true`", "raw_bodies_included: `false`", "### Verification Findings", "- none"} {
+	for _, want := range []string{"GitClaw Heartbeat Report", "Generated without a model call", "model=\"gitclaw/heartbeat\"", "heartbeat_report_status: `ok`", "heartbeat_label_present: `true`", "heartbeat_comments_now: `1`", "heartbeat_marker_model_telemetry: `true`", "heartbeat_marker_prompt_provenance: `true`", "heartbeat_marker_usage_telemetry: `true`", "llm_e2e_required_after_heartbeat_marker_change: `true`", "model_call_required: `false`", "runner_model_call_required: `true`", "raw_bodies_included: `false`", "### Verification Findings", "- none"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("heartbeat handler report missing %q:\n%s", want, body)
 		}

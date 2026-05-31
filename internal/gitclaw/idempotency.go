@@ -83,6 +83,32 @@ func RenderHeartbeatComment(marker HeartbeatMarker, text string) string {
 	if marker.RunURL != "" {
 		parts = append(parts, fmt.Sprintf(`run_url="%s"`, escapeMarkerValue(marker.RunURL)))
 	}
+	if marker.Model != "" {
+		parts = append(parts, fmt.Sprintf(`model="%s"`, escapeMarkerValue(marker.Model)))
+	}
+	if marker.PromptContextSHA != "" {
+		parts = append(parts,
+			fmt.Sprintf(`prompt_context_sha256_12="%s"`, escapeMarkerValue(marker.PromptContextSHA)),
+			fmt.Sprintf(`context_documents="%d"`, marker.ContextDocuments),
+			fmt.Sprintf(`selected_skills="%d"`, marker.SelectedSkills),
+			fmt.Sprintf(`tool_outputs="%d"`, marker.ToolOutputs),
+		)
+		if len(marker.PromptVisibleSkills) > 0 {
+			parts = append(parts, fmt.Sprintf(`skills="%s"`, escapeMarkerValue(strings.Join(marker.PromptVisibleSkills, ","))))
+		}
+		if len(marker.PromptVisibleTools) > 0 {
+			parts = append(parts, fmt.Sprintf(`tools="%s"`, escapeMarkerValue(strings.Join(marker.PromptVisibleTools, ","))))
+		}
+	}
+	if marker.Usage.Present {
+		parts = append(parts,
+			fmt.Sprintf(`usage_prompt_tokens="%d"`, marker.Usage.PromptTokens),
+			fmt.Sprintf(`usage_completion_tokens="%d"`, marker.Usage.CompletionTokens),
+			fmt.Sprintf(`usage_total_tokens="%d"`, marker.Usage.TotalTokens),
+			fmt.Sprintf(`usage_cache_read_tokens="%d"`, marker.Usage.CacheReadTokens),
+			fmt.Sprintf(`usage_cache_write_tokens="%d"`, marker.Usage.CacheWriteTokens),
+		)
+	}
 	return fmt.Sprintf("<!-- gitclaw:heartbeat %s -->\n%s", strings.Join(parts, " "), strings.TrimSpace(text))
 }
 

@@ -21,6 +21,9 @@
   secret names and workflow metadata only, then prove model/tool E2E.
 - Proactive jobs are reviewed prompt/workflow files plus visible issue runs;
   info/risk surfaces stay body-free and prove changes with live model/tool E2E.
+- Heartbeat comments are model-backed scheduled turns; their
+  `gitclaw:heartbeat` markers must include model, prompt-context, context-count,
+  and usage telemetry without printing prompt or heartbeat bodies.
 - Skills stay repo-local and review-first: refresh per Actions checkout;
   proposals stay inert; install/upgrade/source/runtime/bundle/provenance
   surfaces classify, hash, and validate only; no registries, remote fetches,

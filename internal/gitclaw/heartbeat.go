@@ -100,11 +100,13 @@ func runIssueHeartbeat(ctx context.Context, cfg Config, github HeartbeatGitHubCl
 	if strings.EqualFold(strings.TrimSpace(response), "HEARTBEAT_OK") {
 		return false, nil
 	}
-	body := RenderHeartbeatComment(HeartbeatMarker{
+	body := RenderHeartbeatComment(withHeartbeatPromptProvenance(HeartbeatMarker{
 		RunID:  envFirst("GITHUB_RUN_ID", "local"),
 		Slot:   slot,
 		RunURL: actionRunURL(ev),
-	}, response)
+		Model:  selectedLLMModel(cfg, llm),
+		Usage:  selectedLLMUsage(llm),
+	}, repoContext), response)
 	if _, err := github.PostIssueComment(ctx, repo, issue.Number, body); err != nil {
 		return false, fmt.Errorf("post heartbeat comment: %w", err)
 	}

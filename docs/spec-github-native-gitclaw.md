@@ -288,8 +288,9 @@ Heartbeat behavior:
 - call GitHub Models with the Actions token,
 - post a short issue comment only when the model does not return
   `HEARTBEAT_OK`,
-- include a hidden `gitclaw:heartbeat` marker with run id, run URL, and
-  idempotency slot.
+- include a hidden `gitclaw:heartbeat` marker with run id, run URL,
+  idempotency slot, selected model, prompt-context hash, prompt-visible
+  context counts, and normalized token usage.
 
 Default idempotency slot: current UTC hour. Manual dispatch and E2E can pass an
 explicit slot. Re-running the same slot must not create a second heartbeat
@@ -319,6 +320,7 @@ and before model inference, posts a `gitclaw:assistant-turn` comment with
   workflow-dispatch trigger, inputs, and permissions,
 - `.gitclaw/HEARTBEAT.md` presence and hash,
 - heartbeat marker/idempotency contract,
+- heartbeat marker model, prompt provenance, and usage telemetry contract,
 - the quiet response contract, `HEARTBEAT_OK`,
 - whether the current issue has the heartbeat label,
 - existing heartbeat marker count for the current issue.
@@ -327,6 +329,9 @@ It never scans heartbeat issues, calls the model, mutates repository contents,
 or prints issue/comment/workflow/heartbeat context bodies. The report carries
 `model_call_required: false` and `runner_model_call_required: true` so E2E can
 distinguish the operator report from the real scheduled model-backed runner.
+Heartbeat marker changes also carry
+`llm_e2e_required_after_heartbeat_marker_change: true` and must be proven by
+the live heartbeat workflow-dispatch harness.
 
 When called as `@gitclaw /heartbeat risk` or `gitclaw heartbeat risk`, GitClaw
 posts a body-free risk audit for the scheduled heartbeat surface. It scans the
@@ -5011,6 +5016,8 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert one heartbeat comment with the hidden `gitclaw:heartbeat` marker,
    - assert the comment includes the nonce token and
      `GITCLAW_HEARTBEAT_CONTEXT_V1` from `.gitclaw/HEARTBEAT.md`,
+   - assert the marker includes the GitHub Models model id, prompt-context
+     hash, context counts, and usage telemetry,
    - dispatch the same slot again,
    - assert no duplicate heartbeat comment is created.
 
