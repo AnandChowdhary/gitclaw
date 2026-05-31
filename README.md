@@ -119,6 +119,7 @@ gitclaw tools validate
 gitclaw tools list
 gitclaw tools exposure
 gitclaw tools exposure risk
+gitclaw tools provenance [query]
 gitclaw tools toolsets
 gitclaw tools toolsets risk
 gitclaw tools toolsets info <name>

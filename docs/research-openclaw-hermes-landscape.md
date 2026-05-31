@@ -1470,6 +1470,17 @@ should mirror that with repo-reviewed `tools.allowed` and `tools.disabled`
 config for deterministic built-ins: disabled tools remain visible in reports,
 but prompt-visible outputs are not generated.
 
+2026-05-31 tool-provenance follow-up: OpenClaw's workspace/tool model and
+Hermes' session/toolset previews both make tool activity inspectable without
+requiring a raw prompt dump. GitClaw should expose `@gitclaw /tools
+provenance` and `gitclaw tools provenance [query]` as the issue-native
+current-turn map: active deterministic tool names, contract modes, enabled
+gate state, prompt-visible names, input/output hashes, size counts, and risk
+codes only. The report must not print raw tool inputs, raw tool outputs,
+search result bodies, file bodies, issue/comment bodies, prompts, credentials,
+or secrets, and every change should be paired with a live GitHub Models
+follow-up that proves the hashed tool outputs still feed a real model call.
+
 2026-05-30 prompt-list follow-up: prompt-budget visibility should also be
 available before opening an issue. Add `gitclaw prompt list` as the local
 mirror of `/prompt`: provider/model, prompt size/hash, configured budgets,

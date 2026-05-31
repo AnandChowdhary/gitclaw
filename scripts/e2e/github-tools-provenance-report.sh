@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "doctor-report-e2e: $*" >&2
+  echo "tools-provenance-report-e2e: $*" >&2
 }
 
 die() {
@@ -33,15 +33,45 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_DOCTOR_REPORT_E2E_${timestamp}"
-followup_hidden_token="GITCLAW_DOCTOR_REPORT_FOLLOWUP_E2E_${timestamp}"
+hidden_token="GITCLAW_TOOLS_PROVENANCE_HIDDEN_${timestamp}"
+followup_hidden_token="GITCLAW_TOOLS_PROVENANCE_FOLLOWUP_HIDDEN_${timestamp}"
 expected_token="GITCLAW_SEARCH_CONTEXT_V1"
 search_phrase="bounded repository search fixture phrase"
-title="@gitclaw /doctor e2e ${timestamp}"
-body="Live doctor-report E2E.
+title="@gitclaw /tools provenance e2e ${timestamp}"
+body="@gitclaw /tools provenance
 
-Hidden doctor body token: ${token}
-This should produce a deterministic health report without a model call."
+Please inspect \`go.mod\` and search for \`${search_phrase}\`.
+Do not include this hidden issue token: ${hidden_token}"
+
+local_report="$(go run ./cmd/gitclaw tools provenance "go.mod \"${search_phrase}\"")"
+for expected in \
+  "GitClaw Tool Provenance Report" \
+  'tool_provenance_status: `ok`' \
+  'provenance_scope: `pre_model_prompt_context`' \
+  'tool_context_strategy: `deterministic-pre-model-outputs`' \
+  'available_tools: `5`' \
+  'enabled_tools: `5`' \
+  'active_tool_outputs: `4`' \
+  'known_tool_outputs: `4`' \
+  'unknown_tool_outputs: `0`' \
+  'prompt_visible_tool_outputs: `4`' \
+  'read_only_outputs: `3`' \
+  'metadata_only_outputs: `1`' \
+  'tool_inputs_hashed: `4`' \
+  'tool_outputs_hashed: `4`' \
+  'model_callable_structured_tools: `false`' \
+  'raw_inputs_included: `false`' \
+  'raw_outputs_included: `false`' \
+  'raw_bodies_included: `false`' \
+  'llm_e2e_required_after_tool_provenance_change: `true`'; do
+  grep -Fq -- "$expected" <<<"$local_report" || die "local tools provenance report missing ${expected}"
+done
+
+for leaked in "module github.com/AnandChowdhary/gitclaw" "$search_phrase" "$expected_token"; do
+  if grep -Fq "$leaked" <<<"$local_report"; then
+    die "local tools provenance report leaked ${leaked}"
+  fi
+done
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -55,7 +85,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "doctor-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "tools-provenance-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -77,11 +107,11 @@ wait_for_run() {
       --json databaseId,status,conclusion,url,createdAt,displayTitle \
       --jq '. as $runs | $runs | map(select(.displayTitle == "'"${title}"'")) | sort_by(.createdAt) | reverse | .[0] // empty')"
     if [[ -n "$run_json" && "$run_json" != "null" ]]; then
-      local run_status conclusion url
-      run_status="$(jq -r '.status' <<<"$run_json")"
+      local status conclusion url
+      status="$(jq -r '.status' <<<"$run_json")"
       conclusion="$(jq -r '.conclusion // ""' <<<"$run_json")"
       url="$(jq -r '.url' <<<"$run_json")"
-      if [[ "$run_status" == "completed" ]]; then
+      if [[ "$status" == "completed" ]]; then
         [[ "$conclusion" == "success" ]] || die "${event_name} run failed with conclusion ${conclusion}: ${url}"
         echo "$run_json"
         return 0
@@ -92,11 +122,11 @@ wait_for_run() {
   return 1
 }
 
-assistant_comments() {
+assistant_count() {
   gh issue view "$issue_number" \
     --repo "$repo" \
     --json comments \
-    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | join("\n---GITCLAW-COMMENT---\n")'
+    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length'
 }
 
 latest_assistant_comment() {
@@ -104,13 +134,6 @@ latest_assistant_comment() {
     --repo "$repo" \
     --json comments \
     --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | .[-1] // ""'
-}
-
-assistant_count() {
-  gh issue view "$issue_number" \
-    --repo "$repo" \
-    --json comments \
-    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length'
 }
 
 error_count() {
@@ -159,80 +182,70 @@ wait_for_done_status() {
   return 1
 }
 
-run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one doctor report comment"
-comments="$(assistant_comments)"
+provenance_run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
+wait_for_assistant_count 1 || die "expected one tools provenance report comment"
+provenance_comment="$(latest_assistant_comment)"
 
 for expected in \
-  'model="gitclaw/doctor"' \
-  "GitClaw Doctor Report" \
+  'model="gitclaw/tools"' \
+  "GitClaw Tool Provenance Report" \
   "Generated without a model call" \
-  'health_status: `ok`' \
-  'config_source: `defaults+repo+environment`' \
-  'config_valid: `true`' \
-  'config_file_present: `true`' \
-  'model: `openai/gpt-5-nano`' \
-  'run_mode: `read-only`' \
-  'workflows_present: `7`' \
-  'context_files_present: `6`' \
-  'memory_notes: `1`' \
-  'skill_files: `1`' \
-  'e2e_scripts: `150`' \
-  'e2e_live_issue_scripts: `143`' \
-  'e2e_cleanup_scripts: `150`' \
-  'e2e_model_coverage_scripts: `61`' \
-  'e2e_model_followup_scripts: `47`' \
-  'e2e_session_coverage_scripts: `2`' \
-  'e2e_backup_gate_scripts: `22`' \
-  'e2e_workflow_dispatch_scripts: `21`' \
-  'enabled_skills: `1`' \
-  'disabled_skills: `0`' \
-  'allowlist_blocked_skills: `0`' \
+  'tool_provenance_status: `ok`' \
+  'provenance_scope: `pre_model_prompt_context`' \
+  'tool_context_strategy: `deterministic-pre-model-outputs`' \
+  'available_tools: `5`' \
   'enabled_tools: `5`' \
   'disabled_tools: `0`' \
   'allowlist_blocked_tools: `0`' \
-  'proactive_prompt_files: `1`' \
-  'managed_labels: `9`' \
-  'validation_errors: `0`' \
-  'validation_warnings: `0`' \
-  'skill_validation_status: `ok`' \
-  'skill_validation_errors: `0`' \
-  'skill_validation_warnings: `0`' \
-  'soul_validation_status: `ok`' \
-  'soul_validation_errors: `0`' \
-  'soul_validation_warnings: `0`' \
-  'memory_validation_status: `ok`' \
-  'memory_validation_errors: `0`' \
-  'memory_validation_warnings: `0`' \
+  'active_tool_outputs: `4`' \
+  'known_tool_outputs: `4`' \
+  'unknown_tool_outputs: `0`' \
+  'prompt_visible_tool_outputs: `4`' \
+  'prompt_visible_tool_names: `gitclaw.list_files, gitclaw.read_file, gitclaw.search_files, gitclaw.skill_index`' \
+  'read_only_outputs: `3`' \
+  'metadata_only_outputs: `1`' \
+  'tool_inputs_hashed: `4`' \
+  'tool_outputs_hashed: `4`' \
+  'registry_verification: `not_configured`' \
+  'runtime_permission_verification: `static_contracts_only`' \
+  'model_callable_structured_tools: `false`' \
+  'shell_execution_allowed: `false`' \
+  'repository_mutation_allowed: `false`' \
+  'raw_inputs_included: `false`' \
+  'raw_outputs_included: `false`' \
+  'raw_bodies_included: `false`' \
+  'raw_issue_bodies_included: `false`' \
+  'raw_comment_bodies_included: `false`' \
+  'raw_prompt_bodies_included: `false`' \
+  'llm_e2e_required_after_tool_provenance_change: `true`' \
   'tool_validation_status: `ok`' \
   'tool_validation_errors: `0`' \
   'tool_validation_warnings: `0`' \
-  '`config_validation`: `ok`' \
-  '`workflow_set`: `ok`' \
-  '`identity_context`: `ok`' \
-  '`local_skills`: `ok`' \
-  '`e2e_harnesses`: `ok`' \
-  '`skill_validation`: `ok`' \
-  '`soul_validation`: `ok`' \
-  '`memory_validation`: `ok`' \
-  '`tool_validation`: `ok`' \
-  '.gitclaw/config.yml' \
-  '.github/workflows/gitclaw.yml' \
-  '.gitclaw/SOUL.md' \
-  '.gitclaw/SKILLS/repo-reader/SKILL.md' \
-  '.gitclaw/proactive/repo-hygiene.md' \
-  "### E2E Harnesses" \
-  'e2e_coverage_status=`ok`' \
-  'path=`scripts/e2e/github-doctor-report.sh`' \
-  'model_coverage=`true`' \
-  'model_followup=`true`' \
-  'sha256_12='; do
-  grep -Fq "$expected" <<<"$comments" || die "doctor report missing ${expected}"
+  'tool_risk_status: `ok`' \
+  'high_risk_findings: `0`' \
+  'warning_risk_findings: `0`' \
+  "### Prompt-Visible Tool Outputs" \
+  'name=`gitclaw.list_files` contract_known=`true` mode=`read-only`' \
+  'name=`gitclaw.read_file` contract_known=`true` mode=`read-only`' \
+  'name=`gitclaw.search_files` contract_known=`true` mode=`read-only`' \
+  'name=`gitclaw.skill_index` contract_known=`true` mode=`metadata-only`' \
+  'input_sha256_12=' \
+  'output_sha256_12=' \
+  'risk_codes=`none`' \
+  "### Provenance Gates" \
+  'model_callable_structured_tools=`false`' \
+  'raw_input_gate=`hash_only`' \
+  'raw_output_gate=`hash_only`' \
+  'mutation_gate=`disabled`' \
+  'shell_gate=`disabled`'; do
+  grep -Fq -- "$expected" <<<"$provenance_comment" || die "tools provenance report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "doctor report leaked issue body token"
-fi
+for leaked in "$hidden_token" "module github.com/AnandChowdhary/gitclaw" "$expected_token" "$search_phrase"; do
+  if grep -Fq "$leaked" <<<"$provenance_comment"; then
+    die "tools provenance report leaked ${leaked}"
+  fi
+done
 
 comment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \
@@ -256,13 +269,13 @@ grep -Fq 'skills="repo-reader"' <<<"$model_comment" || die "assistant marker mis
 grep -Fq 'tools="' <<<"$model_comment" || die "assistant marker missing prompt-visible tools"
 grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant marker did not prove search_files was prompt-visible"
 
-for leaked in "$token" "$followup_hidden_token"; do
+for leaked in "$hidden_token" "$followup_hidden_token"; do
   if grep -Fq "$leaked" <<<"$model_comment"; then
     die "model follow-up leaked ${leaked}"
   fi
 done
 
 wait_for_done_status || die "expected gitclaw:done without running/error"
-url="$(jq -r '.url' <<<"$run_json")"
+provenance_url="$(jq -r '.url' <<<"$provenance_run_json")"
 model_url="$(jq -r '.url' <<<"$model_run_json")"
-log "passed for issue #${issue_number}: ${url} (model follow-up: ${model_url})"
+log "passed for issue #${issue_number}: ${provenance_url} (model follow-up: ${model_url})"

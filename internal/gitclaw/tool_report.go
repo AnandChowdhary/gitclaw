@@ -73,6 +73,9 @@ func RenderToolsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isToolExposureListRequest(ev, cfg) {
 		return renderToolExposureReport(ev, repoContext, true)
 	}
+	if isToolProvenanceRequest(ev, cfg) {
+		return renderToolProvenanceReport(ev, repoContext, true)
+	}
 	if isToolsetsRiskRequest(ev, cfg) {
 		return renderToolsetsRiskReport(ev, cfg, true)
 	}
