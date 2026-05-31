@@ -89,6 +89,7 @@ gitclaw skills risk
 gitclaw skills validate
 gitclaw skills check
 gitclaw skills list
+gitclaw skills provenance
 gitclaw skills select-plan <name>
 gitclaw skills refresh-plan
 gitclaw skills sources
@@ -259,6 +260,7 @@ scripts/e2e/github-session-risk-report.sh
 scripts/e2e/github-session-status-report.sh
 scripts/e2e/github-session-stats-report.sh
 scripts/e2e/github-session-coverage.sh
+scripts/e2e/github-skills-provenance-report.sh
 scripts/e2e/github-soul-provenance-report.sh
 scripts/e2e/github-sandbox-risk-report.sh
 scripts/e2e/github-tasks-risk-report.sh

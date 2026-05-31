@@ -786,7 +786,7 @@ GitHub issue/comment event
   `memory verify`, `memory risk`, `memory validate`, `memory timeline`,
   `memory list`, `memory promote-plan`, `memory info`, `memory search`,
   `skills validate`,
-  `skills list`, `skills select-plan`, `skills refresh-plan`,
+  `skills list`, `skills provenance`, `skills select-plan`, `skills refresh-plan`,
   `skills proposals`, `skills proposal-plan`, `skills install-plan`,
   `skills upgrade-plan`, `skills info`, `skills search`,
   `bundles list`, `bundles risk`, `bundles info`,
@@ -1330,6 +1330,7 @@ gitclaw skills risk
 gitclaw skills validate
 gitclaw skills check
 gitclaw skills list
+gitclaw skills provenance
 gitclaw skills select-plan <name>
 gitclaw skills refresh-plan
 gitclaw skills sources
@@ -1367,6 +1368,7 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills risk
 @gitclaw /skills validate
 @gitclaw /skills check
+@gitclaw /skills provenance
 @gitclaw /skills select-plan repo-reader
 @gitclaw /skills refresh-plan
 @gitclaw /skills sources
@@ -1394,6 +1396,8 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 - configured gate state, `always` activation state, and frontmatter
   descriptions,
 - short hashes and size metadata for review,
+- git tracked state, dirty state, commit IDs/dates, and commit-subject hashes
+  when explicitly requested.
 - declared env/bin requirement counts and whether any are missing.
 - validation status, error/warning counts, duplicate-name count, invalid-name
   count, folder/name mismatch count, and body-free findings.
@@ -1409,6 +1413,16 @@ It does not dump full skill bodies. Full `SKILL.md` content remains a prompt
 input only when selected by the normal progressive-disclosure rules.
 `@gitclaw /skills list` is an explicit inventory alias for the same report,
 matching the local `gitclaw skills list` helper.
+
+When called as `@gitclaw /skills provenance`, `@gitclaw /skills history`, or
+`@gitclaw /skills timeline`, the command posts a body-free git provenance map
+for repo-local `SKILL.md` files. It reports available/enabled/selected skill
+counts, source roots, tracked/untracked counts, working-tree dirty state,
+commit availability, last commit SHA/date metadata, commit-subject hashes,
+validation/risk gates, installer-disabled state, and mutation-disabled state.
+It does not print raw skill bodies, issue bodies, comments, prompts, commit
+subjects, author names, author emails, requirement names, installer output, or
+secret values. This mirrors `gitclaw skills provenance` for local review.
 
 Skill bundles are repo-local YAML task profiles inspired by Hermes' skill
 bundle feature. GitClaw reads `.gitclaw/skill-bundles/*.yaml` and
@@ -4771,6 +4785,7 @@ assert the expected comments/labels, and close the issue in cleanup.
 
    - create a real issue with `@gitclaw /skills`,
    - create a second real issue with `@gitclaw /skills list`,
+   - create another real issue with `@gitclaw /skills provenance`,
    - create a third real issue with `@gitclaw /bundles info repo-context`,
    - create a fourth real issue with `@gitclaw /bundles risk`,
    - assert the reply is marked `model="gitclaw/skills"`,
@@ -4781,6 +4796,10 @@ assert the expected comments/labels, and close the issue in cleanup.
      finding codes, severities, bundle hashes, and line hashes,
    - assert hashes, frontmatter/description presence, and requirement counts
      are present,
+   - assert the provenance report includes tracked git state, working-tree
+     dirty state, last commit IDs/dates, commit-subject hashes,
+     validation/risk/git-history gates, installer-disabled gates, and no raw
+     commit subjects or author identities,
    - assert skill validation status, duplicate-name count, invalid-name count,
      and folder/name mismatch count are present,
    - assert the report does not dump full skill bodies or verification tokens,
@@ -5710,6 +5729,13 @@ examples/workflows/gitclaw.yml
   is an explicit inventory alias with the same body-free skill metadata and
   selected-skill provenance, including enabled/disabled/allowlist-blocked
   counts.
+- A `gh`-driven skills-provenance E2E harness verifies
+  `@gitclaw /skills provenance` exposes tracked git provenance for repo-local
+  `SKILL.md` files, including dirty state, commit IDs/dates, and
+  commit-subject hashes without raw skill bodies, raw subjects, requirement
+  names, installer output, or author identities. It then posts a normal
+  follow-up requiring repo-reader search so GitHub Models proves model
+  inference, prompt provenance, selected skills, and prompt-visible tool names.
 - A `gh`-driven skills-verify E2E harness verifies
   `@gitclaw /skills verify` exposes the repo-local skill trust envelope,
   hashes, config-gate state, requirement status, and no-registry boundary

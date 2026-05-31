@@ -1989,7 +1989,7 @@ func runMigrateRiskCommand(args []string) error {
 
 func runSkillsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw skills verify|risk|validate|check|list|select-plan <name>|refresh-plan|sources [risk|info <name>]|proposals [risk]|proposal-plan <name>|install-plan <target>|upgrade-plan <target>|bundles [risk]|bundle <name>|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw skills verify|risk|validate|check|list|provenance|select-plan <name>|refresh-plan|sources [risk|info <name>]|proposals [risk]|proposal-plan <name>|install-plan <target>|upgrade-plan <target>|bundles [risk]|bundle <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -2000,6 +2000,8 @@ func runSkillsCommand(args []string) error {
 		return runSkillsValidateCommand(args[1:])
 	case "list":
 		return runSkillsListCommand(args[1:])
+	case "provenance", "history", "timeline":
+		return runSkillsProvenanceCommand(args[1:])
 	case "select-plan", "selection-plan":
 		return runSkillsSelectPlanCommand(args[1:])
 	case "refresh-plan", "refresh", "reload-plan", "snapshot":
@@ -2194,6 +2196,22 @@ func runSkillsListCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSkillsCLIReport(repoContext))
+	return nil
+}
+
+func runSkillsProvenanceCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown skills provenance argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSkillProvenanceCLIReport(cfg, repoContext))
 	return nil
 }
 

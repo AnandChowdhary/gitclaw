@@ -2231,6 +2231,19 @@ git provenance report for loaded soul/profile files that shows tracked state,
 last commit IDs/dates, subject hashes, validation/risk gates, and no raw file
 bodies, commit subjects, or author identities.
 
+2026-05-31 skill-provenance follow-up: OpenClaw's skills CLI can list, check,
+install, update, verify, and workshop proposed skills, while its skills
+security docs warn that third-party skills are trusted code and should be
+read before enabling. Hermes uses progressive disclosure (`skills_list`,
+`skill_view`) and distinguishes bundled/official/trusted/community skill
+sources with security scanning. GitClaw should keep the GitHub-native variant
+review-first by adding `@gitclaw /skills provenance` and
+`gitclaw skills provenance`: a body-free report for repo-local `SKILL.md`
+files that shows source roots, selected state, requirement counts, tracked
+state, dirty state, last commit IDs/dates, subject hashes, validation/risk
+gates, disabled installer/mutation gates, and no raw skill bodies, requirement
+names, commit subjects, author identities, or installer output.
+
 - OpenClaw official docs: https://docs.openclaw.ai/llms.txt
 - OpenClaw default AGENTS.md template: https://docs.openclaw.ai/reference/AGENTS.default
 - OpenClaw about page: https://openclawlab.com/en/about/

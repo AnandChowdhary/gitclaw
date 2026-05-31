@@ -86,6 +86,9 @@ func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isSkillSourcesListRequest(ev, cfg) {
 		return renderSkillSourcesReport(ev, cfg, repoContext, true)
 	}
+	if isSkillsProvenanceRequest(ev, cfg) {
+		return RenderSkillProvenanceReport(ev, cfg, repoContext)
+	}
 	if isSkillProposalsReportRequest(ev, cfg) {
 		return renderSkillProposalsReport(ev, cfg, true)
 	}
@@ -124,6 +127,11 @@ func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
 
 func RenderSkillsCLIReport(repoContext RepoContext) string {
 	return renderSkillsListReport(Event{}, repoContext, false)
+}
+
+func isSkillsProvenanceRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && fields[0] == "/skills" && (strings.EqualFold(fields[1], "provenance") || strings.EqualFold(fields[1], "history") || strings.EqualFold(fields[1], "timeline"))
 }
 
 func renderSkillsListReport(ev Event, repoContext RepoContext, includeIssue bool) string {
