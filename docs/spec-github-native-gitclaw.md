@@ -837,7 +837,7 @@ GitHub issue/comment event
   `hooks list`, `hooks risk`, `hooks verify`,
   `plugins list`, `plugins risk`, `plugins verify`,
   `tasks list`, `tasks risk`, `tasks verify`, `tasks ledger`,
-  `agents list`, `agents risk`, `agents verify`,
+  `agents catalog`, `agents list`, `agents risk`, `agents verify`,
   `nodes list`, `nodes risk`, `nodes verify`,
   `migrate plan`, `migrate risk`,
   `orders list`, `orders verify`, `orders risk`,
@@ -3770,8 +3770,10 @@ workers:
 
 ```text
 @gitclaw /agents
+@gitclaw /agents catalog
 @gitclaw /agents risk
 @gitclaw /agent
+@gitclaw /agent catalog
 ```
 
 The command runs after preflight and before model inference. It posts a
@@ -3792,6 +3794,22 @@ agent policy, agent spec, issue, comment, channel, credential, or tool-output
 bodies. Future multi-agent support requires reviewed workflows, explicit
 permissions, approval gates, body-free audit cards, and a live GitHub Models
 conversation E2E in the same implementation batch.
+
+The catalog form:
+
+```text
+@gitclaw /agents catalog
+@gitclaw /agent catalog
+```
+
+posts a `GitClaw Agents Catalog Report` without model inference. It maps the
+agent command surface, `.gitclaw/AGENTS.md`, `.gitclaw/agents/*.md`, the
+GitHub Actions runtime, GitHub issue/comment conversation boundary, reviewed
+tool-name intent, approval frontmatter, and explicit no-delegation/no-subagent
+gates. It does not print agent policy/spec bodies, issue bodies, comments,
+prompts, tool outputs, credentials, channel payloads, or session bodies.
+Changes to this surface must include deterministic tests plus a live GitHub
+Models follow-up E2E that makes an actual model call.
 
 The risk form:
 
@@ -3815,6 +3833,7 @@ against actual inference and prompt-visible tools.
 Local operators can inspect the same policy/spec surface with:
 
 ```bash
+gitclaw agents catalog
 gitclaw agents list
 gitclaw agents risk
 gitclaw agents verify
@@ -6585,6 +6604,13 @@ examples/workflows/gitclaw.yml
   metadata, then runs a real GitHub Models follow-up conversation that proves
   model inference, prompt provenance, selected skills, and prompt-visible tool
   usage.
+- A `gh`-driven agents-catalog E2E harness verifies
+  `@gitclaw /agents catalog` and local `gitclaw agents catalog` expose
+  body-free agent command, policy/spec, runtime, conversation, tool-intent,
+  approval, and no-delegation gate metadata, then runs a real GitHub Models
+  follow-up conversation that proves model inference, prompt provenance,
+  selected skills, prompt-visible tool usage, usage telemetry, and recovery of
+  the bounded agents-catalog repository-search fixture token.
 - A `gh`-driven nodes-risk E2E harness verifies `@gitclaw /nodes risk` and
   local `gitclaw nodes risk` expose body-free node policy/spec/request risk
   metadata, then runs a real GitHub Models follow-up conversation that proves

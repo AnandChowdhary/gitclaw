@@ -1680,6 +1680,19 @@ single-assistant boundaries, and unbounded loops. Acceptance should include the
 deterministic body-free audit plus a real GitHub Models follow-up proving
 inference and repo-search tool exposure.
 
+2026-05-31 agents-catalog follow-up: OpenClaw's current skill and workspace
+docs keep agent behavior in reviewed files, while Hermes profiles, toolsets,
+and delegation docs separate profile state, tool runtime, and subagent/worker
+execution. GitClaw should keep that separation visible with
+`@gitclaw /agents catalog` and `gitclaw agents catalog`: list agent commands,
+policy/spec stores, the GitHub Actions runtime, GitHub issue/comment
+conversation boundary, reviewed tool-name intent, approval frontmatter, and
+explicit disabled delegation/profile/gateway gates without printing agent
+bodies, issue/comment bodies, prompts, tool outputs, credentials, channel
+payloads, or sessions. Acceptance requires a real issue E2E, a local CLI
+assertion, and a GitHub Models repo-reader/search follow-up that recovers a
+distinct agents-catalog repository-search fixture token.
+
 2026-05-30 nodes-runtime follow-up: OpenClaw's node host docs expose a separate
 execution plane: a headless node service connects to the Gateway WebSocket,
 pairs as `role: node`, advertises capabilities, and can run approved

@@ -320,6 +320,7 @@ gitclaw prompt risk
 gitclaw diffs summary
 gitclaw diffs risk
 gitclaw diffs verify
+gitclaw agents catalog
 gitclaw agents risk
 gitclaw nodes risk
 gitclaw hooks risk
@@ -368,6 +369,12 @@ Actions checkout workspace. It maps workspace commands, policy/spec files, git
 metadata, workflow setup, repository inventory, runtime, durable-state, and
 body-free gates without printing workspace file bodies, issue/comment bodies,
 prompts, tool outputs, workflow bodies, or credentials.
+
+`gitclaw agents catalog` is the compact discovery view for the single GitHub
+Actions assistant. It maps agent commands, policy/spec files, runtime,
+conversation boundary, tool-name intent, approval gates, and explicit
+no-delegation/no-subagent boundaries without printing agent files,
+issue/comment bodies, prompts, tool outputs, channel payloads, or credentials.
 
 The live channels-report harness verifies the GitHub-native Slack/Telegram
 bridge contract, workflow-dispatch wake strategy, and mirrored message counts
@@ -445,6 +452,7 @@ scripts/e2e/github-backup-info.sh
 scripts/e2e/github-backup-catalog-report.sh
 scripts/e2e/github-backup-search.sh
 scripts/e2e/github-backup-export-jsonl.sh
+scripts/e2e/github-agents-catalog-report.sh
 scripts/e2e/github-agents-risk-report.sh
 scripts/e2e/github-nodes-risk-report.sh
 scripts/e2e/github-artifacts-risk-report.sh

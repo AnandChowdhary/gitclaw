@@ -56,6 +56,9 @@ func IsAgentReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderAgentReport(ev Event, cfg Config) string {
+	if isAgentCatalogRequest(ev, cfg) {
+		return RenderAgentCatalogReport(ev, cfg)
+	}
 	if isAgentRiskRequest(ev, cfg) {
 		return renderAgentRiskReport(ev, cfg, true)
 	}
@@ -367,4 +370,21 @@ func isAgentRiskRequest(ev Event, cfg Config) bool {
 		return false
 	}
 	return strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit")
+}
+
+func isAgentCatalogRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 {
+		return false
+	}
+	command := fields[0]
+	if command != "/agents" && command != "/agent" {
+		return false
+	}
+	switch strings.ToLower(fields[1]) {
+	case "catalog", "commands", "capabilities", "index":
+		return true
+	default:
+		return false
+	}
 }

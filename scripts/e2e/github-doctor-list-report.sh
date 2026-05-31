@@ -166,11 +166,11 @@ for expected in \
   'context_files_present: `6`' \
   'memory_notes: `1`' \
   'skill_files: `1`' \
-  'e2e_scripts: `185`' \
-  'e2e_live_issue_scripts: `178`' \
-  'e2e_cleanup_scripts: `185`' \
-  'e2e_model_coverage_scripts: `128`' \
-  'e2e_model_followup_scripts: `128`' \
+  'e2e_scripts: `186`' \
+  'e2e_live_issue_scripts: `179`' \
+  'e2e_cleanup_scripts: `186`' \
+  'e2e_model_coverage_scripts: `129`' \
+  'e2e_model_followup_scripts: `129`' \
   'e2e_session_coverage_scripts: `2`' \
   'e2e_backup_gate_scripts: `27`' \
   'e2e_workflow_dispatch_scripts: `21`' \
@@ -201,6 +201,7 @@ for expected in \
   '.gitclaw/proactive/repo-hygiene.md' \
   "### E2E Harnesses" \
   'e2e_coverage_status=`ok`' \
+  'path=`scripts/e2e/github-agents-catalog-report.sh`' \
   'path=`scripts/e2e/github-backup-catalog-report.sh`' \
   'path=`scripts/e2e/github-bundles-catalog-report.sh`' \
   'path=`scripts/e2e/github-bundles-search-report.sh`' \

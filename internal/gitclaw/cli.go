@@ -641,13 +641,27 @@ func runAgentsCommand(args []string) error {
 		return runAgentsListCommand(nil)
 	}
 	switch args[0] {
+	case "catalog", "commands", "capabilities", "index":
+		return runAgentsCatalogCommand(args[1:])
 	case "list", "verify":
 		return runAgentsListCommand(args[1:])
 	case "risk", "risk-audit":
 		return runAgentsRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw agents [list|risk|verify]")
+		return fmt.Errorf("usage: gitclaw agents [catalog|list|risk|verify]")
 	}
+}
+
+func runAgentsCatalogCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown agents catalog argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderAgentCatalogCLIReport(cfg))
+	return nil
 }
 
 func runAgentsListCommand(args []string) error {
