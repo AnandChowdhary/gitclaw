@@ -169,7 +169,7 @@ for expected in \
   "gitclaw.list_files" \
   "gitclaw.skill_index" \
   "gitclaw.read_file" \
-  "go.mod"; do
+  "input_sha256_12="; do
   grep -Fq "$expected" <<<"$comments" || die "context report missing ${expected}"
 done
 
