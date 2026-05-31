@@ -1244,6 +1244,18 @@ v1, deterministic tools are read-only or metadata-only, workflow permissions
 are visible as body-free cards, and backup write permission is isolated to the
 post-handle backup job.
 
+2026-05-31 sandbox-risk follow-up: The same OpenClaw/Hermes boundary split
+also needs an operator-facing risk audit, not only a descriptive sandbox
+report. GitClaw should add `@gitclaw /sandbox risk` and
+`gitclaw sandbox risk` as body-free runtime, tool, workflow, skill, and backup
+concurrency cards with stable finding codes. The audit should make raw
+issue/comment/prompt/workflow/tool bodies and secrets explicitly absent, and
+any future host shell, repository mutation, elevated mode, mutating tool, or
+workflow-permission drift must become a high-severity finding. The live E2E
+harness should still follow the deterministic report with a normal GitHub
+Models conversation that proves prompt provenance, selected skills, and
+prompt-visible read-only tool usage.
+
 2026-05-29 tools-search follow-up: OpenClaw's tools docs distinguish
 tool-policy visibility from skill/plugin instructions, and Hermes' tool
 reference keeps tool names and schemas inspectable as first-class registry

@@ -11,6 +11,9 @@ func IsSandboxReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderSandboxReport(ev Event, cfg Config, repoContext RepoContext) string {
+	if requestedSandboxRisk(ev, cfg) {
+		return RenderSandboxRiskReport(ev, cfg, repoContext, true)
+	}
 	return renderSandboxReport(ev, cfg, repoContext, true)
 }
 

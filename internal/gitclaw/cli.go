@@ -208,8 +208,10 @@ func runSandboxCommand(args []string) error {
 	switch args[0] {
 	case "explain", "verify", "list":
 		return runSandboxExplainCommand(args[1:])
+	case "risk", "risk-audit":
+		return runSandboxRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw sandbox [explain|verify|list]")
+		return fmt.Errorf("usage: gitclaw sandbox [explain|verify|list|risk]")
 	}
 }
 
@@ -226,6 +228,22 @@ func runSandboxExplainCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSandboxCLIReport(cfg, repoContext))
+	return nil
+}
+
+func runSandboxRiskCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown sandbox risk argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSandboxRiskReport(Event{}, cfg, repoContext, false))
 	return nil
 }
 

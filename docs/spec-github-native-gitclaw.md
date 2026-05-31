@@ -782,7 +782,7 @@ GitHub issue/comment event
   `context list`, `context risk`, `context info`,
   `prompt list`, `prompt risk`,
   `runs current`, `runs verify`,
-  `sandbox explain`, `sandbox verify`,
+  `sandbox explain`, `sandbox verify`, `sandbox risk`,
   `memory verify`, `memory risk`, `memory validate`, `memory list`,
   `memory promote-plan`, `memory info`, `memory search`,
   `skills validate`,
@@ -1986,6 +1986,8 @@ boundary:
 @gitclaw /sandbox
 @gitclaw /sandboxes
 @gitclaw /exec-policy
+@gitclaw /sandbox risk
+@gitclaw /exec-policy risk
 ```
 
 The command runs after normal preflight authorization and context assembly, but
@@ -2013,7 +2015,15 @@ Local operators can inspect the same boundary before opening an issue:
 ```bash
 gitclaw sandbox explain
 gitclaw sandbox verify
+gitclaw sandbox risk
 ```
+
+`@gitclaw /sandbox risk` and `gitclaw sandbox risk` produce a stricter
+body-free risk audit for the same boundary. The report emits runtime, tool,
+workflow, and skill risk cards with stable finding codes, explicitly records
+that raw issue/comment/prompt/workflow/tool bodies and secrets were not
+printed, and treats future shell, repository mutation, elevated execution, or
+workflow-permission drift as high-severity findings.
 
 ## Context Inspection Command
 
@@ -5375,6 +5385,12 @@ examples/workflows/gitclaw.yml
   exposes the current GitHub Actions runtime boundary, denied host exec,
   read-only tool modes, workflow permission cards, and backup-job-only write
   scope without a model call or body leakage.
+- A `gh`-driven sandbox-risk E2E harness verifies `@gitclaw /sandbox risk`
+  exposes runtime, tool, workflow, skill, backup-concurrency, and raw-body
+  leakage risk cards without a model call. The same harness then posts a
+  normal follow-up comment that requires repo-reader search so GitHub Models
+  performs a real LLM call with prompt context, selected skill metadata, and
+  prompt-visible tool provenance.
 - A `gh`-driven policy-report E2E harness verifies `@gitclaw /policy` produces
   a deterministic preflight/label/write-policy audit without a model call or
   issue-body leakage.

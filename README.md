@@ -185,6 +185,7 @@ gitclaw workspace risk
 gitclaw workspace verify
 gitclaw profile risk
 gitclaw sandbox verify
+gitclaw sandbox risk
 ```
 
 Use `gitclaw commands` for the full catalog.
@@ -226,6 +227,7 @@ scripts/e2e/github-proactive-risk-report.sh
 scripts/e2e/github-session-risk-report.sh
 scripts/e2e/github-session-stats-report.sh
 scripts/e2e/github-session-coverage.sh
+scripts/e2e/github-sandbox-risk-report.sh
 scripts/e2e/github-tasks-risk-report.sh
 scripts/e2e/github-tools-risk-report.sh
 scripts/e2e/github-workspace-risk-report.sh
