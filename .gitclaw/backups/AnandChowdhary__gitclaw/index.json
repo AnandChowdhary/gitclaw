@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T15:06:36Z",
+  "generated_at": "2026-05-31T15:14:01Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 374,
+  "count": 375,
   "issues": [
     {
       "number": 3,
@@ -4663,6 +4663,20 @@
       ],
       "comment_count": 3,
       "transcript_messages": 4
+    },
+    {
+      "number": 415,
+      "title": "GitClaw proactive proactive-not-before-e2e-20260531t151151z due-20260531T151151Z",
+      "path": "issues/000415.json",
+      "backup_generated_at": "2026-05-31T15:14:00Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:done",
+        "gitclaw:proactive"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
