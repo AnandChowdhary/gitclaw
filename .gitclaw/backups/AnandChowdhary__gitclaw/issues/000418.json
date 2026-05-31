@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T15:30:37Z",
+  "generated_at": "2026-05-31T15:31:57Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "workflow_dispatch",
   "issue": {
     "number": 418,
     "title": "GitClaw workflow_dispatch e2e 20260531T152923Z",
@@ -11,7 +11,8 @@
     "author_association": "OWNER",
     "labels": [
       "gitclaw",
-      "gitclaw:e2e"
+      "gitclaw:e2e",
+      "gitclaw:done"
     ]
   },
   "transcript": [
@@ -32,6 +33,15 @@
       "CommentID": 4587158068,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "The exact verification token from the repository context for this workflow_dispatch E2E is: `GITCLAW_WORKFLOW_DISPATCH_E2E_20260531T152923Z`.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4587161376,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -42,6 +52,14 @@
       "author_association": "NONE",
       "created_at": "2026-05-31T15:30:09Z",
       "updated_at": "2026-05-31T15:30:09Z"
+    },
+    {
+      "id": 4587161376,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26716695682\" event_id=\"dispatch-workflow-dispatch-e2e-20260531T152923Z\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"46fa0b7c79bf78bd5fd87ffc6ba12f16\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26716695682\" prompt_context_sha256_12=\"ac04b8c4565b\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"9217\" usage_completion_tokens=\"39\" usage_total_tokens=\"9256\" usage_cache_read_tokens=\"8960\" usage_cache_write_tokens=\"0\" --\u003e\nThe exact verification token from the repository context for this workflow_dispatch E2E is: `GITCLAW_WORKFLOW_DISPATCH_E2E_20260531T152923Z`.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T15:31:33Z",
+      "updated_at": "2026-05-31T15:31:33Z"
     }
   ]
 }

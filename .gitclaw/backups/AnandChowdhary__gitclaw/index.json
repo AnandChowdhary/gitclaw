@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T15:30:39Z",
+  "generated_at": "2026-05-31T15:31:58Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 378,
   "issues": [
@@ -4710,14 +4710,15 @@
       "number": 418,
       "title": "GitClaw workflow_dispatch e2e 20260531T152923Z",
       "path": "issues/000418.json",
-      "backup_generated_at": "2026-05-31T15:30:37Z",
-      "event_name": "issues",
+      "backup_generated_at": "2026-05-31T15:31:57Z",
+      "event_name": "workflow_dispatch",
       "labels": [
         "gitclaw",
-        "gitclaw:e2e"
+        "gitclaw:e2e",
+        "gitclaw:done"
       ],
-      "comment_count": 1,
-      "transcript_messages": 2
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
