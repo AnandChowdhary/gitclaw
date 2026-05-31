@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T10:20:06Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 376,
+    "title": "@gitclaw /backup retention-plan e2e 20260531T101902Z",
+    "body": "Live backup retention-plan E2E.\n\nHidden backup retention-plan token: GITCLAW_BACKUP_RETENTION_PLAN_E2E_20260531T101902Z\nThis should produce a deterministic backup report, then the fetched backup branch should render a dry-run retention plan without leaking this token.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /backup retention-plan e2e 20260531T101902Z\n\nLive backup retention-plan E2E.\n\nHidden backup retention-plan token: GITCLAW_BACKUP_RETENTION_PLAN_E2E_20260531T101902Z\nThis should produce a deterministic backup report, then the fetched backup branch should render a dry-run retention plan without leaking this token.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Backup Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#376`\n- requested_backup_command: `retention-plan`\n- backup_command_status: `ok`\n- backup_branch: `gitclaw-backups`\n- backup_root: `.gitclaw/backups`\n- repo_backup_dir: `.gitclaw/backups/AnandChowdhary__gitclaw`\n- issue_backup_path: `.gitclaw/backups/AnandChowdhary__gitclaw/issues/000376.json`\n- index_path: `.gitclaw/backups/AnandChowdhary__gitclaw/index.json`\n- readme_path: `.gitclaw/backups/AnandChowdhary__gitclaw/README.md`\n- backup_schema_version: `1`\n- raw_comments_now: `0`\n- transcript_messages_now: `1`\n- assistant_turn_comments_now: `0`\n- issue_title_sha256_12: `a60eb76ee012`\n- issue_side_execution: `deferred_to_post_turn_backup_branch`\n- raw_bodies_included: `false`\n- requested_local_command: `gitclaw backup retention-plan --root .gitclaw/backups --repo AnandChowdhary/gitclaw --keep-latest 50`\n- backup_retention_plan_status: `deferred`\n- backup_retention_plan_execution: `local_fetched_backup_branch`\n- backup_retention_plan_mode: `dry-run`\n- backup_retention_plan_gates: `verify, keep-latest-plan, body-free-output, explicit-future-approval`\n- raw_backup_payloads_scanned_issue_side: `false`\n- repository_mutation_allowed_issue_side: `false`\n- branch_deletion_allowed_issue_side: `false`\n- github_api_calls_performed_issue_side: `false`\n- llm_e2e_required_after_backup_retention_plan_change: `true`\n\nThe backup job runs after a successful assistant turn and writes the raw transcript backup plus repo-scoped index to the dedicated backup branch.\n\nIssue and comment bodies are not included in this report; the raw backup JSON is the canonical transcript copy. Requested backup subcommands are recorded here as issue-visible intent, then run locally against a fetched `gitclaw-backups` branch.\n\n### Backup Contents\n- issue metadata\n- raw issue comments\n- reconstructed transcript with GitClaw assistant markers stripped\n- generation timestamp\n- schema version\n\n### Requested Command\n- `retention-plan` requested from the issue thread\n- run `gitclaw backup retention-plan --root .gitclaw/backups --repo AnandChowdhary/gitclaw --keep-latest 50` after fetching `gitclaw-backups`\n- issue-side execution is metadata-only because the backup branch is written after this assistant turn\n\n### Verification\n- `gitclaw backup verify --root .gitclaw/backups --repo \u003cowner/repo\u003e`\n- `gitclaw backup coverage --root .gitclaw/backups --repo \u003cowner/repo\u003e --issue \u003cnumber\u003e`\n- `gitclaw backup drill --root .gitclaw/backups --repo \u003cowner/repo\u003e --issue \u003cnumber\u003e`\n- `gitclaw backup risk --root .gitclaw/backups --repo \u003cowner/repo\u003e`\n- `gitclaw backup provenance --root .gitclaw/backups --repo \u003cowner/repo\u003e`\n- `gitclaw backup timeline --root .gitclaw/backups --repo \u003cowner/repo\u003e --limit 20`\n- `gitclaw backup search --root .gitclaw/backups --repo \u003cowner/repo\u003e \u003cquery\u003e`\n- `gitclaw backup retention-plan --root .gitclaw/backups --repo \u003cowner/repo\u003e --keep-latest 50`\n- validates the repo-scoped index, README, canonical issue paths, JSON schema version, counts, timestamps, traversal-safe payload paths, and git provenance; search reports hashes and metadata without printing raw backup bodies",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4586400246,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4586400246,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26709926619\" event_id=\"issue-376\" model=\"gitclaw/backup\" idempotency_key=\"c721b2b43281263ade1c5c4a5191f58f\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26709926619\" --\u003e\n## GitClaw Backup Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#376`\n- requested_backup_command: `retention-plan`\n- backup_command_status: `ok`\n- backup_branch: `gitclaw-backups`\n- backup_root: `.gitclaw/backups`\n- repo_backup_dir: `.gitclaw/backups/AnandChowdhary__gitclaw`\n- issue_backup_path: `.gitclaw/backups/AnandChowdhary__gitclaw/issues/000376.json`\n- index_path: `.gitclaw/backups/AnandChowdhary__gitclaw/index.json`\n- readme_path: `.gitclaw/backups/AnandChowdhary__gitclaw/README.md`\n- backup_schema_version: `1`\n- raw_comments_now: `0`\n- transcript_messages_now: `1`\n- assistant_turn_comments_now: `0`\n- issue_title_sha256_12: `a60eb76ee012`\n- issue_side_execution: `deferred_to_post_turn_backup_branch`\n- raw_bodies_included: `false`\n- requested_local_command: `gitclaw backup retention-plan --root .gitclaw/backups --repo AnandChowdhary/gitclaw --keep-latest 50`\n- backup_retention_plan_status: `deferred`\n- backup_retention_plan_execution: `local_fetched_backup_branch`\n- backup_retention_plan_mode: `dry-run`\n- backup_retention_plan_gates: `verify, keep-latest-plan, body-free-output, explicit-future-approval`\n- raw_backup_payloads_scanned_issue_side: `false`\n- repository_mutation_allowed_issue_side: `false`\n- branch_deletion_allowed_issue_side: `false`\n- github_api_calls_performed_issue_side: `false`\n- llm_e2e_required_after_backup_retention_plan_change: `true`\n\nThe backup job runs after a successful assistant turn and writes the raw transcript backup plus repo-scoped index to the dedicated backup branch.\n\nIssue and comment bodies are not included in this report; the raw backup JSON is the canonical transcript copy. Requested backup subcommands are recorded here as issue-visible intent, then run locally against a fetched `gitclaw-backups` branch.\n\n### Backup Contents\n- issue metadata\n- raw issue comments\n- reconstructed transcript with GitClaw assistant markers stripped\n- generation timestamp\n- schema version\n\n### Requested Command\n- `retention-plan` requested from the issue thread\n- run `gitclaw backup retention-plan --root .gitclaw/backups --repo AnandChowdhary/gitclaw --keep-latest 50` after fetching `gitclaw-backups`\n- issue-side execution is metadata-only because the backup branch is written after this assistant turn\n\n### Verification\n- `gitclaw backup verify --root .gitclaw/backups --repo \u003cowner/repo\u003e`\n- `gitclaw backup coverage --root .gitclaw/backups --repo \u003cowner/repo\u003e --issue \u003cnumber\u003e`\n- `gitclaw backup drill --root .gitclaw/backups --repo \u003cowner/repo\u003e --issue \u003cnumber\u003e`\n- `gitclaw backup risk --root .gitclaw/backups --repo \u003cowner/repo\u003e`\n- `gitclaw backup provenance --root .gitclaw/backups --repo \u003cowner/repo\u003e`\n- `gitclaw backup timeline --root .gitclaw/backups --repo \u003cowner/repo\u003e --limit 20`\n- `gitclaw backup search --root .gitclaw/backups --repo \u003cowner/repo\u003e \u003cquery\u003e`\n- `gitclaw backup retention-plan --root .gitclaw/backups --repo \u003cowner/repo\u003e --keep-latest 50`\n- validates the repo-scoped index, README, canonical issue paths, JSON schema version, counts, timestamps, traversal-safe payload paths, and git provenance; search reports hashes and metadata without printing raw backup bodies",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T10:19:45Z",
+      "updated_at": "2026-05-31T10:19:45Z"
+    }
+  ]
+}
