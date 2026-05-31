@@ -2061,6 +2061,13 @@ hash-only lease in the channel-state issue; the workflow wrapper can optionally
 `workflow_dispatch` its successor with `actions: write`. Provider sockets and
 pollers can be added behind that lease once the renewal surface is proven live.
 
+2026-05-31 channel-gateway workflow E2E hardening: Hermes exposes a long-running
+messaging gateway process, while OpenClaw treats routing state as part of the
+gateway control plane. GitClaw's no-server equivalent is an Actions-renewable
+lease, so the live gateway workflow harness should prove hash-only lease state,
+duplicate lease suppression, and ordinary GitHub issue-comment continuation on
+the lease state issue through real GitHub Models repo-reader/search turns.
+
 2026-05-30 channel delivery follow-up: OpenClaw's gateway owns both inbound
 delivery and outbound replies. GitClaw should record outbound reply delivery as
 a GitHub-native receipt: verify the source `gitclaw:assistant-turn`, write one

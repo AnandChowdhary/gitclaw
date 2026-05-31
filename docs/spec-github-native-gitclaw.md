@@ -4086,7 +4086,9 @@ therefore a new auditable state update.
 lease and exits. With `renew=true`, it dispatches a successor gateway run before
 the job exits, using `actions: write`. This is the first executable version of
 the long-running Actions gateway idea: no webhook server, no always-on VM, and
-state durable in GitHub issues.
+state durable in GitHub issues. Changes to this workflow must prove hash-only
+lease state, duplicate lease suppression, and two normal GitHub Models
+repo-reader/search turns on the lease state issue.
 
 ### Channel Delivery Command
 
@@ -5991,7 +5993,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven channel-gateway-workflow E2E harness dispatches
   `.github/workflows/gitclaw-channel-gateway.yml`, verifies the gateway lease is
   persisted through channel-state hashes, then repeats the same lease to prove
-  duplicate gateway runs are idempotent.
+  duplicate gateway runs are idempotent. The same harness then posts normal
+  issue-comment follow-ups that must make GitHub Models calls, select
+  `repo-reader`, expose `gitclaw.search_files`, recover distinct
+  channel-gateway fixture tokens, and avoid hidden account/lease sentinels.
 - A `gh`-driven channel-delivery-workflow E2E harness dispatches
   `.github/workflows/gitclaw-channel-delivery.yml`, verifies a source
   `gitclaw:assistant-turn` comment can be recorded as delivered, checks that

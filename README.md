@@ -403,6 +403,9 @@ The channel-state workflow harness now proves hash-only provider offset state,
 duplicate offset suppression, and two normal model/tool issue-comment turns on
 the state issue, keeping gateway cursors auditable without storing raw provider
 IDs.
+The channel-gateway workflow harness applies the same gate to renewable gateway
+leases: hash-only lease state, duplicate lease suppression, and two normal
+model/tool turns on the lease state issue.
 `gitclaw doctor list` also inventories checked-in E2E harnesses by count,
 cleanup coverage, live issue coverage, model marker coverage, real model
 follow-up coverage, session coverage, backup gates, and workflow-dispatch
