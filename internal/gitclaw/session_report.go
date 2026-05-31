@@ -52,6 +52,9 @@ func IsSessionReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderSessionReport(ev Event, cfg Config, comments []Comment, transcript []TranscriptMessage) string {
+	if requestedSessionCatalog(ev, cfg) {
+		return RenderSessionCatalogIssueReport(ev, comments, transcript)
+	}
 	if requestedSessionStatus(ev, cfg) {
 		return RenderSessionStatusReport(ev, cfg, comments, transcript)
 	}
@@ -236,6 +239,11 @@ func requestedSessionSearchQuery(ev Event, cfg Config) string {
 		return ""
 	}
 	return cleanMemorySearchQuery(strings.Join(fields[2:], " "))
+}
+
+func requestedSessionCatalog(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && fields[0] == "/session" && (strings.EqualFold(fields[1], "catalog") || strings.EqualFold(fields[1], "commands") || strings.EqualFold(fields[1], "capabilities"))
 }
 
 func requestedSessionRisk(ev Event, cfg Config) bool {

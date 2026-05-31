@@ -960,6 +960,7 @@ transcript/session CLIs and Hermes' saved/searchable sessions:
 
 ```text
 @gitclaw /session
+@gitclaw /session catalog
 @gitclaw /session list
 @gitclaw /session status
 @gitclaw /session readback
@@ -992,6 +993,7 @@ copy.
 Local operators can inspect a backed-up issue session without calling GitHub:
 
 ```bash
+gitclaw session catalog
 gitclaw session list --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session status --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session stats --backup .gitclaw/backups/owner/repo/issues/000123.json
@@ -1002,6 +1004,16 @@ The local report reads the canonical backup JSON, uses `scope: local-backup`,
 and emits repo/issue backup metadata, marker counts, transcript counts, trust
 states, sources, sizes, and hashes without dumping issue bodies, comment bodies,
 or assistant replies.
+
+`gitclaw session catalog` is the compact discovery surface for session
+inspection. It lists issue intents, local backup commands, execution locations,
+recall gates, GitHub-issue canonical session storage, and disabled export/delete
+authority without printing raw issue bodies, comment bodies, assistant replies,
+prompts, tool outputs, or raw search queries. `@gitclaw /session catalog`
+publishes the same command/gate map for the current issue before model
+inference and carries `llm_e2e_required_after_session_catalog_change: true`.
+Catalog changes require a live deterministic issue-command E2E plus a normal
+GitHub Models repo-reader/search follow-up.
 
 `gitclaw session status --backup <issue.json>` is the compact Hermes-inspired
 readback surface. It emits session labels, transcript/comment counts, latest
@@ -7181,6 +7193,12 @@ examples/workflows/gitclaw.yml
   an explicit report alias, while local
   `gitclaw session list --backup <issue.json>` inspects a backed-up issue
   session without dumping raw issue, comment, assistant, or transcript bodies.
+- A `gh`-driven session-catalog E2E harness verifies
+  `@gitclaw /session catalog` publishes a body-free command/gate map with
+  `llm_e2e_required_after_session_catalog_change: true`, while local
+  `gitclaw session catalog` exposes the same surface without issue metadata.
+  The same harness posts a normal GitHub Models repo-reader/search follow-up
+  that recovers the bounded session-catalog repository-search fixture token.
 - A `gh`-driven session-stats E2E harness first runs a normal GitHub Models
   conversation with repo-reader and `gitclaw.search_files`, then verifies
   `@gitclaw /session stats` reports model/provenance/session totals without

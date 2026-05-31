@@ -558,6 +558,16 @@ message/line hashes without raw transcript snippets or raw query text.
 Local `gitclaw session search <query> --backup <issue.json>` should use the
 same matcher over canonical backup JSON for offline triage.
 
+2026-05-31 session-catalog follow-up: OpenClaw's current session docs emphasize
+bounded session lists, redacted trajectory tails, and cleanup/export gates,
+while Hermes' session docs emphasize automatic saved sessions, deterministic
+messaging-platform session keys, and cross-session search. GitClaw should add a
+body-free `@gitclaw /session catalog` and `gitclaw session catalog` that list
+the available session reports, backup-backed local commands, recall gates, and
+no-export/no-delete boundaries before adding any separate session database.
+Changes should prove deterministic issue metadata plus a normal GitHub Models
+repo-reader/search follow-up.
+
 2026-05-30 session-provenance follow-up: OpenClaw transcript artifacts and
 Hermes saved sessions are useful because they make execution history
 inspectable after the turn. GitClaw should fold its assistant-turn prompt

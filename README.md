@@ -228,6 +228,7 @@ gitclaw backup search <query>
 gitclaw backup export-jsonl
 gitclaw backup restore-plan
 gitclaw backup retention-plan
+gitclaw session catalog
 gitclaw session list --backup <issue.json>
 gitclaw session status --backup <issue.json>
 gitclaw session stats --backup <issue.json>
@@ -244,6 +245,11 @@ system. It lists the issue intents, local commands, fetched-branch gates, and
 restore/retention mutation boundaries without printing raw issue bodies,
 comments, prompts, backup payloads, credentials, git subjects, or author
 identities.
+
+`gitclaw session catalog` is the compact session-surface map. It lists the
+issue intents, local backup commands, recall gates, and GitHub-issue canonical
+session boundary without printing raw issue bodies, comments, assistant
+replies, prompts, tool outputs, search queries, or credentials.
 
 `gitclaw backup provenance` is the body-free git-history audit for fetched
 `gitclaw-backups` branches. It verifies the backup tree, then reports whether
@@ -264,6 +270,10 @@ The live backup-catalog harness covers `@gitclaw /backup catalog`: it verifies
 the deterministic command/gate catalog, checks the post-turn backup branch, and
 then forces a real GitHub Models repo-reader/search follow-up so the catalog
 surface keeps LLM/tool coverage.
+
+The live session-catalog harness covers `@gitclaw /session catalog`: it checks
+the deterministic session command/gate map, then posts a real GitHub Models
+repo-reader/search follow-up so the session surface proves LLM/tool grounding.
 
 `gitclaw backup restore-plan` is a dry-run recovery plan for a fetched backup
 payload. Its live harness pairs deterministic restore metadata checks with a
@@ -471,6 +481,7 @@ scripts/e2e/github-proactive-report.sh
 scripts/e2e/github-proactive-list-report.sh
 scripts/e2e/github-proactive-info-report.sh
 scripts/e2e/github-proactive-risk-report.sh
+scripts/e2e/github-session-catalog-report.sh
 scripts/e2e/github-session-risk-report.sh
 scripts/e2e/github-session-status-report.sh
 scripts/e2e/github-session-stats-report.sh

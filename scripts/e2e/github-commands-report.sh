@@ -149,7 +149,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `33`' \
   'aliases: `31`' \
-  'local_cli_helpers: `179`' \
+  'local_cli_helpers: `180`' \
   'run_mode: `read-only`' \
   'llm_e2e_required_after_commands_report_change: `true`' \
   "### Slash Commands" \
@@ -282,6 +282,7 @@ for expected in \
   'gitclaw proactive info <name>' \
   'gitclaw proactive init' \
   'gitclaw proactive enqueue' \
+  'gitclaw session catalog' \
   'gitclaw session list --backup <issue.json>' \
   'gitclaw session status --backup <issue.json>' \
   'gitclaw session stats --backup <issue.json>' \

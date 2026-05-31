@@ -6,6 +6,61 @@ import (
 	"testing"
 )
 
+func TestRenderSessionCatalogReportListsBodyFreeSessionSurface(t *testing.T) {
+	ev := Event{
+		Repo: "owner/repo",
+		Issue: Issue{
+			Number: 88,
+			Title:  "@gitclaw /session catalog",
+			Body:   "SESSION_CATALOG_BODY_SECRET",
+		},
+	}
+	comments := []Comment{{
+		ID:   21,
+		Body: "<!-- gitclaw:assistant-turn idempotency_key=old -->\nSESSION_CATALOG_COMMENT_SECRET",
+		User: User{Login: "github-actions[bot]", Type: "Bot"},
+	}}
+	transcript := []TranscriptMessage{
+		{Role: "user", Body: "SESSION_CATALOG_TRANSCRIPT_SECRET"},
+		{Role: "assistant", Body: "SESSION_CATALOG_ASSISTANT_SECRET"},
+	}
+
+	body := RenderSessionReport(ev, DefaultConfig(), comments, transcript)
+	for _, want := range []string{
+		"GitClaw Session Catalog Report",
+		"requested_session_command: `catalog`",
+		"session_command_status: `ok`",
+		"session_catalog_status: `ok`",
+		"catalog_strategy: `compact-issue-thread-session-discovery`",
+		"session_model: `github-issue-thread-plus-backup-json`",
+		"canonical_session_store: `github-issue-thread`",
+		"local_backup_store: `gitclaw-backups issue JSON`",
+		"catalog_entries: `7`",
+		"issue_side_commands: `7`",
+		"local_backup_commands: `6`",
+		"raw_bodies_included: `false`",
+		"raw_tool_outputs_included: `false`",
+		"repository_mutation_allowed: `false`",
+		"session_deletion_allowed: `false`",
+		"session_export_allowed_issue_side: `false`",
+		"llm_e2e_required_after_session_catalog_change: `true`",
+		"command=`catalog` issue_intent=`@gitclaw /session catalog` local_command=`gitclaw session catalog` execution=`metadata-only` gate=`body-free-output` raw_bodies_included=`false` mutation_allowed=`false`",
+		"command=`search` issue_intent=`@gitclaw /session search <query>` local_command=`gitclaw session search <query> --backup <issue.json>`",
+		"issue_thread_gate=`canonical-session-is-github-issue-thread`",
+		"search_gate=`query-hash-and-line-hash-metadata`",
+		"coverage_gate=`prompt-provenance-skill-tool-telemetry`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("session catalog report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SESSION_CATALOG_BODY_SECRET", "SESSION_CATALOG_COMMENT_SECRET", "SESSION_CATALOG_TRANSCRIPT_SECRET", "SESSION_CATALOG_ASSISTANT_SECRET"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("session catalog report leaked %q:\n%s", leaked, body)
+		}
+	}
+}
+
 func TestRenderSessionSearchReportFindsTranscriptWithoutBodies(t *testing.T) {
 	transcript := []TranscriptMessage{
 		{

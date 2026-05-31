@@ -118,6 +118,8 @@
 - Sessions and run history are reconstructed from issues, backups, and
   `gitclaw:assistant-turn` markers; reports hash markers, labels, model
   provenance, skills, and tools without printing assistant replies or prompts.
+- Session catalog changes need two proofs: body-free session command/gate
+  inventory plus a normal model/tool follow-up proving repo-reader search.
 - Runs report changes need two proofs: body-free current-turn provenance and
   prompt-visible input hashes, plus a normal model/tool follow-up.
 - Prompt report/list changes need two proofs: body-free prompt

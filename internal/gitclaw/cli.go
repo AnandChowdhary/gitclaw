@@ -1530,9 +1530,11 @@ func isPromptCLISubcommand(arg string) bool {
 
 func runSessionCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw session list --backup <issue.json> | gitclaw session status --backup <issue.json> | gitclaw session stats --backup <issue.json> | gitclaw session coverage --backup <issue.json> | gitclaw session risk --backup <issue.json> | gitclaw session search <query> --backup <issue.json>")
+		return fmt.Errorf("usage: gitclaw session catalog | gitclaw session list --backup <issue.json> | gitclaw session status --backup <issue.json> | gitclaw session stats --backup <issue.json> | gitclaw session coverage --backup <issue.json> | gitclaw session risk --backup <issue.json> | gitclaw session search <query> --backup <issue.json>")
 	}
 	switch args[0] {
+	case "catalog", "commands", "capabilities":
+		return runSessionCatalogCommand(args[1:])
 	case "list":
 		return runSessionListCommand(args[1:])
 	case "status", "readback":
@@ -1548,6 +1550,14 @@ func runSessionCommand(args []string) error {
 	default:
 		return fmt.Errorf("unknown session command %q", args[0])
 	}
+}
+
+func runSessionCatalogCommand(args []string) error {
+	if len(args) != 0 {
+		return fmt.Errorf("usage: gitclaw session catalog")
+	}
+	fmt.Println(RenderSessionCatalogCLIReport())
+	return nil
 }
 
 func runSessionListCommand(args []string) error {
