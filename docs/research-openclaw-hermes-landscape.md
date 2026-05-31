@@ -813,6 +813,19 @@ explicit `workflow_dispatch` wakeup path. The useful OpenClaw/Hermes analogue is
 not a socket loop; it is an auditable issue-number dispatch with a stable
 external event ID used as the idempotency key.
 
+2026-05-31 workflow-dispatch E2E hardening: GitHub's Actions docs continue to
+make `workflow_dispatch` the explicit manual/API wakeup path and note that
+`workflow_dispatch`/`repository_dispatch` are the events designed to create
+fresh runs from a workflow-triggering call. OpenClaw's channel docs still frame
+Slack and Telegram as gateway-owned adapters that normalize channel messages
+before routing them to an agent session, while Hermes cron keeps scheduled work
+as fresh agent sessions. GitClaw should keep the GitHub-native version small:
+the generic dispatch harness first proves issue-number wakeup and stable
+dispatch-id idempotency, then proves conversation continuity with a normal
+GitHub Models repo-reader/search follow-up on the same issue. That makes the
+no-server bridge useful for Slack/Telegram pollers without adding a long-lived
+socket process.
+
 2026-05-31 channels-info E2E follow-up: current OpenClaw channel docs continue
 to frame Slack and Telegram as gateway-owned channel adapters, while GitClaw's
 serverless version keeps GitHub issues as the canonical session and wakes the

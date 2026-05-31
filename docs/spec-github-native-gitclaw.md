@@ -5098,9 +5098,16 @@ assert the expected comments/labels, and close the issue in cleanup.
    - dispatch the main `gitclaw.yml` workflow with `issue_number` and a stable
      `dispatch_id`,
    - assert one assistant comment with a `dispatch-...` event marker and exact
-     nonce token,
+     nonce token, plus GitHub Models model id, prompt-context hash, and usage
+     telemetry,
    - dispatch the same `dispatch_id` again,
-   - assert no duplicate assistant comment is created.
+   - assert no duplicate assistant comment is created,
+   - post a normal `@gitclaw` issue-comment follow-up requiring `repo-reader`
+     and `gitclaw.search_files`,
+   - assert the second assistant turn is GitHub Models-backed, selects
+     `repo-reader`, exposes `gitclaw.search_files`, recovers
+     `GITCLAW_WORKFLOW_DISPATCH_CONTEXT_V1` from `docs/search-fixture.md`, and
+     does not leak follow-up sentinels.
 
 11. **Channel message reconstruction**
 
@@ -5840,7 +5847,8 @@ MVP is not complete until:
 - the heartbeat harness dispatches a real workflow, receives one heartbeat
   comment, and proves same-slot idempotency,
 - the workflow-dispatch harness dispatches the main handler against a real
-  issue and proves same-dispatch-id idempotency,
+  issue, proves same-dispatch-id idempotency, then continues the same issue
+  with a normal GitHub Models repo-reader/search follow-up,
 - the channel-message harness verifies a hidden `gitclaw:channel-message`
   comment is reconstructed as user input during a dispatched run and can drive
   repo-reader search with model/prompt/usage telemetry, then continues the same
@@ -5992,7 +6000,11 @@ examples/workflows/gitclaw.yml
   real GitHub Models follow-up conversation that proves repo-reader selection
   and prompt-visible repository search tool usage.
 - A `gh`-driven workflow-dispatch E2E harness verifies the main handler can be
-  woken for a specific issue and deduped by dispatch ID.
+  woken for a specific issue and deduped by dispatch ID. The same live issue
+  must then receive a normal issue-comment follow-up that makes a GitHub Models
+  call, selects `repo-reader`, exposes `gitclaw.search_files`, recovers the
+  workflow-dispatch repository-search fixture token, and avoids hidden
+  follow-up sentinel leakage.
 - A `gh`-driven channel-message E2E harness verifies a mirrored channel
   comment is included in the dispatched conversation transcript and can force a
   real GitHub Models repo-reader/search turn with prompt provenance and usage

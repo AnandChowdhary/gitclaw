@@ -43,6 +43,8 @@
 - Channel-message and proactive workflow-dispatch E2E must prove repo-reader
   search/tool grounding, model provenance, and usage telemetry, not just nonce
   echoing from the mirrored prompt.
+- Workflow-dispatch E2E needs two proofs: real dispatch-id wakeup/idempotency,
+  then a normal model/tool issue-comment follow-up on the same issue.
 - Channel-message E2E also needs a normal issue-comment follow-up after the
   workflow-dispatch turn, proving the mirrored channel thread can continue as
   an ordinary GitHub conversation.
