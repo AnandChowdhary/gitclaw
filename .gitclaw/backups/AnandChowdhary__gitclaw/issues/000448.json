@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T20:09:59Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 448,
+    "title": "@gitclaw /bundles catalog e2e 20260531T200845Z",
+    "body": "@gitclaw /bundles catalog\n\nLive bundle-catalog E2E.\nDo not include this hidden issue token: NOECHO_BUNDLE_CATALOG_20260531T200845Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /bundles catalog e2e 20260531T200845Z\n\n@gitclaw /bundles catalog\n\nLive bundle-catalog E2E.\nDo not include this hidden issue token: NOECHO_BUNDLE_CATALOG_20260531T200845Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Skill Bundle Catalog Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#448`\n- bundle_catalog_status: `ok`\n- catalog_strategy: `compact-bundle-orchestration-discovery`\n- catalog_scope: `repo-local-skill-bundles-procedural-memory`\n- bundle_model: `repo-local-reviewed-yaml`\n- hermes_bundle_boundary: `task-profile-loads-existing-skills`\n- openclaw_skill_boundary: `skills-install-separately-review-first`\n- available_bundles: `1`\n- cataloged_entries: `1`\n- selected_bundles: `0`\n- available_skills: `1`\n- bundle_skill_refs: `1`\n- resolved_bundle_skills: `1`\n- missing_bundle_skills: `0`\n- bundles_with_instruction: `1`\n- prompt_visible_instructions: `0`\n- metadata_only_instructions: `1`\n- entries_with_risk_findings: `0`\n- bundle_risk_findings: `0`\n- external_registry_verification: `not_configured`\n- installer_scripts_run: `false`\n- agent_authored_bundle_mutation_allowed: `false`\n- raw_bundle_bodies_included: `false`\n- raw_bundle_instructions_included: `false`\n- raw_skill_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompt_bodies_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_bundle_catalog_change: `true`\n- issue_title_sha256_12: `0ed754263871`\n\nThis compact catalog treats skill bundles as Hermes-style task profiles over existing reviewed skills. It reports procedural-memory orchestration metadata, selected/load state, skill-ref resolution, instruction hashes, risk rollups, and gates only; raw bundle YAML, bundle instructions, skill bodies, issue bodies, comments, prompts, credentials, and secret values are not included.\n\n### Bundle Catalog Entries\n- position=`1` bundle_name=`repo-context` path=`.gitclaw/skill-bundles/repo-context.yaml` orchestration_layer=`procedural-memory` source=`repo-local-yaml` role=`available-task-profile` selected_for_this_turn=`false` prompt_visible=`false` instruction=`true` instruction_load_mode=`metadata-only` instruction_sha256_12=`02a8be4758bf` skills=`repo-reader` resolved_skills=`repo-reader` missing_skills=`none` skill_refs=`1` resolved_skill_refs=`1` missing_skill_refs=`0` bytes=`290` lines=`7` sha256_12=`4a6baa73f30e` parse_error=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` reason_codes=`all_skill_refs_resolved, available_task_profile, instruction_present, metadata_only, no_risk_findings, not_prompt_visible, not_selected, parse_ok, procedural_memory, repo_local_yaml`\n\n### Catalog Gates\n- risk_gate=`pass`\n- skill_ref_gate=`pass`\n- instruction_body_gate=`sha256_12`\n- external_registry_gate=`not_configured`\n- installer_gate=`disabled`\n- agent_authored_mutation_gate=`disabled`\n- raw_body_gate=`hash_only`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4587938329,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4587938329,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26723169609\" event_id=\"issue-448\" model=\"gitclaw/skills\" idempotency_key=\"13a925751984abfea4ff0340047132ef\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26723169609\" --\u003e\n## GitClaw Skill Bundle Catalog Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#448`\n- bundle_catalog_status: `ok`\n- catalog_strategy: `compact-bundle-orchestration-discovery`\n- catalog_scope: `repo-local-skill-bundles-procedural-memory`\n- bundle_model: `repo-local-reviewed-yaml`\n- hermes_bundle_boundary: `task-profile-loads-existing-skills`\n- openclaw_skill_boundary: `skills-install-separately-review-first`\n- available_bundles: `1`\n- cataloged_entries: `1`\n- selected_bundles: `0`\n- available_skills: `1`\n- bundle_skill_refs: `1`\n- resolved_bundle_skills: `1`\n- missing_bundle_skills: `0`\n- bundles_with_instruction: `1`\n- prompt_visible_instructions: `0`\n- metadata_only_instructions: `1`\n- entries_with_risk_findings: `0`\n- bundle_risk_findings: `0`\n- external_registry_verification: `not_configured`\n- installer_scripts_run: `false`\n- agent_authored_bundle_mutation_allowed: `false`\n- raw_bundle_bodies_included: `false`\n- raw_bundle_instructions_included: `false`\n- raw_skill_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompt_bodies_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_bundle_catalog_change: `true`\n- issue_title_sha256_12: `0ed754263871`\n\nThis compact catalog treats skill bundles as Hermes-style task profiles over existing reviewed skills. It reports procedural-memory orchestration metadata, selected/load state, skill-ref resolution, instruction hashes, risk rollups, and gates only; raw bundle YAML, bundle instructions, skill bodies, issue bodies, comments, prompts, credentials, and secret values are not included.\n\n### Bundle Catalog Entries\n- position=`1` bundle_name=`repo-context` path=`.gitclaw/skill-bundles/repo-context.yaml` orchestration_layer=`procedural-memory` source=`repo-local-yaml` role=`available-task-profile` selected_for_this_turn=`false` prompt_visible=`false` instruction=`true` instruction_load_mode=`metadata-only` instruction_sha256_12=`02a8be4758bf` skills=`repo-reader` resolved_skills=`repo-reader` missing_skills=`none` skill_refs=`1` resolved_skill_refs=`1` missing_skill_refs=`0` bytes=`290` lines=`7` sha256_12=`4a6baa73f30e` parse_error=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` reason_codes=`all_skill_refs_resolved, available_task_profile, instruction_present, metadata_only, no_risk_findings, not_prompt_visible, not_selected, parse_ok, procedural_memory, repo_local_yaml`\n\n### Catalog Gates\n- risk_gate=`pass`\n- skill_ref_gate=`pass`\n- instruction_body_gate=`sha256_12`\n- external_registry_gate=`not_configured`\n- installer_gate=`disabled`\n- agent_authored_mutation_gate=`disabled`\n- raw_body_gate=`hash_only`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T20:09:32Z",
+      "updated_at": "2026-05-31T20:09:32Z"
+    }
+  ]
+}
