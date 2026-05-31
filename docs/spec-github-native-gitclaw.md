@@ -829,8 +829,8 @@ GitHub issue/comment event
   `soul edit-plan`, `soul info`, `soul search`,
   `tools verify`, `tools risk`, `tools validate`, `tools list`,
   `tools exposure`, `tools exposure risk`, `tools defer-plan`,
-  `tools boundary`, `tools provenance`, `tools run-plan`, `tools info`,
-  `tools search`, `doctor`,
+  `tools boundary`, `tools provenance`, `tools approval-plan`,
+  `tools run-plan`, `tools info`, `tools search`, `doctor`,
   `policy verify`, `policy risk`,
   `secrets audit`, `secrets scan`, `secrets list`,
   `commands`, `version`.
@@ -2190,6 +2190,7 @@ gitclaw tools toolsets
 gitclaw tools toolsets risk
 gitclaw tools toolsets provenance
 gitclaw tools toolsets info <name>
+gitclaw tools approval-plan <name>
 gitclaw tools run-plan <name>
 gitclaw tools info <name>
 gitclaw tools search <query> --max-results 10
@@ -2218,6 +2219,7 @@ OpenClaw's tool policy visibility and Hermes' toolset inventory:
 @gitclaw /tools toolsets risk
 @gitclaw /tools toolsets provenance
 @gitclaw /tools toolsets info repo-read
+@gitclaw /tools approval-plan search_files
 @gitclaw /tools run-plan search_files
 @gitclaw /tools info read_file
 @gitclaw /tools search read_file
@@ -2393,6 +2395,24 @@ validation findings. It never emits raw tool inputs, tool output bodies,
 issue/comment bodies, prompts, or file bodies. This mirrors the skill-info
 workflow for tools: one contract can be inspected without dumping the full
 tool inventory.
+
+When called as `@gitclaw /tools approval-plan <name>`, the command posts a
+body-free approval dry run for one declared tool contract. It is the
+GitHub-native slice of OpenClaw's exec approval posture and Hermes' explicit
+tool authorization boundary: the report shows the normalized tool, match
+count, enabled/disabled/allowlist gate state, contract mode, trigger, mutation
+flag, active-output hashes, validation summary, per-issue approval labels, and
+whether approval would be required before a future write-capable mode. In v1
+all built-in contracts are read-only or metadata-only, so known enabled tools
+report `approval_required=false`,
+`approval_decision=no_approval_required_read_only`,
+`model_callable_structured_tools=false`, `shell_execution_allowed=false`, and
+`repository_mutation_allowed=false`. It never approves, executes shell,
+calls a model, makes network calls, mutates the repository, or emits raw tool
+names from the issue, raw tool inputs, raw outputs, approval payloads,
+issue/comment bodies, prompts, credentials, or file bodies. Any implementation
+change to tool approval behavior must pair the deterministic approval-plan E2E
+with a live GitHub Models conversation E2E.
 
 When called as `@gitclaw /tools run-plan <name>`, the command posts a
 body-free dry-run plan for one declared tool contract. It reports the
@@ -6309,6 +6329,15 @@ examples/workflows/gitclaw.yml
   posts a normal follow-up comment that requires repo-reader search so GitHub
   Models performs a real LLM call with prompt context, selected skill, and
   prompt-visible tool provenance.
+- A `gh`-driven tools-approval-plan E2E harness verifies
+  `@gitclaw /tools approval-plan search_files` exposes the body-free
+  approval/interlock decision for one deterministic tool contract, including
+  config/allowlist/mode gates, per-issue label names, current no-approval
+  decision for read-only tools, raw input/output/approval-payload suppression,
+  and the live-LLM E2E requirement. The same harness then posts a normal
+  follow-up comment that requires repo-reader search so GitHub Models performs
+  a real LLM call with prompt context, selected skill, prompt-visible tool
+  provenance, and usage markers.
 - A `gh`-driven tools-provenance E2E harness verifies
   `@gitclaw /tools provenance` exposes the body-free current-turn tool
   provenance map, prompt-visible tool names, input/output hashes, hash-only

@@ -136,6 +136,7 @@ gitclaw tools toolsets
 gitclaw tools toolsets risk
 gitclaw tools toolsets provenance
 gitclaw tools toolsets info <name>
+gitclaw tools approval-plan <name>
 gitclaw tools run-plan <name>
 gitclaw tools info <name>
 gitclaw tools search <query>
@@ -304,6 +305,7 @@ scripts/e2e/github-tools-toolsets-report.sh
 scripts/e2e/github-tools-exposure-report.sh
 scripts/e2e/github-tools-defer-plan-report.sh
 scripts/e2e/github-tools-boundary-report.sh
+scripts/e2e/github-tools-approval-plan-report.sh
 scripts/e2e/github-tools-risk-report.sh
 scripts/e2e/github-workspace-risk-report.sh
 scripts/e2e/github-channels-risk-report.sh

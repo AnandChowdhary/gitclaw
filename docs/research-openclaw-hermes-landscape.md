@@ -1508,6 +1508,21 @@ active-output hashes, validation summary, no shell/network/repository/model
 execution, and an explicit requirement that tool-behavior changes also pass a
 live GitHub Models conversation E2E.
 
+2026-05-31 tools-approval-plan follow-up: OpenClaw's exec approvals separate
+tool policy, allowlists, and human approval before command execution, while
+Hermes keeps tool availability and dangerous command authorization explicit in
+the platform/tool boundary. GitClaw now has enough tool inventory, run-plan, and
+approval-label metadata to expose the same decision without adding execution:
+`@gitclaw /tools approval-plan <name>` and
+`gitclaw tools approval-plan <name>` should report the normalized tool, config
+and allowlist gates, contract mode, mutation flag, active-output hashes,
+per-issue approval labels, and current decision. In v1, known read-only or
+metadata-only tools should say no approval is required; any future mutating
+tool must be blocked behind a future write mode, `gitclaw:write-requested`,
+`gitclaw:approved`, and live model/tool E2E. The report must never approve,
+execute, mutate, call a model, or print raw tool inputs, outputs, approval
+payloads, issue/comment bodies, prompts, credentials, or secrets.
+
 2026-05-31 toolsets follow-up: Hermes' toolsets and OpenClaw's tool-policy
 surfaces both point to named, task-oriented capability profiles, but GitClaw
 should keep v1 stricter than either runtime. Add repo-reviewed

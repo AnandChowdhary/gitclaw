@@ -1721,7 +1721,7 @@ func runSessionSearchCommand(args []string) error {
 
 func runToolsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw tools verify|risk|validate|list|exposure [risk]|defer-plan|boundary [query]|provenance [query]|toolsets [risk|provenance|info <name>]|run-plan <name>|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw tools verify|risk|validate|list|exposure [risk]|defer-plan|boundary [query]|provenance [query]|toolsets [risk|provenance|info <name>]|approval-plan <name>|run-plan <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -1742,6 +1742,8 @@ func runToolsCommand(args []string) error {
 		return runToolsProvenanceCommand(args[1:])
 	case "toolsets", "toolset":
 		return runToolsToolsetsCommand(args[1:])
+	case "approval-plan", "approval", "approve-plan", "approval-gate", "gate":
+		return runToolsApprovalPlanCommand(args[1:])
 	case "run-plan", "plan":
 		return runToolsRunPlanCommand(args[1:])
 	case "info":
@@ -2012,6 +2014,22 @@ func runToolsRunPlanCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderToolRunPlanCLIReport(repoContext, args[0]))
+	return nil
+}
+
+func runToolsApprovalPlanCommand(args []string) error {
+	if len(args) != 1 {
+		return fmt.Errorf("usage: gitclaw tools approval-plan <name>")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "tools approval-plan " + args[0]}}, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderToolApprovalPlanCLIReport(cfg, repoContext, args[0]))
 	return nil
 }
 

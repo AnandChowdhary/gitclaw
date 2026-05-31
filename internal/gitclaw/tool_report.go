@@ -82,6 +82,12 @@ func RenderToolsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isToolProvenanceRequest(ev, cfg) {
 		return renderToolProvenanceReport(ev, repoContext, true)
 	}
+	if toolName := requestedToolApprovalPlanName(ev, cfg); toolName != "" {
+		if toolName == "__missing__" {
+			toolName = ""
+		}
+		return renderToolApprovalPlanReport(ev, cfg, repoContext, toolName, true)
+	}
 	if isToolsetsProvenanceRequest(ev, cfg) {
 		return renderToolsetsProvenanceReport(ev, cfg, true)
 	}
