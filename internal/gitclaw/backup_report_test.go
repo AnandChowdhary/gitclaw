@@ -64,6 +64,7 @@ func TestRenderBackupSearchIssueCommandHashesQueryWithoutPrintingIt(t *testing.T
 		"requested_local_command: `gitclaw backup search --root .gitclaw/backups --repo owner/repo <query>`",
 		"query_sha256_12: `" + shortDocumentHash(query) + "`",
 		"query_terms: `3`",
+		"llm_e2e_required_after_backup_search_change: `true`",
 		"raw search query is not printed",
 	} {
 		if !strings.Contains(report, want) {

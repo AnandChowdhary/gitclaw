@@ -4460,7 +4460,10 @@ the exact chronological timeline command for a
 fetched backup branch without trying to inspect raw backup payloads from the
 pre-backup issue handler. `@gitclaw /backup search <query>` records only a
 query hash and term count; raw search terms and raw backup bodies stay out of
-the issue-visible comment.
+the issue-visible comment. Search-surface changes carry
+`llm_e2e_required_after_backup_search_change: true` and must be proven with a
+fetched-branch backup search plus a normal GitHub Models repo-reader/search
+follow-up.
 
 ## Backup Verification Command
 
@@ -5646,7 +5649,10 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert it lists query hash, issue/search counts, the just-created issue,
      source metadata, scores, and hashes,
    - assert it does not dump the hidden token, raw issue body, raw issue title,
-     raw comments, raw transcript messages, or raw query text.
+     raw comments, raw transcript messages, or raw query text,
+   - post a normal model-backed repo-reader/search follow-up and assert prompt
+     provenance, selected skill metadata, prompt-visible `gitclaw.search_files`,
+     usage telemetry, and no hidden issue/comment sentinel leakage.
 
 46. **Proactive init generator**
 
@@ -5757,6 +5763,7 @@ MVP is not complete until:
 - the backup-search harness verifies a fetched backup branch can search actual
   backed-up conversation content and return only paths, sources, trust
   metadata, scores, and hashes without leaking the searched token or bodies,
+  then proves a normal model-backed repo-reader/search follow-up,
 - the live harness verifies status labels end at `gitclaw:done` without
   `gitclaw:running` or `gitclaw:error`,
 - the failure harness forces a real invalid-model run and verifies a bounded

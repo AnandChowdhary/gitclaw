@@ -318,6 +318,13 @@ export is a high-trust backup surface, changes should also run a normal
 GitHub Models repo-reader/search follow-up so model provenance, tool grounding,
 and usage telemetry remain covered without leaking hidden issue sentinels.
 
+2026-05-31 backup-search E2E follow-up: backup search is another raw-archive
+recovery surface, even when the issue-visible report prints only a query hash
+and term count. GitClaw should prove two things for search changes: the fetched
+backup branch can find a planted raw token without leaking it, and a normal
+GitHub Models follow-up still uses repo-reader search with prompt provenance,
+selected tool metadata, and usage telemetry.
+
 2026-05-30 backup-risk follow-up: OpenClaw's backup verification treats unsafe
 paths and malformed manifests as restore blockers, while Hermes' checkpoint and
 session export posture makes rollback review a local operator action. GitClaw
