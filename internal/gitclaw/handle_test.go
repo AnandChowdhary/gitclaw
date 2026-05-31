@@ -710,7 +710,7 @@ on:
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Proactive Report", "Generated without a model call", "model=\"gitclaw/proactive\"", "workflow_present: `true`", "workflow_dispatch_trigger: `true`", "schedule_trigger: `true`", "prompt_files: `1`", ".github/workflows/gitclaw-proactive.yml", ".gitclaw/proactive/repo-hygiene.md", "gitclaw proactive enqueue"} {
+	for _, want := range []string{"GitClaw Proactive Report", "Generated without a model call", "model=\"gitclaw/proactive\"", "workflow_present: `true`", "workflow_dispatch_trigger: `true`", "schedule_trigger: `true`", "prompt_files: `1`", "llm_e2e_required_after_proactive_report_change: `true`", ".github/workflows/gitclaw-proactive.yml", ".gitclaw/proactive/repo-hygiene.md", "gitclaw proactive enqueue"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("proactive report missing %q:\n%s", want, body)
 		}

@@ -79,6 +79,10 @@ func renderProactiveReport(ev Event, cfg Config, includeIssue bool) string {
 	fmt.Fprintf(&b, "- schedule_trigger: `%t`\n", surface.Workflow.Schedule)
 	fmt.Fprintf(&b, "- prompt_files: `%d`\n", len(surface.Prompts))
 	fmt.Fprintf(&b, "- prompt_skill_hints: `%d`\n", proactivePromptSkillHintCount(surface.Prompts))
+	fmt.Fprintf(&b, "- llm_e2e_required_after_proactive_report_change: `%t`\n", true)
+	if includeIssue && isProactiveListRequest(ev, cfg) {
+		fmt.Fprintf(&b, "- llm_e2e_required_after_proactive_list_change: `%t`\n", true)
+	}
 	if includeIssue {
 		fmt.Fprintf(&b, "- proactive_run_issue: `%t`\n", HasProactiveRunMarker(ev.Issue.Body))
 		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
@@ -294,6 +298,14 @@ func isProactiveRiskRequest(ev Event, cfg Config) bool {
 		return false
 	}
 	return strings.EqualFold(fields[1], "risk") || strings.EqualFold(fields[1], "risk-audit")
+}
+
+func isProactiveListRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 || !isProactiveCommand(fields[0]) {
+		return false
+	}
+	return strings.EqualFold(fields[1], "list")
 }
 
 func matchingProactivePrompts(prompts []proactivePrompt, name string) []proactivePrompt {

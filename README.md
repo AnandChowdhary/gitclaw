@@ -295,6 +295,9 @@ still proves real repo-reader search.
 The live channels-verify harness applies the same model/tool gate to the
 positive bridge health check, so workflow permission/input changes prove both
 deterministic readiness and real repo-reader search.
+The live proactive-report and proactive-list harnesses use the same two-proof
+shape for scheduled work: body-free workflow/prompt metadata first, then a
+normal GitHub Models repo-reader/search follow-up.
 
 ## Testing
 
@@ -358,6 +361,8 @@ scripts/e2e/github-profile-risk-report.sh
 scripts/e2e/github-channel-message.sh
 scripts/e2e/github-channels-info-report.sh
 scripts/e2e/github-proactive.sh
+scripts/e2e/github-proactive-report.sh
+scripts/e2e/github-proactive-list-report.sh
 scripts/e2e/github-proactive-info-report.sh
 scripts/e2e/github-proactive-risk-report.sh
 scripts/e2e/github-session-risk-report.sh
@@ -410,6 +415,10 @@ The channel-delivery workflow harness now proves outbound receipt safety:
 source assistant verification, hash-only provider message receipts, duplicate
 receipt suppression, and two normal model/tool turns without leaking the source
 assistant body.
+The proactive-report and proactive-list harnesses now require the deterministic
+scheduled-job inventory to be followed by a real issue-comment GitHub Models
+turn that selects `repo-reader`, exposes `gitclaw.search_files`, and recovers a
+fixture token from repository search.
 `gitclaw doctor list` also inventories checked-in E2E harnesses by count,
 cleanup coverage, live issue coverage, model marker coverage, real model
 follow-up coverage, session coverage, backup gates, and workflow-dispatch

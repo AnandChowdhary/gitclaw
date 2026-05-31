@@ -2030,12 +2030,12 @@ PROACTIVE_LIST_WORKFLOW_BODY
 			t.Fatalf("proactive list returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Proactive Report", "scope: `local-cli`", "Generated without a model call", "proactive_label: `gitclaw:proactive`", "trigger_label: `gitclaw`", "workflow_path: `.github/workflows/gitclaw-proactive.yml`", "workflow_present: `true`", "workflow_dispatch_trigger: `true`", "schedule_trigger: `true`", "prompt_files: `1`", "### Workflow", ".github/workflows/gitclaw-proactive.yml", "### Prompt Files", ".gitclaw/proactive/repo-hygiene.md", "sha256_12=", "### Enqueue Contract", "gitclaw proactive enqueue"} {
+	for _, want := range []string{"GitClaw Proactive Report", "scope: `local-cli`", "Generated without a model call", "proactive_label: `gitclaw:proactive`", "trigger_label: `gitclaw`", "workflow_path: `.github/workflows/gitclaw-proactive.yml`", "workflow_present: `true`", "workflow_dispatch_trigger: `true`", "schedule_trigger: `true`", "prompt_files: `1`", "llm_e2e_required_after_proactive_report_change: `true`", "### Workflow", ".github/workflows/gitclaw-proactive.yml", "### Prompt Files", ".gitclaw/proactive/repo-hygiene.md", "sha256_12=", "### Enqueue Contract", "gitclaw proactive enqueue"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("proactive list output missing %q:\n%s", want, output)
 		}
 	}
-	for _, notWant := range []string{"repository:", "issue:", "issue_title_sha256_12", "proactive_run_issue:", "PROACTIVE_LIST_WORKFLOW_BODY", "PROACTIVE_LIST_PROMPT_BODY"} {
+	for _, notWant := range []string{"repository:", "issue:", "issue_title_sha256_12", "proactive_run_issue:", "llm_e2e_required_after_proactive_list_change", "PROACTIVE_LIST_WORKFLOW_BODY", "PROACTIVE_LIST_PROMPT_BODY"} {
 		if strings.Contains(output, notWant) {
 			t.Fatalf("proactive list output unexpectedly included %q:\n%s", notWant, output)
 		}

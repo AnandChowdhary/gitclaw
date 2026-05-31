@@ -745,6 +745,17 @@ should be proven with a real GitHub Models issue-comment follow-up that selects
 `repo-reader`, exposes bounded repository search, and confirms scheduled-job
 inspection still works on the same path users will use for normal conversation.
 
+2026-05-31 proactive report/list E2E follow-up: [OpenClaw cron](https://docs.openclaw.ai/cron/)
+keeps precise scheduled work distinct from
+[OpenClaw heartbeat](https://docs.openclaw.ai/heartbeat), while
+[Hermes cron](https://hermes-agent.nousresearch.com/docs/user-guide/features/cron/)
+exposes scheduled jobs through an explicit tool and reusable workflow hints.
+GitClaw should keep that operator visibility but translate it into GitHub
+primitives: `/proactive` and `/proactive list` publish only reviewed workflow
+and prompt metadata, then the live harness posts a normal issue-comment turn
+that must use GitHub Models, `repo-reader`, and bounded repository search. That
+guards against a fake proactive audit that only echoes deterministic metadata.
+
 2026-05-29 heartbeat follow-up: OpenClaw's heartbeat docs define heartbeat as
 "periodic awareness": it reads `HEARTBEAT.md`, runs lightweight checks on a
 fixed interval, and expects `HEARTBEAT_OK` when there is nothing useful to say.

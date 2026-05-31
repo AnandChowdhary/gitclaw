@@ -30,6 +30,10 @@
   gates and provider/input readiness, plus a normal model/tool follow-up.
 - Proactive jobs are reviewed prompt/workflow files plus visible issue runs;
   info/risk surfaces stay body-free and prove changes with live model/tool E2E.
+- Proactive report/list changes need two proofs: body-free scheduled workflow
+  and prompt inventory, plus a normal GitHub Models issue-comment follow-up
+  that selects `repo-reader`, exposes `gitclaw.search_files`, and recovers a
+  repository-search fixture token.
 - Channel-message and proactive workflow-dispatch E2E must prove repo-reader
   search/tool grounding, model provenance, and usage telemetry, not just nonce
   echoing from the mirrored prompt.

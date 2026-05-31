@@ -506,7 +506,12 @@ inference. It posts a `gitclaw:assistant-turn` comment with
 - the enqueue/idempotency contract.
 
 It never dumps prompt, issue, or comment bodies. The command is for safe
-operator visibility before adding or editing scheduled jobs.
+operator visibility before adding or editing scheduled jobs. The root report
+includes `llm_e2e_required_after_proactive_report_change=true`, and the
+explicit `/proactive list` alias also includes
+`llm_e2e_required_after_proactive_list_change=true`, so changes to either
+surface must prove the body-free report and a normal GitHub Models tool-using
+follow-up.
 
 The risk form:
 
@@ -6052,10 +6057,17 @@ examples/workflows/gitclaw.yml
   `gitclaw proactive init` generates a scheduled workflow and prompt file
   without leaking prompt bodies, then dispatches a real proactive conversation.
 - A `gh`-driven proactive-report E2E harness verifies `@gitclaw /proactive`
-  reports workflow triggers and prompt metadata without a model call.
+  reports workflow triggers, prompt metadata, and
+  `llm_e2e_required_after_proactive_report_change: true` without a model call;
+  the same live issue then receives a normal GitHub Models follow-up that must
+  select `repo-reader`, expose `gitclaw.search_files`, recover a bounded
+  repository-search fixture token, and publish usage telemetry.
 - A `gh`-driven proactive-list E2E harness verifies `@gitclaw /proactive list`
   is an explicit report alias, while local `gitclaw proactive list` exposes
   workflow and prompt-file metadata without issue-only fields or prompt bodies.
+  The live issue form also proves
+  `llm_e2e_required_after_proactive_list_change: true` and the same
+  model/tool follow-up contract as the root proactive report.
 - A `gh`-driven proactive-info E2E harness verifies
   `@gitclaw /proactive info <name>` and local `gitclaw proactive info <name>`
   expose one proactive job definition, generic workflow metadata, generated
