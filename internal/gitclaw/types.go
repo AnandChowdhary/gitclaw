@@ -273,9 +273,17 @@ type SkillSummary struct {
 	SHA                string
 	RequiredEnv        []string
 	RequiredBins       []string
+	OptionalEnv        []string
+	PrimaryEnv         string
+	InstallSpecs       []SkillInstallSpec
 	MissingEnv         []string
 	MissingBins        []string
 	RiskFindings       []SkillRiskFinding
+}
+
+type SkillInstallSpec struct {
+	Kind string
+	Bins []string
 }
 
 type SkillBundleSummary struct {

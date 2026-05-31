@@ -643,6 +643,9 @@ func loadSkillContext(root string, transcript []TranscriptMessage, cfg Config) (
 			SHA:                shortDocumentHash(skill.Body),
 			RequiredEnv:        append([]string(nil), skill.RequiredEnv...),
 			RequiredBins:       append([]string(nil), skill.RequiredBins...),
+			OptionalEnv:        append([]string(nil), skill.OptionalEnv...),
+			PrimaryEnv:         skill.PrimaryEnv,
+			InstallSpecs:       append([]SkillInstallSpec(nil), skill.InstallSpecs...),
 			MissingEnv:         missingEnvVars(skill.RequiredEnv),
 			MissingBins:        missingBins(skill.RequiredBins),
 			RiskFindings:       scanSkillRiskFindings(skill.Path, skill.Body),
@@ -689,6 +692,9 @@ type skillDocument struct {
 	FrontmatterPresent bool
 	RequiredEnv        []string
 	RequiredBins       []string
+	OptionalEnv        []string
+	PrimaryEnv         string
+	InstallSpecs       []SkillInstallSpec
 }
 
 type skillBundleDocument struct {
@@ -808,6 +814,9 @@ func parseSkillDocument(path, body string) skillDocument {
 	frontmatterPresent := false
 	var requiredEnv []string
 	var requiredBins []string
+	var optionalEnv []string
+	primaryEnv := ""
+	var installSpecs []SkillInstallSpec
 	if fm, ok := frontmatter(body); ok {
 		frontmatterPresent = true
 		if value := frontmatterValue(fm, "name"); value != "" {
@@ -823,6 +832,15 @@ func parseSkillDocument(path, body string) skillDocument {
 		requiredEnv = append(requiredEnv, frontmatterList(fm, "metadata.openclaw.requires.env")...)
 		requiredEnv = append(requiredEnv, frontmatterList(fm, "metadata.openclaw.env")...)
 		requiredBins = append(requiredBins, frontmatterList(fm, "metadata.openclaw.requires.bins")...)
+		runtime := parseSkillRuntimeFrontmatter(fm)
+		if runtime.Always {
+			always = true
+		}
+		requiredEnv = append(requiredEnv, runtime.RequiredEnv...)
+		requiredBins = append(requiredBins, runtime.RequiredBins...)
+		optionalEnv = append(optionalEnv, runtime.OptionalEnv...)
+		primaryEnv = runtime.PrimaryEnv
+		installSpecs = append(installSpecs, runtime.InstallSpecs...)
 	}
 	return skillDocument{
 		Name:               name,
@@ -833,7 +851,121 @@ func parseSkillDocument(path, body string) skillDocument {
 		FrontmatterPresent: frontmatterPresent,
 		RequiredEnv:        uniqueSortedStrings(requiredEnv),
 		RequiredBins:       uniqueSortedStrings(requiredBins),
+		OptionalEnv:        uniqueSortedStrings(optionalEnv),
+		PrimaryEnv:         strings.TrimSpace(primaryEnv),
+		InstallSpecs:       normalizeSkillInstallSpecs(installSpecs),
 	}
+}
+
+type skillRuntimeFrontmatter struct {
+	Always       bool
+	RequiredEnv  []string
+	RequiredBins []string
+	OptionalEnv  []string
+	PrimaryEnv   string
+	InstallSpecs []SkillInstallSpec
+}
+
+type skillRuntimeYAML struct {
+	Always   bool `yaml:"always"`
+	Metadata struct {
+		OpenClaw skillRuntimeMetadataYAML `yaml:"openclaw"`
+		Clawdbot skillRuntimeMetadataYAML `yaml:"clawdbot"`
+		Clawdis  skillRuntimeMetadataYAML `yaml:"clawdis"`
+	} `yaml:"metadata"`
+}
+
+type skillRuntimeMetadataYAML struct {
+	Always     bool                      `yaml:"always"`
+	Requires   skillRuntimeRequiresYAML  `yaml:"requires"`
+	Env        []string                  `yaml:"env"`
+	PrimaryEnv string                    `yaml:"primaryEnv"`
+	EnvVars    []skillRuntimeEnvVarYAML  `yaml:"envVars"`
+	Install    []skillRuntimeInstallYAML `yaml:"install"`
+}
+
+type skillRuntimeRequiresYAML struct {
+	Env  []string `yaml:"env"`
+	Bins []string `yaml:"bins"`
+}
+
+type skillRuntimeEnvVarYAML struct {
+	Name     string `yaml:"name"`
+	Required *bool  `yaml:"required"`
+}
+
+type skillRuntimeInstallYAML struct {
+	Kind    string   `yaml:"kind"`
+	Bins    []string `yaml:"bins"`
+	Formula string   `yaml:"formula"`
+	Package string   `yaml:"package"`
+	Module  string   `yaml:"module"`
+}
+
+func parseSkillRuntimeFrontmatter(lines []string) skillRuntimeFrontmatter {
+	var file skillRuntimeYAML
+	if err := yaml.Unmarshal([]byte(strings.Join(lines, "\n")), &file); err != nil {
+		return skillRuntimeFrontmatter{}
+	}
+	out := skillRuntimeFrontmatter{Always: file.Always}
+	for _, meta := range []skillRuntimeMetadataYAML{file.Metadata.OpenClaw, file.Metadata.Clawdbot, file.Metadata.Clawdis} {
+		if meta.Always {
+			out.Always = true
+		}
+		out.RequiredEnv = append(out.RequiredEnv, meta.Requires.Env...)
+		out.RequiredEnv = append(out.RequiredEnv, meta.Env...)
+		out.RequiredBins = append(out.RequiredBins, meta.Requires.Bins...)
+		if strings.TrimSpace(meta.PrimaryEnv) != "" && out.PrimaryEnv == "" {
+			out.PrimaryEnv = strings.TrimSpace(meta.PrimaryEnv)
+		}
+		for _, envVar := range meta.EnvVars {
+			name := strings.TrimSpace(envVar.Name)
+			if name == "" {
+				continue
+			}
+			if envVar.Required == nil || *envVar.Required {
+				out.RequiredEnv = append(out.RequiredEnv, name)
+			} else {
+				out.OptionalEnv = append(out.OptionalEnv, name)
+			}
+		}
+		for _, install := range meta.Install {
+			out.InstallSpecs = append(out.InstallSpecs, SkillInstallSpec{
+				Kind: strings.TrimSpace(install.Kind),
+				Bins: uniqueSortedStrings(append(append([]string{}, install.Bins...), install.Formula, install.Package, install.Module)),
+			})
+		}
+	}
+	out.RequiredEnv = uniqueSortedStrings(out.RequiredEnv)
+	out.RequiredBins = uniqueSortedStrings(out.RequiredBins)
+	out.OptionalEnv = uniqueSortedStrings(out.OptionalEnv)
+	out.InstallSpecs = normalizeSkillInstallSpecs(out.InstallSpecs)
+	return out
+}
+
+func normalizeSkillInstallSpecs(specs []SkillInstallSpec) []SkillInstallSpec {
+	out := make([]SkillInstallSpec, 0, len(specs))
+	seen := map[string]bool{}
+	for _, spec := range specs {
+		kind := strings.ToLower(strings.TrimSpace(spec.Kind))
+		if kind == "" {
+			kind = "unknown"
+		}
+		bins := uniqueSortedStrings(spec.Bins)
+		key := kind + "\x00" + strings.Join(bins, "\x00")
+		if seen[key] {
+			continue
+		}
+		seen[key] = true
+		out = append(out, SkillInstallSpec{Kind: kind, Bins: bins})
+	}
+	sort.Slice(out, func(i, j int) bool {
+		if out[i].Kind != out[j].Kind {
+			return out[i].Kind < out[j].Kind
+		}
+		return strings.Join(out[i].Bins, "\x00") < strings.Join(out[j].Bins, "\x00")
+	})
+	return out
 }
 
 func frontmatter(body string) ([]string, bool) {

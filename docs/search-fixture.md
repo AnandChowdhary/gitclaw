@@ -7,3 +7,5 @@ bounded repository search output to recover the associated token.
 bounded repository search fixture phrase => GITCLAW_SEARCH_CONTEXT_V1
 
 task ledger unique search fixture phrase => GITCLAW_TASKS_LEDGER_CONTEXT_V1
+
+skill runtime unique search fixture phrase => GITCLAW_SKILL_RUNTIME_CONTEXT_V1

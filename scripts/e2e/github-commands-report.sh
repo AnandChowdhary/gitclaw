@@ -138,7 +138,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `33`' \
   'aliases: `31`' \
-  'local_cli_helpers: `157`' \
+  'local_cli_helpers: `158`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/agents' \
@@ -315,6 +315,7 @@ for expected in \
   'gitclaw soul search <query>' \
   'gitclaw skills verify' \
   'gitclaw skills risk' \
+  'gitclaw skills runtime' \
   'gitclaw skills validate' \
   'gitclaw skills check' \
   'gitclaw skills list' \

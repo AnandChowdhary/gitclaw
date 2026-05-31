@@ -95,6 +95,7 @@ gitclaw skills refresh-plan
 gitclaw skills sources
 gitclaw skills sources risk
 gitclaw skills sources info <name>
+gitclaw skills runtime
 gitclaw skills proposals [risk]
 gitclaw skills proposal-plan <name>
 gitclaw skills install-plan <target>
@@ -257,6 +258,7 @@ scripts/e2e/github-skills-proposal-plan-report.sh
 scripts/e2e/github-skills-proposals-report.sh
 scripts/e2e/github-skills-refresh-plan-report.sh
 scripts/e2e/github-skills-sources-report.sh
+scripts/e2e/github-skills-runtime-report.sh
 scripts/e2e/github-bundles-risk-report.sh
 scripts/e2e/github-orders-risk-report.sh
 scripts/e2e/github-policy-risk-report.sh

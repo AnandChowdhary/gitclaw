@@ -124,6 +124,20 @@ skills; run installers; mutate `.gitclaw/SKILLS`; or dump raw source refs,
 source YAML, skill bodies, issue bodies, comments, prompts, credentials, or
 provider payloads.
 
+2026-05-31 skill-runtime follow-up: OpenClaw's `SKILL.md` frontmatter and
+ClawHub format expose runtime metadata such as required env vars, binaries,
+`primaryEnv`, and install specs, while Hermes skills/tool docs frame these
+declarations as part of the capability and trust boundary. GitClaw should parse
+that metadata for review but keep it inert: add `@gitclaw /skills runtime` and
+`gitclaw skills runtime` to report env/bin/install declaration counts, hashes,
+install kind names, primary-env consistency, and no-registry/no-install gates.
+The report should never run installers, install dependencies, contact remote
+registries, mutate skills, or print raw env names, install targets, skill
+bodies, prompts, issue/comment bodies, credentials, provider payloads, or tool
+outputs. Any change to this surface should be paired with a live GitHub Models
+conversation E2E so the deterministic audit does not become a substitute for
+testing real skill selection and tool usage.
+
 ### Memory
 
 OpenClaw's default memory model is file-centric:

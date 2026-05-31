@@ -1337,6 +1337,7 @@ gitclaw skills refresh-plan
 gitclaw skills sources
 gitclaw skills sources risk
 gitclaw skills sources info <name>
+gitclaw skills runtime
 gitclaw skills proposals [risk]
 gitclaw skills proposal-plan <name>
 gitclaw skills install-plan <target>
@@ -1375,6 +1376,9 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills sources
 @gitclaw /skills sources risk
 @gitclaw /skills sources info repo-reader
+@gitclaw /skills runtime
+@gitclaw /skills requirements
+@gitclaw /skills metadata
 @gitclaw /skills proposals
 @gitclaw /skills proposals risk
 @gitclaw /skills proposal-plan repo-reader
@@ -1406,6 +1410,8 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
   line hashes without raw `SKILL.md` text.
 - source-pin counts, expected/current skill hashes, source kind, trust level,
   install mode, no-fetch gates, and body-free provenance risk findings.
+- OpenClaw-compatible runtime metadata counts for env/bin/install declarations,
+  primary env hashes, inert install specs, and no-install/no-registry gates.
 - dry-run selection planning metadata when explicitly requested.
 - skill refresh-boundary planning metadata when explicitly requested.
 - dry-run install/upgrade planning metadata when explicitly requested.
@@ -1558,6 +1564,37 @@ source refs, raw source-pin bodies, raw skill bodies, issue bodies, comments,
 prompts, provider payloads, credentials, or secret values. The reports include
 `llm_e2e_required_after_skill_source_change=true`; every source-pin behavior
 change must ship with a live GitHub Models follow-up E2E.
+
+When called as `@gitclaw /skills runtime`,
+`@gitclaw /skills requirements`, `@gitclaw /skills metadata`, or
+`gitclaw skills runtime`, GitClaw posts a body-free runtime metadata audit for
+repo-local `SKILL.md` frontmatter. The report parses OpenClaw-compatible
+`metadata.openclaw` declarations plus Hermes/mini-claw style compatibility
+namespaces such as `metadata.clawdbot` and `metadata.clawdis`, then summarizes:
+
+- skills with frontmatter and runtime metadata,
+- required and optional env declaration counts,
+- primary env declaration counts, match counts, and short hashes,
+- required binary declaration counts,
+- inert install spec counts, install kind names, install target hashes, and
+  install-bin totals,
+- missing env/bin requirement counts for enabled skills,
+- explicit `registry_contact_allowed=false`, `installer_scripts_run=false`,
+  `dependency_install_allowed=false`, and `repository_mutation_allowed=false`
+  gates.
+
+The runtime report never contacts ClawHub, Hermes Hub, GitHub, package
+registries, or well-known endpoints; never runs installers; never installs
+dependencies; never mutates `.gitclaw/SKILLS`; and never prints raw skill
+bodies, raw env names, raw install targets, issue/comment bodies, prompts,
+provider payloads, tool outputs, credentials, or secret values. Findings are
+limited to codes such as `missing_runtime_requirements`,
+`primary_env_not_declared`, and `declared_install_specs_inert`, with paths and
+body-free detail. The report includes
+`llm_e2e_required_after_skill_runtime_change=true`; every runtime metadata
+behavior change must ship with a live GitHub Models follow-up E2E that proves
+normal model inference, repo-local skill selection, and prompt-visible tool
+usage still work.
 
 When called as `@gitclaw /skills proposal-plan <name>` or
 `gitclaw skills proposal-plan <name>`, GitClaw posts a non-mutating proposal
@@ -5885,6 +5922,12 @@ examples/workflows/gitclaw.yml
   no-registry/no-fetch/no-install runtime gates, and risk counts, then runs a
   real GitHub Models follow-up conversation that proves repo-local skill
   selection and prompt-visible tool usage still work.
+- A `gh`-driven skills-runtime E2E harness verifies
+  `@gitclaw /skills runtime` and local `gitclaw skills runtime` expose
+  body-free OpenClaw-compatible env/bin/install runtime metadata counts,
+  hashes, inert install gates, and no raw skill/env/install body leakage. It
+  then runs a real GitHub Models follow-up conversation that proves repo-local
+  skill selection and prompt-visible repository search tool usage.
 - A `gh`-driven skills-proposal-plan E2E harness verifies
   `@gitclaw /skills proposal-plan repo-reader` produces a body-free,
   non-mutating OpenClaw Skills Workshop-style proposal plan with review paths,
