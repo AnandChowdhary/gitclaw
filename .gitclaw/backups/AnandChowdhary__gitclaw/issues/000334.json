@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T00:33:23Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 334,
+    "title": "@gitclaw /sandbox risk e2e 20260531T003210Z",
+    "body": "@gitclaw /sandbox risk\n\nLive sandbox-risk E2E.\nDo not include this hidden issue token: GITCLAW_SANDBOX_RISK_HIDDEN_20260531T003210Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /sandbox risk e2e 20260531T003210Z\n\n@gitclaw /sandbox risk\n\nLive sandbox-risk E2E.\nDo not include this hidden issue token: GITCLAW_SANDBOX_RISK_HIDDEN_20260531T003210Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Sandbox Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#334`\n- event_kind: `issue_opened`\n- event_name: `issues`\n- event_action: `opened`\n- active_command: `/sandbox`\n- sandbox_risk_status: `ok`\n- verification_scope: `github_actions_sandbox_boundary`\n- runtime_boundary: `github-actions-ephemeral-runner`\n- sandbox_backend: `github-actions`\n- host_exec_policy: `deny`\n- shell_execution_allowed: `false`\n- repository_mutation_allowed: `false`\n- write_mode: `read-only`\n- approval_mode: `not_applicable_no_exec_tool`\n- approval_store: `not_configured`\n- elevated_mode_available: `false`\n- skill_cli_auto_allow: `false`\n- inline_eval_policy: `not_applicable_no_exec_tool`\n- network_egress_policy: `github-actions-default`\n- available_tools: `5`\n- enabled_tools: `5`\n- disabled_tools: `0`\n- allowlist_blocked_tools: `0`\n- read_only_tool_contracts: `3`\n- metadata_only_tool_contracts: `2`\n- mutating_tool_contracts: `0`\n- active_tool_outputs: `3`\n- tool_validation_status: `ok`\n- tool_validation_errors: `0`\n- tool_validation_warnings: `0`\n- workflow_permission_status: `ok`\n- workflow_present: `true`\n- unexpected_write_permissions: `0`\n- backup_write_permission_scope: `backup-job-only`\n- backup_concurrency_group: `true`\n- backup_concurrency_cancel_safe: `true`\n- skill_required_bins: `0`\n- skill_missing_bins: `0`\n- surfaces_with_risk_findings: `0`\n- sandbox_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompt_bodies_included: `false`\n- raw_workflow_bodies_included: `false`\n- raw_tool_outputs_included: `false`\n- secrets_included: `false`\n- llm_e2e_required_after_sandbox_risk_change: `true`\n- issue_title_sha256_12: `c7e0b262edac`\n\nThis report audits GitClaw's current execution boundary. It reports sandbox, tool, skill, and workflow-permission metadata only; issue bodies, comments, prompts, workflow bodies, tool output bodies, and secrets are not included.\n\n### Runtime Boundary Risk Card\n- kind=`runtime-boundary` runtime_boundary=`github-actions-ephemeral-runner` sandbox_backend=`github-actions` host_exec_policy=`deny` shell_execution_allowed=`false` repository_mutation_allowed=`false` elevated_mode_available=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` evidence_hashes=`none`\n\n### Tool Contract Risk Card\n- kind=`tool-contract` available_tools=`5` enabled_tools=`5` read_only_tool_contracts=`3` metadata_only_tool_contracts=`2` mutating_tool_contracts=`0` active_tool_outputs=`3` tool_validation_status=`ok` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` evidence_hashes=`none`\n\n### Workflow Permission Risk Card\n- kind=`workflow-permission` workflow_present=`true` workflow_permission_status=`ok` unexpected_write_permissions=`0` backup_write_permission_scope=`backup-job-only` backup_concurrency_group=`true` backup_concurrency_cancel_safe=`true` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` evidence_hashes=`none`\n\n### Skill Runtime Risk Card\n- kind=`skill-runtime` skill_cli_auto_allow=`false` skill_required_bins=`0` skill_missing_bins=`0` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` evidence_hashes=`none`\n\n### Risk Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4585269927,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4585269927,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26698983161\" event_id=\"issue-334\" model=\"gitclaw/sandbox\" idempotency_key=\"842f1d6821a4b98317f67767b49f04ae\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26698983161\" --\u003e\n## GitClaw Sandbox Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#334`\n- event_kind: `issue_opened`\n- event_name: `issues`\n- event_action: `opened`\n- active_command: `/sandbox`\n- sandbox_risk_status: `ok`\n- verification_scope: `github_actions_sandbox_boundary`\n- runtime_boundary: `github-actions-ephemeral-runner`\n- sandbox_backend: `github-actions`\n- host_exec_policy: `deny`\n- shell_execution_allowed: `false`\n- repository_mutation_allowed: `false`\n- write_mode: `read-only`\n- approval_mode: `not_applicable_no_exec_tool`\n- approval_store: `not_configured`\n- elevated_mode_available: `false`\n- skill_cli_auto_allow: `false`\n- inline_eval_policy: `not_applicable_no_exec_tool`\n- network_egress_policy: `github-actions-default`\n- available_tools: `5`\n- enabled_tools: `5`\n- disabled_tools: `0`\n- allowlist_blocked_tools: `0`\n- read_only_tool_contracts: `3`\n- metadata_only_tool_contracts: `2`\n- mutating_tool_contracts: `0`\n- active_tool_outputs: `3`\n- tool_validation_status: `ok`\n- tool_validation_errors: `0`\n- tool_validation_warnings: `0`\n- workflow_permission_status: `ok`\n- workflow_present: `true`\n- unexpected_write_permissions: `0`\n- backup_write_permission_scope: `backup-job-only`\n- backup_concurrency_group: `true`\n- backup_concurrency_cancel_safe: `true`\n- skill_required_bins: `0`\n- skill_missing_bins: `0`\n- surfaces_with_risk_findings: `0`\n- sandbox_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompt_bodies_included: `false`\n- raw_workflow_bodies_included: `false`\n- raw_tool_outputs_included: `false`\n- secrets_included: `false`\n- llm_e2e_required_after_sandbox_risk_change: `true`\n- issue_title_sha256_12: `c7e0b262edac`\n\nThis report audits GitClaw's current execution boundary. It reports sandbox, tool, skill, and workflow-permission metadata only; issue bodies, comments, prompts, workflow bodies, tool output bodies, and secrets are not included.\n\n### Runtime Boundary Risk Card\n- kind=`runtime-boundary` runtime_boundary=`github-actions-ephemeral-runner` sandbox_backend=`github-actions` host_exec_policy=`deny` shell_execution_allowed=`false` repository_mutation_allowed=`false` elevated_mode_available=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` evidence_hashes=`none`\n\n### Tool Contract Risk Card\n- kind=`tool-contract` available_tools=`5` enabled_tools=`5` read_only_tool_contracts=`3` metadata_only_tool_contracts=`2` mutating_tool_contracts=`0` active_tool_outputs=`3` tool_validation_status=`ok` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` evidence_hashes=`none`\n\n### Workflow Permission Risk Card\n- kind=`workflow-permission` workflow_present=`true` workflow_permission_status=`ok` unexpected_write_permissions=`0` backup_write_permission_scope=`backup-job-only` backup_concurrency_group=`true` backup_concurrency_cancel_safe=`true` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` evidence_hashes=`none`\n\n### Skill Runtime Risk Card\n- kind=`skill-runtime` skill_cli_auto_allow=`false` skill_required_bins=`0` skill_missing_bins=`0` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` evidence_hashes=`none`\n\n### Risk Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T00:33:01Z",
+      "updated_at": "2026-05-31T00:33:01Z"
+    }
+  ]
+}
