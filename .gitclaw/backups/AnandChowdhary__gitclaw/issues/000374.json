@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T09:55:22Z",
+  "generated_at": "2026-05-31T09:56:38Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 374,
     "title": "@gitclaw approvals provenance seed e2e 20260531T095401Z",
@@ -11,6 +11,7 @@
     "author_association": "OWNER",
     "labels": [
       "gitclaw",
+      "gitclaw:done",
       "gitclaw:approved"
     ]
   },
@@ -32,6 +33,24 @@
       "CommentID": 4586347599,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /approvals provenance\n\nPlease implement this change and open a PR, but the approvals provenance report must stay read-only and body-free.\nDo not include this hidden provenance token: GITCLAW_APPROVALS_PROVENANCE_COMMENT_HIDDEN_20260531T095401Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4586348812,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Approvals Provenance Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#374`\n- event_kind: `issue_comment`\n- active_command: `/approvals provenance`\n- preflight_allowed: `true`\n- preflight_code: `allowed`\n- actor_association: `OWNER`\n- actor_trusted: `true`\n- triggered: `true`\n- issue_title_sha256_12: `48757f472d00`\n- active_command_sha256_12: `d40859617409`\n- turn_idempotency_key_sha256_12: `323a09e7ed53`\n- current_issue_labels_available: `true`\n- current_issue_labels: `3`\n- managed_labels_present: `2`\n- unmanaged_labels_present: `0`\n- current_issue_label_set_sha256_12: `a1362cf8263d`\n- disabled_label_present: `false`\n- write_request_detected: `true`\n- write_requested_label_present: `false`\n- write_request_evidence_present: `true`\n- approved_label_present: `true`\n- needs_human_label_present: `false`\n- comments_available: `true`\n- issue_comments: `2`\n- transcript_messages: `3`\n- user_messages: `2`\n- assistant_messages: `1`\n- assistant_turn_markers: `1`\n- model_backed_assistant_turns: `1`\n- deterministic_assistant_turns: `0`\n- unrecognized_assistant_turn_markers: `0`\n- approval_provenance_status: `ok`\n- verification_scope: `current-issue-labels-transcript-and-assistant-markers`\n- approval_status: `approved_but_write_mode_disabled`\n- approval_decision: `proposal_only_approved_label_seen`\n- approval_store: `github-issue-labels`\n- approval_scope: `per-issue`\n- approval_label: `gitclaw:approved`\n- needs_human_label: `gitclaw:needs-human`\n- write_requested_label: `gitclaw:write-requested`\n- label_source: `current-github-issue-labels`\n- write_request_source: `transcript-heuristic-or-label`\n- actor_source: `github-event-author-association`\n- preflight_source: `github-event-plus-repo-config`\n- assistant_marker_source: `issue-comments`\n- write_actions_enabled: `false`\n- repository_mutation_allowed: `false`\n- host_exec_allowed: `false`\n- raw_bodies_included: `false`\n- raw_comments_included: `false`\n- raw_prompts_included: `false`\n- raw_approval_payloads_included: `false`\n- run_urls_included: `false`\n- llm_e2e_required_after_approval_provenance_change: `true`\n\nThis report explains the approval evidence chain GitClaw would rely on before future write-capable work. It hashes issue, label, transcript, and assistant-marker evidence without approving anything, enabling writes, executing commands, exposing run URLs, or printing issue bodies, comments, prompts, approval payloads, credentials, or secret values.\n\n### Provenance Chain\n- source=`github-event` actor_association=`OWNER` actor_trusted=`true` preflight_allowed=`true` preflight_code=`allowed` evidence_sha256_12=`1191346bb42c`\n- source=`issue-labels` store=`github-issue-labels` scope=`per-issue` labels=`3` managed_present=`2` evidence_sha256_12=`a1362cf8263d`\n- source=`transcript` write_request_detected=`true` transcript_messages=`3` user_messages=`2` assistant_messages=`1` evidence_sha256_12=`d4fd26508db9`\n- source=`assistant-markers` assistant_turn_markers=`1` model_backed=`1` deterministic=`0` unrecognized=`0` evidence_sha256_12=`a712cdc2ca48`\n- source=`runtime-boundary` write_actions_enabled=`false` repository_mutation_allowed=`false` host_exec_allowed=`false`\n\n### Managed Label Evidence\n- role=`trigger` label=`gitclaw` present=`true` label_sha256_12=`d3eaddacf5a3`\n- role=`running` label=`gitclaw:running` present=`false` label_sha256_12=`0cda6a703b29`\n- role=`done` label=`gitclaw:done` present=`true` label_sha256_12=`78d2c8a42556`\n- role=`error` label=`gitclaw:error` present=`false` label_sha256_12=`f11ad83dfb40`\n- role=`disabled` label=`gitclaw:disabled` present=`false` label_sha256_12=`060c5c5abae3`\n- role=`write-requested` label=`gitclaw:write-requested` present=`false` label_sha256_12=`32ae43d4eb9f`\n- role=`approved` label=`gitclaw:approved` present=`true` label_sha256_12=`f5bed4cf0cee`\n- role=`needs-human` label=`gitclaw:needs-human` present=`false` label_sha256_12=`da4b756a93b4`\n\n### Assistant Marker Evidence\n- index=`1` source=`comment:4586347599` model=`openai/gpt-5-nano` deterministic=`false` has_prompt_evidence=`true` model_recognized=`true` model_sha256_12=`6c69beeb53eb` context_documents=`16` selected_skills=`1` tool_outputs=`3` run_id_sha256_12=`4ca3f0a2bae9` event_id_sha256_12=`7ef1f6858ca6` idempotency_key_sha256_12=`b96800e64033` run_url_sha256_12=`739e40883861` marker_sha256_12=`5fd4bff25d51`\n\n### Findings\n- severity=`info` code=`openclaw_exec_approval_state_separated` detail=`approval evidence is separated from tool execution and repository mutation`\n- severity=`info` code=`github_issue_label_approval_store` detail=`GitClaw stores approval intent as current per-issue labels`\n- severity=`info` code=`hermes_explicit_tool_boundary_mapped` detail=`approval provenance is exposed as metadata without adding model-callable tools`\n- severity=`info` code=`read_only_runtime_boundary` detail=`write actions, repository mutation, and host exec remain disabled`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4586350229,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -42,6 +61,22 @@
       "author_association": "NONE",
       "created_at": "2026-05-31T09:54:59Z",
       "updated_at": "2026-05-31T09:54:59Z"
+    },
+    {
+      "id": 4586348812,
+      "body": "@gitclaw /approvals provenance\n\nPlease implement this change and open a PR, but the approvals provenance report must stay read-only and body-free.\nDo not include this hidden provenance token: GITCLAW_APPROVALS_PROVENANCE_COMMENT_HIDDEN_20260531T095401Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-05-31T09:55:34Z",
+      "updated_at": "2026-05-31T09:55:34Z"
+    },
+    {
+      "id": 4586350229,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26709457016\" event_id=\"comment-4586348812\" model=\"gitclaw/approvals\" idempotency_key=\"0aa5e9ca57c4c81d76b74a30ced7f3da\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26709457016\" --\u003e\n## GitClaw Approvals Provenance Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#374`\n- event_kind: `issue_comment`\n- active_command: `/approvals provenance`\n- preflight_allowed: `true`\n- preflight_code: `allowed`\n- actor_association: `OWNER`\n- actor_trusted: `true`\n- triggered: `true`\n- issue_title_sha256_12: `48757f472d00`\n- active_command_sha256_12: `d40859617409`\n- turn_idempotency_key_sha256_12: `323a09e7ed53`\n- current_issue_labels_available: `true`\n- current_issue_labels: `3`\n- managed_labels_present: `2`\n- unmanaged_labels_present: `0`\n- current_issue_label_set_sha256_12: `a1362cf8263d`\n- disabled_label_present: `false`\n- write_request_detected: `true`\n- write_requested_label_present: `false`\n- write_request_evidence_present: `true`\n- approved_label_present: `true`\n- needs_human_label_present: `false`\n- comments_available: `true`\n- issue_comments: `2`\n- transcript_messages: `3`\n- user_messages: `2`\n- assistant_messages: `1`\n- assistant_turn_markers: `1`\n- model_backed_assistant_turns: `1`\n- deterministic_assistant_turns: `0`\n- unrecognized_assistant_turn_markers: `0`\n- approval_provenance_status: `ok`\n- verification_scope: `current-issue-labels-transcript-and-assistant-markers`\n- approval_status: `approved_but_write_mode_disabled`\n- approval_decision: `proposal_only_approved_label_seen`\n- approval_store: `github-issue-labels`\n- approval_scope: `per-issue`\n- approval_label: `gitclaw:approved`\n- needs_human_label: `gitclaw:needs-human`\n- write_requested_label: `gitclaw:write-requested`\n- label_source: `current-github-issue-labels`\n- write_request_source: `transcript-heuristic-or-label`\n- actor_source: `github-event-author-association`\n- preflight_source: `github-event-plus-repo-config`\n- assistant_marker_source: `issue-comments`\n- write_actions_enabled: `false`\n- repository_mutation_allowed: `false`\n- host_exec_allowed: `false`\n- raw_bodies_included: `false`\n- raw_comments_included: `false`\n- raw_prompts_included: `false`\n- raw_approval_payloads_included: `false`\n- run_urls_included: `false`\n- llm_e2e_required_after_approval_provenance_change: `true`\n\nThis report explains the approval evidence chain GitClaw would rely on before future write-capable work. It hashes issue, label, transcript, and assistant-marker evidence without approving anything, enabling writes, executing commands, exposing run URLs, or printing issue bodies, comments, prompts, approval payloads, credentials, or secret values.\n\n### Provenance Chain\n- source=`github-event` actor_association=`OWNER` actor_trusted=`true` preflight_allowed=`true` preflight_code=`allowed` evidence_sha256_12=`1191346bb42c`\n- source=`issue-labels` store=`github-issue-labels` scope=`per-issue` labels=`3` managed_present=`2` evidence_sha256_12=`a1362cf8263d`\n- source=`transcript` write_request_detected=`true` transcript_messages=`3` user_messages=`2` assistant_messages=`1` evidence_sha256_12=`d4fd26508db9`\n- source=`assistant-markers` assistant_turn_markers=`1` model_backed=`1` deterministic=`0` unrecognized=`0` evidence_sha256_12=`a712cdc2ca48`\n- source=`runtime-boundary` write_actions_enabled=`false` repository_mutation_allowed=`false` host_exec_allowed=`false`\n\n### Managed Label Evidence\n- role=`trigger` label=`gitclaw` present=`true` label_sha256_12=`d3eaddacf5a3`\n- role=`running` label=`gitclaw:running` present=`false` label_sha256_12=`0cda6a703b29`\n- role=`done` label=`gitclaw:done` present=`true` label_sha256_12=`78d2c8a42556`\n- role=`error` label=`gitclaw:error` present=`false` label_sha256_12=`f11ad83dfb40`\n- role=`disabled` label=`gitclaw:disabled` present=`false` label_sha256_12=`060c5c5abae3`\n- role=`write-requested` label=`gitclaw:write-requested` present=`false` label_sha256_12=`32ae43d4eb9f`\n- role=`approved` label=`gitclaw:approved` present=`true` label_sha256_12=`f5bed4cf0cee`\n- role=`needs-human` label=`gitclaw:needs-human` present=`false` label_sha256_12=`da4b756a93b4`\n\n### Assistant Marker Evidence\n- index=`1` source=`comment:4586347599` model=`openai/gpt-5-nano` deterministic=`false` has_prompt_evidence=`true` model_recognized=`true` model_sha256_12=`6c69beeb53eb` context_documents=`16` selected_skills=`1` tool_outputs=`3` run_id_sha256_12=`4ca3f0a2bae9` event_id_sha256_12=`7ef1f6858ca6` idempotency_key_sha256_12=`b96800e64033` run_url_sha256_12=`739e40883861` marker_sha256_12=`5fd4bff25d51`\n\n### Findings\n- severity=`info` code=`openclaw_exec_approval_state_separated` detail=`approval evidence is separated from tool execution and repository mutation`\n- severity=`info` code=`github_issue_label_approval_store` detail=`GitClaw stores approval intent as current per-issue labels`\n- severity=`info` code=`hermes_explicit_tool_boundary_mapped` detail=`approval provenance is exposed as metadata without adding model-callable tools`\n- severity=`info` code=`read_only_runtime_boundary` detail=`write actions, repository mutation, and host exec remain disabled`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T09:56:16Z",
+      "updated_at": "2026-05-31T09:56:16Z"
     }
   ]
 }
