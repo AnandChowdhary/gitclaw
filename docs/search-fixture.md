@@ -39,3 +39,4 @@ channels info unique search fixture phrase => GITCLAW_CHANNELS_INFO_CONTEXT_V1
 backup verify unique search fixture phrase => GITCLAW_BACKUP_VERIFY_CONTEXT_V1
 channel message unique search fixture phrase => GITCLAW_CHANNEL_MESSAGE_CONTEXT_V1
 proactive run unique search fixture phrase => GITCLAW_PROACTIVE_RUN_CONTEXT_V1
+backup export jsonl unique search fixture phrase => GITCLAW_BACKUP_EXPORT_JSONL_CONTEXT_V1

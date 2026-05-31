@@ -38,6 +38,9 @@
   drill, search, stats, timeline, provenance, restore-plan, retention-plan, or
   export reports; verifier changes need branch audit plus live model/tool E2E;
   never call GitHub restore/delete APIs or print raw bodies.
+- Backup export-jsonl is an explicit raw recovery path only after fetching
+  `gitclaw-backups`; issue-visible reports stay body-free and still need a live
+  model/tool follow-up when the export surface changes.
 - Sessions and run history are reconstructed from issues, backups, and
   `gitclaw:assistant-turn` markers; reports hash markers, labels, model
   provenance, skills, and tools without printing assistant replies or prompts.

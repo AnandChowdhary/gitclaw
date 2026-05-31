@@ -310,6 +310,14 @@ related subcommands should be treated as deterministic command intents: record
 the exact branch paths, local command, privacy boundary, and hashes, then let
 the post-turn backup job and fetched-branch CLI command perform the real audit.
 
+2026-05-31 backup-export-jsonl follow-up: Hermes-style session export is an
+explicit raw recovery path, not an issue-visible assistant report. GitClaw
+should keep `@gitclaw /backup export-jsonl` body-free and deferred, then prove
+the fetched `gitclaw-backups` branch can emit raw JSONL locally. Because raw
+export is a high-trust backup surface, changes should also run a normal
+GitHub Models repo-reader/search follow-up so model provenance, tool grounding,
+and usage telemetry remain covered without leaking hidden issue sentinels.
+
 2026-05-30 backup-risk follow-up: OpenClaw's backup verification treats unsafe
 paths and malformed manifests as restore blockers, while Hermes' checkpoint and
 session export posture makes rollback review a local operator action. GitClaw

@@ -476,6 +476,45 @@ func TestHandleBackupVerifyCommandPostsDeferredIntentWithoutLLM(t *testing.T) {
 	}
 }
 
+func TestHandleBackupExportJSONLCommandPostsDeferredIntentWithoutLLM(t *testing.T) {
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 102,
+			"title": "@gitclaw /backup export-jsonl",
+			"body": "Hidden backup export token: BACKUP_EXPORT_JSONL_SECRET_TOKEN.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{102: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, DefaultConfig(), github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic backup export-jsonl command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"model=\"gitclaw/backup\"", "requested_backup_command: `export-jsonl`", "backup_command_status: `ok`", "requested_local_command: `gitclaw backup export-jsonl --root .gitclaw/backups --repo owner/repo --issue 102`", "issue_side_execution: `deferred_to_post_turn_backup_branch`", "backup_export_jsonl_status: `deferred`", "backup_export_jsonl_mode: `explicit_raw_recovery_path`", "raw_jsonl_included_issue_side: `false`", "llm_e2e_required_after_backup_export_jsonl_change: `true`", "raw_bodies_included: `false`"} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("backup export-jsonl report missing %q:\n%s", want, body)
+		}
+	}
+	if strings.Contains(body, "BACKUP_EXPORT_JSONL_SECRET_TOKEN") {
+		t.Fatalf("backup export-jsonl report leaked body token:\n%s", body)
+	}
+}
+
 func TestHandleProactiveCommandPostsReportWithoutLLM(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".github/workflows/gitclaw-proactive.yml", `name: GitClaw Proactive

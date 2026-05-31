@@ -76,6 +76,9 @@ func RenderBackupReport(ev Event, cfg Config, comments []Comment, transcript []T
 	if request.Name == "retention-plan" {
 		writeBackupIssueRetentionPlanSummary(&b)
 	}
+	if request.Name == "export-jsonl" {
+		writeBackupIssueExportJSONLSummary(&b)
+	}
 	b.WriteByte('\n')
 
 	b.WriteString("The backup job runs after a successful assistant turn and writes the raw transcript backup plus repo-scoped index to the dedicated backup branch.\n\n")
@@ -300,6 +303,15 @@ func writeBackupIssueRetentionPlanSummary(b *strings.Builder) {
 	b.WriteString("- branch_deletion_allowed_issue_side: `false`\n")
 	b.WriteString("- github_api_calls_performed_issue_side: `false`\n")
 	b.WriteString("- llm_e2e_required_after_backup_retention_plan_change: `true`\n")
+}
+
+func writeBackupIssueExportJSONLSummary(b *strings.Builder) {
+	b.WriteString("- backup_export_jsonl_status: `deferred`\n")
+	b.WriteString("- backup_export_jsonl_execution: `local_fetched_backup_branch`\n")
+	b.WriteString("- backup_export_jsonl_mode: `explicit_raw_recovery_path`\n")
+	b.WriteString("- raw_backup_payloads_scanned_issue_side: `false`\n")
+	b.WriteString("- raw_jsonl_included_issue_side: `false`\n")
+	b.WriteString("- llm_e2e_required_after_backup_export_jsonl_change: `true`\n")
 }
 
 func parseBackupIssueNumber(value string) (int, bool) {

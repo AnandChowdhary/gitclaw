@@ -278,6 +278,50 @@ func TestRenderBackupTimelineIssueCommandRecordsDeferredIntentWithoutBodies(t *t
 	}
 }
 
+func TestRenderBackupExportJSONLIssueCommandRecordsDeferredIntentWithoutBodies(t *testing.T) {
+	ev := Event{
+		Repo: "owner/repo",
+		Issue: Issue{
+			Number: 101,
+			Title:  "@gitclaw /backup export-jsonl",
+			Body:   "BACKUP_EXPORT_JSONL_ISSUE_BODY_SECRET",
+		},
+	}
+	comments := []Comment{{
+		ID:   24,
+		Body: "<!-- gitclaw:assistant-turn idempotency_key=old -->\nBACKUP_EXPORT_JSONL_COMMENT_SECRET",
+		User: User{Login: "github-actions[bot]", Type: "Bot"},
+	}}
+	transcript := []TranscriptMessage{
+		{Role: "user", Body: "BACKUP_EXPORT_JSONL_TRANSCRIPT_SECRET"},
+	}
+
+	report := RenderBackupReport(ev, DefaultConfig(), comments, transcript)
+	for _, want := range []string{
+		"GitClaw Backup Report",
+		"requested_backup_command: `export-jsonl`",
+		"backup_command_status: `ok`",
+		"requested_local_command: `gitclaw backup export-jsonl --root .gitclaw/backups --repo owner/repo --issue 101`",
+		"run `gitclaw backup export-jsonl --root .gitclaw/backups --repo owner/repo --issue 101` after fetching `gitclaw-backups`",
+		"backup_export_jsonl_status: `deferred`",
+		"backup_export_jsonl_execution: `local_fetched_backup_branch`",
+		"backup_export_jsonl_mode: `explicit_raw_recovery_path`",
+		"raw_backup_payloads_scanned_issue_side: `false`",
+		"raw_jsonl_included_issue_side: `false`",
+		"llm_e2e_required_after_backup_export_jsonl_change: `true`",
+		"raw_bodies_included: `false`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("backup export-jsonl report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"BACKUP_EXPORT_JSONL_ISSUE_BODY_SECRET", "BACKUP_EXPORT_JSONL_COMMENT_SECRET", "BACKUP_EXPORT_JSONL_TRANSCRIPT_SECRET"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("backup export-jsonl report leaked %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestRenderBackupProvenanceIssueCommandRecordsDeferredIntentWithoutBodies(t *testing.T) {
 	ev := Event{
 		Repo: "owner/repo",

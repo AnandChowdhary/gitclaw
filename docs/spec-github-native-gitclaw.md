@@ -5570,7 +5570,10 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the JSONL contains exactly the new issue transcript records,
    - assert the first record contains the issue body token and the second record
      contains the assistant backup report body, proving the command is an
-     explicit raw recovery/export path rather than an issue-visible report.
+     explicit raw recovery/export path rather than an issue-visible report,
+   - post a normal model-backed repo-reader/search follow-up and assert prompt
+     provenance, selected skill metadata, prompt-visible `gitclaw.search_files`,
+     usage telemetry, and no hidden issue/comment sentinel leakage.
 
 43. **Backup restore plan**
 
@@ -6146,7 +6149,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven backup-export-jsonl E2E harness verifies
   `@gitclaw /backup export-jsonl` records the deferred issue-side command
   intent, then verifies the fetched `gitclaw-backups` branch can be exported
-  into raw JSONL transcript records for one real issue.
+  into raw JSONL transcript records for one real issue. The same harness posts
+  a normal model-backed follow-up that proves repo-reader search, prompt
+  provenance, selected skill metadata, prompt-visible tool names, and
+  normalized usage markers.
 - A `gh`-driven backup-restore-plan E2E harness verifies
   `@gitclaw /backup restore-plan` records the deferred issue-side command
   intent, then verifies the fetched `gitclaw-backups` branch can produce a
