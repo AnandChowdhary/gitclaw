@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T01:18:34Z",
+  "generated_at": "2026-05-31T01:33:46Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 300,
+  "count": 301,
   "issues": [
     {
       "number": 3,
@@ -3699,6 +3699,18 @@
       ],
       "comment_count": 3,
       "transcript_messages": 4
+    },
+    {
+      "number": 338,
+      "title": "@gitclaw /plugins mcp risk e2e 20260531T013240Z",
+      "path": "issues/000338.json",
+      "backup_generated_at": "2026-05-31T01:33:45Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }

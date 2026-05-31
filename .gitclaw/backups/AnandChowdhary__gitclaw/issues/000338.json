@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T01:33:45Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 338,
+    "title": "@gitclaw /plugins mcp risk e2e 20260531T013240Z",
+    "body": "@gitclaw /plugins mcp risk\n\nLive plugins MCP E2E.\nDo not include this hidden MCP token: GITCLAW_MCP_E2E_20260531T013240Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /plugins mcp risk e2e 20260531T013240Z\n\n@gitclaw /plugins mcp risk\n\nLive plugins MCP E2E.\nDo not include this hidden MCP token: GITCLAW_MCP_E2E_20260531T013240Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw MCP Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#338`\n- mcp_status: `ok`\n- mcp_specs_dir: `.gitclaw/mcp`\n- mcp_specs: `1`\n- parsed_mcp_specs: `1`\n- mcp_specs_with_command: `0`\n- mcp_specs_with_url: `0`\n- mcp_specs_with_tool_allowlist: `1`\n- mcp_tool_allowlist_refs: `3`\n- mcp_tool_denylist_refs: `2`\n- mcp_required_secret_refs: `1`\n- mcp_env_passthrough_refs: `0`\n- mcp_specs_with_resources_enabled: `0`\n- mcp_specs_with_prompts_enabled: `0`\n- mcp_specs_with_risk_findings: `0`\n- mcp_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- mcp_connection_supported: `false`\n- mcp_server_launch_allowed: `false`\n- mcp_tool_exposure_allowed: `false`\n- dynamic_tool_discovery_allowed: `false`\n- repository_mutation_allowed: `false`\n- raw_mcp_bodies_included: `false`\n- raw_command_args_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_mcp_change: `true`\n- issue_title_sha256_12: `c103f279591e`\n\nThis report scans repo-local MCP server specs for over-broad tool exposure, unsafe activation, command/url launch surfaces, env passthrough, prompt/resource exposure, prompt-boundary overrides, credential material, host execution, repository mutation, remote exfiltration, and unbounded loops. It reports only metadata, counts, paths, risk codes, severities, and hashes.\n\n### MCP Risk Cards\n- mcp_name=`github-read` path=`.gitclaw/mcp/github-read.yaml` transport=`stdio` source=`github-mcp-read` activation=`metadata-only` description=`true` command_present=`false` command_sha256_12=`none` args_count=`0` args_sha256_12=`none` url_present=`false` url_sha256_12=`none` tool_allowlist=`contents.read, issues.read, pull_requests.read` tool_denylist=`actions.write, contents.write` requires_secrets=`GITHUB_TOKEN` env_passthrough=`none` resources_enabled=`false` prompts_enabled=`false` bytes=`379` lines=`16` sha256_12=`00ad0f6f6b81` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Risk Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4585380941,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4585380941,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26700069284\" event_id=\"issue-338\" model=\"gitclaw/plugins\" idempotency_key=\"65c9438b9bbb282db434e96f4a46cfdd\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26700069284\" --\u003e\n## GitClaw MCP Risk Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#338`\n- mcp_status: `ok`\n- mcp_specs_dir: `.gitclaw/mcp`\n- mcp_specs: `1`\n- parsed_mcp_specs: `1`\n- mcp_specs_with_command: `0`\n- mcp_specs_with_url: `0`\n- mcp_specs_with_tool_allowlist: `1`\n- mcp_tool_allowlist_refs: `3`\n- mcp_tool_denylist_refs: `2`\n- mcp_required_secret_refs: `1`\n- mcp_env_passthrough_refs: `0`\n- mcp_specs_with_resources_enabled: `0`\n- mcp_specs_with_prompts_enabled: `0`\n- mcp_specs_with_risk_findings: `0`\n- mcp_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- mcp_connection_supported: `false`\n- mcp_server_launch_allowed: `false`\n- mcp_tool_exposure_allowed: `false`\n- dynamic_tool_discovery_allowed: `false`\n- repository_mutation_allowed: `false`\n- raw_mcp_bodies_included: `false`\n- raw_command_args_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_mcp_change: `true`\n- issue_title_sha256_12: `c103f279591e`\n\nThis report scans repo-local MCP server specs for over-broad tool exposure, unsafe activation, command/url launch surfaces, env passthrough, prompt/resource exposure, prompt-boundary overrides, credential material, host execution, repository mutation, remote exfiltration, and unbounded loops. It reports only metadata, counts, paths, risk codes, severities, and hashes.\n\n### MCP Risk Cards\n- mcp_name=`github-read` path=`.gitclaw/mcp/github-read.yaml` transport=`stdio` source=`github-mcp-read` activation=`metadata-only` description=`true` command_present=`false` command_sha256_12=`none` args_count=`0` args_sha256_12=`none` url_present=`false` url_sha256_12=`none` tool_allowlist=`contents.read, issues.read, pull_requests.read` tool_denylist=`actions.write, contents.write` requires_secrets=`GITHUB_TOKEN` env_passthrough=`none` resources_enabled=`false` prompts_enabled=`false` bytes=`379` lines=`16` sha256_12=`00ad0f6f6b81` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Risk Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T01:33:26Z",
+      "updated_at": "2026-05-31T01:33:26Z"
+    }
+  ]
+}
