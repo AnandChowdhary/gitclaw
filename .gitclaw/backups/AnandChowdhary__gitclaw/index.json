@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T00:00:03Z",
+  "generated_at": "2026-05-31T00:06:58Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 294,
+  "count": 295,
   "issues": [
     {
       "number": 3,
@@ -3621,6 +3621,18 @@
       ],
       "comment_count": 3,
       "transcript_messages": 4
+    },
+    {
+      "number": 332,
+      "title": "@gitclaw /tools run-plan search_files e2e 20260531T000550Z",
+      "path": "issues/000332.json",
+      "backup_generated_at": "2026-05-31T00:06:57Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }
