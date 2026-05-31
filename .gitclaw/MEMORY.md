@@ -13,6 +13,9 @@
   prompt hash, selected skills, prompt-visible tools, and usage telemetry; keep
   no-echo issue/comment sentinels on a distinct prefix from expected repository
   search fixture tokens.
+- Context reports may name active tools and output hashes, but raw tool inputs
+  must be hashed so issue/body sentinels cannot leak through diagnostic
+  metadata.
 - Approval, policy, sandbox, secrets, migration, workspace, profile, prompt,
   model, heartbeat, hooks, agents, nodes, artifacts, checkpoints, channels,
   plugins, MCP, tasks, runs, and orders reports remain read-only control-plane

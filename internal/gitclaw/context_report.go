@@ -89,7 +89,7 @@ func renderContextReport(ev Event, cfg Config, transcript []TranscriptMessage, r
 		b.WriteString("- none\n")
 	} else {
 		for _, output := range repoContext.ToolOutputs {
-			fmt.Fprintf(&b, "- `%s` input=`%s` bytes=`%d` lines=`%d` sha256_12=`%s`\n", output.Name, inlineCode(output.Input), len(output.Output), lineCount(output.Output), shortDocumentHash(output.Output))
+			fmt.Fprintf(&b, "- `%s` input_sha256_12=`%s` bytes=`%d` lines=`%d` sha256_12=`%s`\n", output.Name, shortDocumentHash(output.Input), len(output.Output), lineCount(output.Output), shortDocumentHash(output.Output))
 		}
 	}
 

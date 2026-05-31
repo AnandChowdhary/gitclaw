@@ -2529,12 +2529,13 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 
 - selected context files,
 - selected full skill documents,
-- read-only tool outputs and their input/size/hash,
+- read-only tool outputs and their input hash, size, and output hash,
 - transcript and prompt-budget settings.
 
-It never dumps full file bodies, skill bodies, prompts, or tool output contents
-into the issue. This makes context visibility cheap enough for routine E2E
-debugging and avoids burning GitHub Models quota for a diagnostic turn.
+It never dumps full file bodies, skill bodies, prompts, raw tool inputs, or
+tool output contents into the issue. This makes context visibility cheap enough
+for routine E2E debugging and avoids burning GitHub Models quota for a
+diagnostic turn.
 
 When called as `@gitclaw /context info <path>`, the command posts a focused
 body-free card for one requested context item. The lookup covers loaded context

@@ -189,6 +189,13 @@ outputs, raw tool inputs, or credentials. The feature should be paired with a
 live GitHub Models follow-up E2E that proves actual selected-skill and
 repository-search tool behavior.
 
+2026-05-31 context-report hardening: diagnostic reports can accidentally leak
+the same prompt material they are meant to audit if they print raw tool inputs.
+Hermes-style progressive disclosure and OpenClaw-style context visibility point
+to a safer rule for GitClaw: deterministic `/context` reports may name active
+tools and output hashes, but raw tool inputs stay hashed because search queries
+can be derived from issue bodies and comments.
+
 2026-05-31 prompt-cache follow-up: OpenClaw's prompt-caching reference shows
 that cache usefulness depends less on a magic toggle and more on stable
 prefixes, provider-specific request fields, usage counters, cache-boundary

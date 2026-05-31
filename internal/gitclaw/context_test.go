@@ -192,6 +192,36 @@ func TestRenderContextReportShowsContextReferenceMetadataWithoutBodies(t *testin
 	}
 }
 
+func TestRenderContextReportHashesToolInputs(t *testing.T) {
+	report := RenderContextReport(Event{
+		Repo:  "owner/repo",
+		Issue: Issue{Number: 8, Title: "@gitclaw /context"},
+	}, DefaultConfig(), []TranscriptMessage{{
+		Role: "user",
+		Body: "Search for the hidden token.",
+	}}, RepoContext{ToolOutputs: []ToolOutput{{
+		Name:   "gitclaw.search_files",
+		Input:  "hidden query GITCLAW_CONTEXT_TOOL_INPUT_SECRET",
+		Output: "docs/search-fixture.md:1:GITCLAW_SEARCH_CONTEXT_V1",
+	}}})
+
+	for _, want := range []string{
+		"GitClaw Context Report",
+		"raw_inputs_included: `false`",
+		"`gitclaw.search_files` input_sha256_12=",
+		"sha256_12=",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("context report missing %q:\n%s", want, report)
+		}
+	}
+	for _, notWant := range []string{"GITCLAW_CONTEXT_TOOL_INPUT_SECRET", "hidden query", "input=`"} {
+		if strings.Contains(report, notWant) {
+			t.Fatalf("context report leaked %q:\n%s", notWant, report)
+		}
+	}
+}
+
 func TestLoadRepoContextExpandsGitContextReferences(t *testing.T) {
 	root := t.TempDir()
 	runTestGit(t, root, "init")
