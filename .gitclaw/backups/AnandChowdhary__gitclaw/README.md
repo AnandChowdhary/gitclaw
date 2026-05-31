@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-05-31T18:40:16Z`
-- issue_count: `400`
+- generated_at: `2026-05-31T18:54:15Z`
+- issue_count: `401`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -405,3 +405,4 @@
 | #438 | GitClaw proactive proactive-e2e-20260531t175745z slot-20260531T175745Z | `2026-05-31T18:02:42Z` | 3 | 4 | `issues/000438.json` |
 | #439 | @gitclaw /backup freshness e2e 20260531T182223Z | `2026-05-31T18:24:54Z` | 3 | 4 | `issues/000439.json` |
 | #440 | @gitclaw /backup continuity e2e 20260531T183734Z | `2026-05-31T18:40:15Z` | 3 | 4 | `issues/000440.json` |
+| #441 | @gitclaw /skills catalog e2e 20260531T185308Z | `2026-05-31T18:54:14Z` | 1 | 2 | `issues/000441.json` |
