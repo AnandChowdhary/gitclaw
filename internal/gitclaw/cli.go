@@ -198,8 +198,10 @@ func runRunsCommand(args []string) error {
 	switch args[0] {
 	case "current", "verify", "list":
 		return runRunsCurrentCommand(args[1:])
+	case "history", "timeline":
+		return runRunsHistoryCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw runs [current|verify|list]")
+		return fmt.Errorf("usage: gitclaw runs [current|verify|list|history --backup <issue.json>]")
 	}
 }
 
@@ -216,6 +218,31 @@ func runRunsCurrentCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderRunCLIReport(cfg, repoContext))
+	return nil
+}
+
+func runRunsHistoryCommand(args []string) error {
+	backupPath := ""
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--backup":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--backup requires a value")
+			}
+			backupPath = args[i+1]
+			i++
+		default:
+			return fmt.Errorf("unknown runs history argument %q", args[i])
+		}
+	}
+	if backupPath == "" {
+		return fmt.Errorf("usage: gitclaw runs history --backup <issue.json>")
+	}
+	backup, err := ReadIssueBackupFile(backupPath)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderRunHistoryCLIReport(backupPath, backup))
 	return nil
 }
 

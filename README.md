@@ -159,6 +159,7 @@ gitclaw session risk --backup <issue.json>
 gitclaw session search <query> --backup <issue.json>
 gitclaw runs current
 gitclaw runs verify
+gitclaw runs history --backup <issue.json>
 ```
 
 Operational surfaces:

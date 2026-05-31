@@ -781,7 +781,7 @@ GitHub issue/comment event
   `profile show`, `profile verify`,
   `context list`, `context risk`, `context info`,
   `prompt list`, `prompt risk`,
-  `runs current`, `runs verify`,
+  `runs current`, `runs verify`, `runs history`,
   `sandbox explain`, `sandbox verify`, `sandbox risk`,
   `memory verify`, `memory risk`, `memory validate`, `memory list`,
   `memory promote-plan`, `memory info`, `memory search`,
@@ -1766,6 +1766,8 @@ metadata:
 @gitclaw /runs
 @gitclaw /run
 @gitclaw /ledger
+@gitclaw /runs history
+@gitclaw /runs timeline
 ```
 
 The command runs after normal preflight authorization, transcript
@@ -1800,6 +1802,37 @@ opening an issue:
 gitclaw runs current
 gitclaw runs verify
 ```
+
+Run history is a second body-free view over the same issue-native ledger. It is
+inspired by OpenClaw's trajectory/progress record, which treats execution steps
+and tool calls as inspectable run metadata, and Hermes' session-list/session-show
+model, which makes prior sessions replayable without requiring a resident
+server. GitClaw's cut is intentionally smaller: `@gitclaw /runs history` reads
+only prior `gitclaw:assistant-turn` markers from the issue comments and emits:
+
+- assistant turn count, model-backed count, deterministic count, unique run ID
+  count, and prompt-provenance coverage,
+- model names and prompt-visible skill/tool names,
+- one timeline entry per prior assistant marker with comment source, run ID,
+  event ID, deterministic/model-backed classification, prompt-context hash,
+  context/skill/tool-output counts, selected skill/tool names, and comment hash,
+- idempotency key and Actions run URL hashes, never their raw values,
+- explicit `raw_bodies_included=false`, `raw_run_payloads_included=false`,
+  `raw_tool_outputs_included=false`, and `raw_prompts_included=false` gates.
+
+Local operators can reconstruct the same history from fetched backup JSON:
+
+```bash
+gitclaw runs history --backup <issue.json>
+```
+
+The live `github-runs-history-report.sh` E2E must create a real issue, wait for
+an initial GitHub Models conversation that uses `repo-reader` and
+`gitclaw.search_files`, post `@gitclaw /runs history`, assert that the report
+lists the previous model-backed turn without leaking the model reply or request
+bodies, and then post another normal comment that performs a second GitHub
+Models tool-backed turn. This keeps the deterministic report honest: it proves
+the history surface against actual LLM calls, not just synthetic markers.
 
 ## Soul Validation
 
@@ -5425,6 +5458,12 @@ examples/workflows/gitclaw.yml
   leakage. Each run-ledger feature batch must still run at least one
   LLM-backed GitHub Models conversation E2E in addition to this deterministic
   report.
+- A `gh`-driven runs-history E2E harness first creates a real GitHub Models
+  issue conversation with repo-reader and `gitclaw.search_files`, then posts
+  `@gitclaw /runs history` and verifies a body-free timeline of the prior
+  model-backed assistant marker. It then posts a second normal follow-up so the
+  same harness proves the report against actual conversation history and fresh
+  LLM/tool usage.
 - A `gh`-driven doctor-report E2E harness verifies `@gitclaw /doctor` reports
   config validation, workflow presence, context files, skills, memory notes,
   E2E harness inventory, proactive prompts, and skill/soul/memory/tool

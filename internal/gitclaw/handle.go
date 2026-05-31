@@ -182,13 +182,19 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		return nil
 	}
 	if IsRunReportRequest(ev, cfg) {
+		var report string
+		if IsRunHistoryRequest(ev, cfg) {
+			report = RenderRunHistoryReport(ev, cfg, comments)
+		} else {
+			report = RenderRunReport(ev, cfg, decision, comments, transcript, repoContext, writeRequested)
+		}
 		body := RenderAssistantComment(Marker{
 			RunID:          envFirst("GITHUB_RUN_ID", "local"),
 			EventID:        eventID(ev),
 			Model:          "gitclaw/runs",
 			IdempotencyKey: key,
 			RunURL:         actionRunURL(ev),
-		}, RenderRunReport(ev, cfg, decision, comments, transcript, repoContext, writeRequested))
+		}, report)
 		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
 			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post run ledger report comment: %w", err))
 		}

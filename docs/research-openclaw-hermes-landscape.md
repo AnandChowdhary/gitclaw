@@ -323,6 +323,16 @@ show event/run IDs, idempotency key, preflight gates, managed labels, marker
 counts, prompt-visible input hashes, and active tool-output hashes without
 printing raw bodies or run payloads.
 
+2026-05-31 run-history follow-up: OpenClaw's trajectory/progress framing is
+useful, but GitClaw should keep the first history surface narrower than a full
+trace database. `/runs history` should reconstruct a body-free timeline from
+prior `gitclaw:assistant-turn` markers only: run IDs, model names, deterministic
+versus model-backed counts, prompt-context hashes, skill/tool names, idempotency
+hashes, run-URL hashes, and comment hashes. This borrows Hermes' session-list
+and session-show ergonomics without adding a daemon or raw transcript store.
+The required E2E should include real GitHub Models turns before and after the
+deterministic report so run history is proven against actual LLM/tool usage.
+
 2026-05-29 memory follow-up: the right GitClaw cut is read-only memory
 injection, not self-writing memory. Load compact files such as
 `.gitclaw/MEMORY.md`, `.gitclaw/USER.md`, `.gitclaw/IDENTITY.md`, and the
