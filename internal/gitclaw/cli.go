@@ -2187,7 +2187,7 @@ func runMigrateRiskCommand(args []string) error {
 
 func runSkillsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw skills verify|risk|runtime|validate|check|list|provenance|select-plan <name>|refresh-plan|sources [risk|info <name>]|proposals [risk]|proposal-plan <name>|install-plan <target>|upgrade-plan <target>|bundles [risk|provenance]|bundle <name>|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw skills verify|risk|runtime|catalog|eligible|validate|check|list|provenance|select-plan <name>|refresh-plan|sources [risk|info <name>]|proposals [risk]|proposal-plan <name>|install-plan <target>|upgrade-plan <target>|bundles [risk|provenance]|bundle <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -2196,6 +2196,8 @@ func runSkillsCommand(args []string) error {
 		return runSkillsRiskCommand(args[1:])
 	case "runtime", "requirements", "metadata":
 		return runSkillsRuntimeCommand(args[1:])
+	case "catalog", "eligible", "eligibility", "index":
+		return runSkillsCatalogCommand(args[1:])
 	case "validate", "check":
 		return runSkillsValidateCommand(args[1:])
 	case "list":
@@ -2241,6 +2243,22 @@ func runSkillsCommand(args []string) error {
 	default:
 		return fmt.Errorf("unknown skills command %q", args[0])
 	}
+}
+
+func runSkillsCatalogCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown skills catalog argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSkillCatalogCLIReport(repoContext))
+	return nil
 }
 
 func runSkillsSelectPlanCommand(args []string) error {

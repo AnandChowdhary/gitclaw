@@ -2889,6 +2889,16 @@ state, dirty state, last commit IDs/dates, subject hashes, validation/risk
 gates, disabled installer/mutation gates, and no raw skill bodies, requirement
 names, commit subjects, author identities, or installer output.
 
+2026-05-31 skill-catalog follow-up: OpenClaw's current `skills list` surface
+includes an eligibility view, while Hermes keeps compact discovery separate
+from `skill_view` body loading. GitClaw should preserve that progressive
+disclosure boundary with `@gitclaw /skills catalog` and
+`gitclaw skills catalog`: a compact body-free eligibility index that reports
+enabled/blocked/missing-requirement counts, load modes, reason codes,
+selected/always state, validation/risk rollups, description hashes, and body
+hashes, while disabling registry/install/update actions and avoiding raw skill
+bodies, raw descriptions, env names, issue bodies, prompts, and tool outputs.
+
 - OpenClaw official docs: https://docs.openclaw.ai/llms.txt
 - OpenClaw default AGENTS.md template: https://docs.openclaw.ai/reference/AGENTS.default
 - OpenClaw about page: https://openclawlab.com/en/about/

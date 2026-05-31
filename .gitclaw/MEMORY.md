@@ -127,6 +127,9 @@
   metadata, plus a normal model/tool follow-up. Search proofs should use a
   distinct needle, avoid fixture-file reads, and prioritize the newest user
   turn.
+- Skills catalog changes need two proofs: body-free eligibility/load-mode
+  metadata with description hashes instead of raw descriptions, plus a normal
+  model/tool follow-up proving live repo-reader search.
 - Context-reference chat changes need two proofs: bounded `@file:` line ranges
   must not be widened by `read_file`, plus a normal model/tool follow-up.
 - Git-reference chat changes need two proofs: bounded `@git:N` recall first,

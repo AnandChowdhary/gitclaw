@@ -128,6 +128,108 @@ SECRET_SKILL_RISK_ROUTE_BODY_TOKEN
 	}
 }
 
+func TestRenderSkillCatalogReportShowsEligibilityWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/config.yml", `skills:
+  allowed:
+    - repo-reader
+`)
+	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Use read-only repository files.
+---
+
+# Repo Reader
+SECRET_SKILL_CATALOG_BODY_TOKEN
+`)
+	writeTestFile(t, root, ".gitclaw/SKILLS/mail-triage/SKILL.md", `---
+name: mail-triage
+description: Private mail triage helper.
+metadata:
+  openclaw:
+    requires:
+      env:
+        - MAIL_TRIAGE_SECRET
+---
+
+# Mail Triage
+SECRET_SKILL_CATALOG_MAIL_BODY_TOKEN
+`)
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	cfg.AllowedSkills = map[string]bool{"repo-reader": true}
+	ctx, err := LoadRepoContextWithConfig(root, []TranscriptMessage{{Role: "user", Body: "Use repo-reader for this catalog check."}}, cfg)
+	if err != nil {
+		t.Fatalf("LoadRepoContext returned error: %v", err)
+	}
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 118,
+			"title": "@gitclaw /skills catalog",
+			"body": "Hidden skill catalog token: SKILL_CATALOG_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	report := RenderSkillsReport(ev, cfg, ctx)
+	for _, want := range []string{
+		"GitClaw Skill Catalog Report",
+		"Generated without a model call",
+		"repository: `owner/repo`",
+		"issue: `#118`",
+		"skill_catalog_status: `warn`",
+		"catalog_strategy: `compact-progressive-disclosure`",
+		"available_skills: `2`",
+		"cataloged_skills: `2`",
+		"eligible_skills: `1`",
+		"ineligible_skills: `1`",
+		"selected_skills: `1`",
+		"missing_requirement_skills: `1`",
+		"allowlist_blocked_skills: `1`",
+		"raw_skill_bodies_included: `false`",
+		"raw_skill_descriptions_included: `false`",
+		"llm_e2e_required_after_skill_catalog_change: `true`",
+		"### Catalog Cards",
+		"name=`repo-reader`",
+		"eligible=`true`",
+		"load_mode=`selected`",
+		"selected_for_this_turn=`true`",
+		"reason_codes=`eligible, selected_for_turn`",
+		"name=`mail-triage`",
+		"eligible=`false`",
+		"load_mode=`allowlist-blocked`",
+		"missing_env=`1`",
+		"reason_codes=`blocked_by_allowlist, missing_env`",
+		"description_sha256_12=",
+		"### Catalog Gates",
+		"skill_view_required_for_body=`true`",
+		"registry_lookup_allowed=`false`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("skill catalog report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{
+		"SECRET_SKILL_CATALOG_BODY_TOKEN",
+		"SECRET_SKILL_CATALOG_MAIL_BODY_TOKEN",
+		"SKILL_CATALOG_BODY_SECRET",
+		"Use read-only repository files.",
+		"Private mail triage helper.",
+		"MAIL_TRIAGE_SECRET",
+	} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("skill catalog report leaked %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestRenderSkillSelectPlanReportExplainsSelectionWithoutBodies(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---

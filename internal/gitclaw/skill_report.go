@@ -86,6 +86,9 @@ func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isSkillsRuntimeRequest(ev, cfg) {
 		return renderSkillRuntimeReport(ev, repoContext, true)
 	}
+	if isSkillsCatalogRequest(ev, cfg) {
+		return renderSkillCatalogReport(ev, repoContext, true)
+	}
 	if sourceName := requestedSkillSourceInfoName(ev, cfg); sourceName != "" {
 		return renderSkillSourceInfoReport(ev, cfg, repoContext, sourceName, true)
 	}
@@ -135,9 +138,26 @@ func RenderSkillsCLIReport(repoContext RepoContext) string {
 	return renderSkillsListReport(Event{}, repoContext, false)
 }
 
+func RenderSkillCatalogCLIReport(repoContext RepoContext) string {
+	return renderSkillCatalogReport(Event{}, repoContext, false)
+}
+
 func isSkillsProvenanceRequest(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && fields[0] == "/skills" && (strings.EqualFold(fields[1], "provenance") || strings.EqualFold(fields[1], "history") || strings.EqualFold(fields[1], "timeline"))
+}
+
+func isSkillsCatalogRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 2 || fields[0] != "/skills" {
+		return false
+	}
+	switch strings.ToLower(fields[1]) {
+	case "catalog", "eligible", "eligibility", "index":
+		return true
+	default:
+		return false
+	}
 }
 
 func renderSkillsListReport(ev Event, repoContext RepoContext, includeIssue bool) string {
@@ -188,6 +208,64 @@ func renderSkillsListReport(ev Event, repoContext RepoContext, includeIssue bool
 	b.WriteString("\n### Validation\n")
 	writeSkillValidationFindings(&b, validation)
 
+	return strings.TrimSpace(b.String())
+}
+
+func renderSkillCatalogReport(ev Event, repoContext RepoContext, includeIssue bool) string {
+	validation := ValidateSkillSummaries(repoContext.SkillSummaries)
+	risk := BuildSkillRiskReport(repoContext.SkillSummaries)
+	var b strings.Builder
+	b.WriteString("## GitClaw Skill Catalog Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	if includeIssue {
+		fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
+		fmt.Fprintf(&b, "- issue: `#%d`\n", ev.Issue.Number)
+	} else {
+		fmt.Fprintf(&b, "- scope: `%s`\n", "local-cli")
+	}
+	fmt.Fprintf(&b, "- skill_catalog_status: `%s`\n", skillCatalogStatus(repoContext))
+	fmt.Fprintf(&b, "- catalog_strategy: `%s`\n", "compact-progressive-disclosure")
+	fmt.Fprintf(&b, "- catalog_scope: `%s`\n", "repo-local-skills")
+	fmt.Fprintf(&b, "- available_skills: `%d`\n", availableSkillCount(repoContext))
+	fmt.Fprintf(&b, "- cataloged_skills: `%d`\n", len(repoContext.SkillSummaries))
+	fmt.Fprintf(&b, "- eligible_skills: `%d`\n", eligibleSkillCount(repoContext.SkillSummaries))
+	fmt.Fprintf(&b, "- ineligible_skills: `%d`\n", ineligibleSkillCount(repoContext.SkillSummaries))
+	fmt.Fprintf(&b, "- selected_skills: `%d`\n", len(repoContext.Skills))
+	fmt.Fprintf(&b, "- always_on_skills: `%d`\n", alwaysOnSkillCount(repoContext.SkillSummaries))
+	fmt.Fprintf(&b, "- missing_requirement_skills: `%d`\n", missingRequirementSkillCount(repoContext.SkillSummaries))
+	fmt.Fprintf(&b, "- disabled_skills: `%d`\n", disabledByConfigCount(repoContext.SkillSummaries))
+	fmt.Fprintf(&b, "- allowlist_blocked_skills: `%d`\n", blockedByAllowlistCount(repoContext.SkillSummaries))
+	fmt.Fprintf(&b, "- skill_bundles: `%d`\n", len(repoContext.SkillBundles))
+	fmt.Fprintf(&b, "- selected_bundles: `%d`\n", selectedSkillBundleCount(repoContext.SkillBundles))
+	writeSkillValidationSummary(&b, validation)
+	writeSkillRiskSummary(&b, risk)
+	fmt.Fprintf(&b, "- registry_contact_allowed: `%t`\n", false)
+	fmt.Fprintf(&b, "- installer_scripts_run: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_skill_bodies_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_skill_descriptions_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_skill_catalog_change: `%t`\n\n", true)
+	b.WriteString("This compact catalog follows the OpenClaw/Hermes discovery split: list what can be loaded and why, then load full skill bodies only when progressive disclosure selects a skill. It reports names, paths, hashes, counts, and eligibility reason codes; raw skill bodies, raw descriptions, issue bodies, comments, prompts, tool inputs, and tool outputs are not included.\n\n")
+
+	b.WriteString("### Catalog Cards\n")
+	if len(repoContext.SkillSummaries) == 0 {
+		b.WriteString("- none\n")
+	} else {
+		skills := append([]SkillSummary(nil), repoContext.SkillSummaries...)
+		sort.Slice(skills, func(i, j int) bool {
+			return strings.ToLower(skills[i].Name) < strings.ToLower(skills[j].Name)
+		})
+		for _, skill := range skills {
+			writeSkillCatalogCard(&b, repoContext, skill)
+		}
+	}
+
+	b.WriteString("\n### Catalog Gates\n")
+	b.WriteString("- progressive_disclosure=`true`\n")
+	b.WriteString("- skill_view_required_for_body=`true`\n")
+	b.WriteString("- install_allowed=`false`\n")
+	b.WriteString("- update_allowed=`false`\n")
+	b.WriteString("- registry_lookup_allowed=`false`\n")
+	b.WriteString("- body_hash_gate=`sha256_12`\n")
 	return strings.TrimSpace(b.String())
 }
 
@@ -825,6 +903,39 @@ func writeSkillSummary(b *strings.Builder, skill SkillSummary) {
 	b.WriteByte('\n')
 }
 
+func writeSkillCatalogCard(b *strings.Builder, repoContext RepoContext, skill SkillSummary) {
+	descriptionSHA := "none"
+	if strings.TrimSpace(skill.Description) != "" {
+		descriptionSHA = shortDocumentHash(skill.Description)
+	}
+	fmt.Fprintf(
+		b,
+		"- name=`%s` path=`%s` eligible=`%t` load_mode=`%s` selected_for_this_turn=`%t` enabled=`%t` disabled_by_config=`%t` blocked_by_allowlist=`%t` always=`%t` frontmatter=`%t` description_present=`%t` description_sha256_12=`%s` bytes=`%d` lines=`%d` sha256_12=`%s` requires_env=`%d` requires_bins=`%d` missing_env=`%d` missing_bins=`%d` risk_findings=`%d` risk_max_severity=`%s` reason_codes=`%s`\n",
+		inlineCode(skill.Name),
+		skill.Path,
+		skillCatalogEligible(skill),
+		skillCatalogLoadMode(repoContext, skill),
+		skillSelectedForTurn(repoContext, skill),
+		skillIsEnabled(skill),
+		skill.DisabledByConfig,
+		skill.BlockedByAllowlist,
+		skill.Always,
+		skill.FrontmatterPresent,
+		strings.TrimSpace(skill.Description) != "",
+		descriptionSHA,
+		skill.Bytes,
+		skill.Lines,
+		skill.SHA,
+		len(skill.RequiredEnv),
+		len(skill.RequiredBins),
+		len(skill.MissingEnv),
+		len(skill.MissingBins),
+		len(skill.RiskFindings),
+		skillRiskMaxSeverity(skill.RiskFindings),
+		inlineList(skillCatalogReasonCodes(repoContext, skill)),
+	)
+}
+
 func writeSkillBundleSummary(b *strings.Builder, bundle SkillBundleSummary) {
 	fmt.Fprintf(b, "- bundle_name=`%s` path=`%s` skills=`%s` resolved_skills=`%s` missing_skills=`%s` selected_for_this_turn=`%t` instruction=`%t` bytes=`%d` lines=`%d` sha256_12=`%s`",
 		inlineCode(bundle.Name),
@@ -886,6 +997,117 @@ func enabledSkillCount(skills []SkillSummary) int {
 
 func skillIsEnabled(skill SkillSummary) bool {
 	return skill.Enabled || (!skill.DisabledByConfig && !skill.BlockedByAllowlist)
+}
+
+func skillCatalogStatus(repoContext RepoContext) string {
+	if len(repoContext.SkillSummaries) == 0 {
+		return "empty"
+	}
+	if ineligibleSkillCount(repoContext.SkillSummaries) > 0 {
+		return "warn"
+	}
+	return "ok"
+}
+
+func skillCatalogEligible(skill SkillSummary) bool {
+	return skillIsEnabled(skill) && len(skill.MissingEnv) == 0 && len(skill.MissingBins) == 0
+}
+
+func eligibleSkillCount(skills []SkillSummary) int {
+	count := 0
+	for _, skill := range skills {
+		if skillCatalogEligible(skill) {
+			count++
+		}
+	}
+	return count
+}
+
+func ineligibleSkillCount(skills []SkillSummary) int {
+	count := 0
+	for _, skill := range skills {
+		if !skillCatalogEligible(skill) {
+			count++
+		}
+	}
+	return count
+}
+
+func alwaysOnSkillCount(skills []SkillSummary) int {
+	count := 0
+	for _, skill := range skills {
+		if skill.Always {
+			count++
+		}
+	}
+	return count
+}
+
+func missingRequirementSkillCount(skills []SkillSummary) int {
+	count := 0
+	for _, skill := range skills {
+		if len(skill.MissingEnv) > 0 || len(skill.MissingBins) > 0 {
+			count++
+		}
+	}
+	return count
+}
+
+func skillCatalogLoadMode(repoContext RepoContext, skill SkillSummary) string {
+	if skill.DisabledByConfig {
+		return "disabled"
+	}
+	if skill.BlockedByAllowlist {
+		return "allowlist-blocked"
+	}
+	if len(skill.MissingEnv) > 0 || len(skill.MissingBins) > 0 {
+		return "runtime-blocked"
+	}
+	if skill.Always {
+		return "always"
+	}
+	if skillSelectedForTurn(repoContext, skill) {
+		return "selected"
+	}
+	return "on-demand"
+}
+
+func skillCatalogReasonCodes(repoContext RepoContext, skill SkillSummary) []string {
+	var reasons []string
+	if skillCatalogEligible(skill) {
+		reasons = append(reasons, "eligible")
+	}
+	if !skillCatalogEligible(skill) && !skill.DisabledByConfig && !skill.BlockedByAllowlist && len(skill.MissingEnv) == 0 && len(skill.MissingBins) == 0 {
+		reasons = append(reasons, "unknown_ineligible")
+	}
+	if skill.DisabledByConfig {
+		reasons = append(reasons, "disabled_by_config")
+	}
+	if skill.BlockedByAllowlist {
+		reasons = append(reasons, "blocked_by_allowlist")
+	}
+	if len(skill.MissingEnv) > 0 {
+		reasons = append(reasons, "missing_env")
+	}
+	if len(skill.MissingBins) > 0 {
+		reasons = append(reasons, "missing_bins")
+	}
+	if skill.Always {
+		reasons = append(reasons, "always")
+	}
+	if skillSelectedForTurn(repoContext, skill) {
+		reasons = append(reasons, "selected_for_turn")
+	}
+	if !skill.Always && !skillSelectedForTurn(repoContext, skill) && skillCatalogEligible(skill) {
+		reasons = append(reasons, "on_demand")
+	}
+	if !skill.FrontmatterPresent {
+		reasons = append(reasons, "no_frontmatter")
+	}
+	if strings.TrimSpace(skill.Description) == "" {
+		reasons = append(reasons, "no_description")
+	}
+	return uniqueSortedStrings(reasons)
 }
 
 func disabledByConfigCount(skills []SkillSummary) int {

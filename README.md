@@ -105,6 +105,7 @@ gitclaw skills risk
 gitclaw skills validate
 gitclaw skills check
 gitclaw skills list
+gitclaw skills catalog
 gitclaw skills provenance
 gitclaw skills select-plan <name>
 gitclaw skills refresh-plan
@@ -129,6 +130,11 @@ gitclaw bundles info <name>
 They report target/match hashes and no-fetch, no-install, no-mutation gates,
 and their live harnesses prove real GitHub Models repo-reader follow-ups after
 the deterministic report.
+
+`gitclaw skills catalog` is a compact eligibility index inspired by the
+OpenClaw/Hermes `skills_list`/`skill_view` split. It reports prompt eligibility,
+load mode, gate reasons, and description/body hashes without printing raw skill
+bodies or descriptions.
 
 Migration:
 
@@ -393,6 +399,7 @@ scripts/e2e/github-skills-proposals-report.sh
 scripts/e2e/github-skills-refresh-plan-report.sh
 scripts/e2e/github-skills-sources-report.sh
 scripts/e2e/github-skills-runtime-report.sh
+scripts/e2e/github-skills-catalog-report.sh
 scripts/e2e/github-skills-install-plan-report.sh
 scripts/e2e/github-skills-upgrade-plan-report.sh
 scripts/e2e/github-bundles-provenance-report.sh

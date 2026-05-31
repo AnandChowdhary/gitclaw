@@ -849,7 +849,7 @@ GitHub issue/comment event
   `memory verify`, `memory risk`, `memory validate`, `memory timeline`,
   `memory list`, `memory promote-plan`, `memory info`, `memory search`,
   `skills validate`,
-  `skills list`, `skills provenance`, `skills select-plan`, `skills refresh-plan`,
+  `skills list`, `skills catalog`, `skills provenance`, `skills select-plan`, `skills refresh-plan`,
   `skills proposals`, `skills proposal-plan`, `skills install-plan`,
   `skills upgrade-plan`, `skills info`, `skills search`,
   `bundles list`, `bundles risk`, `bundles info`,
@@ -1398,6 +1398,7 @@ gitclaw skills risk
 gitclaw skills validate
 gitclaw skills check
 gitclaw skills list
+gitclaw skills catalog
 gitclaw skills provenance
 gitclaw skills select-plan <name>
 gitclaw skills refresh-plan
@@ -1438,6 +1439,8 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills risk
 @gitclaw /skills validate
 @gitclaw /skills check
+@gitclaw /skills catalog
+@gitclaw /skills eligible
 @gitclaw /skills provenance
 @gitclaw /skills select-plan repo-reader
 @gitclaw /skills refresh-plan
@@ -1481,6 +1484,9 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
   install mode, no-fetch gates, and body-free provenance risk findings.
 - OpenClaw-compatible runtime metadata counts for env/bin/install declarations,
   primary env hashes, inert install specs, and no-install/no-registry gates.
+- compact catalog eligibility metadata when explicitly requested: eligible and
+  ineligible counts, load modes, reason codes, selected state, always-on state,
+  description hashes, body hashes, and disabled registry/install/update gates.
 - dry-run selection planning metadata when explicitly requested.
 - skill refresh-boundary planning metadata when explicitly requested.
 - dry-run install/upgrade planning metadata when explicitly requested.
@@ -1489,6 +1495,17 @@ It does not dump full skill bodies. Full `SKILL.md` content remains a prompt
 input only when selected by the normal progressive-disclosure rules.
 `@gitclaw /skills list` is an explicit inventory alias for the same report,
 matching the local `gitclaw skills list` helper.
+
+When called as `@gitclaw /skills catalog`, `@gitclaw /skills eligible`, or
+locally as `gitclaw skills catalog`, GitClaw posts a compact
+`GitClaw Skill Catalog Report`. This is the GitHub-native equivalent of the
+OpenClaw/Hermes discovery split: `skills_list`-style metadata is visible
+first, while `skill_view`-style full bodies are only loaded when progressive
+disclosure selects a skill. The catalog reports prompt eligibility, load mode,
+reason codes, requirement counts, selected/always state, risk counts,
+validation/risk rollups, and description/body hashes. It never prints raw
+skill bodies, raw descriptions, issue bodies, comments, prompts, tool inputs,
+tool outputs, env names, or installer targets.
 
 When called as `@gitclaw /skills provenance`, `@gitclaw /skills history`, or
 `@gitclaw /skills timeline`, the command posts a body-free git provenance map
@@ -5412,11 +5429,15 @@ assert the expected comments/labels, and close the issue in cleanup.
 
    - create a real issue with `@gitclaw /skills`,
    - create a second real issue with `@gitclaw /skills list`,
+   - create another real issue with `@gitclaw /skills catalog`,
    - create another real issue with `@gitclaw /skills provenance`,
    - create a third real issue with `@gitclaw /bundles info repo-context`,
    - create a fourth real issue with `@gitclaw /bundles risk`,
    - assert the reply is marked `model="gitclaw/skills"`,
    - assert the report lists available skill metadata and selected skill paths,
+   - assert the catalog report lists compact eligibility counts, load modes,
+     reason codes, selected/always state, description hashes, body hashes,
+     no-registry/no-install gates, and no raw descriptions or skill bodies,
    - assert the bundle info report lists bundle path, referenced/resolved
      skills, selected-for-turn state, instruction presence, and hashes,
    - assert the bundle risk report lists body-free bundle risk status, counts,
@@ -5430,7 +5451,11 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert skill validation status, duplicate-name count, invalid-name count,
      and folder/name mismatch count are present,
    - assert the report does not dump full skill bodies or verification tokens,
-   - assert the run succeeds without requiring a model provider response.
+   - assert the run succeeds without requiring a model provider response,
+   - post a normal follow-up after the catalog report that requires repo-reader
+     search and assert the second assistant turn is model-backed by GitHub
+     Models with prompt context, selected skill, usage telemetry, and
+     `gitclaw.search_files`.
 
 23. **Skills search inspection**
 
@@ -6674,6 +6699,15 @@ examples/workflows/gitclaw.yml
   is an explicit inventory alias with the same body-free skill metadata and
   selected-skill provenance, including enabled/disabled/allowlist-blocked
   counts.
+- A `gh`-driven skills-catalog E2E harness verifies
+  `@gitclaw /skills catalog` exposes the compact progressive-disclosure
+  catalog with eligibility counts, load modes, reason codes, selected/always
+  state, description hashes, body hashes, validation/risk rollups, and
+  no-registry/no-install gates without raw description, skill body, issue body,
+  prompt, or tool-output leakage. It then posts a normal issue-comment
+  follow-up requiring repo-reader search so GitHub Models proves model
+  inference, prompt provenance, selected skills, usage telemetry, and
+  prompt-visible `gitclaw.search_files`.
 - A `gh`-driven skills-provenance E2E harness verifies
   `@gitclaw /skills provenance` exposes tracked git provenance for repo-local
   `SKILL.md` files, including dirty state, commit IDs/dates, and
