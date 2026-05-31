@@ -298,6 +298,15 @@ from the issue itself: `@gitclaw /backup` reports the expected backup branch,
 per-issue JSON path, and repo index paths, then the post-turn backup job writes
 the canonical raw transcript copy.
 
+2026-05-31 backup-report E2E hardening: The root backup report is the
+operator's first pointer to raw transcript recovery state, so it should not be
+weaker than the subcommands it introduces. OpenClaw-style preview/verify and
+Hermes-style portable session export imply two proofs after changes: the issue
+report must stay body-free while naming the backup branch and paths, and a
+normal GitHub Models follow-up must select repo-reader, expose
+`gitclaw.search_files`, recover the backup-report repository-search fixture
+token, and avoid hidden issue/comment token echoing.
+
 2026-05-29 backup-verify follow-up: OpenClaw's `backup verify` command checks
 that an archive has exactly one manifest, rejects traversal-style paths, and
 confirms every manifest-declared payload exists. GitClaw's git-native analogue

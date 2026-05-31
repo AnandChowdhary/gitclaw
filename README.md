@@ -207,6 +207,10 @@ dedicated backup branch with the issue JSON, repo index, and README, then posts
 a normal GitHub Models repo-reader follow-up so index changes keep LLM/tool
 coverage in the loop too.
 
+The live backup-report harness does the same for `@gitclaw /backup`: it checks
+the issue-visible, body-free backup paths and the fetched backup branch, then
+requires a normal GitHub Models repo-reader/search follow-up.
+
 `gitclaw backup restore-plan` is a dry-run recovery plan for a fetched backup
 payload. Its live harness pairs deterministic restore metadata checks with a
 real GitHub Models repo-reader follow-up so backup changes keep normal LLM and

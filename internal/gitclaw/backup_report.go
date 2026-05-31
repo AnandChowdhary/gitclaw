@@ -54,6 +54,9 @@ func RenderBackupReport(ev Event, cfg Config, comments []Comment, transcript []T
 	if request.LocalCommand != "" {
 		fmt.Fprintf(&b, "- requested_local_command: `%s`\n", backupInlineCommand(request.LocalCommand))
 	}
+	if request.Name == "summary" {
+		fmt.Fprintf(&b, "- llm_e2e_required_after_backup_report_change: `%t`\n", true)
+	}
 	if request.Name == "verify" {
 		fmt.Fprintf(&b, "- llm_e2e_required_after_backup_verify_change: `%t`\n", true)
 	}

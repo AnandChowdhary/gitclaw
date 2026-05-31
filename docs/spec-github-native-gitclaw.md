@@ -4447,7 +4447,9 @@ comment with `model="gitclaw/backup"` and summarizes:
 
 It never dumps issue/comment bodies. The report is navigational metadata; the
 raw transcript copy remains the canonical backup JSON written by the post-turn
-backup job.
+backup job. Summary report changes carry
+`llm_e2e_required_after_backup_report_change: true` and require a fetched-branch
+backup proof plus a normal GitHub Models repo-reader/search follow-up.
 
 Issue-side backup subcommands intentionally mirror OpenClaw's manifest-oriented
 backup verification and Hermes' exportable session artifacts without pretending
@@ -5433,10 +5435,16 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the reply is marked `model="gitclaw/backup"`,
    - assert the report lists the expected backup branch, issue backup path,
      index path, README path, and schema version,
+   - assert the report carries
+     `llm_e2e_required_after_backup_report_change: true`,
    - wait for the successful backup job,
    - assert the backup branch contains the issue JSON backup and repo index
      entry for that same issue,
-   - assert the report does not dump issue or comment body tokens.
+   - assert the report does not dump issue or comment body tokens,
+   - post a normal model-backed repo-reader/search follow-up using no-echo
+     sentinels with a distinct prefix from the expected search fixture token,
+     then assert the reply returns only the `gitclaw.search_files` token and
+     does not echo issue/comment sentinels.
 
 34. **Backup verification**
 
@@ -6151,8 +6159,13 @@ examples/workflows/gitclaw.yml
   names, usage markers, and the bounded backup-index repository-search fixture
   token.
 - A `gh`-driven backup-report E2E harness verifies `@gitclaw /backup`
-  publishes deterministic backup paths without a model call and that the
-  backup branch receives the corresponding issue JSON and index entry.
+  publishes deterministic backup paths and
+  `llm_e2e_required_after_backup_report_change: true` without a model call,
+  then proves the backup branch receives the corresponding issue JSON and index
+  entry without hidden issue-token leakage. The same harness posts a normal
+  model-backed follow-up that proves repo-reader search, prompt provenance,
+  selected skill metadata, prompt-visible tool names, usage markers, and the
+  bounded backup-report repository-search fixture token.
 - A `gh`-driven backup-verify E2E harness verifies `@gitclaw /backup verify`
   records the deferred issue-side command intent, then verifies the fetched
   `gitclaw-backups` branch with `gitclaw backup verify` after the real backup
