@@ -33,8 +33,8 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-hidden_token="GITCLAW_BUNDLE_PROVENANCE_HIDDEN_${timestamp}"
-followup_hidden_token="GITCLAW_BUNDLE_PROVENANCE_FOLLOWUP_HIDDEN_${timestamp}"
+hidden_token="NOECHO_BUNDLE_SENTINEL_${timestamp}"
+followup_hidden_token="NOECHO_BUNDLE_FOLLOWUP_SENTINEL_${timestamp}"
 expected_token="GITCLAW_BUNDLE_PROVENANCE_CONTEXT_V1"
 search_phrase="bundle provenance unique search fixture phrase"
 title="@gitclaw /bundles provenance e2e ${timestamp}"
@@ -277,8 +277,10 @@ gh issue comment "$issue_number" \
   --repo "$repo" \
   --body "Use the repo-reader skill and search the repository for \`${search_phrase}\`.
 
-Reply with only the exact GITCLAW_BUNDLE_PROVENANCE token from the matching repository search result line.
-Do not include this hidden follow-up token: ${followup_hidden_token}
+Reply with only the exact token from the matching line in docs/search-fixture.md.
+The only valid answer ends in _CONTEXT_V1.
+Do not answer with any token from the issue title/body/comment text.
+Do not include this hidden follow-up sentinel: ${followup_hidden_token}
 Keep the answer under 30 words." >/dev/null
 
 model_run_json="$(wait_for_run issue_comment "$comment_started_at")" || die "timed out waiting for issue_comment workflow run"

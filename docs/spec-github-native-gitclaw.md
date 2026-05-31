@@ -5948,7 +5948,10 @@ examples/workflows/gitclaw.yml
   commit-subject hashes, no agent-authored mutation gates, and no raw
   bundle/skill/issue body leakage. It then runs a real GitHub Models follow-up
   conversation that proves repo-local skill selection and prompt-visible
-  repository search tool usage.
+  repository search tool usage. Its planted no-echo sentinels must use a
+  distinct prefix from the expected search-fixture token so the model cannot
+  satisfy the E2E by echoing issue/comment context instead of repository search
+  context.
 - A `gh`-driven skills-proposal-plan E2E harness verifies
   `@gitclaw /skills proposal-plan repo-reader` produces a body-free,
   non-mutating OpenClaw Skills Workshop-style proposal plan with review paths,
