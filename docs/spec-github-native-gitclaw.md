@@ -801,7 +801,8 @@ GitHub issue/comment event
   `checkpoints status`, `checkpoints list`, `checkpoints risk`,
   `checkpoints verify`, `rollback list`, `rollback risk`,
   `proactive enqueue`, `proactive init`, `proactive info`, `proactive risk`,
-  `approvals list`, `approvals verify`, `approvals risk`,
+  `approvals list`, `approvals verify`, `approvals provenance`,
+  `approvals risk`,
   `artifacts list`, `artifacts risk`, `artifacts verify`,
   `diffs summary`, `diffs risk`, `diffs verify`,
   `workspace summary`, `workspace risk`, `workspace verify`,
@@ -2727,6 +2728,7 @@ OpenClaw's exec-approval gates and Hermes' explicit command approval posture:
 ```text
 @gitclaw /approvals
 @gitclaw /approval
+@gitclaw /approvals provenance
 ```
 
 The command runs after normal preflight authorization and context assembly, but
@@ -2750,12 +2752,30 @@ Local operators can inspect the static approval shape without opening an issue:
 ```bash
 gitclaw approvals list
 gitclaw approvals verify
+gitclaw approvals provenance
 gitclaw approvals risk
 ```
 
 The local report omits repository, issue, actor, trigger, and write-intent
 state. It still reports the approval label names, trusted association source,
 per-issue GitHub-label approval store, and read-only write-mode gate.
+
+`@gitclaw /approvals provenance` and local
+`gitclaw approvals provenance` switch from gate inventory to body-free evidence
+provenance. The report explains the current approval evidence chain:
+GitHub event trust, per-issue label state, write-request detection source,
+assistant-turn marker history, and the read-only runtime boundary. It reports
+counts and hashes for issue labels, active commands, idempotency keys,
+transcript shape, and assistant markers; it may show configured managed label
+names and recognized assistant marker model names, but unrecognized marker
+model attributes are reported only by hash. It never prints raw issue bodies,
+comments, prompts, approval payloads, run URLs, credentials, or secret values.
+The report includes
+`llm_e2e_required_after_approval_provenance_change=true`; every change to this
+surface must be tested by first creating a model-backed GitHub issue
+conversation, then posting the deterministic provenance command, then posting a
+second model-backed follow-up that proves prompt context hashing, selected
+skill metadata, prompt-visible repository search tools, and usage markers.
 
 `@gitclaw /approvals risk` and local `gitclaw approvals risk` switch from
 readiness inventory to the approval-boundary risk audit. The risk report checks
@@ -6391,6 +6411,15 @@ examples/workflows/gitclaw.yml
   `@gitclaw /approvals` detects real write intent, observes
   `gitclaw:approved`, reports the approval gates as read-only, applies
   `gitclaw:write-requested`, and avoids issue body leakage.
+- A `gh`-driven approvals-provenance E2E harness verifies
+  `@gitclaw /approvals provenance` runs after a real model-backed seed turn,
+  exposes the body-free approval evidence chain, counts current labels,
+  transcript messages, and assistant markers, hashes active command and marker
+  evidence, suppresses raw bodies/prompts/run URLs/approval payloads, and
+  applies `gitclaw:write-requested` when the provenance request contains write
+  intent. The same harness must then run another real GitHub Models follow-up
+  conversation that proves model inference, prompt provenance, selected skills,
+  prompt-visible repository search tool usage, and usage markers.
 - A `gh`-driven approvals-risk E2E harness verifies
   `@gitclaw /approvals risk` exposes body-free approval-boundary risk metadata,
   approval/managed-label collision counts, trusted association breadth, and the
@@ -6550,6 +6579,8 @@ examples/workflows/gitclaw.yml
 - OpenClaw backup docs: https://docs.openclaw.ai/cli/backup
 - OpenClaw exec approvals docs: https://docs.openclaw.ai/tools/exec-approvals
 - OpenClaw sandboxing docs: https://docs.openclaw.ai/gateway/sandboxing
+- Hermes tools and toolsets docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/tools/
+- Hermes Tool Search docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-search
 - Hermes memory docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/memory.md
 - Hermes context compression and caching docs: https://hermes-agent.nousresearch.com/docs/developer-guide/context-compression-and-caching/
 - Hermes checkpoints and rollback docs: https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback

@@ -315,10 +315,12 @@ func runApprovalsCommand(args []string) error {
 	switch args[0] {
 	case "list", "verify":
 		return runApprovalsListCommand(args[1:])
+	case "provenance", "trace", "evidence":
+		return runApprovalsProvenanceCommand(args[1:])
 	case "risk", "risk-audit":
 		return runApprovalsRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw approvals [list|verify|risk]")
+		return fmt.Errorf("usage: gitclaw approvals [list|verify|provenance|risk]")
 	}
 }
 
@@ -343,6 +345,18 @@ func runApprovalsRiskCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderApprovalRiskCLIReport(cfg))
+	return nil
+}
+
+func runApprovalsProvenanceCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown approvals provenance argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderApprovalProvenanceCLIReport(cfg))
 	return nil
 }
 

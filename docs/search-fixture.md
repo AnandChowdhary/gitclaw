@@ -27,3 +27,4 @@ prompt compression unique search fixture phrase => GITCLAW_PROMPT_COMPRESSION_CO
 model usage unique search fixture phrase => GITCLAW_MODEL_USAGE_CONTEXT_V1
 model cost unique search fixture phrase => GITCLAW_MODEL_COST_CONTEXT_V1
 tool approval unique search fixture phrase => GITCLAW_TOOL_APPROVAL_CONTEXT_V1
+approval provenance unique search fixture phrase => GITCLAW_APPROVAL_PROVENANCE_CONTEXT_V1

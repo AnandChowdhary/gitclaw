@@ -2241,6 +2241,20 @@ metadata, and hard write/host-exec denial. Acceptance requires a deterministic
 body-free report plus a live GitHub Models follow-up that proves the normal
 LLM/tool path still works after the risk audit.
 
+2026-05-31 approval-provenance follow-up: OpenClaw's exec approval docs
+separate requested policy, host-local approval state, allowlists, UI/manual
+approval, and execution result; Hermes similarly keeps tool availability and
+tool-call guardrails visible at the tool boundary. GitClaw should add the
+missing evidence-chain readback without enabling writes:
+`@gitclaw /approvals provenance` and local `gitclaw approvals provenance`
+should report current issue-label counts and hashes, actor/preflight source,
+write-request detection source, assistant-turn marker counts and hashes, and
+the read-only runtime boundary. It should never print raw issue bodies,
+comments, prompts, run URLs, approval payloads, credentials, or secrets. Live
+E2E must seed a real model-backed turn first, run the deterministic provenance
+report, and then run a second real model/tool follow-up so provenance testing
+does not replace inference coverage.
+
 Main attack pattern: an untrusted input enters through one surface, persists into memory/skills/cron/filesystem, then fires later through a different surface when the attacker is no longer present.
 
 Design requirements for `gitclaw`:

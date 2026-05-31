@@ -16,8 +16,15 @@ func IsApprovalReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderApprovalReport(ev Event, cfg Config, decision PreflightDecision, transcript []TranscriptMessage, writeRequested bool) string {
+	return RenderApprovalReportWithComments(ev, cfg, decision, nil, transcript, writeRequested)
+}
+
+func RenderApprovalReportWithComments(ev Event, cfg Config, decision PreflightDecision, comments []Comment, transcript []TranscriptMessage, writeRequested bool) string {
 	if isApprovalRiskRequest(ev, cfg) {
 		return renderApprovalRiskReport(ev, cfg, decision, transcript, writeRequested, true)
+	}
+	if isApprovalProvenanceRequest(ev, cfg) {
+		return renderApprovalProvenanceReport(ev, cfg, decision, comments, transcript, writeRequested, true)
 	}
 	return renderApprovalReport(ev, cfg, decision, transcript, writeRequested, true)
 }
