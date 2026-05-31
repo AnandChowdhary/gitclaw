@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T09:51:26Z",
+  "generated_at": "2026-05-31T09:55:23Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 336,
+  "count": 337,
   "issues": [
     {
       "number": 3,
@@ -4166,6 +4166,19 @@
       ],
       "comment_count": 5,
       "transcript_messages": 6
+    },
+    {
+      "number": 374,
+      "title": "@gitclaw approvals provenance seed e2e 20260531T095401Z",
+      "path": "issues/000374.json",
+      "backup_generated_at": "2026-05-31T09:55:22Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw",
+        "gitclaw:approved"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }
