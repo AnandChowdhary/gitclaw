@@ -525,7 +525,7 @@ func TestBuildBackupInfoReportsOneBackupWithoutBodies(t *testing.T) {
 		t.Fatalf("unexpected backup info metadata: %#v", info)
 	}
 	report := RenderBackupInfo(info)
-	for _, want := range []string{"GitClaw Backup Info Report", "repository: `owner/repo`", "backup_info_status: `ok`", "backup_verify_status: `ok`", "verification_failures: `0`", "backup_schema_version: `1`", "issue: `#8`", "issue_backup_path: `issues/000008.json`", "backup_event_name: `issue_comment`", "payload_bytes:", "payload_sha256_12:", "labels: `2`", "comments: `2`", "transcript_messages: `2`", "user_messages: `1`", "assistant_messages: `1`", "assistant_turn_comments: `1`", "error_comments: `1`", "issue_title_sha256_12:", "issue_body_sha256_12:", "raw_bodies_included: `false`", "gitclaw:e2e", "comment_1_sha256_12:", "message_1_sha256_12:"} {
+	for _, want := range []string{"GitClaw Backup Info Report", "repository: `owner/repo`", "backup_info_status: `ok`", "backup_verify_status: `ok`", "verification_failures: `0`", "backup_schema_version: `1`", "issue: `#8`", "issue_backup_path: `issues/000008.json`", "backup_event_name: `issue_comment`", "payload_bytes:", "payload_sha256_12:", "labels: `2`", "comments: `2`", "transcript_messages: `2`", "user_messages: `1`", "assistant_messages: `1`", "assistant_turn_comments: `1`", "error_comments: `1`", "issue_title_sha256_12:", "issue_body_sha256_12:", "raw_bodies_included: `false`", "llm_e2e_required_after_backup_info_change: `true`", "gitclaw:e2e", "comment_1_sha256_12:", "message_1_sha256_12:"} {
 		if !strings.Contains(report, want) {
 			t.Fatalf("backup info report missing %q:\n%s", want, report)
 		}

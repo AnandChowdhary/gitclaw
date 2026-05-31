@@ -476,6 +476,45 @@ func TestHandleBackupVerifyCommandPostsDeferredIntentWithoutLLM(t *testing.T) {
 	}
 }
 
+func TestHandleBackupInfoCommandPostsDeferredIntentWithoutLLM(t *testing.T) {
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 98,
+			"title": "@gitclaw /backup info #42",
+			"body": "Hidden backup info token: BACKUP_INFO_SECRET_TOKEN.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{98: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, DefaultConfig(), github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic backup info command", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{"model=\"gitclaw/backup\"", "requested_backup_command: `info`", "backup_command_status: `ok`", "requested_local_command: `gitclaw backup info --root .gitclaw/backups --repo owner/repo --issue 42`", "issue_side_execution: `deferred_to_post_turn_backup_branch`", "raw_bodies_included: `false`", "llm_e2e_required_after_backup_info_change: `true`"} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("backup info report missing %q:\n%s", want, body)
+		}
+	}
+	if strings.Contains(body, "BACKUP_INFO_SECRET_TOKEN") {
+		t.Fatalf("backup info report leaked body token:\n%s", body)
+	}
+}
+
 func TestHandleBackupExportJSONLCommandPostsDeferredIntentWithoutLLM(t *testing.T) {
 	ev, err := ParseEvent("issues", []byte(`{
 		"action": "opened",

@@ -290,6 +290,9 @@ scripts/e2e/github-backup-verify.sh
 scripts/e2e/github-backup-coverage.sh
 scripts/e2e/github-backup-provenance.sh
 scripts/e2e/github-backup-timeline.sh
+scripts/e2e/github-backup-info.sh
+scripts/e2e/github-backup-search.sh
+scripts/e2e/github-backup-export-jsonl.sh
 scripts/e2e/github-agents-risk-report.sh
 scripts/e2e/github-nodes-risk-report.sh
 scripts/e2e/github-artifacts-risk-report.sh

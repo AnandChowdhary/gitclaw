@@ -4455,12 +4455,14 @@ records the exact local git-provenance command and the body-free gates for
 verifying tracked, clean, committed backup files without printing raw commit
 subjects or author identities. `@gitclaw /backup info <issue-number>` records
 the exact focused-inspection command for one backed-up issue, defaulting to the
-current issue when no number is supplied. `@gitclaw /backup timeline` records
-the exact chronological timeline command for a
-fetched backup branch without trying to inspect raw backup payloads from the
-pre-backup issue handler. `@gitclaw /backup search <query>` records only a
-query hash and term count; raw search terms and raw backup bodies stay out of
-the issue-visible comment. Search-surface changes carry
+current issue when no number is supplied; info-surface changes carry
+`llm_e2e_required_after_backup_info_change: true` and require a fetched-branch
+info proof plus a normal GitHub Models repo-reader/search follow-up. The
+`@gitclaw /backup timeline` command records the exact chronological timeline
+command for a fetched backup branch without trying to inspect raw backup
+payloads from the pre-backup issue handler. `@gitclaw /backup search <query>`
+records only a query hash and term count; raw search terms and raw backup
+bodies stay out of the issue-visible comment. Search-surface changes carry
 `llm_e2e_required_after_backup_search_change: true` and must be proven with a
 fetched-branch backup search plus a normal GitHub Models repo-reader/search
 follow-up.
@@ -5549,6 +5551,8 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the issue-side report lists `requested_backup_command: info`, the
      deferred execution marker, and the concrete local info command for the
      current issue without dumping body/title tokens,
+   - assert the issue-visible report includes
+     `llm_e2e_required_after_backup_info_change: true`,
    - wait for the successful backup job,
    - fetch the real `gitclaw-backups` branch,
    - run `gitclaw backup info --root <fetched>/.gitclaw/backups --repo
@@ -5558,7 +5562,11 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert it lists the canonical payload path, payload hash, event name,
      label/comment/transcript counts, assistant-turn/error counts, and body
      hashes,
-   - assert it does not dump the issue body token or raw title.
+   - assert it does not dump the issue body token or raw title,
+   - post a normal follow-up that requires repo-reader search and assert the
+     second assistant turn is GitHub Models-backed with prompt context,
+     selected skill, prompt-visible `gitclaw.search_files`, usage telemetry,
+     and the backup-info repository-search fixture token.
 
 42. **Backup JSONL export**
 
@@ -6152,7 +6160,10 @@ examples/workflows/gitclaw.yml
   `@gitclaw /backup info` records the deferred issue-side command intent, then
   verifies the fetched `gitclaw-backups` branch can produce a focused
   single-issue backup info card with payload hashes, counts, marker totals, and
-  body hashes, without dumping raw bodies or titles.
+  body hashes, without dumping raw bodies or titles. The same harness posts a
+  normal model-backed follow-up that proves repo-reader search, prompt
+  provenance, selected skill metadata, prompt-visible tool names, usage markers,
+  and the bounded backup-info repository-search fixture token.
 - A `gh`-driven backup-export-jsonl E2E harness verifies
   `@gitclaw /backup export-jsonl` records the deferred issue-side command
   intent, then verifies the fetched `gitclaw-backups` branch can be exported

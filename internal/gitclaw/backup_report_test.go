@@ -94,6 +94,7 @@ func TestRenderBackupInfoIssueCommandRecordsTargetIssue(t *testing.T) {
 		"run `gitclaw backup info --root .gitclaw/backups --repo owner/repo --issue 42` after fetching `gitclaw-backups`",
 		"issue_side_execution: `deferred_to_post_turn_backup_branch`",
 		"raw_bodies_included: `false`",
+		"llm_e2e_required_after_backup_info_change: `true`",
 	} {
 		if !strings.Contains(report, want) {
 			t.Fatalf("backup info report missing %q:\n%s", want, report)

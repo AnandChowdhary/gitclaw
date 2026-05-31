@@ -2436,7 +2436,7 @@ func TestBackupInfoCommandReportsFetchedIssueBackup(t *testing.T) {
 			t.Fatalf("backup info returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Backup Info Report", "backup_info_status: `ok`", "backup_verify_status: `ok`", "issue: `#8`", "issue_backup_path: `issues/000008.json`", "backup_event_name: `issue_comment`", "labels: `2`", "comments: `1`", "transcript_messages: `2`", "assistant_turn_comments: `1`", "raw_bodies_included: `false`", "comment_1_sha256_12:", "message_1_sha256_12:"} {
+	for _, want := range []string{"GitClaw Backup Info Report", "backup_info_status: `ok`", "backup_verify_status: `ok`", "issue: `#8`", "issue_backup_path: `issues/000008.json`", "backup_event_name: `issue_comment`", "labels: `2`", "comments: `1`", "transcript_messages: `2`", "assistant_turn_comments: `1`", "raw_bodies_included: `false`", "llm_e2e_required_after_backup_info_change: `true`", "comment_1_sha256_12:", "message_1_sha256_12:"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("backup info output missing %q:\n%s", want, output)
 		}

@@ -41,6 +41,8 @@
 - Backup export-jsonl is an explicit raw recovery path only after fetching
   `gitclaw-backups`; issue-visible reports stay body-free and still need a live
   model/tool follow-up when the export surface changes.
+- Backup info changes need two proofs: fetched-branch body-free single-issue
+  metadata inspection, plus a normal model/tool follow-up.
 - Backup search changes need two proofs: fetched-branch raw-token search that
   does not leak bodies, plus a normal model/tool follow-up.
 - Sessions and run history are reconstructed from issues, backups, and

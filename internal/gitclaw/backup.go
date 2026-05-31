@@ -253,34 +253,35 @@ type BackupTimelinePoint struct {
 }
 
 type BackupInfo struct {
-	Root                 string
-	Repo                 string
-	RepoDir              string
-	IndexPath            string
-	ReadmePath           string
-	SchemaVersion        int
-	IndexGeneratedAt     string
-	BackupInfoStatus     string
-	BackupVerifyStatus   string
-	VerificationFailures int
-	IssueNumber          int
-	IssuePath            string
-	BackupGeneratedAt    string
-	EventName            string
-	PayloadBytes         int
-	PayloadSHA           string
-	Labels               []string
-	Comments             int
-	TranscriptMessages   int
-	UserMessages         int
-	AssistantMessages    int
-	AssistantTurns       int
-	ErrorComments        int
-	IssueTitleSHA        string
-	IssueBodySHA         string
-	CommentBodySHAs      []string
-	TranscriptBodySHAs   []string
-	RawBodiesIncluded    bool
+	Root                      string
+	Repo                      string
+	RepoDir                   string
+	IndexPath                 string
+	ReadmePath                string
+	SchemaVersion             int
+	IndexGeneratedAt          string
+	BackupInfoStatus          string
+	BackupVerifyStatus        string
+	VerificationFailures      int
+	IssueNumber               int
+	IssuePath                 string
+	BackupGeneratedAt         string
+	EventName                 string
+	PayloadBytes              int
+	PayloadSHA                string
+	Labels                    []string
+	Comments                  int
+	TranscriptMessages        int
+	UserMessages              int
+	AssistantMessages         int
+	AssistantTurns            int
+	ErrorComments             int
+	IssueTitleSHA             string
+	IssueBodySHA              string
+	CommentBodySHAs           []string
+	TranscriptBodySHAs        []string
+	RawBodiesIncluded         bool
+	LLME2ERequiredAfterChange bool
 }
 
 type BackupCoverage struct {
@@ -964,18 +965,19 @@ func BuildBackupInfo(root, repo string, issueNumber int) (BackupInfo, error) {
 		return BackupInfo{}, err
 	}
 	info := BackupInfo{
-		Root:                 filepath.ToSlash(root),
-		Repo:                 repo,
-		RepoDir:              filepath.ToSlash(repoDir),
-		IndexPath:            filepath.ToSlash(filepath.Join(repoDir, "index.json")),
-		ReadmePath:           filepath.ToSlash(filepath.Join(repoDir, "README.md")),
-		SchemaVersion:        index.Version,
-		IndexGeneratedAt:     index.GeneratedAt,
-		BackupInfoStatus:     "ok",
-		BackupVerifyStatus:   "ok",
-		VerificationFailures: len(verify.VerificationFailures),
-		IssueNumber:          issueNumber,
-		RawBodiesIncluded:    false,
+		Root:                      filepath.ToSlash(root),
+		Repo:                      repo,
+		RepoDir:                   filepath.ToSlash(repoDir),
+		IndexPath:                 filepath.ToSlash(filepath.Join(repoDir, "index.json")),
+		ReadmePath:                filepath.ToSlash(filepath.Join(repoDir, "README.md")),
+		SchemaVersion:             index.Version,
+		IndexGeneratedAt:          index.GeneratedAt,
+		BackupInfoStatus:          "ok",
+		BackupVerifyStatus:        "ok",
+		VerificationFailures:      len(verify.VerificationFailures),
+		IssueNumber:               issueNumber,
+		RawBodiesIncluded:         false,
+		LLME2ERequiredAfterChange: true,
 	}
 	if !verify.OK() {
 		info.BackupInfoStatus = "warn"
@@ -1552,7 +1554,8 @@ func RenderBackupInfo(info BackupInfo) string {
 	fmt.Fprintf(&b, "- error_comments: `%d`\n", info.ErrorComments)
 	fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", info.IssueTitleSHA)
 	fmt.Fprintf(&b, "- issue_body_sha256_12: `%s`\n", info.IssueBodySHA)
-	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n\n", info.RawBodiesIncluded)
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", info.RawBodiesIncluded)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_backup_info_change: `%t`\n\n", info.LLME2ERequiredAfterChange)
 	b.WriteString("This report inspects one fetched backup payload from the local backup tree. It does not print raw issue titles, issue bodies, comments, transcript messages, prompts, or restored content.\n\n")
 
 	b.WriteString("### Labels\n")

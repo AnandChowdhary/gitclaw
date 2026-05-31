@@ -401,6 +401,13 @@ label/comment/transcript/message counts, assistant/error marker counts, and
 body hashes only. This matches Hermes' session detail ergonomics while keeping
 OpenClaw-style restore/export behind explicit commands.
 
+2026-05-31 backup-info E2E hardening: Treat backup info as a recovery surface,
+not just a metadata card. Changes now require two live proofs: the fetched
+`gitclaw-backups` branch must render the focused body-free info report, and a
+normal issue-comment follow-up must make a GitHub Models call, select the
+repo-reader skill, expose `gitclaw.search_files`, recover the backup-info
+repository-search fixture token, and avoid echoing hidden issue/comment tokens.
+
 2026-05-29 backup-restore-plan follow-up: OpenClaw's migration/backup posture
 emphasizes preview before state-changing recovery. GitClaw should copy that
 separation: a local `backup restore-plan` command reads the backup branch and
