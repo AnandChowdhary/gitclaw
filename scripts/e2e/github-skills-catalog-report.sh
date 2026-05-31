@@ -221,7 +221,7 @@ for expected in \
   'cataloged_skills: `1`' \
   'eligible_skills: `1`' \
   'ineligible_skills: `0`' \
-  'selected_skills: `0`' \
+  'selected_skills: `1`' \
   'always_on_skills: `0`' \
   'missing_requirement_skills: `0`' \
   'disabled_skills: `0`' \
@@ -238,8 +238,8 @@ for expected in \
   'name=`repo-reader`' \
   'path=`.gitclaw/SKILLS/repo-reader/SKILL.md`' \
   'eligible=`true`' \
-  'load_mode=`on-demand`' \
-  'selected_for_this_turn=`false`' \
+  'load_mode=`selected`' \
+  'selected_for_this_turn=`true`' \
   'enabled=`true`' \
   'description_present=`true`' \
   'description_sha256_12=' \
@@ -248,7 +248,7 @@ for expected in \
   'missing_env=`0`' \
   'missing_bins=`0`' \
   'risk_findings=`0`' \
-  'reason_codes=`eligible, on_demand`' \
+  'reason_codes=`eligible, selected_for_turn`' \
   "### Catalog Gates" \
   'progressive_disclosure=`true`' \
   'skill_view_required_for_body=`true`' \
