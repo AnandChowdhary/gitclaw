@@ -3909,6 +3909,15 @@ The hard constraint: Slack and Telegram cannot directly call
 write permission, and Slack/Telegram webhooks cannot safely attach the required
 GitHub Authorization header themselves. That leaves four viable tiers.
 
+`@gitclaw /channels` is the body-free operator view for the whole bridge. It
+reports workflow presence, dispatch inputs, permissions, supported providers,
+channel-thread markers, and mirrored channel-message counts only, and carries
+`llm_e2e_required_after_channel_report_change=true`. Changes to this surface
+must pair the deterministic report with a normal GitHub Models follow-up that
+uses `repo-reader` plus bounded repository search, so Slack/Telegram bridge
+metadata changes keep proving real model/tool context without exposing channel
+message bodies or provider credentials.
+
 `@gitclaw /channels info <provider>` is the body-free operator view for one
 provider contract. It reports secret names, offset/thread/message keys,
 workflow-dispatch bridge metadata, gateway runtime, state storage, and command
@@ -5960,8 +5969,13 @@ examples/workflows/gitclaw.yml
   only hashes are stored for channel account/provider message IDs, and repeats
   the same delivery to prove outbound idempotency.
 - A `gh`-driven channels-report E2E harness verifies `@gitclaw /channels`
-  reports workflow dispatch, channel labels, provider keys, and mirrored
-  message marker counts without a model call.
+  reports workflow dispatch, channel labels, provider keys, mirrored message
+  marker counts, and `llm_e2e_required_after_channel_report_change: true`
+  without a model call or hidden-token leakage. The same live harness then
+  posts a normal issue-comment follow-up that must make a GitHub Models call,
+  select `repo-reader`, expose `gitclaw.search_files`, recover a bounded
+  repository-search fixture token, and publish usage telemetry without leaking
+  hidden issue/message tokens.
 - A `gh`-driven channels-list E2E harness verifies `@gitclaw /channels list`
   is an explicit report alias, while local `gitclaw channels list` exposes the
   same bridge contract without issue-only fields.

@@ -1004,7 +1004,7 @@ permissions:
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Channel Report", "Generated without a model call", "model=\"gitclaw/channels\"", "channel_label: `gitclaw:channel`", "trigger_label: `gitclaw`", "workflow_present: `true`", "workflow_dispatch_trigger: `true`", "permissions_actions_write: `true`", "permissions_issues_write: `true`", "workflow_inputs: `5`", "state_workflow_present: `true`", "gateway_workflow_present: `true`", "gateway_workflow_inputs: `6`", "delivery_workflow_present: `true`", "delivery_workflow_inputs: `6`", "channel_thread_issue: `true`", "channel_message_comments_now: `1`", "supported_providers: `telegram, slack, generic`", "wake_strategy: `workflow_dispatch`", ".github/workflows/gitclaw-channel-ingest.yml", "telegram", "slack", "generic", "gitclaw channel-ingest", "gitclaw channel-gateway", "gitclaw channel-delivery", "dispatch id: `<channel>-<message_id>`", "sha256_12="} {
+	for _, want := range []string{"GitClaw Channel Report", "Generated without a model call", "model=\"gitclaw/channels\"", "channel_label: `gitclaw:channel`", "trigger_label: `gitclaw`", "workflow_present: `true`", "workflow_dispatch_trigger: `true`", "permissions_actions_write: `true`", "permissions_issues_write: `true`", "workflow_inputs: `5`", "state_workflow_present: `true`", "gateway_workflow_present: `true`", "gateway_workflow_inputs: `6`", "delivery_workflow_present: `true`", "delivery_workflow_inputs: `6`", "channel_thread_issue: `true`", "channel_message_comments_now: `1`", "supported_providers: `telegram, slack, generic`", "wake_strategy: `workflow_dispatch`", "llm_e2e_required_after_channel_report_change: `true`", ".github/workflows/gitclaw-channel-ingest.yml", "telegram", "slack", "generic", "gitclaw channel-ingest", "gitclaw channel-gateway", "gitclaw channel-delivery", "dispatch id: `<channel>-<message_id>`", "sha256_12="} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("channel report missing %q:\n%s", want, body)
 		}
@@ -1348,7 +1348,7 @@ jobs:
 		t.Fatalf("posted %d comments, want 1", len(github.Posted))
 	}
 	body := github.Posted[0].Body
-	for _, want := range []string{"GitClaw Channel Report", "Generated without a model call", "model=\"gitclaw/channels\"", "event_id=\"dispatch-telegram-message-789\"", "channel_thread_issue: `true`", "channel_message_comments_now: `1`"} {
+	for _, want := range []string{"GitClaw Channel Report", "Generated without a model call", "model=\"gitclaw/channels\"", "event_id=\"dispatch-telegram-message-789\"", "channel_thread_issue: `true`", "channel_message_comments_now: `1`", "llm_e2e_required_after_channel_report_change: `true`"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("channel dispatch report missing %q:\n%s", want, body)
 		}

@@ -158,6 +158,7 @@ func renderChannelReport(ev Event, cfg Config, comments []Comment, includeIssue 
 	}
 	fmt.Fprintf(&b, "- supported_providers: `%s`\n", strings.Join(channelReportProviders, ", "))
 	fmt.Fprintf(&b, "- wake_strategy: `%s`\n", "workflow_dispatch")
+	fmt.Fprintf(&b, "- llm_e2e_required_after_channel_report_change: `%t`\n", true)
 	if includeIssue {
 		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
 	}

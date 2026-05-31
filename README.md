@@ -263,6 +263,7 @@ gitclaw plugins mcp info github-read
 gitclaw tasks risk
 gitclaw tasks ledger --backup <issue.json>
 gitclaw orders risk
+gitclaw channels
 gitclaw channels verify
 gitclaw channels risk
 gitclaw channels info telegram
@@ -282,6 +283,11 @@ gitclaw sandbox risk
 ```
 
 Use `gitclaw commands` for the full catalog.
+
+The live channels-report harness verifies the GitHub-native Slack/Telegram
+bridge contract, workflow-dispatch wake strategy, and mirrored message counts
+without printing channel bodies, then requires a normal GitHub Models
+repo-reader/search follow-up.
 
 ## Testing
 

@@ -1991,6 +1991,16 @@ it should force repo-reader search from the mirrored message and assert model,
 prompt, tool, and usage markers while keeping hidden channel sentinels out of
 the response.
 
+2026-05-31 channels-report E2E hardening: OpenClaw's current channel docs make
+Slack/Telegram gateway routing, channel policies, and provider delivery a
+first-class operator surface, while Hermes' Slack docs emphasize thread/session
+isolation, mention gating, slash commands, and per-channel skill bindings.
+GitClaw's serverless channel report should therefore be more than static
+workflow metadata: every change needs a deterministic, body-free bridge report
+plus a normal GitHub Models follow-up that selects repo-reader, exposes
+`gitclaw.search_files`, recovers the channels-report repository-search fixture
+token, and avoids hidden channel/command token echoing.
+
 2026-05-30 channel state follow-up: Telegram long polling and Slack gateway
 experiments need durable offset/dedupe state before any runner loop can be
 trusted. GitClaw should store this as one GitHub issue per
