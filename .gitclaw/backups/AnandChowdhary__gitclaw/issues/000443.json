@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T18:58:30Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 443,
+    "title": "@gitclaw /skills catalog e2e 20260531T185729Z",
+    "body": "@gitclaw /skills catalog\n\nLive skills-catalog E2E. Please keep the catalog report body-free.\nDo not include this hidden skill catalog token: NOECHO_SKILLS_CATALOG_20260531T185729Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /skills catalog e2e 20260531T185729Z\n\n@gitclaw /skills catalog\n\nLive skills-catalog E2E. Please keep the catalog report body-free.\nDo not include this hidden skill catalog token: NOECHO_SKILLS_CATALOG_20260531T185729Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Skill Catalog Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#443`\n- skill_catalog_status: `ok`\n- catalog_strategy: `compact-progressive-disclosure`\n- catalog_scope: `repo-local-skills`\n- available_skills: `1`\n- cataloged_skills: `1`\n- eligible_skills: `1`\n- ineligible_skills: `0`\n- selected_skills: `1`\n- always_on_skills: `0`\n- missing_requirement_skills: `0`\n- disabled_skills: `0`\n- allowlist_blocked_skills: `0`\n- skill_bundles: `1`\n- selected_bundles: `0`\n- skill_validation_status: `ok`\n- skill_validation_errors: `0`\n- skill_validation_warnings: `0`\n- skill_duplicate_names: `0`\n- skill_invalid_names: `0`\n- skill_name_folder_mismatches: `0`\n- skill_risk_status: `ok`\n- available_skills: `1`\n- scanned_skills: `1`\n- skills_with_risk_findings: `0`\n- skill_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- registry_verification: `not_configured`\n- installer_scripts_run: `false`\n- raw_bodies_included: `false`\n- llm_e2e_required_after_skill_risk_change: `true`\n- registry_contact_allowed: `false`\n- installer_scripts_run: `false`\n- raw_skill_bodies_included: `false`\n- raw_skill_descriptions_included: `false`\n- llm_e2e_required_after_skill_catalog_change: `true`\n\nThis compact catalog follows the OpenClaw/Hermes discovery split: list what can be loaded and why, then load full skill bodies only when progressive disclosure selects a skill. It reports names, paths, hashes, counts, and eligibility reason codes; raw skill bodies, raw descriptions, issue bodies, comments, prompts, tool inputs, and tool outputs are not included.\n\n### Catalog Cards\n- name=`repo-reader` path=`.gitclaw/SKILLS/repo-reader/SKILL.md` eligible=`true` load_mode=`selected` selected_for_this_turn=`true` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` always=`false` frontmatter=`true` description_present=`true` description_sha256_12=`2029f1cab901` bytes=`699` lines=`18` sha256_12=`2f9e68a57bd6` requires_env=`0` requires_bins=`0` missing_env=`0` missing_bins=`0` risk_findings=`0` risk_max_severity=`none` reason_codes=`eligible, selected_for_turn`\n\n### Catalog Gates\n- progressive_disclosure=`true`\n- skill_view_required_for_body=`true`\n- install_allowed=`false`\n- update_allowed=`false`\n- registry_lookup_allowed=`false`\n- body_hash_gate=`sha256_12`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4587723028,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4587723028,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26721530268\" event_id=\"issue-443\" model=\"gitclaw/skills\" idempotency_key=\"7fde294fbaae081553c4104247b5d107\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26721530268\" --\u003e\n## GitClaw Skill Catalog Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#443`\n- skill_catalog_status: `ok`\n- catalog_strategy: `compact-progressive-disclosure`\n- catalog_scope: `repo-local-skills`\n- available_skills: `1`\n- cataloged_skills: `1`\n- eligible_skills: `1`\n- ineligible_skills: `0`\n- selected_skills: `1`\n- always_on_skills: `0`\n- missing_requirement_skills: `0`\n- disabled_skills: `0`\n- allowlist_blocked_skills: `0`\n- skill_bundles: `1`\n- selected_bundles: `0`\n- skill_validation_status: `ok`\n- skill_validation_errors: `0`\n- skill_validation_warnings: `0`\n- skill_duplicate_names: `0`\n- skill_invalid_names: `0`\n- skill_name_folder_mismatches: `0`\n- skill_risk_status: `ok`\n- available_skills: `1`\n- scanned_skills: `1`\n- skills_with_risk_findings: `0`\n- skill_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- registry_verification: `not_configured`\n- installer_scripts_run: `false`\n- raw_bodies_included: `false`\n- llm_e2e_required_after_skill_risk_change: `true`\n- registry_contact_allowed: `false`\n- installer_scripts_run: `false`\n- raw_skill_bodies_included: `false`\n- raw_skill_descriptions_included: `false`\n- llm_e2e_required_after_skill_catalog_change: `true`\n\nThis compact catalog follows the OpenClaw/Hermes discovery split: list what can be loaded and why, then load full skill bodies only when progressive disclosure selects a skill. It reports names, paths, hashes, counts, and eligibility reason codes; raw skill bodies, raw descriptions, issue bodies, comments, prompts, tool inputs, and tool outputs are not included.\n\n### Catalog Cards\n- name=`repo-reader` path=`.gitclaw/SKILLS/repo-reader/SKILL.md` eligible=`true` load_mode=`selected` selected_for_this_turn=`true` enabled=`true` disabled_by_config=`false` blocked_by_allowlist=`false` always=`false` frontmatter=`true` description_present=`true` description_sha256_12=`2029f1cab901` bytes=`699` lines=`18` sha256_12=`2f9e68a57bd6` requires_env=`0` requires_bins=`0` missing_env=`0` missing_bins=`0` risk_findings=`0` risk_max_severity=`none` reason_codes=`eligible, selected_for_turn`\n\n### Catalog Gates\n- progressive_disclosure=`true`\n- skill_view_required_for_body=`true`\n- install_allowed=`false`\n- update_allowed=`false`\n- registry_lookup_allowed=`false`\n- body_hash_gate=`sha256_12`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T18:58:10Z",
+      "updated_at": "2026-05-31T18:58:10Z"
+    }
+  ]
+}
