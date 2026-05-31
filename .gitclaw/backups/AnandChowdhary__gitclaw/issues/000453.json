@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T20:58:12Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 453,
+    "title": "GitClaw session-catalog e2e 20260531T205657Z",
+    "body": "@gitclaw /session catalog\n\nLive session-catalog E2E.\n\nHidden session catalog body token: NOECHO_SESSION_CATALOG_20260531T205657Z\nThis should produce a deterministic session catalog without leaking raw issue text.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw session-catalog e2e 20260531T205657Z\n\n@gitclaw /session catalog\n\nLive session-catalog E2E.\n\nHidden session catalog body token: NOECHO_SESSION_CATALOG_20260531T205657Z\nThis should produce a deterministic session catalog without leaking raw issue text.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Session Catalog Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#453`\n- requested_session_command: `catalog`\n- session_command_status: `ok`\n- issue_title_sha256_12: `079d49d7b253`\n- issue_side_execution: `current_issue_thread_metadata`\n- raw_comments_now: `0`\n- transcript_messages_now: `1`\n- assistant_turn_comments_now: `0`\n- session_catalog_status: `ok`\n- catalog_strategy: `compact-issue-thread-session-discovery`\n- session_model: `github-issue-thread-plus-backup-json`\n- canonical_session_store: `github-issue-thread`\n- local_backup_store: `gitclaw-backups issue JSON`\n- catalog_scope: `session-commands-and-recall-gates`\n- catalog_entries: `7`\n- issue_side_commands: `7`\n- local_backup_commands: `6`\n- raw_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_replies_included: `false`\n- raw_prompt_bodies_included: `false`\n- raw_tool_outputs_included: `false`\n- repository_mutation_allowed: `false`\n- session_deletion_allowed: `false`\n- session_export_allowed_issue_side: `false`\n- llm_e2e_required_after_session_catalog_change: `true`\n\nThis catalog is a body-free map of GitClaw's session inspection surface. It records which session commands exist, which commands need a fetched backup JSON, and which gates keep transcript recall inspectable without printing raw messages.\n\n### Catalog Entries\n- command=`catalog` issue_intent=`@gitclaw /session catalog` local_command=`gitclaw session catalog` execution=`metadata-only` gate=`body-free-output` raw_bodies_included=`false` mutation_allowed=`false`\n- command=`list` issue_intent=`@gitclaw /session list` local_command=`gitclaw session list --backup \u003cissue.json\u003e` execution=`current-issue-or-local-backup` gate=`hash-only-message-list` raw_bodies_included=`false` mutation_allowed=`false`\n- command=`status` issue_intent=`@gitclaw /session status` local_command=`gitclaw session status --backup \u003cissue.json\u003e` execution=`current-issue-or-local-backup` gate=`latest-message-hashes` raw_bodies_included=`false` mutation_allowed=`false`\n- command=`stats` issue_intent=`@gitclaw /session stats` local_command=`gitclaw session stats --backup \u003cissue.json\u003e` execution=`current-issue-or-local-backup` gate=`aggregate-counts-and-provenance` raw_bodies_included=`false` mutation_allowed=`false`\n- command=`coverage` issue_intent=`@gitclaw /session coverage` local_command=`gitclaw session coverage --backup \u003cissue.json\u003e` execution=`current-issue-or-local-backup` gate=`model-skill-tool-provenance` raw_bodies_included=`false` mutation_allowed=`false`\n- command=`risk` issue_intent=`@gitclaw /session risk` local_command=`gitclaw session risk --backup \u003cissue.json\u003e` execution=`current-issue-or-local-backup` gate=`prompt-boundary-and-marker-hygiene` raw_bodies_included=`false` mutation_allowed=`false`\n- command=`search` issue_intent=`@gitclaw /session search \u003cquery\u003e` local_command=`gitclaw session search \u003cquery\u003e --backup \u003cissue.json\u003e` execution=`current-issue-or-local-backup` gate=`query-hash-and-line-hash-metadata` raw_bodies_included=`false` mutation_allowed=`false`\n\n### Catalog Gates\n- issue_thread_gate=`canonical-session-is-github-issue-thread`\n- local_backup_gate=`fetched-backup-json-required-for-local-transcript-inspection`\n- raw_body_gate=`hashes-counts-and-metadata-only`\n- search_gate=`query-hash-and-line-hash-metadata`\n- coverage_gate=`prompt-provenance-skill-tool-telemetry`\n- channel_boundary_gate=`provider-session-keys-collapse-to-canonical-github-issue`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4588071803,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4588071803,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26724262857\" event_id=\"issue-453\" model=\"gitclaw/session\" idempotency_key=\"5577f9606c60093af26690d7f03b862a\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26724262857\" --\u003e\n## GitClaw Session Catalog Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#453`\n- requested_session_command: `catalog`\n- session_command_status: `ok`\n- issue_title_sha256_12: `079d49d7b253`\n- issue_side_execution: `current_issue_thread_metadata`\n- raw_comments_now: `0`\n- transcript_messages_now: `1`\n- assistant_turn_comments_now: `0`\n- session_catalog_status: `ok`\n- catalog_strategy: `compact-issue-thread-session-discovery`\n- session_model: `github-issue-thread-plus-backup-json`\n- canonical_session_store: `github-issue-thread`\n- local_backup_store: `gitclaw-backups issue JSON`\n- catalog_scope: `session-commands-and-recall-gates`\n- catalog_entries: `7`\n- issue_side_commands: `7`\n- local_backup_commands: `6`\n- raw_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_replies_included: `false`\n- raw_prompt_bodies_included: `false`\n- raw_tool_outputs_included: `false`\n- repository_mutation_allowed: `false`\n- session_deletion_allowed: `false`\n- session_export_allowed_issue_side: `false`\n- llm_e2e_required_after_session_catalog_change: `true`\n\nThis catalog is a body-free map of GitClaw's session inspection surface. It records which session commands exist, which commands need a fetched backup JSON, and which gates keep transcript recall inspectable without printing raw messages.\n\n### Catalog Entries\n- command=`catalog` issue_intent=`@gitclaw /session catalog` local_command=`gitclaw session catalog` execution=`metadata-only` gate=`body-free-output` raw_bodies_included=`false` mutation_allowed=`false`\n- command=`list` issue_intent=`@gitclaw /session list` local_command=`gitclaw session list --backup \u003cissue.json\u003e` execution=`current-issue-or-local-backup` gate=`hash-only-message-list` raw_bodies_included=`false` mutation_allowed=`false`\n- command=`status` issue_intent=`@gitclaw /session status` local_command=`gitclaw session status --backup \u003cissue.json\u003e` execution=`current-issue-or-local-backup` gate=`latest-message-hashes` raw_bodies_included=`false` mutation_allowed=`false`\n- command=`stats` issue_intent=`@gitclaw /session stats` local_command=`gitclaw session stats --backup \u003cissue.json\u003e` execution=`current-issue-or-local-backup` gate=`aggregate-counts-and-provenance` raw_bodies_included=`false` mutation_allowed=`false`\n- command=`coverage` issue_intent=`@gitclaw /session coverage` local_command=`gitclaw session coverage --backup \u003cissue.json\u003e` execution=`current-issue-or-local-backup` gate=`model-skill-tool-provenance` raw_bodies_included=`false` mutation_allowed=`false`\n- command=`risk` issue_intent=`@gitclaw /session risk` local_command=`gitclaw session risk --backup \u003cissue.json\u003e` execution=`current-issue-or-local-backup` gate=`prompt-boundary-and-marker-hygiene` raw_bodies_included=`false` mutation_allowed=`false`\n- command=`search` issue_intent=`@gitclaw /session search \u003cquery\u003e` local_command=`gitclaw session search \u003cquery\u003e --backup \u003cissue.json\u003e` execution=`current-issue-or-local-backup` gate=`query-hash-and-line-hash-metadata` raw_bodies_included=`false` mutation_allowed=`false`\n\n### Catalog Gates\n- issue_thread_gate=`canonical-session-is-github-issue-thread`\n- local_backup_gate=`fetched-backup-json-required-for-local-transcript-inspection`\n- raw_body_gate=`hashes-counts-and-metadata-only`\n- search_gate=`query-hash-and-line-hash-metadata`\n- coverage_gate=`prompt-provenance-skill-tool-telemetry`\n- channel_boundary_gate=`provider-session-keys-collapse-to-canonical-github-issue`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T20:57:47Z",
+      "updated_at": "2026-05-31T20:57:47Z"
+    }
+  ]
+}
