@@ -134,6 +134,24 @@ skills; run installers; mutate `.gitclaw/SKILLS`; or dump raw source refs,
 source YAML, skill bodies, issue bodies, comments, prompts, credentials, or
 provider payloads.
 
+2026-06-01 skill-source-provenance follow-up: the next trust layer should make
+the reviewed source-pin files themselves auditable as repo artifacts. Inspired
+by OpenClaw's skill/ClawHub review metadata and Hermes' source/trust framing,
+add `@gitclaw /skills sources provenance` and
+`gitclaw skills sources provenance` to map `.gitclaw/skill-sources/*.yml` and
+`.gitclaw/skill-sources/*.yaml` to body-free git history. The report should
+reuse the source-pin parser, then add tracked/dirty state, last commit
+IDs/dates, commit-subject hashes, risk rollups, source-pin gates, and
+no-registry/no-fetch/no-install/no-mutation gates. It must not contact
+registries, fetch remote source refs, run installers, mutate skills, expose raw
+source refs or YAML, expose raw skill bodies, print git subjects, show author
+identities, or include issue/comment/prompt/provider bodies. Sources:
+OpenClaw skills docs (`https://docs.openclaw.ai/tools/skills`), OpenClaw
+ClawHub skill format (`https://docs.openclaw.ai/clawhub/skill-format`), Hermes
+skills guide (`https://hermes-agent.nousresearch.com/docs/guides/work-with-skills/`),
+and Hermes skill authoring/trust docs
+(`https://hermes-agent.nousresearch.com/docs/developer-guide/creating-skills`).
+
 2026-05-31 skill-runtime follow-up: OpenClaw's `SKILL.md` frontmatter and
 ClawHub format expose runtime metadata such as required env vars, binaries,
 `primaryEnv`, and install specs, while Hermes skills/tool docs frame these

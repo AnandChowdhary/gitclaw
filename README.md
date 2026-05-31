@@ -133,6 +133,7 @@ gitclaw skills provenance
 gitclaw skills select-plan <name>
 gitclaw skills refresh-plan
 gitclaw skills sources
+gitclaw skills sources provenance
 gitclaw skills sources risk
 gitclaw skills sources info <name>
 gitclaw skills runtime
@@ -160,6 +161,13 @@ the deterministic report.
 OpenClaw/Hermes `skills_list`/`skill_view` split. It reports prompt eligibility,
 load mode, gate reasons, and description/body hashes without printing raw skill
 bodies or descriptions.
+
+`gitclaw skills sources provenance` maps reviewed source pins in
+`.gitclaw/skill-sources/*.yml` and `.gitclaw/skill-sources/*.yaml` to body-free
+git history. It reports source-pin paths, hashes, tracked/dirty state, last
+commit metadata, and no-registry/no-fetch/no-install gates without printing raw
+source refs, source YAML, skill bodies, commit subjects, issue text, or
+credentials.
 
 `gitclaw bundles catalog` is the compact orchestration index for Hermes-style
 skill bundles. It reports repo-local bundle roles, selected/load state,
@@ -545,6 +553,7 @@ scripts/e2e/github-skills-proposal-plan-report.sh
 scripts/e2e/github-skills-proposals-report.sh
 scripts/e2e/github-skills-refresh-plan-report.sh
 scripts/e2e/github-skills-sources-report.sh
+scripts/e2e/github-skills-sources-provenance-report.sh
 scripts/e2e/github-skills-runtime-report.sh
 scripts/e2e/github-skills-catalog-report.sh
 scripts/e2e/github-skills-install-plan-report.sh

@@ -92,6 +92,9 @@ func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if query := requestedSkillBundleSearchQuery(ev, cfg); query != "" {
 		return renderSkillBundleSearchReport(ev, repoContext, query, true)
 	}
+	if isSkillSourcesProvenanceRequest(ev, cfg) {
+		return renderSkillSourceProvenanceReport(ev, cfg, repoContext, true)
+	}
 	if isSkillSourcesRiskRequest(ev, cfg) {
 		return renderSkillSourcesRiskReport(ev, cfg, repoContext, true)
 	}

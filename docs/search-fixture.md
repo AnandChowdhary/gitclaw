@@ -98,5 +98,6 @@ bundle search unique search fixture phrase => GITCLAW_BUNDLE_SEARCH_CONTEXT_V1
 workspace catalog unique search fixture phrase => GITCLAW_WORKSPACE_CATALOG_CONTEXT_V1
 agents catalog unique search fixture phrase => GITCLAW_AGENTS_CATALOG_CONTEXT_V1
 agents provenance unique search fixture phrase => GITCLAW_AGENTS_PROVENANCE_CONTEXT_V1
+skills sources provenance unique search fixture phrase => GITCLAW_SKILLS_SOURCES_PROVENANCE_CONTEXT_V1
 nodes catalog unique search fixture phrase => GITCLAW_NODES_CATALOG_CONTEXT_V1
 artifacts catalog unique search fixture phrase => GITCLAW_ARTIFACTS_CATALOG_CONTEXT_V1

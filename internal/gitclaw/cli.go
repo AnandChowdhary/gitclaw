@@ -2402,7 +2402,7 @@ func runMigrateRiskCommand(args []string) error {
 
 func runSkillsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw skills verify|risk|runtime|catalog|eligible|validate|check|list|provenance|select-plan <name>|refresh-plan|sources [risk|info <name>]|proposals [risk]|proposal-plan <name>|install-plan <target>|upgrade-plan <target>|bundles [risk|provenance]|bundle <name>|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw skills verify|risk|runtime|catalog|eligible|validate|check|list|provenance|select-plan <name>|refresh-plan|sources [provenance|risk|info <name>]|proposals [risk]|proposal-plan <name>|install-plan <target>|upgrade-plan <target>|bundles [risk|provenance]|bundle <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -2543,6 +2543,13 @@ func runSkillsSourcesCommand(args []string) error {
 		fmt.Println(RenderSkillSourcesRiskCLIReport(cfg, repoContext))
 		return nil
 	}
+	if args[0] == "provenance" || args[0] == "history" || args[0] == "timeline" {
+		if len(args) > 1 {
+			return fmt.Errorf("unknown skills sources provenance argument %q", args[1])
+		}
+		fmt.Println(RenderSkillSourceProvenanceCLIReport(cfg, repoContext))
+		return nil
+	}
 	if args[0] == "info" || args[0] == "show" {
 		if len(args) != 2 {
 			return fmt.Errorf("usage: gitclaw skills sources info <name>")
@@ -2554,7 +2561,7 @@ func runSkillsSourcesCommand(args []string) error {
 		}
 		return nil
 	}
-	return fmt.Errorf("usage: gitclaw skills sources [list|risk|info <name>]")
+	return fmt.Errorf("usage: gitclaw skills sources [list|provenance|risk|info <name>]")
 }
 
 func runSkillsProposalPlanCommand(args []string, requestedAction string) error {

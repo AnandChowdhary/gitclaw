@@ -1445,6 +1445,7 @@ gitclaw skills provenance
 gitclaw skills select-plan <name>
 gitclaw skills refresh-plan
 gitclaw skills sources
+gitclaw skills sources provenance
 gitclaw skills sources risk
 gitclaw skills sources info <name>
 gitclaw skills runtime
@@ -1489,6 +1490,7 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills select-plan repo-reader
 @gitclaw /skills refresh-plan
 @gitclaw /skills sources
+@gitclaw /skills sources provenance
 @gitclaw /skills sources risk
 @gitclaw /skills sources info repo-reader
 @gitclaw /skills runtime
@@ -1716,7 +1718,11 @@ remote_fetch_allowed: false
 `@gitclaw /skills sources` and `gitclaw skills sources` list source pins by
 path, normalized name, skill path, source kind, trust level, install mode,
 expected/current skill hash, match state, and no-fetch/no-install runtime
-gates. `@gitclaw /skills sources risk` and
+gates. `@gitclaw /skills sources provenance` and
+`gitclaw skills sources provenance` map reviewed source pins to body-free git
+history: source-pin paths, source kind, trust level, install mode, match/hash
+state, risk codes, tracked/dirty state, last commit IDs/dates, and
+commit-subject hashes only. `@gitclaw /skills sources risk` and
 `gitclaw skills sources risk` scan source-pin YAML for parse errors, missing
 skill matches, missing or mismatched hashes, unsafe remote-fetch gates,
 installer-like install modes, missing approval gates, untrusted source kinds,
@@ -1729,9 +1735,11 @@ Skill source reports never contact ClawHub, Hermes Hub, skills.sh, GitHub, or
 well-known endpoints; never fetch remote sources; never run installers; never
 install dependencies; never write `.gitclaw/SKILLS`; and never print raw
 source refs, raw source-pin bodies, raw skill bodies, issue bodies, comments,
-prompts, provider payloads, credentials, or secret values. The reports include
-`llm_e2e_required_after_skill_source_change=true`; every source-pin behavior
-change must ship with a live GitHub Models follow-up E2E.
+prompts, git subjects, author identities, provider payloads, credentials, or
+secret values. The reports include
+`llm_e2e_required_after_skill_source_change=true` or
+`llm_e2e_required_after_skill_source_provenance_change=true`; every source-pin
+behavior change must ship with a live GitHub Models follow-up E2E.
 
 When called as `@gitclaw /skills runtime`,
 `@gitclaw /skills requirements`, `@gitclaw /skills metadata`, or
@@ -7132,6 +7140,12 @@ examples/workflows/gitclaw.yml
   no-registry/no-fetch/no-install runtime gates, and risk counts, then runs a
   real GitHub Models follow-up conversation that proves repo-local skill
   selection and prompt-visible tool usage still work.
+- A `gh`-driven skills-sources-provenance E2E harness verifies
+  `@gitclaw /skills sources provenance` and local
+  `gitclaw skills sources provenance` expose body-free source-pin git history,
+  tracked/dirty state, commit availability, source-pin gates, and raw-body
+  exclusion, then runs a real GitHub Models follow-up conversation that proves
+  repo-local skill selection, `gitclaw.search_files`, and usage telemetry.
 - A `gh`-driven skills-runtime E2E harness verifies
   `@gitclaw /skills runtime` and local `gitclaw skills runtime` expose
   body-free OpenClaw-compatible env/bin/install runtime metadata counts,
