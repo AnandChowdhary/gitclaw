@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T06:19:26Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 357,
+    "title": "@gitclaw /bundles provenance e2e 20260531T061815Z",
+    "body": "@gitclaw /bundles provenance\n\nLive bundle provenance E2E. Please keep the provenance report body-free.\nDo not include this hidden bundle provenance token: GITCLAW_BUNDLE_PROVENANCE_HIDDEN_20260531T061815Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /bundles provenance e2e 20260531T061815Z\n\n@gitclaw /bundles provenance\n\nLive bundle provenance E2E. Please keep the provenance report body-free.\nDo not include this hidden bundle provenance token: GITCLAW_BUNDLE_PROVENANCE_HIDDEN_20260531T061815Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Skill Bundle Provenance Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#357`\n- bundle_provenance_status: `ok`\n- provenance_scope: `repo-local-skill-bundle-git-history`\n- available_bundles: `1`\n- selected_bundles: `0`\n- bundle_skill_refs: `1`\n- resolved_bundle_skills: `1`\n- missing_bundle_skills: `0`\n- bundles_with_instruction: `1`\n- git_tracked_bundles: `1`\n- untracked_bundles: `0`\n- working_tree_dirty_bundles: `0`\n- bundles_with_commits: `1`\n- bundles_without_commits: `0`\n- git_available: `true`\n- git_history_available: `true`\n- repository_mutation_allowed: `false`\n- agent_authored_bundle_mutation_supported: `false`\n- raw_bundle_bodies_included: `false`\n- raw_bundle_instructions_included: `false`\n- raw_skill_bodies_included: `false`\n- raw_git_subjects_included: `false`\n- author_identities_included: `false`\n- llm_e2e_required_after_bundle_provenance_change: `true`\n- issue_title_sha256_12: `4b6434ca7b9a`\n\nThis report maps repo-local skill bundle YAML files to body-free git provenance. It reports bundle metadata, skill-ref counts, instruction hashes, tracked state, dirty state, last commit IDs/dates, and commit-subject hashes only; raw bundle YAML, bundle instructions, skill bodies, issue bodies, comments, prompts, git subjects, author identities, provider payloads, and secret values are not included.\n\n### Bundle Provenance Cards\n- bundle_name=`repo-context` path=`.gitclaw/skill-bundles/repo-context.yaml` skills=`repo-reader` resolved_skills=`repo-reader` missing_skills=`none` selected_for_this_turn=`false` instruction=`true` instruction_sha256_12=`02a8be4758bf` bytes=`290` lines=`7` sha256_12=`4a6baa73f30e` parse_error=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` git_tracked=`true` working_tree_dirty=`false` commit_available=`true` last_commit_sha256_12=`aa76d781e812` last_commit_short=`aa76d78` last_commit_date=`2026-05-31T08:17:58+02:00` subject_sha256_12=`bfa773fa9d82`\n\n### Provenance Gates\n- git_history_gate=`pass`\n- mutation_gate=`disabled`\n- agent_authored_mutation_gate=`disabled`\n- raw_body_gate=`hash_only`\n\n### Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4585907760,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4585907760,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26705190280\" event_id=\"issue-357\" model=\"gitclaw/skills\" idempotency_key=\"f639eadf8aed668f99ffd34b51da8957\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26705190280\" --\u003e\n## GitClaw Skill Bundle Provenance Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#357`\n- bundle_provenance_status: `ok`\n- provenance_scope: `repo-local-skill-bundle-git-history`\n- available_bundles: `1`\n- selected_bundles: `0`\n- bundle_skill_refs: `1`\n- resolved_bundle_skills: `1`\n- missing_bundle_skills: `0`\n- bundles_with_instruction: `1`\n- git_tracked_bundles: `1`\n- untracked_bundles: `0`\n- working_tree_dirty_bundles: `0`\n- bundles_with_commits: `1`\n- bundles_without_commits: `0`\n- git_available: `true`\n- git_history_available: `true`\n- repository_mutation_allowed: `false`\n- agent_authored_bundle_mutation_supported: `false`\n- raw_bundle_bodies_included: `false`\n- raw_bundle_instructions_included: `false`\n- raw_skill_bodies_included: `false`\n- raw_git_subjects_included: `false`\n- author_identities_included: `false`\n- llm_e2e_required_after_bundle_provenance_change: `true`\n- issue_title_sha256_12: `4b6434ca7b9a`\n\nThis report maps repo-local skill bundle YAML files to body-free git provenance. It reports bundle metadata, skill-ref counts, instruction hashes, tracked state, dirty state, last commit IDs/dates, and commit-subject hashes only; raw bundle YAML, bundle instructions, skill bodies, issue bodies, comments, prompts, git subjects, author identities, provider payloads, and secret values are not included.\n\n### Bundle Provenance Cards\n- bundle_name=`repo-context` path=`.gitclaw/skill-bundles/repo-context.yaml` skills=`repo-reader` resolved_skills=`repo-reader` missing_skills=`none` selected_for_this_turn=`false` instruction=`true` instruction_sha256_12=`02a8be4758bf` bytes=`290` lines=`7` sha256_12=`4a6baa73f30e` parse_error=`false` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` git_tracked=`true` working_tree_dirty=`false` commit_available=`true` last_commit_sha256_12=`aa76d781e812` last_commit_short=`aa76d78` last_commit_date=`2026-05-31T08:17:58+02:00` subject_sha256_12=`bfa773fa9d82`\n\n### Provenance Gates\n- git_history_gate=`pass`\n- mutation_gate=`disabled`\n- agent_authored_mutation_gate=`disabled`\n- raw_body_gate=`hash_only`\n\n### Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T06:19:02Z",
+      "updated_at": "2026-05-31T06:19:02Z"
+    }
+  ]
+}
