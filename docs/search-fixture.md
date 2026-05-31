@@ -63,6 +63,7 @@ channels verify unique search fixture phrase => GITCLAW_CHANNELS_VERIFY_CONTEXT_
 backup verify unique search fixture phrase => GITCLAW_BACKUP_VERIFY_CONTEXT_V1
 backup index unique search fixture phrase => GITCLAW_BACKUP_INDEX_CONTEXT_V1
 backup report unique search fixture phrase => GITCLAW_BACKUP_REPORT_CONTEXT_V1
+backup catalog unique search fixture phrase => GITCLAW_BACKUP_CATALOG_CONTEXT_V1
 channel message unique search fixture phrase => GITCLAW_CHANNEL_MESSAGE_CONTEXT_V1
 channel message followup unique search fixture phrase => GITCLAW_CHANNEL_MESSAGE_FOLLOWUP_CONTEXT_V1
 channel ingest unique search fixture phrase => GITCLAW_CHANNEL_INGEST_CONTEXT_V1

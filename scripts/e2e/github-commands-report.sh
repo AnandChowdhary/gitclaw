@@ -149,7 +149,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `33`' \
   'aliases: `31`' \
-  'local_cli_helpers: `178`' \
+  'local_cli_helpers: `179`' \
   'run_mode: `read-only`' \
   'llm_e2e_required_after_commands_report_change: `true`' \
   "### Slash Commands" \
@@ -302,6 +302,7 @@ for expected in \
   'gitclaw policy list' \
   'gitclaw policy verify' \
   'gitclaw policy risk' \
+  'gitclaw backup catalog' \
   'gitclaw backup verify' \
   'gitclaw backup coverage --issue <number>' \
   'gitclaw backup drill --issue <number>' \

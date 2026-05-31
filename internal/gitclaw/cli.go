@@ -2685,6 +2685,9 @@ func runSkillsValidateCommand(args []string) error {
 }
 
 func runBackup(ctx context.Context, args []string) error {
+	if len(args) > 0 && (args[0] == "catalog" || args[0] == "commands" || args[0] == "capabilities") {
+		return runBackupCatalog(args[1:])
+	}
 	if len(args) > 0 && args[0] == "index" {
 		return runBackupIndex(args[1:])
 	}
@@ -2756,6 +2759,31 @@ func runBackup(ctx context.Context, args []string) error {
 		return err
 	}
 	fmt.Println(path)
+	return nil
+}
+
+func runBackupCatalog(args []string) error {
+	root := filepath.Join(".gitclaw", "backups")
+	repo := os.Getenv("GITHUB_REPOSITORY")
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--root":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--root requires a value")
+			}
+			root = args[i+1]
+			i++
+		case "--repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--repo requires a value")
+			}
+			repo = args[i+1]
+			i++
+		default:
+			return fmt.Errorf("unknown backup catalog argument %q", args[i])
+		}
+	}
+	fmt.Println(RenderBackupCatalogCLIReport(root, repo))
 	return nil
 }
 

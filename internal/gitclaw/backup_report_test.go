@@ -89,6 +89,62 @@ func TestRenderBackupVerifyIssueCommandRecordsDeferredIntentWithoutBodies(t *tes
 	}
 }
 
+func TestRenderBackupCatalogIssueCommandListsBodyFreeRecoverySurface(t *testing.T) {
+	ev := Event{
+		Repo: "owner/repo",
+		Issue: Issue{
+			Number: 96,
+			Title:  "@gitclaw /backup catalog",
+			Body:   "BACKUP_CATALOG_BODY_SECRET",
+		},
+	}
+	comments := []Comment{{
+		ID:   21,
+		Body: "<!-- gitclaw:assistant-turn idempotency_key=old -->\nBACKUP_CATALOG_COMMENT_SECRET",
+		User: User{Login: "github-actions[bot]", Type: "Bot"},
+	}}
+	transcript := []TranscriptMessage{
+		{Role: "user", Body: "BACKUP_CATALOG_TRANSCRIPT_SECRET"},
+		{Role: "assistant", Body: "BACKUP_CATALOG_ASSISTANT_SECRET"},
+	}
+
+	report := RenderBackupReport(ev, DefaultConfig(), comments, transcript)
+	for _, want := range []string{
+		"GitClaw Backup Catalog Report",
+		"requested_backup_command: `catalog`",
+		"backup_command_status: `ok`",
+		"backup_catalog_status: `ok`",
+		"catalog_strategy: `compact-git-backed-recovery-discovery`",
+		"backup_model: `github-issues-plus-gitclaw-backups-branch`",
+		"catalog_scope: `backup-commands-and-recovery-gates`",
+		"catalog_entries: `17`",
+		"fetched_branch_required_commands: `16`",
+		"requested_local_command: `gitclaw backup catalog --repo owner/repo`",
+		"issue_side_execution: `deferred_to_post_turn_backup_branch`",
+		"raw_bodies_included: `false`",
+		"raw_backup_payloads_included: `false`",
+		"repository_mutation_allowed: `false`",
+		"restore_mutation_allowed: `false`",
+		"retention_mutation_allowed: `false`",
+		"llm_e2e_required_after_backup_catalog_change: `true`",
+		".gitclaw/backups/owner__repo/issues/000096.json",
+		"command=`catalog` issue_intent=`@gitclaw /backup catalog` local_command=`gitclaw backup catalog` execution=`metadata-only` gate=`body-free-output` raw_bodies_included=`false` mutation_allowed=`false`",
+		"command=`search` issue_intent=`@gitclaw /backup search <query>` local_command=`gitclaw backup search --root .gitclaw/backups --repo owner/repo <query>`",
+		"backup_branch_gate=`fetched-before-local-inspection`",
+		"restore_gate=`plan-only`",
+		"search_gate=`query-hash-and-match-metadata`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("backup catalog report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"BACKUP_CATALOG_BODY_SECRET", "BACKUP_CATALOG_COMMENT_SECRET", "BACKUP_CATALOG_TRANSCRIPT_SECRET", "BACKUP_CATALOG_ASSISTANT_SECRET"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("backup catalog report leaked %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestRenderBackupSearchIssueCommandHashesQueryWithoutPrintingIt(t *testing.T) {
 	query := "rare-secret search phrase"
 	ev := Event{

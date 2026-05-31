@@ -211,6 +211,7 @@ gitclaw secrets risk
 Backups, sessions, and run provenance:
 
 ```bash
+gitclaw backup catalog
 gitclaw backup verify
 gitclaw backup coverage --issue <number>
 gitclaw backup drill --issue <number>
@@ -238,6 +239,12 @@ gitclaw runs verify
 gitclaw runs history --backup <issue.json>
 ```
 
+`gitclaw backup catalog` is the compact recovery-surface map for the backup
+system. It lists the issue intents, local commands, fetched-branch gates, and
+restore/retention mutation boundaries without printing raw issue bodies,
+comments, prompts, backup payloads, credentials, git subjects, or author
+identities.
+
 `gitclaw backup provenance` is the body-free git-history audit for fetched
 `gitclaw-backups` branches. It verifies the backup tree, then reports whether
 the index, README, and issue payload files are tracked, clean, and backed by
@@ -252,6 +259,11 @@ coverage in the loop too.
 The live backup-report harness does the same for `@gitclaw /backup`: it checks
 the issue-visible, body-free backup paths and the fetched backup branch, then
 requires a normal GitHub Models repo-reader/search follow-up.
+
+The live backup-catalog harness covers `@gitclaw /backup catalog`: it verifies
+the deterministic command/gate catalog, checks the post-turn backup branch, and
+then forces a real GitHub Models repo-reader/search follow-up so the catalog
+surface keeps LLM/tool coverage.
 
 `gitclaw backup restore-plan` is a dry-run recovery plan for a fetched backup
 payload. Its live harness pairs deterministic restore metadata checks with a
@@ -405,6 +417,7 @@ scripts/e2e/github-backup-continuity.sh
 scripts/e2e/github-backup-list.sh
 scripts/e2e/github-backup-timeline.sh
 scripts/e2e/github-backup-info.sh
+scripts/e2e/github-backup-catalog-report.sh
 scripts/e2e/github-backup-search.sh
 scripts/e2e/github-backup-export-jsonl.sh
 scripts/e2e/github-agents-risk-report.sh

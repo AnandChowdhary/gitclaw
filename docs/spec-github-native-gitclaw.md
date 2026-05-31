@@ -4600,9 +4600,9 @@ The command runs after normal preflight authorization and transcript
 reconstruction, but before model inference. It posts a `gitclaw:assistant-turn`
 comment with `model="gitclaw/backup"` and summarizes:
 
-- requested backup command intent (`summary`, `verify`, `coverage`, `manifest`, `list`,
-  `timeline`, `info`, `stats`, `search`, `export-jsonl`, `restore-plan`, or
-  `retention-plan`),
+- requested backup command intent (`summary`, `catalog`, `verify`, `coverage`,
+  `manifest`, `list`, `timeline`, `info`, `stats`, `search`, `export-jsonl`,
+  `restore-plan`, or `retention-plan`),
 - the matching local `gitclaw backup ...` command to run against a fetched
   `gitclaw-backups` branch,
 - that issue-side execution is metadata-only because the backup branch is
@@ -4624,16 +4624,23 @@ backup proof plus a normal GitHub Models repo-reader/search follow-up.
 Issue-side backup subcommands intentionally mirror OpenClaw's manifest-oriented
 backup verification and Hermes' exportable session artifacts without pretending
 the issue handler can verify a branch that has not been written yet. For
-example, `@gitclaw /backup verify` records the exact local verification command
-and the backup paths, then the post-turn backup job commits the raw issue JSON
-and index to `gitclaw-backups`. `@gitclaw /backup risk` records the exact local
-risk-audit command and risk categories while making clear that raw payload
-scanning is deferred to a fetched backup branch. `@gitclaw /backup provenance`
-records the exact local git-provenance command and the body-free gates for
-verifying tracked, clean, committed backup files without printing raw commit
-subjects or author identities. `@gitclaw /backup info <issue-number>` records
-the exact focused-inspection command for one backed-up issue, defaulting to the
-current issue when no number is supplied; info-surface changes carry
+example, `@gitclaw /backup catalog` records a compact recovery-surface catalog:
+issue intents, local commands, fetched-branch gates, body-free output policy,
+and explicit no-mutation restore/retention boundaries. Catalog changes carry
+`llm_e2e_required_after_backup_catalog_change: true` and require three proofs:
+the deterministic issue-side catalog, a post-turn `gitclaw-backups` branch
+update for the same issue, and a normal GitHub Models repo-reader/search
+follow-up. `@gitclaw /backup verify` records the exact local verification
+command and the backup paths, then the post-turn backup job commits the raw
+issue JSON and index to `gitclaw-backups`. `@gitclaw /backup risk` records the
+exact local risk-audit command and risk categories while making clear that raw
+payload scanning is deferred to a fetched backup branch.
+`@gitclaw /backup provenance` records the exact local git-provenance command
+and the body-free gates for verifying tracked, clean, committed backup files
+without printing raw commit subjects or author identities.
+`@gitclaw /backup info <issue-number>` records the exact focused-inspection
+command for one backed-up issue, defaulting to the current issue when no number
+is supplied; info-surface changes carry
 `llm_e2e_required_after_backup_info_change: true` and require a fetched-branch
 info proof plus a normal GitHub Models repo-reader/search follow-up. The
 `@gitclaw /backup timeline` command records the exact chronological timeline
@@ -6583,6 +6590,12 @@ examples/workflows/gitclaw.yml
   model-backed follow-up that proves repo-reader search, prompt provenance,
   selected skill metadata, prompt-visible tool names, usage markers, and the
   bounded backup-report repository-search fixture token.
+- A `gh`-driven backup-catalog E2E harness verifies
+  `@gitclaw /backup catalog` publishes a body-free command/gate catalog with
+  `llm_e2e_required_after_backup_catalog_change: true`, checks the post-turn
+  backup branch for the same issue, runs local `gitclaw backup catalog`, and
+  then posts a normal GitHub Models repo-reader/search follow-up that recovers
+  the bounded backup-catalog repository-search fixture token.
 - A `gh`-driven backup-verify E2E harness verifies `@gitclaw /backup verify`
   records the deferred issue-side command intent, then verifies the fetched
   `gitclaw-backups` branch with `gitclaw backup verify` after the real backup

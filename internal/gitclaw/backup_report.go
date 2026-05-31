@@ -25,6 +25,9 @@ func IsBackupReportRequest(ev Event, cfg Config) bool {
 
 func RenderBackupReport(ev Event, cfg Config, comments []Comment, transcript []TranscriptMessage) string {
 	request := requestedBackupIssueCommand(ev, cfg)
+	if request.Name == "catalog" {
+		return RenderBackupCatalogIssueReport(ev, cfg, comments, transcript)
+	}
 	relIssuePath := issueBackupPath(defaultBackupRoot, ev.Repo, ev.Issue.Number)
 	repoDir := backupRepoDir(defaultBackupRoot, ev.Repo)
 	indexPath := filepath.ToSlash(filepath.Join(repoDir, "index.json"))
@@ -140,6 +143,12 @@ func requestedBackupIssueCommand(ev Event, cfg Config) backupIssueCommand {
 	}
 	name := cleanBackupCommandName(fields[1])
 	switch name {
+	case "catalog", "commands", "capabilities":
+		return backupIssueCommand{
+			Name:         "catalog",
+			Status:       "ok",
+			LocalCommand: fmt.Sprintf("gitclaw backup catalog --repo %s", backupReportRepo(ev.Repo)),
+		}
 	case "verify":
 		return backupIssueCommand{
 			Name:         "verify",
@@ -283,7 +292,7 @@ func writeBackupIssueCommandSummary(b *strings.Builder, request backupIssueComma
 			b.WriteString("- raw search query is not printed; only query hash and term count are shown\n")
 		}
 	case "unknown":
-		b.WriteString("- unknown backup subcommand; supported issue intents are `verify`, `coverage`, `drill`, `risk`, `provenance`, `manifest`, `list`, `timeline`, `info`, `stats`, `freshness`, `continuity`, `search`, `export-jsonl`, `restore-plan`, and `retention-plan`\n")
+		b.WriteString("- unknown backup subcommand; supported issue intents are `catalog`, `verify`, `coverage`, `drill`, `risk`, `provenance`, `manifest`, `list`, `timeline`, `info`, `stats`, `freshness`, `continuity`, `search`, `export-jsonl`, `restore-plan`, and `retention-plan`\n")
 	case "invalid_issue":
 		b.WriteString("- invalid backup issue number; use `@gitclaw /backup info <issue-number>`, `@gitclaw /backup coverage <issue-number>`, `@gitclaw /backup drill <issue-number>`, or inspect the current issue without an explicit issue number\n")
 	default:

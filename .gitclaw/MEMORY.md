@@ -91,6 +91,9 @@
   never call GitHub restore/delete APIs or print raw bodies.
 - Backup report changes need two proofs: issue-visible body-free path metadata
   plus fetched-branch validation, then a normal model/tool follow-up.
+- Backup catalog changes need three proofs: body-free command/gate inventory,
+  post-turn backup branch update for the same issue, plus a normal model/tool
+  follow-up.
 - Backup export-jsonl is an explicit raw recovery path only after fetching
   `gitclaw-backups`; issue-visible reports stay body-free and still need a live
   model/tool follow-up when the export surface changes.
