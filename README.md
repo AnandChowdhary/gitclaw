@@ -128,6 +128,7 @@ gitclaw tools boundary [query]
 gitclaw tools provenance [query]
 gitclaw tools toolsets
 gitclaw tools toolsets risk
+gitclaw tools toolsets provenance
 gitclaw tools toolsets info <name>
 gitclaw tools run-plan <name>
 gitclaw tools info <name>
@@ -205,6 +206,7 @@ gitclaw agents risk
 gitclaw nodes risk
 gitclaw hooks risk
 gitclaw hooks provenance
+gitclaw tools toolsets provenance
 gitclaw plugins risk
 gitclaw plugins mcp
 gitclaw plugins mcp risk
@@ -290,6 +292,7 @@ scripts/e2e/github-channels-risk-report.sh
 scripts/e2e/github-config-risk-report.sh
 scripts/e2e/github-doctor-report.sh
 scripts/e2e/github-doctor-list-report.sh
+scripts/e2e/github-toolsets-provenance-report.sh
 ```
 
 Live E2E scripts create a real GitHub issue, wait for the GitHub Actions run,

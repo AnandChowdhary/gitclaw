@@ -2152,6 +2152,7 @@ gitclaw tools boundary [query]
 gitclaw tools provenance [query]
 gitclaw tools toolsets
 gitclaw tools toolsets risk
+gitclaw tools toolsets provenance
 gitclaw tools toolsets info <name>
 gitclaw tools run-plan <name>
 gitclaw tools info <name>
@@ -2178,6 +2179,7 @@ OpenClaw's tool policy visibility and Hermes' toolset inventory:
 @gitclaw /tools provenance
 @gitclaw /tools toolsets
 @gitclaw /tools toolsets risk
+@gitclaw /tools toolsets provenance
 @gitclaw /tools toolsets info repo-read
 @gitclaw /tools run-plan search_files
 @gitclaw /tools info read_file
@@ -2288,11 +2290,17 @@ and `gitclaw tools toolsets risk` scan toolset YAML for unknown tool refs,
 disabled/allowlist-blocked refs, non-read-only modes, prompt-boundary
 overrides, secret exfiltration instructions, credential material, host
 execution, repository mutation, remote exfiltration, and unbounded loops.
+`@gitclaw /tools toolsets provenance`,
+`gitclaw tools toolsets provenance`, and the `history`/`timeline` aliases map
+repo-local toolset YAML files to git history without exposing their bodies.
+They report profile names, paths, normalized/resolved tool refs, config gates,
+risk codes, file hashes, tracked/dirty state, last commit IDs/dates, and
+commit-subject hashes only. They never print raw toolset YAML, reviewed
+instructions, tool outputs, git commit subjects, author identities,
+issue/comment bodies, prompts, credentials, or secret values.
 `@gitclaw /tools toolsets info <name>` and
-`gitclaw tools toolsets info <name>` show one profile. All three reports are
-body-free: they never print raw toolset instructions, issue/comment bodies,
-prompts, tool outputs, credentials, or secret values, and changes require a
-live GitHub Models follow-up E2E.
+`gitclaw tools toolsets info <name>` show one profile. All four reports are
+body-free, and changes require a live GitHub Models follow-up E2E.
 
 When called as `@gitclaw /tools validate`, the command posts only the
 validation report: tool contract counts, active-output counts, status,
@@ -5776,6 +5784,11 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven doctor-list E2E harness verifies `@gitclaw /doctor list` is an
   explicit report alias, while local `gitclaw doctor list` exposes the same
   body-free health and E2E-harness metadata without issue-only fields.
+- A `gh`-driven toolsets-provenance E2E harness verifies
+  `@gitclaw /tools toolsets provenance` maps repo-local toolset YAML to
+  body-free git history without a model call. The same harness then posts a
+  normal repo-reader follow-up that must make a real GitHub Models call and
+  prove prompt provenance, selected skill names, and prompt-visible tool names.
 - A `gh`-driven backup-index E2E harness verifies the dedicated backup branch
   contains issue JSON plus a repo-scoped `index.json` and `README.md`.
 - A `gh`-driven backup-report E2E harness verifies `@gitclaw /backup`

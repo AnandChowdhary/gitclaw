@@ -138,7 +138,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `33`' \
   'aliases: `31`' \
-  'local_cli_helpers: `160`' \
+  'local_cli_helpers: `161`' \
   'run_mode: `read-only`' \
   "### Slash Commands" \
   '/agents' \
@@ -340,6 +340,7 @@ for expected in \
   'gitclaw tools provenance [query]' \
   'gitclaw tools toolsets' \
   'gitclaw tools toolsets risk' \
+  'gitclaw tools toolsets provenance' \
   'gitclaw tools toolsets info <name>' \
   'gitclaw tools run-plan <name>' \
   'gitclaw tools info <name>' \

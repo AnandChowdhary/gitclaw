@@ -1425,6 +1425,15 @@ publish only profile names, paths, normalized tool refs, resolved/unknown refs,
 config-gate state, hashes, risk codes, and line hashes; raw toolset bodies and
 instructions stay out of issue comments.
 
+2026-05-31 toolset-provenance follow-up: OpenClaw and Hermes both make tool
+selection inspectable, but GitClaw also needs repo-native review history for
+those reviewed toolset profiles. Add `@gitclaw /tools toolsets provenance` and
+`gitclaw tools toolsets provenance` as a body-free git-history audit over
+`.gitclaw/toolsets/*.yaml`: tracked/dirty state, commit IDs/dates, subject
+hashes, tool refs, gate counts, and risk codes only. It must not activate
+toolsets, run tools, print reviewed instructions, leak git subjects or author
+identities, or skip the live GitHub Models follow-up E2E.
+
 2026-05-30 migration-plan follow-up: OpenClaw's migration posture is
 preview-first, secret-redacted, and backup-backed, while Hermes' profiles keep
 agent state isolated by config, `.env`, `SOUL.md`, memories, sessions, skills,

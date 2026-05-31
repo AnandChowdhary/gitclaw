@@ -79,6 +79,9 @@ func RenderToolsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isToolProvenanceRequest(ev, cfg) {
 		return renderToolProvenanceReport(ev, repoContext, true)
 	}
+	if isToolsetsProvenanceRequest(ev, cfg) {
+		return renderToolsetsProvenanceReport(ev, cfg, true)
+	}
 	if isToolsetsRiskRequest(ev, cfg) {
 		return renderToolsetsRiskReport(ev, cfg, true)
 	}
@@ -288,6 +291,15 @@ func isToolsetsRiskRequest(ev Event, cfg Config) bool {
 	return len(fields) >= 3 && fields[0] == "/tools" &&
 		(strings.EqualFold(fields[1], "toolsets") || strings.EqualFold(fields[1], "toolset")) &&
 		(strings.EqualFold(fields[2], "risk") || strings.EqualFold(fields[2], "risk-audit"))
+}
+
+func isToolsetsProvenanceRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 3 && fields[0] == "/tools" &&
+		(strings.EqualFold(fields[1], "toolsets") || strings.EqualFold(fields[1], "toolset")) &&
+		(strings.EqualFold(fields[2], "provenance") ||
+			strings.EqualFold(fields[2], "history") ||
+			strings.EqualFold(fields[2], "timeline"))
 }
 
 func requestedToolsetInfoName(ev Event, cfg Config) string {
