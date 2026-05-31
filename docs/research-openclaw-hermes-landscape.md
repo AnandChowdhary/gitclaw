@@ -418,6 +418,16 @@ configurable max age, and report status, gate, timestamps, payload hash, and
 title hash only. Changes need a live fetched-branch freshness proof plus a
 normal GitHub Models repo-reader/search follow-up.
 
+2026-05-31 backup-continuity follow-up: OpenClaw's cron CLI now exposes run
+history, skipped/error state, and inspection commands for scheduled work, while
+Hermes stores session timestamps and source metadata for resume/search/export.
+GitClaw should expose the git-native backup equivalent as
+`gitclaw backup continuity`: verify the fetched `gitclaw-backups` tree, sort
+indexed backups chronologically, compute longest gaps and threshold violations,
+and report only timestamps, issue numbers, paths, event names, and title hashes.
+Changes need a live fetched-branch continuity proof plus a normal GitHub Models
+repo-reader/search follow-up.
+
 2026-05-30 backup-list follow-up: Hermes' session list and OpenClaw's backup
 inspection surfaces both point to a compact index-first view before export or
 restore. GitClaw should add `gitclaw backup list`: verify the fetched

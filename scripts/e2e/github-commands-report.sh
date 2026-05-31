@@ -149,7 +149,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `33`' \
   'aliases: `31`' \
-  'local_cli_helpers: `171`' \
+  'local_cli_helpers: `172`' \
   'run_mode: `read-only`' \
   'llm_e2e_required_after_commands_report_change: `true`' \
   "### Slash Commands" \
@@ -311,6 +311,7 @@ for expected in \
   'gitclaw backup info --issue <number>' \
   'gitclaw backup stats' \
   'gitclaw backup freshness' \
+  'gitclaw backup continuity' \
   'gitclaw backup search <query>' \
   'gitclaw backup export-jsonl' \
   'gitclaw backup restore-plan' \

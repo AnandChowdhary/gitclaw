@@ -401,6 +401,74 @@ func TestBuildBackupFreshnessReportsLatestAgeWithoutBodies(t *testing.T) {
 	}
 }
 
+func TestBuildBackupContinuityReportsGapsWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T12:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue: IssueBackupIssue{
+			Number: 7,
+			Title:  "@gitclaw continuity old CONTINUITY_OLD_TITLE",
+			Body:   "CONTINUITY_OLD_BODY",
+			Labels: []string{"gitclaw"},
+		},
+		Transcript: []TranscriptMessage{{Role: "user", Body: "CONTINUITY_OLD_TRANSCRIPT"}},
+		Comments:   []IssueBackupComment{{ID: 12, Body: "CONTINUITY_OLD_COMMENT"}},
+	})
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T13:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issue_comment",
+		Issue: IssueBackupIssue{
+			Number: 8,
+			Title:  "@gitclaw continuity middle CONTINUITY_MIDDLE_TITLE",
+			Body:   "CONTINUITY_MIDDLE_BODY",
+			Labels: []string{"gitclaw"},
+		},
+		Transcript: []TranscriptMessage{{Role: "user", Body: "CONTINUITY_MIDDLE_TRANSCRIPT"}},
+		Comments:   []IssueBackupComment{{ID: 13, Body: "CONTINUITY_MIDDLE_COMMENT"}},
+	})
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T17:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issue_comment",
+		Issue: IssueBackupIssue{
+			Number: 9,
+			Title:  "@gitclaw continuity latest CONTINUITY_LATEST_TITLE",
+			Body:   "CONTINUITY_LATEST_BODY",
+			Labels: []string{"gitclaw", "gitclaw:e2e"},
+		},
+		Transcript: []TranscriptMessage{{Role: "user", Body: "CONTINUITY_LATEST_TRANSCRIPT"}},
+		Comments:   []IssueBackupComment{{ID: 14, Body: "CONTINUITY_LATEST_COMMENT"}},
+	})
+	if _, err := WriteBackupIndex(root, "owner/repo", time.Date(2026, 5, 29, 18, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+
+	continuity, err := BuildBackupContinuity(root, "owner/repo", 2*time.Hour)
+	if err != nil {
+		t.Fatalf("BuildBackupContinuity returned error: %v", err)
+	}
+	if continuity.BackupContinuityStatus != "gap" || continuity.ContinuityGate != "fail" || continuity.PointsScanned != 3 || continuity.GapsOverMax != 1 || continuity.LongestGapSeconds != 14400 {
+		t.Fatalf("unexpected backup continuity: %#v", continuity)
+	}
+	report := RenderBackupContinuity(continuity)
+	for _, want := range []string{"GitClaw Backup Continuity Report", "repository: `owner/repo`", "backup_continuity_status: `gap`", "backup_verify_status: `ok`", "verification_failures: `0`", "backup_schema_version: `1`", "issue_count: `3`", "points_scanned: `3`", "timeline_order: `chronological`", "max_gap_seconds: `7200`", "gaps_over_max: `1`", "gaps_reported: `1`", "first_issue: `#7`", "latest_issue: `#9`", "total_span_seconds: `18000`", "longest_gap_seconds: `14400`", "longest_gap_from_issue: `#8`", "longest_gap_to_issue: `#9`", "continuity_gate: `fail`", "raw_bodies_included: `false`", "llm_e2e_required_after_backup_continuity_change: `true`", "### Gaps Over Threshold", "from_issue=#8 to_issue=#9", "gap_seconds=`14400`", "from_title_sha256_12=", "to_title_sha256_12="} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("continuity report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"CONTINUITY_OLD_TITLE", "CONTINUITY_OLD_BODY", "CONTINUITY_OLD_TRANSCRIPT", "CONTINUITY_OLD_COMMENT", "CONTINUITY_MIDDLE_TITLE", "CONTINUITY_MIDDLE_BODY", "CONTINUITY_MIDDLE_TRANSCRIPT", "CONTINUITY_MIDDLE_COMMENT", "CONTINUITY_LATEST_TITLE", "CONTINUITY_LATEST_BODY", "CONTINUITY_LATEST_TRANSCRIPT", "CONTINUITY_LATEST_COMMENT", "@gitclaw continuity"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("continuity report leaked body/title token %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestBuildBackupListListsNewestBackupsWithoutBodies(t *testing.T) {
 	root := t.TempDir()
 	writeBackupFixture(t, root, IssueBackup{

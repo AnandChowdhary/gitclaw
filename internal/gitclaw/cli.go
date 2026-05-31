@@ -2609,6 +2609,9 @@ func runBackup(ctx context.Context, args []string) error {
 	if len(args) > 0 && (args[0] == "timeline" || args[0] == "history") {
 		return runBackupTimeline(args[1:])
 	}
+	if len(args) > 0 && (args[0] == "continuity" || args[0] == "gaps" || args[0] == "gap") {
+		return runBackupContinuity(args[1:])
+	}
 	if len(args) > 0 && args[0] == "info" {
 		return runBackupInfo(args[1:])
 	}
@@ -3253,6 +3256,62 @@ func runBackupFreshness(args []string) error {
 	fmt.Println(RenderBackupFreshness(freshness))
 	if freshness.FreshnessGate != "pass" || freshness.BackupFreshnessStatus != "ok" {
 		return fmt.Errorf("backup freshness reported %s", freshness.BackupFreshnessStatus)
+	}
+	return nil
+}
+
+func runBackupContinuity(args []string) error {
+	root := filepath.Join(".gitclaw", "backups")
+	repo := os.Getenv("GITHUB_REPOSITORY")
+	maxGap := 168 * time.Hour
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--root":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--root requires a value")
+			}
+			root = args[i+1]
+			i++
+		case "--repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--repo requires a value")
+			}
+			repo = args[i+1]
+			i++
+		case "--max-gap-hours":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--max-gap-hours requires a value")
+			}
+			parsed, err := strconv.Atoi(args[i+1])
+			if err != nil || parsed <= 0 {
+				return fmt.Errorf("invalid --max-gap-hours: %q", args[i+1])
+			}
+			maxGap = time.Duration(parsed) * time.Hour
+			i++
+		case "--max-gap-seconds":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--max-gap-seconds requires a value")
+			}
+			parsed, err := strconv.Atoi(args[i+1])
+			if err != nil || parsed <= 0 {
+				return fmt.Errorf("invalid --max-gap-seconds: %q", args[i+1])
+			}
+			maxGap = time.Duration(parsed) * time.Second
+			i++
+		default:
+			return fmt.Errorf("unknown backup continuity argument %q", args[i])
+		}
+	}
+	if repo == "" {
+		return fmt.Errorf("missing --repo or GITHUB_REPOSITORY")
+	}
+	continuity, err := BuildBackupContinuity(root, repo, maxGap)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderBackupContinuity(continuity))
+	if continuity.ContinuityGate != "pass" || continuity.BackupContinuityStatus != "ok" {
+		return fmt.Errorf("backup continuity reported %s", continuity.BackupContinuityStatus)
 	}
 	return nil
 }

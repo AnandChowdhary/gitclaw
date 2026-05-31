@@ -820,7 +820,7 @@ GitHub issue/comment event
 - CLI entry point.
 - Subcommands: `preflight`, `handle`, `backup`, `backup coverage`,
   `backup search`, `backup provenance`, `backup timeline`, `backup info`,
-  `backup freshness`, `backup retention-plan`,
+  `backup freshness`, `backup continuity`, `backup retention-plan`,
   `session status`, `session coverage`,
   `heartbeat`, `heartbeat status`, `heartbeat risk`,
   `channel-ingest`, `channel-state`, `channel-gateway`, `channel-delivery`,
@@ -4784,6 +4784,42 @@ Freshness-surface changes carry
 fetched-branch freshness proof plus a normal GitHub Models repo-reader/search
 follow-up.
 
+## Backup Continuity Command
+
+GitClaw supports a local backup continuity command inspired by OpenClaw's
+scheduled-run history inspection and Hermes' timestamped session metadata:
+
+```bash
+gitclaw backup continuity --root .gitclaw/backups --repo <owner/repo> --max-gap-hours 168
+```
+
+The command reads a fetched `gitclaw-backups` tree, verifies it, sorts indexed
+backups chronologically, and prints a deterministic
+`GitClaw Backup Continuity Report` with:
+
+- backup continuity and verify status,
+- continuity gate result (`pass` when the longest chronological backup gap is
+  within the configured max gap),
+- schema version and index generation time,
+- indexed issue count, scanned point count, max-gap seconds, gap count over
+  threshold, and reported gap count,
+- first/latest issue numbers and timestamps,
+- total span seconds,
+- longest gap duration and its source/destination issue numbers and
+  timestamps,
+- gap cards with issue numbers, paths, timestamps, event names, gap seconds,
+  and title hashes for gaps that exceed the threshold.
+
+It never prints raw issue titles, issue bodies, comments, transcript messages,
+prompts, search queries, or tool outputs. The issue-side `/backup continuity`
+report is metadata-only because the backup branch is written after the current
+assistant turn; it records the concrete local command and a deferred
+`longest-backup-gap <= max-gap` gate for a later fetched-branch check.
+Continuity-surface changes carry
+`llm_e2e_required_after_backup_continuity_change: true` and require a
+fetched-branch continuity proof plus a normal GitHub Models repo-reader/search
+follow-up.
+
 ## Backup List Command
 
 GitClaw supports a local backup list command inspired by Hermes' `sessions
@@ -5720,7 +5756,30 @@ assert the expected comments/labels, and close the issue in cleanup.
      selected skill, prompt-visible `gitclaw.search_files`, usage telemetry,
      and the backup-freshness repository-search fixture token.
 
-40. **Backup list**
+40. **Backup continuity**
+
+   - create a real issue with `@gitclaw /backup continuity`,
+   - assert the issue-side report lists `requested_backup_command:
+     continuity`, the deferred execution marker, the concrete local continuity
+     command, and the deferred `longest-backup-gap <= max-gap` gate without
+     dumping body/title tokens,
+   - assert the issue-visible report includes
+     `llm_e2e_required_after_backup_continuity_change: true`,
+   - wait for the successful backup job,
+   - fetch the real `gitclaw-backups` branch,
+   - run `gitclaw backup continuity --root <fetched>/.gitclaw/backups --repo
+     <owner/repo> --max-gap-hours 168`,
+   - assert the report is marked `backup_continuity_status: ok`,
+     `backup_verify_status: ok`, and `continuity_gate: pass`,
+   - assert it lists scanned point count, longest gap seconds, first/latest
+     issue timestamps, gap-threshold metadata, and hash-only gap cards,
+   - assert it does not dump the issue body token or raw title,
+   - post a normal follow-up that requires repo-reader search and assert the
+     second assistant turn is GitHub Models-backed with prompt context,
+     selected skill, prompt-visible `gitclaw.search_files`, usage telemetry,
+     and the backup-continuity repository-search fixture token.
+
+41. **Backup list**
 
    - create a real issue with `@gitclaw /backup list`,
    - assert the issue-side report lists `requested_backup_command: list`,
@@ -5742,7 +5801,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      selected skill, prompt-visible `gitclaw.search_files`, usage telemetry,
      and the backup-list repository-search fixture token.
 
-41. **Backup timeline**
+42. **Backup timeline**
 
    - create a real issue with `@gitclaw /backup timeline`,
    - assert the issue-side report lists `requested_backup_command: timeline`,
@@ -5761,7 +5820,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      second assistant turn is GitHub Models-backed with prompt context,
      selected skill, and prompt-visible tool markers.
 
-42. **Backup info**
+43. **Backup info**
 
    - create a real issue with `@gitclaw /backup info`,
    - assert the issue-side report lists `requested_backup_command: info`, the
@@ -5784,7 +5843,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      selected skill, prompt-visible `gitclaw.search_files`, usage telemetry,
      and the backup-info repository-search fixture token.
 
-43. **Backup JSONL export**
+44. **Backup JSONL export**
 
    - create a real issue with `@gitclaw /backup export-jsonl`,
    - assert the issue-side report lists `requested_backup_command:
@@ -5802,7 +5861,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      provenance, selected skill metadata, prompt-visible `gitclaw.search_files`,
      usage telemetry, and no hidden issue/comment sentinel leakage.
 
-44. **Backup restore plan**
+45. **Backup restore plan**
 
    - create a real issue with `@gitclaw /backup restore-plan`,
    - assert the issue-side report lists `requested_backup_command:
@@ -5820,7 +5879,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      assert the next assistant turn used GitHub Models with prompt provenance,
      selected skills, prompt-visible tool names, and usage markers.
 
-45. **Backup drill**
+46. **Backup drill**
 
    - create a real issue with `@gitclaw /backup drill`,
    - assert the issue-side report lists `requested_backup_command: drill`, the
@@ -5837,7 +5896,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      assert the next assistant turn used GitHub Models with prompt provenance,
      selected skills, and prompt-visible tool names.
 
-46. **Backup retention plan**
+47. **Backup retention plan**
 
    - create a real issue with `@gitclaw /backup retention-plan`,
    - assert the issue-side report lists `requested_backup_command:
@@ -5857,7 +5916,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      assert the next assistant turn used GitHub Models with prompt provenance,
      selected skills, prompt-visible tool names, and usage markers.
 
-47. **Backup search**
+48. **Backup search**
 
    - create a real issue with `@gitclaw /backup search <query>`,
    - include a unique hidden token in the issue body,
@@ -5878,7 +5937,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      provenance, selected skill metadata, prompt-visible `gitclaw.search_files`,
      usage telemetry, and no hidden issue/comment sentinel leakage.
 
-48. **Proactive init generator**
+49. **Proactive init generator**
 
    - run `gitclaw proactive init` against a temporary repo root,
    - assert it writes the expected prompt file and scheduled workflow,
@@ -5894,7 +5953,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      token, includes model/prompt/usage telemetry, and does not leak hidden
      prompt/comment tokens.
 
-49. **Proactive info report**
+50. **Proactive info report**
 
    - create a real issue with `@gitclaw /proactive info repo-hygiene`,
    - include a unique hidden token in the issue body,
@@ -5905,7 +5964,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      candidate, trigger metadata, and enqueue command hashes/paths,
    - assert no issue body, prompt body, or workflow body content is leaked.
 
-50. **Proactive risk report with model follow-up**
+51. **Proactive risk report with model follow-up**
 
    - create a real issue with `@gitclaw /proactive risk`,
    - include a unique hidden token in the issue body,
@@ -6456,6 +6515,15 @@ examples/workflows/gitclaw.yml
   a normal model-backed follow-up that proves repo-reader search, prompt
   provenance, selected skill metadata, prompt-visible tool names, usage
   markers, and the bounded backup-freshness repository-search fixture token.
+- A `gh`-driven backup-continuity E2E harness verifies
+  `@gitclaw /backup continuity` records the deferred issue-side command
+  intent, then verifies the fetched `gitclaw-backups` branch can produce a
+  body-free chronological gap report with verify status, scanned point count,
+  longest gap seconds, threshold counts, hash-only gap cards, and
+  `continuity_gate: pass`. The same harness posts a normal model-backed
+  follow-up that proves repo-reader search, prompt provenance, selected skill
+  metadata, prompt-visible tool names, usage markers, and the bounded
+  backup-continuity repository-search fixture token.
 - A `gh`-driven backup-list E2E harness verifies
   `@gitclaw /backup list` records the deferred issue-side command intent, then
   verifies the fetched `gitclaw-backups` branch can produce a timestamp-sorted

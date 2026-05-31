@@ -182,6 +182,7 @@ gitclaw backup timeline
 gitclaw backup info --issue <number>
 gitclaw backup stats
 gitclaw backup freshness
+gitclaw backup continuity
 gitclaw backup search <query>
 gitclaw backup export-jsonl
 gitclaw backup restore-plan
@@ -220,6 +221,11 @@ tool coverage honest.
 `gitclaw backup retention-plan` is a dry-run cleanup plan for fetched backups.
 Its live harness now also proves a real GitHub Models repo-reader follow-up
 after the deterministic keep/prune metadata check.
+
+`gitclaw backup continuity` verifies chronological backup history in a fetched
+`gitclaw-backups` branch. It reports longest gaps, threshold violations, and
+hash-only gap cards without printing raw issue titles, bodies, comments, or
+transcripts.
 
 Operational surfaces:
 
@@ -354,6 +360,8 @@ scripts/e2e/github-backup-coverage.sh
 scripts/e2e/github-backup-provenance.sh
 scripts/e2e/github-backup-manifest.sh
 scripts/e2e/github-backup-stats.sh
+scripts/e2e/github-backup-freshness.sh
+scripts/e2e/github-backup-continuity.sh
 scripts/e2e/github-backup-list.sh
 scripts/e2e/github-backup-timeline.sh
 scripts/e2e/github-backup-info.sh

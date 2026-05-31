@@ -101,6 +101,9 @@
 - Backup freshness changes need two proofs: fetched-branch body-free
   latest-backup-age gate with verify status, plus a normal model/tool
   follow-up.
+- Backup continuity changes need two proofs: fetched-branch body-free
+  chronological gap/longest-gap gate with verify status, plus a normal
+  model/tool follow-up.
 - Backup list changes need two proofs: fetched-branch body-free indexed backup
   navigation, plus a normal model/tool follow-up.
 - Backup manifest changes need two proofs: fetched-branch body-free control and

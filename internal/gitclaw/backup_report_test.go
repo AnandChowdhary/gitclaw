@@ -263,6 +263,40 @@ func TestRenderBackupFreshnessIssueCommandRecordsDeferredIntentWithoutBodies(t *
 	}
 }
 
+func TestRenderBackupContinuityIssueCommandRecordsDeferredIntentWithoutBodies(t *testing.T) {
+	ev := Event{
+		Repo: "owner/repo",
+		Issue: Issue{
+			Number: 98,
+			Title:  "@gitclaw /backup continuity e2e",
+			Body:   "BACKUP_CONTINUITY_INTENT_SECRET",
+		},
+	}
+
+	report := RenderBackupReport(ev, DefaultConfig(), nil, nil)
+	for _, want := range []string{
+		"requested_backup_command: `continuity`",
+		"backup_command_status: `ok`",
+		"requested_local_command: `gitclaw backup continuity --root .gitclaw/backups --repo owner/repo --max-gap-hours 168`",
+		"run `gitclaw backup continuity --root .gitclaw/backups --repo owner/repo --max-gap-hours 168` after fetching `gitclaw-backups`",
+		"issue_side_execution: `deferred_to_post_turn_backup_branch`",
+		"backup_continuity_status: `deferred`",
+		"backup_continuity_execution: `local_fetched_backup_branch`",
+		"backup_continuity_gate: `longest-backup-gap <= max-gap`",
+		"raw_backup_payloads_scanned_issue_side: `false`",
+		"raw_bodies_included: `false`",
+		"llm_e2e_required_after_backup_continuity_change: `true`",
+		"`gitclaw backup continuity --root .gitclaw/backups --repo <owner/repo> --max-gap-hours 168`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("backup continuity report missing %q:\n%s", want, report)
+		}
+	}
+	if strings.Contains(report, "BACKUP_CONTINUITY_INTENT_SECRET") || strings.Contains(report, "@gitclaw /backup continuity e2e") {
+		t.Fatalf("backup continuity report leaked request text:\n%s", report)
+	}
+}
+
 func TestRenderBackupListIssueCommandRecordsDeferredIntentWithoutBodies(t *testing.T) {
 	ev := Event{
 		Repo: "owner/repo",

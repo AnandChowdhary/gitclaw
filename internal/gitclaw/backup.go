@@ -283,6 +283,53 @@ type BackupTimelinePoint struct {
 	IssueTitleSHA           string
 }
 
+type BackupContinuity struct {
+	Root                      string
+	Repo                      string
+	RepoDir                   string
+	IndexPath                 string
+	ReadmePath                string
+	SchemaVersion             int
+	IndexGeneratedAt          string
+	BackupContinuityStatus    string
+	BackupVerifyStatus        string
+	VerificationFailures      int
+	IssueCount                int
+	PointsScanned             int
+	TimelineOrder             string
+	MaxGapSeconds             int64
+	GapsOverMax               int
+	GapsReported              int
+	ContinuityGate            string
+	FirstIssueNumber          int
+	FirstGeneratedAt          string
+	LatestIssueNumber         int
+	LatestGeneratedAt         string
+	TotalSpanSeconds          int64
+	LongestGapSeconds         int64
+	LongestGapFromIssueNumber int
+	LongestGapToIssueNumber   int
+	LongestGapFromGeneratedAt string
+	LongestGapToGeneratedAt   string
+	RawBodiesIncluded         bool
+	LLME2ERequiredAfterChange bool
+	Gaps                      []BackupContinuityGap
+}
+
+type BackupContinuityGap struct {
+	FromIssueNumber   int
+	ToIssueNumber     int
+	FromPath          string
+	ToPath            string
+	FromGeneratedAt   string
+	ToGeneratedAt     string
+	FromEventName     string
+	ToEventName       string
+	GapSeconds        int64
+	FromIssueTitleSHA string
+	ToIssueTitleSHA   string
+}
+
 type BackupInfo struct {
 	Root                      string
 	Repo                      string
@@ -1066,6 +1113,116 @@ func BuildBackupTimeline(root, repo string, limit int) (BackupTimeline, error) {
 	return timeline, nil
 }
 
+func BuildBackupContinuity(root, repo string, maxGap time.Duration) (BackupContinuity, error) {
+	if maxGap <= 0 {
+		return BackupContinuity{}, fmt.Errorf("max gap must be positive")
+	}
+	if err := validateRepoName(repo); err != nil {
+		return BackupContinuity{}, err
+	}
+	repoDir, index, err := readBackupIndex(root, repo)
+	if err != nil {
+		return BackupContinuity{}, err
+	}
+	if root == "" {
+		root = filepath.Join(".gitclaw", "backups")
+	}
+	verify, err := VerifyBackupTree(root, repo)
+	if err != nil {
+		return BackupContinuity{}, err
+	}
+	continuity := BackupContinuity{
+		Root:                      filepath.ToSlash(root),
+		Repo:                      repo,
+		RepoDir:                   filepath.ToSlash(repoDir),
+		IndexPath:                 filepath.ToSlash(filepath.Join(repoDir, "index.json")),
+		ReadmePath:                filepath.ToSlash(filepath.Join(repoDir, "README.md")),
+		SchemaVersion:             index.Version,
+		IndexGeneratedAt:          index.GeneratedAt,
+		BackupContinuityStatus:    "ok",
+		BackupVerifyStatus:        "ok",
+		VerificationFailures:      len(verify.VerificationFailures),
+		IssueCount:                len(index.Issues),
+		PointsScanned:             len(index.Issues),
+		TimelineOrder:             "chronological",
+		MaxGapSeconds:             int64(maxGap.Seconds()),
+		ContinuityGate:            "pass",
+		RawBodiesIncluded:         false,
+		LLME2ERequiredAfterChange: true,
+	}
+	if !verify.OK() {
+		continuity.BackupContinuityStatus = "warn"
+		continuity.BackupVerifyStatus = "warn"
+		continuity.ContinuityGate = "fail"
+	}
+	if len(index.Issues) == 0 {
+		continuity.BackupContinuityStatus = "empty"
+		continuity.ContinuityGate = "fail"
+		return continuity, nil
+	}
+
+	type continuityCandidate struct {
+		issue       BackupIndexIssue
+		generatedAt time.Time
+	}
+	candidates := make([]continuityCandidate, 0, len(index.Issues))
+	for _, issue := range index.Issues {
+		generatedAt, err := time.Parse(time.RFC3339, issue.BackupGeneratedAt)
+		if err != nil {
+			return BackupContinuity{}, fmt.Errorf("parse backup timestamp for issue #%d: %w", issue.Number, err)
+		}
+		candidates = append(candidates, continuityCandidate{issue: issue, generatedAt: generatedAt})
+	}
+	sort.Slice(candidates, func(i, j int) bool {
+		if !candidates[i].generatedAt.Equal(candidates[j].generatedAt) {
+			return candidates[i].generatedAt.Before(candidates[j].generatedAt)
+		}
+		return candidates[i].issue.Number < candidates[j].issue.Number
+	})
+
+	first := candidates[0]
+	latest := candidates[len(candidates)-1]
+	continuity.FirstIssueNumber = first.issue.Number
+	continuity.FirstGeneratedAt = first.issue.BackupGeneratedAt
+	continuity.LatestIssueNumber = latest.issue.Number
+	continuity.LatestGeneratedAt = latest.issue.BackupGeneratedAt
+	continuity.TotalSpanSeconds = int64(latest.generatedAt.Sub(first.generatedAt).Seconds())
+	for i := 1; i < len(candidates); i++ {
+		previous := candidates[i-1]
+		current := candidates[i]
+		gapSeconds := int64(current.generatedAt.Sub(previous.generatedAt).Seconds())
+		if gapSeconds > continuity.LongestGapSeconds {
+			continuity.LongestGapSeconds = gapSeconds
+			continuity.LongestGapFromIssueNumber = previous.issue.Number
+			continuity.LongestGapToIssueNumber = current.issue.Number
+			continuity.LongestGapFromGeneratedAt = previous.issue.BackupGeneratedAt
+			continuity.LongestGapToGeneratedAt = current.issue.BackupGeneratedAt
+		}
+		if gapSeconds > continuity.MaxGapSeconds {
+			continuity.GapsOverMax++
+			continuity.Gaps = append(continuity.Gaps, BackupContinuityGap{
+				FromIssueNumber:   previous.issue.Number,
+				ToIssueNumber:     current.issue.Number,
+				FromPath:          filepath.ToSlash(previous.issue.Path),
+				ToPath:            filepath.ToSlash(current.issue.Path),
+				FromGeneratedAt:   previous.issue.BackupGeneratedAt,
+				ToGeneratedAt:     current.issue.BackupGeneratedAt,
+				FromEventName:     previous.issue.EventName,
+				ToEventName:       current.issue.EventName,
+				GapSeconds:        gapSeconds,
+				FromIssueTitleSHA: shortDocumentHash(previous.issue.Title),
+				ToIssueTitleSHA:   shortDocumentHash(current.issue.Title),
+			})
+		}
+	}
+	continuity.GapsReported = len(continuity.Gaps)
+	if continuity.GapsOverMax > 0 && continuity.BackupContinuityStatus == "ok" {
+		continuity.BackupContinuityStatus = "gap"
+		continuity.ContinuityGate = "fail"
+	}
+	return continuity, nil
+}
+
 func BuildBackupInfo(root, repo string, issueNumber int) (BackupInfo, error) {
 	if issueNumber <= 0 {
 		return BackupInfo{}, fmt.Errorf("missing positive issue number")
@@ -1687,6 +1844,56 @@ func RenderBackupTimeline(timeline BackupTimeline) string {
 	return strings.TrimSpace(b.String())
 }
 
+func RenderBackupContinuity(continuity BackupContinuity) string {
+	var b strings.Builder
+	b.WriteString("## GitClaw Backup Continuity Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	fmt.Fprintf(&b, "- repository: `%s`\n", continuity.Repo)
+	fmt.Fprintf(&b, "- backup_continuity_status: `%s`\n", continuity.BackupContinuityStatus)
+	fmt.Fprintf(&b, "- backup_verify_status: `%s`\n", continuity.BackupVerifyStatus)
+	fmt.Fprintf(&b, "- verification_failures: `%d`\n", continuity.VerificationFailures)
+	fmt.Fprintf(&b, "- backup_root: `%s`\n", continuity.Root)
+	fmt.Fprintf(&b, "- repo_backup_dir: `%s`\n", continuity.RepoDir)
+	fmt.Fprintf(&b, "- index_path: `%s`\n", continuity.IndexPath)
+	fmt.Fprintf(&b, "- readme_path: `%s`\n", continuity.ReadmePath)
+	fmt.Fprintf(&b, "- backup_schema_version: `%d`\n", continuity.SchemaVersion)
+	fmt.Fprintf(&b, "- index_generated_at: `%s`\n", continuity.IndexGeneratedAt)
+	fmt.Fprintf(&b, "- issue_count: `%d`\n", continuity.IssueCount)
+	fmt.Fprintf(&b, "- points_scanned: `%d`\n", continuity.PointsScanned)
+	fmt.Fprintf(&b, "- timeline_order: `%s`\n", continuity.TimelineOrder)
+	fmt.Fprintf(&b, "- max_gap_seconds: `%d`\n", continuity.MaxGapSeconds)
+	fmt.Fprintf(&b, "- gaps_over_max: `%d`\n", continuity.GapsOverMax)
+	fmt.Fprintf(&b, "- gaps_reported: `%d`\n", continuity.GapsReported)
+	if continuity.PointsScanned > 0 {
+		fmt.Fprintf(&b, "- first_issue: `#%d`\n", continuity.FirstIssueNumber)
+		fmt.Fprintf(&b, "- first_generated_at: `%s`\n", continuity.FirstGeneratedAt)
+		fmt.Fprintf(&b, "- latest_issue: `#%d`\n", continuity.LatestIssueNumber)
+		fmt.Fprintf(&b, "- latest_generated_at: `%s`\n", continuity.LatestGeneratedAt)
+		fmt.Fprintf(&b, "- total_span_seconds: `%d`\n", continuity.TotalSpanSeconds)
+	} else {
+		b.WriteString("- first_issue: `none`\n")
+		b.WriteString("- latest_issue: `none`\n")
+		b.WriteString("- total_span_seconds: `0`\n")
+	}
+	if continuity.LongestGapSeconds > 0 {
+		fmt.Fprintf(&b, "- longest_gap_seconds: `%d`\n", continuity.LongestGapSeconds)
+		fmt.Fprintf(&b, "- longest_gap_from_issue: `#%d`\n", continuity.LongestGapFromIssueNumber)
+		fmt.Fprintf(&b, "- longest_gap_to_issue: `#%d`\n", continuity.LongestGapToIssueNumber)
+		fmt.Fprintf(&b, "- longest_gap_from_generated_at: `%s`\n", continuity.LongestGapFromGeneratedAt)
+		fmt.Fprintf(&b, "- longest_gap_to_generated_at: `%s`\n", continuity.LongestGapToGeneratedAt)
+	} else {
+		b.WriteString("- longest_gap_seconds: `0`\n")
+	}
+	fmt.Fprintf(&b, "- continuity_gate: `%s`\n", continuity.ContinuityGate)
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", continuity.RawBodiesIncluded)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_backup_continuity_change: `%t`\n\n", continuity.LLME2ERequiredAfterChange)
+	b.WriteString("This report checks chronological continuity across the fetched `gitclaw-backups` branch. It reports only timestamps, issue numbers, paths, event names, gap durations, and hashes; raw issue titles, issue bodies, comments, transcript messages, prompts, and tool outputs are not included.\n\n")
+
+	b.WriteString("### Gaps Over Threshold\n")
+	writeBackupContinuityGaps(&b, continuity.Gaps)
+	return strings.TrimSpace(b.String())
+}
+
 func RenderBackupInfo(info BackupInfo) string {
 	var b strings.Builder
 	b.WriteString("## GitClaw Backup Info Report\n\n")
@@ -1907,6 +2114,38 @@ func writeBackupTimelinePoints(b *strings.Builder, points []BackupTimelinePoint)
 			point.AssistantTurns,
 			point.ErrorComments,
 			point.IssueTitleSHA,
+		)
+	}
+}
+
+func writeBackupContinuityGaps(b *strings.Builder, gaps []BackupContinuityGap) {
+	if len(gaps) == 0 {
+		b.WriteString("- none\n")
+		return
+	}
+	for _, gap := range gaps {
+		fromEvent := strings.TrimSpace(gap.FromEventName)
+		if fromEvent == "" {
+			fromEvent = "unknown"
+		}
+		toEvent := strings.TrimSpace(gap.ToEventName)
+		if toEvent == "" {
+			toEvent = "unknown"
+		}
+		fmt.Fprintf(
+			b,
+			"- from_issue=#%d to_issue=#%d from_path=`%s` to_path=`%s` from_generated_at=`%s` to_generated_at=`%s` from_event=`%s` to_event=`%s` gap_seconds=`%d` from_title_sha256_12=`%s` to_title_sha256_12=`%s`\n",
+			gap.FromIssueNumber,
+			gap.ToIssueNumber,
+			gap.FromPath,
+			gap.ToPath,
+			gap.FromGeneratedAt,
+			gap.ToGeneratedAt,
+			fromEvent,
+			toEvent,
+			gap.GapSeconds,
+			gap.FromIssueTitleSHA,
+			gap.ToIssueTitleSHA,
 		)
 	}
 }
