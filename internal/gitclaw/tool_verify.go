@@ -137,6 +137,7 @@ func renderToolVerifyReport(ev Event, repoContext RepoContext, includeIssue bool
 	fmt.Fprintf(&b, "- repository_mutation_allowed: `%t`\n", report.RepositoryMutationAllowed)
 	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", report.RawBodiesIncluded)
 	fmt.Fprintf(&b, "- raw_inputs_included: `%t`\n", report.RawInputsIncluded)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_tool_verify_change: `%t`\n", true)
 	writeToolsValidationSummary(&b, report.Validation)
 	writeToolRiskSummary(&b, report.Risk)
 	b.WriteByte('\n')

@@ -306,6 +306,9 @@ The live tools-report and tools-list harnesses apply the same rule to the tool
 surface: tool contracts, gate state, validation, and active-output hashes stay
 body-free, then a normal GitHub Models repo-reader/search follow-up proves real
 prompt-visible tool usage.
+The live tools-verify harness extends that gate to the stricter trust envelope:
+contract modes, registry/runtime-attestation non-goals, and input/output hashes
+stay body-free, then the model follow-up proves ordinary repo-reader search.
 
 ## Testing
 

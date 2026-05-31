@@ -111,6 +111,8 @@
   budget/hash/truncation metadata, plus a normal model/tool follow-up.
 - Tools report/list changes need two proofs: body-free
   contracts/gates/active-output hashes, plus a normal model/tool follow-up.
+- Tools verify changes need two proofs: body-free trust envelope and
+  input/output hashes, plus a normal model/tool follow-up.
 - Soul, memory, and profile files are high-authority git-reviewed context:
   edit/promote plans are dry-run, body-free, and review-first; planner changes
   need live model/tool E2E, and validation must stay prompt-fit and green.

@@ -1708,6 +1708,16 @@ repo-local `.gitclaw/TOOLS.md` provenance, known versus unknown active outputs,
 input/output hashes, and explicit external-registry/runtime-attestation
 non-goals without printing raw tool inputs or output bodies.
 
+2026-05-31 tools-verify E2E hardening: OpenClaw's current capabilities docs
+stress that only tools surviving active policy are sent to the model, and
+Hermes' current tool-search docs keep deferred catalogs scoped to the
+session's enabled/disabled toolsets rather than the whole process registry.
+GitClaw's `/tools verify` trust envelope should therefore prove two things
+after any change: the deterministic report remains body-free and hash-only,
+and a normal GitHub Models follow-up still selects `repo-reader`, exposes
+`gitclaw.search_files`, and recovers a fixture token through actual
+prompt-visible tool output.
+
 2026-05-30 tools-risk follow-up: OpenClaw's current plugin-permission and
 hook docs make `before_tool_call` gates, approval elicitations, and runtime
 tool interception explicit, while Hermes' tools reference exposes a large

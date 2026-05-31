@@ -106,6 +106,7 @@ func TestRenderToolVerifyReportShowsTrustEnvelopeWithoutBodies(t *testing.T) {
 		"repository_mutation_allowed: `false`",
 		"raw_bodies_included: `false`",
 		"raw_inputs_included: `false`",
+		"llm_e2e_required_after_tool_verify_change: `true`",
 		"tool_validation_status: `ok`",
 		"tool_validation_errors: `0`",
 		"tool_validation_warnings: `0`",

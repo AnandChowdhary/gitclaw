@@ -2425,6 +2425,11 @@ unknown outputs, `.gitclaw/TOOLS.md` provenance and hash metadata,
 active-output input/output hashes, and explicit external-registry and runtime
 permission verification status. Unlike the inventory report, it does not print
 raw tool input values such as file paths or search phrases.
+The report includes `llm_e2e_required_after_tool_verify_change=true`; changes
+to this trust envelope must be paired with a live GitHub Models follow-up that
+selects `repo-reader`, exposes `gitclaw.search_files`, and recovers a bounded
+repository-search fixture token without echoing trust-card, tool-input, or
+issue-body sentinels.
 
 When called as `@gitclaw /tools risk` or `@gitclaw /tools risk-audit`, the
 command posts a body-free tool-surface risk audit. It scans built-in
@@ -6670,7 +6675,10 @@ examples/workflows/gitclaw.yml
   `@gitclaw /tools verify` exposes the body-free deterministic tool trust
   envelope, contract modes, gate-state metadata, guidance provenance,
   active-output hashes, raw input suppression, and verification findings
-  without a model call.
+  without a model call. The same live issue then receives a normal
+  issue-comment follow-up that must make a GitHub Models call, select
+  `repo-reader`, expose `gitclaw.search_files`, recover the tools-verify
+  repository-search fixture token, and avoid hidden sentinel leakage.
 - A `gh`-driven tools-exposure E2E harness verifies
   `@gitclaw /tools exposure risk` exposes the body-free prompt-visible tool
   exposure boundary, static pre-model context strategy, structured-tool bridge
