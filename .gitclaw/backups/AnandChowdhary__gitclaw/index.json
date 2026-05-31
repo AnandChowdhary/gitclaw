@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T03:26:40Z",
+  "generated_at": "2026-05-31T03:40:30Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 308,
+  "count": 309,
   "issues": [
     {
       "number": 3,
@@ -3803,6 +3803,18 @@
       ],
       "comment_count": 5,
       "transcript_messages": 6
+    },
+    {
+      "number": 346,
+      "title": "@gitclaw session status seed e2e 20260531T033928Z",
+      "path": "issues/000346.json",
+      "backup_generated_at": "2026-05-31T03:40:30Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }
