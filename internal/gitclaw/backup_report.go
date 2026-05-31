@@ -67,6 +67,9 @@ func RenderBackupReport(ev Event, cfg Config, comments []Comment, transcript []T
 	if request.Name == "drill" {
 		writeBackupIssueDrillSummary(&b)
 	}
+	if request.Name == "restore-plan" {
+		writeBackupIssueRestorePlanSummary(&b)
+	}
 	b.WriteByte('\n')
 
 	b.WriteString("The backup job runs after a successful assistant turn and writes the raw transcript backup plus repo-scoped index to the dedicated backup branch.\n\n")
@@ -268,6 +271,17 @@ func writeBackupIssueDrillSummary(b *strings.Builder) {
 	b.WriteString("- backup_drill_gates: `verify, coverage, restore-plan`\n")
 	b.WriteString("- raw_backup_payloads_scanned_issue_side: `false`\n")
 	b.WriteString("- llm_e2e_required_after_backup_drill_change: `true`\n")
+}
+
+func writeBackupIssueRestorePlanSummary(b *strings.Builder) {
+	b.WriteString("- backup_restore_plan_status: `deferred`\n")
+	b.WriteString("- backup_restore_plan_execution: `local_fetched_backup_branch`\n")
+	b.WriteString("- backup_restore_plan_mode: `dry-run`\n")
+	b.WriteString("- backup_restore_plan_gates: `verify, body-free-output, explicit-future-approval`\n")
+	b.WriteString("- raw_backup_payloads_scanned_issue_side: `false`\n")
+	b.WriteString("- repository_mutation_allowed_issue_side: `false`\n")
+	b.WriteString("- github_api_calls_performed_issue_side: `false`\n")
+	b.WriteString("- llm_e2e_required_after_backup_restore_plan_change: `true`\n")
 }
 
 func parseBackupIssueNumber(value string) (int, bool) {

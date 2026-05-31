@@ -228,7 +228,7 @@ func TestPlanBackupRestoreRendersDryRunWithoutBodies(t *testing.T) {
 		t.Fatalf("unexpected restore plan: %#v", plan)
 	}
 	report := RenderBackupRestorePlan(plan)
-	for _, want := range []string{"GitClaw Backup Restore Plan", "restore_mode: `dry-run`", "source_repository: `owner/repo`", "target_repository: `owner/restored`", "issue: `#7`", "issue_backup_path: `issues/000007.json`", "backup_schema_version: `1`", "comments: `2`", "transcript_messages: `2`", "assistant_turn_comments: `1`", "error_comments: `1`", "raw_bodies_included: `false`", "comment_1_sha256_12:", "message_1_sha256_12:", "gitclaw:e2e"} {
+	for _, want := range []string{"GitClaw Backup Restore Plan", "restore_mode: `dry-run`", "source_repository: `owner/repo`", "target_repository: `owner/restored`", "issue: `#7`", "issue_backup_path: `issues/000007.json`", "backup_schema_version: `1`", "comments: `2`", "transcript_messages: `2`", "assistant_turn_comments: `1`", "error_comments: `1`", "raw_bodies_included: `false`", "llm_e2e_required_after_backup_restore_plan_change: `true`", "comment_1_sha256_12:", "message_1_sha256_12:", "gitclaw:e2e"} {
 		if !strings.Contains(report, want) {
 			t.Fatalf("restore plan report missing %q:\n%s", want, report)
 		}

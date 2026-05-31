@@ -155,6 +155,52 @@ func TestRenderBackupCoverageIssueCommandDefaultsToCurrentIssueWithTrailingProse
 	}
 }
 
+func TestRenderBackupRestorePlanIssueCommandRecordsDeferredIntentWithoutBodies(t *testing.T) {
+	ev := Event{
+		Repo: "owner/repo",
+		Issue: Issue{
+			Number: 97,
+			Title:  "@gitclaw /backup restore-plan e2e",
+			Body:   "BACKUP_RESTORE_PLAN_INTENT_SECRET",
+		},
+	}
+	comments := []Comment{{
+		ID:   24,
+		Body: "<!-- gitclaw:assistant-turn idempotency_key=old -->\nBACKUP_RESTORE_PLAN_COMMENT_SECRET",
+		User: User{Login: "github-actions[bot]", Type: "Bot"},
+	}}
+	transcript := []TranscriptMessage{
+		{Role: "user", Body: "BACKUP_RESTORE_PLAN_TRANSCRIPT_SECRET"},
+	}
+
+	report := RenderBackupReport(ev, DefaultConfig(), comments, transcript)
+	for _, want := range []string{
+		"GitClaw Backup Report",
+		"requested_backup_command: `restore-plan`",
+		"backup_command_status: `ok`",
+		"requested_local_command: `gitclaw backup restore-plan --root .gitclaw/backups --repo owner/repo --issue 97`",
+		"run `gitclaw backup restore-plan --root .gitclaw/backups --repo owner/repo --issue 97` after fetching `gitclaw-backups`",
+		"backup_restore_plan_status: `deferred`",
+		"backup_restore_plan_execution: `local_fetched_backup_branch`",
+		"backup_restore_plan_mode: `dry-run`",
+		"backup_restore_plan_gates: `verify, body-free-output, explicit-future-approval`",
+		"raw_backup_payloads_scanned_issue_side: `false`",
+		"repository_mutation_allowed_issue_side: `false`",
+		"github_api_calls_performed_issue_side: `false`",
+		"llm_e2e_required_after_backup_restore_plan_change: `true`",
+		"raw_bodies_included: `false`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("backup restore-plan report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"BACKUP_RESTORE_PLAN_INTENT_SECRET", "BACKUP_RESTORE_PLAN_COMMENT_SECRET", "BACKUP_RESTORE_PLAN_TRANSCRIPT_SECRET", "@gitclaw /backup restore-plan e2e"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("backup restore-plan report leaked %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestRenderBackupTimelineIssueCommandRecordsDeferredIntentWithoutBodies(t *testing.T) {
 	ev := Event{
 		Repo: "owner/repo",

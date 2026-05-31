@@ -91,25 +91,27 @@ type BackupJSONLRecord struct {
 }
 
 type BackupRestorePlan struct {
-	Root                  string
-	Repo                  string
-	TargetRepo            string
-	IssuePath             string
-	IssueNumber           int
-	BackupGeneratedAt     string
-	EventName             string
-	SchemaVersion         int
-	Labels                []string
-	Comments              int
-	TranscriptMessages    int
-	AssistantTurns        int
-	ErrorComments         int
-	UserMessages          int
-	AssistantMessages     int
-	IssueTitleSHA         string
-	IssueBodySHA          string
-	CommentBodySHAs       []string
-	TranscriptMessageSHAs []string
+	Root                      string
+	Repo                      string
+	TargetRepo                string
+	IssuePath                 string
+	IssueNumber               int
+	BackupGeneratedAt         string
+	EventName                 string
+	SchemaVersion             int
+	Labels                    []string
+	Comments                  int
+	TranscriptMessages        int
+	AssistantTurns            int
+	ErrorComments             int
+	UserMessages              int
+	AssistantMessages         int
+	IssueTitleSHA             string
+	IssueBodySHA              string
+	CommentBodySHAs           []string
+	TranscriptMessageSHAs     []string
+	RawBodiesIncluded         bool
+	LLME2ERequiredAfterChange bool
 }
 
 type BackupManifest struct {
@@ -1292,7 +1294,8 @@ func RenderBackupRestorePlan(plan BackupRestorePlan) string {
 	fmt.Fprintf(&b, "- error_comments: `%d`\n", plan.ErrorComments)
 	fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", plan.IssueTitleSHA)
 	fmt.Fprintf(&b, "- issue_body_sha256_12: `%s`\n", plan.IssueBodySHA)
-	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n\n", false)
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", plan.RawBodiesIncluded)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_backup_restore_plan_change: `%t`\n\n", plan.LLME2ERequiredAfterChange)
 	b.WriteString("This is a non-mutating recovery plan. It reads the local backup tree only; it does not create issues, post comments, apply labels, or call GitHub APIs.\n\n")
 	b.WriteString("### Planned Restore Actions\n")
 	b.WriteString("- create one new issue in the target repository using the backed-up title and body\n")
@@ -1847,20 +1850,22 @@ func readIndexedBackup(repoDir, repo string, issue BackupIndexIssue) (IssueBacku
 
 func buildBackupRestorePlan(root, repo, targetRepo string, issue BackupIndexIssue, backup IssueBackup) BackupRestorePlan {
 	plan := BackupRestorePlan{
-		Root:               root,
-		Repo:               repo,
-		TargetRepo:         targetRepo,
-		IssuePath:          issue.Path,
-		IssueNumber:        backup.Issue.Number,
-		BackupGeneratedAt:  backup.GeneratedAt,
-		EventName:          backup.EventName,
-		SchemaVersion:      backup.Version,
-		Labels:             append([]string(nil), backup.Issue.Labels...),
-		Comments:           len(backup.Comments),
-		TranscriptMessages: len(backup.Transcript),
-		IssueTitleSHA:      shortDocumentHash(backup.Issue.Title),
-		IssueBodySHA:       shortDocumentHash(backup.Issue.Body),
-		CommentBodySHAs:    make([]string, 0, len(backup.Comments)),
+		Root:                      root,
+		Repo:                      repo,
+		TargetRepo:                targetRepo,
+		IssuePath:                 issue.Path,
+		IssueNumber:               backup.Issue.Number,
+		BackupGeneratedAt:         backup.GeneratedAt,
+		EventName:                 backup.EventName,
+		SchemaVersion:             backup.Version,
+		Labels:                    append([]string(nil), backup.Issue.Labels...),
+		Comments:                  len(backup.Comments),
+		TranscriptMessages:        len(backup.Transcript),
+		IssueTitleSHA:             shortDocumentHash(backup.Issue.Title),
+		IssueBodySHA:              shortDocumentHash(backup.Issue.Body),
+		CommentBodySHAs:           make([]string, 0, len(backup.Comments)),
+		RawBodiesIncluded:         false,
+		LLME2ERequiredAfterChange: true,
 	}
 	for _, comment := range backup.Comments {
 		plan.CommentBodySHAs = append(plan.CommentBodySHAs, shortDocumentHash(comment.Body))

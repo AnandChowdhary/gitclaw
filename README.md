@@ -186,6 +186,11 @@ the index, README, and issue payload files are tracked, clean, and backed by
 git commits without printing raw backup bodies, commit subjects, or author
 identities.
 
+`gitclaw backup restore-plan` is a dry-run recovery plan for a fetched backup
+payload. Its live harness pairs deterministic restore metadata checks with a
+real GitHub Models repo-reader follow-up so backup changes keep normal LLM and
+tool coverage honest.
+
 Operational surfaces:
 
 ```bash

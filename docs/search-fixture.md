@@ -28,3 +28,4 @@ model usage unique search fixture phrase => GITCLAW_MODEL_USAGE_CONTEXT_V1
 model cost unique search fixture phrase => GITCLAW_MODEL_COST_CONTEXT_V1
 tool approval unique search fixture phrase => GITCLAW_TOOL_APPROVAL_CONTEXT_V1
 approval provenance unique search fixture phrase => GITCLAW_APPROVAL_PROVENANCE_CONTEXT_V1
+backup restore plan unique search fixture phrase => GITCLAW_BACKUP_RESTORE_PLAN_CONTEXT_V1

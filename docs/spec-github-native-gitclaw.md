@@ -4793,6 +4793,10 @@ file from a fetched backup tree, then prints a deterministic
 - label, comment, transcript, assistant-turn, and error-comment counts,
 - comment body hashes and transcript body hashes,
 - planned restore actions for a future approved mutating restore command.
+- `llm_e2e_required_after_backup_restore_plan_change=true`, so restore-plan
+  changes must be paired with a live GitHub Models follow-up that proves prompt
+  context hashing, selected skills, prompt-visible repo-reader search, and
+  usage markers.
 
 It does not call GitHub APIs, create issues, post comments, apply labels, or
 print raw issue/comment/transcript bodies. A future mutating restore command
@@ -5530,7 +5534,10 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the report is marked `restore_mode: dry-run`,
    - assert it lists backup path, schema version, label/comment/transcript
      counts, assistant-turn/error counts, and body hashes,
-   - assert it does not dump the issue body token or raw transcript bodies.
+   - assert it does not dump the issue body token or raw transcript bodies,
+   - post a normal follow-up comment that requires repo-reader search and
+     assert the next assistant turn used GitHub Models with prompt provenance,
+     selected skills, prompt-visible tool names, and usage markers.
 
 44. **Backup drill**
 
@@ -6069,7 +6076,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven backup-restore-plan E2E harness verifies
   `@gitclaw /backup restore-plan` records the deferred issue-side command
   intent, then verifies the fetched `gitclaw-backups` branch can produce a
-  dry-run restore plan for one real issue without dumping raw bodies.
+  dry-run restore plan for one real issue without dumping raw bodies. The same
+  harness posts a normal model-backed follow-up that proves repo-reader search,
+  prompt provenance, selected skill metadata, prompt-visible tool names, and
+  normalized usage markers.
 - A `gh`-driven backup-retention-plan E2E harness verifies
   `@gitclaw /backup retention-plan` records the deferred issue-side command
   intent, then verifies the fetched `gitclaw-backups` branch can produce a
@@ -6580,6 +6590,7 @@ examples/workflows/gitclaw.yml
 - OpenClaw prompt caching docs: https://docs.openclaw.ai/reference/prompt-caching
 - OpenClaw token use and costs docs: https://docs.openclaw.ai/reference/token-use
 - OpenClaw backup docs: https://docs.openclaw.ai/cli/backup
+- OpenClaw transcripts CLI docs: https://docs.openclaw.ai/cli/transcripts
 - OpenClaw exec approvals docs: https://docs.openclaw.ai/tools/exec-approvals
 - OpenClaw sandboxing docs: https://docs.openclaw.ai/gateway/sandboxing
 - Hermes tools and toolsets docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/tools/

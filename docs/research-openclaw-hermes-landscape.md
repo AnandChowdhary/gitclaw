@@ -356,6 +356,17 @@ prints a dry-run restore plan with counts and hashes, but makes no GitHub API
 calls and does not dump raw issue/comment bodies. A future mutating restore can
 require explicit approval and compare the restored issue against this plan.
 
+2026-05-31 backup-restore-plan E2E follow-up: OpenClaw's current backup docs
+still frame verification as an explicit operator action over a manifest-backed
+archive, OpenClaw's transcript CLI frames stored transcripts as read-only
+inspection artifacts, and Hermes' session docs frame saved conversations as
+resume/search/export state rather than context that must be copied into every
+turn. GitClaw's restore-plan surface should therefore advertise a mandatory
+live LLM/tool follow-up: the deterministic restore plan proves backup recovery
+metadata, then a normal GitHub Models issue-comment turn proves the assistant
+can still use repo-reader search with prompt provenance, selected-skill
+metadata, and usage markers after the backup inspection.
+
 2026-05-29 backup-retention follow-up: OpenClaw's backup/restore commands keep
 state changes behind explicit previews, while Hermes' session lifecycle docs
 make cleanup/archival pressure visible through exported session artifacts.
@@ -2476,6 +2487,7 @@ names, commit subjects, author identities, or installer output.
 - OpenClaw configure docs: https://docs.openclaw.ai/cli/configure
 - OpenClaw doctor docs: https://docs.openclaw.ai/doctor
 - OpenClaw backup docs: https://docs.openclaw.ai/cli/backup
+- OpenClaw transcripts CLI docs: https://docs.openclaw.ai/cli/transcripts
 - OpenClaw creating skills docs: https://docs.openclaw.ai/tools/creating-skills
 - OpenClaw skill format docs: https://docs.openclaw.ai/clawhub/skill-format
 - OpenClaw migration guide: https://docs.openclaw.ai/install/migrating
