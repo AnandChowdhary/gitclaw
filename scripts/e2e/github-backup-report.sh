@@ -38,8 +38,10 @@ token="NOECHO_BACKUP_REPORT_${timestamp}"
 followup_hidden_token="NOECHO_BACKUP_REPORT_FOLLOWUP_${timestamp}"
 expected_token="GITCLAW_BACKUP_REPORT_CONTEXT_V1"
 search_phrase="backup report unique search fixture phrase"
-title="@gitclaw /backup e2e ${timestamp}"
-body="Live backup-report E2E.
+title="GitClaw backup-report e2e ${timestamp}"
+body="@gitclaw /backup
+
+Live backup-report E2E.
 
 Hidden backup body token: ${token}
 This should produce a deterministic backup report, then the backup job should update the backup branch without leaking this token."
