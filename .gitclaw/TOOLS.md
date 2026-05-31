@@ -15,6 +15,11 @@ Reviewed toolsets live in `.gitclaw/toolsets/*.yaml`. They are planning and
 audit profiles only in v1; they do not activate tools, grant permissions, or
 execute provider APIs.
 
+Use `gitclaw tools defer-plan` or `@gitclaw /tools defer-plan` to inspect the
+advisory progressive-disclosure plan for built-in tools, repo-reviewed
+toolsets, and MCP allowlist entries. The report must stay body-free and must
+not enable a Hermes-style bridge at runtime in v1.
+
 Use `gitclaw tools boundary` or `@gitclaw /tools boundary` to audit the
 prompt-side boundary around active tool outputs. The report must stay
 body-free: names, modes, hashes, risk codes, and gate results only.

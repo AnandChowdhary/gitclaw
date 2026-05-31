@@ -794,8 +794,9 @@ GitHub issue/comment event
   `soul provenance`, `soul verify`, `soul risk`, `soul validate`, `soul list`,
   `soul edit-plan`, `soul info`, `soul search`,
   `tools verify`, `tools risk`, `tools validate`, `tools list`,
-  `tools exposure`, `tools exposure risk`, `tools boundary`, `tools provenance`,
-  `tools run-plan`, `tools info`, `tools search`, `doctor`,
+  `tools exposure`, `tools exposure risk`, `tools defer-plan`,
+  `tools boundary`, `tools provenance`, `tools run-plan`, `tools info`,
+  `tools search`, `doctor`,
   `policy verify`, `policy risk`,
   `secrets audit`, `secrets scan`, `secrets list`,
   `commands`, `version`.
@@ -2148,6 +2149,7 @@ gitclaw tools validate
 gitclaw tools list
 gitclaw tools exposure
 gitclaw tools exposure risk
+gitclaw tools defer-plan
 gitclaw tools boundary [query]
 gitclaw tools provenance [query]
 gitclaw tools toolsets
@@ -2175,6 +2177,7 @@ OpenClaw's tool policy visibility and Hermes' toolset inventory:
 @gitclaw /tools validate
 @gitclaw /tools exposure
 @gitclaw /tools exposure risk
+@gitclaw /tools defer-plan
 @gitclaw /tools boundary
 @gitclaw /tools provenance
 @gitclaw /tools toolsets
@@ -2229,6 +2232,23 @@ static/bridge boundary. They never print raw tool schemas, tool inputs, tool
 outputs, issue bodies, comments, prompts, credentials, or secret values. The
 report includes `llm_e2e_required_after_tool_exposure_change=true`; every
 change to this surface must ship with a live GitHub Models follow-up E2E.
+
+`@gitclaw /tools defer-plan` and `gitclaw tools defer-plan` provide a
+body-free advisory plan for Hermes-style progressive disclosure. The report
+combines built-in deterministic tool contracts, repo-reviewed toolset profiles,
+and MCP allowlist entries, then estimates whether a future bridge should keep
+entries direct or defer them behind `tool_search` / `tool_describe` /
+`tool_call`-style controls. GitClaw v1 keeps this as analysis only:
+`model_callable_structured_tools=false`,
+`tool_search_bridge_runtime_enabled=false`,
+`mcp_server_launch_allowed=false`, and
+`toolset_activation_supported=false`. The report emits catalog counts,
+thresholds, activation decision, card metadata, risk codes, and hashes; it
+never prints raw tool schemas, toolset instructions, MCP spec bodies, command
+args, issue/comment bodies, prompts, credentials, or tool outputs. The report
+includes `llm_e2e_required_after_tool_defer_plan_change=true`; every change to
+this surface must pair the deterministic issue-command E2E with a live GitHub
+Models follow-up that proves prompt-visible tools still reach inference.
 
 `@gitclaw /tools boundary` and `gitclaw tools boundary [query]` focus on the
 prompt-side delimiter between deterministic tool output and model instructions.
@@ -6126,6 +6146,14 @@ examples/workflows/gitclaw.yml
   normal follow-up comment that requires repo-reader search so GitHub Models
   performs a real LLM call with prompt context, selected skill, and
   prompt-visible tool provenance.
+- A `gh`-driven tools-defer-plan E2E harness verifies
+  `@gitclaw /tools defer-plan` exposes the body-free advisory
+  progressive-disclosure plan across built-in tools, repo-reviewed toolsets,
+  and MCP allowlists, including threshold metadata, direct/deferred entry
+  counts, bridge non-goals, raw schema/body suppression, and the live-LLM E2E
+  requirement. The same harness then posts a normal follow-up comment that
+  requires repo-reader search so GitHub Models performs a real LLM call with
+  prompt context, selected skill, and prompt-visible tool provenance.
 - A `gh`-driven tools-boundary E2E harness verifies
   `@gitclaw /tools boundary` exposes the body-free prompt-side tool-output
   boundary, delimiter strategy, prompt-injection scan, hash-only raw
@@ -6339,6 +6367,7 @@ examples/workflows/gitclaw.yml
 - Hermes Kanban docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban
 - Hermes subagent delegation docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation
 - Hermes toolsets reference: https://hermes-agent.nousresearch.com/docs/reference/toolsets-reference
+- Hermes Tool Search docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-search
 - Hermes MCP docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp
 - Slack Socket Mode: https://api.slack.com/apis/connections/socket
 - Slack Events API: https://docs.slack.dev/apis/events-api/

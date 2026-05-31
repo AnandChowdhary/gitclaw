@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "doctor-report-e2e: $*" >&2
+  echo "tools-defer-plan-report-e2e: $*" >&2
 }
 
 die() {
@@ -33,15 +33,43 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_DOCTOR_REPORT_E2E_${timestamp}"
-followup_hidden_token="GITCLAW_DOCTOR_REPORT_FOLLOWUP_E2E_${timestamp}"
-expected_token="GITCLAW_SEARCH_CONTEXT_V1"
-search_phrase="bounded repository search fixture phrase"
-title="@gitclaw /doctor e2e ${timestamp}"
-body="Live doctor-report E2E.
+hidden_token="GITCLAW_TOOLS_DEFER_PLAN_HIDDEN_${timestamp}"
+followup_hidden_token="GITCLAW_TOOLS_DEFER_PLAN_FOLLOWUP_HIDDEN_${timestamp}"
+expected_token="GITCLAW_DEFER_PLAN_CONTEXT_V1"
+search_phrase="defer plan unique search fixture phrase"
+title="@gitclaw /tools defer-plan e2e ${timestamp}"
+body="@gitclaw /tools defer-plan
 
-Hidden doctor body token: ${token}
-This should produce a deterministic health report without a model call."
+Live tools defer-plan E2E.
+Do not include this hidden issue token: ${hidden_token}"
+
+local_report="$(go run ./cmd/gitclaw tools defer-plan)"
+for expected in \
+  "GitClaw Tool Defer Plan Report" \
+  'tool_defer_plan_status: `ok`' \
+  'defer_mode: `auto`' \
+  'threshold_pct: `10`' \
+  'activation_decision: `direct`' \
+  'activation_reason: `below_threshold`' \
+  'direct_core_entries: `5`' \
+  'enabled_core_entries: `5`' \
+  'deferrable_candidate_entries: `4`' \
+  'toolset_catalog_entries: `1`' \
+  'mcp_catalog_entries: `3`' \
+  'planned_direct_entries: `9`' \
+  'planned_deferred_entries: `0`' \
+  'candidate_bridge_tools: `3`' \
+  'planned_bridge_tools: `0`' \
+  'model_callable_structured_tools: `false`' \
+  'tool_search_bridge_runtime_enabled: `false`' \
+  'mcp_server_launch_allowed: `false`' \
+  'toolset_activation_supported: `false`' \
+  'raw_tool_schemas_included: `false`' \
+  'raw_toolset_instructions_included: `false`' \
+  'raw_mcp_bodies_included: `false`' \
+  'llm_e2e_required_after_tool_defer_plan_change: `true`'; do
+  grep -Fq -- "$expected" <<<"$local_report" || die "local tools defer-plan report missing ${expected}"
+done
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -55,7 +83,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "doctor-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "tools-defer-plan-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -92,11 +120,11 @@ wait_for_run() {
   return 1
 }
 
-assistant_comments() {
+assistant_count() {
   gh issue view "$issue_number" \
     --repo "$repo" \
     --json comments \
-    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | join("\n---GITCLAW-COMMENT---\n")'
+    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length'
 }
 
 latest_assistant_comment() {
@@ -104,13 +132,6 @@ latest_assistant_comment() {
     --repo "$repo" \
     --json comments \
     --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | .[-1] // ""'
-}
-
-assistant_count() {
-  gh issue view "$issue_number" \
-    --repo "$repo" \
-    --json comments \
-    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length'
 }
 
 error_count() {
@@ -159,87 +180,62 @@ wait_for_done_status() {
   return 1
 }
 
-run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one doctor report comment"
-comments="$(assistant_comments)"
+defer_plan_run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
+wait_for_assistant_count 1 || die "expected one tools defer-plan report comment"
+defer_plan_comment="$(latest_assistant_comment)"
 
 for expected in \
-  'model="gitclaw/doctor"' \
-  "GitClaw Doctor Report" \
+  'model="gitclaw/tools"' \
+  "GitClaw Tool Defer Plan Report" \
   "Generated without a model call" \
-  'health_status: `ok`' \
-  'config_source: `defaults+repo+environment`' \
-  'config_valid: `true`' \
-  'config_file_present: `true`' \
-  'model: `openai/gpt-5-nano`' \
-  'run_mode: `read-only`' \
-  'workflows_present: `7`' \
-  'context_files_present: `6`' \
-  'memory_notes: `1`' \
-  'skill_files: `1`' \
-  'e2e_scripts: `165`' \
-  'e2e_live_issue_scripts: `158`' \
-  'e2e_cleanup_scripts: `165`' \
-  'e2e_model_coverage_scripts: `76`' \
-  'e2e_model_followup_scripts: `62`' \
-  'e2e_session_coverage_scripts: `2`' \
-  'e2e_backup_gate_scripts: `24`' \
-  'e2e_workflow_dispatch_scripts: `21`' \
-  'enabled_skills: `1`' \
-  'disabled_skills: `0`' \
-  'allowlist_blocked_skills: `0`' \
-  'enabled_tools: `5`' \
-  'disabled_tools: `0`' \
-  'allowlist_blocked_tools: `0`' \
-  'proactive_prompt_files: `1`' \
-  'managed_labels: `9`' \
-  'validation_errors: `0`' \
-  'validation_warnings: `0`' \
-  'skill_validation_status: `ok`' \
-  'skill_validation_errors: `0`' \
-  'skill_validation_warnings: `0`' \
-  'soul_validation_status: `ok`' \
-  'soul_validation_errors: `0`' \
-  'soul_validation_warnings: `0`' \
-  'memory_validation_status: `ok`' \
-  'memory_validation_errors: `0`' \
-  'memory_validation_warnings: `0`' \
-  'tool_validation_status: `ok`' \
-  'tool_validation_errors: `0`' \
-  'tool_validation_warnings: `0`' \
-  '`config_validation`: `ok`' \
-  '`workflow_set`: `ok`' \
-  '`identity_context`: `ok`' \
-  '`local_skills`: `ok`' \
-  '`e2e_harnesses`: `ok`' \
-  '`skill_validation`: `ok`' \
-  '`soul_validation`: `ok`' \
-  '`memory_validation`: `ok`' \
-  '`tool_validation`: `ok`' \
-  '.gitclaw/config.yml' \
-  '.github/workflows/gitclaw.yml' \
-  '.gitclaw/SOUL.md' \
-  '.gitclaw/SKILLS/repo-reader/SKILL.md' \
-  '.gitclaw/proactive/repo-hygiene.md' \
-  "### E2E Harnesses" \
-  'e2e_coverage_status=`ok`' \
-  'path=`scripts/e2e/github-doctor-report.sh`' \
-  'model_coverage=`true`' \
-  'model_followup=`true`' \
-  'sha256_12='; do
-  grep -Fq "$expected" <<<"$comments" || die "doctor report missing ${expected}"
+  'tool_defer_plan_status: `ok`' \
+  'defer_mode: `auto`' \
+  'activation_decision: `direct`' \
+  'activation_reason: `below_threshold`' \
+  'direct_core_entries: `5`' \
+  'enabled_core_entries: `5`' \
+  'deferrable_candidate_entries: `4`' \
+  'toolset_catalog_entries: `1`' \
+  'mcp_catalog_entries: `3`' \
+  'planned_direct_entries: `9`' \
+  'planned_deferred_entries: `0`' \
+  'candidate_bridge_tools: `3`' \
+  'planned_bridge_tools: `0`' \
+  'model_callable_structured_tools: `false`' \
+  'tool_search_bridge_runtime_enabled: `false`' \
+  'dynamic_mcp_discovery_allowed: `false`' \
+  'mcp_server_launch_allowed: `false`' \
+  'toolset_activation_supported: `false`' \
+  'raw_tool_schemas_included: `false`' \
+  'raw_toolset_bodies_included: `false`' \
+  'raw_toolset_instructions_included: `false`' \
+  'raw_mcp_bodies_included: `false`' \
+  'raw_mcp_command_args_included: `false`' \
+  'raw_issue_bodies_included: `false`' \
+  'raw_comment_bodies_included: `false`' \
+  'raw_prompt_bodies_included: `false`' \
+  'llm_e2e_required_after_tool_defer_plan_change: `true`' \
+  'kind=`builtin-contract` name=`gitclaw.search_files`' \
+  'kind=`toolset-profile` name=`repo-read`' \
+  'kind=`mcp-tool` name=`github-read/issues.read`' \
+  'code=`hermes_progressive_disclosure_threshold_evaluated`' \
+  'code=`structured_model_tools_disabled`' \
+  'code=`mcp_runtime_disabled`'; do
+  grep -Fq -- "$expected" <<<"$defer_plan_comment" || die "tools defer-plan report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "doctor report leaked issue body token"
-fi
+for leaked in "$hidden_token" "Live tools defer-plan E2E" "$expected_token" "$search_phrase" "Prefer bounded repository search" "contents.write" "actions.write"; do
+  if grep -Fq "$leaked" <<<"$defer_plan_comment"; then
+    die "tools defer-plan report leaked ${leaked}"
+  fi
+done
 
 comment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \
   --repo "$repo" \
   --body "Use the repo-reader skill and search the repository for \`${search_phrase}\`.
 
-Reply with only the exact GITCLAW_SEARCH token from the matching repository search result line.
+Reply with only the exact GITCLAW_DEFER_PLAN token from the matching repository search result line.
 Do not include this hidden follow-up token: ${followup_hidden_token}
 Keep the answer under 30 words." >/dev/null
 
@@ -256,13 +252,13 @@ grep -Fq 'skills="repo-reader"' <<<"$model_comment" || die "assistant marker mis
 grep -Fq 'tools="' <<<"$model_comment" || die "assistant marker missing prompt-visible tools"
 grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant marker did not prove search_files was prompt-visible"
 
-for leaked in "$token" "$followup_hidden_token"; do
+for leaked in "$hidden_token" "$followup_hidden_token"; do
   if grep -Fq "$leaked" <<<"$model_comment"; then
     die "model follow-up leaked ${leaked}"
   fi
 done
 
 wait_for_done_status || die "expected gitclaw:done without running/error"
-url="$(jq -r '.url' <<<"$run_json")"
+defer_plan_url="$(jq -r '.url' <<<"$defer_plan_run_json")"
 model_url="$(jq -r '.url' <<<"$model_run_json")"
-log "passed for issue #${issue_number}: ${url} (model follow-up: ${model_url})"
+log "passed for issue #${issue_number}: ${defer_plan_url} (model follow-up: ${model_url})"

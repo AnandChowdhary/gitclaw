@@ -741,6 +741,19 @@ codes, and no raw commands, args, URLs, env values, credential values, git
 subjects, author identities, server launch, MCP connection, dynamic discovery,
 or model-visible MCP tools.
 
+2026-05-31 tool-defer-plan follow-up: Hermes' Tool Search docs describe an
+auto progressive-disclosure layer that replaces large deferrable MCP/plugin
+tool schemas with search/describe/call bridge tools once the schema load is
+large enough. OpenClaw's tools overview uses the same conceptual split:
+tools are callable actions, skills teach workflows, and plugins add runtime
+capabilities, with allow/deny/profile policy controlling visibility. GitClaw
+should not expose runtime structured tools yet, but it should make the future
+decision inspectable by adding `@gitclaw /tools defer-plan` and
+`gitclaw tools defer-plan`: a body-free advisory report that combines built-in
+tools, repo-reviewed toolsets, and MCP allowlist entries, estimates direct vs
+deferred catalog entries, records bridge non-goals, and proves the change with
+live GitHub Models repo-search E2E.
+
 2026-05-30 task-risk follow-up: OpenClaw Task Flow composes work by creating
 background tasks and advancing the flow as tasks complete, while Hermes Kanban
 uses durable task boards, dispatchers, workers, and a dedicated kanban toolset.
@@ -2400,6 +2413,7 @@ names, commit subjects, author identities, or installer output.
 - Hermes skills docs: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/skills.md
 - Hermes working with skills docs: https://hermes-agent.nousresearch.com/docs/guides/work-with-skills/
 - Hermes tools docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/tools/
+- Hermes Tool Search docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-search
 - Hermes features overview: https://hermes-agent.nousresearch.com/docs/user-guide/features/overview/
 - Hermes tools reference: https://github.com/NousResearch/hermes-agent/blob/main/website/docs/reference/tools-reference.md
 - Hermes subagent delegation docs: https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation

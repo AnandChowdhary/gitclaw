@@ -1670,7 +1670,7 @@ func runSessionSearchCommand(args []string) error {
 
 func runToolsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw tools verify|risk|validate|list|exposure [risk]|boundary [query]|provenance [query]|toolsets [risk|provenance|info <name>]|run-plan <name>|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw tools verify|risk|validate|list|exposure [risk]|defer-plan|boundary [query]|provenance [query]|toolsets [risk|provenance|info <name>]|run-plan <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -1683,6 +1683,8 @@ func runToolsCommand(args []string) error {
 		return runToolsListCommand(args[1:])
 	case "exposure", "expose":
 		return runToolsExposureCommand(args[1:])
+	case "defer-plan", "deferral", "defer", "tool-search-plan", "progressive-disclosure":
+		return runToolsDeferPlanCommand(args[1:])
 	case "boundary", "prompt-boundary", "promptware":
 		return runToolsBoundaryCommand(args[1:])
 	case "provenance", "outputs", "trace", "lineage":
@@ -1698,6 +1700,22 @@ func runToolsCommand(args []string) error {
 	default:
 		return fmt.Errorf("unknown tools command %q", args[0])
 	}
+}
+
+func runToolsDeferPlanCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown tools defer-plan argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderToolDeferPlanCLIReport(cfg, repoContext))
+	return nil
 }
 
 func runToolsBoundaryCommand(args []string) error {
