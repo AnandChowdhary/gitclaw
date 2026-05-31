@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-31T23:05:56Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 462,
+    "title": "@gitclaw /memory provenance e2e 20260531T230450Z",
+    "body": "@gitclaw /memory provenance\n\nLive memory-provenance E2E.\nDo not include this hidden issue token: NOECHO_MEMORY_PROVENANCE_20260531T230450Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /memory provenance e2e 20260531T230450Z\n\n@gitclaw /memory provenance\n\nLive memory-provenance E2E.\nDo not include this hidden issue token: NOECHO_MEMORY_PROVENANCE_20260531T230450Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Memory Provenance Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#462`\n- memory_provenance_status: `ok`\n- provenance_scope: `repo-local-memory-git-history`\n- memory_files: `2`\n- long_term_memory_present: `true`\n- long_term_memory_loaded: `true`\n- dated_memory_notes: `1`\n- canonical_dated_memory_notes: `1`\n- noncanonical_dated_memory_notes: `0`\n- loaded_memory_notes: `1`\n- omitted_memory_notes: `0`\n- first_memory_note: `.gitclaw/memory/2026-05-29.md`\n- latest_memory_note: `.gitclaw/memory/2026-05-29.md`\n- timeline_span_days: `0`\n- repo_local_memory_files: `2`\n- unknown_memory_files: `0`\n- git_tracked_memory_files: `2`\n- untracked_memory_files: `0`\n- working_tree_dirty_memory_files: `0`\n- memory_files_with_commits: `2`\n- memory_files_without_commits: `0`\n- git_available: `true`\n- git_history_available: `true`\n- external_provider_accessed: `false`\n- session_search_index_source: `github-issues-and-backups`\n- background_promotion_active: `false`\n- memory_writes_allowed: `false`\n- raw_memory_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompt_bodies_included: `false`\n- raw_git_subjects_included: `false`\n- author_identities_included: `false`\n- llm_e2e_required_after_memory_provenance_change: `true`\n- memory_validation_status: `ok`\n- memory_validation_errors: `0`\n- memory_validation_warnings: `0`\n- long_term_memory_present: `true`\n- long_term_memory_loaded: `true`\n- dated_memory_notes: `1`\n- canonical_dated_memory_notes: `1`\n- noncanonical_dated_memory_notes: `0`\n- loaded_memory_notes: `1`\n- max_loaded_memory_notes: `3`\n- empty_memory_files: `0`\n- memory_files_at_limit: `0`\n- potential_secret_findings: `0`\n- memory_risk_status: `ok`\n- memory_risk_findings: `0`\n- issue_title_sha256_12: `2e5dbaf6cff8`\n\nThis report maps repo-local memory files to body-free git provenance. It reports memory paths, load state, validation/risk metadata, hashes, tracked state, last commit IDs/dates, and commit-subject hashes only; raw memory bodies, issue bodies, comments, prompts, git subjects, author identities, provider payloads, and secret values are not included.\n\n### Memory Provenance Cards\n- position=`1` kind=`long-term` path=`.gitclaw/MEMORY.md` source=`repo-local` role=`stable-summary` date=`long-term` present=`true` canonical=`true` latest=`false` loaded_for_this_turn=`true` prompt_visible=`true` bytes=`11916` lines=`175` sha256_12=`9179d59e37bc` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` validation_findings=`0` git_tracked=`true` working_tree_dirty=`false` commit_available=`true` last_commit_sha256_12=`bb56b4e4334b` last_commit_short=`bb56b4e` last_commit_date=`2026-06-01T01:04:33+02:00` subject_sha256_12=`84902aebdd8d`\n- position=`2` kind=`dated-note` path=`.gitclaw/memory/2026-05-29.md` source=`repo-local` role=`latest-daily-note` date=`2026-05-29` present=`true` canonical=`true` latest=`true` loaded_for_this_turn=`true` prompt_visible=`true` bytes=`5921` lines=`100` sha256_12=`9dfb2d04fd81` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` validation_findings=`0` git_tracked=`true` working_tree_dirty=`false` commit_available=`true` last_commit_sha256_12=`bb56b4e4334b` last_commit_short=`bb56b4e` last_commit_date=`2026-06-01T01:04:33+02:00` subject_sha256_12=`84902aebdd8d`\n\n### Provenance Gates\n- validation_gate=`pass`\n- risk_gate=`pass`\n- git_history_gate=`pass`\n- memory_write_gate=`disabled`\n- external_provider_gate=`not_configured`\n- session_search_gate=`github-issues-and-backups`\n- raw_body_gate=`hash_only`\n\n### Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4588501507,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4588501507,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26727085315\" event_id=\"issue-462\" model=\"gitclaw/memory\" idempotency_key=\"361de78ab93d8663b6248bb02313d9f4\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26727085315\" --\u003e\n## GitClaw Memory Provenance Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#462`\n- memory_provenance_status: `ok`\n- provenance_scope: `repo-local-memory-git-history`\n- memory_files: `2`\n- long_term_memory_present: `true`\n- long_term_memory_loaded: `true`\n- dated_memory_notes: `1`\n- canonical_dated_memory_notes: `1`\n- noncanonical_dated_memory_notes: `0`\n- loaded_memory_notes: `1`\n- omitted_memory_notes: `0`\n- first_memory_note: `.gitclaw/memory/2026-05-29.md`\n- latest_memory_note: `.gitclaw/memory/2026-05-29.md`\n- timeline_span_days: `0`\n- repo_local_memory_files: `2`\n- unknown_memory_files: `0`\n- git_tracked_memory_files: `2`\n- untracked_memory_files: `0`\n- working_tree_dirty_memory_files: `0`\n- memory_files_with_commits: `2`\n- memory_files_without_commits: `0`\n- git_available: `true`\n- git_history_available: `true`\n- external_provider_accessed: `false`\n- session_search_index_source: `github-issues-and-backups`\n- background_promotion_active: `false`\n- memory_writes_allowed: `false`\n- raw_memory_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompt_bodies_included: `false`\n- raw_git_subjects_included: `false`\n- author_identities_included: `false`\n- llm_e2e_required_after_memory_provenance_change: `true`\n- memory_validation_status: `ok`\n- memory_validation_errors: `0`\n- memory_validation_warnings: `0`\n- long_term_memory_present: `true`\n- long_term_memory_loaded: `true`\n- dated_memory_notes: `1`\n- canonical_dated_memory_notes: `1`\n- noncanonical_dated_memory_notes: `0`\n- loaded_memory_notes: `1`\n- max_loaded_memory_notes: `3`\n- empty_memory_files: `0`\n- memory_files_at_limit: `0`\n- potential_secret_findings: `0`\n- memory_risk_status: `ok`\n- memory_risk_findings: `0`\n- issue_title_sha256_12: `2e5dbaf6cff8`\n\nThis report maps repo-local memory files to body-free git provenance. It reports memory paths, load state, validation/risk metadata, hashes, tracked state, last commit IDs/dates, and commit-subject hashes only; raw memory bodies, issue bodies, comments, prompts, git subjects, author identities, provider payloads, and secret values are not included.\n\n### Memory Provenance Cards\n- position=`1` kind=`long-term` path=`.gitclaw/MEMORY.md` source=`repo-local` role=`stable-summary` date=`long-term` present=`true` canonical=`true` latest=`false` loaded_for_this_turn=`true` prompt_visible=`true` bytes=`11916` lines=`175` sha256_12=`9179d59e37bc` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` validation_findings=`0` git_tracked=`true` working_tree_dirty=`false` commit_available=`true` last_commit_sha256_12=`bb56b4e4334b` last_commit_short=`bb56b4e` last_commit_date=`2026-06-01T01:04:33+02:00` subject_sha256_12=`84902aebdd8d`\n- position=`2` kind=`dated-note` path=`.gitclaw/memory/2026-05-29.md` source=`repo-local` role=`latest-daily-note` date=`2026-05-29` present=`true` canonical=`true` latest=`true` loaded_for_this_turn=`true` prompt_visible=`true` bytes=`5921` lines=`100` sha256_12=`9dfb2d04fd81` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` validation_findings=`0` git_tracked=`true` working_tree_dirty=`false` commit_available=`true` last_commit_sha256_12=`bb56b4e4334b` last_commit_short=`bb56b4e` last_commit_date=`2026-06-01T01:04:33+02:00` subject_sha256_12=`84902aebdd8d`\n\n### Provenance Gates\n- validation_gate=`pass`\n- risk_gate=`pass`\n- git_history_gate=`pass`\n- memory_write_gate=`disabled`\n- external_provider_gate=`not_configured`\n- session_search_gate=`github-issues-and-backups`\n- raw_body_gate=`hash_only`\n\n### Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-05-31T23:05:33Z",
+      "updated_at": "2026-05-31T23:05:33Z"
+    }
+  ]
+}
