@@ -43,6 +43,7 @@ backup verify unique search fixture phrase => GITCLAW_BACKUP_VERIFY_CONTEXT_V1
 backup index unique search fixture phrase => GITCLAW_BACKUP_INDEX_CONTEXT_V1
 backup report unique search fixture phrase => GITCLAW_BACKUP_REPORT_CONTEXT_V1
 channel message unique search fixture phrase => GITCLAW_CHANNEL_MESSAGE_CONTEXT_V1
+channel message followup unique search fixture phrase => GITCLAW_CHANNEL_MESSAGE_FOLLOWUP_CONTEXT_V1
 proactive run unique search fixture phrase => GITCLAW_PROACTIVE_RUN_CONTEXT_V1
 backup export jsonl unique search fixture phrase => GITCLAW_BACKUP_EXPORT_JSONL_CONTEXT_V1
 backup search unique search fixture phrase => GITCLAW_BACKUP_SEARCH_CONTEXT_V1

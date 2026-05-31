@@ -2008,6 +2008,14 @@ it should force repo-reader search from the mirrored message and assert model,
 prompt, tool, and usage markers while keeping hidden channel sentinels out of
 the response.
 
+2026-05-31 channel-message follow-up hardening: a GitHub-native channel bridge
+is only useful if the user can continue the conversation after the mirrored
+Telegram/Slack turn. The live channel-message harness should therefore post a
+normal GitHub issue comment after the workflow-dispatch channel turn and prove
+another GitHub Models repo-reader/search response with a distinct repository
+fixture token, so the bridge validates both gateway ingress and ordinary
+thread continuation.
+
 2026-05-31 channels-report E2E hardening: OpenClaw's current channel docs make
 Slack/Telegram gateway routing, channel policies, and provider delivery a
 first-class operator surface, while Hermes' Slack docs emphasize thread/session

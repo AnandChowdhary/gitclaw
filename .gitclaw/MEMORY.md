@@ -33,6 +33,9 @@
 - Channel-message and proactive workflow-dispatch E2E must prove repo-reader
   search/tool grounding, model provenance, and usage telemetry, not just nonce
   echoing from the mirrored prompt.
+- Channel-message E2E also needs a normal issue-comment follow-up after the
+  workflow-dispatch turn, proving the mirrored channel thread can continue as
+  an ordinary GitHub conversation.
 - Heartbeat comments are model-backed scheduled turns; their
   `gitclaw:heartbeat` markers must include model, prompt-context, context-count,
   and usage telemetry without printing prompt or heartbeat bodies.

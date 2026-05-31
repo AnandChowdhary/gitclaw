@@ -392,6 +392,10 @@ inference, prompt context, selected skills, and prompt-visible tools. When a
 model E2E asks for a repository-search fixture token, hidden issue/comment
 sentinels must use a distinct prefix so the assertion proves tool-output
 grounding rather than transcript echoing.
+The channel-message harness now proves both sides of the Slack/Telegram bridge:
+the mirrored channel comment can wake a model-backed repo-reader/search turn by
+`workflow_dispatch`, and the same issue can continue with a normal
+issue-comment follow-up that proves repo-reader/search again.
 `gitclaw doctor list` also inventories checked-in E2E harnesses by count,
 cleanup coverage, live issue coverage, model marker coverage, real model
 follow-up coverage, session coverage, backup gates, and workflow-dispatch

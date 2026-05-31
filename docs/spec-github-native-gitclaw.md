@@ -5815,7 +5815,9 @@ MVP is not complete until:
   issue and proves same-dispatch-id idempotency,
 - the channel-message harness verifies a hidden `gitclaw:channel-message`
   comment is reconstructed as user input during a dispatched run and can drive
-  repo-reader search with model/prompt/usage telemetry,
+  repo-reader search with model/prompt/usage telemetry, then continues the same
+  issue through a normal issue-comment follow-up that proves repo-reader search
+  again,
 - the channel-ingest harness verifies the generic bridge workflow mirrors a
   message into an issue and dispatches the main handler,
 - the proactive enqueue harness verifies manual/scheduled job primitives can
@@ -5962,7 +5964,10 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven channel-message E2E harness verifies a mirrored channel
   comment is included in the dispatched conversation transcript and can force a
   real GitHub Models repo-reader/search turn with prompt provenance and usage
-  telemetry.
+  telemetry. The same harness then posts a normal issue-comment follow-up that
+  must make another GitHub Models call, select `repo-reader`, expose
+  `gitclaw.search_files`, recover a distinct channel-message follow-up fixture
+  token, and avoid hidden channel/comment sentinels.
 - A `gh`-driven channel-ingest E2E harness verifies the generic channel ingress
   workflow end to end, including duplicate provider-message retries.
 - A `gh`-driven channel-state E2E harness verifies real GitHub issue-backed
