@@ -759,7 +759,7 @@ GitHub issue/comment event
 
 - CLI entry point.
 - Subcommands: `preflight`, `handle`, `backup`, `backup coverage`,
-  `backup search`, `backup info`, `backup retention-plan`,
+  `backup search`, `backup timeline`, `backup info`, `backup retention-plan`,
   `session status`, `session coverage`,
   `heartbeat`, `heartbeat status`, `heartbeat risk`,
   `channel-ingest`, `channel-state`, `channel-gateway`, `channel-delivery`,
@@ -4040,7 +4040,7 @@ reconstruction, but before model inference. It posts a `gitclaw:assistant-turn`
 comment with `model="gitclaw/backup"` and summarizes:
 
 - requested backup command intent (`summary`, `verify`, `coverage`, `manifest`, `list`,
-  `info`, `stats`, `search`, `export-jsonl`, `restore-plan`, or
+  `timeline`, `info`, `stats`, `search`, `export-jsonl`, `restore-plan`, or
   `retention-plan`),
 - the matching local `gitclaw backup ...` command to run against a fetched
   `gitclaw-backups` branch,
@@ -4067,9 +4067,12 @@ and index to `gitclaw-backups`. `@gitclaw /backup risk` records the exact local
 risk-audit command and risk categories while making clear that raw payload
 scanning is deferred to a fetched backup branch. `@gitclaw /backup info
 <issue-number>` records the exact focused-inspection command for one backed-up
-issue, defaulting to the current issue when no number is supplied. `@gitclaw
-/backup search <query>` records only a query hash and term count; raw search
-terms and raw backup bodies stay out of the issue-visible comment.
+issue, defaulting to the current issue when no number is supplied. `@gitclaw /backup timeline`
+records the exact chronological timeline command for a
+fetched backup branch without trying to inspect raw backup payloads from the
+pre-backup issue handler. `@gitclaw /backup search <query>` records only a
+query hash and term count; raw search terms and raw backup bodies stay out of
+the issue-visible comment.
 
 ## Backup Verification Command
 
@@ -4242,6 +4245,35 @@ It never prints raw issue titles, issue bodies, comments, or transcript bodies.
 The list report is the body-safe navigation layer before a more specific
 `backup info`, `backup manifest`, `backup search`, `backup restore-plan`, or raw
 `backup export-jsonl` command.
+
+## Backup Timeline Command
+
+GitClaw supports a local backup timeline command inspired by OpenClaw's session
+management/export surface and Hermes' cross-session recall posture:
+
+```bash
+gitclaw backup timeline --root .gitclaw/backups --repo <owner/repo> --limit 20
+```
+
+The command reads a fetched `gitclaw-backups` tree, verifies it, selects the
+latest backups by backup timestamp, and renders those selected backups in
+chronological order. The deterministic `GitClaw Backup Timeline Report`
+includes:
+
+- backup timeline and verify status,
+- schema version and index generation time,
+- indexed issue count, requested limit, returned timeline-point count, and
+  chronological window metadata,
+- first/latest issue numbers and backup timestamps for the selected window,
+- total span seconds across the selected window,
+- per-point issue number, canonical path, timestamp, event name, gap from the
+  previous point, payload size/hash, comment/transcript counts,
+  assistant-turn/error counts, and issue-title hash.
+
+It never prints raw issue titles, issue bodies, comment bodies, transcript
+messages, prompts, search queries, or tool outputs. The timeline is a body-safe
+continuity view for restoring or auditing a repo's backed-up conversation
+history without opening raw JSON payloads.
 
 ## Backup Info Command
 
@@ -4993,7 +5025,26 @@ assert the expected comments/labels, and close the issue in cleanup.
      event name, label/comment/transcript counts, and title hash,
    - assert it does not dump the issue body token or raw title.
 
-39. **Backup info**
+39. **Backup timeline**
+
+   - create a real issue with `@gitclaw /backup timeline`,
+   - assert the issue-side report lists `requested_backup_command: timeline`,
+     the deferred execution marker, and the concrete local timeline command
+     without dumping body/title tokens,
+   - wait for the successful backup job,
+   - fetch the real `gitclaw-backups` branch,
+   - run `gitclaw backup timeline --root <fetched>/.gitclaw/backups --repo
+     <owner/repo> --limit 5`,
+   - assert the report is marked `backup_timeline_status: ok` and
+     `backup_verify_status: ok`,
+   - assert it lists the just-created issue number, canonical path, timestamp,
+     event name, gap seconds, counts, payload hash, and title hash,
+   - assert it does not dump the issue body token or raw title,
+   - post a normal follow-up that requires repo-reader search and assert the
+     second assistant turn is GitHub Models-backed with prompt context,
+     selected skill, and prompt-visible tool markers.
+
+40. **Backup info**
 
    - create a real issue with `@gitclaw /backup info`,
    - assert the issue-side report lists `requested_backup_command: info`, the
@@ -5010,7 +5061,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      hashes,
    - assert it does not dump the issue body token or raw title.
 
-40. **Backup JSONL export**
+41. **Backup JSONL export**
 
    - create a real issue with `@gitclaw /backup export-jsonl`,
    - assert the issue-side report lists `requested_backup_command:
@@ -5025,7 +5076,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      contains the assistant backup report body, proving the command is an
      explicit raw recovery/export path rather than an issue-visible report.
 
-41. **Backup restore plan**
+42. **Backup restore plan**
 
    - create a real issue with `@gitclaw /backup restore-plan`,
    - assert the issue-side report lists `requested_backup_command:
@@ -5040,7 +5091,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      counts, assistant-turn/error counts, and body hashes,
    - assert it does not dump the issue body token or raw transcript bodies.
 
-42. **Backup drill**
+43. **Backup drill**
 
    - create a real issue with `@gitclaw /backup drill`,
    - assert the issue-side report lists `requested_backup_command: drill`, the
@@ -5057,7 +5108,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      assert the next assistant turn used GitHub Models with prompt provenance,
      selected skills, and prompt-visible tool names.
 
-43. **Backup retention plan**
+44. **Backup retention plan**
 
    - create a real issue with `@gitclaw /backup retention-plan`,
    - assert the issue-side report lists `requested_backup_command:
@@ -5074,7 +5125,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the just-created issue is included without dumping the issue body
      token or raw title.
 
-44. **Backup search**
+45. **Backup search**
 
    - create a real issue with `@gitclaw /backup search <query>`,
    - include a unique hidden token in the issue body,
@@ -5092,7 +5143,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert it does not dump the hidden token, raw issue body, raw issue title,
      raw comments, raw transcript messages, or raw query text.
 
-45. **Proactive init generator**
+46. **Proactive init generator**
 
    - run `gitclaw proactive init` against a temporary repo root,
    - assert it writes the expected prompt file and scheduled workflow,
@@ -5104,7 +5155,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert it creates a real proactive issue and receives one deterministic
      proactive report without leaking the hidden prompt token.
 
-46. **Proactive info report**
+47. **Proactive info report**
 
    - create a real issue with `@gitclaw /proactive info repo-hygiene`,
    - include a unique hidden token in the issue body,
@@ -5115,7 +5166,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      candidate, trigger metadata, and enqueue command hashes/paths,
    - assert no issue body, prompt body, or workflow body content is leaked.
 
-47. **Proactive risk report with model follow-up**
+48. **Proactive risk report with model follow-up**
 
    - create a real issue with `@gitclaw /proactive risk`,
    - include a unique hidden token in the issue body,
@@ -5518,6 +5569,12 @@ examples/workflows/gitclaw.yml
   verifies the fetched `gitclaw-backups` branch can produce a timestamp-sorted
   indexed backup list with paths, counts, event names, and title hashes,
   without dumping raw bodies or titles.
+- A `gh`-driven backup-timeline E2E harness verifies
+  `@gitclaw /backup timeline` records the deferred issue-side command intent,
+  then verifies the fetched `gitclaw-backups` branch can produce a
+  chronological, body-free backup timeline with gap seconds, payload hashes,
+  assistant-turn counts, and title hashes. It also posts a normal follow-up
+  that must use GitHub Models and repo-reader search.
 - A `gh`-driven backup-info E2E harness verifies
   `@gitclaw /backup info` records the deferred issue-side command intent, then
   verifies the fetched `gitclaw-backups` branch can produce a focused

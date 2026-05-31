@@ -81,6 +81,7 @@ func RenderBackupReport(ev Event, cfg Config, comments []Comment, transcript []T
 	b.WriteString("- `gitclaw backup coverage --root .gitclaw/backups --repo <owner/repo> --issue <number>`\n")
 	b.WriteString("- `gitclaw backup drill --root .gitclaw/backups --repo <owner/repo> --issue <number>`\n")
 	b.WriteString("- `gitclaw backup risk --root .gitclaw/backups --repo <owner/repo>`\n")
+	b.WriteString("- `gitclaw backup timeline --root .gitclaw/backups --repo <owner/repo> --limit 20`\n")
 	b.WriteString("- `gitclaw backup search --root .gitclaw/backups --repo <owner/repo> <query>`\n")
 	b.WriteString("- `gitclaw backup retention-plan --root .gitclaw/backups --repo <owner/repo> --keep-latest 50`\n")
 	b.WriteString("- validates the repo-scoped index, README, canonical issue paths, JSON schema version, counts, timestamps, and traversal-safe payload paths; search reports hashes and metadata without printing raw backup bodies\n")
@@ -148,6 +149,12 @@ func requestedBackupIssueCommand(ev Event, cfg Config) backupIssueCommand {
 			Name:         "list",
 			Status:       "ok",
 			LocalCommand: fmt.Sprintf("gitclaw backup list --root %s --repo %s --limit 20", defaultBackupRoot, backupReportRepo(ev.Repo)),
+		}
+	case "timeline", "history":
+		return backupIssueCommand{
+			Name:         "timeline",
+			Status:       "ok",
+			LocalCommand: fmt.Sprintf("gitclaw backup timeline --root %s --repo %s --limit 20", defaultBackupRoot, backupReportRepo(ev.Repo)),
 		}
 	case "info":
 		issueNumber := ev.Issue.Number
@@ -218,7 +225,7 @@ func writeBackupIssueCommandSummary(b *strings.Builder, request backupIssueComma
 			b.WriteString("- raw search query is not printed; only query hash and term count are shown\n")
 		}
 	case "unknown":
-		b.WriteString("- unknown backup subcommand; supported issue intents are `verify`, `coverage`, `drill`, `risk`, `manifest`, `list`, `info`, `stats`, `search`, `export-jsonl`, `restore-plan`, and `retention-plan`\n")
+		b.WriteString("- unknown backup subcommand; supported issue intents are `verify`, `coverage`, `drill`, `risk`, `manifest`, `list`, `timeline`, `info`, `stats`, `search`, `export-jsonl`, `restore-plan`, and `retention-plan`\n")
 	case "invalid_issue":
 		b.WriteString("- invalid backup issue number; use `@gitclaw /backup info <issue-number>`, `@gitclaw /backup coverage <issue-number>`, `@gitclaw /backup drill <issue-number>`, or inspect the current issue without an explicit issue number\n")
 	default:

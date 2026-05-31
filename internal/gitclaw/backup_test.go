@@ -404,6 +404,93 @@ func TestBuildBackupListListsNewestBackupsWithoutBodies(t *testing.T) {
 	}
 }
 
+func TestBuildBackupTimelineRendersRecentChronologyWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T12:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue: IssueBackupIssue{
+			Number: 7,
+			Title:  "@gitclaw timeline old TIMELINE_OLD_TITLE_TOKEN",
+			Body:   "TIMELINE_OLD_BODY_TOKEN",
+			Labels: []string{"gitclaw"},
+		},
+		Transcript: []TranscriptMessage{{Role: "user", Body: "TIMELINE_OLD_TRANSCRIPT_TOKEN"}},
+		Comments:   []IssueBackupComment{{ID: 11, Body: "TIMELINE_OLD_COMMENT_TOKEN"}},
+	})
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T14:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issue_comment",
+		Issue: IssueBackupIssue{
+			Number: 8,
+			Title:  "@gitclaw timeline middle TIMELINE_MIDDLE_TITLE_TOKEN",
+			Body:   "TIMELINE_MIDDLE_BODY_TOKEN",
+			Labels: []string{"gitclaw", "gitclaw:e2e"},
+		},
+		Transcript: []TranscriptMessage{
+			{Role: "user", Body: "TIMELINE_MIDDLE_TRANSCRIPT_TOKEN"},
+			{Role: "assistant", Body: "TIMELINE_MIDDLE_ASSISTANT_TOKEN"},
+		},
+		Comments: []IssueBackupComment{
+			{ID: 12, Body: "<!-- gitclaw:error -->\nTIMELINE_MIDDLE_ERROR_TOKEN"},
+		},
+	})
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T15:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issue_comment",
+		Issue: IssueBackupIssue{
+			Number: 9,
+			Title:  "@gitclaw timeline latest TIMELINE_LATEST_TITLE_TOKEN",
+			Body:   "TIMELINE_LATEST_BODY_TOKEN",
+			Labels: []string{"gitclaw"},
+		},
+		Transcript: []TranscriptMessage{
+			{Role: "user", Body: "TIMELINE_LATEST_TRANSCRIPT_TOKEN"},
+			{Role: "assistant", Body: "TIMELINE_LATEST_ASSISTANT_TOKEN"},
+		},
+		Comments: []IssueBackupComment{
+			{ID: 13, Body: "<!-- gitclaw:assistant-turn -->\nTIMELINE_LATEST_COMMENT_TOKEN"},
+		},
+	})
+	if _, err := WriteBackupIndex(root, "owner/repo", time.Date(2026, 5, 29, 16, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+
+	timeline, err := BuildBackupTimeline(root, "owner/repo", 2)
+	if err != nil {
+		t.Fatalf("BuildBackupTimeline returned error: %v", err)
+	}
+	if timeline.BackupTimelineStatus != "ok" || timeline.BackupVerifyStatus != "ok" || timeline.IssueCount != 3 || timeline.Limit != 2 || timeline.TimelinePoints != 2 {
+		t.Fatalf("unexpected backup timeline metadata: %#v", timeline)
+	}
+	if timeline.FirstIssueNumber != 8 || timeline.LatestIssueNumber != 9 || timeline.TotalSpanSeconds != 3600 {
+		t.Fatalf("unexpected timeline endpoints: %#v", timeline)
+	}
+	if timeline.Points[0].IssueNumber != 8 || timeline.Points[0].GapSecondsSincePrevious != 0 || timeline.Points[0].ErrorComments != 1 {
+		t.Fatalf("unexpected first timeline point: %#v", timeline.Points[0])
+	}
+	if timeline.Points[1].IssueNumber != 9 || timeline.Points[1].GapSecondsSincePrevious != 3600 || timeline.Points[1].AssistantTurns != 1 {
+		t.Fatalf("unexpected latest timeline point: %#v", timeline.Points[1])
+	}
+	report := RenderBackupTimeline(timeline)
+	for _, want := range []string{"GitClaw Backup Timeline Report", "backup_timeline_status: `ok`", "backup_verify_status: `ok`", "verification_failures: `0`", "backup_schema_version: `1`", "issue_count: `3`", "limit: `2`", "timeline_points: `2`", "timeline_order: `chronological`", "timeline_window: `latest_by_backup_generated_at`", "first_issue: `#8`", "latest_issue: `#9`", "total_span_seconds: `3600`", "raw_bodies_included: `false`", "llm_e2e_required_after_backup_timeline_change: `true`", "### Timeline Points", "issue=#8 path=`issues/000008.json`", "gap_seconds_since_previous=`0`", "error_comments=`1`", "issue=#9 path=`issues/000009.json`", "gap_seconds_since_previous=`3600`", "assistant_turn_comments=`1`", "payload_sha256_12=", "title_sha256_12="} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("backup timeline report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"TIMELINE_OLD_TITLE_TOKEN", "TIMELINE_OLD_BODY_TOKEN", "TIMELINE_OLD_TRANSCRIPT_TOKEN", "TIMELINE_OLD_COMMENT_TOKEN", "TIMELINE_MIDDLE_TITLE_TOKEN", "TIMELINE_MIDDLE_BODY_TOKEN", "TIMELINE_MIDDLE_TRANSCRIPT_TOKEN", "TIMELINE_MIDDLE_ASSISTANT_TOKEN", "TIMELINE_MIDDLE_ERROR_TOKEN", "TIMELINE_LATEST_TITLE_TOKEN", "TIMELINE_LATEST_BODY_TOKEN", "TIMELINE_LATEST_TRANSCRIPT_TOKEN", "TIMELINE_LATEST_ASSISTANT_TOKEN", "TIMELINE_LATEST_COMMENT_TOKEN", "@gitclaw timeline old", "@gitclaw timeline middle", "@gitclaw timeline latest"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("backup timeline leaked body/title token %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestBuildBackupInfoReportsOneBackupWithoutBodies(t *testing.T) {
 	root := t.TempDir()
 	writeBackupFixture(t, root, IssueBackup{

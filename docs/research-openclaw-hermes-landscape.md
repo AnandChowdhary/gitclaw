@@ -228,6 +228,23 @@ restore. GitClaw should add `gitclaw backup list`: verify the fetched
 numbers, payload paths, timestamps, event names, label/comment/transcript
 counts, and title hashes only. This keeps routine backup navigation body-free.
 
+2026-05-31 backup-timeline follow-up: the latest OpenClaw release notes keep
+emphasizing bounded release/QA/E2E proof lanes and a status surface for active
+work, while OpenClaw's session CLI frames sessions as manageable/exportable
+conversation state and its backup CLI centers manifest-backed verification.
+Hermes' current docs still emphasize cross-session recall, scheduled
+automations, portable skills, and progressive skill disclosure. GitClaw's
+git-native version should therefore expose a body-free `gitclaw backup
+timeline` over the fetched backup branch: verify first, select the most recent
+backups, render them chronologically with gap seconds, counts, payload hashes,
+assistant-turn counts, and title hashes, and never print raw issue, comment,
+transcript, prompt, search, or tool bodies. Sources checked:
+https://github.com/openclaw/openclaw/releases,
+https://openclawlab.com/en/docs/cli/backup/,
+https://openclaw.cc/en/cli/sessions,
+https://hermes-agent.nousresearch.com/docs/, and
+https://hermes-agent.nousresearch.com/docs/guides/work-with-skills/.
+
 2026-05-30 backup-info follow-up: The same landscape also needs a focused
 single-session card between list and raw export. GitClaw should add
 `gitclaw backup info --issue <n>`: verify the fetched backup tree, locate one

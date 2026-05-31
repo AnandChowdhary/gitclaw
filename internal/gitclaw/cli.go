@@ -2310,6 +2310,9 @@ func runBackup(ctx context.Context, args []string) error {
 	if len(args) > 0 && args[0] == "list" {
 		return runBackupList(args[1:])
 	}
+	if len(args) > 0 && (args[0] == "timeline" || args[0] == "history") {
+		return runBackupTimeline(args[1:])
+	}
 	if len(args) > 0 && args[0] == "info" {
 		return runBackupInfo(args[1:])
 	}
@@ -2712,6 +2715,52 @@ func runBackupList(args []string) error {
 	fmt.Println(RenderBackupList(list))
 	if list.BackupListStatus != "ok" {
 		return fmt.Errorf("backup list reported %s", list.BackupListStatus)
+	}
+	return nil
+}
+
+func runBackupTimeline(args []string) error {
+	root := filepath.Join(".gitclaw", "backups")
+	repo := os.Getenv("GITHUB_REPOSITORY")
+	limit := 20
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--root":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--root requires a value")
+			}
+			root = args[i+1]
+			i++
+		case "--repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--repo requires a value")
+			}
+			repo = args[i+1]
+			i++
+		case "--limit":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--limit requires a value")
+			}
+			parsed, err := strconv.Atoi(args[i+1])
+			if err != nil || parsed <= 0 {
+				return fmt.Errorf("invalid --limit: %q", args[i+1])
+			}
+			limit = parsed
+			i++
+		default:
+			return fmt.Errorf("unknown backup timeline argument %q", args[i])
+		}
+	}
+	if repo == "" {
+		return fmt.Errorf("missing --repo or GITHUB_REPOSITORY")
+	}
+	timeline, err := BuildBackupTimeline(root, repo, limit)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderBackupTimeline(timeline))
+	if timeline.BackupTimelineStatus != "ok" {
+		return fmt.Errorf("backup timeline reported %s", timeline.BackupTimelineStatus)
 	}
 	return nil
 }

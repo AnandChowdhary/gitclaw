@@ -207,6 +207,49 @@ type BackupListIssue struct {
 	IssueTitleSHA      string
 }
 
+type BackupTimeline struct {
+	Root                      string
+	Repo                      string
+	RepoDir                   string
+	IndexPath                 string
+	ReadmePath                string
+	SchemaVersion             int
+	IndexGeneratedAt          string
+	BackupTimelineStatus      string
+	BackupVerifyStatus        string
+	VerificationFailures      int
+	IssueCount                int
+	Limit                     int
+	TimelinePoints            int
+	TimelineOrder             string
+	TimelineWindow            string
+	FirstIssueNumber          int
+	FirstGeneratedAt          string
+	LatestIssueNumber         int
+	LatestGeneratedAt         string
+	TotalSpanSeconds          int64
+	RawBodiesIncluded         bool
+	LLME2ERequiredAfterChange bool
+	Points                    []BackupTimelinePoint
+}
+
+type BackupTimelinePoint struct {
+	IssueNumber             int
+	Path                    string
+	BackupGeneratedAt       string
+	EventName               string
+	GapSecondsSincePrevious int64
+	PayloadBytes            int
+	PayloadSHA              string
+	Comments                int
+	TranscriptMessages      int
+	UserMessages            int
+	AssistantMessages       int
+	AssistantTurns          int
+	ErrorComments           int
+	IssueTitleSHA           string
+}
+
 type BackupInfo struct {
 	Root                 string
 	Repo                 string
@@ -778,6 +821,127 @@ func BuildBackupList(root, repo string, limit int) (BackupList, error) {
 	return list, nil
 }
 
+func BuildBackupTimeline(root, repo string, limit int) (BackupTimeline, error) {
+	if limit <= 0 {
+		return BackupTimeline{}, fmt.Errorf("limit must be positive")
+	}
+	if err := validateRepoName(repo); err != nil {
+		return BackupTimeline{}, err
+	}
+	repoDir, index, err := readBackupIndex(root, repo)
+	if err != nil {
+		return BackupTimeline{}, err
+	}
+	if root == "" {
+		root = filepath.Join(".gitclaw", "backups")
+	}
+	verify, err := VerifyBackupTree(root, repo)
+	if err != nil {
+		return BackupTimeline{}, err
+	}
+	timeline := BackupTimeline{
+		Root:                      filepath.ToSlash(root),
+		Repo:                      repo,
+		RepoDir:                   filepath.ToSlash(repoDir),
+		IndexPath:                 filepath.ToSlash(filepath.Join(repoDir, "index.json")),
+		ReadmePath:                filepath.ToSlash(filepath.Join(repoDir, "README.md")),
+		SchemaVersion:             index.Version,
+		IndexGeneratedAt:          index.GeneratedAt,
+		BackupTimelineStatus:      "ok",
+		BackupVerifyStatus:        "ok",
+		VerificationFailures:      len(verify.VerificationFailures),
+		IssueCount:                len(index.Issues),
+		Limit:                     limit,
+		TimelineOrder:             "chronological",
+		TimelineWindow:            "latest_by_backup_generated_at",
+		RawBodiesIncluded:         false,
+		LLME2ERequiredAfterChange: true,
+	}
+	if !verify.OK() {
+		timeline.BackupTimelineStatus = "warn"
+		timeline.BackupVerifyStatus = "warn"
+	}
+
+	type timelineCandidate struct {
+		point       BackupTimelinePoint
+		generatedAt time.Time
+	}
+	candidates := make([]timelineCandidate, 0, len(index.Issues))
+	for _, issue := range index.Issues {
+		backup, payload, err := manifestPayload(repoDir, repo, issue)
+		if err != nil {
+			return BackupTimeline{}, err
+		}
+		generatedAt, err := time.Parse(time.RFC3339, backup.GeneratedAt)
+		if err != nil {
+			return BackupTimeline{}, fmt.Errorf("parse backup timestamp for issue #%d: %w", backup.Issue.Number, err)
+		}
+		point := BackupTimelinePoint{
+			IssueNumber:        backup.Issue.Number,
+			Path:               filepath.ToSlash(issue.Path),
+			BackupGeneratedAt:  backup.GeneratedAt,
+			EventName:          backup.EventName,
+			PayloadBytes:       payload.Bytes,
+			PayloadSHA:         payload.SHA,
+			Comments:           len(backup.Comments),
+			TranscriptMessages: len(backup.Transcript),
+			IssueTitleSHA:      shortDocumentHash(backup.Issue.Title),
+		}
+		for _, comment := range backup.Comments {
+			if HasGitClawMarker(comment.Body) {
+				point.AssistantTurns++
+			}
+			if HasGitClawErrorMarker(comment.Body) {
+				point.ErrorComments++
+			}
+		}
+		for _, msg := range backup.Transcript {
+			switch msg.Role {
+			case "assistant":
+				point.AssistantMessages++
+			default:
+				point.UserMessages++
+			}
+		}
+		candidates = append(candidates, timelineCandidate{
+			point:       point,
+			generatedAt: generatedAt,
+		})
+	}
+	sort.Slice(candidates, func(i, j int) bool {
+		if !candidates[i].generatedAt.Equal(candidates[j].generatedAt) {
+			return candidates[i].generatedAt.After(candidates[j].generatedAt)
+		}
+		return candidates[i].point.IssueNumber > candidates[j].point.IssueNumber
+	})
+	if len(candidates) > limit {
+		candidates = candidates[:limit]
+	}
+	sort.Slice(candidates, func(i, j int) bool {
+		if !candidates[i].generatedAt.Equal(candidates[j].generatedAt) {
+			return candidates[i].generatedAt.Before(candidates[j].generatedAt)
+		}
+		return candidates[i].point.IssueNumber < candidates[j].point.IssueNumber
+	})
+	for i, candidate := range candidates {
+		if i > 0 {
+			candidate.point.GapSecondsSincePrevious = int64(candidate.generatedAt.Sub(candidates[i-1].generatedAt).Seconds())
+		}
+		timeline.Points = append(timeline.Points, candidate.point)
+	}
+	timeline.TimelinePoints = len(timeline.Points)
+	if len(candidates) > 0 {
+		first := candidates[0]
+		latest := candidates[len(candidates)-1]
+		timeline.FirstIssueNumber = first.point.IssueNumber
+		timeline.FirstGeneratedAt = first.point.BackupGeneratedAt
+		timeline.LatestIssueNumber = latest.point.IssueNumber
+		timeline.LatestGeneratedAt = latest.point.BackupGeneratedAt
+		timeline.TotalSpanSeconds = int64(latest.generatedAt.Sub(first.generatedAt).Seconds())
+	}
+	return timeline, nil
+}
+
 func BuildBackupInfo(root, repo string, issueNumber int) (BackupInfo, error) {
 	if issueNumber <= 0 {
 		return BackupInfo{}, fmt.Errorf("missing positive issue number")
@@ -1314,6 +1478,45 @@ func RenderBackupList(list BackupList) string {
 	return strings.TrimSpace(b.String())
 }
 
+func RenderBackupTimeline(timeline BackupTimeline) string {
+	var b strings.Builder
+	b.WriteString("## GitClaw Backup Timeline Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	fmt.Fprintf(&b, "- repository: `%s`\n", timeline.Repo)
+	fmt.Fprintf(&b, "- backup_timeline_status: `%s`\n", timeline.BackupTimelineStatus)
+	fmt.Fprintf(&b, "- backup_verify_status: `%s`\n", timeline.BackupVerifyStatus)
+	fmt.Fprintf(&b, "- verification_failures: `%d`\n", timeline.VerificationFailures)
+	fmt.Fprintf(&b, "- backup_root: `%s`\n", timeline.Root)
+	fmt.Fprintf(&b, "- repo_backup_dir: `%s`\n", timeline.RepoDir)
+	fmt.Fprintf(&b, "- index_path: `%s`\n", timeline.IndexPath)
+	fmt.Fprintf(&b, "- readme_path: `%s`\n", timeline.ReadmePath)
+	fmt.Fprintf(&b, "- backup_schema_version: `%d`\n", timeline.SchemaVersion)
+	fmt.Fprintf(&b, "- index_generated_at: `%s`\n", timeline.IndexGeneratedAt)
+	fmt.Fprintf(&b, "- issue_count: `%d`\n", timeline.IssueCount)
+	fmt.Fprintf(&b, "- limit: `%d`\n", timeline.Limit)
+	fmt.Fprintf(&b, "- timeline_points: `%d`\n", timeline.TimelinePoints)
+	fmt.Fprintf(&b, "- timeline_order: `%s`\n", timeline.TimelineOrder)
+	fmt.Fprintf(&b, "- timeline_window: `%s`\n", timeline.TimelineWindow)
+	if timeline.TimelinePoints > 0 {
+		fmt.Fprintf(&b, "- first_issue: `#%d`\n", timeline.FirstIssueNumber)
+		fmt.Fprintf(&b, "- first_generated_at: `%s`\n", timeline.FirstGeneratedAt)
+		fmt.Fprintf(&b, "- latest_issue: `#%d`\n", timeline.LatestIssueNumber)
+		fmt.Fprintf(&b, "- latest_generated_at: `%s`\n", timeline.LatestGeneratedAt)
+		fmt.Fprintf(&b, "- total_span_seconds: `%d`\n", timeline.TotalSpanSeconds)
+	} else {
+		b.WriteString("- first_issue: `none`\n")
+		b.WriteString("- latest_issue: `none`\n")
+		b.WriteString("- total_span_seconds: `0`\n")
+	}
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", timeline.RawBodiesIncluded)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_backup_timeline_change: `%t`\n\n", timeline.LLME2ERequiredAfterChange)
+
+	b.WriteString("This report turns the fetched `gitclaw-backups` branch into a body-free conversation backup timeline. It reports ordering, gaps, counts, hashes, and assistant-turn markers only; raw issue titles, issue bodies, comment bodies, transcript messages, prompts, search queries, and tool outputs are not included.\n\n")
+	b.WriteString("### Timeline Points\n")
+	writeBackupTimelinePoints(&b, timeline.Points)
+	return strings.TrimSpace(b.String())
+}
+
 func RenderBackupInfo(info BackupInfo) string {
 	var b strings.Builder
 	b.WriteString("## GitClaw Backup Info Report\n\n")
@@ -1502,6 +1705,37 @@ func writeBackupListIssues(b *strings.Builder, issues []BackupListIssue) {
 			issue.Comments,
 			issue.TranscriptMessages,
 			issue.IssueTitleSHA,
+		)
+	}
+}
+
+func writeBackupTimelinePoints(b *strings.Builder, points []BackupTimelinePoint) {
+	if len(points) == 0 {
+		b.WriteString("- none\n")
+		return
+	}
+	for _, point := range points {
+		eventName := strings.TrimSpace(point.EventName)
+		if eventName == "" {
+			eventName = "unknown"
+		}
+		fmt.Fprintf(
+			b,
+			"- issue=#%d path=`%s` generated_at=`%s` event=`%s` gap_seconds_since_previous=`%d` payload_bytes=`%d` payload_sha256_12=`%s` comments=`%d` transcript_messages=`%d` user_messages=`%d` assistant_messages=`%d` assistant_turn_comments=`%d` error_comments=`%d` title_sha256_12=`%s`\n",
+			point.IssueNumber,
+			point.Path,
+			point.BackupGeneratedAt,
+			eventName,
+			point.GapSecondsSincePrevious,
+			point.PayloadBytes,
+			point.PayloadSHA,
+			point.Comments,
+			point.TranscriptMessages,
+			point.UserMessages,
+			point.AssistantMessages,
+			point.AssistantTurns,
+			point.ErrorComments,
+			point.IssueTitleSHA,
 		)
 	}
 }

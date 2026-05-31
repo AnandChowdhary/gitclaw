@@ -146,6 +146,7 @@ gitclaw backup drill --issue <number>
 gitclaw backup risk
 gitclaw backup manifest
 gitclaw backup list
+gitclaw backup timeline
 gitclaw backup info --issue <number>
 gitclaw backup stats
 gitclaw backup search <query>
@@ -225,6 +226,7 @@ Run a live E2E harness against the current GitHub repository:
 ```bash
 scripts/e2e/github-backup-risk-report.sh
 scripts/e2e/github-backup-coverage.sh
+scripts/e2e/github-backup-timeline.sh
 scripts/e2e/github-agents-risk-report.sh
 scripts/e2e/github-nodes-risk-report.sh
 scripts/e2e/github-artifacts-risk-report.sh

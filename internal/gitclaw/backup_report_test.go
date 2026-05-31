@@ -155,6 +155,35 @@ func TestRenderBackupCoverageIssueCommandDefaultsToCurrentIssueWithTrailingProse
 	}
 }
 
+func TestRenderBackupTimelineIssueCommandRecordsDeferredIntentWithoutBodies(t *testing.T) {
+	ev := Event{
+		Repo: "owner/repo",
+		Issue: Issue{
+			Number: 97,
+			Title:  "@gitclaw /backup timeline e2e",
+			Body:   "BACKUP_TIMELINE_INTENT_SECRET",
+		},
+	}
+
+	report := RenderBackupReport(ev, DefaultConfig(), nil, nil)
+	for _, want := range []string{
+		"requested_backup_command: `timeline`",
+		"backup_command_status: `ok`",
+		"requested_local_command: `gitclaw backup timeline --root .gitclaw/backups --repo owner/repo --limit 20`",
+		"run `gitclaw backup timeline --root .gitclaw/backups --repo owner/repo --limit 20` after fetching `gitclaw-backups`",
+		"issue_side_execution: `deferred_to_post_turn_backup_branch`",
+		"raw_bodies_included: `false`",
+		"`gitclaw backup timeline --root .gitclaw/backups --repo <owner/repo> --limit 20`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("backup timeline report missing %q:\n%s", want, report)
+		}
+	}
+	if strings.Contains(report, "BACKUP_TIMELINE_INTENT_SECRET") || strings.Contains(report, "@gitclaw /backup timeline e2e") {
+		t.Fatalf("backup timeline report leaked request text:\n%s", report)
+	}
+}
+
 func TestRenderBackupDrillIssueCommandRecordsDeferredIntentWithoutBodies(t *testing.T) {
 	ev := Event{
 		Repo: "owner/repo",
