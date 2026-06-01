@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-01T12:00:06Z`
-- issue_count: `471`
+- generated_at: `2026-06-01T12:12:30Z`
+- issue_count: `472`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -476,3 +476,4 @@
 | #516 | GitClaw telegram thread channel-reply-e2e-20260601T112348Z | `2026-06-01T11:31:07Z` | 9 | 9 | `issues/000516.json` |
 | #518 | GitClaw telegram thread channel-reply-e2e-20260601T113225Z | `2026-06-01T11:39:29Z` | 9 | 9 | `issues/000518.json` |
 | #520 | @gitclaw /tools request-run search_files --id e2e-tool-run-20260601t115539z | `2026-06-01T12:00:05Z` | 5 | 6 | `issues/000520.json` |
+| #522 | @gitclaw /channels broadcast e2e-slack-route,e2e-telegram-route --message-id broadcast-20260601T121107Z | `2026-06-01T12:12:29Z` | 1 | 2 | `issues/000522.json` |
