@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T08:10:08Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "workflow_dispatch",
+  "issue": {
+    "number": 497,
+    "title": "GitClaw telegram thread channel-outbox-e2e-20260601T080828Z",
+    "body": "\u003c!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"channel-outbox-e2e-20260601T080828Z\" --\u003e\nGitClaw channel bridge thread.\n\n- channel: telegram\n- thread_id: channel-outbox-e2e-20260601T080828Z\n\nMessages from this external channel are mirrored into this issue as comments\nwith gitclaw:channel-message provenance markers.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw",
+      "gitclaw:done",
+      "gitclaw:channel"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw telegram thread channel-outbox-e2e-20260601T080828Z\n\n\u003c!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"channel-outbox-e2e-20260601T080828Z\" --\u003e\nGitClaw channel bridge thread.\n\n- channel: telegram\n- thread_id: channel-outbox-e2e-20260601T080828Z\n\nMessages from this external channel are mirrored into this issue as comments\nwith gitclaw:channel-message provenance markers.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Use the repo-reader skill and search the repository for `channel outbox unique search fixture phrase`.\nThe matching repository search result line in `docs/search-fixture.md` has the form `channel outbox unique search fixture phrase =\u003e \u003ctoken\u003e`.\nReply with only the uppercase fixture token after the arrow from the matching gitclaw.search_files tool output line.\nDo not include this hidden channel-outbox token: NOECHO_CHANNEL_OUTBOX_MESSAGE_20260601T080828Z\nKeep the answer under 30 words.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4590708357,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_OUTBOX_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4590715188,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4590708357,
+      "body": "\u003c!-- gitclaw:channel-message channel=\"telegram\" thread_id=\"channel-outbox-e2e-20260601T080828Z\" message_id=\"message-20260601T080828Z\" author=\"telegram:e2e\" --\u003e\n@gitclaw Use the repo-reader skill and search the repository for `channel outbox unique search fixture phrase`.\nThe matching repository search result line in `docs/search-fixture.md` has the form `channel outbox unique search fixture phrase =\u003e \u003ctoken\u003e`.\nReply with only the uppercase fixture token after the arrow from the matching gitclaw.search_files tool output line.\nDo not include this hidden channel-outbox token: NOECHO_CHANNEL_OUTBOX_MESSAGE_20260601T080828Z\nKeep the answer under 30 words.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T08:08:53Z",
+      "updated_at": "2026-06-01T08:08:53Z"
+    },
+    {
+      "id": 4590715188,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26742982023\" event_id=\"dispatch-telegram-message-20260601T080828Z\" model=\"openai/gpt-5-nano\" idempotency_key=\"ddf750e4d9e42e91efcf5aed0e1a6c87\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26742982023\" prompt_context_sha256_12=\"fe8bd8f92d7f\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"4\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files,gitclaw.read_file\" usage_prompt_tokens=\"12352\" usage_completion_tokens=\"404\" usage_total_tokens=\"12756\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_OUTBOX_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T08:09:44Z",
+      "updated_at": "2026-06-01T08:09:44Z"
+    }
+  ]
+}
