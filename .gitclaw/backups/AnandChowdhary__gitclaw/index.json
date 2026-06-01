@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T16:54:56Z",
+  "generated_at": "2026-06-01T16:56:33Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 499,
+  "count": 500,
   "issues": [
     {
       "number": 3,
@@ -6277,6 +6277,18 @@
       ],
       "comment_count": 5,
       "transcript_messages": 6
+    },
+    {
+      "number": 570,
+      "title": "GitClaw session handoff: issue #569 (handoff-20260601t165018z)",
+      "path": "issues/000570.json",
+      "backup_generated_at": "2026-06-01T16:56:32Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
