@@ -200,6 +200,12 @@ type ChannelSendGitHubClient interface {
 	AddIssueLabels(ctx context.Context, repo string, issueNumber int, labels []string) error
 }
 
+type ChannelDoneGitHubClient interface {
+	ChannelSendGitHubClient
+	GetIssue(ctx context.Context, repo string, issueNumber int) (Issue, error)
+	CloseIssue(ctx context.Context, repo string, issueNumber int) error
+}
+
 type ChannelStateGitHubClient interface {
 	CreateIssue(ctx context.Context, repo, title, body string, labels []string) (Issue, error)
 	ListOpenIssues(ctx context.Context, repo string, labels []string, limit int) ([]Issue, error)

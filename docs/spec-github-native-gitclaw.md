@@ -5335,6 +5335,7 @@ accepts a structured reaction form:
 @gitclaw /channels task --task-id <stable-task-id> --message-id <provider-message-id>
 @gitclaw /channels clip --clip-id <stable-clip-id> --message-id <provider-message-id>
 @gitclaw /channels remind --reminder-id <stable-reminder-id> --message-id <provider-message-id> --at <RFC3339-or-date>
+@gitclaw /channels done --message-id <stable-outbound-id>
 ```
 
 `/channels status`, `/channels progress`, and `/channels typing` infer the
@@ -5493,6 +5494,31 @@ validates the metadata-only reminder-link outbox, checks duplicate suppression,
 and then continues on the reminder issue with a normal GitHub Models
 repo-reader/search follow-up.
 
+The channel-created task, clip, and reminder issues also accept a completion
+form:
+
+```text
+@gitclaw /channels done --message-id <stable-outbound-id>
+```
+
+`/channels done`, `/channels complete`, `/channels close`, and
+`/channels resolve` read the channel artifact marker from the current GitHub
+issue, load the original `gitclaw:channel-thread` source issue to recover the
+provider thread target, queue one provider-facing done acknowledgement through
+the normal `channel-send` path, and close the current artifact issue. The
+artifact issue receipt remains body-free: it reports artifact kind, artifact
+issue, close status, source channel issue, notification queue metadata, hashes,
+and delivery gates. It does not call a model, call provider APIs, print raw
+artifact ids, print raw thread ids, print raw notification message ids, print
+artifact titles or bodies, print channel message bodies, or perform provider
+delivery. Duplicate done acknowledgements are suppressed by
+`channel + notify_message_id`. Changes to this surface require a live E2E that
+creates a channel task, completes it from the task issue, validates
+metadata-only done acknowledgement outbox discovery, checks duplicate
+suppression, confirms the task issue is closed, and then continues on the
+original channel issue with a normal GitHub Models repo-reader/search
+follow-up.
+
 Behavior:
 
 - find or create the same `gitclaw:channel-thread` issue used by inbound
@@ -5511,6 +5537,9 @@ Behavior:
 - create or reuse one `gitclaw:channel-reminder` issue per reminder id and
   queue one provider-facing reminder-link outbound comment per
   `channel + notify_message_id`,
+- close one `gitclaw:channel-task`, `gitclaw:channel-clip`, or
+  `gitclaw:channel-reminder` issue and queue one provider-facing done
+  acknowledgement per `channel + notify_message_id`,
 - suppress duplicate outbound message IDs,
 - for issue-native `/channels send`, post a `model="gitclaw/channels"`
   receipt back to the source issue,
@@ -8125,6 +8154,15 @@ examples/workflows/gitclaw.yml
   Models issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-rollcall fixture token, and avoid
   hidden route/account/channel sentinels.
+- A `gh`-driven channel-done-slash E2E harness creates a real channel task from
+  a mirrored channel issue, comments `@gitclaw /channels done ...` on the task
+  issue, verifies the task issue closes, queues a metadata-safe done
+  acknowledgement back to the original channel thread, checks duplicate
+  acknowledgement suppression and metadata-only outbox discovery, and then
+  continues on the original channel issue with a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-done fixture token, and avoid
+  hidden task/thread/account/channel sentinels.
 - A `gh`-driven channel-status-slash E2E harness creates a real channel-thread
   issue, posts `@gitclaw /channels status --message-id ... --status-id ...
   --state working` on that mirrored thread, verifies same-issue structured

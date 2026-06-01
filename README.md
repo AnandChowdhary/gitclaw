@@ -678,6 +678,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels task --task-id <id> --message-id <id>
 @gitclaw /channels clip --clip-id <id> --message-id <id>
 @gitclaw /channels remind --reminder-id <id> --message-id <id> --at <time>
+@gitclaw /channels done --message-id <id>
 gitclaw proactive list
 gitclaw proactive schedule
 gitclaw proactive chain
@@ -917,6 +918,12 @@ a normal GitHub reminder issue with a `not_before` due gate, queues a
 provider-facing reminder link back to the mirrored thread, and keeps the source
 receipt body-free. Scheduled GitHub Actions can later use the reminder issue as
 the canonical wake-up lane without a socket or webhook.
+Inside a channel-created task, clip, or reminder issue, `@gitclaw /channels
+done --message-id <id>` closes the GitHub artifact issue and queues a
+provider-facing acknowledgement back to the original mirrored Slack/Telegram
+thread. The artifact receipt reports hashes, close status, notification queue
+metadata, and delivery gates without printing artifact IDs, thread IDs,
+message IDs, titles, notes, or channel message bodies.
 The live proactive-report, proactive-list, and proactive-schedule harnesses use
 the same two-proof shape for scheduled work: body-free workflow/prompt metadata
 first, then a normal GitHub Models repo-reader/search follow-up.
@@ -1150,6 +1157,7 @@ scripts/e2e/github-channel-reply-slash.sh
 scripts/e2e/github-channel-task-slash.sh
 scripts/e2e/github-channel-clip-slash.sh
 scripts/e2e/github-channel-reminder-slash.sh
+scripts/e2e/github-channel-done-slash.sh
 scripts/e2e/github-channel-delivery-workflow.sh
 scripts/e2e/github-channel-outbox-workflow.sh
 scripts/e2e/github-config-risk-report.sh
@@ -1427,6 +1435,12 @@ queues a provider-facing reminder link back to the mirrored thread, checks
 duplicate reminder and notification suppression, exposes the reminder-link
 notification through metadata-only outbox, and then continues on the reminder
 issue with a real GitHub Models repo-reader/search follow-up.
+The channel-done slash harness closes the loop: a channel-created task issue
+receives `@gitclaw /channels done`, GitClaw closes that artifact issue, queues
+a provider-facing done acknowledgement back to the mirrored thread, checks
+duplicate acknowledgement suppression, exposes the acknowledgement through
+metadata-only outbox, and then continues on the channel issue with a real
+GitHub Models repo-reader/search follow-up.
 The channel-outbox workflow harness proves the missing outbound half of the
 bridge: a real channel-ingested message gets a GitHub Models/tool reply, the
 outbox exposes only pending assistant comments for provider delivery, delivery

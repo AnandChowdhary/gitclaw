@@ -6411,6 +6411,7 @@ type FakeGitHub struct {
 	CommentsByIssue map[int][]Comment
 	Posted          []PostedComment
 	IssueLabels     map[int][]string
+	ClosedIssues    map[int]bool
 }
 
 func (f *FakeGitHub) CreateIssue(ctx context.Context, repo, title, body string, labels []string) (Issue, error) {
@@ -6468,6 +6469,14 @@ func (f *FakeGitHub) PostIssueComment(ctx context.Context, repo string, issueNum
 		User: User{Login: "github-actions[bot]", Type: "Bot"},
 	})
 	return posted, nil
+}
+
+func (f *FakeGitHub) CloseIssue(ctx context.Context, repo string, issueNumber int) error {
+	if f.ClosedIssues == nil {
+		f.ClosedIssues = map[int]bool{}
+	}
+	f.ClosedIssues[issueNumber] = true
+	return nil
 }
 
 func (f *FakeGitHub) AddIssueLabels(ctx context.Context, repo string, issueNumber int, labels []string) error {

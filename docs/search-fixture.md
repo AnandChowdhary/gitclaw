@@ -57,6 +57,7 @@ memory promote plan unique search fixture phrase => GITCLAW_MEMORY_PROMOTE_PLAN_
 memory remember unique search fixture phrase => GITCLAW_MEMORY_REMEMBER_CONTEXT_V1
 memory remember channel notify unique search fixture phrase => GITCLAW_MEMORY_NOTIFY_CONTEXT_V1
 memory rehearsal unique search fixture phrase => GITCLAW_MEMORY_REHEARSAL_CONTEXT_V1
+channel done unique search fixture phrase => GITCLAW_CHANNEL_DONE_CONTEXT_V1
 heartbeat report unique search fixture phrase => GITCLAW_HEARTBEAT_REPORT_CONTEXT_V1
 heartbeat followup unique search fixture phrase => GITCLAW_HEARTBEAT_FOLLOWUP_CONTEXT_V1
 workflow dispatch unique search fixture phrase => GITCLAW_WORKFLOW_DISPATCH_CONTEXT_V1

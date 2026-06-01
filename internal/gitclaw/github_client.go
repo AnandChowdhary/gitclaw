@@ -257,6 +257,32 @@ func (c *RESTGitHubClient) PostIssueComment(ctx context.Context, repo string, is
 	return PostedComment{ID: raw.ID, Body: raw.Body, URL: raw.HTMLURL}, nil
 }
 
+func (c *RESTGitHubClient) CloseIssue(ctx context.Context, repo string, issueNumber int) error {
+	if c.Token == "" {
+		return fmt.Errorf("missing GitHub token")
+	}
+	payload, err := json.Marshal(map[string]string{"state": "closed"})
+	if err != nil {
+		return err
+	}
+	endpoint := fmt.Sprintf("%s/repos/%s/issues/%d", strings.TrimRight(c.APIBaseURL, "/"), repo, issueNumber)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPatch, endpoint, bytes.NewReader(payload))
+	if err != nil {
+		return err
+	}
+	c.setHeaders(req)
+	res, err := c.httpClient().Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+	if res.StatusCode < 200 || res.StatusCode >= 300 {
+		body, _ := io.ReadAll(io.LimitReader(res.Body, 4096))
+		return fmt.Errorf("GitHub close issue failed: status=%d body=%s", res.StatusCode, strings.TrimSpace(string(body)))
+	}
+	return nil
+}
+
 func (c *RESTGitHubClient) AddIssueLabels(ctx context.Context, repo string, issueNumber int, labels []string) error {
 	if c.Token == "" {
 		return fmt.Errorf("missing GitHub token")

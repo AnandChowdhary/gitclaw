@@ -2694,6 +2694,20 @@ another GitHub Models repo-reader/search response with a distinct repository
 fixture token, so the bridge validates both gateway ingress and ordinary
 thread continuation.
 
+2026-06-01 channel completion follow-up: current OpenClaw primary docs frame
+the gateway as a single control plane for channels, tools, events, sessions,
+and real messaging delivery, with explicit DM pairing/default-deny safety.
+Hermes' current README frames the gateway as cross-platform conversation
+continuity plus scheduled automations and skills/memory loops. GitClaw should
+keep borrowing the continuity shape without adopting a resident gateway: when a
+channel-created task, clip, or reminder finishes, the GitHub-native action
+should close the artifact issue, recover provider routing only from the
+reviewed source channel-thread marker, queue a provider-facing acknowledgement
+through `channel-outbox`, and require a normal GitHub Models follow-up after
+the deterministic action. Sources: OpenClaw GitHub README
+(`https://github.com/openclaw/openclaw`) and Hermes Agent GitHub README
+(`https://github.com/NousResearch/hermes-agent`).
+
 2026-05-31 channels-report E2E hardening: OpenClaw's current channel docs make
 Slack/Telegram gateway routing, channel policies, and provider delivery a
 first-class operator surface, while Hermes' Slack docs emphasize thread/session
