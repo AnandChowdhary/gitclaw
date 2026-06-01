@@ -5609,6 +5609,8 @@ comment with `model="gitclaw/backup"` and summarizes:
 - requested backup command intent (`summary`, `catalog`, `verify`, `coverage`,
   `manifest`, `list`, `timeline`, `info`, `stats`, `search`, `export-jsonl`,
   `restore-plan`, or `retention-plan`),
+- the recovery rehearsal issue action
+  (`@gitclaw /backup rehearse --id <stable-rehearsal-id>`),
 - the matching local `gitclaw backup ...` command to run against a fetched
   `gitclaw-backups` branch,
 - that issue-side execution is metadata-only because the backup branch is
@@ -5741,6 +5743,47 @@ to run after the post-turn backup job writes the `gitclaw-backups` branch.
 Changes to this surface must include a live GitHub Models follow-up E2E that
 proves normal inference, repo-reader skill selection, and prompt-visible tool
 usage after the deterministic drill report.
+
+## Backup Rehearsal Issue Action
+
+GitClaw supports a conversation-creating recovery rehearsal action:
+
+```text
+@gitclaw /backup rehearse --id <stable-rehearsal-id>
+```
+
+Aliases are `/backup rehearsal`, `/backup restore-rehearsal`,
+`/backup recovery`, and `/backup recover`; `/backups` may be used instead of
+`/backup`. The action runs before model inference, creates or reuses one open
+GitHub issue marked with `gitclaw:backup-rehearsal-issue`, and labels that
+issue with the normal trigger label so the operator can continue the rehearsal
+as a GitHub Models conversation.
+
+The source receipt is body-free and model-free. It includes the rehearsal issue
+number, duplicate suppression status, backup issue number, backup branch/root,
+hashes for repo backup paths, and explicit gates:
+
+- `restore_mode: dry-run`,
+- `repository_mutation_allowed: false`,
+- `backup_branch_write_allowed: false`,
+- `github_api_replay_allowed: false`,
+- `raw_source_body_included: false`,
+- `raw_backup_bodies_included: false`.
+
+The action does not read raw backup payloads, restore files, mutate the
+repository, replay GitHub API calls, or call a model. The rehearsal issue body
+may include the stable rehearsal id and expected backup paths because it is the
+operator-facing lane, but it must not copy raw source text. Duplicate
+suppression is keyed by the hidden rehearsal marker and sanitized id.
+
+Every change to this surface must run a live E2E that creates a real source
+issue, verifies the rehearsal issue was opened and labeled, fetches the real
+`gitclaw-backups` branch, runs `gitclaw backup coverage`, `gitclaw backup
+drill`, and `gitclaw backup restore-plan` for the source issue, posts a
+duplicate rehearsal request, and finally comments on the rehearsal issue with a
+repo-reader search task that must make a GitHub Models call with prompt
+context, selected skill, prompt-visible `gitclaw.search_files`, and usage
+telemetry.
 
 ## Backup Risk Command
 
@@ -7112,7 +7155,28 @@ assert the expected comments/labels, and close the issue in cleanup.
      assert the next assistant turn used GitHub Models with prompt provenance,
      selected skills, and prompt-visible tool names.
 
-47. **Backup retention plan**
+47. **Backup rehearsal issue**
+
+   - create a real issue with `@gitclaw /backup rehearse --id <id>`,
+   - assert the source receipt is generated without a model call, creates a
+     labeled rehearsal issue, suppresses raw source text, and exposes only
+     hashes for backup paths,
+   - inspect the rehearsal issue body and assert it contains the stable
+     marker, backup branch/root, expected issue backup path, dry-run gates, and
+     no raw source body,
+   - wait for the successful backup job,
+   - fetch the real `gitclaw-backups` branch,
+   - run `gitclaw backup coverage`, `gitclaw backup drill`, and
+     `gitclaw backup restore-plan` for the source issue,
+   - assert all three local reports are body-free and non-mutating,
+   - post a duplicate `@gitclaw /backup rehearse --id <id>` comment and assert
+     it reuses the same rehearsal issue,
+   - post a normal follow-up comment on the rehearsal issue that requires
+     repo-reader search and assert the next assistant turn used GitHub Models
+     with prompt provenance, selected skills, prompt-visible tool names, and
+     usage markers.
+
+48. **Backup retention plan**
 
    - create a real issue with `@gitclaw /backup retention-plan`,
    - assert the issue-side report lists `requested_backup_command:
@@ -7932,6 +7996,13 @@ examples/workflows/gitclaw.yml
   harness posts a normal model-backed follow-up that proves repo-reader search,
   prompt provenance, selected skill metadata, prompt-visible tool names, and
   normalized usage markers.
+- A `gh`-driven backup-rehearse-issue E2E harness verifies
+  `@gitclaw /backup rehearse` opens or reuses a labeled recovery rehearsal
+  issue, checks duplicate suppression and body-free source receipts, verifies
+  the fetched `gitclaw-backups` branch with coverage/drill/restore-plan, and
+  then posts a normal model-backed follow-up on the rehearsal issue that proves
+  repo-reader search, prompt provenance, selected skill metadata,
+  prompt-visible tool names, and normalized usage markers.
 - A `gh`-driven backup-retention-plan E2E harness verifies
   `@gitclaw /backup retention-plan` records the deferred issue-side command
   intent, then verifies the fetched `gitclaw-backups` branch can produce a

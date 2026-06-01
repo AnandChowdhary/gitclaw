@@ -356,6 +356,7 @@ gitclaw backup search <query>
 gitclaw backup export-jsonl
 gitclaw backup restore-plan
 gitclaw backup retention-plan
+@gitclaw /backup rehearse --id <id>
 gitclaw session catalog
 gitclaw session list --backup <issue.json>
 gitclaw session provenance --backup <issue.json>
@@ -506,6 +507,12 @@ gates without leaking hidden issue/comment text or raw run URLs.
 payload. Its live harness pairs deterministic restore metadata checks with a
 real GitHub Models repo-reader follow-up so backup changes keep normal LLM and
 tool coverage honest.
+
+`@gitclaw /backup rehearse --id <id>` opens or reuses a dedicated GitHub issue
+for a dry-run recovery rehearsal. The source receipt is body-free and
+model-free; the rehearsal issue records the expected backup branch paths and
+dry-run gates, then normal comments on that issue exercise GitHub Models and
+repo-reader tools.
 
 `gitclaw backup retention-plan` is a dry-run cleanup plan for fetched backups.
 Its live harness now also proves a real GitHub Models repo-reader follow-up
@@ -839,6 +846,7 @@ scripts/e2e/github-backup-catalog-report.sh
 scripts/e2e/github-backup-snapshot.sh
 scripts/e2e/github-backup-search.sh
 scripts/e2e/github-backup-export-jsonl.sh
+scripts/e2e/github-backup-rehearse-issue.sh
 scripts/e2e/github-agents-catalog-report.sh
 scripts/e2e/github-agents-provenance-report.sh
 scripts/e2e/github-agents-risk-report.sh
@@ -1111,6 +1119,11 @@ deterministic route probe, exposes it through outbox without bodies, records a
 delivery receipt through the delivery workflow, suppresses duplicate probes,
 keeps route/thread/message/probe data out of receipts, and then runs a real
 GitHub Models repo-reader/search follow-up.
+The backup-rehearse issue harness proves recovery can become its own GitHub
+conversation lane: `@gitclaw /backup rehearse` opens a labeled rehearsal issue,
+verifies the real `gitclaw-backups` branch with coverage/drill/restore-plan,
+suppresses duplicate rehearsal requests, and then runs a real GitHub Models
+repo-reader/search follow-up on the rehearsal issue.
 The channel-broadcast slash harness fans one source issue out to multiple
 reviewed routes, verifies one outbound queue item per route, checks duplicate
 broadcast suppression, keeps route names and outbound bodies out of the source

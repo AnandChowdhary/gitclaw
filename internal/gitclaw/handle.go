@@ -629,6 +629,32 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		status.SetDone()
 		return nil
 	}
+	if IsBackupRehearsalIssueRequest(ev, cfg) {
+		rehearsalClient, ok := github.(BackupRehearsalIssueGitHubClient)
+		if !ok {
+			return failStartedTurn(ctx, cfg, github, ev, status, "backup", fmt.Errorf("github client cannot create backup rehearsal issues"))
+		}
+		req, err := BuildBackupRehearsalIssueRequest(ev, cfg)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "backup", fmt.Errorf("build backup rehearsal issue: %w", err))
+		}
+		result, err := RunBackupRehearsalIssue(ctx, cfg, rehearsalClient, req)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "backup", fmt.Errorf("run backup rehearsal issue: %w", err))
+		}
+		body := RenderAssistantComment(Marker{
+			RunID:          envFirst("GITHUB_RUN_ID", "local"),
+			EventID:        eventID(ev),
+			Model:          "gitclaw/backup",
+			IdempotencyKey: key,
+			RunURL:         actionRunURL(ev),
+		}, RenderBackupRehearsalIssueActionReport(ev, req, result))
+		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post backup rehearsal issue comment: %w", err))
+		}
+		status.SetDone()
+		return nil
+	}
 	if IsBackupReportRequest(ev, cfg) {
 		body := RenderAssistantComment(Marker{
 			RunID:          envFirst("GITHUB_RUN_ID", "local"),

@@ -628,6 +628,19 @@ metadata, then a normal GitHub Models issue-comment turn proves the assistant
 can still use repo-reader search with prompt provenance, selected-skill
 metadata, and usage markers after the backup inspection.
 
+2026-06-01 backup-rehearsal follow-up: OpenClaw's backup and migration posture
+keeps recovery behind explicit verify/preview gates, while Hermes-style session
+state makes old conversations useful only when they can be resumed safely.
+GitClaw should turn that into a no-server recovery lane:
+`@gitclaw /backup rehearse --id <id>` creates or reuses a GitHub issue for a
+dry-run rehearsal, labels it for normal GitClaw conversation, and records only
+backup paths, source hashes, and no-mutation gates. The action must not read
+raw backup payloads, restore files, replay GitHub API calls, mutate the repo,
+or call a model; acceptance requires fetching `gitclaw-backups`, running
+coverage/drill/restore-plan, suppressing duplicate rehearsal ids, and then
+continuing on the rehearsal issue with a real GitHub Models repo-reader/search
+turn.
+
 2026-05-29 backup-retention follow-up: OpenClaw's backup/restore commands keep
 state changes behind explicit previews, while Hermes' session lifecycle docs
 make cleanup/archival pressure visible through exported session artifacts.
