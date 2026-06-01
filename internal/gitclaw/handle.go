@@ -702,6 +702,32 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		status.SetDone()
 		return nil
 	}
+	if IsChannelInviteActionRequest(ev, cfg) {
+		channelClient, ok := github.(ChannelSendGitHubClient)
+		if !ok {
+			return failStartedTurn(ctx, cfg, github, ev, status, "channel", fmt.Errorf("github client cannot invite channel routes"))
+		}
+		req, err := BuildChannelInviteActionRequest(ev, cfg)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "channel", fmt.Errorf("build channel invite action: %w", err))
+		}
+		result, err := RunChannelBroadcast(ctx, cfg, channelClient, req.Options)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "channel", fmt.Errorf("run channel invite action: %w", err))
+		}
+		body := RenderAssistantComment(Marker{
+			RunID:          envFirst("GITHUB_RUN_ID", "local"),
+			EventID:        eventID(ev),
+			Model:          "gitclaw/channels",
+			IdempotencyKey: key,
+			RunURL:         actionRunURL(ev),
+		}, RenderChannelInviteActionReport(ev, req, result))
+		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post channel invite action comment: %w", err))
+		}
+		status.SetDone()
+		return nil
+	}
 	if IsChannelBroadcastActionRequest(ev, cfg) {
 		channelClient, ok := github.(ChannelSendGitHubClient)
 		if !ok {

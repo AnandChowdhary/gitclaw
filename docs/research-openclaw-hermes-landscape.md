@@ -2705,6 +2705,18 @@ provider tokens, raw route names, raw thread IDs, raw message IDs, and raw
 outbound bodies must stay out of the receipt, and the live E2E must still end
 with a normal GitHub Models repo-reader/search turn.
 
+2026-06-01 channel invite follow-up: channel bridges should help a GitHub-native
+conversation reach people in external chat without moving the canonical thread
+out of GitHub. OpenClaw's gateway routing and Hermes' messaging gateway both
+support this "bring the channel to the work" pattern. GitClaw's serverless
+version is `@gitclaw /channels invite <routes> --message-id <id>`: compose a
+provider-facing invitation from the issue number, URL, title, and optional
+note, queue it to each reviewed route, and keep raw routes, notes, titles,
+thread IDs, message IDs, and outbound bodies out of the source receipt. Live
+E2E must prove the queued invite bodies on target channel issues, duplicate
+suppression, metadata-only outbox discovery, and a real GitHub Models
+repo-reader/search follow-up on the source issue.
+
 Hermes' session docs also expose a practical backup primitive:
 `hermes sessions export backup.jsonl` writes conversation metadata and messages
 as durable JSONL. GitClaw should preserve the same principle, but use GitHub

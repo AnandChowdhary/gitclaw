@@ -81,6 +81,7 @@ channel send unique search fixture phrase => GITCLAW_CHANNEL_SEND_CONTEXT_V1
 channel send route unique search fixture phrase => GITCLAW_CHANNEL_SEND_ROUTE_CONTEXT_V1
 channel send slash unique search fixture phrase => GITCLAW_CHANNEL_SEND_SLASH_CONTEXT_V1
 channel broadcast unique search fixture phrase => GITCLAW_CHANNEL_BROADCAST_CONTEXT_V1
+channel invite unique search fixture phrase => GITCLAW_CHANNEL_INVITE_CONTEXT_V1
 channel reply slash unique search fixture phrase => GITCLAW_CHANNEL_REPLY_SLASH_CONTEXT_V1
 backup verify unique search fixture phrase => GITCLAW_BACKUP_VERIFY_CONTEXT_V1
 backup index unique search fixture phrase => GITCLAW_BACKUP_INDEX_CONTEXT_V1

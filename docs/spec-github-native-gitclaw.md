@@ -4968,6 +4968,25 @@ raw outbound bodies, or perform provider delivery. Duplicates are suppressed
 per route by the same `channel + message_id` queue semantics as single-route
 sends.
 
+For inviting an external channel into an existing GitHub issue, GitClaw also
+supports:
+
+```text
+@gitclaw /channels invite team-alerts,ops-alerts --message-id <stable-outbound-id>
+optional note to include in the routed channel invitation
+```
+
+`/channels invite`, `/channels share`, and `/channels summon` compose a
+provider-facing invitation body from the source issue number, source issue URL,
+source issue title, and optional note, then queue that body through the same
+reviewed-route broadcast machinery. The source receipt reports only hashes,
+counts, target issue/comment IDs, provider keys, duplicate status, and delivery
+instructions. It does not call a model, call provider APIs, print raw route
+names, print raw source titles, print raw notes, print raw thread/message IDs,
+or print the outbound invitation body. Duplicates are suppressed per route by
+the same `channel + message_id` queue semantics as other outbound channel
+messages.
+
 When the source issue is itself a `gitclaw:channel-thread`, GitClaw also
 accepts a shorter reply form:
 
@@ -7362,6 +7381,15 @@ examples/workflows/gitclaw.yml
   same source issue then gets a normal GitHub Models issue-comment follow-up
   that must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-broadcast fixture token, and avoid hidden route/account/channel
+  sentinels.
+- A `gh`-driven channel-invite-slash E2E harness creates an ordinary GitHub
+  issue with `@gitclaw /channels invite ...`, verifies routebook-backed issue
+  invitations on each target channel issue, body-free source receipt metadata,
+  duplicate invite suppression from a later issue comment with the same message
+  id, and metadata-only outbox discovery for each target issue. The same source
+  issue then gets a normal GitHub Models issue-comment follow-up that must
+  select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-invite fixture token, and avoid hidden route/account/channel
   sentinels.
 - A `gh`-driven channel-reply-slash E2E harness creates a real channel-thread
   issue through `gitclaw-channel-ingest.yml`, posts
