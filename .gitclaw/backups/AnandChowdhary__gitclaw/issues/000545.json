@@ -1,15 +1,18 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T14:22:22Z",
+  "generated_at": "2026-06-01T14:24:11Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 545,
     "title": "@gitclaw /soul rehearse --target soul --id soul-rehearsal-20260601t142050z",
     "body": "GitClaw live soul rehearsal issue E2E.\n\nCreate a current-soul conversation lane without copying this raw source request.\nDo not include this hidden source token: NOECHO_SOUL_REHEARSAL_SOURCE_20260601t142050z",
     "author": "AnandChowdhary",
     "author_association": "OWNER",
-    "labels": null
+    "labels": [
+      "gitclaw:done",
+      "gitclaw:write-requested"
+    ]
   },
   "transcript": [
     {
@@ -29,6 +32,24 @@
       "CommentID": 4593475453,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /soul rehearse --target soul --id soul-rehearsal-20260601t142050z\n\nRepeat the same soul rehearsal.\nDo not include this hidden duplicate token: NOECHO_SOUL_REHEARSAL_DUPLICATE_20260601t142050z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4593482306,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Soul Rehearsal Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#545`\n- source_comment_id: `4593482306`\n- requested_soul_command: `/soul rehearse`\n- soul_rehearsal_status: `existing`\n- rehearsal_issue: `#546`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/546`\n- rehearsal_issue_created: `false`\n- duplicate_suppressed: `true`\n- rehearsal_id_sha256_12: `ff3a050f2a17`\n- requested_target: `soul`\n- normalized_soul_path: `.gitclaw/SOUL.md`\n- target_category: `soul`\n- target_present: `true`\n- target_required: `true`\n- target_canonical: `true`\n- target_loaded_for_this_turn: `true`\n- target_sha256_12: `0460b93e1a5c`\n- target_bytes: `576`\n- target_lines: `14`\n- soul_validation_status: `ok`\n- soul_validation_errors: `0`\n- soul_validation_warnings: `0`\n- soul_risk_status: `ok`\n- soul_risk_findings: `0`\n- high_risk_findings: `0`\n- rehearsal_mode: `github-issue-conversation`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- context_target_write_allowed: `false`\n- candidate_soul_generation_allowed: `false`\n- soul_file_written: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `cb14affc548c`\n- source_bytes: `200`\n- source_lines: `4`\n- raw_source_body_included: `false`\n- raw_target_body_included: `false`\n- raw_candidate_soul_included: `false`\n- llm_e2e_required_after_soul_rehearsal_issue_change: `true`\n- issue_title_sha256_12: `d260b42a86ab`\n\nGitClaw opened or reused a GitHub issue for rehearsing the current high-authority context in a normal conversation. The action does not generate candidate soul text, write `.gitclaw/` files, mutate the repository, or call a model; continue on the rehearsal issue to exercise the current behavior with GitHub Models.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#546`\n- ask a normal `@gitclaw` follow-up that relies on `.gitclaw/SOUL.md` without requesting a file edit\n- verify the follow-up assistant marker includes prompt context, selected skill, prompt-visible tools, and usage telemetry",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4593491178,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -39,6 +60,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T14:21:52Z",
       "updated_at": "2026-06-01T14:21:52Z"
+    },
+    {
+      "id": 4593482306,
+      "body": "@gitclaw /soul rehearse --target soul --id soul-rehearsal-20260601t142050z\n\nRepeat the same soul rehearsal.\nDo not include this hidden duplicate token: NOECHO_SOUL_REHEARSAL_DUPLICATE_20260601t142050z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T14:22:41Z",
+      "updated_at": "2026-06-01T14:22:41Z"
+    },
+    {
+      "id": 4593491178,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26760917663\" event_id=\"comment-4593482306\" model=\"gitclaw/soul\" idempotency_key=\"7d52614aa3a712b5c570007746a5a6d9\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26760917663\" --\u003e\n## GitClaw Soul Rehearsal Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#545`\n- source_comment_id: `4593482306`\n- requested_soul_command: `/soul rehearse`\n- soul_rehearsal_status: `existing`\n- rehearsal_issue: `#546`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/546`\n- rehearsal_issue_created: `false`\n- duplicate_suppressed: `true`\n- rehearsal_id_sha256_12: `ff3a050f2a17`\n- requested_target: `soul`\n- normalized_soul_path: `.gitclaw/SOUL.md`\n- target_category: `soul`\n- target_present: `true`\n- target_required: `true`\n- target_canonical: `true`\n- target_loaded_for_this_turn: `true`\n- target_sha256_12: `0460b93e1a5c`\n- target_bytes: `576`\n- target_lines: `14`\n- soul_validation_status: `ok`\n- soul_validation_errors: `0`\n- soul_validation_warnings: `0`\n- soul_risk_status: `ok`\n- soul_risk_findings: `0`\n- high_risk_findings: `0`\n- rehearsal_mode: `github-issue-conversation`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- context_target_write_allowed: `false`\n- candidate_soul_generation_allowed: `false`\n- soul_file_written: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `cb14affc548c`\n- source_bytes: `200`\n- source_lines: `4`\n- raw_source_body_included: `false`\n- raw_target_body_included: `false`\n- raw_candidate_soul_included: `false`\n- llm_e2e_required_after_soul_rehearsal_issue_change: `true`\n- issue_title_sha256_12: `d260b42a86ab`\n\nGitClaw opened or reused a GitHub issue for rehearsing the current high-authority context in a normal conversation. The action does not generate candidate soul text, write `.gitclaw/` files, mutate the repository, or call a model; continue on the rehearsal issue to exercise the current behavior with GitHub Models.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#546`\n- ask a normal `@gitclaw` follow-up that relies on `.gitclaw/SOUL.md` without requesting a file edit\n- verify the follow-up assistant marker includes prompt context, selected skill, prompt-visible tools, and usage telemetry",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T14:23:43Z",
+      "updated_at": "2026-06-01T14:23:43Z"
     }
   ]
 }
