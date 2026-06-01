@@ -195,6 +195,9 @@ for expected in \
   'permissions_actions_write: `true`' \
   'permissions_issues_write: `true`' \
   'workflow_inputs: `5`' \
+  'send_workflow_path: `.github/workflows/gitclaw-channel-send.yml`' \
+  'send_workflow_present: `true`' \
+  'send_workflow_inputs: `5`' \
   'state_workflow_present: `true`' \
   'state_workflow_inputs: `4`' \
   'gateway_workflow_present: `true`' \
@@ -213,6 +216,7 @@ for expected in \
   'slack' \
   'generic' \
   'gitclaw channel-ingest' \
+  'gitclaw channel-send' \
   'gitclaw channel-gateway' \
   'gitclaw channel-outbox' \
   'gitclaw channel-delivery' \

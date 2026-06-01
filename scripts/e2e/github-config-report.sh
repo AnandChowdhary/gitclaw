@@ -154,14 +154,15 @@ for expected in \
   'skills_disabled_configured: `0`' \
   'tools_allowed_configured: `0`' \
   'tools_disabled_configured: `0`' \
-  'workflows_present: `8`' \
-  'slash_commands: `34`' \
+  'workflows_present: `9`' \
+  'slash_commands: `35`' \
   '/agents' \
   '/artifacts' \
   '/nodes' \
   '/approvals' \
   '/bundles' \
   '/checkpoints' \
+  '/security' \
   '/secrets' \
   '### Skill Gates' \
   '### Tool Gates' \
@@ -186,6 +187,7 @@ for expected in \
   '.github/workflows/gitclaw-heartbeat.yml' \
   '.github/workflows/gitclaw-proactive.yml' \
   '.github/workflows/gitclaw-channel-ingest.yml' \
+  '.github/workflows/gitclaw-channel-send.yml' \
   '.github/workflows/gitclaw-channel-state.yml' \
   '.github/workflows/gitclaw-channel-gateway.yml' \
   '.github/workflows/gitclaw-channel-outbox.yml' \

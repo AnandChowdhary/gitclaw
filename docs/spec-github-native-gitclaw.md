@@ -931,8 +931,8 @@ GitHub issue/comment event
   `session status`,
   `session coverage`,
   `heartbeat`, `heartbeat status`, `heartbeat risk`,
-  `channel-ingest`, `channel-state`, `channel-gateway`, `channel-outbox`,
-  `channel-delivery`,
+  `channel-ingest`, `channel-send`, `channel-state`, `channel-gateway`,
+  `channel-outbox`, `channel-delivery`,
   `channels list`, `channels verify`, `channels risk`, `channels info`,
   `checkpoints catalog`, `checkpoints status`, `checkpoints list`,
   `checkpoints preview`, `checkpoints risk`, `checkpoints verify`,
@@ -959,6 +959,7 @@ GitHub issue/comment event
   `prompt compression`, `prompt risk`,
   `runs current`, `runs verify`, `runs history`,
   `sandbox explain`, `sandbox verify`, `sandbox risk`,
+  `security audit`, `security risk`,
   `memory catalog`, `memory snapshot`, `memory provenance`, `memory verify`, `memory risk`, `memory validate`,
   `memory timeline`, `memory list`, `memory promote-plan`, `memory info`, `memory search`,
   `skills validate`,
@@ -3070,6 +3071,51 @@ that raw issue/comment/prompt/workflow/tool bodies and secrets were not
 printed, and treats future shell, repository mutation, elevated execution, or
 workflow-permission drift as high-severity findings.
 
+## Security Audit Command
+
+GitClaw supports an OpenClaw-style personal-assistant security audit that
+aggregates the deterministic risk surfaces already available in the repo:
+
+```text
+@gitclaw /security
+@gitclaw /sec
+@gitclaw /security audit
+@gitclaw /security risk
+```
+
+The command runs after normal preflight authorization and repo-context loading,
+but before model inference. It posts a `gitclaw:assistant-turn` comment with
+`model="gitclaw/security"` and summarizes:
+
+- trust model: single trusted operator, not hostile multi-tenant delegation,
+- runtime boundary: ephemeral GitHub Actions runner, no gateway server
+  required,
+- aggregate status for config, policy, sandbox, channels, tools, skills,
+  plugins, and secrets,
+- high/warning/info finding counts across those surfaces,
+- workflow permission and channel workflow presence gates,
+- host-exec, repository-mutation, mutating-tool, and plaintext-secret gates,
+- explicit body-free and credential-free audit boundaries.
+
+It never calls a model, mutates the repository, executes shell tools, prints
+raw config/workflow/issue/comment/prompt/tool-output bodies, resolves GitHub
+Secrets, or prints credential values. This is intentionally closer to a
+control-plane posture card than to a vulnerability scanner: it tells the
+operator whether GitClaw's GitHub-native assistant boundary still matches the
+OpenClaw/Hermes lessons before more channel or proactive surfaces are added.
+
+Local operators can run the same aggregate audit without opening an issue:
+
+```bash
+gitclaw security audit
+gitclaw security risk
+```
+
+Any implementation change to this surface must pair the deterministic report
+with a live GitHub Models follow-up conversation that selects `repo-reader`,
+exposes prompt-visible `gitclaw.search_files`, recovers the security-audit
+fixture token, and avoids hidden issue/comment/body leakage.
+
 ## Context Inspection Command
 
 GitClaw supports a deterministic context inspection command inspired by
@@ -4789,6 +4835,42 @@ This workflow is useful for E2E, manual bridge experiments, and tiny external
 dispatchers. Provider-specific pollers can later call the same CLI path after
 they read Telegram/Slack events.
 
+### Channel Send Command
+
+Channel bridges also need a GitHub-originated outbound path for proactive jobs,
+operator-triggered notifications, and future scheduled channel nudges. GitClaw
+exposes this as `channel-send`, which queues a deliverable message on the
+canonical channel thread without calling the model:
+
+```bash
+gitclaw channel-send \
+  --repo OWNER/REPO \
+  --channel slack \
+  --thread-id <provider-thread-or-chat-id> \
+  --message-id <stable-outbound-id> \
+  --body "message to send"
+```
+
+Behavior:
+
+- find or create the same `gitclaw:channel-thread` issue used by inbound
+  channel ingest,
+- label it with `gitclaw:channel` but do not apply the normal `gitclaw`
+  trigger label,
+- post one `gitclaw:channel-outbound` comment per `channel + message_id`,
+- suppress duplicate outbound message IDs,
+- leave provider delivery to `channel-outbox` plus `channel-delivery`, so
+  provider credentials and message send APIs stay outside the core assistant
+  turn.
+
+`.github/workflows/gitclaw-channel-send.yml` wraps the command with
+`workflow_dispatch` and `issues: write`. This makes scheduled jobs and manual
+bridge tests able to queue Slack/Telegram work without a webhook server,
+socket service, or hidden delivery database. Changes to this workflow must
+prove duplicate suppression, pending outbox discovery, delivery receipt retry
+suppression, and a normal GitHub Models repo-reader/search follow-up on the
+same issue.
+
 ### Channel State Command
 
 Provider-specific bridges need durable state before GitClaw can safely poll
@@ -4878,13 +4960,14 @@ gitclaw channel-outbox \
 Behavior:
 
 - verify the source issue carries a matching `gitclaw:channel-thread` marker,
-- list assistant comments carrying `gitclaw:assistant-turn`,
+- list assistant comments carrying `gitclaw:assistant-turn` and outbound
+  channel comments carrying `gitclaw:channel-outbound`,
 - find the matching `gitclaw:channel-state` issue and read
   `gitclaw:channel-delivery` receipts,
-- return only assistant comments that have not yet been delivered for
+- return only deliverable comments that have not yet been delivered for
   `channel + account_sha256_12 + source issue + source comment`,
-- write assistant bodies only to an explicit local `--out` JSON file when
-  `--include-body` is set,
+- write assistant/outbound bodies only to an explicit local `--out` JSON file
+  when `--include-body` is set,
 - keep stdout, `GITHUB_OUTPUT`, logs, state issues, and receipts metadata-only
   by default.
 
@@ -4909,14 +4992,14 @@ gitclaw channel-delivery \
   --channel telegram \
   --account-id <provider-account-or-workspace-id> \
   --issue-number <github-issue> \
-  --comment-id <github-assistant-comment-id> \
+  --comment-id <github-assistant-or-outbound-comment-id> \
   --external-message-id <provider-message-id>
 ```
 
 Behavior:
 
-- verify the source comment exists and carries a `gitclaw:assistant-turn`
-  marker,
+- verify the source comment exists and carries either a
+  `gitclaw:assistant-turn` marker or a `gitclaw:channel-outbound` marker,
 - find or create the matching `gitclaw:channel-state` issue,
 - post one `gitclaw:channel-delivery` receipt for
   `channel + account_sha256_12 + source issue + source comment`,
@@ -4926,11 +5009,11 @@ Behavior:
 `.github/workflows/gitclaw-channel-delivery.yml` exposes the same receipt path
 through `workflow_dispatch`, so a gateway can send a reply through Telegram or
 Slack and then use the repository `GITHUB_TOKEN` to record exactly what GitHub
-assistant comment was delivered without writing channel credentials or reply
-bodies into the state issue. Changes to this workflow must prove source
-assistant verification, hash-only outbound receipt state, duplicate receipt
-suppression, and two normal GitHub Models repo-reader/search turns that do not
-leak source assistant bodies or provider message IDs.
+assistant or queued outbound comment was delivered without writing channel
+credentials or reply bodies into the state issue. Changes to this workflow
+must prove source assistant/outbound verification, hash-only outbound receipt
+state, duplicate receipt suppression, and normal GitHub Models repo-reader/
+search turns that do not leak source bodies or provider message IDs.
 
 ### Channel Inspection Command
 
@@ -7086,6 +7169,16 @@ examples/workflows/gitclaw.yml
   issue-comment follow-ups that must make GitHub Models calls, select
   `repo-reader`, expose `gitclaw.search_files`, recover distinct
   channel-gateway fixture tokens, and avoid hidden account/lease sentinels.
+- A `gh`-driven channel-send-workflow E2E harness dispatches
+  `.github/workflows/gitclaw-channel-send.yml`, verifies a GitHub-originated
+  `gitclaw:channel-outbound` message is queued on a canonical channel issue,
+  repeats the dispatch to prove duplicate suppression, discovers the pending
+  outbound message through `channel-outbox`, records delivery through
+  `channel-delivery`, then dispatches outbox again to prove the receipt
+  suppresses retries. The same harness posts a normal issue-comment follow-up
+  that must make a GitHub Models call, select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-send fixture token, and avoid
+  hidden account/provider/channel sentinels.
 - A `gh`-driven channel-delivery-workflow E2E harness dispatches
   `.github/workflows/gitclaw-channel-delivery.yml`, verifies a source
   `gitclaw:assistant-turn` comment can be recorded as delivered, checks that
@@ -8068,6 +8161,13 @@ examples/workflows/gitclaw.yml
   normal follow-up comment that requires repo-reader search so GitHub Models
   performs a real LLM call with prompt context, selected skill metadata, and
   prompt-visible tool provenance.
+- A `gh`-driven security-audit E2E harness verifies `@gitclaw /security audit`
+  aggregates config, policy, sandbox, channels, tools, skills, plugins, and
+  secrets into one body-free OpenClaw-style security posture card without a
+  model call or issue-body leakage. The same live issue then receives a normal
+  GitHub Models follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the security-audit repository-search fixture
+  token, and avoid hidden issue/comment sentinels.
 - A `gh`-driven policy-report E2E harness verifies `@gitclaw /policy` produces
   a deterministic preflight/label/write-policy audit without a model call or
   issue-body leakage.

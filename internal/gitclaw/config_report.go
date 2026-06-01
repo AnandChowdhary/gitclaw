@@ -15,6 +15,7 @@ var configWorkflowPaths = []string{
 	".github/workflows/gitclaw-heartbeat.yml",
 	".github/workflows/gitclaw-proactive.yml",
 	".github/workflows/gitclaw-channel-ingest.yml",
+	".github/workflows/gitclaw-channel-send.yml",
 	".github/workflows/gitclaw-channel-state.yml",
 	".github/workflows/gitclaw-channel-gateway.yml",
 	".github/workflows/gitclaw-channel-outbox.yml",

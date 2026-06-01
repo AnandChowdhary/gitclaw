@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "channels-info-report-e2e: $*" >&2
+  echo "security-audit-report-e2e: $*" >&2
 }
 
 die() {
@@ -26,7 +26,6 @@ ensure_label() {
 }
 
 ensure_label gitclaw 5319e7 "Handled by GitClaw"
-ensure_label gitclaw:channel 1d76db "GitClaw mirrored channel thread"
 ensure_label gitclaw:running fbca04 "GitClaw run is active"
 ensure_label gitclaw:done 0e8a16 "Latest GitClaw run completed"
 ensure_label gitclaw:error b60205 "Latest GitClaw run failed"
@@ -34,15 +33,15 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="GITCLAW_CHANNELS_INFO_E2E_${timestamp}"
-followup_hidden_token="GITCLAW_CHANNELS_INFO_FOLLOWUP_HIDDEN_${timestamp}"
-expected_token="GITCLAW_CHANNELS_INFO_CONTEXT_V1"
-search_phrase="channels info unique search fixture phrase"
-title="@gitclaw /channels info telegram e2e ${timestamp}"
-body="Live channels info E2E.
+hidden_token="NOECHO_SECURITY_AUDIT_${timestamp}"
+followup_hidden_token="NOECHO_SECURITY_AUDIT_FOLLOWUP_${timestamp}"
+expected_token="GITCLAW_SECURITY_AUDIT_CONTEXT_V1"
+search_phrase="security audit unique search fixture phrase"
+title="@gitclaw /security audit e2e ${timestamp}"
+body="@gitclaw /security audit
 
-Hidden channels info token: ${token}
-This should produce a deterministic provider contract report without a model call."
+Live security-audit E2E.
+Do not include this hidden issue token: ${hidden_token}"
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -56,7 +55,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "channels-info-report e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "security-audit-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -93,11 +92,11 @@ wait_for_run() {
   return 1
 }
 
-assistant_comments() {
+assistant_count() {
   gh issue view "$issue_number" \
     --repo "$repo" \
     --json comments \
-    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | join("\n---GITCLAW-COMMENT---\n")'
+    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length'
 }
 
 latest_assistant_comment() {
@@ -105,13 +104,6 @@ latest_assistant_comment() {
     --repo "$repo" \
     --json comments \
     --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | .[-1] // ""'
-}
-
-assistant_count() {
-  gh issue view "$issue_number" \
-    --repo "$repo" \
-    --json comments \
-    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length'
 }
 
 error_count() {
@@ -160,62 +152,74 @@ wait_for_done_status() {
   return 1
 }
 
-run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one channels info report comment"
-comments="$(assistant_comments)"
+audit_run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
+wait_for_assistant_count 1 || die "expected one security audit report comment"
+audit_comment="$(latest_assistant_comment)"
 
 for expected in \
-  'model="gitclaw/channels"' \
-  "GitClaw Channel Info Report" \
+  'model="gitclaw/security"' \
+  "GitClaw Security Audit Report" \
   "Generated without a model call" \
-  'requested_provider: `telegram`' \
-  'channel_info_status: `ok`' \
-  'supported_providers: `telegram, slack, generic`' \
-  'wake_strategy: `workflow_dispatch`' \
-  'state_storage: `gitclaw:channel-state issue`' \
-  'gateway_runtime: `GitHub Actions workflow_dispatch`' \
-  'raw_bodies_included: `false`' \
+  'repository: `'"$repo"'`' \
+  'issue: `#'"$issue_number"'`' \
+  'security_audit_status: `' \
+  'verification_scope: `openclaw_personal_assistant_security_audit`' \
+  'trust_model: `personal-assistant-single-operator`' \
+  'runtime_boundary: `github-actions-ephemeral-runner`' \
+  'gateway_server_required: `false`' \
+  'hostile_multi_tenant_supported: `false`' \
+  'surfaces_scanned: `8`' \
+  'config_risk_status: `' \
+  'policy_risk_status: `' \
+  'sandbox_risk_status: `' \
+  'channel_risk_status: `' \
+  'tool_risk_status: `' \
+  'skill_risk_status: `' \
+  'plugin_risk_status: `' \
+  'secrets_risk_status: `' \
+  'raw_config_bodies_included: `false`' \
+  'raw_workflow_bodies_included: `false`' \
+  'raw_issue_bodies_included: `false`' \
+  'raw_comment_bodies_included: `false`' \
+  'raw_prompt_bodies_included: `false`' \
+  'raw_tool_outputs_included: `false`' \
   'credential_values_included: `false`' \
-  'llm_e2e_required_after_channel_info_change: `true`' \
-  'required_secrets: `TELEGRAM_BOT_TOKEN`' \
-  'offset_key: `update_id`' \
-  'thread_key: `chat_id`' \
-  'message_key: `update_id or message_id`' \
-  'channel_thread_issue: `false`' \
-  'channel_message_comments_now: `0`' \
-  'getUpdates polling' \
-  'sendMessage then channel-delivery receipt' \
-  'required_secret_names=`TELEGRAM_BOT_TOKEN`' \
-  '`ingest` path=`.github/workflows/gitclaw-channel-ingest.yml` present=`true`' \
-  '`send` path=`.github/workflows/gitclaw-channel-send.yml` present=`true`' \
-  '`state` path=`.github/workflows/gitclaw-channel-state.yml` present=`true`' \
-  '`gateway` path=`.github/workflows/gitclaw-channel-gateway.yml` present=`true`' \
-  '`delivery` path=`.github/workflows/gitclaw-channel-delivery.yml` present=`true`' \
-  '`outbox` path=`.github/workflows/gitclaw-channel-outbox.yml` present=`true`' \
-  'gitclaw channel-ingest --channel telegram' \
-  'gitclaw channel-send --channel telegram' \
-  'gitclaw channel-state --channel telegram' \
-  'gitclaw channel-gateway --channel telegram' \
-  'gitclaw channel-outbox --channel telegram' \
-  'gitclaw channel-delivery --channel telegram' \
-  'dispatch id: `telegram-<message_id>`'; do
-  grep -Fq "$expected" <<<"$comments" || die "channels info report missing ${expected}"
+  'repository_mutation_allowed: `false`' \
+  'host_exec_allowed: `false`' \
+  'llm_e2e_required_after_security_audit_change: `true`' \
+  "### Trust Boundary" \
+  'split_trust_boundaries_for_untrusted_users=`true`' \
+  "### Surface Cards" \
+  'surface=`config`' \
+  'surface=`policy`' \
+  'surface=`sandbox`' \
+  'surface=`channels`' \
+  'surface=`tools`' \
+  'surface=`skills`' \
+  'surface=`plugins`' \
+  'surface=`secrets`' \
+  "### Control Plane Gates" \
+  'workflow_files_present=`' \
+  'channel_workflows_present=`' \
+  'plaintext_secret_findings=`' \
+  "### Audit Boundaries" \
+  'model_call_required=`false`' \
+  'exact_secrets_or_provider_tokens_included=`false`'; do
+  grep -Fq -- "$expected" <<<"$audit_comment" || die "security audit report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "channels info report leaked hidden token"
-fi
-
-if grep -Fq "$expected_token" <<<"$comments" || grep -Fq "$search_phrase" <<<"$comments"; then
-  die "channels info report leaked follow-up fixture context"
-fi
+for leaked in "$hidden_token" "Live security-audit E2E" "$expected_token" "$search_phrase" "workflow_dispatch:" "permissions:"; do
+  if grep -Fq "$leaked" <<<"$audit_comment"; then
+    die "security audit report leaked ${leaked}"
+  fi
+done
 
 comment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \
   --repo "$repo" \
   --body "Use the repo-reader skill and search the repository for \`${search_phrase}\`.
 
-Reply with only the exact GITCLAW_CHANNELS_INFO token from the matching repository search result line.
+Reply with only the exact uppercase token from the matching repository search result line.
 Do not include this hidden follow-up token: ${followup_hidden_token}
 Keep the answer under 30 words." >/dev/null
 
@@ -233,13 +237,13 @@ grep -Fq 'tools="' <<<"$model_comment" || die "assistant marker missing prompt-v
 grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant marker did not prove search_files was prompt-visible"
 grep -Fq 'usage_total_tokens="' <<<"$model_comment" || die "assistant marker missing usage token telemetry"
 
-for leaked in "$token" "$followup_hidden_token"; do
+for leaked in "$hidden_token" "$followup_hidden_token"; do
   if grep -Fq "$leaked" <<<"$model_comment"; then
     die "model follow-up leaked ${leaked}"
   fi
 done
 
 wait_for_done_status || die "expected gitclaw:done without running/error"
-url="$(jq -r '.url' <<<"$run_json")"
+audit_url="$(jq -r '.url' <<<"$audit_run_json")"
 model_url="$(jq -r '.url' <<<"$model_run_json")"
-log "passed for issue #${issue_number}: ${url} (model follow-up: ${model_url})"
+log "passed for issue #${issue_number}: ${audit_url} (model follow-up: ${model_url})"

@@ -125,12 +125,16 @@ func verifyChannelDeliverySource(ctx context.Context, github ChannelDeliveryGitH
 		if comment.ID != opts.CommentID {
 			continue
 		}
-		if !HasGitClawMarker(comment.Body) {
-			return fmt.Errorf("source comment is not a GitClaw assistant turn")
+		if !isChannelDeliverableComment(comment.Body) {
+			return fmt.Errorf("source comment is not a GitClaw assistant turn or channel outbound message")
 		}
 		return nil
 	}
 	return fmt.Errorf("source assistant comment not found")
+}
+
+func isChannelDeliverableComment(body string) bool {
+	return HasGitClawMarker(body) || HasChannelOutboundMarker(body)
 }
 
 func RenderChannelDeliveryComment(opts ChannelDeliveryOptions, accountHash, externalHash string) string {

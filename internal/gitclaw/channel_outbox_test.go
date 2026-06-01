@@ -51,11 +51,17 @@ func TestRunChannelOutboxReturnsPendingAssistantReplies(t *testing.T) {
 	if result.SourceAssistantComments != 1 || result.DeliveredAssistantComments != 0 || result.PendingMessages != 1 || result.MessagesReturned != 1 {
 		t.Fatalf("unexpected outbox result: %#v", result)
 	}
+	if result.SourceOutboundComments != 0 || result.SourceDeliverableComments != 1 {
+		t.Fatalf("unexpected deliverable counters: %#v", result)
+	}
 	if !result.BodyIncluded || result.AccountHash == "telegram-account-secret" {
 		t.Fatalf("unexpected body/hash fields: %#v", result)
 	}
 	if got := result.Messages[0].Body; !strings.Contains(got, "OUTBOX_REPLY_TOKEN") || strings.Contains(got, "gitclaw:assistant-turn") {
 		t.Fatalf("outbox body should include visible assistant reply only: %q", got)
+	}
+	if result.Messages[0].Kind != "assistant" {
+		t.Fatalf("outbox message kind = %q, want assistant", result.Messages[0].Kind)
 	}
 
 	data, err := os.ReadFile(outPath)
@@ -78,6 +84,60 @@ func TestRunChannelOutboxReturnsPendingAssistantReplies(t *testing.T) {
 	}
 	if !strings.Contains(payload.Messages[0].Body, "OUTBOX_REPLY_TOKEN") {
 		t.Fatalf("outbox file missing assistant body: %s", data)
+	}
+}
+
+func TestRunChannelOutboxReturnsPendingOutboundMessages(t *testing.T) {
+	cfg := DefaultConfig()
+	source := Issue{
+		Number: 42,
+		Title:  "GitClaw slack thread channel-123",
+		Body: RenderChannelThreadBody(ChannelIngestOptions{
+			Channel:  "slack",
+			ThreadID: "channel-123",
+		}),
+		Labels: []string{cfg.ChannelLabel},
+	}
+	github := &FakeGitHub{
+		Issues: []Issue{source},
+		CommentsByIssue: map[int][]Comment{
+			42: {{
+				ID: 13,
+				Body: RenderChannelOutboundComment(ChannelSendOptions{
+					Channel:   "slack",
+					ThreadID:  "channel-123",
+					MessageID: "notify-1",
+					Author:    "gitclaw:proactive",
+					Body:      "Outbound body for Slack.\n\nOUTBOUND_QUEUE_TOKEN",
+				}),
+				CreatedAt: "2026-06-01T11:00:00Z",
+			}},
+		},
+	}
+	outPath := filepath.Join(t.TempDir(), "outbox.json")
+
+	result, err := RunChannelOutbox(context.Background(), cfg, github, ChannelOutboxOptions{
+		Repo:        "owner/repo",
+		Channel:     "slack",
+		AccountID:   "slack-workspace-secret",
+		IssueNumber: 42,
+		IncludeBody: true,
+		OutPath:     outPath,
+	})
+	if err != nil {
+		t.Fatalf("RunChannelOutbox returned error: %v", err)
+	}
+	if result.SourceAssistantComments != 0 || result.SourceOutboundComments != 1 || result.SourceDeliverableComments != 1 || result.PendingMessages != 1 {
+		t.Fatalf("unexpected outbox result: %#v", result)
+	}
+	if len(result.Messages) != 1 || result.Messages[0].Kind != "channel-outbound" || result.Messages[0].SourceCommentID != 13 {
+		t.Fatalf("unexpected outbound message: %#v", result.Messages)
+	}
+	if result.Messages[0].MessageHash == "" || result.Messages[0].MessageHash == "notify-1" {
+		t.Fatalf("outbound message id should be hashed: %#v", result.Messages[0])
+	}
+	if got := result.Messages[0].Body; !strings.Contains(got, "OUTBOUND_QUEUE_TOKEN") || strings.Contains(got, "gitclaw:channel-outbound") {
+		t.Fatalf("outbox body should include visible outbound body only: %q", got)
 	}
 }
 

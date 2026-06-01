@@ -114,3 +114,37 @@ func TestRunChannelDeliveryRequiresAssistantSourceComment(t *testing.T) {
 		t.Fatalf("delivery should not create state issue for invalid source comment")
 	}
 }
+
+func TestRunChannelDeliveryAcceptsChannelOutboundSourceComment(t *testing.T) {
+	cfg := DefaultConfig()
+	sourceComment := RenderChannelOutboundComment(ChannelSendOptions{
+		Channel:   "telegram",
+		ThreadID:  "chat-123",
+		MessageID: "notify-1",
+		Body:      "outbound delivery source body",
+	})
+	github := &FakeGitHub{
+		CommentsByIssue: map[int][]Comment{
+			42: {{ID: 12345, Body: sourceComment}},
+		},
+	}
+
+	result, err := RunChannelDelivery(context.Background(), cfg, github, ChannelDeliveryOptions{
+		Repo:              "octo/repo",
+		Channel:           "telegram",
+		AccountID:         "delivery-account-secret",
+		IssueNumber:       42,
+		CommentID:         12345,
+		ExternalMessageID: "external-message-secret",
+	})
+	if err != nil {
+		t.Fatalf("RunChannelDelivery returned error: %v", err)
+	}
+	if !result.Delivered || result.Duplicate || result.ReceiptCommentID == 0 {
+		t.Fatalf("unexpected delivery result: %#v", result)
+	}
+	receipt := github.CommentsByIssue[result.StateIssueNumber][0].Body
+	if !HasChannelDeliveryMarker(receipt) || strings.Contains(receipt, "outbound delivery source body") {
+		t.Fatalf("delivery receipt should be marked without source body: %s", receipt)
+	}
+}

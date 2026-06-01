@@ -1,0 +1,61 @@
+name: GitClaw Channel Send
+
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: External channel name, such as telegram or slack
+        required: true
+      thread_id:
+        description: External channel thread or chat id
+        required: true
+      message_id:
+        description: Stable outbound message id
+        required: true
+      author:
+        description: Outbound author label
+        required: false
+        default: gitclaw
+      body:
+        description: Message body to queue for provider delivery
+        required: true
+
+concurrency:
+  group: gitclaw-channel-send-${{ inputs.channel }}-${{ inputs.thread_id }}
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: stable
+
+      - id: send
+        run: |
+          set -euo pipefail
+          channel="$(jq -r '.inputs.channel // ""' "$GITHUB_EVENT_PATH")"
+          thread_id="$(jq -r '.inputs.thread_id // ""' "$GITHUB_EVENT_PATH")"
+          message_id="$(jq -r '.inputs.message_id // ""' "$GITHUB_EVENT_PATH")"
+          author="$(jq -r '.inputs.author // "gitclaw"' "$GITHUB_EVENT_PATH")"
+          body="$(jq -r '.inputs.body // ""' "$GITHUB_EVENT_PATH")"
+          printf "::add-mask::%s\n" "$thread_id"
+          printf "::add-mask::%s\n" "$message_id"
+          GITCLAW_CHANNEL="$channel" \
+            GITCLAW_CHANNEL_THREAD_ID="$thread_id" \
+            GITCLAW_CHANNEL_MESSAGE_ID="$message_id" \
+            GITCLAW_CHANNEL_AUTHOR="$author" \
+            GITCLAW_CHANNEL_BODY="$body" \
+            go run ./cmd/gitclaw channel-send
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}

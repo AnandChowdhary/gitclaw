@@ -54,6 +54,7 @@ go run ./cmd/gitclaw models cost
 go run ./cmd/gitclaw models risk
 go run ./cmd/gitclaw heartbeat risk
 go run ./cmd/gitclaw config risk
+go run ./cmd/gitclaw security audit
 go run ./cmd/gitclaw orders risk
 go run ./cmd/gitclaw policy risk
 go run ./cmd/gitclaw approvals catalog
@@ -547,6 +548,7 @@ gitclaw channels list
 gitclaw channels verify
 gitclaw channels risk
 gitclaw channels info telegram
+gitclaw channel-send --channel slack --thread-id <thread> --message-id <id> --body "hello"
 gitclaw proactive list
 gitclaw proactive schedule
 gitclaw proactive chain
@@ -568,6 +570,8 @@ gitclaw profile export-plan
 gitclaw profile risk
 gitclaw sandbox verify
 gitclaw sandbox risk
+gitclaw security audit
+gitclaw security risk
 ```
 
 Use `gitclaw commands` for the full catalog.
@@ -577,6 +581,12 @@ reports reviewed official source IDs/URLs, local research-file hashes, adopted
 GitHub-native patterns, rejected v1 surfaces, and no-runtime-fetch gates
 without printing raw research notes, source bodies, issue/comment bodies,
 prompts, tool outputs, credentials, or secrets.
+
+`gitclaw security audit` is the OpenClaw-style operator security posture card.
+It aggregates config, policy, sandbox, channel, tool, skill, plugin, and secret
+risk metadata under GitClaw's personal-assistant trust model without printing
+issue/comment bodies, prompts, workflow bodies, tool outputs, credentials, or
+secret values.
 
 `gitclaw profile catalog` is the compact discovery view for the repo-local
 agent profile. It maps profile commands and layers across identity, soul,
@@ -678,6 +688,10 @@ The channel outbox path makes channels more than reports:
 returns undelivered assistant replies for a provider gateway, while
 `gitclaw channel-delivery` records the receipt after Telegram, Slack, or another
 sender posts the message.
+`gitclaw channel-send` adds the GitHub-originated half: scheduled jobs,
+operator commands, or future proactive flows can queue a
+`gitclaw:channel-outbound` message onto a channel thread, and the same
+outbox/delivery receipt path handles provider delivery without a server.
 The live proactive-report, proactive-list, and proactive-schedule harnesses use
 the same two-proof shape for scheduled work: body-free workflow/prompt metadata
 first, then a normal GitHub Models repo-reader/search follow-up.
@@ -694,6 +708,11 @@ The live tools-report and tools-list harnesses apply the same rule to the tool
 surface: tool contracts, gate state, validation, and active-output hashes stay
 body-free, then a normal GitHub Models repo-reader/search follow-up proves real
 prompt-visible tool usage.
+The live security-audit harness aggregates OpenClaw-style operator security
+posture across config, policy, sandbox, channels, tools, skills, plugins, and
+secrets without a model call, then requires a real GitHub Models
+repo-reader/search follow-up so the audit surface does not replace normal
+inference and tool grounding.
 The live tools-verify harness extends that gate to the stricter trust envelope:
 contract modes, registry/runtime-attestation non-goals, and input/output hashes
 stay body-free, then the model follow-up proves ordinary repo-reader search.
@@ -848,6 +867,7 @@ scripts/e2e/github-soul-provenance-report.sh
 scripts/e2e/github-sandbox-risk-report.sh
 scripts/e2e/github-tasks-ledger-report.sh
 scripts/e2e/github-tasks-risk-report.sh
+scripts/e2e/github-security-audit-report.sh
 scripts/e2e/github-tools-catalog-report.sh
 scripts/e2e/github-tools-snapshot-report.sh
 scripts/e2e/github-tools-toolsets-report.sh
@@ -867,6 +887,7 @@ scripts/e2e/github-channel-ingest.sh
 scripts/e2e/github-channel-state.sh
 scripts/e2e/github-channel-state-workflow.sh
 scripts/e2e/github-channel-gateway-workflow.sh
+scripts/e2e/github-channel-send-workflow.sh
 scripts/e2e/github-channel-delivery-workflow.sh
 scripts/e2e/github-channel-outbox-workflow.sh
 scripts/e2e/github-config-risk-report.sh
@@ -955,6 +976,11 @@ The channel-delivery workflow harness now proves outbound receipt safety:
 source assistant verification, hash-only provider message receipts, duplicate
 receipt suppression, and two normal model/tool turns without leaking the source
 assistant body.
+The channel-send workflow harness proves GitHub-originated outbound channel
+messages: workflow-dispatch queues a `gitclaw:channel-outbound` comment,
+duplicates are suppressed, outbox exposes it as pending provider work, delivery
+receipts suppress retries, and a follow-up issue comment still makes a real
+GitHub Models/tool call.
 The channel-outbox workflow harness proves the missing outbound half of the
 bridge: a real channel-ingested message gets a GitHub Models/tool reply, the
 outbox exposes only pending assistant comments for provider delivery, delivery

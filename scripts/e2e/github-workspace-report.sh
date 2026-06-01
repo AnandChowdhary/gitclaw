@@ -150,9 +150,9 @@ for expected in \
   'context_documents_loaded:' \
   'context_allowlist_entries: `18`' \
   'workspace_context_policy_loaded: `true`' \
-  'workflow_files_present: `7`' \
-  'checkout_workflows: `7`' \
-  'checkout_steps: `9`' \
+  'workflow_files_present: `9`' \
+  'checkout_workflows: `9`' \
+  'checkout_steps: `11`' \
   'checkout_action_versions: `actions/checkout@v5`' \
   'setup_go_action_versions: `actions/setup-go@v6`' \
   'fetch_depth_configured: `true`' \

@@ -2121,6 +2121,18 @@ report should publish only names, paths, fields, counts, codes, severities, and
 hashes, and each implementation batch must pair the deterministic report with a
 real GitHub Models conversation E2E.
 
+2026-06-01 aggregate-security follow-up: OpenClaw's gateway security posture
+is most useful as an operator card when it keeps untrusted message bodies,
+credentials, and tool output out of the diagnostic itself. GitClaw should map
+that lesson into `@gitclaw /security` and `gitclaw security audit`: a
+body-free, no-model aggregate over config, policy, sandbox, channels, tools,
+skills, plugins, and secrets. The report should name the personal-assistant
+trust model, GitHub Actions runtime boundary, workflow/channel/control-plane
+gates, and risk counts without claiming hostile multi-tenant isolation. Every
+change to this surface needs the same two-step proof as other deterministic
+reports: first the no-body security card, then a normal GitHub Models
+repo-reader/search follow-up that proves the real LLM/tool path still works.
+
 2026-05-31 tool-exposure follow-up: OpenClaw's tools docs now make allow/deny
 and tool-profile visibility a first-class operator concern, while Hermes' Tool
 Search docs frame model-visible tool schemas as a progressive-disclosure and

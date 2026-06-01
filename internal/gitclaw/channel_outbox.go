@@ -28,6 +28,8 @@ type ChannelOutboxResult struct {
 	StateIssueNumber           int
 	StateIssueURL              string
 	SourceAssistantComments    int
+	SourceOutboundComments     int
+	SourceDeliverableComments  int
 	DeliveredAssistantComments int
 	PendingMessages            int
 	MessagesReturned           int
@@ -40,10 +42,12 @@ type ChannelOutboxResult struct {
 type ChannelOutboxMessage struct {
 	IssueNumber     int    `json:"issue_number"`
 	SourceCommentID int64  `json:"source_comment_id"`
+	Kind            string `json:"kind"`
 	BodySHA         string `json:"body_sha256_12"`
 	BodyBytes       int    `json:"body_bytes"`
 	BodyLines       int    `json:"body_lines"`
 	CreatedAt       string `json:"created_at,omitempty"`
+	MessageHash     string `json:"outbound_message_sha256_12,omitempty"`
 	Body            string `json:"body,omitempty"`
 }
 
@@ -53,6 +57,8 @@ type channelOutboxFile struct {
 	IssueNumber               int                    `json:"issue_number"`
 	StateIssueNumber          int                    `json:"state_issue_number,omitempty"`
 	SourceAssistantComments   int                    `json:"source_assistant_comments"`
+	SourceOutboundComments    int                    `json:"source_outbound_comments"`
+	SourceDeliverableComments int                    `json:"source_deliverable_comments"`
 	DeliveredAssistantReplies int                    `json:"delivered_assistant_comments"`
 	PendingMessages           int                    `json:"pending_messages"`
 	MessagesReturned          int                    `json:"messages_returned"`
@@ -76,7 +82,7 @@ func RunChannelOutbox(ctx context.Context, cfg Config, github ChannelOutboxGitHu
 	if issue.IsPullRequest {
 		return ChannelOutboxResult{}, fmt.Errorf("channel outbox source must be an issue")
 	}
-	threadChannel, _ := channelThreadMarkerFields(issue.Body)
+	threadChannel, threadID := channelThreadMarkerFields(issue.Body)
 	if threadChannel == "" {
 		return ChannelOutboxResult{}, fmt.Errorf("source issue is missing gitclaw:channel-thread marker")
 	}
@@ -110,22 +116,29 @@ func RunChannelOutbox(ctx context.Context, cfg Config, github ChannelOutboxGitHu
 		return ChannelOutboxResult{}, fmt.Errorf("list channel issue comments: %w", err)
 	}
 	for _, comment := range comments {
-		if !HasGitClawMarker(comment.Body) {
+		kind, visibleBody, messageHash, ok := channelOutboxDeliverable(comment.Body, opts.Channel, threadID)
+		if !ok {
 			continue
 		}
-		result.SourceAssistantComments++
+		result.SourceDeliverableComments++
+		if kind == "assistant" {
+			result.SourceAssistantComments++
+		} else if kind == "channel-outbound" {
+			result.SourceOutboundComments++
+		}
 		if delivered[comment.ID] {
 			result.DeliveredAssistantComments++
 			continue
 		}
-		visibleBody := StripMarker(comment.Body)
 		message := ChannelOutboxMessage{
 			IssueNumber:     opts.IssueNumber,
 			SourceCommentID: comment.ID,
+			Kind:            kind,
 			BodySHA:         shortDocumentHash(visibleBody),
 			BodyBytes:       len(visibleBody),
 			BodyLines:       lineCount(visibleBody),
 			CreatedAt:       comment.CreatedAt,
+			MessageHash:     messageHash,
 		}
 		if opts.IncludeBody {
 			message.Body = visibleBody
@@ -142,6 +155,23 @@ func RunChannelOutbox(ctx context.Context, cfg Config, github ChannelOutboxGitHu
 		}
 	}
 	return result, nil
+}
+
+func channelOutboxDeliverable(body, channel, threadID string) (string, string, string, bool) {
+	if HasGitClawMarker(body) {
+		return "assistant", StripMarker(body), "", true
+	}
+	outboundChannel, outboundThread, outboundMessageID := channelOutboundMarkerFields(body)
+	if outboundChannel == "" {
+		return "", "", "", false
+	}
+	if outboundChannel != channel {
+		return "", "", "", false
+	}
+	if outboundThread != "" && threadID != "" && outboundThread != threadID {
+		return "", "", "", false
+	}
+	return "channel-outbound", StripChannelOutboundMarker(body), channelStateHash(outboundMessageID), true
 }
 
 func normalizeChannelOutboxOptions(opts ChannelOutboxOptions) ChannelOutboxOptions {
@@ -231,6 +261,8 @@ func writeChannelOutboxFile(opts ChannelOutboxOptions, result ChannelOutboxResul
 		IssueNumber:               result.IssueNumber,
 		StateIssueNumber:          result.StateIssueNumber,
 		SourceAssistantComments:   result.SourceAssistantComments,
+		SourceOutboundComments:    result.SourceOutboundComments,
+		SourceDeliverableComments: result.SourceDeliverableComments,
 		DeliveredAssistantReplies: result.DeliveredAssistantComments,
 		PendingMessages:           result.PendingMessages,
 		MessagesReturned:          result.MessagesReturned,

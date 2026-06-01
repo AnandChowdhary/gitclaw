@@ -166,8 +166,8 @@ for expected in \
   'config_source: `defaults+repo+environment`' \
   'config_file_path: `.gitclaw/config.yml`' \
   'config_file_present: `true`' \
-  'workflow_files_expected: `7`' \
-  'workflow_files_present: `7`' \
+  'workflow_files_expected: `9`' \
+  'workflow_files_present: `9`' \
   'workflow_files_missing: `0`' \
   'trigger_mode: `label-or-prefix`' \
   'trigger_label: `gitclaw`' \
@@ -194,7 +194,7 @@ for expected in \
   'tools_allowed_configured: `0`' \
   'tools_disabled_configured: `0`' \
   'tool_gate_conflicts: `0`' \
-  'slash_commands: `34`' \
+  'slash_commands: `35`' \
   'surfaces_with_risk_findings: `0`' \
   'config_risk_findings: `0`' \
   'high_risk_findings: `0`' \
@@ -217,6 +217,7 @@ for expected in \
   'kind=`workflow-file` path=`.github/workflows/gitclaw-heartbeat.yml` present=`true`' \
   'kind=`workflow-file` path=`.github/workflows/gitclaw-proactive.yml` present=`true`' \
   'kind=`workflow-file` path=`.github/workflows/gitclaw-channel-ingest.yml` present=`true`' \
+  'kind=`workflow-file` path=`.github/workflows/gitclaw-channel-send.yml` present=`true`' \
   'kind=`workflow-file` path=`.github/workflows/gitclaw-channel-state.yml` present=`true`' \
   'kind=`workflow-file` path=`.github/workflows/gitclaw-channel-gateway.yml` present=`true`' \
   'kind=`workflow-file` path=`.github/workflows/gitclaw-channel-outbox.yml` present=`true`' \

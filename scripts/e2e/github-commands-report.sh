@@ -147,9 +147,9 @@ for expected in \
   "GitClaw Commands Report" \
   "Generated without a model call" \
   'trigger_prefix: `@gitclaw`' \
-  'commands: `34`' \
-  'aliases: `32`' \
-  'local_cli_helpers: `223`' \
+  'commands: `35`' \
+  'aliases: `33`' \
+  'local_cli_helpers: `227`' \
   'run_mode: `read-only`' \
   'llm_e2e_required_after_commands_report_change: `true`' \
   "### Slash Commands" \
@@ -173,6 +173,8 @@ for expected in \
   '/workdir' \
   '/repo' \
   '/tools' \
+  '/security' \
+  '/sec' \
   '/secrets' \
   '/secret' \
   '/migrate' \
@@ -232,6 +234,8 @@ for expected in \
   'gitclaw channels risk' \
   'gitclaw channels list' \
   'gitclaw channels info <provider>' \
+  'gitclaw channel-ingest' \
+  'gitclaw channel-send' \
   'gitclaw channel-state' \
   'gitclaw channel-gateway' \
   'gitclaw channel-outbox' \
@@ -290,6 +294,8 @@ for expected in \
   'gitclaw sandbox explain' \
   'gitclaw sandbox verify' \
   'gitclaw sandbox risk' \
+  'gitclaw security audit' \
+  'gitclaw security risk' \
   'gitclaw prompt list' \
   'gitclaw prompt pack' \
   'gitclaw prompt context' \

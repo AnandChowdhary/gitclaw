@@ -285,6 +285,24 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		status.SetDone()
 		return nil
 	}
+	if IsSecurityReportRequest(ev, cfg) {
+		reportBody, err := RenderSecurityReport(ev, cfg, repoContext, comments)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "security", fmt.Errorf("build security audit: %w", err))
+		}
+		body := RenderAssistantComment(Marker{
+			RunID:          envFirst("GITHUB_RUN_ID", "local"),
+			EventID:        eventID(ev),
+			Model:          "gitclaw/security",
+			IdempotencyKey: key,
+			RunURL:         actionRunURL(ev),
+		}, reportBody)
+		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post security audit comment: %w", err))
+		}
+		status.SetDone()
+		return nil
+	}
 	if IsSecretsReportRequest(ev, cfg) {
 		report, err := BuildSecretAuditReport(cfg.Workdir)
 		if err != nil {

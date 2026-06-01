@@ -158,6 +158,11 @@ for expected in \
   'permissions_issues_write: `true`' \
   'workflow_inputs: `5`' \
   'required_workflow_inputs: `5`' \
+  'send_workflow_path: `.github/workflows/gitclaw-channel-send.yml`' \
+  'send_workflow_present: `true`' \
+  'send_workflow_dispatch_trigger: `true`' \
+  'send_workflow_permissions_issues_write: `true`' \
+  'send_workflow_inputs: `5`' \
   'state_workflow_path: `.github/workflows/gitclaw-channel-state.yml`' \
   'state_workflow_present: `true`' \
   'state_workflow_dispatch_trigger: `true`' \
@@ -188,6 +193,7 @@ for expected in \
   "### Verification Findings" \
   "- none" \
   'workflow has `workflow_dispatch`' \
+  'channel-send workflow can queue GitHub-originated outbound messages with `issues: write`' \
   'channel state and gateway workflows are callable with `workflow_dispatch`' \
   'gateway workflow can dispatch its renewal with `actions: write`' \
   'outbox workflow can read pending assistant replies with `issues: read`' \
