@@ -182,6 +182,60 @@ type BackupStatsEvent struct {
 	Count int
 }
 
+const backupSnapshotVersion = "gitclaw-backup-snapshot-v1"
+
+type BackupSnapshot struct {
+	Root                      string
+	Repo                      string
+	RepoDir                   string
+	IndexPath                 string
+	ReadmePath                string
+	SchemaVersion             int
+	IndexGeneratedAt          string
+	BackupSnapshotStatus      string
+	BackupVerifyStatus        string
+	VerificationFailures      int
+	SnapshotVersion           string
+	SnapshotScope             string
+	SnapshotSHA               string
+	SnapshotEntries           int
+	ControlFileEntries        int
+	IssuePayloadEntries       int
+	IssueCount                int
+	CommentCount              int
+	TranscriptMessages        int
+	UserMessages              int
+	AssistantMessages         int
+	AssistantTurns            int
+	ErrorComments             int
+	TotalPayloadBytes         int
+	RawBodiesIncluded         bool
+	LLME2ERequiredAfterChange bool
+	Entries                   []BackupSnapshotEntry
+}
+
+type BackupSnapshotEntry struct {
+	Position              int
+	Kind                  string
+	Path                  string
+	IssueNumber           int
+	BackupGeneratedAt     string
+	EventName             string
+	SchemaVersion         int
+	Bytes                 int
+	SHA                   string
+	Comments              int
+	TranscriptMessages    int
+	UserMessages          int
+	AssistantMessages     int
+	AssistantTurns        int
+	ErrorComments         int
+	IssueTitleSHA         string
+	RawBodiesIncluded     bool
+	MutationAllowed       bool
+	GitHubAPICallsAllowed bool
+}
+
 type BackupFreshness struct {
 	Root                      string
 	Repo                      string
@@ -825,6 +879,114 @@ func BuildBackupStats(root, repo string) (BackupStats, error) {
 	}
 	sort.Slice(stats.EventCounts, func(i, j int) bool { return stats.EventCounts[i].Name < stats.EventCounts[j].Name })
 	return stats, nil
+}
+
+func BuildBackupSnapshot(root, repo string) (BackupSnapshot, error) {
+	if err := validateRepoName(repo); err != nil {
+		return BackupSnapshot{}, err
+	}
+	repoDir, index, err := readBackupIndex(root, repo)
+	if err != nil {
+		return BackupSnapshot{}, err
+	}
+	if root == "" {
+		root = filepath.Join(".gitclaw", "backups")
+	}
+	verify, err := VerifyBackupTree(root, repo)
+	if err != nil {
+		return BackupSnapshot{}, err
+	}
+	snapshot := BackupSnapshot{
+		Root:                      filepath.ToSlash(root),
+		Repo:                      repo,
+		RepoDir:                   filepath.ToSlash(repoDir),
+		IndexPath:                 filepath.ToSlash(filepath.Join(repoDir, "index.json")),
+		ReadmePath:                filepath.ToSlash(filepath.Join(repoDir, "README.md")),
+		SchemaVersion:             index.Version,
+		IndexGeneratedAt:          index.GeneratedAt,
+		BackupSnapshotStatus:      "ok",
+		BackupVerifyStatus:        "ok",
+		VerificationFailures:      len(verify.VerificationFailures),
+		SnapshotVersion:           backupSnapshotVersion,
+		SnapshotScope:             "repo-backup-index-readme-and-issue-payloads",
+		IssueCount:                len(index.Issues),
+		RawBodiesIncluded:         false,
+		LLME2ERequiredAfterChange: true,
+	}
+	if !verify.OK() {
+		snapshot.BackupSnapshotStatus = "warn"
+		snapshot.BackupVerifyStatus = "warn"
+	}
+
+	for _, path := range []string{filepath.Join(repoDir, "index.json"), filepath.Join(repoDir, "README.md")} {
+		file, err := manifestFile(repoDir, path)
+		if err != nil {
+			return BackupSnapshot{}, err
+		}
+		snapshot.Entries = append(snapshot.Entries, BackupSnapshotEntry{
+			Position:              len(snapshot.Entries) + 1,
+			Kind:                  "control-file",
+			Path:                  file.Path,
+			Bytes:                 file.Bytes,
+			SHA:                   file.SHA,
+			RawBodiesIncluded:     false,
+			MutationAllowed:       false,
+			GitHubAPICallsAllowed: false,
+		})
+		snapshot.ControlFileEntries++
+	}
+
+	for _, issue := range index.Issues {
+		backup, payload, err := manifestPayload(repoDir, repo, issue)
+		if err != nil {
+			return BackupSnapshot{}, err
+		}
+		entry := BackupSnapshotEntry{
+			Position:              len(snapshot.Entries) + 1,
+			Kind:                  "issue-payload",
+			Path:                  payload.Path,
+			IssueNumber:           payload.IssueNumber,
+			BackupGeneratedAt:     payload.BackupGeneratedAt,
+			EventName:             payload.EventName,
+			SchemaVersion:         payload.SchemaVersion,
+			Bytes:                 payload.Bytes,
+			SHA:                   payload.SHA,
+			Comments:              len(backup.Comments),
+			TranscriptMessages:    len(backup.Transcript),
+			IssueTitleSHA:         shortDocumentHash(backup.Issue.Title),
+			RawBodiesIncluded:     false,
+			MutationAllowed:       false,
+			GitHubAPICallsAllowed: false,
+		}
+		for _, comment := range backup.Comments {
+			if HasGitClawMarker(comment.Body) {
+				entry.AssistantTurns++
+			}
+			if HasGitClawErrorMarker(comment.Body) {
+				entry.ErrorComments++
+			}
+		}
+		for _, msg := range backup.Transcript {
+			switch msg.Role {
+			case "assistant":
+				entry.AssistantMessages++
+			default:
+				entry.UserMessages++
+			}
+		}
+		snapshot.Entries = append(snapshot.Entries, entry)
+		snapshot.IssuePayloadEntries++
+		snapshot.TotalPayloadBytes += entry.Bytes
+		snapshot.CommentCount += entry.Comments
+		snapshot.TranscriptMessages += entry.TranscriptMessages
+		snapshot.UserMessages += entry.UserMessages
+		snapshot.AssistantMessages += entry.AssistantMessages
+		snapshot.AssistantTurns += entry.AssistantTurns
+		snapshot.ErrorComments += entry.ErrorComments
+	}
+	snapshot.SnapshotEntries = len(snapshot.Entries)
+	snapshot.SnapshotSHA = backupSnapshotHash(snapshot)
+	return snapshot, nil
 }
 
 func BuildBackupFreshness(root, repo string, maxAge time.Duration, now time.Time) (BackupFreshness, error) {
@@ -1740,6 +1902,53 @@ func RenderBackupStats(stats BackupStats) string {
 	return strings.TrimSpace(b.String())
 }
 
+func RenderBackupSnapshot(snapshot BackupSnapshot) string {
+	var b strings.Builder
+	b.WriteString("## GitClaw Backup Snapshot Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	fmt.Fprintf(&b, "- repository: `%s`\n", snapshot.Repo)
+	fmt.Fprintf(&b, "- backup_snapshot_status: `%s`\n", snapshot.BackupSnapshotStatus)
+	fmt.Fprintf(&b, "- backup_verify_status: `%s`\n", snapshot.BackupVerifyStatus)
+	fmt.Fprintf(&b, "- verification_failures: `%d`\n", snapshot.VerificationFailures)
+	fmt.Fprintf(&b, "- snapshot_version: `%s`\n", snapshot.SnapshotVersion)
+	fmt.Fprintf(&b, "- snapshot_scope: `%s`\n", snapshot.SnapshotScope)
+	fmt.Fprintf(&b, "- snapshot_sha256_12: `%s`\n", snapshot.SnapshotSHA)
+	fmt.Fprintf(&b, "- snapshot_entries: `%d`\n", snapshot.SnapshotEntries)
+	fmt.Fprintf(&b, "- control_file_entries: `%d`\n", snapshot.ControlFileEntries)
+	fmt.Fprintf(&b, "- issue_payload_entries: `%d`\n", snapshot.IssuePayloadEntries)
+	fmt.Fprintf(&b, "- issue_count: `%d`\n", snapshot.IssueCount)
+	fmt.Fprintf(&b, "- comment_count: `%d`\n", snapshot.CommentCount)
+	fmt.Fprintf(&b, "- transcript_messages: `%d`\n", snapshot.TranscriptMessages)
+	fmt.Fprintf(&b, "- user_messages: `%d`\n", snapshot.UserMessages)
+	fmt.Fprintf(&b, "- assistant_messages: `%d`\n", snapshot.AssistantMessages)
+	fmt.Fprintf(&b, "- assistant_turn_comments: `%d`\n", snapshot.AssistantTurns)
+	fmt.Fprintf(&b, "- error_comments: `%d`\n", snapshot.ErrorComments)
+	fmt.Fprintf(&b, "- total_payload_bytes: `%d`\n", snapshot.TotalPayloadBytes)
+	fmt.Fprintf(&b, "- backup_root: `%s`\n", snapshot.Root)
+	fmt.Fprintf(&b, "- repo_backup_dir: `%s`\n", snapshot.RepoDir)
+	fmt.Fprintf(&b, "- index_path: `%s`\n", snapshot.IndexPath)
+	fmt.Fprintf(&b, "- readme_path: `%s`\n", snapshot.ReadmePath)
+	fmt.Fprintf(&b, "- backup_schema_version: `%d`\n", snapshot.SchemaVersion)
+	fmt.Fprintf(&b, "- index_generated_at: `%s`\n", snapshot.IndexGeneratedAt)
+	fmt.Fprintf(&b, "- raw_bodies_included: `%t`\n", snapshot.RawBodiesIncluded)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_backup_snapshot_change: `%t`\n\n", snapshot.LLME2ERequiredAfterChange)
+
+	b.WriteString("This snapshot fingerprints a fetched `gitclaw-backups` branch as a body-free lockfile. It reports file paths, counts, timestamps, gates, and short hashes only; raw issue titles, issue bodies, comment bodies, transcript messages, prompts, search queries, and tool outputs are not included.\n\n")
+
+	b.WriteString("### Snapshot Entries\n")
+	writeBackupSnapshotEntries(&b, snapshot.Entries)
+
+	b.WriteString("\n### Snapshot Gates\n")
+	writeBackupSnapshotGate(&b, "verify_gate", snapshot.BackupVerifyStatus)
+	b.WriteString("- raw_body_gate=`hash-and-count-only`\n")
+	b.WriteString("- restore_gate=`disabled`\n")
+	b.WriteString("- retention_gate=`plan-only`\n")
+	b.WriteString("- mutation_gate=`disabled`\n")
+	b.WriteString("- github_api_gate=`disabled`\n")
+	fmt.Fprintf(&b, "- snapshot_hash_gate=`composite-sha256_12:%s`\n", snapshot.SnapshotSHA)
+	return strings.TrimSpace(b.String())
+}
+
 func RenderBackupList(list BackupList) string {
 	var b strings.Builder
 	b.WriteString("## GitClaw Backup List Report\n\n")
@@ -2062,6 +2271,57 @@ func RenderBackupDrill(drill BackupDrill) string {
 	return strings.TrimSpace(b.String())
 }
 
+func writeBackupSnapshotEntries(b *strings.Builder, entries []BackupSnapshotEntry) {
+	if len(entries) == 0 {
+		b.WriteString("- none\n")
+		return
+	}
+	for _, entry := range entries {
+		if entry.Kind == "control-file" {
+			fmt.Fprintf(
+				b,
+				"- position=`%d` kind=`%s` path=`%s` bytes=`%d` sha256_12=`%s` raw_bodies_included=`%t` mutation_allowed=`%t` github_api_calls_allowed=`%t`\n",
+				entry.Position,
+				entry.Kind,
+				entry.Path,
+				entry.Bytes,
+				entry.SHA,
+				entry.RawBodiesIncluded,
+				entry.MutationAllowed,
+				entry.GitHubAPICallsAllowed,
+			)
+			continue
+		}
+		eventName := strings.TrimSpace(entry.EventName)
+		if eventName == "" {
+			eventName = "unknown"
+		}
+		fmt.Fprintf(
+			b,
+			"- position=`%d` kind=`%s` issue=#%d path=`%s` generated_at=`%s` event=`%s` schema=`%d` bytes=`%d` sha256_12=`%s` comments=`%d` transcript_messages=`%d` user_messages=`%d` assistant_messages=`%d` assistant_turn_comments=`%d` error_comments=`%d` title_sha256_12=`%s` raw_bodies_included=`%t` mutation_allowed=`%t` github_api_calls_allowed=`%t`\n",
+			entry.Position,
+			entry.Kind,
+			entry.IssueNumber,
+			entry.Path,
+			entry.BackupGeneratedAt,
+			eventName,
+			entry.SchemaVersion,
+			entry.Bytes,
+			entry.SHA,
+			entry.Comments,
+			entry.TranscriptMessages,
+			entry.UserMessages,
+			entry.AssistantMessages,
+			entry.AssistantTurns,
+			entry.ErrorComments,
+			entry.IssueTitleSHA,
+			entry.RawBodiesIncluded,
+			entry.MutationAllowed,
+			entry.GitHubAPICallsAllowed,
+		)
+	}
+}
+
 func writeBackupListIssues(b *strings.Builder, issues []BackupListIssue) {
 	if len(issues) == 0 {
 		b.WriteString("- none\n")
@@ -2317,6 +2577,48 @@ func writeBackupDrillGate(b *strings.Builder, name, status string) {
 		gate = "missing"
 	}
 	fmt.Fprintf(b, "- %s=`%s`\n", name, gate)
+}
+
+func writeBackupSnapshotGate(b *strings.Builder, name, status string) {
+	gate := "warn"
+	switch status {
+	case "ok":
+		gate = "pass"
+	case "empty":
+		gate = "empty"
+	}
+	fmt.Fprintf(b, "- %s=`%s`\n", name, gate)
+}
+
+func backupSnapshotHash(snapshot BackupSnapshot) string {
+	var b strings.Builder
+	fmt.Fprintf(&b, "version=%s\n", snapshot.SnapshotVersion)
+	fmt.Fprintf(&b, "repo=%s\n", snapshot.Repo)
+	fmt.Fprintf(&b, "schema=%d\n", snapshot.SchemaVersion)
+	fmt.Fprintf(&b, "index_generated_at=%s\n", snapshot.IndexGeneratedAt)
+	for _, entry := range snapshot.Entries {
+		fmt.Fprintf(
+			&b,
+			"entry=%d|%s|%s|%d|%s|%s|%d|%d|%s|%d|%d|%d|%d|%d|%d|%s\n",
+			entry.Position,
+			entry.Kind,
+			entry.Path,
+			entry.IssueNumber,
+			entry.BackupGeneratedAt,
+			entry.EventName,
+			entry.SchemaVersion,
+			entry.Bytes,
+			entry.SHA,
+			entry.Comments,
+			entry.TranscriptMessages,
+			entry.UserMessages,
+			entry.AssistantMessages,
+			entry.AssistantTurns,
+			entry.ErrorComments,
+			entry.IssueTitleSHA,
+		)
+	}
+	return shortDocumentHash(b.String())
 }
 
 func backupJSONLRecord(backup IssueBackup, msg TranscriptMessage, sequence int) BackupJSONLRecord {

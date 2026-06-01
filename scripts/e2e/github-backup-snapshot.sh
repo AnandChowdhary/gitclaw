@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "backup-catalog-e2e: $*" >&2
+  echo "backup-snapshot-e2e: $*" >&2
 }
 
 die() {
@@ -34,17 +34,15 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="NOECHO_BACKUP_CATALOG_${timestamp}"
-followup_hidden_token="NOECHO_BACKUP_CATALOG_FOLLOWUP_${timestamp}"
-expected_token="GITCLAW_BACKUP_CATALOG_CONTEXT_V1"
-search_phrase="backup catalog unique search fixture phrase"
-title="GitClaw backup-catalog e2e ${timestamp}"
-body="@gitclaw /backup catalog
+token="NOECHO_BACKUP_SNAPSHOT_${timestamp}"
+followup_hidden_token="NOECHO_BACKUP_SNAPSHOT_FOLLOWUP_${timestamp}"
+expected_token="GITCLAW_BACKUP_SNAPSHOT_CONTEXT_V1"
+search_phrase="backup snapshot unique search fixture phrase"
+title="@gitclaw /backup snapshot e2e ${timestamp}"
+body="Live backup snapshot E2E.
 
-Live backup-catalog E2E.
-
-Hidden backup catalog body token: ${token}
-This should produce a deterministic backup catalog, update the backup branch, and keep raw issue text out of the report."
+Hidden backup snapshot token: ${token}
+This should produce a deterministic backup report, then the fetched backup branch should render a body-free lockfile-style snapshot."
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -53,12 +51,16 @@ issue_url="$(gh issue create \
   --body "$body" \
   --label gitclaw)"
 issue_number="${issue_url##*/}"
+tmp_dir=""
 
 cleanup() {
+  if [[ -n "${tmp_dir:-}" ]]; then
+    rm -rf "$tmp_dir"
+  fi
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "backup-catalog e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "backup-snapshot e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -123,13 +125,6 @@ error_count() {
     --jq '[.comments[] | select(.body | contains("<!-- gitclaw:error"))] | length'
 }
 
-issue_label_names() {
-  gh issue view "$issue_number" \
-    --repo "$repo" \
-    --json labels \
-    --jq '.labels[].name'
-}
-
 wait_for_assistant_count() {
   local want="$1"
   for _ in {1..90}; do
@@ -148,124 +143,113 @@ wait_for_assistant_count() {
   return 1
 }
 
-wait_for_done_status() {
-  for _ in {1..60}; do
-    local labels
-    labels="$(issue_label_names)"
-    if grep -Fxq "gitclaw:done" <<<"$labels" &&
-      ! grep -Fxq "gitclaw:running" <<<"$labels" &&
-      ! grep -Fxq "gitclaw:error" <<<"$labels"; then
-      return 0
-    fi
-    sleep 5
-  done
-  return 1
-}
-
-read_branch_file() {
-  local path="$1"
-  gh api "repos/${repo}/contents/${path}?ref=${backup_branch}" \
-    --jq '.content' \
-    | python3 -c 'import base64, sys; print(base64.b64decode(sys.stdin.read()).decode(), end="")'
-}
-
-repo_key="${repo//\//__}"
-issue_padded="$(printf "%06d" "$issue_number")"
-issue_backup_path=".gitclaw/backups/${repo_key}/issues/${issue_padded}.json"
-index_path=".gitclaw/backups/${repo_key}/index.json"
-readme_path=".gitclaw/backups/${repo_key}/README.md"
-
 run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one backup catalog comment"
+wait_for_assistant_count 1 || die "expected one backup snapshot report comment"
 comments="$(assistant_comments)"
 
 for expected in \
   'model="gitclaw/backup"' \
-  "GitClaw Backup Catalog Report" \
+  "GitClaw Backup Report" \
   "Generated without a model call" \
-  'requested_backup_command: `catalog`' \
-  'backup_catalog_status: `ok`' \
-  'catalog_strategy: `compact-git-backed-recovery-discovery`' \
-  'backup_model: `github-issues-plus-gitclaw-backups-branch`' \
-  'catalog_entries: `18`' \
-  'fetched_branch_required_commands: `17`' \
+  'requested_backup_command: `snapshot`' \
+  'backup_command_status: `ok`' \
+  'issue_side_execution: `deferred_to_post_turn_backup_branch`' \
+  'backup_snapshot_status: `deferred`' \
+  'backup_snapshot_execution: `local_fetched_backup_branch`' \
+  'backup_snapshot_gate: `verify + composite lockfile hash`' \
+  'raw_backup_payloads_scanned_issue_side: `false`' \
+  'raw_issue_titles_included_issue_side: `false`' \
+  'repository_mutation_allowed_issue_side: `false`' \
+  'github_api_calls_performed_issue_side: `false`' \
   'raw_bodies_included: `false`' \
-  'raw_backup_payloads_included: `false`' \
-  'repository_mutation_allowed: `false`' \
-  'restore_mutation_allowed: `false`' \
-  'retention_mutation_allowed: `false`' \
-  'llm_e2e_required_after_backup_catalog_change: `true`' \
-  "$issue_backup_path" \
-  "$index_path" \
-  "$readme_path" \
-  'command=`catalog` issue_intent=`@gitclaw /backup catalog` local_command=`gitclaw backup catalog` execution=`metadata-only` gate=`body-free-output` raw_bodies_included=`false` mutation_allowed=`false`' \
-  'command=`verify` issue_intent=`@gitclaw /backup verify`' \
-  'command=`snapshot` issue_intent=`@gitclaw /backup snapshot`' \
-  'command=`search` issue_intent=`@gitclaw /backup search <query>`' \
-  'backup_branch_gate=`fetched-before-local-inspection`' \
-  'restore_gate=`plan-only`' \
-  'search_gate=`query-hash-and-match-metadata`' \
-  'transcript_messages_now: `1`'; do
-  grep -Fq "$expected" <<<"$comments" || die "backup catalog report missing ${expected}"
+  "requested_local_command: \`gitclaw backup snapshot --root .gitclaw/backups --repo ${repo}\`" \
+  'llm_e2e_required_after_backup_snapshot_change: `true`' \
+  'backup_branch: `gitclaw-backups`' \
+  'backup_schema_version: `1`'; do
+  grep -Fq "$expected" <<<"$comments" || die "backup snapshot issue report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "backup catalog report leaked issue body token"
-fi
 if grep -Fq "$expected_token" <<<"$comments" || grep -Fq "$search_phrase" <<<"$comments"; then
-  die "backup catalog report leaked follow-up fixture context"
+  die "backup snapshot report leaked follow-up fixture context"
 fi
 
-cli_catalog="$(GITHUB_REPOSITORY="$repo" go run ./cmd/gitclaw backup catalog)"
-for expected in \
-  "GitClaw Backup Catalog Report" \
-  'scope: `local-cli`' \
-  "repository: \`${repo}\`" \
-  'backup_catalog_status: `ok`' \
-  'catalog_entries: `18`' \
-  'fetched_branch_required_commands: `17`' \
-  'raw_bodies_included: `false`' \
-  'command=`snapshot` issue_intent=`@gitclaw /backup snapshot`' \
-  'command=`restore-plan` issue_intent=`@gitclaw /backup restore-plan`' \
-  'retention_gate=`plan-only`'; do
-  grep -Fq "$expected" <<<"$cli_catalog" || die "local backup catalog missing ${expected}"
+for leaked in "$token" "$title"; do
+  if grep -Fq "$leaked" <<<"$comments"; then
+    die "backup snapshot report leaked issue-side input ${leaked}"
+  fi
 done
-if grep -Fq "$token" <<<"$cli_catalog"; then
-  die "local backup catalog leaked issue token"
-fi
 
-tmp_index="$(mktemp)"
-tmp_readme="$(mktemp)"
-cleanup_tmp() {
-  rm -f "$tmp_index" "$tmp_readme"
+repo_key="${repo//\//__}"
+issue_padded="$(printf "%06d" "$issue_number")"
+issue_path="issues/${issue_padded}.json"
+
+fetch_backup_branch() {
+  rm -rf "$tmp_dir"
+  tmp_dir="$(mktemp -d)"
+  backup_checkout="${tmp_dir}/backup-branch"
+  gh repo clone "$repo" "$backup_checkout" -- --depth=1 --branch "$backup_branch" >/dev/null 2>&1
 }
-trap 'cleanup_tmp; cleanup' EXIT
 
 for _ in {1..60}; do
-  if read_branch_file "$index_path" >"$tmp_index" 2>/dev/null &&
-    read_branch_file "$readme_path" >"$tmp_readme" 2>/dev/null &&
-    read_branch_file "$issue_backup_path" >/dev/null 2>&1; then
-    if jq -e --argjson number "$issue_number" --arg title "$title" --arg path "issues/${issue_padded}.json" '
-      .version == 1
-      and .repo == "'"${repo}"'"
-      and (.count >= 1)
-      and any(.issues[]; .number == $number and .title == $title and .path == $path and .comment_count >= 1 and .transcript_messages >= 1)
-    ' "$tmp_index" >/dev/null &&
-      grep -Fq "#${issue_number}" "$tmp_readme" &&
-      grep -Fq "issues/${issue_padded}.json" "$tmp_readme"; then
-      if grep -Fq "$token" "$tmp_index" || grep -Fq "$token" "$tmp_readme"; then
-        die "backup index or README leaked issue body token"
-      fi
-      wait_for_done_status || die "expected gitclaw:done without running/error"
-      url="$(jq -r '.url' <<<"$run_json")"
-      log "backup branch verified for issue #${issue_number}"
-      break
+  if fetch_backup_branch; then
+    index_path="${backup_checkout}/.gitclaw/backups/${repo_key}/index.json"
+  else
+    sleep 5
+    continue
+  fi
+  if [[ -f "$index_path" ]] &&
+    jq -e --argjson number "$issue_number" --arg title "$title" --arg path "$issue_path" '
+      any(.issues[]; .number == $number and .title == $title and .path == $path)
+    ' "$index_path" >/dev/null; then
+    issue_count="$(jq -r '.count' "$index_path")"
+    comment_count="$(jq -r '[.issues[].comment_count] | add // 0' "$index_path")"
+    transcript_count="$(jq -r '[.issues[].transcript_messages] | add // 0' "$index_path")"
+    snapshot_entries="$((issue_count + 2))"
+    snapshot_output="$(go run ./cmd/gitclaw backup snapshot --root "${backup_checkout}/.gitclaw/backups" --repo "$repo")"
+    for expected in \
+      "GitClaw Backup Snapshot Report" \
+      "repository: \`${repo}\`" \
+      'backup_snapshot_status: `ok`' \
+      'backup_verify_status: `ok`' \
+      'verification_failures: `0`' \
+      'snapshot_version: `gitclaw-backup-snapshot-v1`' \
+      'snapshot_scope: `repo-backup-index-readme-and-issue-payloads`' \
+      'snapshot_sha256_12:' \
+      "snapshot_entries: \`${snapshot_entries}\`" \
+      'control_file_entries: `2`' \
+      "issue_payload_entries: \`${issue_count}\`" \
+      "issue_count: \`${issue_count}\`" \
+      "comment_count: \`${comment_count}\`" \
+      "transcript_messages: \`${transcript_count}\`" \
+      'total_payload_bytes:' \
+      'raw_bodies_included: `false`' \
+      'llm_e2e_required_after_backup_snapshot_change: `true`' \
+      'kind=`control-file` path=`index.json`' \
+      'kind=`control-file` path=`README.md`' \
+      "kind=\`issue-payload\` issue=#${issue_number} path=\`${issue_path}\`" \
+      'sha256_12=' \
+      'title_sha256_12=' \
+      'verify_gate=`pass`' \
+      'raw_body_gate=`hash-and-count-only`' \
+      'restore_gate=`disabled`' \
+      'mutation_gate=`disabled`' \
+      'github_api_gate=`disabled`' \
+      'snapshot_hash_gate=`composite-sha256_12:'; do
+      grep -Fq "$expected" <<<"$snapshot_output" || die "backup snapshot missing ${expected}"
+    done
+    if grep -Fq "$token" <<<"$snapshot_output"; then
+      die "backup snapshot leaked issue body token"
     fi
+    if grep -Fq "$title" <<<"$snapshot_output"; then
+      die "backup snapshot leaked issue title"
+    fi
+    url="$(jq -r '.url' <<<"$run_json")"
+    break
   fi
   sleep 5
 done
 
-[[ -n "${url:-}" ]] || die "backup branch did not include catalog issue #${issue_number}"
+[[ -n "${url:-}" ]] || die "backup snapshot did not observe issue #${issue_number} in ${backup_branch}"
 
 comment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \

@@ -347,6 +347,69 @@ func TestBuildBackupStatsSummarizesBackupsWithoutBodies(t *testing.T) {
 	}
 }
 
+func TestBuildBackupSnapshotFingerprintsBackupsWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T12:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issues",
+		Issue: IssueBackupIssue{
+			Number: 7,
+			Title:  "@gitclaw snapshot one SNAPSHOT_ONE_TITLE_TOKEN",
+			Body:   "SNAPSHOT_ONE_BODY_TOKEN",
+			Labels: []string{"gitclaw"},
+		},
+		Transcript: []TranscriptMessage{
+			{Role: "user", Body: "SNAPSHOT_ONE_TRANSCRIPT_TOKEN", Actor: "alice", Trusted: true},
+			{Role: "assistant", Body: "SNAPSHOT_ONE_ASSISTANT_TOKEN", Actor: "github-actions[bot]", CommentID: 12, Trusted: true},
+		},
+		Comments: []IssueBackupComment{{ID: 12, Body: "<!-- gitclaw:assistant-turn -->\nSNAPSHOT_ONE_COMMENT_TOKEN"}},
+	})
+	writeBackupFixture(t, root, IssueBackup{
+		Version:     1,
+		GeneratedAt: "2026-05-29T13:00:00Z",
+		Repo:        "owner/repo",
+		EventName:   "issue_comment",
+		Issue: IssueBackupIssue{
+			Number: 8,
+			Title:  "@gitclaw snapshot two SNAPSHOT_TWO_TITLE_TOKEN",
+			Body:   "SNAPSHOT_TWO_BODY_TOKEN",
+			Labels: []string{"gitclaw:e2e"},
+		},
+		Transcript: []TranscriptMessage{{Role: "user", Body: "SNAPSHOT_TWO_TRANSCRIPT_TOKEN"}},
+		Comments:   []IssueBackupComment{{ID: 13, Body: "<!-- gitclaw:error -->\nSNAPSHOT_TWO_COMMENT_TOKEN"}},
+	})
+	if _, err := WriteBackupIndex(root, "owner/repo", time.Date(2026, 5, 29, 14, 0, 0, 0, time.UTC)); err != nil {
+		t.Fatalf("WriteBackupIndex returned error: %v", err)
+	}
+
+	snapshot, err := BuildBackupSnapshot(root, "owner/repo")
+	if err != nil {
+		t.Fatalf("BuildBackupSnapshot returned error: %v", err)
+	}
+	if snapshot.BackupSnapshotStatus != "ok" || snapshot.BackupVerifyStatus != "ok" || snapshot.SnapshotVersion != backupSnapshotVersion || snapshot.SnapshotSHA == "" {
+		t.Fatalf("unexpected snapshot metadata: %#v", snapshot)
+	}
+	if snapshot.SnapshotEntries != 4 || snapshot.ControlFileEntries != 2 || snapshot.IssuePayloadEntries != 2 || snapshot.IssueCount != 2 || snapshot.CommentCount != 2 || snapshot.TranscriptMessages != 3 || snapshot.UserMessages != 2 || snapshot.AssistantMessages != 1 || snapshot.AssistantTurns != 1 || snapshot.ErrorComments != 1 {
+		t.Fatalf("unexpected snapshot counts: %#v", snapshot)
+	}
+	if snapshot.Entries[0].Kind != "control-file" || snapshot.Entries[0].Path != "index.json" || snapshot.Entries[2].IssueNumber != 7 || snapshot.Entries[3].IssueNumber != 8 {
+		t.Fatalf("unexpected snapshot entries: %#v", snapshot.Entries)
+	}
+	report := RenderBackupSnapshot(snapshot)
+	for _, want := range []string{"GitClaw Backup Snapshot Report", "repository: `owner/repo`", "backup_snapshot_status: `ok`", "backup_verify_status: `ok`", "verification_failures: `0`", "snapshot_version: `gitclaw-backup-snapshot-v1`", "snapshot_scope: `repo-backup-index-readme-and-issue-payloads`", "snapshot_sha256_12:", "snapshot_entries: `4`", "control_file_entries: `2`", "issue_payload_entries: `2`", "issue_count: `2`", "comment_count: `2`", "transcript_messages: `3`", "user_messages: `2`", "assistant_messages: `1`", "assistant_turn_comments: `1`", "error_comments: `1`", "raw_bodies_included: `false`", "llm_e2e_required_after_backup_snapshot_change: `true`", "### Snapshot Entries", "kind=`control-file` path=`index.json`", "kind=`control-file` path=`README.md`", "kind=`issue-payload` issue=#7 path=`issues/000007.json`", "kind=`issue-payload` issue=#8 path=`issues/000008.json`", "sha256_12=", "title_sha256_12=", "verify_gate=`pass`", "raw_body_gate=`hash-and-count-only`", "snapshot_hash_gate=`composite-sha256_12:"} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("backup snapshot report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"SNAPSHOT_ONE_TITLE_TOKEN", "SNAPSHOT_ONE_BODY_TOKEN", "SNAPSHOT_ONE_TRANSCRIPT_TOKEN", "SNAPSHOT_ONE_ASSISTANT_TOKEN", "SNAPSHOT_ONE_COMMENT_TOKEN", "SNAPSHOT_TWO_TITLE_TOKEN", "SNAPSHOT_TWO_BODY_TOKEN", "SNAPSHOT_TWO_TRANSCRIPT_TOKEN", "SNAPSHOT_TWO_COMMENT_TOKEN", "@gitclaw snapshot"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("backup snapshot leaked body/title token %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestBuildBackupFreshnessReportsLatestAgeWithoutBodies(t *testing.T) {
 	root := t.TempDir()
 	writeBackupFixture(t, root, IssueBackup{

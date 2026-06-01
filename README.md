@@ -296,6 +296,7 @@ Backups, sessions, and run provenance:
 ```bash
 gitclaw backup catalog
 gitclaw backup verify
+gitclaw backup snapshot
 gitclaw backup coverage --issue <number>
 gitclaw backup drill --issue <number>
 gitclaw backup risk
@@ -335,6 +336,12 @@ system. It lists the issue intents, local commands, fetched-branch gates, and
 restore/retention mutation boundaries without printing raw issue bodies,
 comments, prompts, backup payloads, credentials, git subjects, or author
 identities.
+
+`gitclaw backup snapshot` is the compact lockfile-style fingerprint for a
+fetched backup branch. It verifies the backup tree, fingerprints `index.json`,
+`README.md`, and every indexed issue payload, then reports only paths, counts,
+timestamps, gates, and short hashes. It is useful for proving the archive shape
+changed as expected without opening raw conversation JSON.
 
 `gitclaw session catalog` is the compact session-surface map. It lists the
 issue intents, local backup commands, recall gates, and GitHub-issue canonical
@@ -405,6 +412,11 @@ The live backup-catalog harness covers `@gitclaw /backup catalog`: it verifies
 the deterministic command/gate catalog, checks the post-turn backup branch, and
 then forces a real GitHub Models repo-reader/search follow-up so the catalog
 surface keeps LLM/tool coverage.
+
+The live backup-snapshot harness covers `@gitclaw /backup snapshot`: it records
+the deferred issue-side intent, verifies the fetched backup branch can produce a
+body-free composite snapshot hash, and then forces a real GitHub Models
+repo-reader/search follow-up.
 
 The live session-catalog harness covers `@gitclaw /session catalog`: it checks
 the deterministic session command/gate map, then posts a real GitHub Models
@@ -680,6 +692,7 @@ scripts/e2e/github-backup-list.sh
 scripts/e2e/github-backup-timeline.sh
 scripts/e2e/github-backup-info.sh
 scripts/e2e/github-backup-catalog-report.sh
+scripts/e2e/github-backup-snapshot.sh
 scripts/e2e/github-backup-search.sh
 scripts/e2e/github-backup-export-jsonl.sh
 scripts/e2e/github-agents-catalog-report.sh

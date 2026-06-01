@@ -3255,6 +3255,9 @@ func runBackup(ctx context.Context, args []string) error {
 	if len(args) > 0 && args[0] == "stats" {
 		return runBackupStats(args[1:])
 	}
+	if len(args) > 0 && (args[0] == "snapshot" || args[0] == "snapshots" || args[0] == "fingerprint" || args[0] == "fingerprints" || args[0] == "lock" || args[0] == "lockfile") {
+		return runBackupSnapshot(args[1:])
+	}
 	if len(args) > 0 && args[0] == "retention-plan" {
 		return runBackupRetentionPlan(args[1:])
 	}
@@ -3848,6 +3851,41 @@ func runBackupStats(args []string) error {
 	fmt.Println(RenderBackupStats(stats))
 	if stats.BackupStatsStatus != "ok" {
 		return fmt.Errorf("backup stats reported %s", stats.BackupStatsStatus)
+	}
+	return nil
+}
+
+func runBackupSnapshot(args []string) error {
+	root := filepath.Join(".gitclaw", "backups")
+	repo := os.Getenv("GITHUB_REPOSITORY")
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--root":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--root requires a value")
+			}
+			root = args[i+1]
+			i++
+		case "--repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--repo requires a value")
+			}
+			repo = args[i+1]
+			i++
+		default:
+			return fmt.Errorf("unknown backup snapshot argument %q", args[i])
+		}
+	}
+	if repo == "" {
+		return fmt.Errorf("missing --repo or GITHUB_REPOSITORY")
+	}
+	snapshot, err := BuildBackupSnapshot(root, repo)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderBackupSnapshot(snapshot))
+	if snapshot.BackupSnapshotStatus != "ok" {
+		return fmt.Errorf("backup snapshot reported %s", snapshot.BackupSnapshotStatus)
 	}
 	return nil
 }

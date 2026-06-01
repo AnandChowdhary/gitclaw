@@ -504,6 +504,15 @@ issue-comment follow-up that makes a GitHub Models call, selects repo-reader,
 exposes `gitclaw.search_files`, recovers the backup-stats repository-search
 fixture token, and avoids echoing hidden issue/comment tokens.
 
+2026-06-01 backup-snapshot follow-up: OpenClaw's backup manifest/verify posture
+and Hermes' portable session export both imply a need for a compact archive
+fingerprint before restore, export, mirroring, or retention work. GitClaw should
+expose `gitclaw backup snapshot`: verify the fetched `gitclaw-backups` tree,
+fingerprint `index.json`, `README.md`, and indexed issue payloads, compute a
+composite lockfile hash, and report only paths, counts, timestamps, gates, and
+short hashes. Changes need a live fetched-branch snapshot proof plus a normal
+GitHub Models repo-reader/search follow-up.
+
 2026-05-31 backup-freshness follow-up: OpenClaw's verify-before-restore habit
 and Hermes' session export/checkpoint posture both imply an operator should be
 able to ask whether the backup branch is fresh enough without opening raw

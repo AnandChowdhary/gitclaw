@@ -69,6 +69,9 @@ func RenderBackupReport(ev Event, cfg Config, comments []Comment, transcript []T
 	if request.Name == "stats" {
 		fmt.Fprintf(&b, "- llm_e2e_required_after_backup_stats_change: `%t`\n", true)
 	}
+	if request.Name == "snapshot" {
+		writeBackupIssueSnapshotSummary(&b)
+	}
 	if request.Name == "freshness" {
 		writeBackupIssueFreshnessSummary(&b)
 	}
@@ -118,6 +121,7 @@ func RenderBackupReport(ev Event, cfg Config, comments []Comment, transcript []T
 	writeBackupIssueCommandSummary(&b, request)
 	b.WriteString("\n### Verification\n")
 	b.WriteString("- `gitclaw backup verify --root .gitclaw/backups --repo <owner/repo>`\n")
+	b.WriteString("- `gitclaw backup snapshot --root .gitclaw/backups --repo <owner/repo>`\n")
 	b.WriteString("- `gitclaw backup coverage --root .gitclaw/backups --repo <owner/repo> --issue <number>`\n")
 	b.WriteString("- `gitclaw backup drill --root .gitclaw/backups --repo <owner/repo> --issue <number>`\n")
 	b.WriteString("- `gitclaw backup risk --root .gitclaw/backups --repo <owner/repo>`\n")
@@ -234,6 +238,12 @@ func requestedBackupIssueCommand(ev Event, cfg Config) backupIssueCommand {
 			Status:       "ok",
 			LocalCommand: fmt.Sprintf("gitclaw backup stats --root %s --repo %s", defaultBackupRoot, backupReportRepo(ev.Repo)),
 		}
+	case "snapshot", "snapshots", "fingerprint", "fingerprints", "lock", "lockfile":
+		return backupIssueCommand{
+			Name:         "snapshot",
+			Status:       "ok",
+			LocalCommand: fmt.Sprintf("gitclaw backup snapshot --root %s --repo %s", defaultBackupRoot, backupReportRepo(ev.Repo)),
+		}
 	case "freshness", "fresh", "staleness":
 		return backupIssueCommand{
 			Name:         "freshness",
@@ -292,7 +302,7 @@ func writeBackupIssueCommandSummary(b *strings.Builder, request backupIssueComma
 			b.WriteString("- raw search query is not printed; only query hash and term count are shown\n")
 		}
 	case "unknown":
-		b.WriteString("- unknown backup subcommand; supported issue intents are `catalog`, `verify`, `coverage`, `drill`, `risk`, `provenance`, `manifest`, `list`, `timeline`, `info`, `stats`, `freshness`, `continuity`, `search`, `export-jsonl`, `restore-plan`, and `retention-plan`\n")
+		b.WriteString("- unknown backup subcommand; supported issue intents are `catalog`, `verify`, `snapshot`, `coverage`, `drill`, `risk`, `provenance`, `manifest`, `list`, `timeline`, `info`, `stats`, `freshness`, `continuity`, `search`, `export-jsonl`, `restore-plan`, and `retention-plan`\n")
 	case "invalid_issue":
 		b.WriteString("- invalid backup issue number; use `@gitclaw /backup info <issue-number>`, `@gitclaw /backup coverage <issue-number>`, `@gitclaw /backup drill <issue-number>`, or inspect the current issue without an explicit issue number\n")
 	default:
@@ -356,6 +366,17 @@ func writeBackupIssueFreshnessSummary(b *strings.Builder) {
 	b.WriteString("- backup_freshness_gate: `latest-backup-age <= max-age`\n")
 	b.WriteString("- raw_backup_payloads_scanned_issue_side: `false`\n")
 	b.WriteString("- llm_e2e_required_after_backup_freshness_change: `true`\n")
+}
+
+func writeBackupIssueSnapshotSummary(b *strings.Builder) {
+	b.WriteString("- backup_snapshot_status: `deferred`\n")
+	b.WriteString("- backup_snapshot_execution: `local_fetched_backup_branch`\n")
+	b.WriteString("- backup_snapshot_gate: `verify + composite lockfile hash`\n")
+	b.WriteString("- raw_backup_payloads_scanned_issue_side: `false`\n")
+	b.WriteString("- raw_issue_titles_included_issue_side: `false`\n")
+	b.WriteString("- repository_mutation_allowed_issue_side: `false`\n")
+	b.WriteString("- github_api_calls_performed_issue_side: `false`\n")
+	b.WriteString("- llm_e2e_required_after_backup_snapshot_change: `true`\n")
 }
 
 func writeBackupIssueContinuitySummary(b *strings.Builder) {

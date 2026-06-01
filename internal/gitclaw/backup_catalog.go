@@ -177,6 +177,7 @@ func backupCatalogEntries(root string, repo string) []backupCatalogEntry {
 	return []backupCatalogEntry{
 		{Name: "catalog", IssueIntent: "@gitclaw /backup catalog", LocalCommand: "gitclaw backup catalog", Execution: "metadata-only", Gate: "body-free-output"},
 		{Name: "verify", IssueIntent: "@gitclaw /backup verify", LocalCommand: fmt.Sprintf("gitclaw backup verify --root %s --repo %s", root, repo), Execution: "local-fetched-backup-branch", Gate: "schema-index-paths"},
+		{Name: "snapshot", IssueIntent: "@gitclaw /backup snapshot", LocalCommand: fmt.Sprintf("gitclaw backup snapshot --root %s --repo %s", root, repo), Execution: "local-fetched-backup-branch", Gate: "composite-lockfile-hash"},
 		{Name: "coverage", IssueIntent: "@gitclaw /backup coverage <issue>", LocalCommand: fmt.Sprintf("gitclaw backup coverage --root %s --repo %s --issue <number>", root, repo), Execution: "local-fetched-backup-branch", Gate: "issue-backup-present"},
 		{Name: "drill", IssueIntent: "@gitclaw /backup drill <issue>", LocalCommand: fmt.Sprintf("gitclaw backup drill --root %s --repo %s --issue <number>", root, repo), Execution: "local-fetched-backup-branch", Gate: "verify-coverage-restore-plan"},
 		{Name: "risk", IssueIntent: "@gitclaw /backup risk", LocalCommand: fmt.Sprintf("gitclaw backup risk --root %s --repo %s", root, repo), Execution: "local-fetched-backup-branch", Gate: "integrity-path-safety-credentials"},

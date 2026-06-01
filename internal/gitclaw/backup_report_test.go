@@ -117,8 +117,8 @@ func TestRenderBackupCatalogIssueCommandListsBodyFreeRecoverySurface(t *testing.
 		"catalog_strategy: `compact-git-backed-recovery-discovery`",
 		"backup_model: `github-issues-plus-gitclaw-backups-branch`",
 		"catalog_scope: `backup-commands-and-recovery-gates`",
-		"catalog_entries: `17`",
-		"fetched_branch_required_commands: `16`",
+		"catalog_entries: `18`",
+		"fetched_branch_required_commands: `17`",
 		"requested_local_command: `gitclaw backup catalog --repo owner/repo`",
 		"issue_side_execution: `deferred_to_post_turn_backup_branch`",
 		"raw_bodies_included: `false`",
@@ -130,6 +130,7 @@ func TestRenderBackupCatalogIssueCommandListsBodyFreeRecoverySurface(t *testing.
 		".gitclaw/backups/owner__repo/issues/000096.json",
 		"command=`catalog` issue_intent=`@gitclaw /backup catalog` local_command=`gitclaw backup catalog` execution=`metadata-only` gate=`body-free-output` raw_bodies_included=`false` mutation_allowed=`false`",
 		"command=`search` issue_intent=`@gitclaw /backup search <query>` local_command=`gitclaw backup search --root .gitclaw/backups --repo owner/repo <query>`",
+		"command=`snapshot` issue_intent=`@gitclaw /backup snapshot` local_command=`gitclaw backup snapshot --root .gitclaw/backups --repo owner/repo` execution=`local-fetched-backup-branch` gate=`composite-lockfile-hash`",
 		"backup_branch_gate=`fetched-before-local-inspection`",
 		"restore_gate=`plan-only`",
 		"search_gate=`query-hash-and-match-metadata`",
@@ -282,6 +283,43 @@ func TestRenderBackupStatsIssueCommandRecordsDeferredIntentWithoutBodies(t *test
 	}
 	if strings.Contains(report, "BACKUP_STATS_INTENT_SECRET") {
 		t.Fatalf("backup stats report leaked body:\n%s", report)
+	}
+}
+
+func TestRenderBackupSnapshotIssueCommandRecordsDeferredIntentWithoutBodies(t *testing.T) {
+	ev := Event{
+		Repo: "owner/repo",
+		Issue: Issue{
+			Number: 98,
+			Title:  "@gitclaw /backup snapshot e2e",
+			Body:   "BACKUP_SNAPSHOT_INTENT_SECRET",
+		},
+	}
+
+	report := RenderBackupReport(ev, DefaultConfig(), nil, nil)
+	for _, want := range []string{
+		"requested_backup_command: `snapshot`",
+		"backup_command_status: `ok`",
+		"requested_local_command: `gitclaw backup snapshot --root .gitclaw/backups --repo owner/repo`",
+		"run `gitclaw backup snapshot --root .gitclaw/backups --repo owner/repo` after fetching `gitclaw-backups`",
+		"issue_side_execution: `deferred_to_post_turn_backup_branch`",
+		"backup_snapshot_status: `deferred`",
+		"backup_snapshot_execution: `local_fetched_backup_branch`",
+		"backup_snapshot_gate: `verify + composite lockfile hash`",
+		"raw_backup_payloads_scanned_issue_side: `false`",
+		"raw_issue_titles_included_issue_side: `false`",
+		"repository_mutation_allowed_issue_side: `false`",
+		"github_api_calls_performed_issue_side: `false`",
+		"raw_bodies_included: `false`",
+		"llm_e2e_required_after_backup_snapshot_change: `true`",
+		"`gitclaw backup snapshot --root .gitclaw/backups --repo <owner/repo>`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("backup snapshot report missing %q:\n%s", want, report)
+		}
+	}
+	if strings.Contains(report, "BACKUP_SNAPSHOT_INTENT_SECRET") || strings.Contains(report, "@gitclaw /backup snapshot e2e") {
+		t.Fatalf("backup snapshot report leaked request text:\n%s", report)
 	}
 }
 

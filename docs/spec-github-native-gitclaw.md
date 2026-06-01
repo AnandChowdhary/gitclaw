@@ -900,8 +900,8 @@ GitHub issue/comment event
 
 - CLI entry point.
 - Subcommands: `preflight`, `handle`, `backup`, `backup coverage`,
-  `backup search`, `backup provenance`, `backup timeline`, `backup info`,
-  `backup freshness`, `backup continuity`, `backup retention-plan`,
+  `backup search`, `backup provenance`, `backup snapshot`, `backup timeline`,
+  `backup info`, `backup freshness`, `backup continuity`, `backup retention-plan`,
   `session provenance`, `session tools`, `session skills`, `session usage`,
   `session trajectory`, `session compaction`, `session resume`,
   `session status`,
@@ -5164,6 +5164,11 @@ command for one backed-up issue, defaulting to the current issue when no number
 is supplied; info-surface changes carry
 `llm_e2e_required_after_backup_info_change: true` and require a fetched-branch
 info proof plus a normal GitHub Models repo-reader/search follow-up. The
+`@gitclaw /backup snapshot` command records the exact local lockfile-style
+fingerprint command, defers branch inspection to a fetched backup checkout, and
+advertises `llm_e2e_required_after_backup_snapshot_change: true` because every
+snapshot-surface change must be proven with both a fetched-branch snapshot and
+a normal GitHub Models repo-reader/search follow-up. The
 `@gitclaw /backup timeline` command records the exact chronological timeline
 command for a fetched backup branch without trying to inspect raw backup
 payloads from the pre-backup issue handler. `@gitclaw /backup search <query>`
@@ -5369,6 +5374,35 @@ every raw JSON file would be noisy. Stats-surface changes carry
 `llm_e2e_required_after_backup_stats_change: true` and require a fetched-branch
 stats proof plus a normal GitHub Models repo-reader/search follow-up.
 
+## Backup Snapshot Command
+
+GitClaw supports a local backup snapshot command inspired by OpenClaw's
+manifest/verify posture and Hermes' portable session export fingerprints:
+
+```bash
+gitclaw backup snapshot --root .gitclaw/backups --repo <owner/repo>
+```
+
+The command reads a fetched `gitclaw-backups` tree, verifies it, and prints a
+deterministic `GitClaw Backup Snapshot Report` with:
+
+- backup snapshot and verify status,
+- snapshot version, scope, and composite snapshot hash,
+- control-file entries for `index.json` and `README.md`,
+- issue payload entries with paths, bytes, short hashes, event names,
+  generated timestamps, schema versions, title hashes, and count telemetry,
+- aggregate issue, comment, transcript, user-message, assistant-message,
+  assistant-turn, error-comment, and payload-byte counts,
+- explicit gates showing restore and mutation are disabled.
+
+It never prints raw issue titles, issue bodies, comments, transcript messages,
+prompts, search queries, or tool outputs. The snapshot report is the
+lockfile-style proof that a fetched backup branch has the expected shape before
+restore planning, retention planning, export, or off-repo mirroring. Snapshot
+changes carry `llm_e2e_required_after_backup_snapshot_change: true` and require
+a fetched-branch snapshot proof plus a normal GitHub Models repo-reader/search
+follow-up.
+
 ## Backup Freshness Command
 
 GitClaw supports a local backup freshness command inspired by OpenClaw's
@@ -5457,8 +5491,8 @@ backups by backup timestamp descending, and prints a deterministic
 
 It never prints raw issue titles, issue bodies, comments, or transcript bodies.
 The list report is the body-safe navigation layer before a more specific
-`backup info`, `backup manifest`, `backup search`, `backup restore-plan`, or raw
-`backup export-jsonl` command. List-surface changes carry
+`backup info`, `backup snapshot`, `backup manifest`, `backup search`,
+`backup restore-plan`, or raw `backup export-jsonl` command. List-surface changes carry
 `llm_e2e_required_after_backup_list_change: true` and require a fetched-branch
 list proof plus a normal GitHub Models repo-reader/search follow-up.
 
@@ -6397,7 +6431,30 @@ assert the expected comments/labels, and close the issue in cleanup.
      selected skill, prompt-visible `gitclaw.search_files`, usage telemetry,
      and the backup-stats repository-search fixture token.
 
-39. **Backup freshness**
+39. **Backup snapshot**
+
+   - create a real issue with `@gitclaw /backup snapshot`,
+   - assert the issue-side report lists `requested_backup_command: snapshot`,
+     the deferred execution marker, the concrete local snapshot command, and
+     the deferred composite-lockfile gate without dumping body/title tokens,
+   - assert the issue-visible report includes
+     `llm_e2e_required_after_backup_snapshot_change: true`,
+   - wait for the successful backup job,
+   - fetch the real `gitclaw-backups` branch,
+   - run `gitclaw backup snapshot --root <fetched>/.gitclaw/backups --repo
+     <owner/repo>`,
+   - assert the report is marked `backup_snapshot_status: ok` and
+     `backup_verify_status: ok`,
+   - assert it lists control-file entries, issue-payload entries, aggregate
+     counts, the composite `snapshot_sha256_12`, body-free gates, and the
+     current issue payload path,
+   - assert it does not dump the issue body token or raw title,
+   - post a normal follow-up that requires repo-reader search and assert the
+     second assistant turn is GitHub Models-backed with prompt context,
+     selected skill, prompt-visible `gitclaw.search_files`, usage telemetry,
+     and the backup-snapshot repository-search fixture token.
+
+40. **Backup freshness**
 
    - create a real issue with `@gitclaw /backup freshness`,
    - assert the issue-side report lists `requested_backup_command: freshness`,
@@ -6420,7 +6477,7 @@ assert the expected comments/labels, and close the issue in cleanup.
      selected skill, prompt-visible `gitclaw.search_files`, usage telemetry,
      and the backup-freshness repository-search fixture token.
 
-40. **Backup continuity**
+41. **Backup continuity**
 
    - create a real issue with `@gitclaw /backup continuity`,
    - assert the issue-side report lists `requested_backup_command:
@@ -7238,6 +7295,15 @@ examples/workflows/gitclaw.yml
   harness posts a normal model-backed follow-up that proves repo-reader search,
   prompt provenance, selected skill metadata, prompt-visible tool names, usage
   markers, and the bounded backup-stats repository-search fixture token.
+- A `gh`-driven backup-snapshot E2E harness verifies
+  `@gitclaw /backup snapshot` records the deferred issue-side command intent,
+  then verifies the fetched `gitclaw-backups` branch can produce a body-free
+  lockfile-style snapshot with control-file hashes, issue-payload hashes,
+  aggregate counts, gate evidence, and a composite `snapshot_sha256_12`. The
+  same harness posts a normal model-backed follow-up that proves repo-reader
+  search, prompt provenance, selected skill metadata, prompt-visible tool
+  names, usage markers, and the bounded backup-snapshot repository-search
+  fixture token.
 - A `gh`-driven backup-freshness E2E harness verifies
   `@gitclaw /backup freshness` records the deferred issue-side command intent,
   then verifies the fetched `gitclaw-backups` branch can produce a body-free
