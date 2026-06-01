@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T14:10:35Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 544,
+    "title": "GitClaw backup rehearsal: issue #543 (backup-rehearsal-20260601t140519z)",
+    "body": "\u003c!-- gitclaw:backup-rehearsal-issue id=\"backup-rehearsal-20260601t140519z\" backup_issue=\"543\" source_issue=\"543\" source_comment_id=\"0\" source_sha256_12=\"4d8169d41431\" --\u003e\nGitClaw backup recovery rehearsal issue.\n\n- rehearsal_id: backup-rehearsal-20260601t140519z\n- backup_issue: #543\n- backup_branch: gitclaw-backups\n- backup_root: .gitclaw/backups\n- repo_backup_dir: .gitclaw/backups/AnandChowdhary__gitclaw\n- issue_backup_path: .gitclaw/backups/AnandChowdhary__gitclaw/issues/000543.json\n- index_path: .gitclaw/backups/AnandChowdhary__gitclaw/index.json\n- source_issue: #543\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/543\n- source_comment_id: 0\n- source_kind: issue\n- source_sha256_12: 4d8169d41431\n- rehearsal_mode: recovery-conversation\n- restore_mode: dry-run\n- repository_mutation_allowed: false\n- backup_branch_write_allowed: false\n- github_api_replay_allowed: false\n- raw_source_body_included: false\n- raw_backup_bodies_included: false\n\nUse this issue to rehearse recovery from the GitClaw backup branch. Fetch `gitclaw-backups` locally, run the coverage/drill/restore-plan commands below, and keep any real restore as a reviewed branch or separate recovery procedure.\n\n### Suggested Dry-Run Commands\n- `gitclaw backup coverage --root .gitclaw/backups --repo AnandChowdhary/gitclaw --issue 543`\n- `gitclaw backup drill --root .gitclaw/backups --repo AnandChowdhary/gitclaw --issue 543`\n- `gitclaw backup restore-plan --root .gitclaw/backups --repo AnandChowdhary/gitclaw --issue 543`",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw backup rehearsal: issue #543 (backup-rehearsal-20260601t140519z)\n\n\u003c!-- gitclaw:backup-rehearsal-issue id=\"backup-rehearsal-20260601t140519z\" backup_issue=\"543\" source_issue=\"543\" source_comment_id=\"0\" source_sha256_12=\"4d8169d41431\" --\u003e\nGitClaw backup recovery rehearsal issue.\n\n- rehearsal_id: backup-rehearsal-20260601t140519z\n- backup_issue: #543\n- backup_branch: gitclaw-backups\n- backup_root: .gitclaw/backups\n- repo_backup_dir: .gitclaw/backups/AnandChowdhary__gitclaw\n- issue_backup_path: .gitclaw/backups/AnandChowdhary__gitclaw/issues/000543.json\n- index_path: .gitclaw/backups/AnandChowdhary__gitclaw/index.json\n- source_issue: #543\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/543\n- source_comment_id: 0\n- source_kind: issue\n- source_sha256_12: 4d8169d41431\n- rehearsal_mode: recovery-conversation\n- restore_mode: dry-run\n- repository_mutation_allowed: false\n- backup_branch_write_allowed: false\n- github_api_replay_allowed: false\n- raw_source_body_included: false\n- raw_backup_bodies_included: false\n\nUse this issue to rehearse recovery from the GitClaw backup branch. Fetch `gitclaw-backups` locally, run the coverage/drill/restore-plan commands below, and keep any real restore as a reviewed branch or separate recovery procedure.\n\n### Suggested Dry-Run Commands\n- `gitclaw backup coverage --root .gitclaw/backups --repo AnandChowdhary/gitclaw --issue 543`\n- `gitclaw backup drill --root .gitclaw/backups --repo AnandChowdhary/gitclaw --issue 543`\n- `gitclaw backup restore-plan --root .gitclaw/backups --repo AnandChowdhary/gitclaw --issue 543`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this backup recovery rehearsal and use the repo-reader skill.\n\nSearch the repository for `backup rehearsal unique search fixture phrase`.\nThe matching repository search result line ends with an all-caps token after the arrow.\nThat token starts with `GITCLAW_BACKUP_REHEARSAL_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include the source issue number, rehearsal issue number, rehearsal id, backup path, backup branch, source body, or hidden sentinels.\nDo not include this hidden follow-up token: NOECHO_BACKUP_REHEARSAL_FOLLOWUP_20260601t140519z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4593364781,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_BACKUP_REHEARSAL_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4593375210,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4593364781,
+      "body": "@gitclaw Continue this backup recovery rehearsal and use the repo-reader skill.\n\nSearch the repository for `backup rehearsal unique search fixture phrase`.\nThe matching repository search result line ends with an all-caps token after the arrow.\nThat token starts with `GITCLAW_BACKUP_REHEARSAL_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include the source issue number, rehearsal issue number, rehearsal id, backup path, backup branch, source body, or hidden sentinels.\nDo not include this hidden follow-up token: NOECHO_BACKUP_REHEARSAL_FOLLOWUP_20260601t140519z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T14:08:54Z",
+      "updated_at": "2026-06-01T14:08:54Z"
+    },
+    {
+      "id": 4593375210,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26760137970\" event_id=\"comment-4593364781\" model=\"openai/gpt-5-nano\" idempotency_key=\"2d125622a3185e3bcb48493dd706dbf9\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26760137970\" prompt_context_sha256_12=\"f2a6993c3d1c\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10932\" usage_completion_tokens=\"535\" usage_total_tokens=\"11467\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_BACKUP_REHEARSAL_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T14:10:08Z",
+      "updated_at": "2026-06-01T14:10:08Z"
+    }
+  ]
+}
