@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T03:26:19Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 479,
+    "title": "@gitclaw /tools toolsets info repo-read e2e 20260601T032509Z",
+    "body": "@gitclaw /tools toolsets info repo-read\n\nLive toolset info E2E. Keep the focused profile report body-free.\nDo not include this hidden toolset info sentinel: NOECHO_TOOLSET_INFO_SENTINEL_20260601T032509Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /tools toolsets info repo-read e2e 20260601T032509Z\n\n@gitclaw /tools toolsets info repo-read\n\nLive toolset info E2E. Keep the focused profile report body-free.\nDo not include this hidden toolset info sentinel: NOECHO_TOOLSET_INFO_SENTINEL_20260601T032509Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Toolset Info Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#479`\n- requested_toolset_sha256_12: `7ced4f0fdaf9`\n- normalized_toolset: `repo-read`\n- toolset_info_status: `ok`\n- available_toolsets: `1`\n- matched_toolsets: `1`\n- runtime_toolset_selection: `not_active_in_v1`\n- registry_verification: `static_builtin_contracts_only`\n- toolset_activation_supported: `false`\n- repository_mutation_allowed: `false`\n- shell_execution_allowed: `false`\n- network_tool_execution_allowed: `false`\n- raw_requested_toolset_included: `false`\n- raw_toolset_bodies_included: `false`\n- raw_toolset_instructions_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_toolset_info_change: `true`\n- issue_title_sha256_12: `fabb183bb124`\n\nThis report focuses one repo-reviewed toolset profile. It shows normalized tool refs, config gating, hashes, and risk codes only; raw toolset instructions, issue bodies, comments, prompts, and tool outputs are not included.\n\n### Matches\n- toolset_name=`repo-read` path=`.gitclaw/toolsets/repo-read.yaml` mode=`read-only` tools=`gitclaw.list_files, gitclaw.policy, gitclaw.read_file, gitclaw.search_files, ...` resolved_tools=`gitclaw.list_files, gitclaw.policy, gitclaw.read_file, gitclaw.search_files, ...` unknown_tools=`none` disabled_tools=`none` allowlist_blocked_tools=`none` instruction=`true` description=`true` bytes=`394` lines=`12` sha256_12=`c8e9afb4dced` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Risk Findings For Matches\n- none\n\n### Info Gates\n- toolset_info_gate=`ok`\n- activation_gate=`disabled`\n- mutation_gate=`disabled`\n- shell_execution_gate=`disabled`\n- network_execution_gate=`disabled`\n- raw_body_gate=`hash_only`\n- model_e2e_gate=`required`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4589289170,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4589289170,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26733458216\" event_id=\"issue-479\" model=\"gitclaw/tools\" idempotency_key=\"57fe723dfaf2f77f5a0f2c59a3e8c5d4\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26733458216\" --\u003e\n## GitClaw Toolset Info Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#479`\n- requested_toolset_sha256_12: `7ced4f0fdaf9`\n- normalized_toolset: `repo-read`\n- toolset_info_status: `ok`\n- available_toolsets: `1`\n- matched_toolsets: `1`\n- runtime_toolset_selection: `not_active_in_v1`\n- registry_verification: `static_builtin_contracts_only`\n- toolset_activation_supported: `false`\n- repository_mutation_allowed: `false`\n- shell_execution_allowed: `false`\n- network_tool_execution_allowed: `false`\n- raw_requested_toolset_included: `false`\n- raw_toolset_bodies_included: `false`\n- raw_toolset_instructions_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_toolset_info_change: `true`\n- issue_title_sha256_12: `fabb183bb124`\n\nThis report focuses one repo-reviewed toolset profile. It shows normalized tool refs, config gating, hashes, and risk codes only; raw toolset instructions, issue bodies, comments, prompts, and tool outputs are not included.\n\n### Matches\n- toolset_name=`repo-read` path=`.gitclaw/toolsets/repo-read.yaml` mode=`read-only` tools=`gitclaw.list_files, gitclaw.policy, gitclaw.read_file, gitclaw.search_files, ...` resolved_tools=`gitclaw.list_files, gitclaw.policy, gitclaw.read_file, gitclaw.search_files, ...` unknown_tools=`none` disabled_tools=`none` allowlist_blocked_tools=`none` instruction=`true` description=`true` bytes=`394` lines=`12` sha256_12=`c8e9afb4dced` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Risk Findings For Matches\n- none\n\n### Info Gates\n- toolset_info_gate=`ok`\n- activation_gate=`disabled`\n- mutation_gate=`disabled`\n- shell_execution_gate=`disabled`\n- network_execution_gate=`disabled`\n- raw_body_gate=`hash_only`\n- model_e2e_gate=`required`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T03:25:55Z",
+      "updated_at": "2026-06-01T03:25:55Z"
+    }
+  ]
+}
