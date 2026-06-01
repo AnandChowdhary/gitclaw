@@ -268,6 +268,7 @@ gitclaw session tools --backup <issue.json>
 gitclaw session skills --backup <issue.json>
 gitclaw session usage --backup <issue.json>
 gitclaw session trajectory --backup <issue.json>
+gitclaw session compaction --backup <issue.json>
 gitclaw session status --backup <issue.json>
 gitclaw session stats --backup <issue.json>
 gitclaw session coverage --backup <issue.json>
@@ -320,6 +321,13 @@ skills/tools, model names, and usage counters without printing issue bodies,
 comments, assistant replies, prompts, provider responses, search queries, run
 URLs, or tool outputs.
 
+`gitclaw session compaction --backup <issue.json>` is the body-free session
+compaction-readiness audit. It models Hermes-style 50% in-loop and 85%
+gateway-hygiene thresholds plus OpenClaw-style trajectory pruning, then reports
+transcript sizes, bounded-message counts, per-message hashes, provenance,
+model/usage telemetry, and disabled mutation gates without summarizing,
+splitting, mutating memory, or printing raw bodies.
+
 `gitclaw backup provenance` is the body-free git-history audit for fetched
 `gitclaw-backups` branches. It verifies the backup tree, then reports whether
 the index, README, and issue payload files are tracked, clean, and backed by
@@ -368,6 +376,12 @@ The live session-trajectory harness follows the same model-first shape, then
 verifies `@gitclaw /session trajectory` reports an export-like assistant-turn
 manifest with model, run-hash, prompt-context, skill/tool, and usage evidence
 without leaking hidden issue/comment text or raw run URLs.
+
+The live session-compaction harness follows the same model-first shape, then
+verifies `@gitclaw /session compaction` reports threshold readiness,
+bounded-transcript cards, model-backed provenance, usage telemetry, and
+disabled summary/mutation gates without leaking hidden issue/comment text or
+raw run URLs.
 
 `gitclaw backup restore-plan` is a dry-run recovery plan for a fetched backup
 payload. Its live harness pairs deterministic restore metadata checks with a
@@ -648,6 +662,7 @@ scripts/e2e/github-session-tools.sh
 scripts/e2e/github-session-skills.sh
 scripts/e2e/github-session-usage.sh
 scripts/e2e/github-session-trajectory.sh
+scripts/e2e/github-session-compaction.sh
 scripts/e2e/github-session-risk-report.sh
 scripts/e2e/github-session-status-report.sh
 scripts/e2e/github-session-stats-report.sh

@@ -70,6 +70,9 @@ func RenderSessionReport(ev Event, cfg Config, comments []Comment, transcript []
 	if requestedSessionTrajectory(ev, cfg) {
 		return RenderSessionTrajectoryReport(BuildSessionTrajectoryReport("issue-thread", "", ev, comments, transcript))
 	}
+	if requestedSessionCompaction(ev, cfg) {
+		return RenderSessionCompactionReport(BuildSessionCompactionReport("issue-thread", "", ev, cfg, comments, transcript))
+	}
 	if requestedSessionStatus(ev, cfg) {
 		return RenderSessionStatusReport(ev, cfg, comments, transcript)
 	}
@@ -284,6 +287,11 @@ func requestedSessionUsage(ev Event, cfg Config) bool {
 func requestedSessionTrajectory(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && fields[0] == "/session" && (strings.EqualFold(fields[1], "trajectory") || strings.EqualFold(fields[1], "trace") || strings.EqualFold(fields[1], "manifest") || strings.EqualFold(fields[1], "export-trajectory"))
+}
+
+func requestedSessionCompaction(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && fields[0] == "/session" && (strings.EqualFold(fields[1], "compaction") || strings.EqualFold(fields[1], "compact") || strings.EqualFold(fields[1], "compression") || strings.EqualFold(fields[1], "compress") || strings.EqualFold(fields[1], "summarization"))
 }
 
 func requestedSessionRisk(ev Event, cfg Config) bool {

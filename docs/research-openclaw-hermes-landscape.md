@@ -3155,6 +3155,27 @@ search queries, or tool outputs. Acceptance requires a live GitHub Models
 repo-reader/search turn first, followed by the deterministic session-trajectory
 report proving model-backed trajectory evidence from marker metadata.
 
+### 2026-06-01 Session Compaction Follow-Up
+
+Hermes' context-compression docs make the 50% in-loop threshold and 85%
+gateway-hygiene threshold explicit, while OpenClaw's trajectory artifacts treat
+compaction state, usage, prompts, assistant text, and tool metadata as separate
+inspectable surfaces. GitClaw should preserve the operator signal without
+pretending to have a semantic compaction engine or a hidden session database.
+
+Add `@gitclaw /session compaction` and
+`gitclaw session compaction --backup <issue.json>`. The report should audit
+GitHub issue sessions through hashes, counts, and assistant-turn marker
+attributes: transcript byte/line/token estimates, bounded transcript counts,
+omitted/truncated messages, per-message compaction cards, prompt provenance,
+model-backed turn evidence, token/cache usage telemetry, and disabled
+summary/mutation gates. It must not print issue bodies, comments, assistant
+replies, prompts, provider payloads, search queries, raw run URLs, or tool
+outputs, and it must not write summaries, split sessions, mutate memory, or
+persist compressed state. Acceptance requires a live GitHub Models
+repo-reader/search turn first, followed by the deterministic session-compaction
+report proving model-backed provenance and usage evidence from marker metadata.
+
 ## Open Questions For Speccing
 
 1. Is `gitclaw` primarily for one user's repos, or for teams/organizations?

@@ -35,9 +35,9 @@ func TestRenderSessionCatalogReportListsBodyFreeSessionSurface(t *testing.T) {
 		"session_model: `github-issue-thread-plus-backup-json`",
 		"canonical_session_store: `github-issue-thread`",
 		"local_backup_store: `gitclaw-backups issue JSON`",
-		"catalog_entries: `12`",
-		"issue_side_commands: `12`",
-		"local_backup_commands: `11`",
+		"catalog_entries: `13`",
+		"issue_side_commands: `13`",
+		"local_backup_commands: `12`",
 		"raw_bodies_included: `false`",
 		"raw_tool_outputs_included: `false`",
 		"repository_mutation_allowed: `false`",
@@ -50,6 +50,7 @@ func TestRenderSessionCatalogReportListsBodyFreeSessionSurface(t *testing.T) {
 		"command=`skills` issue_intent=`@gitclaw /session skills` local_command=`gitclaw session skills --backup <issue.json>` execution=`current-issue-or-local-backup` gate=`assistant-turn-marker-skill-context`",
 		"command=`usage` issue_intent=`@gitclaw /session usage` local_command=`gitclaw session usage --backup <issue.json>` execution=`current-issue-or-local-backup` gate=`assistant-turn-marker-token-telemetry`",
 		"command=`trajectory` issue_intent=`@gitclaw /session trajectory` local_command=`gitclaw session trajectory --backup <issue.json>` execution=`current-issue-or-local-backup` gate=`body-free-assistant-turn-manifest`",
+		"command=`compaction` issue_intent=`@gitclaw /session compaction` local_command=`gitclaw session compaction --backup <issue.json>` execution=`current-issue-or-local-backup` gate=`body-free-session-compaction-readiness`",
 		"command=`search` issue_intent=`@gitclaw /session search <query>` local_command=`gitclaw session search <query> --backup <issue.json>`",
 		"issue_thread_gate=`canonical-session-is-github-issue-thread`",
 		"provenance_gate=`assistant-turn-marker-prompt-context`",
@@ -57,6 +58,7 @@ func TestRenderSessionCatalogReportListsBodyFreeSessionSurface(t *testing.T) {
 		"skills_gate=`assistant-turn-marker-skill-context`",
 		"usage_gate=`assistant-turn-marker-token-telemetry`",
 		"trajectory_gate=`body-free-assistant-turn-manifest`",
+		"compaction_gate=`body-free-session-compaction-readiness`",
 		"search_gate=`query-hash-and-line-hash-metadata`",
 		"coverage_gate=`prompt-provenance-skill-tool-telemetry`",
 	} {
@@ -660,6 +662,135 @@ func TestRenderSessionReportRoutesTrajectoryCommandWithoutBodies(t *testing.T) {
 	for _, leaked := range []string{"SESSION_TRAJECTORY_ROUTE_SECRET", "SESSION_TRAJECTORY_ROUTE_ISSUE_SECRET", "https://github.com/owner/repo/actions/runs/123"} {
 		if strings.Contains(body, leaked) {
 			t.Fatalf("session trajectory route leaked %q:\n%s", leaked, body)
+		}
+	}
+}
+
+func TestRenderSessionCompactionReportShowsReadinessWithoutBodies(t *testing.T) {
+	cfg := DefaultConfig()
+	cfg.MaxPromptBytes = 400
+	cfg.MaxTranscriptMessages = 3
+	cfg.MaxTranscriptMessageBytes = 45
+	comments := []Comment{{
+		ID:                67,
+		Body:              "<!-- gitclaw:assistant-turn run_id=\"run-1\" model=\"openai/gpt-4.1-nano\" prompt_context_sha256_12=\"abc123abc123\" context_documents=\"2\" selected_skills=\"1\" tool_outputs=\"2\" skills=\"repo-reader\" tools=\"gitclaw.search_files\" usage_prompt_tokens=\"100\" usage_completion_tokens=\"9\" usage_total_tokens=\"109\" usage_cache_read_tokens=\"7\" usage_cache_write_tokens=\"2\" -->\nSESSION_COMPACTION_MODEL_ASSISTANT_SECRET",
+		User:              User{Login: "github-actions[bot]", Type: "Bot"},
+		AuthorAssociation: "NONE",
+	}}
+	transcript := []TranscriptMessage{
+		{Role: "user", Body: "SESSION_COMPACTION_ISSUE_SECRET opening context that is deliberately long enough", Actor: "alice", AuthorAssociation: "MEMBER", Trusted: true},
+		{Role: "assistant", Body: "SESSION_COMPACTION_MODEL_ASSISTANT_SECRET first answer with long text", Actor: "github-actions[bot]", AuthorAssociation: "NONE", CommentID: 67, Trusted: true},
+		{Role: "user", Body: "SESSION_COMPACTION_COMMENT_SECRET follow up body", Actor: "alice", AuthorAssociation: "MEMBER", CommentID: 68, Trusted: true},
+		{Role: "assistant", Body: "SESSION_COMPACTION_DETERMINISTIC_SECRET session report", Actor: "github-actions[bot]", AuthorAssociation: "NONE", CommentID: 69, Trusted: true},
+	}
+	body := RenderSessionCompactionReport(BuildSessionCompactionReport("issue-thread", "", Event{Repo: "owner/repo", Kind: "issue_comment", Issue: Issue{Number: 14}}, cfg, comments, transcript))
+	for _, want := range []string{
+		"GitClaw Session Compaction Report",
+		"Generated without a model call",
+		"scope: `issue-thread`",
+		"repository: `owner/repo`",
+		"issue: `#14`",
+		"event_kind: `issue_comment`",
+		"session_compaction_status: `warn`",
+		"compaction_scope: `body-free-session-compaction-readiness`",
+		"compaction_strategy: `github-issue-thread-body-free-compaction-readiness`",
+		"compression_model: `hermes-dual-thresholds+openclaw-trajectory-pruning`",
+		"session_store: `github-issue-thread`",
+		"raw_comments: `1`",
+		"transcript_messages: `4`",
+		"user_messages: `2`",
+		"assistant_messages: `2`",
+		"max_prompt_bytes: `400`",
+		"max_transcript_messages: `3`",
+		"max_transcript_message_bytes: `45`",
+		"bounded_transcript_messages: `3`",
+		"omitted_older_messages: `1`",
+		"agent_compression_threshold_percent: `50`",
+		"agent_compression_threshold_bytes: `200`",
+		"gateway_hygiene_threshold_percent: `85`",
+		"gateway_hygiene_threshold_bytes: `340`",
+		"agent_compaction_recommended: `true`",
+		"gateway_hygiene_recommended: `false`",
+		"assistant_turn_comments: `1`",
+		"assistant_turns_with_prompt_provenance: `1`",
+		"unique_prompt_context_hashes: `1`",
+		"model_backed_assistant_turns: `1`",
+		"deterministic_assistant_turns: `0`",
+		"model_names: `openai/gpt-4.1-nano`",
+		"prompt_visible_skill_names: `repo-reader`",
+		"prompt_visible_tool_names: `gitclaw.search_files`",
+		"usage_bearing_assistant_turns: `1`",
+		"usage_prompt_tokens: `100`",
+		"usage_completion_tokens: `9`",
+		"usage_total_tokens: `109`",
+		"usage_cache_read_tokens: `7`",
+		"usage_cache_write_tokens: `2`",
+		"lossy_summary_supported: `false`",
+		"lossless_session_search_supported: `true`",
+		"issue_thread_canonical_storage: `true`",
+		"backup_branch_replay_preferred: `true`",
+		"raw_bodies_included: `false`",
+		"raw_issue_bodies_included: `false`",
+		"raw_comment_bodies_included: `false`",
+		"raw_assistant_replies_included: `false`",
+		"raw_prompts_included: `false`",
+		"raw_provider_usage_included: `false`",
+		"raw_provider_responses_included: `false`",
+		"raw_tool_outputs_included: `false`",
+		"raw_search_queries_included: `false`",
+		"repository_mutation_allowed: `false`",
+		"compaction_mutation_allowed: `false`",
+		"compression_writes_memory_allowed: `false`",
+		"llm_e2e_required_after_session_compaction_change: `true`",
+		"### Compaction Cards",
+		"message=`01` role=`user`",
+		"compaction_region=`session-anchor`",
+		"message=`02` role=`assistant`",
+		"omitted_by_limit=`true`",
+		"compaction_action=`keep-in-issue-and-backup-search`",
+		"message=`04` role=`assistant`",
+		"compaction_region=`latest-turn`",
+		"### Compaction Gates",
+		"agent_compaction_gate=`warn`",
+		"gateway_hygiene_gate=`pass`",
+		"model_backed_gate=`pass`",
+		"lossless_recall_gate=`backup-json-and-session-search`",
+		"raw_body_gate=`hashes-counts-and-metadata-only`",
+		"mutation_gate=`disabled`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("session compaction report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SESSION_COMPACTION_ISSUE_SECRET", "SESSION_COMPACTION_MODEL_ASSISTANT_SECRET", "SESSION_COMPACTION_COMMENT_SECRET", "SESSION_COMPACTION_DETERMINISTIC_SECRET", "run-1"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("session compaction report leaked %q:\n%s", leaked, body)
+		}
+	}
+}
+
+func TestRenderSessionReportRoutesCompactionCommandWithoutBodies(t *testing.T) {
+	comments := []Comment{{
+		ID:   70,
+		Body: "<!-- gitclaw:assistant-turn model=\"openai/gpt-4.1-nano\" prompt_context_sha256_12=\"abc123abc123\" context_documents=\"1\" selected_skills=\"1\" tool_outputs=\"1\" skills=\"repo-reader\" tools=\"gitclaw.search_files\" usage_prompt_tokens=\"10\" usage_completion_tokens=\"2\" usage_total_tokens=\"12\" -->\nSESSION_COMPACTION_ROUTE_SECRET",
+	}}
+	transcript := []TranscriptMessage{
+		{Role: "user", Body: "SESSION_COMPACTION_ROUTE_ISSUE_SECRET", Actor: "alice", AuthorAssociation: "MEMBER", Trusted: true},
+		{Role: "assistant", Body: "SESSION_COMPACTION_ROUTE_SECRET", Actor: "github-actions[bot]", AuthorAssociation: "NONE", CommentID: 70, Trusted: true},
+	}
+	body := RenderSessionReport(Event{
+		Repo:  "owner/repo",
+		Kind:  "issue_comment",
+		Issue: Issue{Number: 14, Title: "@gitclaw /session compaction", Body: "SESSION_COMPACTION_ROUTE_ISSUE_SECRET"},
+	}, DefaultConfig(), comments, transcript)
+	for _, want := range []string{"GitClaw Session Compaction Report", "session_compaction_status: `ok`", "compaction_scope: `body-free-session-compaction-readiness`", "model_backed_assistant_turns: `1`", "usage_total_tokens: `12`", "agent_compaction_gate=`pass`", "gateway_hygiene_gate=`pass`", "model_backed_gate=`pass`"} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("session compaction route missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SESSION_COMPACTION_ROUTE_SECRET", "SESSION_COMPACTION_ROUTE_ISSUE_SECRET"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("session compaction route leaked %q:\n%s", leaked, body)
 		}
 	}
 }

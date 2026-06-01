@@ -822,7 +822,8 @@ GitHub issue/comment event
   `backup search`, `backup provenance`, `backup timeline`, `backup info`,
   `backup freshness`, `backup continuity`, `backup retention-plan`,
   `session provenance`, `session tools`, `session skills`, `session usage`,
-  `session trajectory`, `session status`, `session coverage`,
+  `session trajectory`, `session compaction`, `session status`,
+  `session coverage`,
   `heartbeat`, `heartbeat status`, `heartbeat risk`,
   `channel-ingest`, `channel-state`, `channel-gateway`, `channel-delivery`,
   `channels list`, `channels verify`, `channels risk`, `channels info`,
@@ -970,6 +971,7 @@ transcript/session CLIs and Hermes' saved/searchable sessions:
 @gitclaw /session skills
 @gitclaw /session usage
 @gitclaw /session trajectory
+@gitclaw /session compaction
 @gitclaw /session status
 @gitclaw /session readback
 @gitclaw /session stats
@@ -1008,6 +1010,7 @@ gitclaw session tools --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session skills --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session usage --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session trajectory --backup .gitclaw/backups/owner/repo/issues/000123.json
+gitclaw session compaction --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session status --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session stats --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session coverage --backup .gitclaw/backups/owner/repo/issues/000123.json
@@ -1082,6 +1085,19 @@ bodies, comment bodies, assistant replies, prompts, raw provider responses, raw
 search queries, raw run URLs, or tool outputs, and carries
 `llm_e2e_required_after_session_trajectory_change: true`.
 
+`gitclaw session compaction --backup <issue.json>` is the named
+Hermes-threshold and OpenClaw-trajectory inspired compaction-readiness audit for
+a backed-up issue session. It reports transcript byte/line/token estimates,
+bounded transcript counts, omitted/truncated message counts, per-message
+compaction cards, assistant-turn prompt provenance, model-backed turn evidence,
+usage telemetry, and summary/mutation gates. The issue-side
+`@gitclaw /session compaction` form runs before model inference and audits the
+current GitHub issue thread using hashes, counts, and marker attributes only. It
+does not create summaries, split sessions, mutate memory, write compressed
+state, or print issue bodies, comment bodies, assistant replies, prompts, raw
+provider payloads, raw search queries, raw run URLs, or tool outputs, and
+carries `llm_e2e_required_after_session_compaction_change: true`.
+
 `gitclaw session status --backup <issue.json>` is the compact Hermes-inspired
 readback surface. It emits session labels, transcript/comment counts, latest
 user and assistant message sources with sizes and hashes, latest assistant
@@ -1119,6 +1135,7 @@ gitclaw session tools --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session skills --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session usage --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session trajectory --backup .gitclaw/backups/owner/repo/issues/000123.json
+gitclaw session compaction --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session status --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session stats --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session risk --backup .gitclaw/backups/owner/repo/issues/000123.json
@@ -7591,6 +7608,12 @@ examples/workflows/gitclaw.yml
   `@gitclaw /session trajectory` reports an export-like assistant-turn
   manifest with model, run-hash, prompt-context, skill/tool, and usage evidence
   without leaking hidden issue/comment tokens or raw run URLs.
+- A `gh`-driven session-compaction E2E harness first runs a normal GitHub
+  Models repo-reader/search conversation, then verifies
+  `@gitclaw /session compaction` reports Hermes/OpenClaw threshold readiness,
+  bounded-transcript cards, model-backed provenance, usage telemetry, and
+  disabled summary/mutation gates without leaking hidden issue/comment tokens
+  or raw run URLs.
 - A `gh`-driven session-stats E2E harness first runs a normal GitHub Models
   conversation with repo-reader and `gitclaw.search_files`, then verifies
   `@gitclaw /session stats` reports model/provenance/session totals without
