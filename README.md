@@ -316,6 +316,9 @@ surface for reviewed tool execution requests. It opens or reuses a dedicated
 GitHub issue with only hashes, normalized tool metadata, validation gates, and
 review decisions; it does not call a model, execute a tool, copy raw source
 text, include raw tool inputs/outputs, or mutate the repository.
+Add `--notify-route <route>` or `--notify-routes <a,b>` to queue a body-safe
+Slack/Telegram channel notification for the review issue through the existing
+routebook, outbox, and delivery receipt path.
 
 Security:
 
@@ -928,6 +931,7 @@ scripts/e2e/github-tools-defer-plan-report.sh
 scripts/e2e/github-tools-boundary-report.sh
 scripts/e2e/github-tools-approval-plan-report.sh
 scripts/e2e/github-tools-run-request-issue.sh
+scripts/e2e/github-tools-run-request-channel-notify.sh
 scripts/e2e/github-tools-risk-report.sh
 scripts/e2e/github-workspace-catalog-report.sh
 scripts/e2e/github-workspace-risk-report.sh
@@ -1040,6 +1044,11 @@ execution requests: `@gitclaw /tools request-run <name> --id <id>` opens or
 reuses a dedicated GitHub request issue, keeps source/tool bodies out of
 receipts and request bodies, suppresses duplicate requests, and then continues
 with a real GitHub Models repo-reader/search follow-up.
+The tools-run-request channel-notify harness proves the same review issue can
+also notify a reviewed Slack/Telegram route with `--notify-route`, queue a
+metadata-safe channel outbound message, suppress duplicate notifications, expose
+the pending provider work through `channel-outbox`, and then continue with a
+real GitHub Models repo-reader/search follow-up.
 The channel-ingest harness proves the generic no-server bridge end to end:
 workflow-dispatch mirroring, duplicate provider-message suppression, and a
 normal model/tool follow-up on the canonical channel issue.

@@ -18,6 +18,8 @@ type ToolRunRequestIssueRequest struct {
 	Command              string
 	Subcommand           string
 	RequestID            string
+	NotifyRoutes         []string
+	NotifyRoutesSHA      string
 	RequestedToolSHA     string
 	RequestedToolTerms   int
 	NormalizedTool       string
@@ -46,10 +48,24 @@ type ToolRunRequestIssueRequest struct {
 }
 
 type ToolRunRequestIssueResult struct {
-	IssueNumber int
-	IssueURL    string
-	Created     bool
-	Duplicate   bool
+	IssueNumber         int
+	IssueURL            string
+	Created             bool
+	Duplicate           bool
+	ChannelNotification ToolRunRequestChannelNotification
+}
+
+type ToolRunRequestChannelNotification struct {
+	Requested           bool
+	Routes              int
+	Queued              int
+	Duplicates          int
+	TargetIssuesCreated int
+	MessageSHA          string
+	BodySHA             string
+	BodyBytes           int
+	BodyLines           int
+	Destinations        []ChannelBroadcastDestinationResult
 }
 
 func IsToolRunRequestIssueRequest(ev Event, cfg Config) bool {
@@ -74,7 +90,7 @@ func BuildToolRunRequestIssueRequest(ev Event, cfg Config, repoContext RepoConte
 		return ToolRunRequestIssueRequest{}, fmt.Errorf("missing tool run request command")
 	}
 	sourceText := activeRequestText(ev)
-	toolName, requestID, err := parseToolRunRequestIssueArgs(fields[2:], sourceText)
+	toolName, requestID, notifyRoutes, err := parseToolRunRequestIssueArgs(fields[2:], sourceText)
 	if err != nil {
 		return ToolRunRequestIssueRequest{}, err
 	}
@@ -99,6 +115,8 @@ func BuildToolRunRequestIssueRequest(ev Event, cfg Config, repoContext RepoConte
 		Command:              fields[0],
 		Subcommand:           strings.ToLower(strings.Trim(fields[1], " \t\r\n.,:;!?")),
 		RequestID:            requestID,
+		NotifyRoutes:         normalizeChannelBroadcastRoutes(notifyRoutes),
+		NotifyRoutesSHA:      channelBroadcastRoutesHash(notifyRoutes),
 		RequestedToolSHA:     shortDocumentHash(requestedTool),
 		RequestedToolTerms:   len(memorySearchTerms(requestedTool)),
 		NormalizedTool:       normalized,
@@ -167,6 +185,39 @@ func RunToolRunRequestIssue(ctx context.Context, github ToolRunRequestIssueGitHu
 	}, nil
 }
 
+func RunToolRunRequestChannelNotification(ctx context.Context, cfg Config, github ChannelSendGitHubClient, req ToolRunRequestIssueRequest, result ToolRunRequestIssueResult) (ToolRunRequestChannelNotification, error) {
+	notification := ToolRunRequestChannelNotification{
+		Requested: len(req.NotifyRoutes) > 0,
+		Routes:    len(req.NotifyRoutes),
+	}
+	if len(req.NotifyRoutes) == 0 {
+		return notification, nil
+	}
+	if result.IssueNumber <= 0 {
+		return notification, fmt.Errorf("missing tool run request issue for channel notification")
+	}
+	body := RenderToolRunRequestChannelNotificationBody(req, result)
+	messageID := toolRunRequestChannelNotificationMessageID(req)
+	broadcast, err := RunChannelBroadcast(ctx, cfg, github, ChannelBroadcastOptions{
+		Repo:      req.Repo,
+		Routes:    req.NotifyRoutes,
+		MessageID: messageID,
+		Body:      body,
+	})
+	if err != nil {
+		return notification, err
+	}
+	notification.Queued = broadcast.Queued
+	notification.Duplicates = broadcast.Duplicates
+	notification.TargetIssuesCreated = broadcast.Created
+	notification.MessageSHA = shortDocumentHash(messageID)
+	notification.BodySHA = shortDocumentHash(body)
+	notification.BodyBytes = len(body)
+	notification.BodyLines = lineCount(body)
+	notification.Destinations = broadcast.Destinations
+	return notification, nil
+}
+
 func RenderToolRunRequestIssueBody(req ToolRunRequestIssueRequest) string {
 	var b strings.Builder
 	fmt.Fprintf(&b, "<!-- %s id=\"%s\" normalized_tool=\"%s\" source_issue=\"%d\" source_comment_id=\"%d\" source_sha256_12=\"%s\" -->\n", toolRunRequestIssueMarker, escapeMarkerValue(req.RequestID), escapeMarkerValue(req.NormalizedTool), req.SourceIssueNumber, req.SourceCommentID, escapeMarkerValue(req.SourceSHA))
@@ -221,6 +272,16 @@ func RenderToolRunRequestIssueActionReport(ev Event, req ToolRunRequestIssueRequ
 	fmt.Fprintf(&b, "- tool_run_request_issue_created: `%t`\n", result.Created)
 	fmt.Fprintf(&b, "- duplicate_suppressed: `%t`\n", result.Duplicate)
 	fmt.Fprintf(&b, "- tool_run_request_id: `%s`\n", inlineCode(req.RequestID))
+	fmt.Fprintf(&b, "- channel_notification_requested: `%t`\n", result.ChannelNotification.Requested)
+	fmt.Fprintf(&b, "- channel_notification_routes: `%d`\n", result.ChannelNotification.Routes)
+	fmt.Fprintf(&b, "- channel_notification_queued: `%d`\n", result.ChannelNotification.Queued)
+	fmt.Fprintf(&b, "- channel_notification_duplicates: `%d`\n", result.ChannelNotification.Duplicates)
+	fmt.Fprintf(&b, "- channel_notification_target_issues_created: `%d`\n", result.ChannelNotification.TargetIssuesCreated)
+	fmt.Fprintf(&b, "- channel_notification_routes_sha256_12: `%s`\n", noneIfEmpty(req.NotifyRoutesSHA))
+	fmt.Fprintf(&b, "- channel_notification_message_id_sha256_12: `%s`\n", noneIfEmpty(result.ChannelNotification.MessageSHA))
+	fmt.Fprintf(&b, "- channel_notification_body_sha256_12: `%s`\n", noneIfEmpty(result.ChannelNotification.BodySHA))
+	fmt.Fprintf(&b, "- channel_notification_body_bytes: `%d`\n", result.ChannelNotification.BodyBytes)
+	fmt.Fprintf(&b, "- channel_notification_body_lines: `%d`\n", result.ChannelNotification.BodyLines)
 	fmt.Fprintf(&b, "- requested_tool_sha256_12: `%s`\n", req.RequestedToolSHA)
 	fmt.Fprintf(&b, "- requested_tool_terms: `%d`\n", req.RequestedToolTerms)
 	fmt.Fprintf(&b, "- normalized_tool: `%s`\n", valueOrNone(req.NormalizedTool))
@@ -251,6 +312,9 @@ func RenderToolRunRequestIssueActionReport(ev Event, req ToolRunRequestIssueRequ
 	fmt.Fprintf(&b, "- raw_tool_name_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_tool_inputs_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_tool_outputs_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_channel_routes_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_channel_notification_body_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- provider_delivery_performed: `%t`\n", false)
 	fmt.Fprintf(&b, "- repository_mutation_performed: `%t`\n", false)
 	fmt.Fprintf(&b, "- llm_e2e_required_after_tool_run_request_issue_change: `%t`\n", true)
 	fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
@@ -260,12 +324,37 @@ func RenderToolRunRequestIssueActionReport(ev Event, req ToolRunRequestIssueRequ
 	fmt.Fprintf(&b, "- review request issue: `#%d`\n", result.IssueNumber)
 	b.WriteString("- if accepted, continue in a normal model-backed issue turn or future approved workflow\n")
 	b.WriteString("- run `gitclaw tools verify`, `gitclaw tools risk`, and a live GitHub Models conversation E2E after changing tool behavior\n")
+	if result.ChannelNotification.Requested {
+		b.WriteString("\n### Channel Notifications\n")
+		if len(result.ChannelNotification.Destinations) == 0 {
+			b.WriteString("- none\n")
+		} else {
+			for _, destination := range result.ChannelNotification.Destinations {
+				fmt.Fprintf(
+					&b,
+					"- destination=`%02d` target_issue=`#%d` outbound_comment_id=`%d` target_issue_created=`%t` duplicate_suppressed=`%t` route_sha256_12=`%s` channel=`%s` thread_id_sha256_12=`%s` message_id_sha256_12=`%s` body_sha256_12=`%s`\n",
+					destination.Index,
+					destination.IssueNumber,
+					destination.CommentID,
+					destination.Created,
+					destination.Duplicate,
+					noneIfEmpty(destination.RouteHash),
+					destination.Channel,
+					noneIfEmpty(destination.ThreadHash),
+					noneIfEmpty(destination.MessageHash),
+					noneIfEmpty(destination.BodyHash),
+				)
+			}
+		}
+		b.WriteString("- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`\n")
+	}
 	return strings.TrimSpace(b.String())
 }
 
-func parseToolRunRequestIssueArgs(args []string, sourceText string) (string, string, error) {
+func parseToolRunRequestIssueArgs(args []string, sourceText string) (string, string, []string, error) {
 	toolName := ""
 	requestID := ""
+	var notifyRoutes []string
 	for i := 0; i < len(args); i++ {
 		field := strings.TrimSpace(args[i])
 		if field == "" {
@@ -275,18 +364,24 @@ func parseToolRunRequestIssueArgs(args []string, sourceText string) (string, str
 		case "--tool", "-t":
 			i++
 			if i >= len(args) {
-				return "", "", fmt.Errorf("--tool requires a value")
+				return "", "", nil, fmt.Errorf("--tool requires a value")
 			}
 			toolName = cleanToolLookupName(args[i])
 		case "--id":
 			i++
 			if i >= len(args) {
-				return "", "", fmt.Errorf("--id requires a value")
+				return "", "", nil, fmt.Errorf("--id requires a value")
 			}
 			requestID = cleanToolRunRequestID(args[i])
+		case "--notify-route", "--notify-routes", "--channel-route", "--channel-routes":
+			i++
+			if i >= len(args) {
+				return "", "", nil, fmt.Errorf("%s requires a value", field)
+			}
+			notifyRoutes = append(notifyRoutes, splitChannelBroadcastRoutes(args[i])...)
 		default:
 			if strings.HasPrefix(field, "--") {
-				return "", "", fmt.Errorf("unknown tool run request argument %q", field)
+				return "", "", nil, fmt.Errorf("unknown tool run request argument %q", field)
 			}
 			if toolName == "" {
 				toolName = cleanToolLookupName(field)
@@ -296,7 +391,24 @@ func parseToolRunRequestIssueArgs(args []string, sourceText string) (string, str
 	if requestID == "" {
 		requestID = fmt.Sprintf("tool-run-%s", shortDocumentHash(sourceText))
 	}
-	return toolName, requestID, nil
+	return toolName, requestID, normalizeChannelBroadcastRoutes(notifyRoutes), nil
+}
+
+func RenderToolRunRequestChannelNotificationBody(req ToolRunRequestIssueRequest, result ToolRunRequestIssueResult) string {
+	var b strings.Builder
+	b.WriteString("GitClaw tool run request\n\n")
+	fmt.Fprintf(&b, "Review issue: #%d %s\n", result.IssueNumber, result.IssueURL)
+	fmt.Fprintf(&b, "Source issue: #%d %s\n", req.SourceIssueNumber, issueURL(req.Repo, req.SourceIssueNumber))
+	fmt.Fprintf(&b, "Request id: %s\n", req.RequestID)
+	fmt.Fprintf(&b, "Normalized tool: %s\n", valueOrNone(req.NormalizedTool))
+	fmt.Fprintf(&b, "Review decision: %s\n", req.ReviewDecision)
+	fmt.Fprintf(&b, "Run allowed now: %t\n", req.RunAllowedNow)
+	b.WriteString("\nReview the GitHub request issue before converting this into a normal model-backed tool turn or future approved workflow. This notification did not execute a model, tool, shell command, or repository mutation.")
+	return strings.TrimSpace(b.String())
+}
+
+func toolRunRequestChannelNotificationMessageID(req ToolRunRequestIssueRequest) string {
+	return fmt.Sprintf("gitclaw-tool-request-%s", req.RequestID)
 }
 
 func cleanToolRunRequestID(id string) string {

@@ -2252,6 +2252,23 @@ call a model, copy raw source text, copy raw tool inputs/outputs, or mutate the
 repo, and its E2E must still finish with a normal GitHub Models repo-reader
 search turn so action plumbing never replaces real conversation tests.
 
+2026-06-01 tools-run-request channel notification follow-up: current OpenClaw
+docs still frame the Gateway as the source of truth for channel routing and
+sessions, while the Gateway protocol documents side-effect idempotency keys
+and explicit exec approval requests. Hermes' tools docs now group `cronjob`
+and `send_message` under automation/delivery, making review-state delivery a
+first-class agent edge rather than a local log. GitClaw should adapt the useful
+shape without a socket service: `@gitclaw /tools request-run <name> --id <id>
+--notify-route <route>` opens or reuses the GitHub review issue, then queues a
+metadata-safe channel notification through `.gitclaw/channels/routes.yaml`,
+`channel-outbox`, and `channel-delivery`. The source receipt should include
+hashes, target issue/comment IDs, duplicate counts, and provider keys only.
+Raw route names, source request text, tool inputs/outputs, notification bodies,
+thread IDs, message IDs, provider tokens, and provider responses stay out of
+the receipt. Live E2E must prove the review issue, channel queue item,
+metadata-only outbox discovery, duplicate suppression, and a real GitHub
+Models repo-reader/search follow-up.
+
 2026-05-31 toolsets follow-up: Hermes' toolsets and OpenClaw's tool-policy
 surfaces both point to named, task-oriented capability profiles, but GitClaw
 should keep v1 stricter than either runtime. Add repo-reviewed

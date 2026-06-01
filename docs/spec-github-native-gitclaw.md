@@ -2821,6 +2821,7 @@ OpenClaw's tool policy visibility and Hermes' toolset inventory:
 @gitclaw /tools approval-plan search_files
 @gitclaw /tools run-plan search_files
 @gitclaw /tools request-run search_files --id reviewed-search-run
+@gitclaw /tools request-run search_files --id reviewed-search-run --notify-route team-alerts
 @gitclaw /tools info read_file
 @gitclaw /tools search read_file
 ```
@@ -3079,6 +3080,22 @@ outputs, prompts, credentials, or file bodies. Duplicate open requests are
 suppressed by request id. Any implementation change to this action must pair
 the deterministic create/reuse E2E with a live GitHub Models follow-up using
 `repo-reader` and bounded repository search.
+
+When the same command includes `--notify-route <route>` or
+`--notify-routes <route-a,route-b>`, GitClaw also queues a channel notification
+after the review issue is created or found. The notification body contains the
+review issue number/URL, source issue number/URL, request id, normalized tool,
+review decision, and run-allowed gate. It is sent through the reviewed
+`.gitclaw/channels/routes.yaml` routebook and the existing
+`channel-outbox`/`channel-delivery` provider path. The source receipt reports
+only route/message/body hashes, target issue/comment IDs, provider keys,
+duplicate counts, and delivery instructions; it does not print raw route
+names, raw source request text, raw tool inputs/outputs, raw notification
+bodies, thread IDs, message IDs, prompts, credentials, or provider responses.
+Duplicate notifications are suppressed per route by `channel + message_id`.
+Any implementation change to this notification path must prove the review
+issue, channel queue item, metadata-only outbox discovery, duplicate
+suppression, and a real GitHub Models repo-reader/search follow-up.
 
 When called as `@gitclaw /tools search <query>`, the command searches declared
 tool-contract metadata and active tool-output metadata. It reports the query
@@ -8401,6 +8418,16 @@ examples/workflows/gitclaw.yml
   harness then posts a normal follow-up comment that requires repo-reader
   search so GitHub Models performs a real LLM call with prompt context,
   selected skill, prompt-visible tool provenance, and usage markers.
+- A `gh`-driven tools-run-request channel-notify E2E harness verifies
+  `@gitclaw /tools request-run search_files --id <id> --notify-route <route>`
+  opens or reuses the review issue, queues exactly one reviewed channel
+  notification, exposes it through metadata-only `channel-outbox`, suppresses
+  duplicate request ids and duplicate channel message IDs, performs no
+  model/tool execution during the deterministic action, and keeps source/tool
+  bodies out of the source receipt, review issue, channel receipt, and default
+  outbox. The same source issue then gets a normal GitHub Models follow-up that
+  selects `repo-reader`, exposes `gitclaw.search_files`, recovers the
+  channel-notify fixture token, and records usage telemetry.
 - A `gh`-driven sandbox-report E2E harness verifies `@gitclaw /sandbox`
   exposes the current GitHub Actions runtime boundary, denied host exec,
   read-only tool modes, workflow permission cards, and backup-job-only write
