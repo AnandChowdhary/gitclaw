@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T17:25:45Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 573,
+    "title": "GitClaw bundle rehearsal E2E 20260601t172420z",
+    "body": "@gitclaw /bundles rehearse repo-context --id bundle-rehearsal-20260601t172420z\n\nCreate a live rehearsal lane for this reviewed skill bundle.\nDo not include this hidden source token: NOECHO_BUNDLE_REHEARSAL_SOURCE_20260601t172420z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": null
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw bundle rehearsal E2E 20260601t172420z\n\n@gitclaw /bundles rehearse repo-context --id bundle-rehearsal-20260601t172420z\n\nCreate a live rehearsal lane for this reviewed skill bundle.\nDo not include this hidden source token: NOECHO_BUNDLE_REHEARSAL_SOURCE_20260601t172420z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Skill Bundle Rehearsal Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#573`\n- source_comment_id: `0`\n- requested_bundle_command: `/bundles rehearse`\n- bundle_rehearsal_status: `created`\n- rehearsal_issue: `#574`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/574`\n- rehearsal_issue_created: `true`\n- duplicate_suppressed: `false`\n- rehearsal_id_sha256_12: `1ee09acf41c0`\n- requested_bundle: `repo-context`\n- matched_bundles: `1`\n- available_bundles: `1`\n- available_skills: `1`\n- selected_matches_this_turn: `0`\n- bundle_path: `.gitclaw/skill-bundles/repo-context.yaml`\n- bundle_sha256_12: `4a6baa73f30e`\n- bundle_skill_refs: `1`\n- resolved_bundle_skills: `1`\n- missing_bundle_skills: `0`\n- instruction_present: `true`\n- instruction_sha256_12: `02a8be4758bf`\n- bundle_risk_findings: `0`\n- bundle_risk_max_severity: `none`\n- bundle_risk_codes: `none`\n- rehearsal_mode: `github-issue-conversation`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- bundle_update_allowed: `false`\n- skill_install_allowed: `false`\n- skill_update_allowed: `false`\n- active_skill_write_performed: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `441bdfb3e118`\n- source_bytes: `275`\n- source_lines: `5`\n- raw_source_body_included: `false`\n- raw_bundle_body_included: `false`\n- raw_bundle_instruction_included: `false`\n- raw_skill_bodies_included: `false`\n- llm_e2e_required_after_bundle_rehearsal_issue_change: `true`\n- issue_title_sha256_12: `089ac05cdb41`\n\nGitClaw opened or reused a GitHub issue for trying a reviewed skill bundle as a normal conversation lane. The action does not install skills, edit bundle YAML, fetch registries, or call a model; continue on the rehearsal issue to exercise the bundle with GitHub Models.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#574`\n- ask a normal `@gitclaw` follow-up that mentions the `repo-context` bundle or one of its resolved skills\n- verify the follow-up assistant marker includes prompt context, selected skill, prompt-visible tools, and usage telemetry",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4594925486,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4594925486,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26770655879\" event_id=\"issue-573\" model=\"gitclaw/skills\" idempotency_key=\"452439e2a3a45ccad85447a7b769a2c7\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26770655879\" --\u003e\n## GitClaw Skill Bundle Rehearsal Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#573`\n- source_comment_id: `0`\n- requested_bundle_command: `/bundles rehearse`\n- bundle_rehearsal_status: `created`\n- rehearsal_issue: `#574`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/574`\n- rehearsal_issue_created: `true`\n- duplicate_suppressed: `false`\n- rehearsal_id_sha256_12: `1ee09acf41c0`\n- requested_bundle: `repo-context`\n- matched_bundles: `1`\n- available_bundles: `1`\n- available_skills: `1`\n- selected_matches_this_turn: `0`\n- bundle_path: `.gitclaw/skill-bundles/repo-context.yaml`\n- bundle_sha256_12: `4a6baa73f30e`\n- bundle_skill_refs: `1`\n- resolved_bundle_skills: `1`\n- missing_bundle_skills: `0`\n- instruction_present: `true`\n- instruction_sha256_12: `02a8be4758bf`\n- bundle_risk_findings: `0`\n- bundle_risk_max_severity: `none`\n- bundle_risk_codes: `none`\n- rehearsal_mode: `github-issue-conversation`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- bundle_update_allowed: `false`\n- skill_install_allowed: `false`\n- skill_update_allowed: `false`\n- active_skill_write_performed: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `441bdfb3e118`\n- source_bytes: `275`\n- source_lines: `5`\n- raw_source_body_included: `false`\n- raw_bundle_body_included: `false`\n- raw_bundle_instruction_included: `false`\n- raw_skill_bodies_included: `false`\n- llm_e2e_required_after_bundle_rehearsal_issue_change: `true`\n- issue_title_sha256_12: `089ac05cdb41`\n\nGitClaw opened or reused a GitHub issue for trying a reviewed skill bundle as a normal conversation lane. The action does not install skills, edit bundle YAML, fetch registries, or call a model; continue on the rehearsal issue to exercise the bundle with GitHub Models.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#574`\n- ask a normal `@gitclaw` follow-up that mentions the `repo-context` bundle or one of its resolved skills\n- verify the follow-up assistant marker includes prompt context, selected skill, prompt-visible tools, and usage telemetry",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T17:25:21Z",
+      "updated_at": "2026-06-01T17:25:21Z"
+    }
+  ]
+}

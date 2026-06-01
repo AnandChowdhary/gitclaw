@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-01T17:11:05Z`
-- issue_count: `501`
+- generated_at: `2026-06-01T17:25:46Z`
+- issue_count: `502`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -506,3 +506,4 @@
 | #569 | GitClaw session handoff E2E 20260601T165018Z | `2026-06-01T16:54:55Z` | 5 | 6 | `issues/000569.json` |
 | #570 | GitClaw session handoff: issue #569 (handoff-20260601t165018z) | `2026-06-01T16:56:32Z` | 2 | 3 | `issues/000570.json` |
 | #571 | GitClaw telegram thread channel-pin-e2e-20260601T170321Z | `2026-06-01T17:11:04Z` | 9 | 9 | `issues/000571.json` |
+| #573 | GitClaw bundle rehearsal E2E 20260601t172420z | `2026-06-01T17:25:45Z` | 1 | 2 | `issues/000573.json` |
