@@ -5140,7 +5140,27 @@ validates queued route invites and body-free receipts, and then continues on
 the poll issue with a normal GitHub Models repo-reader/search follow-up.
 
 When the source issue is itself a `gitclaw:channel-thread`, GitClaw also
-accepts a shorter reply form:
+accepts a structured reaction form:
+
+```text
+@gitclaw /channels react --message-id <provider-message-id> --reaction eyes
+```
+
+`/channels react`, `/channels reaction`, `/channels emoji`, and `/channels ack`
+infer the current channel and thread id from the issue marker when no explicit
+route/channel/thread target is provided, then post one
+`gitclaw:channel-reaction` comment on the same canonical channel issue. The
+provider gateway delivers that as a native Slack/Telegram acknowledgement
+instead of a full text reply. Duplicate reactions are suppressed by
+`channel + target_message_id + reaction`. The source receipt reports only the
+target issue, comment id, target message hash, reaction hash, route/thread
+hashes, duplicate status, and delivery gates. It does not call a model, call
+provider APIs, print raw route names, print raw thread ids, print raw target
+message ids, print raw reactions, or print channel message bodies. The pending
+reaction appears in `channel-outbox` as kind `channel-reaction`, and
+`channel-delivery` records the provider receipt for the reaction comment.
+
+The same channel-thread issue also accepts a shorter reply form:
 
 ```text
 @gitclaw /channels reply --message-id <stable-outbound-id>
@@ -5165,6 +5185,8 @@ Behavior:
 - label it with `gitclaw:channel` but do not apply the normal `gitclaw`
   trigger label,
 - post one `gitclaw:channel-outbound` comment per `channel + message_id`,
+- post one `gitclaw:channel-reaction` comment per
+  `channel + target_message_id + reaction`,
 - suppress duplicate outbound message IDs,
 - for issue-native `/channels send`, post a `model="gitclaw/channels"`
   receipt back to the source issue,
@@ -7625,6 +7647,16 @@ examples/workflows/gitclaw.yml
   target issue. The poll issue then gets a normal GitHub Models issue-comment
   follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
   recover the channel-poll fixture token, and avoid hidden route/account/channel
+  sentinels.
+- A `gh`-driven channel-reaction-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels react --message-id ... --reaction ...` on that mirrored
+  thread, verifies same-issue structured reaction queueing, body-free receipt
+  metadata, duplicate suppression, metadata-only outbox discovery with kind
+  `channel-reaction`, and channel-delivery workflow receipts. The same issue
+  then gets a normal GitHub Models issue-comment follow-up that must select
+  `repo-reader`, expose `gitclaw.search_files`, recover the channel-reaction
+  fixture token, and avoid hidden channel, account, provider, and reaction
   sentinels.
 - A `gh`-driven channel-reply-slash E2E harness creates a real channel-thread
   issue through `gitclaw-channel-ingest.yml`, posts

@@ -39,6 +39,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runChannelIngestCommand(ctx, args[1:])
 	case "channel-send":
 		return runChannelSendCommand(ctx, args[1:])
+	case "channel-react", "channel-reaction":
+		return runChannelReactionCommand(ctx, args[1:])
 	case "channel-state":
 		return runChannelStateCommand(ctx, args[1:])
 	case "channel-gateway":
@@ -4602,6 +4604,93 @@ func runChannelSendCommand(ctx context.Context, args []string) error {
 	return nil
 }
 
+func runChannelReactionCommand(ctx context.Context, args []string) error {
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	opts := ChannelReactionOptions{
+		Repo:      os.Getenv("GITHUB_REPOSITORY"),
+		Route:     os.Getenv("GITCLAW_CHANNEL_ROUTE"),
+		Channel:   os.Getenv("GITCLAW_CHANNEL"),
+		ThreadID:  os.Getenv("GITCLAW_CHANNEL_THREAD_ID"),
+		MessageID: os.Getenv("GITCLAW_CHANNEL_MESSAGE_ID"),
+		Reaction:  os.Getenv("GITCLAW_CHANNEL_REACTION"),
+		Author:    os.Getenv("GITCLAW_CHANNEL_AUTHOR"),
+	}
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--repo requires a value")
+			}
+			opts.Repo = args[i+1]
+			i++
+		case "--route":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--route requires a value")
+			}
+			opts.Route = args[i+1]
+			i++
+		case "--channel":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--channel requires a value")
+			}
+			opts.Channel = args[i+1]
+			i++
+		case "--thread-id":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--thread-id requires a value")
+			}
+			opts.ThreadID = args[i+1]
+			i++
+		case "--message-id", "--target-message-id":
+			if i+1 >= len(args) {
+				return fmt.Errorf("%s requires a value", args[i])
+			}
+			opts.MessageID = args[i+1]
+			i++
+		case "--reaction", "--emoji":
+			if i+1 >= len(args) {
+				return fmt.Errorf("%s requires a value", args[i])
+			}
+			opts.Reaction = args[i+1]
+			i++
+		case "--author":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--author requires a value")
+			}
+			opts.Author = args[i+1]
+			i++
+		default:
+			return fmt.Errorf("unknown channel-react argument %q", args[i])
+		}
+	}
+	token := githubTokenFromEnv()
+	if token == "" {
+		return fmt.Errorf("missing GH_TOKEN or GITHUB_TOKEN")
+	}
+	result, err := RunChannelReaction(ctx, cfg, NewRESTGitHubClient(token), opts)
+	if err != nil {
+		return err
+	}
+	if err := writeChannelReactionOutputs(result); err != nil {
+		return err
+	}
+	fmt.Printf(
+		"channel_reaction issue=%d comment=%d created=%t duplicate=%t route_resolved=%t route_sha256_12=%s reaction_sha256_12=%s url=%s\n",
+		result.IssueNumber,
+		result.CommentID,
+		result.Created,
+		result.Duplicate,
+		result.RouteName != "",
+		result.RouteHash,
+		result.ReactionHash,
+		result.IssueURL,
+	)
+	return nil
+}
+
 func runChannelGatewayCommand(ctx context.Context, args []string) error {
 	cfg, err := LoadEffectiveConfig()
 	if err != nil {
@@ -4883,11 +4972,12 @@ func runChannelOutboxCommand(ctx context.Context, args []string) error {
 		return err
 	}
 	fmt.Printf(
-		"channel_outbox issue=%d state_issue=%d assistant_comments=%d outbound_comments=%d deliverable_comments=%d delivered=%d pending=%d returned=%d body_included=%t account_sha256_12=%s out=%s\n",
+		"channel_outbox issue=%d state_issue=%d assistant_comments=%d outbound_comments=%d reaction_comments=%d deliverable_comments=%d delivered=%d pending=%d returned=%d body_included=%t account_sha256_12=%s out=%s\n",
 		result.IssueNumber,
 		result.StateIssueNumber,
 		result.SourceAssistantComments,
 		result.SourceOutboundComments,
+		result.SourceReactionComments,
 		result.SourceDeliverableComments,
 		result.DeliveredAssistantComments,
 		result.PendingMessages,

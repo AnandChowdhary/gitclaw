@@ -3488,6 +3488,20 @@ must include a live E2E that verifies poll creation, route invite queues,
 duplicate suppression, metadata-only outbox discovery, and a real GitHub Models
 repo-reader/search follow-up on the poll issue itself.
 
+2026-06-01 channel reaction follow-up: channels should also support tiny
+acknowledgements, not only full replies, huddles, polls, and reports. OpenClaw's
+channel model keeps provider-specific send semantics in gateways, while Hermes'
+message/session framing treats chat history as durable interaction state. The
+GitHub-native version is `@gitclaw /channels react --message-id <id>
+--reaction <name>` inside a mirrored `gitclaw:channel-thread` issue: it infers
+the provider thread, queues one `gitclaw:channel-reaction` comment, exposes the
+pending acknowledgement through `channel-outbox`, records provider delivery via
+`channel-delivery`, suppresses duplicates by channel plus target message plus
+reaction, and keeps the source receipt body-free. Acceptance must include a live
+E2E that proves ingest, reaction queueing, duplicate suppression, metadata-only
+outbox discovery, delivery receipt recording, and a real GitHub Models
+repo-reader/search follow-up on the same channel issue.
+
 2026-06-01 channel probe follow-up: OpenClaw's channel CLI exposes status,
 capabilities, resolve, and logs for configured accounts, and its channel SDK
 splits durable outbound queueing from provider-specific send side effects.

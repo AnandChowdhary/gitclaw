@@ -134,7 +134,7 @@ func verifyChannelDeliverySource(ctx context.Context, github ChannelDeliveryGitH
 }
 
 func isChannelDeliverableComment(body string) bool {
-	return HasGitClawMarker(body) || HasChannelOutboundMarker(body)
+	return HasGitClawMarker(body) || HasChannelOutboundMarker(body) || HasChannelReactionMarker(body)
 }
 
 func RenderChannelDeliveryComment(opts ChannelDeliveryOptions, accountHash, externalHash string) string {

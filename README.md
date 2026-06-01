@@ -599,12 +599,14 @@ gitclaw channels risk
 gitclaw channels info telegram
 gitclaw channel-send --channel slack --thread-id <thread> --message-id <id> --body "hello"
 gitclaw channel-send --route e2e-slack-route --message-id <id> --body "hello"
+gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --reaction eyes
 @gitclaw /channels send --route e2e-slack-route --message-id <id>
 @gitclaw /channels probe --route e2e-slack-route --message-id <id>
 @gitclaw /channels broadcast e2e-slack-route,e2e-telegram-route --message-id <id>
 @gitclaw /channels invite e2e-slack-route,e2e-telegram-route --message-id <id>
 @gitclaw /channels huddle e2e-slack-route,e2e-telegram-route --huddle-id <id> --message-id <id>
 @gitclaw /channels poll e2e-slack-route,e2e-telegram-route --poll-id <id> --message-id <id>
+@gitclaw /channels react --message-id <id> --reaction eyes
 @gitclaw /channels reply --message-id <id>
 gitclaw proactive list
 gitclaw proactive schedule
@@ -786,6 +788,13 @@ issue, writes the question and options there, labels it for normal GitClaw
 conversation, and queues provider-facing poll invites through reviewed routes.
 The source receipt stays body-free and reports only hashes, counts, issue
 numbers, and duplicate status.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels react
+--message-id <id> --reaction <name>` queues a structured
+`gitclaw:channel-reaction` acknowledgement for the provider gateway. Duplicate
+reactions are suppressed by channel, target message id, and reaction name; the
+issue-visible receipt reports only hashes and delivery gates, while
+`channel-outbox` exposes the pending reaction and `channel-delivery` records
+the provider receipt.
 The live proactive-report, proactive-list, and proactive-schedule harnesses use
 the same two-proof shape for scheduled work: body-free workflow/prompt metadata
 first, then a normal GitHub Models repo-reader/search follow-up.
@@ -998,6 +1007,7 @@ scripts/e2e/github-channel-broadcast-slash.sh
 scripts/e2e/github-channel-invite-slash.sh
 scripts/e2e/github-channel-huddle-slash.sh
 scripts/e2e/github-channel-poll-slash.sh
+scripts/e2e/github-channel-reaction-slash.sh
 scripts/e2e/github-channel-reply-slash.sh
 scripts/e2e/github-channel-delivery-workflow.sh
 scripts/e2e/github-channel-outbox-workflow.sh
@@ -1172,6 +1182,11 @@ labels it for normal GitClaw conversation, invites multiple reviewed routes
 through the provider queue, checks duplicate poll suppression, keeps question
 and option text out of the source receipt, and then continues on the poll issue
 with a real GitHub Models repo-reader/search follow-up.
+The channel-reaction slash harness proves mirrored channel issues can do tiny
+social acknowledgements without composing a full reply: a channel-ingested issue
+receives `@gitclaw /channels react`, queues one structured provider reaction,
+exposes it through metadata-only outbox, records delivery, suppresses duplicate
+reactions, and then runs a real GitHub Models repo-reader/search follow-up.
 The channel-reply slash harness proves mirrored channel issues can act as
 operator consoles: a channel-ingested issue receives `@gitclaw /channels reply`,
 queues an outbound message back onto the same thread, suppresses duplicate

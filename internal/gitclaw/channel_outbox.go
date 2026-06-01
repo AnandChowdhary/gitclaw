@@ -29,6 +29,7 @@ type ChannelOutboxResult struct {
 	StateIssueURL              string
 	SourceAssistantComments    int
 	SourceOutboundComments     int
+	SourceReactionComments     int
 	SourceDeliverableComments  int
 	DeliveredAssistantComments int
 	PendingMessages            int
@@ -58,6 +59,7 @@ type channelOutboxFile struct {
 	StateIssueNumber          int                    `json:"state_issue_number,omitempty"`
 	SourceAssistantComments   int                    `json:"source_assistant_comments"`
 	SourceOutboundComments    int                    `json:"source_outbound_comments"`
+	SourceReactionComments    int                    `json:"source_reaction_comments"`
 	SourceDeliverableComments int                    `json:"source_deliverable_comments"`
 	DeliveredAssistantReplies int                    `json:"delivered_assistant_comments"`
 	PendingMessages           int                    `json:"pending_messages"`
@@ -125,6 +127,8 @@ func RunChannelOutbox(ctx context.Context, cfg Config, github ChannelOutboxGitHu
 			result.SourceAssistantComments++
 		} else if kind == "channel-outbound" {
 			result.SourceOutboundComments++
+		} else if kind == "channel-reaction" {
+			result.SourceReactionComments++
 		}
 		if delivered[comment.ID] {
 			result.DeliveredAssistantComments++
@@ -163,7 +167,17 @@ func channelOutboxDeliverable(body, channel, threadID string) (string, string, s
 	}
 	outboundChannel, outboundThread, outboundMessageID := channelOutboundMarkerFields(body)
 	if outboundChannel == "" {
-		return "", "", "", false
+		reactionChannel, reactionThread, reactionMessageID, reaction := channelReactionMarkerFields(body)
+		if reactionChannel == "" {
+			return "", "", "", false
+		}
+		if reactionChannel != channel {
+			return "", "", "", false
+		}
+		if reactionThread != "" && threadID != "" && reactionThread != threadID {
+			return "", "", "", false
+		}
+		return "channel-reaction", StripChannelReactionMarker(body), channelStateHash(reactionMessageID + "|" + reaction), true
 	}
 	if outboundChannel != channel {
 		return "", "", "", false
@@ -262,6 +276,7 @@ func writeChannelOutboxFile(opts ChannelOutboxOptions, result ChannelOutboxResul
 		StateIssueNumber:          result.StateIssueNumber,
 		SourceAssistantComments:   result.SourceAssistantComments,
 		SourceOutboundComments:    result.SourceOutboundComments,
+		SourceReactionComments:    result.SourceReactionComments,
 		SourceDeliverableComments: result.SourceDeliverableComments,
 		DeliveredAssistantReplies: result.DeliveredAssistantComments,
 		PendingMessages:           result.PendingMessages,
