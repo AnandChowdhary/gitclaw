@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T21:14:31Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 599,
+    "title": "GitClaw skills proposal channel notify E2E 20260601t211307z",
+    "body": "@gitclaw /skills propose e2e-skill-notify-20260601t211307z --notify-route e2e-telegram-route\n\nCapture a reusable skill proposal, then notify the reviewed channel route.\nDo not include this hidden source token: NOECHO_SKILLS_NOTIFY_BODY_20260601t211307z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw skills proposal channel notify E2E 20260601t211307z\n\n@gitclaw /skills propose e2e-skill-notify-20260601t211307z --notify-route e2e-telegram-route\n\nCapture a reusable skill proposal, then notify the reviewed channel route.\nDo not include this hidden source token: NOECHO_SKILLS_NOTIFY_BODY_20260601t211307z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Skill Proposal Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#599`\n- source_comment_id: `0`\n- requested_skill_command: `/skills propose`\n- proposal_issue_status: `created`\n- proposal_issue: `#600`\n- proposal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/600`\n- proposal_issue_created: `true`\n- duplicate_suppressed: `false`\n- requested_action: `auto`\n- planned_proposal_action: `propose-create`\n- target_type: `registry-name`\n- target_sha256_12: `6dca4c3904f6`\n- target_terms: `1`\n- safe_name_candidate: `e2e-skill-notify-20260601t211307z`\n- proposal_path: `.gitclaw/skill-proposals/e2e-skill-notify-20260601t211307z/PROPOSAL.md`\n- destination_path: `.gitclaw/SKILLS/e2e-skill-notify-20260601t211307z/SKILL.md`\n- existing_skill_matches: `0`\n- available_skills: `1`\n- proposal_store: `github-issue-to-git-reviewed-proposal-file`\n- review_pr_required: `true`\n- source_sha256_12: `9a4e21fc926d`\n- source_bytes: `312`\n- source_lines: `5`\n- raw_source_body_included: `false`\n- raw_proposal_issue_body_included: `false`\n- raw_skill_body_included: `false`\n- proposal_file_written: `false`\n- active_skill_write_performed: `false`\n- repository_mutation_performed: `false`\n- llm_e2e_required_after_skill_proposal_issue_change: `true`\n- issue_title_sha256_12: `ab9a822a3b74`\n\nGitClaw opened or reused a GitHub issue for a reusable skill proposal. The issue is a review queue entry, not an applied skill: active `SKILL.md` files are not written, proposal files are not written, and raw source request text is not copied into this receipt.\n\n### Review Path\n- review proposal issue: `#600`\n- if accepted, draft `.gitclaw/skill-proposals/e2e-skill-notify-20260601t211307z/PROPOSAL.md` on a normal branch and review it as code\n- only after review should the proposal become `.gitclaw/SKILLS/e2e-skill-notify-20260601t211307z/SKILL.md`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4596569282,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4596569282,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26782416076\" event_id=\"issue-599\" model=\"gitclaw/skills\" idempotency_key=\"6395f0caf4fad16f49a4e59a1ee2d1e6\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26782416076\" --\u003e\n## GitClaw Skill Proposal Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#599`\n- source_comment_id: `0`\n- requested_skill_command: `/skills propose`\n- proposal_issue_status: `created`\n- proposal_issue: `#600`\n- proposal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/600`\n- proposal_issue_created: `true`\n- duplicate_suppressed: `false`\n- requested_action: `auto`\n- planned_proposal_action: `propose-create`\n- target_type: `registry-name`\n- target_sha256_12: `6dca4c3904f6`\n- target_terms: `1`\n- safe_name_candidate: `e2e-skill-notify-20260601t211307z`\n- proposal_path: `.gitclaw/skill-proposals/e2e-skill-notify-20260601t211307z/PROPOSAL.md`\n- destination_path: `.gitclaw/SKILLS/e2e-skill-notify-20260601t211307z/SKILL.md`\n- existing_skill_matches: `0`\n- available_skills: `1`\n- proposal_store: `github-issue-to-git-reviewed-proposal-file`\n- review_pr_required: `true`\n- source_sha256_12: `9a4e21fc926d`\n- source_bytes: `312`\n- source_lines: `5`\n- raw_source_body_included: `false`\n- raw_proposal_issue_body_included: `false`\n- raw_skill_body_included: `false`\n- proposal_file_written: `false`\n- active_skill_write_performed: `false`\n- repository_mutation_performed: `false`\n- llm_e2e_required_after_skill_proposal_issue_change: `true`\n- issue_title_sha256_12: `ab9a822a3b74`\n\nGitClaw opened or reused a GitHub issue for a reusable skill proposal. The issue is a review queue entry, not an applied skill: active `SKILL.md` files are not written, proposal files are not written, and raw source request text is not copied into this receipt.\n\n### Review Path\n- review proposal issue: `#600`\n- if accepted, draft `.gitclaw/skill-proposals/e2e-skill-notify-20260601t211307z/PROPOSAL.md` on a normal branch and review it as code\n- only after review should the proposal become `.gitclaw/SKILLS/e2e-skill-notify-20260601t211307z/SKILL.md`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T21:14:02Z",
+      "updated_at": "2026-06-01T21:14:02Z"
+    }
+  ]
+}
