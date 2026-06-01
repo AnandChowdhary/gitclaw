@@ -75,6 +75,42 @@ func TestBuildChannelSendActionRequestSupportsRouteAndTrailingBody(t *testing.T)
 	}
 }
 
+func TestBuildChannelSendActionRequestInfersReplyThread(t *testing.T) {
+	ev := Event{
+		Kind:      EventIssueComment,
+		EventName: "issue_comment",
+		Repo:      "owner/repo",
+		Issue: Issue{
+			Number: 42,
+			Title:  "GitClaw slack thread team-123",
+			Body: RenderChannelThreadBody(ChannelIngestOptions{
+				Channel:  "slack",
+				ThreadID: "team-123",
+			}),
+		},
+		Comment: &Comment{
+			ID:   4201,
+			Body: "@gitclaw /channels reply --message-id reply-1\nReply body.\n\nCHANNEL_REPLY_PARSE_TOKEN",
+		},
+	}
+	req, err := BuildChannelSendActionRequest(ev, DefaultConfig())
+	if err != nil {
+		t.Fatalf("BuildChannelSendActionRequest returned error: %v", err)
+	}
+	if req.Subcommand != "reply" || !req.TargetFromIssue {
+		t.Fatalf("expected reply inferred from current issue: %#v", req)
+	}
+	if req.Options.Channel != "slack" || req.Options.ThreadID != "team-123" || req.Options.MessageID != "reply-1" {
+		t.Fatalf("unexpected reply target: %#v", req.Options)
+	}
+	if req.BodySource != "trailing-lines" || !strings.Contains(req.Options.Body, "CHANNEL_REPLY_PARSE_TOKEN") {
+		t.Fatalf("unexpected reply body parsing: %#v", req)
+	}
+	if req.RequestedThreadHash == "" || req.RequestedMsgHash == "" || req.OutboundBodySHA == "" {
+		t.Fatalf("expected reply hashes: %#v", req)
+	}
+}
+
 func TestRunChannelSendResolvesNamedRoute(t *testing.T) {
 	cfg := DefaultConfig()
 	cfg.Workdir = t.TempDir()

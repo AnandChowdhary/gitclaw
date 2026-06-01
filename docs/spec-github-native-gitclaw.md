@@ -4938,6 +4938,23 @@ duplicate status, and delivery instructions, but never print raw outbound
 bodies, raw thread IDs, raw message IDs, provider credentials, or provider API
 responses.
 
+When the source issue is itself a `gitclaw:channel-thread`, GitClaw also
+accepts a shorter reply form:
+
+```text
+@gitclaw /channels reply --message-id <stable-outbound-id>
+message to send back to the mirrored channel
+```
+
+`/channels reply` infers the current channel and thread id from the issue
+marker when no explicit route/channel/thread target is provided. It reuses the
+same `channel-send` queue, duplicate suppression, outbox, and delivery receipt
+machinery, but the target issue is the source issue. This makes the mirrored
+Slack/Telegram issue an operator console rather than a passive report surface.
+The receipt reports `target_from_current_channel_issue=true` and
+`target_issue_is_source=true` without printing the raw outbound body, thread id,
+message id, or provider payloads.
+
 Behavior:
 
 - find or create the same `gitclaw:channel-thread` issue used by inbound
@@ -5144,6 +5161,12 @@ instead of producing only an audit report. This is the GitHub-native operator
 equivalent of asking the assistant to "say this in Slack/Telegram" while
 keeping route resolution, duplicate suppression, and provider delivery
 auditable in issues.
+
+`@gitclaw /channels reply --message-id <id>` is the channel-thread shortcut.
+When posted on a mirrored Slack/Telegram issue, it infers the current
+`gitclaw:channel-thread` marker and queues the outbound comment on the same
+issue. The source receipt is still body-free and deterministic, but the channel
+thread now supports a real back-channel action instead of only reports.
 
 `@gitclaw /channels verify` uses the same data surface but switches from
 inventory to health posture. It reports `channel_verify_status`, confirms the
@@ -7295,6 +7318,15 @@ examples/workflows/gitclaw.yml
   issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-send-slash fixture token, and
   avoid hidden route/account/channel sentinels.
+- A `gh`-driven channel-reply-slash E2E harness creates a real channel-thread
+  issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels reply --message-id ...` on that mirrored thread, verifies
+  same-issue outbound queueing, body-free receipt metadata, duplicate
+  suppression, metadata-only outbox discovery, and channel-delivery workflow
+  receipts. The same issue then gets a normal GitHub Models issue-comment
+  follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
+  recover the channel-reply-slash fixture token, and avoid hidden channel,
+  account, provider, and outbound-body sentinels.
 - A `gh`-driven channel-delivery-workflow E2E harness dispatches
   `.github/workflows/gitclaw-channel-delivery.yml`, verifies a source
   `gitclaw:assistant-turn` comment can be recorded as delivered, checks that

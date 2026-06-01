@@ -1170,6 +1170,81 @@ func TestHandleChannelsSendActionQueuesRouteWithoutLLM(t *testing.T) {
 	}
 }
 
+func TestHandleChannelsReplyActionQueuesCurrentThreadWithoutLLM(t *testing.T) {
+	threadBody := RenderChannelThreadBody(ChannelIngestOptions{
+		Channel:  "telegram",
+		ThreadID: "chat-reply-123",
+	})
+	ev, err := ParseEvent("issue_comment", []byte(`{
+		"action": "created",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 152,
+			"title": "GitClaw telegram thread chat-reply-123",
+			"body": "<!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"chat-reply-123\" -->\nGitClaw channel bridge thread.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}, {"name": "gitclaw:channel"}]
+		},
+		"comment": {
+			"id": 15201,
+			"body": "@gitclaw /channels reply --message-id reply-152\nReply from GitHub to the mirrored channel.\n\nCHANNEL_REPLY_ACTION_SECRET",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"}
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{
+		Issues: []Issue{{
+			Number: 152,
+			Title:  "GitClaw telegram thread chat-reply-123",
+			Body:   threadBody,
+			Labels: []string{"gitclaw", "gitclaw:channel"},
+		}},
+		CommentsByIssue: map[int][]Comment{152: nil},
+		IssueLabels:     map[int][]string{152: []string{"gitclaw", "gitclaw:channel"}},
+	}
+	llm := &FakeLLM{Response: "should not be called"}
+	cfg := DefaultConfig()
+
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for channel reply action", llm.Calls)
+	}
+	if len(github.Issues) != 1 {
+		t.Fatalf("channel reply should reuse current issue, issues = %#v", github.Issues)
+	}
+	comments := github.CommentsByIssue[152]
+	if len(comments) != 2 {
+		t.Fatalf("comments = %d, want outbound + receipt: %#v", len(comments), comments)
+	}
+	outbound := comments[0].Body
+	for _, want := range []string{"gitclaw:channel-outbound", `channel="telegram"`, `thread_id="chat-reply-123"`, `message_id="reply-152"`, "CHANNEL_REPLY_ACTION_SECRET"} {
+		if !strings.Contains(outbound, want) {
+			t.Fatalf("reply outbound comment missing %q:\n%s", want, outbound)
+		}
+	}
+	receipt := comments[1].Body
+	for _, want := range []string{"GitClaw Channel Send Action", "Generated without a model call", `model="gitclaw/channels"`, "requested_channel_command: `/channels reply`", "channel_send_status: `queued`", "target_issue: `#152`", "target_issue_created: `false`", "target_from_current_channel_issue: `true`", "target_issue_is_source: `true`", "raw_outbound_body_included: `false`", "provider_delivery_performed: `false`"} {
+		if !strings.Contains(receipt, want) {
+			t.Fatalf("channel reply receipt missing %q:\n%s", want, receipt)
+		}
+	}
+	for _, leaked := range []string{"CHANNEL_REPLY_ACTION_SECRET", "Reply from GitHub", "chat-reply-123", "reply-152"} {
+		if strings.Contains(receipt, leaked) {
+			t.Fatalf("channel reply receipt leaked %q:\n%s", leaked, receipt)
+		}
+	}
+	if !hasLabel(github.IssueLabels[152], "gitclaw:done") || hasLabel(github.IssueLabels[152], "gitclaw:running") || hasLabel(github.IssueLabels[152], "gitclaw:error") {
+		t.Fatalf("unexpected source labels: %#v", github.IssueLabels[152])
+	}
+}
+
 func TestHandleChannelsVerifyCommandPostsReportWithoutLLM(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".github/workflows/gitclaw-channel-ingest.yml", `name: GitClaw Channel Ingest

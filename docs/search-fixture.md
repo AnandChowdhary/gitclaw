@@ -79,6 +79,7 @@ security audit unique search fixture phrase => GITCLAW_SECURITY_AUDIT_CONTEXT_V1
 channel send unique search fixture phrase => GITCLAW_CHANNEL_SEND_CONTEXT_V1
 channel send route unique search fixture phrase => GITCLAW_CHANNEL_SEND_ROUTE_CONTEXT_V1
 channel send slash unique search fixture phrase => GITCLAW_CHANNEL_SEND_SLASH_CONTEXT_V1
+channel reply slash unique search fixture phrase => GITCLAW_CHANNEL_REPLY_SLASH_CONTEXT_V1
 backup verify unique search fixture phrase => GITCLAW_BACKUP_VERIFY_CONTEXT_V1
 backup index unique search fixture phrase => GITCLAW_BACKUP_INDEX_CONTEXT_V1
 backup report unique search fixture phrase => GITCLAW_BACKUP_REPORT_CONTEXT_V1

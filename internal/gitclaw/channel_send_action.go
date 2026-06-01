@@ -10,6 +10,7 @@ type ChannelSendActionRequest struct {
 	Command             string
 	Subcommand          string
 	AutoMessageID       bool
+	TargetFromIssue     bool
 	OutboundBodySHA     string
 	OutboundBodyBytes   int
 	OutboundBodyLines   int
@@ -32,7 +33,7 @@ func isChannelSendActionFields(fields []string) bool {
 		return false
 	}
 	switch strings.ToLower(strings.Trim(fields[1], " \t\r\n.,:;!?")) {
-	case "send", "say", "notify":
+	case "send", "say", "notify", "reply":
 		return true
 	default:
 		return false
@@ -119,6 +120,9 @@ func BuildChannelSendActionRequest(ev Event, cfg Config) (ChannelSendActionReque
 	if strings.TrimSpace(req.Options.Body) == "" {
 		return ChannelSendActionRequest{}, fmt.Errorf("missing outbound channel body")
 	}
+	if err := applyChannelReplyIssueTarget(ev, &req); err != nil {
+		return ChannelSendActionRequest{}, err
+	}
 	if strings.TrimSpace(req.Options.MessageID) == "" {
 		req.Options.MessageID = autoChannelSendActionMessageID(ev, req.Options.Route, req.Options.Channel, req.Options.Body)
 		req.AutoMessageID = true
@@ -132,6 +136,23 @@ func BuildChannelSendActionRequest(ev Event, cfg Config) (ChannelSendActionReque
 	}
 	req.RequestedMsgHash = shortDocumentHash(req.Options.MessageID)
 	return req, nil
+}
+
+func applyChannelReplyIssueTarget(ev Event, req *ChannelSendActionRequest) error {
+	if req == nil || req.Subcommand != "reply" {
+		return nil
+	}
+	if strings.TrimSpace(req.Options.Route) != "" || strings.TrimSpace(req.Options.Channel) != "" || strings.TrimSpace(req.Options.ThreadID) != "" {
+		return nil
+	}
+	channel, threadID := channelThreadMarkerFields(ev.Issue.Body)
+	if channel == "" || threadID == "" {
+		return fmt.Errorf("channel reply requires a gitclaw:channel-thread issue or an explicit route/channel/thread target")
+	}
+	req.Options.Channel = channel
+	req.Options.ThreadID = threadID
+	req.TargetFromIssue = true
+	return nil
 }
 
 func channelSendActionFieldsAndTrailingBody(ev Event, cfg Config) ([]string, string, bool) {
@@ -197,6 +218,8 @@ func RenderChannelSendActionReport(ev Event, req ChannelSendActionRequest, resul
 	fmt.Fprintf(&b, "- outbound_body_bytes: `%d`\n", req.OutboundBodyBytes)
 	fmt.Fprintf(&b, "- outbound_body_lines: `%d`\n", req.OutboundBodyLines)
 	fmt.Fprintf(&b, "- outbound_body_source: `%s`\n", req.BodySource)
+	fmt.Fprintf(&b, "- target_from_current_channel_issue: `%t`\n", req.TargetFromIssue)
+	fmt.Fprintf(&b, "- target_issue_is_source: `%t`\n", result.IssueNumber == ev.Issue.Number)
 	fmt.Fprintf(&b, "- raw_outbound_body_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- provider_delivery_performed: `%t`\n", false)
 	fmt.Fprintf(&b, "- provider_delivery_strategy: `%s`\n", "channel-outbox + channel-delivery")
