@@ -15,6 +15,7 @@ var channelMessageMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-mes
 var channelOutboundMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-outbound\s+([^>]*)-->`)
 var channelThreadMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-thread\s+([^>]*)-->`)
 var channelHuddleMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-huddle\s+([^>]*)-->`)
+var channelPollMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-poll\s+([^>]*)-->`)
 var channelStateMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-state\s+([^>]*)-->`)
 var channelStateUpdateMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-state-update\s+([^>]*)-->`)
 var channelDeliveryMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-delivery\s+([^>]*)-->`)
@@ -153,6 +154,10 @@ func HasChannelThreadMarker(body string) bool {
 
 func HasChannelHuddleMarker(body string) bool {
 	return channelHuddleMarkerPattern.MatchString(body)
+}
+
+func HasChannelPollMarker(body string) bool {
+	return channelPollMarkerPattern.MatchString(body)
 }
 
 func HasChannelStateMarker(body string) bool {

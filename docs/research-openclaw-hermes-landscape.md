@@ -3462,6 +3462,20 @@ must include a live E2E that verifies huddle creation, route invite queues,
 duplicate suppression, metadata-only outbox discovery, and a real GitHub Models
 repo-reader/search follow-up on the huddle issue itself.
 
+2026-06-01 channel poll follow-up: current OpenClaw channel docs still frame
+Slack/Telegram as gateway-owned routes, and Hermes' feature docs describe
+scheduled or agent work piping results to messaging channels. That suggests a
+more playful GitHub-native primitive than another report: create a canonical
+decision issue, invite channel routes into it, and let the decision continue
+as an ordinary issue conversation. GitClaw's serverless version is
+`@gitclaw /channels poll <routes> --poll-id <id> --message-id <id>`: it creates
+or reuses a `gitclaw:channel-poll` issue labelled with `gitclaw`, writes the
+human-readable question and options there, queues provider-facing poll invites
+through `channel-outbox`, and keeps the source receipt body-free. Acceptance
+must include a live E2E that verifies poll creation, route invite queues,
+duplicate suppression, metadata-only outbox discovery, and a real GitHub Models
+repo-reader/search follow-up on the poll issue itself.
+
 2026-06-01 channel probe follow-up: OpenClaw's channel CLI exposes status,
 capabilities, resolve, and logs for configured accounts, and its channel SDK
 splits durable outbound queueing from provider-specific send side effects.
