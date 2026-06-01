@@ -163,10 +163,15 @@ func renderSkillSourceInfoReport(ev Event, cfg Config, repoContext RepoContext, 
 	fmt.Fprintf(&b, "- skill_source_info_status: `%s`\n", status)
 	fmt.Fprintf(&b, "- skill_source_specs: `%d`\n", report.Specs)
 	fmt.Fprintf(&b, "- matched_skill_sources: `%d`\n", len(matches))
+	fmt.Fprintf(&b, "- registry_contact_allowed: `%t`\n", report.RegistryContactAllowed)
+	fmt.Fprintf(&b, "- installer_scripts_run: `%t`\n", report.InstallerScriptsRun)
+	fmt.Fprintf(&b, "- dependency_install_allowed: `%t`\n", report.DependencyInstallAllowed)
+	fmt.Fprintf(&b, "- repository_mutation_allowed: `%t`\n", report.RepositoryMutationAllowed)
 	fmt.Fprintf(&b, "- raw_requested_source_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_source_bodies_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_source_refs_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_skill_bodies_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_skill_source_info_change: `%t`\n", true)
 	if includeIssue {
 		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
 	}
@@ -183,6 +188,16 @@ func renderSkillSourceInfoReport(ev Event, cfg Config, repoContext RepoContext, 
 	}
 	sortSkillSourceRiskFindings(findings)
 	writeSkillSourceRiskFindings(&b, findings)
+
+	b.WriteString("\n### Info Gates\n")
+	fmt.Fprintf(&b, "- skill_source_info_gate=`%s`\n", status)
+	b.WriteString("- registry_contact_gate=`disabled`\n")
+	b.WriteString("- remote_fetch_gate=`metadata-only-no-fetch`\n")
+	b.WriteString("- installer_gate=`disabled`\n")
+	b.WriteString("- dependency_install_gate=`disabled`\n")
+	b.WriteString("- mutation_gate=`disabled`\n")
+	b.WriteString("- raw_body_gate=`hash_only`\n")
+	b.WriteString("- model_e2e_gate=`required`\n")
 
 	if len(matches) == 0 {
 		b.WriteString("\n### Available Skill Sources\n")

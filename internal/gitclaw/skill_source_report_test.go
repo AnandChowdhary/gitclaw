@@ -279,6 +279,75 @@ notes: npm install risky-skill
 	}
 }
 
+func TestRenderSkillSourceInfoReportFocusesOnePinWithoutBodies(t *testing.T) {
+	dir := t.TempDir()
+	hash := writeSkillSourceFixture(t, dir)
+	cfg := DefaultConfig()
+	cfg.Workdir = dir
+	repoContext, err := LoadRepoContextWithConfig(dir, nil, cfg)
+	if err != nil {
+		t.Fatalf("LoadRepoContextWithConfig returned error: %v", err)
+	}
+
+	report := RenderSkillSourceInfoCLIReport(cfg, repoContext, "repo-reader")
+	for _, want := range []string{
+		"GitClaw Skill Source Info Report",
+		"scope: `local-cli`",
+		"Generated without a model call",
+		"requested_source_sha256_12:",
+		"normalized_source: `repo-reader`",
+		"skill_source_info_status: `ok`",
+		"skill_source_specs: `1`",
+		"matched_skill_sources: `1`",
+		"registry_contact_allowed: `false`",
+		"installer_scripts_run: `false`",
+		"dependency_install_allowed: `false`",
+		"repository_mutation_allowed: `false`",
+		"raw_requested_source_included: `false`",
+		"raw_source_bodies_included: `false`",
+		"raw_source_refs_included: `false`",
+		"raw_skill_bodies_included: `false`",
+		"llm_e2e_required_after_skill_source_info_change: `true`",
+		"source_name=`repo-reader`",
+		"path=`.gitclaw/skill-sources/repo-reader.yaml`",
+		"skill_path=`.gitclaw/SKILLS/repo-reader/SKILL.md`",
+		"skill_matched=`true`",
+		"source_kind=`repo-local`",
+		"source_ref_present=`true`",
+		"trust_level=`repo-local`",
+		"install_mode=`manual-review`",
+		"requires_approval=`true`",
+		"remote_fetch_allowed=`false`",
+		"hash_pinned=`true`",
+		"expected_sha256_12=`" + hash + "`",
+		"current_skill_sha256_12=`" + hash + "`",
+		"hash_matched=`true`",
+		"risk_findings=`0`",
+		"risk_max_severity=`none`",
+		"risk_codes=`none`",
+		"### Risk Findings For Matches",
+		"- none",
+		"### Info Gates",
+		"skill_source_info_gate=`ok`",
+		"registry_contact_gate=`disabled`",
+		"remote_fetch_gate=`metadata-only-no-fetch`",
+		"installer_gate=`disabled`",
+		"dependency_install_gate=`disabled`",
+		"mutation_gate=`disabled`",
+		"raw_body_gate=`hash_only`",
+		"model_e2e_gate=`required`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("skill source info report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"SKILL_SOURCE_SKILL_BODY_SECRET", ".gitclaw/SKILLS/repo-reader/SKILL.md\nsource_kind", "Read repository context."} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("skill source info report leaked %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestSkillsSourcesCommandsReportPins(t *testing.T) {
 	dir := t.TempDir()
 	writeSkillSourceFixture(t, dir)
@@ -311,7 +380,7 @@ func TestSkillsSourcesCommandsReportPins(t *testing.T) {
 			t.Fatalf("skills sources info returned error: %v", err)
 		}
 	})
-	for _, want := range []string{"GitClaw Skill Source Info Report", "skill_source_info_status: `ok`", "matched_skill_sources: `1`", "source_name=`repo-reader`"} {
+	for _, want := range []string{"GitClaw Skill Source Info Report", "skill_source_info_status: `ok`", "matched_skill_sources: `1`", "source_name=`repo-reader`", "llm_e2e_required_after_skill_source_info_change: `true`"} {
 		if !strings.Contains(infoOutput, want) {
 			t.Fatalf("skills sources info output missing %q:\n%s", want, infoOutput)
 		}
@@ -442,6 +511,85 @@ func TestHandleSkillsSourcesProvenanceCommandPostsReportWithoutLLM(t *testing.T)
 	}
 	if !hasLabel(github.IssueLabels[126], "gitclaw:done") || hasLabel(github.IssueLabels[126], "gitclaw:running") || hasLabel(github.IssueLabels[126], "gitclaw:error") {
 		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[126])
+	}
+}
+
+func TestHandleSkillsSourcesInfoCommandPostsReportWithoutLLM(t *testing.T) {
+	dir := t.TempDir()
+	writeSkillSourceFixture(t, dir)
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 127,
+			"title": "@gitclaw /skills sources info repo-reader",
+			"body": "Hidden skill source info handler token: SKILL_SOURCE_INFO_HANDLER_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	cfg := DefaultConfig()
+	cfg.Workdir = dir
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{127: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic skill source info report", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{
+		"GitClaw Skill Source Info Report",
+		"Generated without a model call",
+		"model=\"gitclaw/skills\"",
+		"repository: `owner/repo`",
+		"issue: `#127`",
+		"requested_source_sha256_12:",
+		"normalized_source: `repo-reader`",
+		"skill_source_info_status: `ok`",
+		"skill_source_specs: `1`",
+		"matched_skill_sources: `1`",
+		"registry_contact_allowed: `false`",
+		"installer_scripts_run: `false`",
+		"dependency_install_allowed: `false`",
+		"repository_mutation_allowed: `false`",
+		"raw_requested_source_included: `false`",
+		"raw_source_bodies_included: `false`",
+		"raw_source_refs_included: `false`",
+		"raw_skill_bodies_included: `false`",
+		"llm_e2e_required_after_skill_source_info_change: `true`",
+		"source_name=`repo-reader`",
+		"skill_matched=`true`",
+		"source_kind=`repo-local`",
+		"install_mode=`manual-review`",
+		"requires_approval=`true`",
+		"remote_fetch_allowed=`false`",
+		"risk_findings=`0`",
+		"### Risk Findings For Matches",
+		"- none",
+		"### Info Gates",
+		"model_e2e_gate=`required`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("skill source info handler report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SKILL_SOURCE_INFO_HANDLER_BODY_SECRET", "SKILL_SOURCE_SKILL_BODY_SECRET", "Read repository context."} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("skill source info handler report leaked %q:\n%s", leaked, body)
+		}
+	}
+	if !hasLabel(github.IssueLabels[127], "gitclaw:done") || hasLabel(github.IssueLabels[127], "gitclaw:running") || hasLabel(github.IssueLabels[127], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[127])
 	}
 }
 

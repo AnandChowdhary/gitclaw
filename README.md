@@ -673,6 +673,7 @@ scripts/e2e/github-skills-proposal-plan-report.sh
 scripts/e2e/github-skills-proposals-report.sh
 scripts/e2e/github-skills-refresh-plan-report.sh
 scripts/e2e/github-skills-sources-report.sh
+scripts/e2e/github-skills-sources-info-report.sh
 scripts/e2e/github-skills-sources-provenance-report.sh
 scripts/e2e/github-skills-runtime-report.sh
 scripts/e2e/github-skills-catalog-report.sh
@@ -786,6 +787,9 @@ executes with prompt, skill, tool, and usage telemetry.
 The toolset-info harness focuses that same proof on one repo-reviewed toolset
 profile: it verifies activation and mutation gates, keeps reviewed guidance
 body-free, then requires a real GitHub Models repo-reader/search follow-up.
+The skill-source-info harness mirrors that contract for one reviewed source
+pin: it checks no-registry/no-fetch/no-install/no-mutation gates and hash-only
+metadata, then requires a real GitHub Models repo-reader/search follow-up.
 The channel-ingest harness proves the generic no-server bridge end to end:
 workflow-dispatch mirroring, duplicate provider-message suppression, and a
 normal model/tool follow-up on the canonical channel issue.

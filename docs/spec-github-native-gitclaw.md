@@ -1916,7 +1916,9 @@ installer-like install modes, missing approval gates, untrusted source kinds,
 credential material, prompt-boundary overrides, host execution, repository
 mutation, remote exfiltration, and unbounded loops. `@gitclaw /skills sources
 info <name>` and `gitclaw skills sources info <name>` show one focused source
-pin.
+pin with no-registry/no-fetch/no-install/no-mutation gates, hash-only raw-body
+boundaries, risk rollups, and
+`llm_e2e_required_after_skill_source_info_change=true`.
 
 Skill source reports never contact ClawHub, Hermes Hub, skills.sh, GitHub, or
 well-known endpoints; never fetch remote sources; never run installers; never
@@ -7405,6 +7407,14 @@ examples/workflows/gitclaw.yml
   tracked/dirty state, commit availability, source-pin gates, and raw-body
   exclusion, then runs a real GitHub Models follow-up conversation that proves
   repo-local skill selection, `gitclaw.search_files`, and usage telemetry.
+- A `gh`-driven skills-sources-info E2E harness verifies
+  `@gitclaw /skills sources info repo-reader` and local
+  `gitclaw skills sources info repo-reader` expose one reviewed source pin
+  with body-free source metadata, hash match state, risk rollups,
+  no-registry/no-fetch/no-install/no-mutation gates, and the required
+  live-LLM follow-up marker. The same live issue then runs a real GitHub
+  Models repo-reader/search follow-up with prompt, skill, tool, and usage
+  telemetry.
 - A `gh`-driven skills-runtime E2E harness verifies
   `@gitclaw /skills runtime` and local `gitclaw skills runtime` expose
   body-free OpenClaw-compatible env/bin/install runtime metadata counts,

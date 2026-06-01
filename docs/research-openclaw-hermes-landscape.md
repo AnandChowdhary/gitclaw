@@ -152,6 +152,19 @@ skills guide (`https://hermes-agent.nousresearch.com/docs/guides/work-with-skill
 and Hermes skill authoring/trust docs
 (`https://hermes-agent.nousresearch.com/docs/developer-guide/creating-skills`).
 
+2026-06-01 skill-source-info follow-up: focused source-pin inspection should be
+the maintainer's smallest review loop before broader source/risk/provenance
+audits. OpenClaw's skill format and Hermes' progressive-disclosure skill flow
+both point to showing enough metadata to decide whether a capability is
+trusted, while withholding the full instruction body until a normal turn needs
+it. GitClaw should therefore make `@gitclaw /skills sources info <name>` and
+`gitclaw skills sources info <name>` expose one reviewed source pin with
+source kind, trust level, install mode, approval and no-fetch gates,
+expected/current hashes, risk rollups, and explicit no-registry/no-install/
+no-mutation gates. The report should stay body-free and require a live GitHub
+Models repo-reader/search follow-up after any behavior change, so the
+deterministic audit never replaces testing real skill selection and tool use.
+
 2026-05-31 skill-runtime follow-up: OpenClaw's `SKILL.md` frontmatter and
 ClawHub format expose runtime metadata such as required env vars, binaries,
 `primaryEnv`, and install specs, while Hermes skills/tool docs frame these
