@@ -3436,6 +3436,21 @@ must include a live E2E that verifies huddle creation, route invite queues,
 duplicate suppression, metadata-only outbox discovery, and a real GitHub Models
 repo-reader/search follow-up on the huddle issue itself.
 
+2026-06-01 channel probe follow-up: OpenClaw's channel CLI exposes status,
+capabilities, resolve, and logs for configured accounts, and its channel SDK
+splits durable outbound queueing from provider-specific send side effects.
+Hermes' messaging gateway similarly treats platform operations as chat commands
+(`/platform list`, pause, resume) and wraps adapters with circuit breakers that
+require operator-visible state. GitClaw should add the no-server equivalent:
+`@gitclaw /channels probe --route <name> --message-id <id>` queues a generated
+provider-facing route test through a reviewed route, exposes pending work via
+`channel-outbox`, records delivery via `channel-delivery`, and keeps the source
+receipt hash-only. The action must not call a model, call provider APIs, print
+raw route names, print raw thread/message ids, copy source text, or print probe
+bodies. Acceptance must include a live E2E for route resolution, outbox
+visibility, delivery receipt recording, duplicate suppression, and a real
+GitHub Models repo-reader/search follow-up.
+
 ### 2026-06-01 Session Skills Follow-Up
 
 OpenClaw's skill surfaces treat skills as named, inspectable prompt extensions,

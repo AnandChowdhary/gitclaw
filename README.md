@@ -583,6 +583,7 @@ gitclaw channels info telegram
 gitclaw channel-send --channel slack --thread-id <thread> --message-id <id> --body "hello"
 gitclaw channel-send --route e2e-slack-route --message-id <id> --body "hello"
 @gitclaw /channels send --route e2e-slack-route --message-id <id>
+@gitclaw /channels probe --route e2e-slack-route --message-id <id>
 @gitclaw /channels broadcast e2e-slack-route,e2e-telegram-route --message-id <id>
 @gitclaw /channels invite e2e-slack-route,e2e-telegram-route --message-id <id>
 @gitclaw /channels huddle e2e-slack-route,e2e-telegram-route --huddle-id <id> --message-id <id>
@@ -737,6 +738,11 @@ Trusted GitHub issues and comments can also use the same routebook directly:
 `@gitclaw /channels send --route <name> --message-id <id>` queues an outbound
 channel comment, then posts a body-free receipt on the source issue while
 leaving provider delivery to `channel-outbox` and `channel-delivery`.
+`@gitclaw /channels probe --route <name> --message-id <id>` sends a
+deterministic route test message through the same queue. The source receipt
+keeps route names, thread IDs, message IDs, source text, and probe bodies out
+of the issue-visible report, while the channel issue/outbox/delivery path
+proves the reviewed route can actually carry a provider-facing message.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels reply
 --message-id <id>` infers the current Slack/Telegram thread and queues the
 outbound provider message on that same issue. This turns the GitHub issue into
@@ -960,6 +966,7 @@ scripts/e2e/github-channel-gateway-workflow.sh
 scripts/e2e/github-channel-send-workflow.sh
 scripts/e2e/github-channel-send-route-workflow.sh
 scripts/e2e/github-channel-send-slash.sh
+scripts/e2e/github-channel-probe-slash.sh
 scripts/e2e/github-channel-broadcast-slash.sh
 scripts/e2e/github-channel-invite-slash.sh
 scripts/e2e/github-channel-huddle-slash.sh
@@ -1098,6 +1105,12 @@ conversation too: `@gitclaw /channels send` resolves a named route, queues an
 outbound channel comment, posts a body-free receipt, suppresses duplicate
 message IDs from a later comment, exposes pending outbox work without bodies,
 and then runs a real GitHub Models repo-reader/search follow-up.
+The channel-probe slash harness proves reviewed routes can be tested without
+copying arbitrary source text: `@gitclaw /channels probe` queues a
+deterministic route probe, exposes it through outbox without bodies, records a
+delivery receipt through the delivery workflow, suppresses duplicate probes,
+keeps route/thread/message/probe data out of receipts, and then runs a real
+GitHub Models repo-reader/search follow-up.
 The channel-broadcast slash harness fans one source issue out to multiple
 reviewed routes, verifies one outbound queue item per route, checks duplicate
 broadcast suppression, keeps route names and outbound bodies out of the source

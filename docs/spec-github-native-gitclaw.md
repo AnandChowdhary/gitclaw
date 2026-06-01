@@ -4987,6 +4987,25 @@ duplicate status, and delivery instructions, but never print raw outbound
 bodies, raw thread IDs, raw message IDs, provider credentials, or provider API
 responses.
 
+For a deterministic route test that does not copy arbitrary issue text into the
+provider queue, GitClaw also supports:
+
+```text
+@gitclaw /channels probe --route team-alerts --message-id <stable-probe-id>
+```
+
+`/channels probe`, `/channels test`, `/channels ping`, and `/channels check`
+resolve one reviewed route and queue a generated provider-facing probe body
+through the same `channel-send` machinery. The source receipt reports only
+target issue/comment IDs, route/thread/message/probe/source hashes, duplicate
+status, and delivery instructions. It does not call a model, call provider
+APIs, print raw route names, print raw thread/message IDs, copy raw source
+text, print raw probe bodies, or perform provider delivery. Duplicates are
+suppressed by `channel + message_id`. Changes to this surface require a live
+E2E that verifies outbox visibility, delivery receipt recording, duplicate
+suppression, body-free receipts, and a real GitHub Models repo-reader/search
+follow-up.
+
 For multi-route announcements, GitClaw also supports:
 
 ```text
@@ -7436,6 +7455,15 @@ examples/workflows/gitclaw.yml
   issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-send-slash fixture token, and
   avoid hidden route/account/channel sentinels.
+- A `gh`-driven channel-probe-slash E2E harness creates an ordinary GitHub
+  issue with `@gitclaw /channels probe --route ...`, verifies the generated
+  routebook-backed probe message, body-free source receipt, metadata-only
+  outbox discovery, channel-delivery receipt recording, post-delivery outbox
+  suppression, and duplicate probe suppression from a later issue comment with
+  the same message id. The same source issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-probe fixture token, and avoid
+  hidden route/account/provider/channel sentinels.
 - A `gh`-driven channel-broadcast-slash E2E harness creates an ordinary GitHub
   issue with `@gitclaw /channels broadcast ...`, verifies one routebook-backed
   outbound comment per reviewed route, body-free source receipt metadata,
