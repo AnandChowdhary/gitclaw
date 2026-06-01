@@ -5247,6 +5247,7 @@ accepts a structured reaction form:
 @gitclaw /channels react --message-id <provider-message-id> --reaction eyes
 @gitclaw /channels pin --message-id <provider-message-id>
 @gitclaw /channels task --task-id <stable-task-id> --message-id <provider-message-id>
+@gitclaw /channels clip --clip-id <stable-clip-id> --message-id <provider-message-id>
 ```
 
 `/channels react`, `/channels reaction`, `/channels emoji`, `/channels ack`,
@@ -5311,6 +5312,35 @@ this surface require a live E2E that creates the task, validates the
 metadata-only task-link outbox, checks duplicate suppression, and then
 continues on the task issue with a normal GitHub Models repo-reader/search
 follow-up.
+
+The same channel-thread issue can also save a mirrored provider message without
+turning it into work:
+
+```text
+@gitclaw /channels clip --clip-id <stable-clip-id> --message-id <provider-message-id>
+Title: short saved-context title
+Notes:
+optional human-readable clip notes
+```
+
+`/channels clip`, `/channels save`, `/channels capture`, `/channels remember`,
+and `/channels archive` infer the current channel and thread id from the issue
+marker when no explicit route/channel/thread target is provided. They create or
+reuse one open GitHub issue carrying a hidden `gitclaw:channel-clip` marker for
+the stable clip id, label it with `gitclaw` so normal conversation can continue
+there, and queue a provider-facing clip link back to the mirrored channel
+thread. The clip issue contains the human-readable title and notes because it
+is the durable saved context; the source receipt remains body-free, reporting
+only clip/thread/message/title/note hashes, duplicate status, notification
+queue metadata, and delivery gates. It does not call a model, call provider
+APIs, print raw clip ids, print raw thread ids, print raw source or
+notification message ids, print channel message bodies, or print raw clip
+title/notes in the source receipt. Duplicates are suppressed first by `clip_id`
+for the GitHub clip issue and then by `channel + notify_message_id` for the
+provider-facing clip link. Changes to this surface require a live E2E that
+creates the clip, validates the metadata-only clip-link outbox, checks duplicate
+suppression, and then continues on the clip issue with a normal GitHub Models
+repo-reader/search follow-up.
 
 Behavior:
 
@@ -5496,6 +5526,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels info telegram
 @gitclaw /channels send --route team-alerts --message-id alert-123
 @gitclaw /channels task --task-id channel-task-1 --message-id provider-msg-1
+@gitclaw /channels clip --clip-id channel-clip-1 --message-id provider-msg-1
 @gitclaw /channels room team-alerts,ops-alerts --room-id design-room --message-id design-room-1
 @gitclaw /channels huddle team-alerts,ops-alerts --huddle-id design-room --message-id design-room-1
 @gitclaw /channels rollcall team-alerts,ops-alerts --rollcall-id standup --message-id standup-1
@@ -7862,6 +7893,15 @@ examples/workflows/gitclaw.yml
   normal GitHub Models issue-comment follow-up that must select `repo-reader`,
   expose `gitclaw.search_files`, recover the channel-task fixture token, and
   avoid hidden channel, account, provider, message, and task sentinels.
+- A `gh`-driven channel-clip-slash E2E harness creates a real channel-thread
+  issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels clip --clip-id ... --message-id ...` on that mirrored
+  thread, verifies GitHub clip issue creation, body-free source receipt
+  metadata, provider-facing clip-link queueing, duplicate clip and notification
+  suppression, and metadata-only outbox discovery. The clip issue then gets a
+  normal GitHub Models issue-comment follow-up that must select `repo-reader`,
+  expose `gitclaw.search_files`, recover the channel-clip fixture token, and
+  avoid hidden channel, account, provider, message, and clip sentinels.
 - A `gh`-driven channel-delivery-workflow E2E harness dispatches
   `.github/workflows/gitclaw-channel-delivery.yml`, verifies a source
   `gitclaw:assistant-turn` comment can be recorded as delivered, checks that

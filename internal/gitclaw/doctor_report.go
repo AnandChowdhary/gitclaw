@@ -312,6 +312,9 @@ func doctorScriptHasModelFollowupCoverage(text string) bool {
 }
 
 func doctorScriptWaitsForAssistantCount(text string) bool {
+	if strings.Contains(text, "wait_for_assistant_count_for_issue") {
+		return true
+	}
 	for count := 1; count <= 9; count++ {
 		if strings.Contains(text, fmt.Sprintf("wait_for_assistant_count %d", count)) {
 			return true

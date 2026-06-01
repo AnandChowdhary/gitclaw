@@ -3976,3 +3976,17 @@ task/thread/message/title/note hashes and duplicate status, while the task
 issue contains the human-readable title and notes. Acceptance requires live E2E
 for task creation, task-link outbox discovery, duplicate suppression, and a
 real GitHub Models repo-reader/search follow-up on the task issue.
+
+## 2026-06-01 Channel Clip Follow-Up
+
+OpenClaw's channel ideas and Hermes' workspace memory pattern point at a
+second non-report channel primitive: not every useful message should become a
+task. GitClaw's serverless version is
+`@gitclaw /channels clip --clip-id <id> --message-id <id>` inside a mirrored
+channel thread: create or reuse a GitHub issue carrying the saved context, then
+queue a provider-facing clip link back to Slack/Telegram through the same
+outbox/delivery bridge. The source receipt should remain metadata-only with
+clip/thread/message/title/note hashes and duplicate status, while the clip
+issue contains the human-readable title and notes. Acceptance requires live E2E
+for clip creation, clip-link outbox discovery, duplicate suppression, and a
+real GitHub Models repo-reader/search follow-up on the clip issue.

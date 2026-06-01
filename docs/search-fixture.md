@@ -97,6 +97,7 @@ channel reaction unique search fixture phrase => GITCLAW_CHANNEL_REACTION_CONTEX
 channel pin unique search fixture phrase => GITCLAW_CHANNEL_PIN_CONTEXT_V1
 channel reply slash unique search fixture phrase => GITCLAW_CHANNEL_REPLY_SLASH_CONTEXT_V1
 channel task unique search fixture phrase => GITCLAW_CHANNEL_TASK_CONTEXT_V1
+channel clip unique search fixture phrase => GITCLAW_CHANNEL_CLIP_CONTEXT_V1
 backup verify unique search fixture phrase => GITCLAW_BACKUP_VERIFY_CONTEXT_V1
 backup index unique search fixture phrase => GITCLAW_BACKUP_INDEX_CONTEXT_V1
 backup report unique search fixture phrase => GITCLAW_BACKUP_REPORT_CONTEXT_V1
