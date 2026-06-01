@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T04:14:30Z",
+  "generated_at": "2026-06-01T04:15:56Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 442,
   "issues": [
@@ -5544,13 +5544,14 @@
       "number": 482,
       "title": "@gitclaw /skills sources search repo-local manual-review",
       "path": "issues/000482.json",
-      "backup_generated_at": "2026-06-01T04:14:29Z",
-      "event_name": "issues",
+      "backup_generated_at": "2026-06-01T04:15:55Z",
+      "event_name": "issue_comment",
       "labels": [
-        "gitclaw"
+        "gitclaw",
+        "gitclaw:done"
       ],
-      "comment_count": 1,
-      "transcript_messages": 2
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
