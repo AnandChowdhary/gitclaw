@@ -1,15 +1,17 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T16:21:10Z",
+  "generated_at": "2026-06-01T16:22:57Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 563,
     "title": "GitClaw channel room E2E 20260601T161917Z",
     "body": "@gitclaw /channels room e2e-slack-route,e2e-telegram-route --room-id room-20260601T161917Z --message-id room-msg-20260601T161917Z\n\nTopic: GitClaw durable room topic 20260601T161917Z\nNotes:\nVisible room notes token for provider queue inspection: NOECHO_CHANNEL_ROOM_NOTES_20260601T161917Z\nUse the room issue for the next model-backed conversation.",
     "author": "AnandChowdhary",
     "author_association": "OWNER",
-    "labels": null
+    "labels": [
+      "gitclaw:done"
+    ]
   },
   "transcript": [
     {
@@ -29,6 +31,24 @@
       "CommentID": 4594453381,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels room e2e-slack-route,e2e-telegram-route --room-id room-20260601T161917Z --message-id room-msg-20260601T161917Z\nTopic: GitClaw durable room topic 20260601T161917Z\nNotes:\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_ROOM_DUPLICATE_20260601T161917Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4594460267,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Room Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#563`\n- requested_channel_command: `/channels room`\n- channel_room_status: `duplicate`\n- room_issue: `#564`\n- room_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/564`\n- room_issue_created: `false`\n- room_id_sha256_12: `760e3ea4ec09`\n- room_id_auto: `false`\n- room_topic_sha256_12: `7793aadc37e8`\n- room_topic_bytes: `43`\n- room_topic_lines: `1`\n- room_notes_sha256_12: `08eb3e5efd0f`\n- room_notes_bytes: `105`\n- room_notes_lines: `1`\n- room_source: `trailing-lines`\n- room_routes: `2`\n- room_invites_queued: `0`\n- room_invite_duplicates: `2`\n- target_issues_created: `0`\n- routes_sha256_12: `9892046e64ef`\n- message_id_sha256_12: `fe48a05161fc`\n- message_id_auto: `false`\n- outbound_body_sha256_12: `24b733b2b301`\n- outbound_body_bytes: `349`\n- raw_route_names_included: `false`\n- raw_room_id_included: `false`\n- raw_topic_included: `false`\n- raw_notes_included: `false`\n- raw_outbound_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_room_action_change: `true`\n- issue_title_sha256_12: `b2e4010a7c7e`\n\nGitClaw created or reused a durable GitHub channel room, then queued one provider-facing invitation per reviewed route. The room issue contains the human-readable topic and notes; this source receipt keeps route names, room IDs, topic text, notes, thread IDs, message IDs, and outbound bodies out of band.\n\n### Destinations\n- destination=`01` target_issue=`#565` outbound_comment_id=`0` target_issue_created=`false` duplicate_suppressed=`true` route_sha256_12=`ff6bd0e4b42c` channel=`slack` thread_id_sha256_12=`5c959283d728` message_id_sha256_12=`fe48a05161fc` body_sha256_12=`24b733b2b301`\n- destination=`02` target_issue=`#566` outbound_comment_id=`0` target_issue_created=`false` duplicate_suppressed=`true` route_sha256_12=`325d7a85c564` channel=`telegram` thread_id_sha256_12=`58f6c42669a7` message_id_sha256_12=`fe48a05161fc` body_sha256_12=`24b733b2b301`\n\n### Follow-Up Delivery\n- provider gateways read pending room invites with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent room invites with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate room invites are suppressed independently for each route by `channel + message_id`\n- normal GitClaw conversation continues on the room issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4594467673,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -39,6 +59,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T16:20:40Z",
       "updated_at": "2026-06-01T16:20:40Z"
+    },
+    {
+      "id": 4594460267,
+      "body": "@gitclaw /channels room e2e-slack-route,e2e-telegram-route --room-id room-20260601T161917Z --message-id room-msg-20260601T161917Z\nTopic: GitClaw durable room topic 20260601T161917Z\nNotes:\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_ROOM_DUPLICATE_20260601T161917Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T16:21:31Z",
+      "updated_at": "2026-06-01T16:21:31Z"
+    },
+    {
+      "id": 4594467673,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26767473996\" event_id=\"comment-4594460267\" model=\"gitclaw/channels\" idempotency_key=\"39384f812d91bcce536c9c4f850d991c\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26767473996\" --\u003e\n## GitClaw Channel Room Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#563`\n- requested_channel_command: `/channels room`\n- channel_room_status: `duplicate`\n- room_issue: `#564`\n- room_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/564`\n- room_issue_created: `false`\n- room_id_sha256_12: `760e3ea4ec09`\n- room_id_auto: `false`\n- room_topic_sha256_12: `7793aadc37e8`\n- room_topic_bytes: `43`\n- room_topic_lines: `1`\n- room_notes_sha256_12: `08eb3e5efd0f`\n- room_notes_bytes: `105`\n- room_notes_lines: `1`\n- room_source: `trailing-lines`\n- room_routes: `2`\n- room_invites_queued: `0`\n- room_invite_duplicates: `2`\n- target_issues_created: `0`\n- routes_sha256_12: `9892046e64ef`\n- message_id_sha256_12: `fe48a05161fc`\n- message_id_auto: `false`\n- outbound_body_sha256_12: `24b733b2b301`\n- outbound_body_bytes: `349`\n- raw_route_names_included: `false`\n- raw_room_id_included: `false`\n- raw_topic_included: `false`\n- raw_notes_included: `false`\n- raw_outbound_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_room_action_change: `true`\n- issue_title_sha256_12: `b2e4010a7c7e`\n\nGitClaw created or reused a durable GitHub channel room, then queued one provider-facing invitation per reviewed route. The room issue contains the human-readable topic and notes; this source receipt keeps route names, room IDs, topic text, notes, thread IDs, message IDs, and outbound bodies out of band.\n\n### Destinations\n- destination=`01` target_issue=`#565` outbound_comment_id=`0` target_issue_created=`false` duplicate_suppressed=`true` route_sha256_12=`ff6bd0e4b42c` channel=`slack` thread_id_sha256_12=`5c959283d728` message_id_sha256_12=`fe48a05161fc` body_sha256_12=`24b733b2b301`\n- destination=`02` target_issue=`#566` outbound_comment_id=`0` target_issue_created=`false` duplicate_suppressed=`true` route_sha256_12=`325d7a85c564` channel=`telegram` thread_id_sha256_12=`58f6c42669a7` message_id_sha256_12=`fe48a05161fc` body_sha256_12=`24b733b2b301`\n\n### Follow-Up Delivery\n- provider gateways read pending room invites with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent room invites with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate room invites are suppressed independently for each route by `channel + message_id`\n- normal GitClaw conversation continues on the room issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T16:22:30Z",
+      "updated_at": "2026-06-01T16:22:30Z"
     }
   ]
 }
