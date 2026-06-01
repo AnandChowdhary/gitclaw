@@ -637,6 +637,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels react --message-id <id> --reaction eyes
 @gitclaw /channels pin --message-id <id>
 @gitclaw /channels reply --message-id <id>
+@gitclaw /channels task --task-id <id> --message-id <id>
 gitclaw proactive list
 gitclaw proactive schedule
 gitclaw proactive chain
@@ -841,6 +842,14 @@ the provider receipt.
 provider reaction path: it infers the current mirrored channel thread and
 queues a default `pushpin` reaction while keeping message IDs, thread IDs, and
 the reaction name out of the receipt.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels task
+--task-id <id> --message-id <id>` creates or reuses a normal GitHub task issue
+from the channel thread, writes the human-readable title and notes there, and
+queues a provider-facing task link back to the mirrored Slack/Telegram thread.
+The source receipt stays body-free: it reports task/thread/message/title/notes
+hashes, duplicate status, notification queue metadata, and delivery gates
+without printing raw provider IDs, channel message bodies, task titles, or
+task notes.
 The live proactive-report, proactive-list, and proactive-schedule harnesses use
 the same two-proof shape for scheduled work: body-free workflow/prompt metadata
 first, then a normal GitHub Models repo-reader/search follow-up.
@@ -1061,6 +1070,7 @@ scripts/e2e/github-channel-rollcall-slash.sh
 scripts/e2e/github-channel-reaction-slash.sh
 scripts/e2e/github-channel-pin-slash.sh
 scripts/e2e/github-channel-reply-slash.sh
+scripts/e2e/github-channel-task-slash.sh
 scripts/e2e/github-channel-delivery-workflow.sh
 scripts/e2e/github-channel-outbox-workflow.sh
 scripts/e2e/github-config-risk-report.sh
@@ -1266,6 +1276,13 @@ operator consoles: a channel-ingested issue receives `@gitclaw /channels reply`,
 queues an outbound message back onto the same thread, suppresses duplicate
 message IDs, records delivery through the channel-delivery workflow, and then
 runs a real GitHub Models repo-reader/search follow-up.
+The channel-task slash harness turns the operator console into a work intake
+surface: a channel-ingested issue receives `@gitclaw /channels task`, creates
+or reuses a normal GitHub task issue, queues a provider-facing task link back
+to the mirrored thread, checks duplicate task and notification suppression,
+exposes the task-link notification through metadata-only outbox, and then
+continues on the task issue with a real GitHub Models repo-reader/search
+follow-up.
 The channel-outbox workflow harness proves the missing outbound half of the
 bridge: a real channel-ingested message gets a GitHub Models/tool reply, the
 outbox exposes only pending assistant comments for provider delivery, delivery

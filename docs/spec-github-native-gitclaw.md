@@ -5246,6 +5246,7 @@ accepts a structured reaction form:
 ```text
 @gitclaw /channels react --message-id <provider-message-id> --reaction eyes
 @gitclaw /channels pin --message-id <provider-message-id>
+@gitclaw /channels task --task-id <stable-task-id> --message-id <provider-message-id>
 ```
 
 `/channels react`, `/channels reaction`, `/channels emoji`, `/channels ack`,
@@ -5282,6 +5283,35 @@ The receipt reports `target_from_current_channel_issue=true` and
 `target_issue_is_source=true` without printing the raw outbound body, thread id,
 message id, or provider payloads.
 
+The same channel-thread issue can also turn a mirrored provider message into a
+normal GitHub task issue:
+
+```text
+@gitclaw /channels task --task-id <stable-task-id> --message-id <provider-message-id>
+Title: short task title
+Notes:
+optional human-readable task notes
+```
+
+`/channels task`, `/channels todo`, `/channels ticket`, and `/channels issue`
+infer the current channel and thread id from the issue marker when no explicit
+route/channel/thread target is provided. They create or reuse one open GitHub
+issue carrying a hidden `gitclaw:channel-task` marker for the stable task id,
+label it with `gitclaw` so normal conversation can continue there, and queue a
+provider-facing task link back to the mirrored channel thread. The task issue
+contains the human-readable title and notes because it is the work item; the
+source receipt remains body-free, reporting only task/thread/message/title/note
+hashes, duplicate status, notification queue metadata, and delivery gates. It
+does not call a model, call provider APIs, print raw task ids, print raw thread
+ids, print raw source or notification message ids, print channel message
+bodies, or print raw task title/notes in the source receipt. Duplicates are
+suppressed first by `task_id` for the GitHub task issue and then by
+`channel + notify_message_id` for the provider-facing task link. Changes to
+this surface require a live E2E that creates the task, validates the
+metadata-only task-link outbox, checks duplicate suppression, and then
+continues on the task issue with a normal GitHub Models repo-reader/search
+follow-up.
+
 Behavior:
 
 - find or create the same `gitclaw:channel-thread` issue used by inbound
@@ -5293,6 +5323,8 @@ Behavior:
 - post one `gitclaw:channel-outbound` comment per `channel + message_id`,
 - post one `gitclaw:channel-reaction` comment per
   `channel + target_message_id + reaction`,
+- create or reuse one `gitclaw:channel-task` issue per task id and queue one
+  provider-facing task-link outbound comment per `channel + notify_message_id`,
 - suppress duplicate outbound message IDs,
 - for issue-native `/channels send`, post a `model="gitclaw/channels"`
   receipt back to the source issue,
@@ -5463,6 +5495,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels risk
 @gitclaw /channels info telegram
 @gitclaw /channels send --route team-alerts --message-id alert-123
+@gitclaw /channels task --task-id channel-task-1 --message-id provider-msg-1
 @gitclaw /channels room team-alerts,ops-alerts --room-id design-room --message-id design-room-1
 @gitclaw /channels huddle team-alerts,ops-alerts --huddle-id design-room --message-id design-room-1
 @gitclaw /channels rollcall team-alerts,ops-alerts --rollcall-id standup --message-id standup-1
@@ -7820,6 +7853,15 @@ examples/workflows/gitclaw.yml
   follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
   recover the channel-reply-slash fixture token, and avoid hidden channel,
   account, provider, and outbound-body sentinels.
+- A `gh`-driven channel-task-slash E2E harness creates a real channel-thread
+  issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels task --task-id ... --message-id ...` on that mirrored
+  thread, verifies GitHub task issue creation, body-free source receipt
+  metadata, provider-facing task-link queueing, duplicate task and notification
+  suppression, and metadata-only outbox discovery. The task issue then gets a
+  normal GitHub Models issue-comment follow-up that must select `repo-reader`,
+  expose `gitclaw.search_files`, recover the channel-task fixture token, and
+  avoid hidden channel, account, provider, message, and task sentinels.
 - A `gh`-driven channel-delivery-workflow E2E harness dispatches
   `.github/workflows/gitclaw-channel-delivery.yml`, verifies a source
   `gitclaw:assistant-turn` comment can be recorded as delivered, checks that

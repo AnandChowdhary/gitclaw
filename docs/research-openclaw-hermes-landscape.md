@@ -3962,3 +3962,17 @@ and disabled mutation/install gates, and withholds raw source text, bundle
 YAML, bundle instructions, and skill bodies. Acceptance must include a live
 GitHub Models follow-up on that rehearsal issue proving selected skill context,
 prompt-visible repository search, and token usage telemetry.
+
+## 2026-06-01 Channel Task Follow-Up
+
+OpenClaw channel routing and Hermes team workflows both become more useful when
+the assistant can turn a message into durable work without leaving the
+conversation surface. GitClaw's no-server version is
+`@gitclaw /channels task --task-id <id> --message-id <id>` inside a mirrored
+channel thread: create or reuse a GitHub issue carrying the task body, then
+queue a provider-facing task link back to Slack/Telegram through the existing
+outbox/delivery bridge. The source receipt should remain metadata-only with
+task/thread/message/title/note hashes and duplicate status, while the task
+issue contains the human-readable title and notes. Acceptance requires live E2E
+for task creation, task-link outbox discovery, duplicate suppression, and a
+real GitHub Models repo-reader/search follow-up on the task issue.
