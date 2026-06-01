@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T01:48:52Z",
+  "generated_at": "2026-06-01T01:50:10Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 473,
     "title": "@gitclaw session resume e2e 20260601T014742Z",
@@ -10,7 +10,8 @@
     "author": "AnandChowdhary",
     "author_association": "OWNER",
     "labels": [
-      "gitclaw"
+      "gitclaw",
+      "gitclaw:done"
     ]
   },
   "transcript": [
@@ -31,6 +32,24 @@
       "CommentID": 4588965215,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /session resume\n\nPlease show the body-free session resume readiness for this conversation.\nHidden comment token: GITCLAW_SESSION_RESUME_COMMENT_20260601T014742Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4588967827,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Session Resume Report\n\nGenerated without a model call.\n\n- scope: `issue-thread`\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#473`\n- event_kind: `issue_comment`\n- active_command: `/session resume`\n- session_resume_status: `ok`\n- resume_strategy: `github-issue-comment-continuation`\n- resume_key_sha256_12: `2d7efaeffd98`\n- session_store: `github-issue-thread`\n- raw_comments: `2`\n- transcript_messages: `3`\n- user_messages: `2`\n- assistant_messages: `1`\n- label_names: `gitclaw, gitclaw:done`\n- trigger_label_present: `true`\n- running_label_present: `false`\n- done_label_present: `true`\n- error_label_present: `false`\n- disabled_label_present: `false`\n- latest_user_message_present: `true`\n- latest_assistant_message_present: `true`\n- assistant_turn_comments: `1`\n- assistant_turns_with_prompt_provenance: `1`\n- assistant_turns_missing_prompt_provenance: `0`\n- unique_prompt_context_hashes: `1`\n- model_backed_assistant_turns: `1`\n- deterministic_assistant_turns: `0`\n- model_names: `openai/gpt-4.1-nano`\n- prompt_visible_skill_names: `repo-reader`\n- prompt_visible_tool_names: `gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index`\n- latest_assistant_model: `openai/gpt-4.1-nano`\n- latest_assistant_prompt_context_sha256_12: `53aa781ecaef`\n- usage_bearing_assistant_turns: `1`\n- usage_prompt_tokens: `10506`\n- usage_completion_tokens: `9`\n- usage_total_tokens: `10515`\n- usage_cache_read_tokens: `0`\n- usage_cache_write_tokens: `0`\n- next_issue_comment_resumes_session: `true`\n- github_actions_reentry_supported: `true`\n- workflow_event: `issue_comment`\n- workflow_dispatch_required: `false`\n- server_required: `false`\n- socket_required: `false`\n- external_session_db_required: `false`\n- backup_branch_replay_preferred: `true`\n- issue_thread_canonical_storage: `true`\n- channel_thread_issue: `false`\n- proactive_run_issue: `false`\n- raw_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_replies_included: `false`\n- raw_prompts_included: `false`\n- raw_provider_responses_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_search_queries_included: `false`\n- repository_mutation_allowed: `false`\n- resume_mutation_allowed: `false`\n- llm_e2e_required_after_session_resume_change: `true`\n\nThis Hermes-resume and OpenClaw-session inspired report proves how the current GitHub issue can continue as the same session. It reports the issue-thread resume key, labels, latest-message hashes, assistant-marker provenance, model and usage telemetry, and reentry gates only. GitClaw does not open a socket, require a server, create a hidden session database, mutate the repository, or print issue bodies, comments, assistant replies, prompts, search queries, provider responses, or tool outputs.\n\n### Resume Anchors\n- kind=`session-key` source=`github-issue` sha256_12=`2d7efaeffd98` body_included=`false` identifier_included=`false`\n- kind=`latest-user` source=`comment:4588967827` sha256_12=`566b54cbf173` trusted=`true` edited=`false` bytes=`169` lines=`4` body_included=`false` identifier_included=`false`\n- kind=`latest-assistant` source=`comment:4588965215` sha256_12=`1eb3886519bc` trusted=`true` edited=`false` bytes=`25` lines=`1` body_included=`false` identifier_included=`false`\n- kind=`latest-model-turn` source=`comment:4588965215` model=`openai/gpt-4.1-nano` prompt_context_sha256_12=`53aa781ecaef` context_documents=`16` selected_skills=`1` tool_outputs=`3` skills=`repo-reader` tools=`gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index` usage_present=`true` usage_total_tokens=`10515` body_included=`false` identifier_included=`false`\n\n### Latest Assistant Marker\n- model=`openai/gpt-4.1-nano` prompt_context_sha256_12=`53aa781ecaef` context_documents=`16` selected_skills=`1` tool_outputs=`3` skills=`repo-reader` tools=`gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index`\n\n### Resume Gates\n- continuation_gate=`pass`\n- issue_label_gate=`pass`\n- latest_user_gate=`pass`\n- latest_assistant_gate=`pass`\n- model_backed_gate=`pass`\n- prompt_provenance_gate=`pass`\n- reentry_gate=`issue-comment-action`\n- external_session_db_gate=`disabled`\n- raw_body_gate=`hashes-counts-and-marker-attributes-only`\n- mutation_gate=`disabled`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4588970747,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -41,6 +60,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T01:48:29Z",
       "updated_at": "2026-06-01T01:48:29Z"
+    },
+    {
+      "id": 4588967827,
+      "body": "@gitclaw /session resume\n\nPlease show the body-free session resume readiness for this conversation.\nHidden comment token: GITCLAW_SESSION_RESUME_COMMENT_20260601T014742Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T01:49:02Z",
+      "updated_at": "2026-06-01T01:49:02Z"
+    },
+    {
+      "id": 4588970747,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26730986486\" event_id=\"comment-4588967827\" model=\"gitclaw/session\" idempotency_key=\"6b8eff37458904b028423b34984ba3fe\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26730986486\" --\u003e\n## GitClaw Session Resume Report\n\nGenerated without a model call.\n\n- scope: `issue-thread`\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#473`\n- event_kind: `issue_comment`\n- active_command: `/session resume`\n- session_resume_status: `ok`\n- resume_strategy: `github-issue-comment-continuation`\n- resume_key_sha256_12: `2d7efaeffd98`\n- session_store: `github-issue-thread`\n- raw_comments: `2`\n- transcript_messages: `3`\n- user_messages: `2`\n- assistant_messages: `1`\n- label_names: `gitclaw, gitclaw:done`\n- trigger_label_present: `true`\n- running_label_present: `false`\n- done_label_present: `true`\n- error_label_present: `false`\n- disabled_label_present: `false`\n- latest_user_message_present: `true`\n- latest_assistant_message_present: `true`\n- assistant_turn_comments: `1`\n- assistant_turns_with_prompt_provenance: `1`\n- assistant_turns_missing_prompt_provenance: `0`\n- unique_prompt_context_hashes: `1`\n- model_backed_assistant_turns: `1`\n- deterministic_assistant_turns: `0`\n- model_names: `openai/gpt-4.1-nano`\n- prompt_visible_skill_names: `repo-reader`\n- prompt_visible_tool_names: `gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index`\n- latest_assistant_model: `openai/gpt-4.1-nano`\n- latest_assistant_prompt_context_sha256_12: `53aa781ecaef`\n- usage_bearing_assistant_turns: `1`\n- usage_prompt_tokens: `10506`\n- usage_completion_tokens: `9`\n- usage_total_tokens: `10515`\n- usage_cache_read_tokens: `0`\n- usage_cache_write_tokens: `0`\n- next_issue_comment_resumes_session: `true`\n- github_actions_reentry_supported: `true`\n- workflow_event: `issue_comment`\n- workflow_dispatch_required: `false`\n- server_required: `false`\n- socket_required: `false`\n- external_session_db_required: `false`\n- backup_branch_replay_preferred: `true`\n- issue_thread_canonical_storage: `true`\n- channel_thread_issue: `false`\n- proactive_run_issue: `false`\n- raw_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_replies_included: `false`\n- raw_prompts_included: `false`\n- raw_provider_responses_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_search_queries_included: `false`\n- repository_mutation_allowed: `false`\n- resume_mutation_allowed: `false`\n- llm_e2e_required_after_session_resume_change: `true`\n\nThis Hermes-resume and OpenClaw-session inspired report proves how the current GitHub issue can continue as the same session. It reports the issue-thread resume key, labels, latest-message hashes, assistant-marker provenance, model and usage telemetry, and reentry gates only. GitClaw does not open a socket, require a server, create a hidden session database, mutate the repository, or print issue bodies, comments, assistant replies, prompts, search queries, provider responses, or tool outputs.\n\n### Resume Anchors\n- kind=`session-key` source=`github-issue` sha256_12=`2d7efaeffd98` body_included=`false` identifier_included=`false`\n- kind=`latest-user` source=`comment:4588967827` sha256_12=`566b54cbf173` trusted=`true` edited=`false` bytes=`169` lines=`4` body_included=`false` identifier_included=`false`\n- kind=`latest-assistant` source=`comment:4588965215` sha256_12=`1eb3886519bc` trusted=`true` edited=`false` bytes=`25` lines=`1` body_included=`false` identifier_included=`false`\n- kind=`latest-model-turn` source=`comment:4588965215` model=`openai/gpt-4.1-nano` prompt_context_sha256_12=`53aa781ecaef` context_documents=`16` selected_skills=`1` tool_outputs=`3` skills=`repo-reader` tools=`gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index` usage_present=`true` usage_total_tokens=`10515` body_included=`false` identifier_included=`false`\n\n### Latest Assistant Marker\n- model=`openai/gpt-4.1-nano` prompt_context_sha256_12=`53aa781ecaef` context_documents=`16` selected_skills=`1` tool_outputs=`3` skills=`repo-reader` tools=`gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index`\n\n### Resume Gates\n- continuation_gate=`pass`\n- issue_label_gate=`pass`\n- latest_user_gate=`pass`\n- latest_assistant_gate=`pass`\n- model_backed_gate=`pass`\n- prompt_provenance_gate=`pass`\n- reentry_gate=`issue-comment-action`\n- external_session_db_gate=`disabled`\n- raw_body_gate=`hashes-counts-and-marker-attributes-only`\n- mutation_gate=`disabled`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T01:49:48Z",
+      "updated_at": "2026-06-01T01:49:48Z"
     }
   ]
 }
