@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T23:08:19Z",
+  "generated_at": "2026-06-01T23:09:55Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 534,
+  "count": 535,
   "issues": [
     {
       "number": 3,
@@ -6733,6 +6733,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 621,
+      "title": "GitClaw channel digest: Record GitHub-native channel digest 20260601t230330z",
+      "path": "issues/000621.json",
+      "backup_generated_at": "2026-06-01T23:09:54Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
