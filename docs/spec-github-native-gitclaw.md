@@ -1734,6 +1734,7 @@ gitclaw skills sources search <query>
 gitclaw skills runtime
 gitclaw skills proposals [risk]
 gitclaw skills proposal-plan <name>
+@gitclaw /skills sources propose <name> --source <ref>
 @gitclaw /skills propose <name>
 gitclaw skills install-plan <target>
 gitclaw skills upgrade-plan <target>
@@ -1783,6 +1784,7 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills sources risk
 @gitclaw /skills sources info repo-reader
 @gitclaw /skills sources search repo-local
+@gitclaw /skills sources propose repo-reader --source github:owner/repo/path
 @gitclaw /skills runtime
 @gitclaw /skills requirements
 @gitclaw /skills metadata
@@ -2078,6 +2080,22 @@ OpenClaw/ClawHub-style updates: they report stale, unpinned, missing, remote,
 or risky pins as manual-review candidates, show source hash state and disabled
 registry/fetch/install/mutation gates, and never contact registries or mutate
 skills.
+
+When called as `@gitclaw /skills sources propose <name> --source <ref>`,
+GitClaw performs the issue-native source-pin proposal action. It opens or
+reuses a dedicated GitHub issue marked with
+`gitclaw:skill-source-proposal-issue`, labels it for normal GitClaw follow-up
+conversation, records the proposed source-pin path, proposed skill path,
+source kind, source-ref hash, source issue/comment identity, current source
+risk rollup, and approval/fetch/install gates, then posts a body-free receipt
+in the source conversation. Duplicate open source proposal issues are
+suppressed by hidden marker and proposal ID. The action never writes
+`.gitclaw/skill-sources`, never writes `.gitclaw/SKILLS`, never copies raw
+source refs or source request text into the proposal issue or receipt, never
+contacts registries, never fetches remote sources, never runs installers, and
+never calls a model. Reviewers continue on the proposal issue for a real
+GitHub Models discussion before drafting the source-pin YAML on a normal
+code-review branch.
 
 Skill source reports never contact ClawHub, Hermes Hub, skills.sh, GitHub, or
 well-known endpoints; never fetch remote sources; never run installers; never
@@ -8728,6 +8746,13 @@ examples/workflows/gitclaw.yml
   raw source/request leakage, and still runs a live GitHub Models follow-up
   proving repo-local skill selection, prompt-visible repository search tool
   usage, and usage telemetry after the deterministic issue action.
+- A `gh`-driven skills-source-propose E2E harness verifies
+  `@gitclaw /skills sources propose <name> --source <ref>` opens a body-free,
+  labeled GitHub source-pin proposal issue, hashes the source ref instead of
+  copying it, posts a source receipt, suppresses duplicate source proposal
+  requests, avoids raw source/request leakage, and then runs the live GitHub
+  Models follow-up on the proposal issue itself to prove selected skill
+  context, prompt-visible repository search tool usage, and usage telemetry.
 - A `gh`-driven skills-rehearse E2E harness verifies
   `@gitclaw /skills rehearse <name> --id <id>` opens a body-free GitHub
   rehearsal issue labeled for normal GitClaw conversation, posts a source

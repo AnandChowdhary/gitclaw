@@ -1273,6 +1273,32 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		status.SetDone()
 		return nil
 	}
+	if IsSkillSourceProposalIssueRequest(ev, cfg) {
+		proposalClient, ok := github.(SkillSourceProposalIssueGitHubClient)
+		if !ok {
+			return failStartedTurn(ctx, cfg, github, ev, status, "skill", fmt.Errorf("github client cannot create skill source proposal issues"))
+		}
+		req, err := BuildSkillSourceProposalIssueRequest(ev, cfg, repoContext)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "skill", fmt.Errorf("build skill source proposal issue: %w", err))
+		}
+		result, err := RunSkillSourceProposalIssue(ctx, cfg, proposalClient, req)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "skill", fmt.Errorf("run skill source proposal issue: %w", err))
+		}
+		body := RenderAssistantComment(Marker{
+			RunID:          envFirst("GITHUB_RUN_ID", "local"),
+			EventID:        eventID(ev),
+			Model:          "gitclaw/skills",
+			IdempotencyKey: key,
+			RunURL:         actionRunURL(ev),
+		}, RenderSkillSourceProposalIssueActionReport(ev, req, result))
+		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post skill source proposal issue comment: %w", err))
+		}
+		status.SetDone()
+		return nil
+	}
 	if IsSkillProposalIssueRequest(ev, cfg) {
 		proposalClient, ok := github.(SkillProposalIssueGitHubClient)
 		if !ok {
