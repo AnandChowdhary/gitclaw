@@ -1,6 +1,6 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-01T03:17:29Z`
+- generated_at: `2026-06-01T03:18:58Z`
 - issue_count: `438`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
@@ -442,4 +442,4 @@
 | #475 | @gitclaw /models catalog e2e 20260601T022109Z | `2026-06-01T02:23:52Z` | 3 | 4 | `issues/000475.json` |
 | #476 | @gitclaw /research catalog e2e 20260601T023857Z | `2026-06-01T02:41:32Z` | 3 | 4 | `issues/000476.json` |
 | #477 | @gitclaw /rollback diff HEAD~1 e2e 20260601T025736Z | `2026-06-01T03:00:12Z` | 3 | 4 | `issues/000477.json` |
-| #478 | @gitclaw /proactive schedule e2e 20260601T031609Z | `2026-06-01T03:17:27Z` | 1 | 2 | `issues/000478.json` |
+| #478 | @gitclaw /proactive schedule e2e 20260601T031609Z | `2026-06-01T03:18:57Z` | 3 | 4 | `issues/000478.json` |
