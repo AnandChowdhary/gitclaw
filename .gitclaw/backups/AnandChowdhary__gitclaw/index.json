@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T09:54:25Z",
+  "generated_at": "2026-06-01T10:11:10Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 462,
+  "count": 463,
   "issues": [
     {
       "number": 3,
@@ -5811,6 +5811,15 @@
       ],
       "comment_count": 3,
       "transcript_messages": 3
+    },
+    {
+      "number": 507,
+      "title": "@gitclaw /channels send --route e2e-slack-route --message-id slash-20260601T100942Z",
+      "path": "issues/000507.json",
+      "backup_generated_at": "2026-06-01T10:11:08Z",
+      "event_name": "issues",
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }
