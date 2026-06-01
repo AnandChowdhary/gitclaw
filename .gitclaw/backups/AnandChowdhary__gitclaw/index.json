@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T16:22:58Z",
+  "generated_at": "2026-06-01T16:24:39Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 496,
+  "count": 497,
   "issues": [
     {
       "number": 3,
@@ -6239,6 +6239,18 @@
       ],
       "comment_count": 3,
       "transcript_messages": 4
+    },
+    {
+      "number": 564,
+      "title": "GitClaw channel room: GitClaw durable room topic 20260601T161917Z",
+      "path": "issues/000564.json",
+      "backup_generated_at": "2026-06-01T16:24:38Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }

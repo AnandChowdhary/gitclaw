@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T16:24:38Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 564,
+    "title": "GitClaw channel room: GitClaw durable room topic 20260601T161917Z",
+    "body": "\u003c!-- gitclaw:channel-room room_id=\"room-20260601t161917z\" source_issue=\"563\" source_comment_id=\"0\" routes_sha256_12=\"9892046e64ef\" notes_sha256_12=\"0e7dfb51cee5\" --\u003e\nGitClaw channel room.\n\n- source_issue: `#563`\n- source_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/563`\n- room_id_sha256_12: `760e3ea4ec09`\n- room_mode: `durable-issue-channel`\n- routes_sha256_12: `9892046e64ef`\n- route_count: `2`\n- raw_route_names_included: `false`\n\n## Topic\n\nGitClaw durable room topic 20260601T161917Z\n\n## Notes\n\nVisible room notes token for provider queue inspection: NOECHO_CHANNEL_ROOM_NOTES_20260601T161917Z\nUse the room issue for the next model-backed conversation.\n\nKeep talking here from GitHub, or through a mirrored channel thread invited into this room. Tag `@gitclaw` in this issue when you want the model-backed assistant to help.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel room: GitClaw durable room topic 20260601T161917Z\n\n\u003c!-- gitclaw:channel-room room_id=\"room-20260601t161917z\" source_issue=\"563\" source_comment_id=\"0\" routes_sha256_12=\"9892046e64ef\" notes_sha256_12=\"0e7dfb51cee5\" --\u003e\nGitClaw channel room.\n\n- source_issue: `#563`\n- source_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/563`\n- room_id_sha256_12: `760e3ea4ec09`\n- room_mode: `durable-issue-channel`\n- routes_sha256_12: `9892046e64ef`\n- route_count: `2`\n- raw_route_names_included: `false`\n\n## Topic\n\nGitClaw durable room topic 20260601T161917Z\n\n## Notes\n\nVisible room notes token for provider queue inspection: NOECHO_CHANNEL_ROOM_NOTES_20260601T161917Z\nUse the room issue for the next model-backed conversation.\n\nKeep talking here from GitHub, or through a mirrored channel thread invited into this room. Tag `@gitclaw` in this issue when you want the model-backed assistant to help.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this room and use the repo-reader skill.\n\nSearch the repository for `channel room unique search fixture phrase`.\nThe matching repository search result line ends with an all-caps token after the arrow.\nThat token starts with `GITCLAW_CHANNEL_ROOM_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include route names, target issue numbers, message ids, account hashes, source issue title, room id, room topic, or notes token.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_ROOM_FOLLOWUP_20260601T161917Z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4594472993,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_ROOM_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4594480325,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4594472993,
+      "body": "@gitclaw Continue this room and use the repo-reader skill.\n\nSearch the repository for `channel room unique search fixture phrase`.\nThe matching repository search result line ends with an all-caps token after the arrow.\nThat token starts with `GITCLAW_CHANNEL_ROOM_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include route names, target issue numbers, message ids, account hashes, source issue title, room id, room topic, or notes token.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_ROOM_FOLLOWUP_20260601T161917Z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T16:23:11Z",
+      "updated_at": "2026-06-01T16:23:11Z"
+    },
+    {
+      "id": 4594480325,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26767559307\" event_id=\"comment-4594472993\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"28016f100b70327803ca95e23399c1ec\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26767559307\" prompt_context_sha256_12=\"9512c2c6845f\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10570\" usage_completion_tokens=\"10\" usage_total_tokens=\"10580\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_ROOM_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T16:24:12Z",
+      "updated_at": "2026-06-01T16:24:12Z"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-01T16:22:58Z`
-- issue_count: `496`
+- generated_at: `2026-06-01T16:24:39Z`
+- issue_count: `497`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -501,3 +501,4 @@
 | #561 | @gitclaw /tools rehearse search_files --id tools-rehearsal-20260601t160013z | `2026-06-01T16:03:31Z` | 3 | 4 | `issues/000561.json` |
 | #562 | GitClaw tool rehearsal: gitclaw.search_files (tools-rehearsal-20260601t160013z) | `2026-06-01T16:05:10Z` | 2 | 3 | `issues/000562.json` |
 | #563 | GitClaw channel room E2E 20260601T161917Z | `2026-06-01T16:22:57Z` | 3 | 4 | `issues/000563.json` |
+| #564 | GitClaw channel room: GitClaw durable room topic 20260601T161917Z | `2026-06-01T16:24:38Z` | 2 | 3 | `issues/000564.json` |
