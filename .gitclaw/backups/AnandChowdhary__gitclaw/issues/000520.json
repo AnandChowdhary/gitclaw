@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T11:56:55Z",
+  "generated_at": "2026-06-01T11:58:32Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 520,
     "title": "@gitclaw /tools request-run search_files --id e2e-tool-run-20260601t115539z",
@@ -10,7 +10,8 @@
     "author": "AnandChowdhary",
     "author_association": "OWNER",
     "labels": [
-      "gitclaw"
+      "gitclaw",
+      "gitclaw:done"
     ]
   },
   "transcript": [
@@ -31,6 +32,24 @@
       "CommentID": 4592342324,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /tools request-run search_files --id e2e-tool-run-20260601t115539z\n\nRepeat the same tool-run request.\nDo not include this hidden duplicate token: NOECHO_TOOLS_RUN_REQUEST_DUPLICATE_20260601t115539z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4592346796,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Tool Run Request Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#520`\n- source_comment_id: `4592346796`\n- requested_tool_command: `/tools request-run`\n- tool_run_request_status: `existing`\n- tool_run_request_issue: `#521`\n- tool_run_request_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/521`\n- tool_run_request_issue_created: `false`\n- duplicate_suppressed: `true`\n- tool_run_request_id: `e2e-tool-run-20260601t115539z`\n- requested_tool_sha256_12: `25014698ad95`\n- requested_tool_terms: `1`\n- normalized_tool: `gitclaw.search_files`\n- matched_tool: `gitclaw.search_files`\n- matched_tools: `1`\n- available_tools: `5`\n- active_outputs_for_tool: `1`\n- tool_enabled: `true`\n- disabled_by_config: `false`\n- blocked_by_allowlist: `false`\n- tool_mode: `read-only`\n- tool_trigger_sha256_12: `2eaf037f964c`\n- mutating_contract: `false`\n- approval_required: `false`\n- run_allowed_now: `true`\n- review_decision: `review_required_read_only_tool`\n- tool_validation_status: `ok`\n- tool_validation_errors: `0`\n- tool_validation_warnings: `0`\n- request_store: `github-issue-to-reviewed-tool-run`\n- review_required: `true`\n- source_sha256_12: `43f09e04c486`\n- source_bytes: `206`\n- source_lines: `4`\n- model_call_performed: `false`\n- tool_execution_performed: `false`\n- raw_source_body_included: `false`\n- raw_tool_name_included: `false`\n- raw_tool_inputs_included: `false`\n- raw_tool_outputs_included: `false`\n- repository_mutation_performed: `false`\n- llm_e2e_required_after_tool_run_request_issue_change: `true`\n- issue_title_sha256_12: `fd3b5e18926e`\n\nGitClaw opened or reused a GitHub issue for a reviewed tool-run request. The request is not execution: no tool is called, no model is called, no raw source text is copied, and no repository mutation is performed.\n\n### Review Path\n- review request issue: `#521`\n- if accepted, continue in a normal model-backed issue turn or future approved workflow\n- run `gitclaw tools verify`, `gitclaw tools risk`, and a live GitHub Models conversation E2E after changing tool behavior",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4592353386,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -41,6 +60,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T11:56:27Z",
       "updated_at": "2026-06-01T11:56:27Z"
+    },
+    {
+      "id": 4592346796,
+      "body": "@gitclaw /tools request-run search_files --id e2e-tool-run-20260601t115539z\n\nRepeat the same tool-run request.\nDo not include this hidden duplicate token: NOECHO_TOOLS_RUN_REQUEST_DUPLICATE_20260601t115539z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T11:57:07Z",
+      "updated_at": "2026-06-01T11:57:07Z"
+    },
+    {
+      "id": 4592353386,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26753423029\" event_id=\"comment-4592346796\" model=\"gitclaw/tools\" idempotency_key=\"b5817a768b4dc35d4a71b9aec02e06ea\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26753423029\" --\u003e\n## GitClaw Tool Run Request Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#520`\n- source_comment_id: `4592346796`\n- requested_tool_command: `/tools request-run`\n- tool_run_request_status: `existing`\n- tool_run_request_issue: `#521`\n- tool_run_request_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/521`\n- tool_run_request_issue_created: `false`\n- duplicate_suppressed: `true`\n- tool_run_request_id: `e2e-tool-run-20260601t115539z`\n- requested_tool_sha256_12: `25014698ad95`\n- requested_tool_terms: `1`\n- normalized_tool: `gitclaw.search_files`\n- matched_tool: `gitclaw.search_files`\n- matched_tools: `1`\n- available_tools: `5`\n- active_outputs_for_tool: `1`\n- tool_enabled: `true`\n- disabled_by_config: `false`\n- blocked_by_allowlist: `false`\n- tool_mode: `read-only`\n- tool_trigger_sha256_12: `2eaf037f964c`\n- mutating_contract: `false`\n- approval_required: `false`\n- run_allowed_now: `true`\n- review_decision: `review_required_read_only_tool`\n- tool_validation_status: `ok`\n- tool_validation_errors: `0`\n- tool_validation_warnings: `0`\n- request_store: `github-issue-to-reviewed-tool-run`\n- review_required: `true`\n- source_sha256_12: `43f09e04c486`\n- source_bytes: `206`\n- source_lines: `4`\n- model_call_performed: `false`\n- tool_execution_performed: `false`\n- raw_source_body_included: `false`\n- raw_tool_name_included: `false`\n- raw_tool_inputs_included: `false`\n- raw_tool_outputs_included: `false`\n- repository_mutation_performed: `false`\n- llm_e2e_required_after_tool_run_request_issue_change: `true`\n- issue_title_sha256_12: `fd3b5e18926e`\n\nGitClaw opened or reused a GitHub issue for a reviewed tool-run request. The request is not execution: no tool is called, no model is called, no raw source text is copied, and no repository mutation is performed.\n\n### Review Path\n- review request issue: `#521`\n- if accepted, continue in a normal model-backed issue turn or future approved workflow\n- run `gitclaw tools verify`, `gitclaw tools risk`, and a live GitHub Models conversation E2E after changing tool behavior",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T11:58:03Z",
+      "updated_at": "2026-06-01T11:58:03Z"
     }
   ]
 }
