@@ -261,7 +261,9 @@ gh issue comment "$rehearsal_issue_number" \
 
 Search the repository for \`${search_phrase}\`.
 The matching repository search result line has the form \`${search_phrase} => <token>\`.
-Reply with only the token after the arrow from the matching gitclaw.search_files tool output line.
+The exact answer starts with \`GITCLAW_MEMORY_REHEARSAL_\`.
+Reply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.
+Do not reply with a placeholder like \`<token>\` or the word \`token\`.
 Do not include the source issue number, rehearsal issue number, memory rehearsal id, source body, target memory body, or hidden sentinels.
 Do not include this hidden follow-up token: ${followup_hidden_token}
 Keep the answer under 30 words." >/dev/null
