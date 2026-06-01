@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T02:05:35Z",
+  "generated_at": "2026-06-01T02:06:49Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 474,
     "title": "@gitclaw /prompt context e2e 20260601T020428Z",
@@ -10,7 +10,8 @@
     "author": "AnandChowdhary",
     "author_association": "OWNER",
     "labels": [
-      "gitclaw"
+      "gitclaw",
+      "gitclaw:done"
     ]
   },
   "transcript": [
@@ -31,6 +32,24 @@
       "CommentID": 4589020839,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "Use the repo-reader skill and search the repository for `prompt context unique search fixture phrase`.\n\nReply with only the exact GITCLAW_PROMPT_CONTEXT token from the matching repository search result line.\nDo not include this hidden follow-up token: GITCLAW_PROMPT_CONTEXT_FOLLOWUP_HIDDEN_20260601T020428Z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4589022501,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_PROMPT_CONTEXT_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4589025041,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -41,6 +60,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T02:05:13Z",
       "updated_at": "2026-06-01T02:05:13Z"
+    },
+    {
+      "id": 4589022501,
+      "body": "Use the repo-reader skill and search the repository for `prompt context unique search fixture phrase`.\n\nReply with only the exact GITCLAW_PROMPT_CONTEXT token from the matching repository search result line.\nDo not include this hidden follow-up token: GITCLAW_PROMPT_CONTEXT_FOLLOWUP_HIDDEN_20260601T020428Z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T02:05:43Z",
+      "updated_at": "2026-06-01T02:05:43Z"
+    },
+    {
+      "id": 4589025041,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26731414687\" event_id=\"comment-4589022501\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"e3b784b8b14de3eaa9be0a06efc45843\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26731414687\" prompt_context_sha256_12=\"2b97f23167bf\" context_documents=\"17\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"12370\" usage_completion_tokens=\"11\" usage_total_tokens=\"12381\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_PROMPT_CONTEXT_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T02:06:28Z",
+      "updated_at": "2026-06-01T02:06:28Z"
     }
   ]
 }
