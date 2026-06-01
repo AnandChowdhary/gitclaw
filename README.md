@@ -677,6 +677,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels reply --message-id <id>
 @gitclaw /channels task --task-id <id> --message-id <id>
 @gitclaw /channels clip --clip-id <id> --message-id <id>
+@gitclaw /channels decision --decision-id <id> --message-id <id>
 @gitclaw /channels remind --reminder-id <id> --message-id <id> --at <time>
 @gitclaw /channels done --message-id <id>
 gitclaw proactive list
@@ -913,14 +914,20 @@ clip issue without treating it as work. The clip issue holds the readable title
 and notes, a provider-facing clip link is queued back to the Slack/Telegram
 thread, and the source receipt stays body-free with only hashes, duplicate
 state, notification metadata, and delivery gates.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels decision
+--decision-id <id> --message-id <id>` records a channel decision as a durable
+GitHub issue. The decision issue holds the readable decision and rationale,
+queues a provider-facing decision link back to the Slack/Telegram thread, and
+keeps the source receipt body-free with hashes, duplicate state, notification
+metadata, and delivery gates.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels remind
 --reminder-id <id> --message-id <id> --at <RFC3339-or-date>` creates or reuses
 a normal GitHub reminder issue with a `not_before` due gate, queues a
 provider-facing reminder link back to the mirrored thread, and keeps the source
 receipt body-free. Scheduled GitHub Actions can later use the reminder issue as
 the canonical wake-up lane without a socket or webhook.
-Inside a channel-created task, clip, or reminder issue, `@gitclaw /channels
-done --message-id <id>` closes the GitHub artifact issue and queues a
+Inside a channel-created task, clip, decision, or reminder issue,
+`@gitclaw /channels done --message-id <id>` closes the GitHub artifact issue and queues a
 provider-facing acknowledgement back to the original mirrored Slack/Telegram
 thread. The artifact receipt reports hashes, close status, notification queue
 metadata, and delivery gates without printing artifact IDs, thread IDs,
@@ -1167,6 +1174,7 @@ scripts/e2e/github-channel-pin-slash.sh
 scripts/e2e/github-channel-reply-slash.sh
 scripts/e2e/github-channel-task-slash.sh
 scripts/e2e/github-channel-clip-slash.sh
+scripts/e2e/github-channel-decision-slash.sh
 scripts/e2e/github-channel-reminder-slash.sh
 scripts/e2e/github-channel-done-slash.sh
 scripts/e2e/github-channel-delivery-workflow.sh
@@ -1439,6 +1447,13 @@ to the mirrored thread, checks duplicate clip and notification suppression,
 exposes the clip-link notification through metadata-only outbox, and then
 continues on the clip issue with a real GitHub Models repo-reader/search
 follow-up.
+The channel-decision slash harness turns the operator console into a decision
+log: a channel-ingested issue receives `@gitclaw /channels decision`, creates
+or reuses a durable GitHub decision issue, queues a provider-facing decision
+link back to the mirrored thread, checks duplicate decision and notification
+suppression, exposes the decision-link notification through metadata-only
+outbox, and then continues on the decision issue with a real GitHub Models
+repo-reader/search follow-up.
 The channel-reminder slash harness turns the operator console into a scheduled
 nudge surface: a channel-ingested issue receives `@gitclaw /channels remind`,
 creates or reuses a GitHub reminder issue with a normalized `not_before` gate,

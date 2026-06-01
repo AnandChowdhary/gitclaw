@@ -5369,6 +5369,7 @@ accepts a structured reaction form:
 @gitclaw /channels pin --message-id <provider-message-id>
 @gitclaw /channels task --task-id <stable-task-id> --message-id <provider-message-id>
 @gitclaw /channels clip --clip-id <stable-clip-id> --message-id <provider-message-id>
+@gitclaw /channels decision --decision-id <stable-decision-id> --message-id <provider-message-id>
 @gitclaw /channels remind --reminder-id <stable-reminder-id> --message-id <provider-message-id> --at <RFC3339-or-date>
 @gitclaw /channels done --message-id <stable-outbound-id>
 ```
@@ -5495,6 +5496,36 @@ creates the clip, validates the metadata-only clip-link outbox, checks duplicate
 suppression, and then continues on the clip issue with a normal GitHub Models
 repo-reader/search follow-up.
 
+The same channel-thread issue can also record a durable decision:
+
+```text
+@gitclaw /channels decision --decision-id <stable-decision-id> --message-id <provider-message-id>
+Decision: short decision statement
+Rationale:
+optional human-readable rationale
+```
+
+`/channels decision`, `/channels decisions`, `/channels decide`,
+`/channels record-decision`, and `/channels capture-decision` infer the current
+channel and thread id from the issue marker when no explicit route/channel/
+thread target is provided. They create or reuse one open GitHub issue carrying
+a hidden `gitclaw:channel-decision` marker for the stable decision id, label it
+with `gitclaw` so normal conversation can continue there, and queue a
+provider-facing decision link back to the mirrored channel thread. The decision
+issue contains the human-readable decision and rationale because it is the
+durable decision log; the source receipt remains body-free, reporting only
+decision/thread/message/text/rationale hashes, duplicate status, notification
+queue metadata, and delivery gates. It does not call a model, call provider
+APIs, print raw decision ids, print raw thread ids, print raw source or
+notification message ids, print channel message bodies, or print raw decision
+text/rationale in the source receipt. Duplicates are suppressed first by
+`decision_id` for the GitHub decision issue and then by
+`channel + notify_message_id` for the provider-facing decision link. Changes to
+this surface require a live E2E that records the decision, validates the
+metadata-only decision-link outbox, checks duplicate suppression, and then
+continues on the decision issue with a normal GitHub Models repo-reader/search
+follow-up.
+
 The same channel-thread issue can also turn a mirrored provider message into a
 GitHub-native reminder:
 
@@ -5529,8 +5560,8 @@ validates the metadata-only reminder-link outbox, checks duplicate suppression,
 and then continues on the reminder issue with a normal GitHub Models
 repo-reader/search follow-up.
 
-The channel-created task, clip, and reminder issues also accept a completion
-form:
+The channel-created task, clip, decision, and reminder issues also accept a
+completion form:
 
 ```text
 @gitclaw /channels done --message-id <stable-outbound-id>
@@ -8262,6 +8293,16 @@ examples/workflows/gitclaw.yml
   normal GitHub Models issue-comment follow-up that must select `repo-reader`,
   expose `gitclaw.search_files`, recover the channel-clip fixture token, and
   avoid hidden channel, account, provider, message, and clip sentinels.
+- A `gh`-driven channel-decision-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels decision --decision-id ... --message-id ...` on that
+  mirrored thread, verifies GitHub decision issue creation, body-free source
+  receipt metadata, provider-facing decision-link queueing, duplicate decision
+  and notification suppression, and metadata-only outbox discovery. The
+  decision issue then gets a normal GitHub Models issue-comment follow-up that
+  must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-decision fixture token, and avoid hidden channel, account, provider,
+  message, and decision sentinels.
 - A `gh`-driven channel-reminder-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels remind --reminder-id ... --message-id ... --at ...` on

@@ -181,6 +181,27 @@ func TestHandleChannelDoneActionClosesArtifactAndQueuesAckWithoutLLM(t *testing.
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsDecisionIssues(t *testing.T) {
+	body := RenderChannelDecisionIssueBody(ChannelDecisionOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		DecisionID:        "decision-done-1",
+		Decision:          "Use GitHub issues as decision logs",
+		Rationale:         "Durable and reviewable.",
+		SourceIssueNumber: 42,
+		SourceCommentID:   4200,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "decision" || ref.ID != "decision-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 42 || ref.SourceCommentID != 4200 {
+		t.Fatalf("unexpected decision artifact ref: %#v", ref)
+	}
+}
+
 func channelDoneQuoteJSON(t *testing.T, value string) string {
 	t.Helper()
 	quoted, err := json.Marshal(value)

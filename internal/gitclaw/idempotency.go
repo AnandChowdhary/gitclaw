@@ -23,6 +23,7 @@ var channelPollMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-poll\s
 var channelRollcallMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-rollcall\s+([^>]*)-->`)
 var channelTaskMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-task\s+([^>]*)-->`)
 var channelClipMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-clip\s+([^>]*)-->`)
+var channelDecisionMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-decision\s+([^>]*)-->`)
 var channelReminderMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-reminder\s+([^>]*)-->`)
 var channelStateMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-state\s+([^>]*)-->`)
 var channelStateUpdateMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-state-update\s+([^>]*)-->`)
@@ -194,6 +195,10 @@ func HasChannelTaskMarker(body string) bool {
 
 func HasChannelClipMarker(body string) bool {
 	return channelClipMarkerPattern.MatchString(body)
+}
+
+func HasChannelDecisionMarker(body string) bool {
+	return channelDecisionMarkerPattern.MatchString(body)
 }
 
 func HasChannelReminderMarker(body string) bool {

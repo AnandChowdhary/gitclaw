@@ -107,6 +107,7 @@ channel pin unique search fixture phrase => GITCLAW_CHANNEL_PIN_CONTEXT_V1
 channel reply slash unique search fixture phrase => GITCLAW_CHANNEL_REPLY_SLASH_CONTEXT_V1
 channel task unique search fixture phrase => GITCLAW_CHANNEL_TASK_CONTEXT_V1
 channel clip unique search fixture phrase => GITCLAW_CHANNEL_CLIP_CONTEXT_V1
+channel decision unique search fixture phrase => GITCLAW_CHANNEL_DECISION_CONTEXT_V1
 channel reminder unique search fixture phrase => GITCLAW_CHANNEL_REMINDER_CONTEXT_V1
 channel status unique search fixture phrase => GITCLAW_CHANNEL_STATUS_CONTEXT_V1
 channel edit unique search fixture phrase => GITCLAW_CHANNEL_EDIT_CONTEXT_V1

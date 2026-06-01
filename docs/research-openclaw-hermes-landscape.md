@@ -117,6 +117,22 @@ commit-subject hashes are useful operator signals, while raw profile bodies,
 commit subjects, author identities, session payloads, backup payloads, and
 credentials should stay out of issue-visible output.
 
+2026-06-02 channel-decision follow-up: current OpenClaw channel docs emphasize
+that chat surfaces are runtime accounts behind one Gateway, and the channel CLI
+separates socket/provider health from stored sessions. Hermes' cron docs point
+to fresh agent sessions that can target configured messaging channels without
+carrying the whole CLI tool surface. GitClaw's serverless cut should keep the
+same workflow value without an always-on gateway: a mirrored Slack/Telegram
+thread can record a durable decision as a normal GitHub issue, queue one
+provider-facing acknowledgement through `channel-outbox`, and then continue the
+decision issue with a real GitHub Models turn. The source receipt should remain
+body-free, while the decision issue itself intentionally stores the readable
+decision and rationale as reviewed GitHub state. Sources:
+OpenClaw docs (`https://docs.openclaw.ai/`), OpenClaw channel CLI docs
+(`https://docs.openclaw.ai/cli/channels`), OpenClaw chat channel docs
+(`https://docs.openclaw.ai/channels/index`), and Hermes cron docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/cron/`).
+
 2026-05-30 skill-risk follow-up: current OpenClaw plugin-hook docs make prompt,
 model, tool-call, and heartbeat extension points explicit, while Hermes'
 toolsets and MCP docs emphasize filtering exposed capabilities per task. Recent
