@@ -1,15 +1,18 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T15:00:24Z",
+  "generated_at": "2026-06-01T15:02:16Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 551,
     "title": "@gitclaw /memory rehearse --target long-term --id memory-rehearsal-20260601t145851z",
     "body": "GitClaw live memory rehearsal issue E2E.\n\nCreate a current-memory conversation lane without copying this raw source request.\nDo not include this hidden source token: NOECHO_MEMORY_REHEARSAL_SOURCE_20260601t145851z",
     "author": "AnandChowdhary",
     "author_association": "OWNER",
-    "labels": null
+    "labels": [
+      "gitclaw:done",
+      "gitclaw:write-requested"
+    ]
   },
   "transcript": [
     {
@@ -29,6 +32,24 @@
       "CommentID": 4593810866,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /memory rehearse --target long-term --id memory-rehearsal-20260601t145851z\n\nRepeat the same memory rehearsal.\nDo not include this hidden duplicate token: NOECHO_MEMORY_REHEARSAL_DUPLICATE_20260601t145851z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4593817723,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Memory Rehearsal Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#551`\n- source_comment_id: `4593817723`\n- requested_memory_command: `/memory rehearse`\n- memory_rehearsal_status: `existing`\n- rehearsal_issue: `#552`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/552`\n- rehearsal_issue_created: `false`\n- duplicate_suppressed: `true`\n- rehearsal_id_sha256_12: `e82cd2d40545`\n- normalized_target_kind: `long-term`\n- normalized_target_path: `.gitclaw/MEMORY.md`\n- target_present: `true`\n- target_sha256_12: `9179d59e37bc`\n- target_bytes: `11916`\n- target_lines: `175`\n- memory_budget_bytes: `12000`\n- memory_budget_remaining_bytes: `84`\n- dated_memory_notes: `1`\n- latest_memory_note: `.gitclaw/memory/2026-05-29.md`\n- memory_validation_status: `ok`\n- memory_validation_errors: `0`\n- memory_validation_warnings: `0`\n- rehearsal_mode: `github-issue-conversation`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- memory_write_allowed: `false`\n- candidate_memory_generation_allowed: `false`\n- memory_file_written: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `2049f885d59d`\n- source_bytes: `213`\n- source_lines: `4`\n- raw_source_body_included: `false`\n- raw_target_memory_included: `false`\n- raw_candidate_memory_included: `false`\n- llm_e2e_required_after_memory_rehearsal_issue_change: `true`\n- issue_title_sha256_12: `f46d47214ef8`\n\nGitClaw opened or reused a GitHub issue for rehearsing the current memory context in a normal conversation. The action does not generate candidate memory, write `.gitclaw/` files, mutate the repository, or call a model; continue on the rehearsal issue to exercise current memory behavior with GitHub Models.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#552`\n- ask a normal `@gitclaw` follow-up that relies on `.gitclaw/MEMORY.md` without requesting a memory edit\n- verify the follow-up assistant marker includes prompt context, selected skill, prompt-visible tools, and usage telemetry",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4593827497,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -39,6 +60,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T14:59:53Z",
       "updated_at": "2026-06-01T14:59:53Z"
+    },
+    {
+      "id": 4593817723,
+      "body": "@gitclaw /memory rehearse --target long-term --id memory-rehearsal-20260601t145851z\n\nRepeat the same memory rehearsal.\nDo not include this hidden duplicate token: NOECHO_MEMORY_REHEARSAL_DUPLICATE_20260601t145851z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T15:00:38Z",
+      "updated_at": "2026-06-01T15:00:38Z"
+    },
+    {
+      "id": 4593827497,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26763093867\" event_id=\"comment-4593817723\" model=\"gitclaw/memory\" idempotency_key=\"e39b15eb2fbdba42f255a9834d778ca4\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26763093867\" --\u003e\n## GitClaw Memory Rehearsal Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#551`\n- source_comment_id: `4593817723`\n- requested_memory_command: `/memory rehearse`\n- memory_rehearsal_status: `existing`\n- rehearsal_issue: `#552`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/552`\n- rehearsal_issue_created: `false`\n- duplicate_suppressed: `true`\n- rehearsal_id_sha256_12: `e82cd2d40545`\n- normalized_target_kind: `long-term`\n- normalized_target_path: `.gitclaw/MEMORY.md`\n- target_present: `true`\n- target_sha256_12: `9179d59e37bc`\n- target_bytes: `11916`\n- target_lines: `175`\n- memory_budget_bytes: `12000`\n- memory_budget_remaining_bytes: `84`\n- dated_memory_notes: `1`\n- latest_memory_note: `.gitclaw/memory/2026-05-29.md`\n- memory_validation_status: `ok`\n- memory_validation_errors: `0`\n- memory_validation_warnings: `0`\n- rehearsal_mode: `github-issue-conversation`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- memory_write_allowed: `false`\n- candidate_memory_generation_allowed: `false`\n- memory_file_written: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `2049f885d59d`\n- source_bytes: `213`\n- source_lines: `4`\n- raw_source_body_included: `false`\n- raw_target_memory_included: `false`\n- raw_candidate_memory_included: `false`\n- llm_e2e_required_after_memory_rehearsal_issue_change: `true`\n- issue_title_sha256_12: `f46d47214ef8`\n\nGitClaw opened or reused a GitHub issue for rehearsing the current memory context in a normal conversation. The action does not generate candidate memory, write `.gitclaw/` files, mutate the repository, or call a model; continue on the rehearsal issue to exercise current memory behavior with GitHub Models.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#552`\n- ask a normal `@gitclaw` follow-up that relies on `.gitclaw/MEMORY.md` without requesting a memory edit\n- verify the follow-up assistant marker includes prompt context, selected skill, prompt-visible tools, and usage telemetry",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T15:01:46Z",
+      "updated_at": "2026-06-01T15:01:46Z"
     }
   ]
 }
