@@ -1,15 +1,18 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T13:25:41Z",
+  "generated_at": "2026-06-01T13:27:21Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 538,
     "title": "GitClaw skills rehearsal E2E 20260601t132414z",
     "body": "@gitclaw /skills rehearse repo-reader --id rehearsal-20260601t132414z\n\nCreate a live rehearsal lane for this reviewed skill.\nDo not include this hidden source token: NOECHO_SKILL_REHEARSAL_SOURCE_20260601t132414z",
     "author": "AnandChowdhary",
     "author_association": "OWNER",
-    "labels": null
+    "labels": [
+      "gitclaw:done",
+      "gitclaw:write-requested"
+    ]
   },
   "transcript": [
     {
@@ -29,6 +32,24 @@
       "CommentID": 4593005760,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /skills rehearse repo-reader --id rehearsal-20260601t132414z\n\nRepeat the same rehearsal.\nDo not include this hidden duplicate token: NOECHO_SKILL_REHEARSAL_DUPLICATE_20260601t132414z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4593010441,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Skill Rehearsal Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#538`\n- source_comment_id: `4593010441`\n- requested_skill_command: `/skills rehearse`\n- skill_rehearsal_status: `existing`\n- rehearsal_issue: `#539`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/539`\n- rehearsal_issue_created: `false`\n- duplicate_suppressed: `true`\n- rehearsal_id_sha256_12: `337c65b6f4b4`\n- requested_skill: `repo-reader`\n- matched_skills: `1`\n- available_skills: `1`\n- enabled_matches: `1`\n- disabled_matches: `0`\n- allowlist_blocked_matches: `0`\n- missing_env: `0`\n- missing_bins: `0`\n- selected_matches_this_turn: `1`\n- skill_validation_status: `ok`\n- skill_validation_errors: `0`\n- skill_validation_warnings: `0`\n- rehearsal_mode: `github-issue-conversation`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- skill_install_allowed: `false`\n- skill_update_allowed: `false`\n- active_skill_write_performed: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `3175669e1cf9`\n- source_bytes: `191`\n- source_lines: `4`\n- raw_source_body_included: `false`\n- raw_skill_body_included: `false`\n- llm_e2e_required_after_skill_rehearsal_issue_change: `true`\n- issue_title_sha256_12: `b9739c057d18`\n\nGitClaw opened or reused a GitHub issue for trying a reviewed skill in a normal conversation. The action does not install skills, edit `SKILL.md`, fetch registries, or call a model; continue on the rehearsal issue to exercise the selected skill with GitHub Models.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#539`\n- ask a normal `@gitclaw` follow-up that mentions `repo-reader` or relies on the rehearsal issue body\n- verify the follow-up assistant marker includes prompt context, selected skill, prompt-visible tools, and usage telemetry",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4593018544,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -39,6 +60,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T13:25:16Z",
       "updated_at": "2026-06-01T13:25:16Z"
+    },
+    {
+      "id": 4593010441,
+      "body": "@gitclaw /skills rehearse repo-reader --id rehearsal-20260601t132414z\n\nRepeat the same rehearsal.\nDo not include this hidden duplicate token: NOECHO_SKILL_REHEARSAL_DUPLICATE_20260601t132414z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T13:25:54Z",
+      "updated_at": "2026-06-01T13:25:54Z"
+    },
+    {
+      "id": 4593018544,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26757784990\" event_id=\"comment-4593010441\" model=\"gitclaw/skills\" idempotency_key=\"076c980940fe1aa63b242c04182df3ce\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26757784990\" --\u003e\n## GitClaw Skill Rehearsal Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#538`\n- source_comment_id: `4593010441`\n- requested_skill_command: `/skills rehearse`\n- skill_rehearsal_status: `existing`\n- rehearsal_issue: `#539`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/539`\n- rehearsal_issue_created: `false`\n- duplicate_suppressed: `true`\n- rehearsal_id_sha256_12: `337c65b6f4b4`\n- requested_skill: `repo-reader`\n- matched_skills: `1`\n- available_skills: `1`\n- enabled_matches: `1`\n- disabled_matches: `0`\n- allowlist_blocked_matches: `0`\n- missing_env: `0`\n- missing_bins: `0`\n- selected_matches_this_turn: `1`\n- skill_validation_status: `ok`\n- skill_validation_errors: `0`\n- skill_validation_warnings: `0`\n- rehearsal_mode: `github-issue-conversation`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- skill_install_allowed: `false`\n- skill_update_allowed: `false`\n- active_skill_write_performed: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `3175669e1cf9`\n- source_bytes: `191`\n- source_lines: `4`\n- raw_source_body_included: `false`\n- raw_skill_body_included: `false`\n- llm_e2e_required_after_skill_rehearsal_issue_change: `true`\n- issue_title_sha256_12: `b9739c057d18`\n\nGitClaw opened or reused a GitHub issue for trying a reviewed skill in a normal conversation. The action does not install skills, edit `SKILL.md`, fetch registries, or call a model; continue on the rehearsal issue to exercise the selected skill with GitHub Models.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#539`\n- ask a normal `@gitclaw` follow-up that mentions `repo-reader` or relies on the rehearsal issue body\n- verify the follow-up assistant marker includes prompt context, selected skill, prompt-visible tools, and usage telemetry",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T13:26:55Z",
+      "updated_at": "2026-06-01T13:26:55Z"
     }
   ]
 }
