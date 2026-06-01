@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T01:01:15Z",
+  "generated_at": "2026-06-01T01:02:43Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 469,
     "title": "@gitclaw session trajectory e2e 20260601T010003Z",
@@ -10,7 +10,8 @@
     "author": "AnandChowdhary",
     "author_association": "OWNER",
     "labels": [
-      "gitclaw"
+      "gitclaw",
+      "gitclaw:done"
     ]
   },
   "transcript": [
@@ -31,6 +32,24 @@
       "CommentID": 4588814742,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /session trajectory\n\nPlease export the body-free assistant-turn trajectory manifest.\nHidden comment token: GITCLAW_SESSION_TRAJECTORY_COMMENT_20260601T010003Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4588816854,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Session Trajectory Report\n\nGenerated without a model call.\n\n- scope: `issue-thread`\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#469`\n- event_kind: `issue_comment`\n- session_trajectory_status: `ok`\n- trajectory_scope: `body-free-assistant-turn-manifest`\n- export_format: `gitclaw.session-trajectory.v1`\n- session_store: `github-issue-thread`\n- raw_comments: `2`\n- transcript_messages: `3`\n- user_messages: `2`\n- assistant_messages: `1`\n- assistant_turn_comments: `1`\n- trajectory_turns: `1`\n- model_backed_assistant_turns: `1`\n- deterministic_assistant_turns: `0`\n- model_names: `openai/gpt-4.1-nano`\n- prompt_visible_skill_names: `repo-reader`\n- prompt_visible_tool_names: `gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files`\n- unique_prompt_context_hashes: `1`\n- assistant_turns_with_prompt_provenance: `1`\n- assistant_turns_missing_prompt_provenance: `0`\n- run_metadata_turns: `1`\n- unique_run_id_hashes: `1`\n- context_documents_total: `16`\n- selected_skills_total: `1`\n- tool_outputs_total: `3`\n- usage_bearing_assistant_turns: `1`\n- usage_prompt_tokens: `10512`\n- usage_completion_tokens: `9`\n- usage_total_tokens: `10521`\n- usage_cache_read_tokens: `0`\n- usage_cache_write_tokens: `0`\n- raw_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_replies_included: `false`\n- raw_prompts_included: `false`\n- raw_provider_responses_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_search_queries_included: `false`\n- repository_mutation_allowed: `false`\n- llm_e2e_required_after_session_trajectory_change: `true`\n\nThis OpenClaw trajectory-bundle and Hermes-session inspired report exports a body-free manifest of assistant turns. It records marker metadata, run/idempotency hashes, prompt-context hashes, model names, prompt-visible skills/tools, and usage counters; raw issue bodies, comment bodies, assistant replies, prompts, provider responses, search queries, and tool outputs are not included.\n\n### Trajectory Manifest\n- turn=`01` source=`comment:4588814742` model=`openai/gpt-4.1-nano` deterministic=`false` run_id_sha256_12=`eca13b4bb852` event_id_sha256_12=`975aef304c40` idempotency_key_sha256_12=`4d2b37b80e5f` run_url_sha256_12=`e33e5a135fcc` prompt_context_sha256_12=`93c739f84f94` context_documents=`16` selected_skills=`1` tool_outputs=`3` skills=`repo-reader` tools=`gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index` usage_present=`true` usage_prompt_tokens=`10512` usage_completion_tokens=`9` usage_total_tokens=`10521` usage_cache_read_tokens=`0` usage_cache_write_tokens=`0` assistant_comment_sha256_12=`957af22626c0`\n\n### Trajectory Gates\n- prompt_provenance_gate=`pass`\n- model_backed_gate=`pass`\n- run_metadata_gate=`pass`\n- usage_telemetry_gate=`pass`\n- raw_body_gate=`hashes-and-marker-attributes-only`\n- raw_provider_response_gate=`disabled`\n- mutation_gate=`disabled`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4588819371,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -41,6 +60,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T01:00:50Z",
       "updated_at": "2026-06-01T01:00:50Z"
+    },
+    {
+      "id": 4588816854,
+      "body": "@gitclaw /session trajectory\n\nPlease export the body-free assistant-turn trajectory manifest.\nHidden comment token: GITCLAW_SESSION_TRAJECTORY_COMMENT_20260601T010003Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T01:01:30Z",
+      "updated_at": "2026-06-01T01:01:30Z"
+    },
+    {
+      "id": 4588819371,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26729766537\" event_id=\"comment-4588816854\" model=\"gitclaw/session\" idempotency_key=\"697da7df96e861cdbd5db1a975d0b68c\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26729766537\" --\u003e\n## GitClaw Session Trajectory Report\n\nGenerated without a model call.\n\n- scope: `issue-thread`\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#469`\n- event_kind: `issue_comment`\n- session_trajectory_status: `ok`\n- trajectory_scope: `body-free-assistant-turn-manifest`\n- export_format: `gitclaw.session-trajectory.v1`\n- session_store: `github-issue-thread`\n- raw_comments: `2`\n- transcript_messages: `3`\n- user_messages: `2`\n- assistant_messages: `1`\n- assistant_turn_comments: `1`\n- trajectory_turns: `1`\n- model_backed_assistant_turns: `1`\n- deterministic_assistant_turns: `0`\n- model_names: `openai/gpt-4.1-nano`\n- prompt_visible_skill_names: `repo-reader`\n- prompt_visible_tool_names: `gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files`\n- unique_prompt_context_hashes: `1`\n- assistant_turns_with_prompt_provenance: `1`\n- assistant_turns_missing_prompt_provenance: `0`\n- run_metadata_turns: `1`\n- unique_run_id_hashes: `1`\n- context_documents_total: `16`\n- selected_skills_total: `1`\n- tool_outputs_total: `3`\n- usage_bearing_assistant_turns: `1`\n- usage_prompt_tokens: `10512`\n- usage_completion_tokens: `9`\n- usage_total_tokens: `10521`\n- usage_cache_read_tokens: `0`\n- usage_cache_write_tokens: `0`\n- raw_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_replies_included: `false`\n- raw_prompts_included: `false`\n- raw_provider_responses_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_search_queries_included: `false`\n- repository_mutation_allowed: `false`\n- llm_e2e_required_after_session_trajectory_change: `true`\n\nThis OpenClaw trajectory-bundle and Hermes-session inspired report exports a body-free manifest of assistant turns. It records marker metadata, run/idempotency hashes, prompt-context hashes, model names, prompt-visible skills/tools, and usage counters; raw issue bodies, comment bodies, assistant replies, prompts, provider responses, search queries, and tool outputs are not included.\n\n### Trajectory Manifest\n- turn=`01` source=`comment:4588814742` model=`openai/gpt-4.1-nano` deterministic=`false` run_id_sha256_12=`eca13b4bb852` event_id_sha256_12=`975aef304c40` idempotency_key_sha256_12=`4d2b37b80e5f` run_url_sha256_12=`e33e5a135fcc` prompt_context_sha256_12=`93c739f84f94` context_documents=`16` selected_skills=`1` tool_outputs=`3` skills=`repo-reader` tools=`gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index` usage_present=`true` usage_prompt_tokens=`10512` usage_completion_tokens=`9` usage_total_tokens=`10521` usage_cache_read_tokens=`0` usage_cache_write_tokens=`0` assistant_comment_sha256_12=`957af22626c0`\n\n### Trajectory Gates\n- prompt_provenance_gate=`pass`\n- model_backed_gate=`pass`\n- run_metadata_gate=`pass`\n- usage_telemetry_gate=`pass`\n- raw_body_gate=`hashes-and-marker-attributes-only`\n- raw_provider_response_gate=`disabled`\n- mutation_gate=`disabled`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T01:02:19Z",
+      "updated_at": "2026-06-01T01:02:19Z"
     }
   ]
 }
