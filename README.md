@@ -627,6 +627,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels poll e2e-slack-route,e2e-telegram-route --poll-id <id> --message-id <id>
 @gitclaw /channels rollcall e2e-slack-route,e2e-telegram-route --rollcall-id <id> --message-id <id>
 @gitclaw /channels react --message-id <id> --reaction eyes
+@gitclaw /channels pin --message-id <id>
 @gitclaw /channels reply --message-id <id>
 gitclaw proactive list
 gitclaw proactive schedule
@@ -828,6 +829,10 @@ reactions are suppressed by channel, target message id, and reaction name; the
 issue-visible receipt reports only hashes and delivery gates, while
 `channel-outbox` exposes the pending reaction and `channel-delivery` records
 the provider receipt.
+`@gitclaw /channels pin --message-id <id>` is the short form for the same
+provider reaction path: it infers the current mirrored channel thread and
+queues a default `pushpin` reaction while keeping message IDs, thread IDs, and
+the reaction name out of the receipt.
 The live proactive-report, proactive-list, and proactive-schedule harnesses use
 the same two-proof shape for scheduled work: body-free workflow/prompt metadata
 first, then a normal GitHub Models repo-reader/search follow-up.
@@ -1045,6 +1050,7 @@ scripts/e2e/github-channel-huddle-slash.sh
 scripts/e2e/github-channel-poll-slash.sh
 scripts/e2e/github-channel-rollcall-slash.sh
 scripts/e2e/github-channel-reaction-slash.sh
+scripts/e2e/github-channel-pin-slash.sh
 scripts/e2e/github-channel-reply-slash.sh
 scripts/e2e/github-channel-delivery-workflow.sh
 scripts/e2e/github-channel-outbox-workflow.sh
@@ -1235,6 +1241,11 @@ social acknowledgements without composing a full reply: a channel-ingested issue
 receives `@gitclaw /channels react`, queues one structured provider reaction,
 exposes it through metadata-only outbox, records delivery, suppresses duplicate
 reactions, and then runs a real GitHub Models repo-reader/search follow-up.
+The channel-pin slash harness proves the same operator-console path has a
+one-word shortcut: a channel-ingested issue receives `@gitclaw /channels pin`,
+queues a default `pushpin` provider reaction, exposes and delivers it through
+the existing reaction outbox, suppresses duplicate pins, and then runs a real
+GitHub Models repo-reader/search follow-up.
 The channel-reply slash harness proves mirrored channel issues can act as
 operator consoles: a channel-ingested issue receives `@gitclaw /channels reply`,
 queues an outbound message back onto the same thread, suppresses duplicate

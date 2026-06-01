@@ -5231,11 +5231,13 @@ accepts a structured reaction form:
 
 ```text
 @gitclaw /channels react --message-id <provider-message-id> --reaction eyes
+@gitclaw /channels pin --message-id <provider-message-id>
 ```
 
-`/channels react`, `/channels reaction`, `/channels emoji`, and `/channels ack`
-infer the current channel and thread id from the issue marker when no explicit
-route/channel/thread target is provided, then post one
+`/channels react`, `/channels reaction`, `/channels emoji`, `/channels ack`,
+`/channels pin`, `/channels star`, and `/channels bookmark` infer the current
+channel and thread id from the issue marker when no explicit route/channel/thread
+target is provided, then post one
 `gitclaw:channel-reaction` comment on the same canonical channel issue. The
 provider gateway delivers that as a native Slack/Telegram acknowledgement
 instead of a full text reply. Duplicate reactions are suppressed by
@@ -5246,6 +5248,9 @@ provider APIs, print raw route names, print raw thread ids, print raw target
 message ids, print raw reactions, or print channel message bodies. The pending
 reaction appears in `channel-outbox` as kind `channel-reaction`, and
 `channel-delivery` records the provider receipt for the reaction comment.
+The short forms provide default reaction names: `pin` uses `pushpin`, `star`
+uses `star`, and `bookmark` uses `bookmark`, so operators can mark mirrored
+messages without typing provider-specific emoji names.
 
 The same channel-thread issue also accepts a shorter reply form:
 
@@ -7781,6 +7786,15 @@ examples/workflows/gitclaw.yml
   `repo-reader`, expose `gitclaw.search_files`, recover the channel-reaction
   fixture token, and avoid hidden channel, account, provider, and reaction
   sentinels.
+- A `gh`-driven channel-pin-slash E2E harness creates a real channel-thread
+  issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels pin --message-id ...`, verifies the default `pushpin`
+  reaction queue, body-free receipt metadata, duplicate suppression,
+  metadata-only outbox discovery with kind `channel-reaction`, and
+  channel-delivery receipts. The same issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-pin fixture token, and avoid
+  hidden channel, account, provider, and reaction sentinels.
 - A `gh`-driven channel-reply-slash E2E harness creates a real channel-thread
   issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels reply --message-id ...` on that mirrored thread, verifies

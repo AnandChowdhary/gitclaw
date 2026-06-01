@@ -54,7 +54,7 @@ func isChannelReactionActionFields(fields []string) bool {
 		return false
 	}
 	switch strings.ToLower(strings.Trim(fields[1], " \t\r\n.,:;!?")) {
-	case "react", "reaction", "emoji", "ack", "acknowledge":
+	case "react", "reaction", "emoji", "ack", "acknowledge", "pin", "star", "bookmark":
 		return true
 	default:
 		return false
@@ -134,6 +134,9 @@ func BuildChannelReactionActionRequest(ev Event, cfg Config) (ChannelReactionAct
 	if err := applyChannelReactionIssueTarget(ev, &req); err != nil {
 		return ChannelReactionActionRequest{}, err
 	}
+	if req.Options.Reaction == "" {
+		req.Options.Reaction = defaultChannelReactionForSubcommand(req.Subcommand)
+	}
 	req.Options = normalizeChannelReactionOptions(req.Options)
 	req.RequestedRouteHash = channelRouteHash(req.Options.Route)
 	if req.Options.ThreadID != "" {
@@ -142,6 +145,23 @@ func BuildChannelReactionActionRequest(ev Event, cfg Config) (ChannelReactionAct
 	req.RequestedMsgHash = shortDocumentHash(req.Options.MessageID)
 	req.ReactionHash = shortDocumentHash(req.Options.Reaction)
 	return req, nil
+}
+
+func defaultChannelReactionForSubcommand(subcommand string) string {
+	switch cleanChannelReactionSubcommand(subcommand) {
+	case "pin":
+		return "pushpin"
+	case "star":
+		return "star"
+	case "bookmark":
+		return "bookmark"
+	default:
+		return ""
+	}
+}
+
+func cleanChannelReactionSubcommand(value string) string {
+	return strings.ToLower(strings.Trim(value, " \t\r\n.,:;!?"))
 }
 
 func applyChannelReactionIssueTarget(ev Event, req *ChannelReactionActionRequest) error {

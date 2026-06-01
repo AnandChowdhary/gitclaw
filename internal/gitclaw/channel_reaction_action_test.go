@@ -203,3 +203,33 @@ func TestBuildChannelReactionActionRequestParsesRouteAndReaction(t *testing.T) {
 		t.Fatalf("expected route/message/reaction hashes: %#v", req)
 	}
 }
+
+func TestBuildChannelReactionActionRequestDefaultsPinReaction(t *testing.T) {
+	ev := Event{
+		Kind:      EventIssueComment,
+		EventName: "issue_comment",
+		Repo:      "owner/repo",
+		Issue: Issue{
+			Number: 18,
+			Title:  "GitClaw slack thread team-pin",
+			Body: RenderChannelThreadBody(ChannelIngestOptions{
+				Channel:  "slack",
+				ThreadID: "team-pin",
+			}),
+		},
+		Comment: &Comment{
+			ID:   1801,
+			Body: "@gitclaw /channels pin --message-id source-18\nDo not leak CHANNEL_PIN_PARSE_TOKEN",
+		},
+	}
+	req, err := BuildChannelReactionActionRequest(ev, DefaultConfig())
+	if err != nil {
+		t.Fatalf("BuildChannelReactionActionRequest returned error: %v", err)
+	}
+	if req.Subcommand != "pin" || req.Options.Channel != "slack" || req.Options.ThreadID != "team-pin" || req.Options.MessageID != "source-18" || req.Options.Reaction != "pushpin" {
+		t.Fatalf("unexpected pin reaction parsing: %#v", req)
+	}
+	if !req.TargetFromIssue || req.RequestedMsgHash == "" || req.ReactionHash == "" {
+		t.Fatalf("expected current issue target and hashes: %#v", req)
+	}
+}
