@@ -242,20 +242,20 @@ for expected in \
   'snapshot_version: `gitclaw-tool-snapshot-v1`' \
   'snapshot_scope: `deterministic-tools-toolsets-mcp-outputs`' \
   'snapshot_sha256_12:' \
-  'snapshot_entries: `12`' \
+  'snapshot_entries: `13`' \
   'catalog_entries: `9`' \
   'builtin_contract_entries: `5`' \
   'toolset_profile_entries: `1`' \
   'mcp_tool_entries: `3`' \
   'guidance_entries: `1`' \
-  'active_output_entries: `2`' \
-  'prompt_visible_entries: `8`' \
+  'active_output_entries: `3`' \
+  'prompt_visible_entries: `9`' \
   'available_tools: `5`' \
   'enabled_tools: `5`' \
   'disabled_tools: `0`' \
   'allowlist_blocked_tools: `0`' \
-  'active_tool_outputs: `2`' \
-  'known_tool_outputs: `2`' \
+  'active_tool_outputs: `3`' \
+  'known_tool_outputs: `3`' \
   'unknown_tool_outputs: `0`' \
   'toolsets_scanned: `1`' \
   'mcp_specs_scanned: `1`' \
@@ -283,6 +283,7 @@ for expected in \
   'kind=`mcp-tool` name=`github-read/contents.read`' \
   'kind=`guidance` name=`.gitclaw/TOOLS.md`' \
   'kind=`active-output` name=`gitclaw.list_files`' \
+  'kind=`active-output` name=`gitclaw.search_files`' \
   'kind=`active-output` name=`gitclaw.skill_index`' \
   'snapshot_hash_gate=`composite-sha256_12`'; do
   grep -Fq -- "$expected" <<<"$snapshot_comment" || die "tools snapshot report missing ${expected}"
