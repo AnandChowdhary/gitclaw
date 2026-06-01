@@ -235,7 +235,12 @@ jobs:
       - id: enqueue
         run: |
           set -euo pipefail
-          slot="${GITCLAW_PROACTIVE_SLOT:-$(date -u +%%Y-%%m-%%d)}"
+          input_slot="$(jq -r '(.inputs // {}).slot // ""' "$GITHUB_EVENT_PATH")"
+          input_not_before="$(jq -r '(.inputs // {}).not_before // ""' "$GITHUB_EVENT_PATH")"
+          input_notify_routes="$(jq -r '(.inputs // {}).notify_routes // ""' "$GITHUB_EVENT_PATH")"
+          slot="${input_slot:-$(date -u +%%Y-%%m-%%d)}"
+          export GITCLAW_PROACTIVE_NOT_BEFORE="$input_not_before"
+          export GITCLAW_PROACTIVE_NOTIFY_ROUTES="$input_notify_routes"
           go run ./cmd/gitclaw proactive enqueue \
             --name %s \
             --slot "$slot" \
@@ -243,9 +248,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
-          GITCLAW_PROACTIVE_SLOT: ${{ github.event.inputs.slot }}
-          GITCLAW_PROACTIVE_NOT_BEFORE: ${{ github.event.inputs.not_before }}
-          GITCLAW_PROACTIVE_NOTIFY_ROUTES: ${{ github.event.inputs.notify_routes }}
 
       - if: ${{ steps.enqueue.outputs.issue_number != '' && steps.enqueue.outputs.issue_number != '0' }}
         run: |

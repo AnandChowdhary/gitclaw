@@ -454,7 +454,10 @@ must not copy the raw proactive prompt, prompt file body, route names, provider
 thread IDs, provider tokens, or model/tool output. If `--not-before` skips the
 run, no issue or channel notification is created. Delivery to Telegram, Slack,
 or another provider remains delegated to `gitclaw channel-outbox` and
-`gitclaw channel-delivery`.
+`gitclaw channel-delivery`. Workflow-dispatch prompt and route inputs must be
+read from `$GITHUB_EVENT_PATH` inside the step and copied to temporary files or
+local shell variables; they must not be passed as step `env:` entries because
+GitHub Actions prints those values in the run log header.
 
 Changes to proactive channel notifications must run focused local tests and a
 live E2E that proves all of the following: a real proactive workflow/CLI enqueue
@@ -500,14 +503,19 @@ jobs:
         with:
           go-version: stable
       - id: enqueue
-        run: >
-          go run ./cmd/gitclaw proactive enqueue
-          --name email-triage
-          --slot "$(date -u +%Y-%m-%d)"
-          --prompt-file .gitclaw/proactive/email-triage.md
+        run: |
+          set -euo pipefail
+          input_not_before="$(jq -r '(.inputs // {}).not_before // ""' "$GITHUB_EVENT_PATH")"
+          input_notify_routes="$(jq -r '(.inputs // {}).notify_routes // ""' "$GITHUB_EVENT_PATH")"
+          export GITCLAW_PROACTIVE_NOT_BEFORE="$input_not_before"
+          export GITCLAW_PROACTIVE_NOTIFY_ROUTES="$input_notify_routes"
+          go run ./cmd/gitclaw proactive enqueue \
+            --name email-triage \
+            --slot "$(date -u +%Y-%m-%d)" \
+            --prompt-file .gitclaw/proactive/email-triage.md
         env:
-          GITCLAW_PROACTIVE_NOT_BEFORE: ${{ github.event.inputs.not_before }}
-          GITCLAW_PROACTIVE_NOTIFY_ROUTES: ${{ github.event.inputs.notify_routes }}
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
       - if: ${{ steps.enqueue.outputs.issue_number != '' && steps.enqueue.outputs.issue_number != '0' }}
         run: >
           gh workflow run .github/workflows/gitclaw.yml

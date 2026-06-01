@@ -50,18 +50,27 @@ jobs:
       - id: enqueue
         run: |
           set -euo pipefail
-          export GITCLAW_PROACTIVE_NAME="${GITCLAW_PROACTIVE_NAME:-repo-hygiene}"
-          export GITCLAW_PROACTIVE_PROMPT_FILE="${GITCLAW_PROACTIVE_PROMPT_FILE:-.gitclaw/proactive/repo-hygiene.md}"
+          input_name="$(jq -r '(.inputs // {}).name // ""' "$GITHUB_EVENT_PATH")"
+          input_slot="$(jq -r '(.inputs // {}).slot // ""' "$GITHUB_EVENT_PATH")"
+          input_prompt="$(jq -r '(.inputs // {}).prompt // ""' "$GITHUB_EVENT_PATH")"
+          input_prompt_file="$(jq -r '(.inputs // {}).prompt_file // ""' "$GITHUB_EVENT_PATH")"
+          input_not_before="$(jq -r '(.inputs // {}).not_before // ""' "$GITHUB_EVENT_PATH")"
+          input_notify_routes="$(jq -r '(.inputs // {}).notify_routes // ""' "$GITHUB_EVENT_PATH")"
+          export GITCLAW_PROACTIVE_NAME="${input_name:-repo-hygiene}"
+          export GITCLAW_PROACTIVE_SLOT="$input_slot"
+          if [[ -n "$input_prompt" ]]; then
+            prompt_file="$RUNNER_TEMP/gitclaw-proactive-prompt.md"
+            printf "%s" "$input_prompt" > "$prompt_file"
+            export GITCLAW_PROACTIVE_PROMPT_FILE="$prompt_file"
+          else
+            export GITCLAW_PROACTIVE_PROMPT_FILE="${input_prompt_file:-.gitclaw/proactive/repo-hygiene.md}"
+          fi
+          export GITCLAW_PROACTIVE_NOT_BEFORE="$input_not_before"
+          export GITCLAW_PROACTIVE_NOTIFY_ROUTES="$input_notify_routes"
           go run ./cmd/gitclaw proactive enqueue
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
-          GITCLAW_PROACTIVE_NAME: ${{ github.event.inputs.name }}
-          GITCLAW_PROACTIVE_SLOT: ${{ github.event.inputs.slot }}
-          GITCLAW_PROACTIVE_PROMPT: ${{ github.event.inputs.prompt }}
-          GITCLAW_PROACTIVE_PROMPT_FILE: ${{ github.event.inputs.prompt_file }}
-          GITCLAW_PROACTIVE_NOT_BEFORE: ${{ github.event.inputs.not_before }}
-          GITCLAW_PROACTIVE_NOTIFY_ROUTES: ${{ github.event.inputs.notify_routes }}
 
       - if: ${{ steps.enqueue.outputs.issue_number != '' && steps.enqueue.outputs.issue_number != '0' }}
         run: |
