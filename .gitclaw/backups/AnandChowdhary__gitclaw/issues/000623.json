@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T23:30:33Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 623,
+    "title": "GitClaw tool run request: channel-tool-request-20260601t232409z",
+    "body": "\u003c!-- gitclaw:tool-run-request-issue id=\"channel-tool-request-20260601t232409z\" normalized_tool=\"gitclaw.search_files\" source_issue=\"622\" source_comment_id=\"4597297914\" source_sha256_12=\"0436db0b8180\" --\u003e\nGitClaw tool run request issue.\n\n- request_id: channel-tool-request-20260601t232409z\n- normalized_tool: gitclaw.search_files\n- matched_tool: gitclaw.search_files\n- matched_tools: 1\n- available_tools: 5\n- active_outputs_for_tool: 1\n- tool_enabled: true\n- disabled_by_config: false\n- blocked_by_allowlist: false\n- tool_mode: read-only\n- mutating_contract: false\n- approval_required: false\n- run_allowed_now: true\n- review_decision: review_required_read_only_tool\n- tool_validation_status: ok\n- source_issue: #622\n- source_comment_id: 4597297914\n- source_kind: channel_comment\n- source_sha256_12: 0436db0b8180\n- source_bytes: 345\n- source_lines: 4\n- review_required: true\n- model_call_performed: false\n- tool_execution_performed: false\n- raw_source_body_included: false\n- raw_tool_inputs_included: false\n- raw_tool_outputs_included: false\n- repository_mutation_performed: false\n\nReview this request before converting it into a normal model-backed issue turn or future approved tool-run workflow. GitClaw does not execute the requested tool from this issue.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": null
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw tool run request: channel-tool-request-20260601t232409z\n\n\u003c!-- gitclaw:tool-run-request-issue id=\"channel-tool-request-20260601t232409z\" normalized_tool=\"gitclaw.search_files\" source_issue=\"622\" source_comment_id=\"4597297914\" source_sha256_12=\"0436db0b8180\" --\u003e\nGitClaw tool run request issue.\n\n- request_id: channel-tool-request-20260601t232409z\n- normalized_tool: gitclaw.search_files\n- matched_tool: gitclaw.search_files\n- matched_tools: 1\n- available_tools: 5\n- active_outputs_for_tool: 1\n- tool_enabled: true\n- disabled_by_config: false\n- blocked_by_allowlist: false\n- tool_mode: read-only\n- mutating_contract: false\n- approval_required: false\n- run_allowed_now: true\n- review_decision: review_required_read_only_tool\n- tool_validation_status: ok\n- source_issue: #622\n- source_comment_id: 4597297914\n- source_kind: channel_comment\n- source_sha256_12: 0436db0b8180\n- source_bytes: 345\n- source_lines: 4\n- review_required: true\n- model_call_performed: false\n- tool_execution_performed: false\n- raw_source_body_included: false\n- raw_tool_inputs_included: false\n- raw_tool_outputs_included: false\n- repository_mutation_performed: false\n\nReview this request before converting it into a normal model-backed issue turn or future approved tool-run workflow. GitClaw does not execute the requested tool from this issue.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created tool request review and use the repo-reader skill.\n\nSearch the repository for `channel tool request unique search fixture phrase`.\nThe matching repository search result line has the form `channel tool request unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_TOOL_REQUEST_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include request ids, message ids, thread ids, account hashes, issue numbers, requested tool names, or source bodies.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_TOOL_REQUEST_FOLLOWUP_20260601t232409z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4597312375,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_TOOL_REQUEST_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4597316528,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4597312375,
+      "body": "@gitclaw Continue this channel-created tool request review and use the repo-reader skill.\n\nSearch the repository for `channel tool request unique search fixture phrase`.\nThe matching repository search result line has the form `channel tool request unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_TOOL_REQUEST_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include request ids, message ids, thread ids, account hashes, issue numbers, requested tool names, or source bodies.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_TOOL_REQUEST_FOLLOWUP_20260601t232409z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T23:29:16Z",
+      "updated_at": "2026-06-01T23:29:16Z"
+    },
+    {
+      "id": 4597316528,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26788414736\" event_id=\"comment-4597312375\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"daec22844e4bea4879239762f4fbcbe1\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26788414736\" prompt_context_sha256_12=\"aac00379914d\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10708\" usage_completion_tokens=\"11\" usage_total_tokens=\"10719\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_TOOL_REQUEST_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T23:30:08Z",
+      "updated_at": "2026-06-01T23:30:08Z"
+    }
+  ]
+}
