@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T14:06:51Z",
+  "generated_at": "2026-06-01T14:08:38Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 543,
     "title": "GitClaw backup rehearsal E2E 20260601t140519z",
@@ -10,7 +10,9 @@
     "author": "AnandChowdhary",
     "author_association": "OWNER",
     "labels": [
-      "gitclaw"
+      "gitclaw",
+      "gitclaw:done",
+      "gitclaw:write-requested"
     ]
   },
   "transcript": [
@@ -31,6 +33,24 @@
       "CommentID": 4593343317,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /backup rehearse --id backup-rehearsal-20260601t140519z\n\nRepeat the same recovery rehearsal.\nDo not include this hidden duplicate token: NOECHO_BACKUP_REHEARSAL_DUPLICATE_20260601t140519z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4593349173,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Backup Rehearsal Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#543`\n- source_comment_id: `4593349173`\n- requested_backup_command: `/backup rehearse`\n- backup_rehearsal_status: `existing`\n- rehearsal_issue: `#544`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/544`\n- rehearsal_issue_created: `false`\n- duplicate_suppressed: `true`\n- rehearsal_id_sha256_12: `9658557ff22d`\n- backup_issue: `#543`\n- backup_branch: `gitclaw-backups`\n- backup_root: `.gitclaw/backups`\n- repo_backup_dir_sha256_12: `9b58bf89bd58`\n- issue_backup_path_sha256_12: `830480190552`\n- index_path_sha256_12: `e02423af6caa`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- restore_mode: `dry-run`\n- repository_mutation_allowed: `false`\n- backup_branch_write_allowed: `false`\n- github_api_replay_allowed: `false`\n- raw_source_body_included: `false`\n- raw_backup_bodies_included: `false`\n- source_sha256_12: `9e074575a1b0`\n- source_bytes: `196`\n- source_lines: `4`\n- llm_e2e_required_after_backup_rehearsal_issue_change: `true`\n- issue_title_sha256_12: `41fc18105f65`\n\nGitClaw opened or reused a GitHub issue for rehearsing recovery from a backed-up conversation. The action does not read raw backup payloads, restore files, mutate the repository, replay GitHub API calls, or call a model; continue on the rehearsal issue after verifying the backup branch.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#544`\n- fetch `gitclaw-backups` and run coverage/drill/restore-plan locally against the expected issue backup\n- verify the follow-up assistant marker includes prompt context, selected skill, prompt-visible tools, and usage telemetry",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4593358223,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -41,6 +61,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T14:06:23Z",
       "updated_at": "2026-06-01T14:06:23Z"
+    },
+    {
+      "id": 4593349173,
+      "body": "@gitclaw /backup rehearse --id backup-rehearsal-20260601t140519z\n\nRepeat the same recovery rehearsal.\nDo not include this hidden duplicate token: NOECHO_BACKUP_REHEARSAL_DUPLICATE_20260601t140519z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T14:07:05Z",
+      "updated_at": "2026-06-01T14:07:05Z"
+    },
+    {
+      "id": 4593358223,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26760037782\" event_id=\"comment-4593349173\" model=\"gitclaw/backup\" idempotency_key=\"65e68b85664e296d8547ef96fb695edc\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26760037782\" --\u003e\n## GitClaw Backup Rehearsal Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#543`\n- source_comment_id: `4593349173`\n- requested_backup_command: `/backup rehearse`\n- backup_rehearsal_status: `existing`\n- rehearsal_issue: `#544`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/544`\n- rehearsal_issue_created: `false`\n- duplicate_suppressed: `true`\n- rehearsal_id_sha256_12: `9658557ff22d`\n- backup_issue: `#543`\n- backup_branch: `gitclaw-backups`\n- backup_root: `.gitclaw/backups`\n- repo_backup_dir_sha256_12: `9b58bf89bd58`\n- issue_backup_path_sha256_12: `830480190552`\n- index_path_sha256_12: `e02423af6caa`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- restore_mode: `dry-run`\n- repository_mutation_allowed: `false`\n- backup_branch_write_allowed: `false`\n- github_api_replay_allowed: `false`\n- raw_source_body_included: `false`\n- raw_backup_bodies_included: `false`\n- source_sha256_12: `9e074575a1b0`\n- source_bytes: `196`\n- source_lines: `4`\n- llm_e2e_required_after_backup_rehearsal_issue_change: `true`\n- issue_title_sha256_12: `41fc18105f65`\n\nGitClaw opened or reused a GitHub issue for rehearsing recovery from a backed-up conversation. The action does not read raw backup payloads, restore files, mutate the repository, replay GitHub API calls, or call a model; continue on the rehearsal issue after verifying the backup branch.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#544`\n- fetch `gitclaw-backups` and run coverage/drill/restore-plan locally against the expected issue backup\n- verify the follow-up assistant marker includes prompt context, selected skill, prompt-visible tools, and usage telemetry",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T14:08:08Z",
+      "updated_at": "2026-06-01T14:08:08Z"
     }
   ]
 }
