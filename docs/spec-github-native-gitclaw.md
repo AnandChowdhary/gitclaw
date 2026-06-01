@@ -2595,6 +2595,7 @@ Validation is visible in the `/tools` report and locally through:
 
 ```bash
 gitclaw tools catalog
+gitclaw tools snapshot
 gitclaw tools verify
 gitclaw tools risk
 gitclaw tools validate
@@ -2625,6 +2626,7 @@ OpenClaw's tool policy visibility and Hermes' toolset inventory:
 ```text
 @gitclaw /tools
 @gitclaw /tools catalog
+@gitclaw /tools snapshot
 @gitclaw /tools list
 @gitclaw /tools verify
 @gitclaw /tools risk
@@ -2688,6 +2690,22 @@ bodies, comments, prompts, credentials, or secret values. The report includes
 a live GitHub issue E2E for the catalog plus a GitHub Models follow-up that
 selects `repo-reader`, exposes `gitclaw.search_files`, and recovers a fresh
 repository-search fixture token.
+
+`@gitclaw /tools snapshot` and `gitclaw tools snapshot` expose a stable,
+body-free fingerprint for the whole deterministic tool surface. It combines
+built-in contracts, repo-reviewed toolsets, MCP allowlist entries,
+`.gitclaw/TOOLS.md` guidance metadata, and prompt-visible active-output
+metadata into per-entry hashes plus one composite `snapshot_sha256_12`. The
+`fingerprint`, `fingerprints`, `lock`, and `lockfile` aliases route to the same
+report. It never prints raw tool schemas, toolset instructions, MCP command
+args, tool inputs, tool outputs, issue bodies, comments, prompts, credentials,
+or secret values, and keeps registry contact, dynamic MCP discovery, runtime
+MCP launch, structured tools, shell execution, and repository mutation gates
+disabled. The report includes
+`llm_e2e_required_after_tool_snapshot_change=true`; every change must ship with
+a live GitHub issue E2E plus a GitHub Models follow-up that selects
+`repo-reader`, exposes `gitclaw.search_files`, and recovers a fresh repository
+search fixture token.
 
 `@gitclaw /tools exposure` and `gitclaw tools exposure` make the model-visible
 tool boundary explicit. Inspired by OpenClaw's tool allow/deny/profile
@@ -7668,6 +7686,14 @@ examples/workflows/gitclaw.yml
   harness also posts a normal GitHub Models follow-up that must select
   `repo-reader`, expose `gitclaw.search_files`, recover the tools-list
   repository-search fixture token, and avoid hidden sentinel leakage.
+- A `gh`-driven tools-snapshot E2E harness verifies
+  `@gitclaw /tools snapshot` exposes the body-free composite tool fingerprint
+  across built-in contracts, repo-reviewed toolsets, MCP allowlists, guidance
+  files, and active-output hashes without a model call. The same live issue
+  then receives a normal issue-comment follow-up that must make a GitHub
+  Models call, select `repo-reader`, expose `gitclaw.search_files`, recover
+  the tools-snapshot repository-search fixture token, and avoid hidden
+  sentinel leakage.
 - A `gh`-driven tools-validate E2E harness verifies
   `@gitclaw /tools validate` exposes the body-free validation report without
   falling back to the full inventory.

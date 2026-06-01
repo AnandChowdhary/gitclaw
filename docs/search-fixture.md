@@ -100,6 +100,7 @@ skills catalog unique search fixture phrase => GITCLAW_SKILLS_CATALOG_CONTEXT_V1
 backup list unique search fixture phrase => GITCLAW_BACKUP_LIST_CONTEXT_V1
 backup manifest unique search fixture phrase => GITCLAW_BACKUP_MANIFEST_CONTEXT_V1
 tools catalog unique search fixture phrase => GITCLAW_TOOLS_CATALOG_CONTEXT_V1
+tools snapshot unique search fixture phrase => GITCLAW_TOOLS_SNAPSHOT_CONTEXT_V1
 memory catalog unique search fixture phrase => GITCLAW_MEMORY_CATALOG_CONTEXT_V1
 memory provenance unique search fixture phrase => GITCLAW_MEMORY_PROVENANCE_CONTEXT_V1
 bundle catalog unique search fixture phrase => GITCLAW_BUNDLE_CATALOG_CONTEXT_V1

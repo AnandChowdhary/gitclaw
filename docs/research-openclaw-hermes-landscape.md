@@ -1205,6 +1205,18 @@ args, tool inputs, tool outputs, issue bodies, comments, prompts, credentials,
 and secrets. The live proof should pair the deterministic catalog issue with a
 GitHub Models repo-reader/search follow-up.
 
+2026-06-01 tools-snapshot follow-up: OpenClaw-style tool policies and Hermes
+tool/profile catalogs also need a stable comparison point across changes.
+GitClaw should add `@gitclaw /tools snapshot`, with `fingerprint` and `lock`
+aliases, as a body-free composite fingerprint over deterministic contracts,
+repo-reviewed toolsets, MCP allowlist entries, `.gitclaw/TOOLS.md` guidance,
+and prompt-visible active-output metadata. It should expose per-entry hashes,
+one `snapshot_sha256_12`, validation/risk gates, and explicit disabled runtime
+gates while excluding raw schemas, instructions, MCP args, tool IO, issue
+bodies, comments, prompts, credentials, and secrets. Acceptance requires local
+CLI assertions, deterministic tests, a live issue E2E, and a GitHub Models
+repo-reader/search follow-up.
+
 2026-05-30 task-risk follow-up: OpenClaw Task Flow composes work by creating
 background tasks and advancing the flow as tasks complete, while Hermes Kanban
 uses durable task boards, dispatchers, workers, and a dedicated kanban toolset.

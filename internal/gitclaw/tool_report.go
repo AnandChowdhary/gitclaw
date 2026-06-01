@@ -61,6 +61,9 @@ func RenderToolsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isToolCatalogRequest(ev, cfg) {
 		return renderToolCatalogReport(ev, cfg, repoContext, true)
 	}
+	if isToolSnapshotRequest(ev, cfg) {
+		return renderToolSnapshotReport(ev, cfg, repoContext, true)
+	}
 	if isToolsVerifyRequest(ev, cfg) {
 		return renderToolVerifyReport(ev, repoContext, true)
 	}

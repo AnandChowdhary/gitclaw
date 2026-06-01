@@ -244,6 +244,7 @@ Tools:
 
 ```bash
 gitclaw tools catalog
+gitclaw tools snapshot
 gitclaw tools verify
 gitclaw tools risk
 gitclaw tools validate
@@ -268,6 +269,11 @@ tool surface. It reports direct core tools, repo-reviewed toolsets, and
 metadata-only MCP allowlist entries with gate state, reason codes, counts, and
 hashes, without printing raw schemas, toolset instructions, MCP args, tool
 inputs, tool outputs, issue bodies, comments, prompts, credentials, or secrets.
+`gitclaw tools snapshot` adds a stable body-free fingerprint over the same
+surface plus loaded tool guidance and prompt-visible active-output metadata. It
+emits one composite hash for drift checks while keeping registry contact,
+runtime MCP launch, structured tools, shell execution, repository mutation, and
+raw body gates disabled.
 
 Security:
 
@@ -761,6 +767,7 @@ scripts/e2e/github-sandbox-risk-report.sh
 scripts/e2e/github-tasks-ledger-report.sh
 scripts/e2e/github-tasks-risk-report.sh
 scripts/e2e/github-tools-catalog-report.sh
+scripts/e2e/github-tools-snapshot-report.sh
 scripts/e2e/github-tools-toolsets-report.sh
 scripts/e2e/github-tools-toolsets-info-report.sh
 scripts/e2e/github-tools-exposure-report.sh
