@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T20:33:00Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 592,
+    "title": "GitClaw channel reminder: Follow up channel reminder 20260601t202610z",
+    "body": "\u003c!-- gitclaw:channel-reminder reminder_id=\"channel-reminder-20260601t202610z\" channel=\"telegram\" due_at=\"2099-01-02T03:04:05Z\" thread_id_sha256_12=\"ced4ca3f0955\" source_message_id_sha256_12=\"b164e0496210\" source_issue=\"591\" source_comment_id=\"4596248008\" --\u003e\nGitClaw channel reminder.\n\n- reminder_id: channel-reminder-20260601t202610z\n- not_before: 2099-01-02T03:04:05Z\n- source_channel: telegram\n- source_issue: #591\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/591\n- source_comment_id: 4596248008\n- thread_id_sha256_12: ced4ca3f0955\n- source_message_id_sha256_12: b164e0496210\n- reminder_mode: github-issue-reminder\n- wake_strategy: scheduled-github-actions-proactive-check\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Reminder\n\nFollow up channel reminder 20260601t202610z\n\n## Notes\n\nVisible reminder note token: VISIBLE_CHANNEL_REMINDER_NOTES_20260601t202610z\n\nContinue the reminder in this GitHub issue. Scheduled GitHub Actions can treat the `not_before` field as the due gate and then continue the conversation here.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel reminder: Follow up channel reminder 20260601t202610z\n\n\u003c!-- gitclaw:channel-reminder reminder_id=\"channel-reminder-20260601t202610z\" channel=\"telegram\" due_at=\"2099-01-02T03:04:05Z\" thread_id_sha256_12=\"ced4ca3f0955\" source_message_id_sha256_12=\"b164e0496210\" source_issue=\"591\" source_comment_id=\"4596248008\" --\u003e\nGitClaw channel reminder.\n\n- reminder_id: channel-reminder-20260601t202610z\n- not_before: 2099-01-02T03:04:05Z\n- source_channel: telegram\n- source_issue: #591\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/591\n- source_comment_id: 4596248008\n- thread_id_sha256_12: ced4ca3f0955\n- source_message_id_sha256_12: b164e0496210\n- reminder_mode: github-issue-reminder\n- wake_strategy: scheduled-github-actions-proactive-check\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Reminder\n\nFollow up channel reminder 20260601t202610z\n\n## Notes\n\nVisible reminder note token: VISIBLE_CHANNEL_REMINDER_NOTES_20260601t202610z\n\nContinue the reminder in this GitHub issue. Scheduled GitHub Actions can treat the `not_before` field as the due gate and then continue the conversation here.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created reminder and use the repo-reader skill.\n\nSearch the repository for `channel reminder unique search fixture phrase`.\nThe matching repository search result line has the form `channel reminder unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_REMINDER_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include reminder ids, message ids, thread ids, account hashes, issue numbers, due times, reminder titles, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_REMINDER_FOLLOWUP_20260601t202610z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4596273656,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_REMINDER_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4596280608,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4596273656,
+      "body": "@gitclaw Continue this channel-created reminder and use the repo-reader skill.\n\nSearch the repository for `channel reminder unique search fixture phrase`.\nThe matching repository search result line has the form `channel reminder unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_REMINDER_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include reminder ids, message ids, thread ids, account hashes, issue numbers, due times, reminder titles, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_REMINDER_FOLLOWUP_20260601t202610z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T20:31:35Z",
+      "updated_at": "2026-06-01T20:31:35Z"
+    },
+    {
+      "id": 4596280608,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26780239763\" event_id=\"comment-4596273656\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"647cb3a31d291be5ed0d415593e6e45a\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26780239763\" prompt_context_sha256_12=\"dd9683f6f11c\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10688\" usage_completion_tokens=\"11\" usage_total_tokens=\"10699\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_REMINDER_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T20:32:30Z",
+      "updated_at": "2026-06-01T20:32:30Z"
+    }
+  ]
+}
