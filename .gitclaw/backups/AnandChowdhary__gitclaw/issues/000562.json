@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T16:05:10Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 562,
+    "title": "GitClaw tool rehearsal: gitclaw.search_files (tools-rehearsal-20260601t160013z)",
+    "body": "\u003c!-- gitclaw:tool-rehearsal-issue id=\"tools-rehearsal-20260601t160013z\" normalized_tool=\"gitclaw.search_files\" source_issue=\"561\" source_comment_id=\"0\" source_sha256_12=\"2aa778df06e3\" --\u003e\nGitClaw tool rehearsal issue.\n\n- rehearsal_id: tools-rehearsal-20260601t160013z\n- normalized_tool: gitclaw.search_files\n- matched_tool: gitclaw.search_files\n- matched_tools: 1\n- available_tools: 5\n- active_outputs_for_tool: 1\n- tool_enabled: true\n- disabled_by_config: false\n- blocked_by_allowlist: false\n- tool_mode: read-only\n- mutating_contract: false\n- tool_validation_status: ok\n- source_issue: #561\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/561\n- source_comment_id: 0\n- source_kind: issue\n- source_sha256_12: 2aa778df06e3\n- rehearsal_mode: github-issue-conversation\n- tool_execution_performed: false\n- tool_inputs_generated: false\n- tool_run_request_created: false\n- repository_mutation_performed: false\n- raw_source_body_included: false\n- raw_tool_inputs_included: false\n- raw_tool_outputs_included: false\n\nUse this issue to rehearse the current tool contract in a normal GitClaw conversation. If the discussion turns into an execution request, open a reviewed `/tools request-run` issue instead; this issue is only for trying the conversation boundary.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw tool rehearsal: gitclaw.search_files (tools-rehearsal-20260601t160013z)\n\n\u003c!-- gitclaw:tool-rehearsal-issue id=\"tools-rehearsal-20260601t160013z\" normalized_tool=\"gitclaw.search_files\" source_issue=\"561\" source_comment_id=\"0\" source_sha256_12=\"2aa778df06e3\" --\u003e\nGitClaw tool rehearsal issue.\n\n- rehearsal_id: tools-rehearsal-20260601t160013z\n- normalized_tool: gitclaw.search_files\n- matched_tool: gitclaw.search_files\n- matched_tools: 1\n- available_tools: 5\n- active_outputs_for_tool: 1\n- tool_enabled: true\n- disabled_by_config: false\n- blocked_by_allowlist: false\n- tool_mode: read-only\n- mutating_contract: false\n- tool_validation_status: ok\n- source_issue: #561\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/561\n- source_comment_id: 0\n- source_kind: issue\n- source_sha256_12: 2aa778df06e3\n- rehearsal_mode: github-issue-conversation\n- tool_execution_performed: false\n- tool_inputs_generated: false\n- tool_run_request_created: false\n- repository_mutation_performed: false\n- raw_source_body_included: false\n- raw_tool_inputs_included: false\n- raw_tool_outputs_included: false\n\nUse this issue to rehearse the current tool contract in a normal GitClaw conversation. If the discussion turns into an execution request, open a reviewed `/tools request-run` issue instead; this issue is only for trying the conversation boundary.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this tools rehearsal and use the repo-reader skill.\n\nSearch the repository for `tools rehearsal unique search fixture phrase`.\nThe matching repository search result line has the form `tools rehearsal unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_TOOLS_REHEARSAL_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include the source issue number, rehearsal issue number, tool rehearsal id, source body, raw tool inputs, raw tool outputs, or hidden sentinels.\nDo not include this hidden follow-up token: NOECHO_TOOLS_REHEARSAL_FOLLOWUP_20260601t160013z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4594323156,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_TOOLS_REHEARSAL_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4594330330,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4594323156,
+      "body": "@gitclaw Continue this tools rehearsal and use the repo-reader skill.\n\nSearch the repository for `tools rehearsal unique search fixture phrase`.\nThe matching repository search result line has the form `tools rehearsal unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_TOOLS_REHEARSAL_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include the source issue number, rehearsal issue number, tool rehearsal id, source body, raw tool inputs, raw tool outputs, or hidden sentinels.\nDo not include this hidden follow-up token: NOECHO_TOOLS_REHEARSAL_FOLLOWUP_20260601t160013z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T16:03:42Z",
+      "updated_at": "2026-06-01T16:03:42Z"
+    },
+    {
+      "id": 4594330330,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26766548377\" event_id=\"comment-4594323156\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"5592fc69cbdf90462c8be38bc01f8781\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26766548377\" prompt_context_sha256_12=\"895facf784a3\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10718\" usage_completion_tokens=\"14\" usage_total_tokens=\"10732\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_TOOLS_REHEARSAL_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T16:04:39Z",
+      "updated_at": "2026-06-01T16:04:39Z"
+    }
+  ]
+}
