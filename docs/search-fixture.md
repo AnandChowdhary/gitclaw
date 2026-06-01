@@ -54,6 +54,7 @@ tools list report unique search fixture phrase => GITCLAW_TOOLS_LIST_REPORT_CONT
 tools verify report unique search fixture phrase => GITCLAW_TOOLS_VERIFY_REPORT_CONTEXT_V1
 toolset info unique search fixture phrase => GITCLAW_TOOLSET_INFO_CONTEXT_V1
 skill source info unique search fixture phrase => GITCLAW_SKILL_SOURCE_INFO_CONTEXT_V1
+skill source verify unique search fixture phrase => GITCLAW_SKILL_SOURCE_VERIFY_CONTEXT_V1
 gclaw-selectplan-e2e-needle => GITCLAW_SKILLS_SELECT_PLAN_CONTEXT_V1
 gclaw-contextref-followup-needle => GITCLAW_CONTEXT_REFERENCE_FOLLOWUP_CONTEXT_V1
 gclaw-gitref-followup-needle => GITCLAW_GIT_REFERENCE_FOLLOWUP_CONTEXT_V1

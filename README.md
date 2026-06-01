@@ -136,6 +136,7 @@ gitclaw skills provenance
 gitclaw skills select-plan <name>
 gitclaw skills refresh-plan
 gitclaw skills sources
+gitclaw skills sources verify
 gitclaw skills sources provenance
 gitclaw skills sources risk
 gitclaw skills sources info <name>
@@ -171,6 +172,12 @@ git history. It reports source-pin paths, hashes, tracked/dirty state, last
 commit metadata, and no-registry/no-fetch/no-install gates without printing raw
 source refs, source YAML, skill bodies, commit subjects, issue text, or
 credentials.
+
+`gitclaw skills sources verify` treats those pins as a body-free trust
+envelope. It reports source-pin hashes, source-ref hashes, current skill
+hashes, registry/fetch/install gates, and risk rollups without contacting a
+registry, fetching remote sources, running installers, or printing source or
+skill bodies.
 
 `gitclaw bundles catalog` is the compact orchestration index for Hermes-style
 skill bundles. It reports repo-local bundle roles, selected/load state,
@@ -674,6 +681,7 @@ scripts/e2e/github-skills-proposals-report.sh
 scripts/e2e/github-skills-refresh-plan-report.sh
 scripts/e2e/github-skills-sources-report.sh
 scripts/e2e/github-skills-sources-info-report.sh
+scripts/e2e/github-skills-sources-verify-report.sh
 scripts/e2e/github-skills-sources-provenance-report.sh
 scripts/e2e/github-skills-runtime-report.sh
 scripts/e2e/github-skills-catalog-report.sh
@@ -790,6 +798,10 @@ body-free, then requires a real GitHub Models repo-reader/search follow-up.
 The skill-source-info harness mirrors that contract for one reviewed source
 pin: it checks no-registry/no-fetch/no-install/no-mutation gates and hash-only
 metadata, then requires a real GitHub Models repo-reader/search follow-up.
+The skill-source-verify harness checks all reviewed source pins as a
+ClawHub/Hermes-inspired trust envelope: source-pin hashes, source-ref hashes,
+current skill hashes, registry/fetch/install gates, and then a real GitHub
+Models repo-reader/search follow-up.
 The channel-ingest harness proves the generic no-server bridge end to end:
 workflow-dispatch mirroring, duplicate provider-message suppression, and a
 normal model/tool follow-up on the canonical channel issue.

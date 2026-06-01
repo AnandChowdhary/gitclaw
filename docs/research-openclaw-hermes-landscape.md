@@ -165,6 +165,20 @@ no-mutation gates. The report should stay body-free and require a live GitHub
 Models repo-reader/search follow-up after any behavior change, so the
 deterministic audit never replaces testing real skill selection and tool use.
 
+2026-06-01 skill-source-verify follow-up: OpenClaw exposes a ClawHub
+`skills verify` trust envelope and ClawHub skill pages surface scan state
+before install, while Hermes keeps skill discovery compact and loads full
+skill files only on demand. GitClaw should mirror the review value without
+adding registry dependence: `@gitclaw /skills sources verify` and
+`gitclaw skills sources verify` should verify all reviewed source pins as
+repo-local trust envelopes. The report should include source-pin hashes,
+source-ref hashes, current skill hashes, approval/no-fetch/no-install gates,
+risk rollups, registry-not-configured status, static-only remote-fetch
+verification, and disabled install verification. It should never fetch remote
+sources, contact ClawHub/Hermes Hub/skills.sh/GitHub, run installers, mutate
+skills, or print raw source refs, source YAML, skill bodies, prompts, issue
+bodies, comments, credentials, provider payloads, or secret values.
+
 2026-05-31 skill-runtime follow-up: OpenClaw's `SKILL.md` frontmatter and
 ClawHub format expose runtime metadata such as required env vars, binaries,
 `primaryEnv`, and install specs, while Hermes skills/tool docs frame these

@@ -1632,6 +1632,7 @@ gitclaw skills provenance
 gitclaw skills select-plan <name>
 gitclaw skills refresh-plan
 gitclaw skills sources
+gitclaw skills sources verify
 gitclaw skills sources provenance
 gitclaw skills sources risk
 gitclaw skills sources info <name>
@@ -1677,6 +1678,7 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills select-plan repo-reader
 @gitclaw /skills refresh-plan
 @gitclaw /skills sources
+@gitclaw /skills sources verify
 @gitclaw /skills sources provenance
 @gitclaw /skills sources risk
 @gitclaw /skills sources info repo-reader
@@ -1905,6 +1907,11 @@ remote_fetch_allowed: false
 `@gitclaw /skills sources` and `gitclaw skills sources` list source pins by
 path, normalized name, skill path, source kind, trust level, install mode,
 expected/current skill hash, match state, and no-fetch/no-install runtime
+gates. `@gitclaw /skills sources verify` and
+`gitclaw skills sources verify` provide the stricter body-free trust envelope:
+source-pin hashes, source-ref hashes, current skill hashes, risk rollups,
+registry-not-configured status, static-only remote-fetch verification,
+disabled install verification, and no-registry/no-fetch/no-install/no-mutation
 gates. `@gitclaw /skills sources provenance` and
 `gitclaw skills sources provenance` map reviewed source pins to body-free git
 history: source-pin paths, source kind, trust level, install mode, match/hash
@@ -1927,6 +1934,8 @@ source refs, raw source-pin bodies, raw skill bodies, issue bodies, comments,
 prompts, git subjects, author identities, provider payloads, credentials, or
 secret values. The reports include
 `llm_e2e_required_after_skill_source_change=true` or
+`llm_e2e_required_after_skill_source_verify_change=true` or
+`llm_e2e_required_after_skill_source_info_change=true` or
 `llm_e2e_required_after_skill_source_provenance_change=true`; every source-pin
 behavior change must ship with a live GitHub Models follow-up E2E.
 
@@ -7401,6 +7410,14 @@ examples/workflows/gitclaw.yml
   no-registry/no-fetch/no-install runtime gates, and risk counts, then runs a
   real GitHub Models follow-up conversation that proves repo-local skill
   selection and prompt-visible tool usage still work.
+- A `gh`-driven skills-sources-verify E2E harness verifies
+  `@gitclaw /skills sources verify` and local
+  `gitclaw skills sources verify` expose all reviewed source pins as a
+  body-free trust envelope: source-pin hashes, source-ref hashes, current skill
+  hashes, risk rollups, registry-not-configured status, static-only
+  remote-fetch verification, disabled install verification, and no source or
+  skill body leakage. It then runs a real GitHub Models repo-reader/search
+  follow-up with prompt, skill, tool, and usage telemetry.
 - A `gh`-driven skills-sources-provenance E2E harness verifies
   `@gitclaw /skills sources provenance` and local
   `gitclaw skills sources provenance` expose body-free source-pin git history,

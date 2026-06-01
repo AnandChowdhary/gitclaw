@@ -2815,6 +2815,13 @@ func runSkillsSourcesCommand(args []string) error {
 		fmt.Println(RenderSkillSourcesRiskCLIReport(cfg, repoContext))
 		return nil
 	}
+	if args[0] == "verify" || args[0] == "check" {
+		if len(args) > 1 {
+			return fmt.Errorf("unknown skills sources verify argument %q", args[1])
+		}
+		fmt.Println(RenderSkillSourcesVerifyCLIReport(cfg, repoContext))
+		return nil
+	}
 	if args[0] == "provenance" || args[0] == "history" || args[0] == "timeline" {
 		if len(args) > 1 {
 			return fmt.Errorf("unknown skills sources provenance argument %q", args[1])
@@ -2833,7 +2840,7 @@ func runSkillsSourcesCommand(args []string) error {
 		}
 		return nil
 	}
-	return fmt.Errorf("usage: gitclaw skills sources [list|provenance|risk|info <name>]")
+	return fmt.Errorf("usage: gitclaw skills sources [list|verify|provenance|risk|info <name>]")
 }
 
 func runSkillsProposalPlanCommand(args []string, requestedAction string) error {

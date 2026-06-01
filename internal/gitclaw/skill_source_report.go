@@ -92,12 +92,35 @@ type SkillSourceReport struct {
 	Cards                           []SkillSourceCard
 }
 
+type SkillSourceVerifyReport struct {
+	Status                     string
+	Source                     SkillSourceReport
+	SourcePinsHashed           int
+	SourceRefsHashed           int
+	CurrentSkillHashesObserved int
+	RegistryVerification       string
+	RemoteFetchVerification    string
+	InstallVerification        string
+	RegistryContactAllowed     bool
+	RemoteFetchAllowed         bool
+	InstallerScriptsRun        bool
+	DependencyInstallAllowed   bool
+	RepositoryMutationAllowed  bool
+	RawSourceBodiesIncluded    bool
+	RawSourceRefsIncluded      bool
+	RawSkillBodiesIncluded     bool
+}
+
 func RenderSkillSourcesCLIReport(cfg Config, repoContext RepoContext) string {
 	return renderSkillSourcesReport(Event{}, cfg, repoContext, false)
 }
 
 func RenderSkillSourcesRiskCLIReport(cfg Config, repoContext RepoContext) string {
 	return renderSkillSourcesRiskReport(Event{}, cfg, repoContext, false)
+}
+
+func RenderSkillSourcesVerifyCLIReport(cfg Config, repoContext RepoContext) string {
+	return renderSkillSourcesVerifyReport(Event{}, cfg, repoContext, false)
 }
 
 func RenderSkillSourceInfoCLIReport(cfg Config, repoContext RepoContext, name string) string {
@@ -140,6 +163,68 @@ func renderSkillSourcesRiskReport(ev Event, cfg Config, repoContext RepoContext,
 
 	b.WriteString("\n### Risk Findings\n")
 	writeSkillSourceRiskFindings(&b, report.Findings)
+	return strings.TrimSpace(b.String())
+}
+
+func BuildSkillSourceVerifyReport(cfg Config, repoContext RepoContext) SkillSourceVerifyReport {
+	source := BuildSkillSourceReport(cfg, repoContext)
+	report := SkillSourceVerifyReport{
+		Status:                    source.Status,
+		Source:                    source,
+		RegistryVerification:      "not_configured",
+		RemoteFetchVerification:   "static_source_pins_only",
+		InstallVerification:       "disabled_gates_only",
+		RegistryContactAllowed:    false,
+		RemoteFetchAllowed:        false,
+		InstallerScriptsRun:       false,
+		DependencyInstallAllowed:  false,
+		RepositoryMutationAllowed: false,
+		RawSourceBodiesIncluded:   false,
+		RawSourceRefsIncluded:     false,
+		RawSkillBodiesIncluded:    false,
+	}
+	for _, card := range source.Cards {
+		if card.SHA != "" {
+			report.SourcePinsHashed++
+		}
+		if card.SourceRefPresent {
+			report.SourceRefsHashed++
+		}
+		if card.SkillSHA != "" {
+			report.CurrentSkillHashesObserved++
+		}
+	}
+	return report
+}
+
+func renderSkillSourcesVerifyReport(ev Event, cfg Config, repoContext RepoContext, includeIssue bool) string {
+	report := BuildSkillSourceVerifyReport(cfg, repoContext)
+	var b strings.Builder
+	b.WriteString("## GitClaw Skill Source Verify Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	writeSkillSourceHeader(&b, ev, includeIssue)
+	fmt.Fprintf(&b, "- skill_source_verify_status: `%s`\n", report.Status)
+	fmt.Fprintf(&b, "- verification_scope: `%s`\n", "repo-local-source-pin-trust")
+	writeSkillSourceSummary(&b, report.Source)
+	fmt.Fprintf(&b, "- source_pins_hashed: `%d`\n", report.SourcePinsHashed)
+	fmt.Fprintf(&b, "- source_refs_hashed: `%d`\n", report.SourceRefsHashed)
+	fmt.Fprintf(&b, "- current_skill_hashes_observed: `%d`\n", report.CurrentSkillHashesObserved)
+	fmt.Fprintf(&b, "- registry_verification: `%s`\n", report.RegistryVerification)
+	fmt.Fprintf(&b, "- remote_fetch_verification: `%s`\n", report.RemoteFetchVerification)
+	fmt.Fprintf(&b, "- install_verification: `%s`\n", report.InstallVerification)
+	fmt.Fprintf(&b, "- remote_fetch_runtime_allowed: `%t`\n", report.RemoteFetchAllowed)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_skill_source_verify_change: `%t`\n", true)
+	if includeIssue {
+		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
+	}
+	b.WriteByte('\n')
+	b.WriteString("This report verifies reviewed skill source pins as repo-local trust envelopes. It reports source-pin hashes, source-ref hashes, current skill hashes, approval/no-fetch/no-install gates, and risk findings without contacting registries, fetching remote sources, running installers, mutating skills, or printing raw source refs, source YAML, skill bodies, issue bodies, comments, prompts, provider payloads, or secret values.\n\n")
+
+	b.WriteString("### Source Pin Trust Cards\n")
+	writeSkillSourceCards(&b, report.Source.Cards)
+
+	b.WriteString("\n### Verification Findings\n")
+	writeSkillSourceVerifyFindings(&b, report)
 	return strings.TrimSpace(b.String())
 }
 
@@ -618,6 +703,24 @@ func writeSkillSourceRiskFindings(b *strings.Builder, findings []SkillSourceRisk
 	}
 }
 
+func writeSkillSourceVerifyFindings(b *strings.Builder, report SkillSourceVerifyReport) {
+	b.WriteString("- severity=`info` code=`skill_source_registry_verification_not_configured` detail=`GitClaw v1 verifies reviewed repo-local source pins and hashes without contacting external skill registries`\n")
+	b.WriteString("- severity=`info` code=`skill_source_remote_fetch_verification_static_only` detail=`remote source refs are not fetched; verification is limited to reviewed source-pin metadata and local skill hashes`\n")
+	b.WriteString("- severity=`info` code=`skill_source_install_verification_disabled` detail=`skill source verification does not run installers or dependency managers`\n")
+	for _, finding := range report.Source.Findings {
+		fmt.Fprintf(b, "- severity=`%s` code=`%s` category=`%s` source=`%s` path=`%s` field=`%s` line=`%d` line_sha256_12=`%s`\n",
+			finding.Severity,
+			finding.Code,
+			finding.Category,
+			inlineCode(finding.Name),
+			finding.Path,
+			finding.Field,
+			finding.Line,
+			finding.LineSHA,
+		)
+	}
+}
+
 func skillSourceRiskCodes(findings []SkillSourceRiskFinding) []string {
 	var codes []string
 	seen := map[string]bool{}
@@ -691,6 +794,14 @@ func isSkillSourcesRiskRequest(ev Event, cfg Config) bool {
 		fields[0] == "/skills" &&
 		(strings.EqualFold(fields[1], "sources") || strings.EqualFold(fields[1], "source")) &&
 		(strings.EqualFold(fields[2], "risk") || strings.EqualFold(fields[2], "risk-audit"))
+}
+
+func isSkillSourcesVerifyRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 3 &&
+		fields[0] == "/skills" &&
+		(strings.EqualFold(fields[1], "sources") || strings.EqualFold(fields[1], "source")) &&
+		(strings.EqualFold(fields[2], "verify") || strings.EqualFold(fields[2], "check"))
 }
 
 func requestedSkillSourceInfoName(ev Event, cfg Config) string {

@@ -98,6 +98,9 @@ func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isSkillSourcesRiskRequest(ev, cfg) {
 		return renderSkillSourcesRiskReport(ev, cfg, repoContext, true)
 	}
+	if isSkillSourcesVerifyRequest(ev, cfg) {
+		return renderSkillSourcesVerifyReport(ev, cfg, repoContext, true)
+	}
 	if isSkillsRuntimeRequest(ev, cfg) {
 		return renderSkillRuntimeReport(ev, repoContext, true)
 	}
