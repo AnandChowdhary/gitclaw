@@ -50,13 +50,13 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 timestamp="$(date -u +%Y%m%d%H%M%S)"
 name="proactive-notify-e2e-${timestamp}"
 slot="notify-${timestamp}"
-notify_route="e2e-telegram-route"
+notify_route="e2e-slack-route"
 message_id="gitclaw-proactive-${name}-${slot}"
-thread_id="gitclaw-e2e-telegram-${notify_route}-${message_id}"
+thread_id="gitclaw-e2e-route-${message_id}"
 hidden_token="NOECHO_PROACTIVE_NOTIFY_PROMPT_${timestamp}"
 duplicate_hidden_token="NOECHO_PROACTIVE_NOTIFY_DUPLICATE_${timestamp}"
 followup_hidden_token="NOECHO_PROACTIVE_NOTIFY_FOLLOWUP_${timestamp}"
-account_id="telegram-proactive-notify-account-NOECHO_${timestamp}"
+account_id="slack-proactive-notify-account-NOECHO_${timestamp}"
 expected_token="GITCLAW_PROACTIVE_NOTIFY_CONTEXT_V1"
 search_phrase="proactive channel notify unique search fixture phrase"
 issue_number=""
@@ -301,7 +301,7 @@ if grep -Fxq "gitclaw" <<<"$channel_labels"; then
 fi
 for expected in \
   "gitclaw:channel-thread" \
-  'channel="telegram"' \
+  'channel="slack"' \
   "thread_id=\"${thread_id}\""; do
   grep -Fq "$expected" <<<"$channel_body" || die "channel issue body missing ${expected}"
 done
@@ -325,7 +325,7 @@ done
 
 outbox_log="$(go run ./cmd/gitclaw channel-outbox \
   --repo "$repo" \
-  --channel telegram \
+  --channel slack \
   --account-id "$account_id" \
   --issue-number "$channel_issue_number" \
   --include-body \
@@ -341,7 +341,7 @@ for expected in \
 done
 outbox_json="$(cat "$outbox_file")"
 for expected in \
-  '"channel": "telegram"' \
+  '"channel": "slack"' \
   '"pending_messages": 1' \
   '"messages_returned": 1' \
   '"kind": "channel-outbound"' \
