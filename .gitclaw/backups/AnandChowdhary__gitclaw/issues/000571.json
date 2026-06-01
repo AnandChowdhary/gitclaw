@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T17:05:14Z",
+  "generated_at": "2026-06-01T17:06:55Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 571,
     "title": "GitClaw telegram thread channel-pin-e2e-20260601T170321Z",
@@ -42,6 +42,24 @@
       "CommentID": 4594770207,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels pin --message-id pin-ingest-20260601T170321Z\n\nQueue only a provider pin.\nDo not include this source hidden token in the receipt: NOECHO_CHANNEL_PIN_SOURCE_20260601T170321Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4594775306,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Reaction Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#571`\n- requested_channel_command: `/channels pin`\n- channel_reaction_status: `queued`\n- target_issue: `#571`\n- target_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/571`\n- reaction_comment_id: `4594782463`\n- target_issue_created: `false`\n- duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `3569653ae921`\n- target_message_id_sha256_12: `a91973cd1565`\n- reaction_sha256_12: `e5c0c2060bdc`\n- target_from_current_channel_issue: `true`\n- target_issue_is_source: `true`\n- raw_route_name_included: `false`\n- raw_thread_id_included: `false`\n- raw_target_message_id_included: `false`\n- raw_reaction_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_reaction_action_change: `true`\n- issue_title_sha256_12: `35883b7e7b0a`\n\nGitClaw queued a structured `gitclaw:channel-reaction` comment on the canonical channel issue. Provider tokens, provider APIs, raw thread IDs, raw target message IDs, raw reactions, and channel message bodies are not included in this receipt.\n\n### Follow-Up Delivery\n- provider gateways read pending reactions with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent reactions with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate reactions are suppressed by `channel + target_message_id + reaction`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4594782577,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -60,6 +78,30 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T17:04:47Z",
       "updated_at": "2026-06-01T17:04:47Z"
+    },
+    {
+      "id": 4594775306,
+      "body": "@gitclaw /channels pin --message-id pin-ingest-20260601T170321Z\n\nQueue only a provider pin.\nDo not include this source hidden token in the receipt: NOECHO_CHANNEL_PIN_SOURCE_20260601T170321Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T17:05:29Z",
+      "updated_at": "2026-06-01T17:05:29Z"
+    },
+    {
+      "id": 4594782463,
+      "body": "\u003c!-- gitclaw:channel-reaction channel=\"telegram\" thread_id=\"channel-pin-e2e-20260601T170321Z\" message_id=\"pin-ingest-20260601T170321Z\" reaction=\"pushpin\" author=\"gitclaw\" --\u003e\nGitClaw channel reaction: pushpin",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T17:06:27Z",
+      "updated_at": "2026-06-01T17:06:27Z"
+    },
+    {
+      "id": 4594782577,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26769720379\" event_id=\"comment-4594775306\" model=\"gitclaw/channels\" idempotency_key=\"f70e673c3ec8b6732ed667a7c07fcc48\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26769720379\" --\u003e\n## GitClaw Channel Reaction Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#571`\n- requested_channel_command: `/channels pin`\n- channel_reaction_status: `queued`\n- target_issue: `#571`\n- target_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/571`\n- reaction_comment_id: `4594782463`\n- target_issue_created: `false`\n- duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `3569653ae921`\n- target_message_id_sha256_12: `a91973cd1565`\n- reaction_sha256_12: `e5c0c2060bdc`\n- target_from_current_channel_issue: `true`\n- target_issue_is_source: `true`\n- raw_route_name_included: `false`\n- raw_thread_id_included: `false`\n- raw_target_message_id_included: `false`\n- raw_reaction_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_reaction_action_change: `true`\n- issue_title_sha256_12: `35883b7e7b0a`\n\nGitClaw queued a structured `gitclaw:channel-reaction` comment on the canonical channel issue. Provider tokens, provider APIs, raw thread IDs, raw target message IDs, raw reactions, and channel message bodies are not included in this receipt.\n\n### Follow-Up Delivery\n- provider gateways read pending reactions with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent reactions with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate reactions are suppressed by `channel + target_message_id + reaction`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T17:06:28Z",
+      "updated_at": "2026-06-01T17:06:28Z"
     }
   ]
 }
