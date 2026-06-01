@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-01T14:25:55Z`
-- issue_count: `484`
+- generated_at: `2026-06-01T14:43:41Z`
+- issue_count: `485`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -489,3 +489,4 @@
 | #544 | GitClaw backup rehearsal: issue #543 (backup-rehearsal-20260601t140519z) | `2026-06-01T14:10:35Z` | 2 | 3 | `issues/000544.json` |
 | #545 | @gitclaw /soul rehearse --target soul --id soul-rehearsal-20260601t142050z | `2026-06-01T14:24:11Z` | 3 | 4 | `issues/000545.json` |
 | #546 | GitClaw soul rehearsal: .gitclaw/SOUL.md (soul-rehearsal-20260601t142050z) | `2026-06-01T14:25:54Z` | 2 | 3 | `issues/000546.json` |
+| #547 | GitClaw channel poll E2E 20260601T144151Z | `2026-06-01T14:43:40Z` | 1 | 2 | `issues/000547.json` |
