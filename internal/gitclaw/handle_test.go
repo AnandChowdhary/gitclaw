@@ -2828,6 +2828,116 @@ func TestHandleSoulEditPlanCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 }
 
+func TestHandleSoulProposeCommandCreatesProposalIssueWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	files := map[string]string{
+		".gitclaw/SOUL.md":              "Soul policy.",
+		".gitclaw/IDENTITY.md":          "Identity: GitClaw.",
+		".gitclaw/USER.md":              "User facts.",
+		".gitclaw/TOOLS.md":             "Tools.",
+		".gitclaw/MEMORY.md":            "Memory.",
+		".gitclaw/HEARTBEAT.md":         "Heartbeat.",
+		".gitclaw/memory/2026-05-29.md": "Daily note.",
+	}
+	for path, body := range files {
+		writeTestFile(t, root, path, body)
+	}
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 144,
+			"title": "@gitclaw /soul propose --target soul --id warm-tone-soul",
+			"body": "Queue a high-authority style update. Hidden soul proposal token: SOUL_PROPOSE_ACTION_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{144: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for soul propose action", llm.Calls)
+	}
+	if len(github.Issues) != 1 {
+		t.Fatalf("created soul proposal issues = %d, want 1: %#v", len(github.Issues), github.Issues)
+	}
+	proposalIssue := github.Issues[0]
+	if proposalIssue.Title != "GitClaw soul proposal: warm-tone-soul" || !strings.Contains(proposalIssue.Body, soulProposalIssueMarker) {
+		t.Fatalf("unexpected soul proposal issue: %#v", proposalIssue)
+	}
+	for _, want := range []string{"proposal_id: warm-tone-soul", "target_path: .gitclaw/SOUL.md", "target_category: soul", "source_issue: #144", "raw_source_body_included: false", "raw_candidate_soul_included: false", "soul_file_written: false"} {
+		if !strings.Contains(proposalIssue.Body, want) {
+			t.Fatalf("soul proposal issue body missing %q:\n%s", want, proposalIssue.Body)
+		}
+	}
+	if strings.Contains(proposalIssue.Body, "SOUL_PROPOSE_ACTION_SECRET") || strings.Contains(proposalIssue.Body, "Queue a high-authority style update") {
+		t.Fatalf("soul proposal issue body leaked source request:\n%s", proposalIssue.Body)
+	}
+	if len(github.CommentsByIssue[144]) != 1 {
+		t.Fatalf("source comments = %d, want soul proposal receipt: %#v", len(github.CommentsByIssue[144]), github.CommentsByIssue[144])
+	}
+	receipt := github.CommentsByIssue[144][0].Body
+	for _, want := range []string{"GitClaw Soul Proposal Issue Action", "Generated without a model call", `model="gitclaw/soul"`, "soul_proposal_status: `created`", "soul_proposal_issue_created: `true`", "duplicate_suppressed: `false`", "soul_proposal_id: `warm-tone-soul`", "normalized_soul_path: `.gitclaw/SOUL.md`", "target_category: `soul`", "proposal_store: `github-issue-to-git-reviewed-soul-file`", "raw_source_body_included: `false`", "raw_candidate_soul_included: `false`", "soul_file_written: `false`", "llm_e2e_required_after_soul_proposal_issue_change: `true`"} {
+		if !strings.Contains(receipt, want) {
+			t.Fatalf("soul propose receipt missing %q:\n%s", want, receipt)
+		}
+	}
+	for _, leaked := range []string{"SOUL_PROPOSE_ACTION_SECRET", "Queue a high-authority style update"} {
+		if strings.Contains(receipt, leaked) {
+			t.Fatalf("soul propose receipt leaked %q:\n%s", leaked, receipt)
+		}
+	}
+
+	commentEv, err := ParseEvent("issue_comment", []byte(`{
+		"action": "created",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 144,
+			"title": "@gitclaw /soul propose --target soul --id warm-tone-soul",
+			"body": "Queue a high-authority style update.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"comment": {
+			"id": 90,
+			"body": "@gitclaw /soul propose --target soul --id warm-tone-soul\nDuplicate soul request hidden token: SOUL_PROPOSE_DUPLICATE_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"}
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent comment returned error: %v", err)
+	}
+	if err := Handle(context.Background(), commentEv, cfg, github, llm); err != nil {
+		t.Fatalf("second Handle returned error: %v", err)
+	}
+	if len(github.Issues) != 1 {
+		t.Fatalf("duplicate soul proposal created another issue: %#v", github.Issues)
+	}
+	duplicateReceipt := github.CommentsByIssue[144][1].Body
+	for _, want := range []string{"soul_proposal_status: `existing`", "soul_proposal_issue_created: `false`", "duplicate_suppressed: `true`"} {
+		if !strings.Contains(duplicateReceipt, want) {
+			t.Fatalf("duplicate soul propose receipt missing %q:\n%s", want, duplicateReceipt)
+		}
+	}
+	if strings.Contains(duplicateReceipt, "SOUL_PROPOSE_DUPLICATE_SECRET") {
+		t.Fatalf("duplicate soul propose receipt leaked comment body:\n%s", duplicateReceipt)
+	}
+}
+
 func TestHandleSoulSearchCommandPostsReportWithoutLLM(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/SOUL.md", "Repo-native operating guidance SOUL_SEARCH_HANDLER_SECRET.")

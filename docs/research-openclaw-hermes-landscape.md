@@ -860,6 +860,18 @@ repo-reader search and verifies prompt provenance, selected skills,
 prompt-visible tools, and usage telemetry before a soul-planner change is
 accepted.
 
+2026-06-01 soul-proposal-issue follow-up: current OpenClaw workspace docs keep
+`SOUL.md`, `IDENTITY.md`, `USER.md`, `TOOLS.md`, `HEARTBEAT.md`, and memory in
+the agent workspace, and Hermes configuration docs describe `SOUL.md` as the
+primary agent identity file loaded from the profile home. GitClaw should make
+`@gitclaw /soul propose --target <path> --id <id>` an issue-native review
+queue for this prompt-authority layer: open or reuse a marked proposal issue,
+publish source hashes plus target validation/risk metadata, suppress duplicate
+proposal ids, and keep candidate generation, high-authority file writes, model
+self-modification, model calls, and repository mutation behind reviewed git
+changes. The live E2E must prove both the deterministic action and a real
+GitHub Models repo-reader/search follow-up.
+
 2026-05-30 soul-verify follow-up: OpenClaw's `SOUL.md` convention and Hermes'
 profile/memory boundary suggest a second audit surface beyond validation:
 provenance. GitClaw should add `@gitclaw /soul verify` and

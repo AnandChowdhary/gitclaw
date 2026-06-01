@@ -2525,6 +2525,7 @@ gitclaw soul risk
 gitclaw soul validate
 gitclaw soul list
 gitclaw soul edit-plan <path>
+@gitclaw /soul propose --target <path> --id <id>
 gitclaw soul info <path>
 gitclaw soul search <query> --max-results 10
 ```
@@ -2548,6 +2549,7 @@ by OpenClaw and Hermes' portable workspace files:
 @gitclaw /soul risk
 @gitclaw /soul validate
 @gitclaw /soul edit-plan soul
+@gitclaw /soul propose --target soul --id warm-tone-soul
 @gitclaw /soul info soul
 @gitclaw /soul search durable state layer
 ```
@@ -2662,6 +2664,23 @@ GitHub Models conversation E2E in addition to deterministic soul-report tests.
 Changes to the planner itself must also run the live follow-up that proves
 selected skill metadata, prompt-context provenance, `gitclaw.search_files`,
 and token-usage markers.
+
+When called as `@gitclaw /soul propose --target <path> --id <id>`, GitClaw
+performs the issue-native soul proposal action. It opens or reuses a dedicated
+GitHub issue marked with `gitclaw:soul-proposal-issue`, records the safe
+proposal id, source request hash, source issue/comment identity, normalized
+target path, category, current target hash/size/load state, validation rollup,
+and risk rollup, then posts a body-free receipt in the source conversation.
+Duplicate open soul proposal issues are suppressed by marker and proposal id.
+
+The soul proposal action does not write `.gitclaw/SOUL.md`,
+`.gitclaw/IDENTITY.md`, `.gitclaw/USER.md`, `.gitclaw/TOOLS.md`, memory files,
+or any related high-authority context; it does not generate candidate soul
+text, does not copy raw issue/comment text into the proposal issue or receipt,
+and does not call a model. It is a GitHub-native review queue entry: after
+review, a maintainer can draft the high-authority context diff on a normal
+branch, run soul/profile validation and risk checks, and let the change affect
+future prompts only through a reviewed git change.
 
 When called as `@gitclaw /soul validate`, the command posts only the
 validation report: status, error/warning totals, required-file counts,
@@ -8160,6 +8179,13 @@ examples/workflows/gitclaw.yml
   and raw context bodies disabled. The same harness then posts a live GitHub
   Models follow-up proving selected `repo-reader` context, prompt-context
   provenance, `gitclaw.search_files`, and usage telemetry.
+- A `gh`-driven soul-propose E2E harness verifies
+  `@gitclaw /soul propose --target soul --id <id>` opens a body-free GitHub
+  soul proposal issue, posts a source receipt, suppresses duplicate open
+  proposal issues, avoids raw source/request/candidate leakage, and still runs
+  a live GitHub Models follow-up proving repo-local skill selection,
+  prompt-visible repository search tool usage, and usage telemetry after the
+  deterministic issue action.
 - A `gh`-driven soul-validate E2E harness verifies
   `@gitclaw /soul validate` exposes the body-free validation report without
   falling back to the full context inventory.

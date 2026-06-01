@@ -72,7 +72,7 @@ stricter shared repos can use `label-only` or `prefix-only`.
 
 High-authority context:
 
-```bash
+```text
 gitclaw soul catalog
 gitclaw soul anchors
 gitclaw soul snapshot
@@ -82,6 +82,7 @@ gitclaw soul risk
 gitclaw soul validate
 gitclaw soul list
 gitclaw soul edit-plan <path>
+@gitclaw /soul propose --target <path> --id <id>
 gitclaw soul info <path>
 gitclaw soul search <query>
 ```
@@ -101,6 +102,11 @@ profile-export, mutation, and raw-body gates disabled.
 context changes. It reports normalized target metadata and write-disabled
 gates only, and its live harness now proves a real GitHub Models repo-reader
 follow-up after the deterministic report.
+Trusted issue threads can queue reviewed high-authority context changes with
+`@gitclaw /soul propose --target soul --id <id>`: GitClaw opens or reuses a
+GitHub proposal issue, records source hashes and current target metadata, and
+keeps `.gitclaw/SOUL.md`, `.gitclaw/USER.md`, and related prompt-authority
+files untouched until a human-reviewed branch promotes the change.
 
 Memory:
 
@@ -887,6 +893,7 @@ scripts/e2e/github-skills-provenance-report.sh
 scripts/e2e/github-soul-catalog-report.sh
 scripts/e2e/github-soul-snapshot-report.sh
 scripts/e2e/github-soul-provenance-report.sh
+scripts/e2e/github-soul-propose-issue.sh
 scripts/e2e/github-sandbox-risk-report.sh
 scripts/e2e/github-tasks-ledger-report.sh
 scripts/e2e/github-tasks-risk-report.sh
@@ -997,6 +1004,12 @@ a trusted `@gitclaw /memory remember --target long-term --id <id>` turn opens
 or reuses a GitHub memory proposal issue, keeps candidate/source text out of
 receipts and proposal bodies, suppresses duplicate proposal requests, and then
 continues with a real GitHub Models repo-reader/search follow-up.
+The soul-propose harness applies the same review queue to high-authority
+identity/profile context: a trusted `@gitclaw /soul propose --target soul --id
+<id>` turn opens or reuses a GitHub soul proposal issue, keeps source and
+candidate text out of issue-visible receipts, suppresses duplicate proposal
+requests, and then continues with a real GitHub Models repo-reader/search
+follow-up.
 The channel-ingest harness proves the generic no-server bridge end to end:
 workflow-dispatch mirroring, duplicate provider-message suppression, and a
 normal model/tool follow-up on the canonical channel issue.

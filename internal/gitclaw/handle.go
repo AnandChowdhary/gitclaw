@@ -97,6 +97,32 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		status.SetDone()
 		return nil
 	}
+	if IsSoulProposalIssueRequest(ev, cfg) {
+		proposalClient, ok := github.(SoulProposalIssueGitHubClient)
+		if !ok {
+			return failStartedTurn(ctx, cfg, github, ev, status, "soul", fmt.Errorf("github client cannot create soul proposal issues"))
+		}
+		req, err := BuildSoulProposalIssueRequest(ev, cfg, repoContext)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "soul", fmt.Errorf("build soul proposal issue: %w", err))
+		}
+		result, err := RunSoulProposalIssue(ctx, proposalClient, req)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "soul", fmt.Errorf("run soul proposal issue: %w", err))
+		}
+		body := RenderAssistantComment(Marker{
+			RunID:          envFirst("GITHUB_RUN_ID", "local"),
+			EventID:        eventID(ev),
+			Model:          "gitclaw/soul",
+			IdempotencyKey: key,
+			RunURL:         actionRunURL(ev),
+		}, RenderSoulProposalIssueActionReport(ev, req, result))
+		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post soul proposal issue comment: %w", err))
+		}
+		status.SetDone()
+		return nil
+	}
 	if IsSoulReportRequest(ev, cfg) {
 		body := RenderAssistantComment(Marker{
 			RunID:          envFirst("GITHUB_RUN_ID", "local"),
@@ -805,6 +831,8 @@ func safeFailureDiagnostic(phase string, cause error) string {
 		return "memory action could not be completed"
 	case "skill":
 		return "skill action could not be completed"
+	case "soul":
+		return "soul action could not be completed"
 	default:
 		_ = cause
 		return "assistant turn failed"
