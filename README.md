@@ -611,6 +611,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels probe --route e2e-slack-route --message-id <id>
 @gitclaw /channels broadcast e2e-slack-route,e2e-telegram-route --message-id <id>
 @gitclaw /channels invite e2e-slack-route,e2e-telegram-route --message-id <id>
+@gitclaw /channels room e2e-slack-route,e2e-telegram-route --room-id <id> --message-id <id>
 @gitclaw /channels huddle e2e-slack-route,e2e-telegram-route --huddle-id <id> --message-id <id>
 @gitclaw /channels poll e2e-slack-route,e2e-telegram-route --poll-id <id> --message-id <id>
 @gitclaw /channels rollcall e2e-slack-route,e2e-telegram-route --rollcall-id <id> --message-id <id>
@@ -784,6 +785,13 @@ per route, and still leaves actual provider delivery to outbox/delivery.
 issue invitation from the source issue number, URL, title, and optional note,
 queues it to each reviewed route, and keeps raw route names, notes, titles, and
 outbound invite bodies out of the source receipt.
+`@gitclaw /channels room <route-a>,<route-b> --room-id <id> --message-id <id>`
+creates or reuses a durable GitHub room issue, labels it for normal GitClaw
+conversation, writes the human-readable topic and notes there, and queues
+provider-facing room invites through the same routebook/outbox path. The source
+receipt stays body-free and reports only hashes, counts, issue numbers, and
+duplicate status; the room issue is where the model-backed conversation
+continues.
 `@gitclaw /channels huddle <route-a>,<route-b> --huddle-id <id> --message-id
 <id>` creates or reuses a dedicated GitHub huddle issue, labels it for normal
 GitClaw conversation, writes the human-readable topic and agenda there, and
@@ -1020,6 +1028,7 @@ scripts/e2e/github-channel-send-slash.sh
 scripts/e2e/github-channel-probe-slash.sh
 scripts/e2e/github-channel-broadcast-slash.sh
 scripts/e2e/github-channel-invite-slash.sh
+scripts/e2e/github-channel-room-slash.sh
 scripts/e2e/github-channel-huddle-slash.sh
 scripts/e2e/github-channel-poll-slash.sh
 scripts/e2e/github-channel-rollcall-slash.sh

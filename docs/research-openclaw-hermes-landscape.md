@@ -3460,19 +3460,30 @@ Acceptance must include a live slash-command E2E plus a real GitHub Models
 repo-reader/search follow-up, so channel actions do not become another
 deterministic-only report surface.
 
-2026-06-01 channel huddle follow-up: the same channel surface should support
-small ad-hoc rooms, not only one-way announcements and reports. OpenClaw's
+2026-06-01 channel room follow-up: the same channel surface should support
+durable shared rooms, not only one-way announcements and reports. OpenClaw's
 channel/gateway model and Hermes' channel sessions both point at a useful
 primitive: create a canonical GitHub issue as the room, invite Slack/Telegram
 routes into it, and let the room continue as an ordinary GitClaw conversation.
-GitClaw's serverless version is `@gitclaw /channels huddle <routes>
---huddle-id <id> --message-id <id>`: it creates or reuses a
-`gitclaw:channel-huddle` issue labelled with `gitclaw`, writes the
-human-readable topic and agenda there, queues provider-facing huddle invites
-through `channel-outbox`, and keeps the source receipt body-free. Acceptance
-must include a live E2E that verifies huddle creation, route invite queues,
-duplicate suppression, metadata-only outbox discovery, and a real GitHub Models
-repo-reader/search follow-up on the huddle issue itself.
+GitClaw's serverless version is `@gitclaw /channels room <routes> --room-id
+<id> --message-id <id>`: it creates or reuses a `gitclaw:channel-room` issue
+labelled with `gitclaw`, writes the human-readable topic and notes there,
+queues provider-facing room invites through `channel-outbox`, and keeps the
+source receipt body-free. Acceptance must include a live E2E that verifies room
+creation, route invite queues, duplicate suppression, metadata-only outbox
+discovery, and a real GitHub Models repo-reader/search follow-up on the room
+issue itself.
+
+2026-06-01 channel huddle follow-up: once durable rooms exist, huddles remain
+the smaller meeting-shaped primitive with an agenda. GitClaw's serverless
+version is `@gitclaw /channels huddle <routes> --huddle-id <id> --message-id
+<id>`: it creates or reuses a `gitclaw:channel-huddle` issue labelled with
+`gitclaw`, writes the human-readable topic and agenda there, queues
+provider-facing huddle invites through `channel-outbox`, and keeps the source
+receipt body-free. Acceptance must include a live E2E that verifies huddle
+creation, route invite queues, duplicate suppression, metadata-only outbox
+discovery, and a real GitHub Models repo-reader/search follow-up on the huddle
+issue itself.
 
 2026-06-01 channel poll follow-up: current OpenClaw channel docs still frame
 Slack/Telegram as gateway-owned routes, and Hermes' feature docs describe

@@ -5104,24 +5104,51 @@ For opening a dedicated GitHub discussion room and inviting channels into it,
 GitClaw also supports:
 
 ```text
+@gitclaw /channels room team-alerts,ops-alerts --room-id <stable-room-id> --message-id <stable-outbound-id>
+Topic: short room topic
+Notes:
+optional notes to pin in the room and routed channel invitation
+```
+
+`/channels room` and `/channels space` create or reuse one open issue carrying
+a hidden `gitclaw:channel-room` marker for the stable room id, label that issue
+with `gitclaw` so the conversation can continue normally, and queue one
+provider-facing room invitation per reviewed route. The room issue is the
+human-readable shared space: it contains the topic, notes, source issue number,
+source issue URL, route count, and route hash. The source receipt remains
+body-free, reporting only the room issue number/URL, room id/topic/notes hashes,
+route counts, duplicate status, target issue/comment IDs, and delivery
+instructions. It does not call a model, call provider APIs, print raw route
+names, print raw room ids, print raw topic/notes text, print raw thread/message
+IDs, or print the outbound invitation body. Duplicates are suppressed first by
+`room_id` for the GitHub room and then by `channel + message_id` for each routed
+outbound invitation. Changes to this surface require a live E2E that creates
+the room, validates queued route invites and body-free receipts, and then
+continues on the room issue with a normal GitHub Models repo-reader/search
+follow-up.
+
+For smaller ad-hoc meetings that should have an agenda rather than a persistent
+room notebook, GitClaw also supports:
+
+```text
 @gitclaw /channels huddle team-alerts,ops-alerts --huddle-id <stable-huddle-id> --message-id <stable-outbound-id>
 Topic: short huddle topic
 Agenda:
 optional agenda to include in the huddle and routed channel invitation
 ```
 
-`/channels huddle`, `/channels room`, and `/channels jam` create or reuse one
-open issue carrying a hidden `gitclaw:channel-huddle` marker for the stable
-huddle id, label that issue with `gitclaw` so the conversation can continue
-normally, and queue one provider-facing huddle invitation per reviewed route.
-The huddle issue is the human-readable room: it contains the topic, agenda,
-source issue number, source issue URL, route count, and route hash. The source
-receipt remains body-free, reporting only the huddle issue number/URL, huddle
-id/topic/agenda hashes, route counts, duplicate status, target issue/comment
-IDs, and delivery instructions. It does not call a model, call provider APIs,
-print raw route names, print raw huddle ids, print raw topic/agenda text, print
-raw thread/message IDs, or print the outbound invitation body. Duplicates are
-suppressed first by `huddle_id` for the GitHub room and then by
+`/channels huddle` and `/channels jam` create or reuse one open issue carrying
+a hidden `gitclaw:channel-huddle` marker for the stable huddle id, label that
+issue with `gitclaw` so the conversation can continue normally, and queue one
+provider-facing huddle invitation per reviewed route. The huddle issue contains
+the topic, agenda, source issue number, source issue URL, route count, and
+route hash. The source receipt remains body-free, reporting only the huddle
+issue number/URL, huddle id/topic/agenda hashes, route counts, duplicate status,
+target issue/comment IDs, and delivery instructions. It does not call a model,
+call provider APIs, print raw route names, print raw huddle ids, print raw
+topic/agenda text, print raw thread/message IDs, or print the outbound
+invitation body. Duplicates are suppressed first by `huddle_id` for the GitHub
+huddle issue and then by
 `channel + message_id` for each routed outbound invitation. Changes to this
 surface require a live E2E that creates the huddle, validates queued route
 invites and body-free receipts, and then continues on the huddle issue with a
@@ -5404,6 +5431,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels risk
 @gitclaw /channels info telegram
 @gitclaw /channels send --route team-alerts --message-id alert-123
+@gitclaw /channels room team-alerts,ops-alerts --room-id design-room --message-id design-room-1
 @gitclaw /channels huddle team-alerts,ops-alerts --huddle-id design-room --message-id design-room-1
 @gitclaw /channels rollcall team-alerts,ops-alerts --rollcall-id standup --message-id standup-1
 ```
@@ -7694,6 +7722,24 @@ examples/workflows/gitclaw.yml
   select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-invite fixture token, and avoid hidden route/account/channel
   sentinels.
+- A `gh`-driven channel-room-slash E2E harness creates an ordinary GitHub issue
+  with `@gitclaw /channels room ...`, verifies a labeled durable GitHub room
+  issue, routebook-backed room invitations on each target channel issue,
+  body-free source receipt metadata, duplicate room suppression from a later
+  issue comment with the same message id, and metadata-only outbox discovery
+  for each target issue. The room issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-room fixture token, and avoid
+  hidden route/account/channel sentinels.
+- A `gh`-driven channel-huddle-slash E2E harness creates an ordinary GitHub
+  issue with `@gitclaw /channels huddle ...`, verifies a labeled GitHub huddle
+  issue, routebook-backed huddle invitations on each target channel issue,
+  body-free source receipt metadata, duplicate huddle suppression from a later
+  issue comment with the same message id, and metadata-only outbox discovery
+  for each target issue. The huddle issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-huddle fixture token, and avoid
+  hidden route/account/channel sentinels.
 - A `gh`-driven channel-poll-slash E2E harness creates an ordinary GitHub issue
   with `@gitclaw /channels poll ...`, verifies a labeled GitHub poll issue,
   routebook-backed poll invitations on each target channel issue, body-free

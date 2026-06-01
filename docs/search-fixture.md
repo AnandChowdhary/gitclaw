@@ -88,6 +88,7 @@ channel send slash unique search fixture phrase => GITCLAW_CHANNEL_SEND_SLASH_CO
 channel probe unique search fixture phrase => GITCLAW_CHANNEL_PROBE_CONTEXT_V1
 channel broadcast unique search fixture phrase => GITCLAW_CHANNEL_BROADCAST_CONTEXT_V1
 channel invite unique search fixture phrase => GITCLAW_CHANNEL_INVITE_CONTEXT_V1
+channel room unique search fixture phrase => GITCLAW_CHANNEL_ROOM_CONTEXT_V1
 channel huddle unique search fixture phrase => GITCLAW_CHANNEL_HUDDLE_CONTEXT_V1
 channel poll unique search fixture phrase => GITCLAW_CHANNEL_POLL_CONTEXT_V1
 channel rollcall unique search fixture phrase => GITCLAW_CHANNEL_ROLLCALL_CONTEXT_V1
