@@ -3785,6 +3785,7 @@ approval, sandboxing, and mutation:
 @gitclaw /rollback catalog
 @gitclaw /checkpoints preview HEAD~1
 @gitclaw /rollback diff HEAD~1
+@gitclaw /checkpoints rehearse --id rollback-lab --target HEAD~1
 @gitclaw /checkpoints risk
 @gitclaw /rollback risk
 ```
@@ -3868,6 +3869,24 @@ checks out, or mutates files. The report includes
 must pass a deterministic live rollback-preview issue plus a real GitHub
 Models follow-up proving prompt context hashing, selected repo-reader skill,
 prompt-visible repository search tools, and usage telemetry.
+
+`@gitclaw /checkpoints rehearse --id <stable-id> --target HEAD~1`,
+`@gitclaw /rollback rehearsal --id <stable-id> --target HEAD~1`, and
+`@gitclaw /rollback drill --id <stable-id> --target HEAD~1` create or reuse one
+open GitHub issue carrying a hidden `gitclaw:checkpoint-rehearsal-issue`
+marker. This is the issue-native rollback lab: the source issue gets only a
+body-free, model-free receipt with the target ref hash, worktree/checkpoint
+metadata, duplicate status, and disabled mutation gates. The rehearsal issue
+stores the stable rehearsal id, readable target ref, dry-run checkpoint and
+rollback commands, and current preview metadata so normal GitClaw conversation
+can continue there. It must not call a model in the deterministic source
+action, run restore/reset/clean/checkout commands, mutate the repository, print
+raw diffs, print file bodies, print raw target refs in the source receipt, or
+copy raw source issue/comment bodies. Duplicates are suppressed by rehearsal
+id. Changes to this surface require a live E2E that creates the rehearsal
+issue, checks duplicate suppression, runs local checkpoint preview commands,
+and then continues on the rehearsal issue with a normal GitHub Models
+repo-reader/search follow-up.
 
 When called as `@gitclaw /checkpoints risk` or `@gitclaw /rollback risk`, the
 command posts a `GitClaw Checkpoint Risk Report`. It scans git checkpoint
@@ -9049,6 +9068,13 @@ examples/workflows/gitclaw.yml
   file paths, or issue-body leakage. The same issue must then run a real
   GitHub Models follow-up proving model inference, prompt provenance, selected
   skills, prompt-visible repository search tool usage, and usage markers.
+- A `gh`-driven checkpoints-rehearse E2E harness verifies
+  `@gitclaw /checkpoints rehearse --id ... --target HEAD~1` opens or reuses a
+  labeled rollback rehearsal issue, keeps the source receipt body-free and
+  mutation-free, verifies duplicate suppression, runs local checkpoint preview
+  commands, and then continues on the rehearsal issue with a real GitHub Models
+  repo-reader/search follow-up that must recover the checkpoint-rehearsal
+  fixture token.
 - A `gh`-driven checkpoints-risk E2E harness verifies
   `@gitclaw /rollback risk` exposes body-free checkpoint risk metadata, then
   runs a real GitHub Models follow-up conversation that proves model inference,

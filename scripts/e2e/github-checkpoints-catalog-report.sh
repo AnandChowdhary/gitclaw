@@ -185,7 +185,7 @@ for expected in \
   'unstaged_changes: `0`' \
   'untracked_files: `0`' \
   'backup_branch: `' \
-  'catalog_entries: `10`' \
+  'catalog_entries: `11`' \
   'checkpoint_layers: `7`' \
   'restore_operations_enabled: `false`' \
   'git_reset_allowed: `false`' \
@@ -208,6 +208,7 @@ for expected in \
   'command=`verify` issue_intent=`@gitclaw /checkpoints verify` local_command=`gitclaw checkpoints verify`' \
   'command=`preview` issue_intent=`@gitclaw /checkpoints preview HEAD~1` local_command=`gitclaw checkpoints preview HEAD~1`' \
   'command=`risk` issue_intent=`@gitclaw /checkpoints risk` local_command=`gitclaw checkpoints risk`' \
+  'command=`rehearse` issue_intent=`@gitclaw /checkpoints rehearse --id <id>` local_command=`n/a` execution=`issue-native` gate=`rollback-rehearsal-conversation`' \
   'command=`rollback-catalog` issue_intent=`@gitclaw /rollback catalog` local_command=`gitclaw rollback catalog`' \
   'command=`rollback-list` issue_intent=`@gitclaw /rollback` local_command=`gitclaw rollback list`' \
   'command=`rollback-diff` issue_intent=`@gitclaw /rollback diff HEAD~1` local_command=`gitclaw rollback diff HEAD~1`' \
@@ -246,12 +247,13 @@ for output_name in cli_catalog rollback_catalog; do
     "GitClaw Checkpoints Catalog Report" \
     'scope: `local-cli`' \
     'catalog_strategy: `compact-git-history-rollback-discovery`' \
-    'catalog_entries: `10`' \
+    'catalog_entries: `11`' \
     'checkpoint_layers: `7`' \
     'raw_diffs_included: `false`' \
     'raw_file_bodies_included: `false`' \
     'command=`catalog` issue_intent=`@gitclaw /checkpoints catalog` local_command=`gitclaw checkpoints catalog`' \
     'command=`preview` issue_intent=`@gitclaw /checkpoints preview HEAD~1` local_command=`gitclaw checkpoints preview HEAD~1`' \
+    'command=`rehearse` issue_intent=`@gitclaw /checkpoints rehearse --id <id>` local_command=`n/a`' \
     'command=`rollback-catalog` issue_intent=`@gitclaw /rollback catalog` local_command=`gitclaw rollback catalog`' \
     'command=`rollback-diff` issue_intent=`@gitclaw /rollback diff HEAD~1` local_command=`gitclaw rollback diff HEAD~1`' \
     'layer=`git-history` store=`repository .git metadata`' \

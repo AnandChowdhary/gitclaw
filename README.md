@@ -588,6 +588,7 @@ gitclaw artifacts verify
 gitclaw checkpoints catalog
 gitclaw checkpoints preview HEAD~1
 gitclaw checkpoints risk
+@gitclaw /checkpoints rehearse --id <id> --target HEAD~1
 gitclaw rollback catalog
 gitclaw rollback diff HEAD~1
 gitclaw rollback risk
@@ -762,6 +763,11 @@ outputs, or credentials.
 `/rollback diff`: it compares a target git ref to `HEAD`, reports numstat
 counts and path hashes, and refuses restore/reset/clean/checkout behavior.
 The matching issue command is `@gitclaw /rollback diff HEAD~1`.
+`@gitclaw /checkpoints rehearse --id <id> --target HEAD~1` opens or reuses a
+dedicated GitHub rehearsal issue for talking through rollback readiness. The
+source receipt stays body-free and model-free, while the rehearsal issue records
+safe dry-run checkpoint/rollback commands and remains labeled for normal
+GitClaw conversation.
 
 The live channels-report harness verifies the GitHub-native Slack/Telegram
 bridge contract, workflow-dispatch wake strategy, and mirrored message counts
@@ -945,6 +951,7 @@ scripts/e2e/github-artifacts-catalog-report.sh
 scripts/e2e/github-artifacts-risk-report.sh
 scripts/e2e/github-checkpoints-catalog-report.sh
 scripts/e2e/github-rollback-preview-report.sh
+scripts/e2e/github-checkpoints-rehearse-issue.sh
 scripts/e2e/github-checkpoints-risk-report.sh
 scripts/e2e/github-context-risk-report.sh
 scripts/e2e/github-prompt-pack-report.sh
@@ -1125,6 +1132,11 @@ The rollback-preview harness exercises `@gitclaw /rollback diff HEAD~1` against
 the real checked-out repository, checks the body-free numstat/path-hash preview
 and disabled restore gates, then requires a real GitHub Models repo-reader
 follow-up with prompt, skill, tool, and usage telemetry.
+The checkpoint-rehearse harness opens a rollback rehearsal issue from
+`@gitclaw /checkpoints rehearse`, checks duplicate suppression and disabled
+reset/clean/checkout gates, runs the local checkpoint preview commands, and
+then continues on the rehearsal issue with a real GitHub Models
+repo-reader/search follow-up.
 The commands-report harness does the same for `/help`: the catalog stays a
 body-free deterministic capability index, then a model-backed repo-reader/search
 follow-up proves the help surface has not replaced ordinary inference and tool

@@ -137,6 +137,7 @@ func checkpointCatalogEntries() []checkpointCatalogEntry {
 		{Name: "list", IssueIntent: "@gitclaw /checkpoints list", LocalCommand: "gitclaw checkpoints list", Execution: "metadata-only", Gate: "rollback-readiness-inventory"},
 		{Name: "verify", IssueIntent: "@gitclaw /checkpoints verify", LocalCommand: "gitclaw checkpoints verify", Execution: "metadata-only", Gate: "rollback-readiness-inventory"},
 		{Name: "preview", IssueIntent: "@gitclaw /checkpoints preview HEAD~1", LocalCommand: "gitclaw checkpoints preview HEAD~1", Execution: "diff-stat-preview", Gate: "rollback-diff-preview-before-restore"},
+		{Name: "rehearse", IssueIntent: "@gitclaw /checkpoints rehearse --id <id>", LocalCommand: "n/a", Execution: "issue-native", Gate: "rollback-rehearsal-conversation"},
 		{Name: "risk", IssueIntent: "@gitclaw /checkpoints risk", LocalCommand: "gitclaw checkpoints risk", Execution: "risk-audit", Gate: "rollback-safety-risk-audit"},
 		{Name: "rollback-catalog", IssueIntent: "@gitclaw /rollback catalog", LocalCommand: "gitclaw rollback catalog", Execution: "metadata-only", Gate: "body-free-rollback-command-map"},
 		{Name: "rollback-list", IssueIntent: "@gitclaw /rollback", LocalCommand: "gitclaw rollback list", Execution: "metadata-only", Gate: "rollback-readiness-inventory"},

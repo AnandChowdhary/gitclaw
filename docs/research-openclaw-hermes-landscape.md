@@ -3990,3 +3990,18 @@ clip/thread/message/title/note hashes and duplicate status, while the clip
 issue contains the human-readable title and notes. Acceptance requires live E2E
 for clip creation, clip-link outbox discovery, duplicate suppression, and a
 real GitHub Models repo-reader/search follow-up on the clip issue.
+
+## 2026-06-01 Checkpoint Rehearsal Follow-Up
+
+Hermes makes rollback safer by separating checkpoint discovery, rollback diff
+preview, and the actual restore step; OpenClaw's migration and backup posture
+similarly treats recovery as something to rehearse before applying. GitClaw's
+GitHub-native version should not stop at reports:
+`@gitclaw /checkpoints rehearse --id <id> --target HEAD~1` creates or reuses a
+labeled GitHub issue for discussing a rollback plan from real git metadata.
+The source action stays deterministic, model-free, and mutation-free: it stores
+target refs as hashes in the receipt, refuses restore/reset/clean/checkout,
+and keeps raw diffs, file bodies, and source request bodies out of band. The
+rehearsal issue carries readable dry-run commands and can then receive a normal
+GitHub Models repo-reader/search follow-up to prove the conversation lane still
+has tool grounding.
