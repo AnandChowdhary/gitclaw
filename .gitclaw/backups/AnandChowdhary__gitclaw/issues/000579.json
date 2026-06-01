@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T18:37:20Z",
+  "generated_at": "2026-06-01T18:39:05Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 579,
     "title": "GitClaw checkpoint rehearsal E2E 20260601t183556z",
@@ -10,7 +10,9 @@
     "author": "AnandChowdhary",
     "author_association": "OWNER",
     "labels": [
-      "gitclaw"
+      "gitclaw",
+      "gitclaw:done",
+      "gitclaw:write-requested"
     ]
   },
   "transcript": [
@@ -31,6 +33,24 @@
       "CommentID": 4595433400,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /rollback rehearsal --id checkpoint-rehearsal-20260601t183556z --target HEAD~1\n\nRepeat the same checkpoint rehearsal.\nDo not include this hidden duplicate token: NOECHO_CHECKPOINT_REHEARSAL_DUPLICATE_20260601t183556z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4595437884,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Checkpoint Rehearsal Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#579`\n- source_comment_id: `4595437884`\n- requested_checkpoints_command: `/rollback rehearsal`\n- checkpoint_rehearsal_status: `existing`\n- rehearsal_issue: `#580`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/580`\n- rehearsal_issue_created: `false`\n- duplicate_suppressed: `true`\n- rehearsal_id_sha256_12: `222b15fa59c1`\n- target_ref_sha256_12: `af9b7019dd7f`\n- target_allowed: `true`\n- checkpoint_status: `clean`\n- rollback_preview_status: `ok`\n- git_available: `true`\n- git_repository: `true`\n- branch_sha256_12: `0d6e4079e367`\n- head_commit: `5da5e35ba299`\n- target_commit: `61e45fe1df50`\n- comparison_range_sha256_12: `e4c7b0756d8a`\n- commits_available: `2`\n- changed_files: `13`\n- preview_files_returned: `13`\n- worktree_clean: `true`\n- staged_changes: `0`\n- unstaged_changes: `0`\n- untracked_files: `0`\n- backup_branch: `gitclaw-backups`\n- backup_branch_local_ref: `false`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- restore_mode: `rehearsal-only`\n- rollback_mode: `inspect-only`\n- repository_mutation_allowed: `false`\n- git_reset_allowed: `false`\n- git_clean_allowed: `false`\n- checkout_mutation_allowed: `false`\n- raw_source_body_included: `false`\n- raw_target_ref_included: `false`\n- raw_diffs_included: `false`\n- raw_file_bodies_included: `false`\n- source_sha256_12: `f6698d712bf3`\n- source_bytes: `225`\n- source_lines: `4`\n- llm_e2e_required_after_checkpoint_rehearsal_issue_change: `true`\n- issue_title_sha256_12: `c80d9c562423`\n\nGitClaw opened or reused a GitHub issue for rehearsing a rollback from git checkpoint metadata. The action does not print raw diffs, print file bodies, reset/clean/checkout files, mutate the repository, or call a model; continue on the rehearsal issue to discuss the dry-run plan.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#580`\n- run checkpoint status, rollback preview, and checkpoint risk commands before any reviewed recovery branch\n- verify the follow-up assistant marker includes prompt context, selected skill, prompt-visible tools, and usage telemetry",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4595445755,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -41,6 +61,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T18:36:57Z",
       "updated_at": "2026-06-01T18:36:57Z"
+    },
+    {
+      "id": 4595437884,
+      "body": "@gitclaw /rollback rehearsal --id checkpoint-rehearsal-20260601t183556z --target HEAD~1\n\nRepeat the same checkpoint rehearsal.\nDo not include this hidden duplicate token: NOECHO_CHECKPOINT_REHEARSAL_DUPLICATE_20260601t183556z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T18:37:32Z",
+      "updated_at": "2026-06-01T18:37:32Z"
+    },
+    {
+      "id": 4595445755,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26774402890\" event_id=\"comment-4595437884\" model=\"gitclaw/checkpoints\" idempotency_key=\"e81cf8b5f1c81444fc4e450c8a3e20d5\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26774402890\" --\u003e\n## GitClaw Checkpoint Rehearsal Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#579`\n- source_comment_id: `4595437884`\n- requested_checkpoints_command: `/rollback rehearsal`\n- checkpoint_rehearsal_status: `existing`\n- rehearsal_issue: `#580`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/580`\n- rehearsal_issue_created: `false`\n- duplicate_suppressed: `true`\n- rehearsal_id_sha256_12: `222b15fa59c1`\n- target_ref_sha256_12: `af9b7019dd7f`\n- target_allowed: `true`\n- checkpoint_status: `clean`\n- rollback_preview_status: `ok`\n- git_available: `true`\n- git_repository: `true`\n- branch_sha256_12: `0d6e4079e367`\n- head_commit: `5da5e35ba299`\n- target_commit: `61e45fe1df50`\n- comparison_range_sha256_12: `e4c7b0756d8a`\n- commits_available: `2`\n- changed_files: `13`\n- preview_files_returned: `13`\n- worktree_clean: `true`\n- staged_changes: `0`\n- unstaged_changes: `0`\n- untracked_files: `0`\n- backup_branch: `gitclaw-backups`\n- backup_branch_local_ref: `false`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- restore_mode: `rehearsal-only`\n- rollback_mode: `inspect-only`\n- repository_mutation_allowed: `false`\n- git_reset_allowed: `false`\n- git_clean_allowed: `false`\n- checkout_mutation_allowed: `false`\n- raw_source_body_included: `false`\n- raw_target_ref_included: `false`\n- raw_diffs_included: `false`\n- raw_file_bodies_included: `false`\n- source_sha256_12: `f6698d712bf3`\n- source_bytes: `225`\n- source_lines: `4`\n- llm_e2e_required_after_checkpoint_rehearsal_issue_change: `true`\n- issue_title_sha256_12: `c80d9c562423`\n\nGitClaw opened or reused a GitHub issue for rehearsing a rollback from git checkpoint metadata. The action does not print raw diffs, print file bodies, reset/clean/checkout files, mutate the repository, or call a model; continue on the rehearsal issue to discuss the dry-run plan.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#580`\n- run checkpoint status, rollback preview, and checkpoint risk commands before any reviewed recovery branch\n- verify the follow-up assistant marker includes prompt context, selected skill, prompt-visible tools, and usage telemetry",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T18:38:37Z",
+      "updated_at": "2026-06-01T18:38:37Z"
     }
   ]
 }
