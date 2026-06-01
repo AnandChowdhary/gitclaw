@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T21:20:38Z",
+  "generated_at": "2026-06-01T21:30:24Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 523,
+  "count": 524,
   "issues": [
     {
       "number": 3,
@@ -6585,6 +6585,18 @@
       ],
       "comment_count": 5,
       "transcript_messages": 6
+    },
+    {
+      "number": 604,
+      "title": "GitClaw skill source proposal channel notify E2E 20260601t212900z",
+      "path": "issues/000604.json",
+      "backup_generated_at": "2026-06-01T21:30:23Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }
