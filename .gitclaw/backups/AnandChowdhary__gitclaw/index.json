@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T19:53:58Z",
+  "generated_at": "2026-06-01T19:55:29Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 513,
   "issues": [
@@ -6452,10 +6452,13 @@
       "number": 587,
       "title": "@gitclaw /skills sources propose e2e-source-20260601t195236z --source github:example/e2e-source-20260601t195236z/.gitclaw/SKILLS/e2e-source-20260601t195236z/SKILL.md --skill-path .gitclaw/SKILLS/e2e-source-20260601t195236z/SKILL.md --id e2e-source-20260601t195236z-review",
       "path": "issues/000587.json",
-      "backup_generated_at": "2026-06-01T19:53:57Z",
-      "event_name": "issues",
-      "comment_count": 1,
-      "transcript_messages": 2
+      "backup_generated_at": "2026-06-01T19:55:28Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw:done"
+      ],
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
