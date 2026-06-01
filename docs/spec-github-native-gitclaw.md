@@ -5287,6 +5287,7 @@ accepts a structured reaction form:
 @gitclaw /channels pin --message-id <provider-message-id>
 @gitclaw /channels task --task-id <stable-task-id> --message-id <provider-message-id>
 @gitclaw /channels clip --clip-id <stable-clip-id> --message-id <provider-message-id>
+@gitclaw /channels remind --reminder-id <stable-reminder-id> --message-id <provider-message-id> --at <RFC3339-or-date>
 ```
 
 `/channels status`, `/channels progress`, and `/channels typing` infer the
@@ -5411,6 +5412,40 @@ creates the clip, validates the metadata-only clip-link outbox, checks duplicate
 suppression, and then continues on the clip issue with a normal GitHub Models
 repo-reader/search follow-up.
 
+The same channel-thread issue can also turn a mirrored provider message into a
+GitHub-native reminder:
+
+```text
+@gitclaw /channels remind --reminder-id <stable-reminder-id> --message-id <provider-message-id> --at <RFC3339-or-date>
+Title: short reminder title
+Notes:
+optional human-readable reminder notes
+```
+
+`/channels remind`, `/channels reminder`, `/channels remind-me`,
+`/channels snooze`, `/channels follow-up`, and `/channels followup` infer the
+current channel and thread id from the issue marker when no explicit
+route/channel/thread target is provided. They create or reuse one open GitHub
+issue carrying a hidden `gitclaw:channel-reminder` marker for the stable
+reminder id and normalized `not_before` due gate, label it with `gitclaw` so
+normal conversation can continue there, and queue a provider-facing reminder
+link back to the mirrored channel thread. The reminder issue contains the
+human-readable due time, title, and notes because it is the scheduled nudge;
+the source receipt remains body-free, reporting only reminder/thread/message/
+due/title/note hashes, duplicate status, notification queue metadata, and
+delivery gates. It does not call a model, call provider APIs, print raw
+reminder ids, print raw due times, print raw thread ids, print raw source or
+notification message ids, print channel message bodies, or print raw reminder
+title/notes in the source receipt. Duplicates are suppressed first by
+`reminder_id` for the GitHub reminder issue and then by
+`channel + notify_message_id` for the provider-facing reminder link. Scheduled
+GitHub Actions can later scan reminder issues by `not_before` and wake the
+normal issue conversation with `workflow_dispatch`, avoiding sockets and
+webhooks. Changes to this surface require a live E2E that creates the reminder,
+validates the metadata-only reminder-link outbox, checks duplicate suppression,
+and then continues on the reminder issue with a normal GitHub Models
+repo-reader/search follow-up.
+
 Behavior:
 
 - find or create the same `gitclaw:channel-thread` issue used by inbound
@@ -5426,6 +5461,9 @@ Behavior:
 - post one `gitclaw:channel-edit` comment per `channel + edit_id`,
 - create or reuse one `gitclaw:channel-task` issue per task id and queue one
   provider-facing task-link outbound comment per `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-reminder` issue per reminder id and
+  queue one provider-facing reminder-link outbound comment per
+  `channel + notify_message_id`,
 - suppress duplicate outbound message IDs,
 - for issue-native `/channels send`, post a `model="gitclaw/channels"`
   receipt back to the source issue,
@@ -8063,6 +8101,17 @@ examples/workflows/gitclaw.yml
   normal GitHub Models issue-comment follow-up that must select `repo-reader`,
   expose `gitclaw.search_files`, recover the channel-clip fixture token, and
   avoid hidden channel, account, provider, message, and clip sentinels.
+- A `gh`-driven channel-reminder-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels remind --reminder-id ... --message-id ... --at ...` on
+  that mirrored thread, verifies GitHub reminder issue creation with a
+  normalized `not_before` gate, body-free source receipt metadata,
+  provider-facing reminder-link queueing, duplicate reminder and notification
+  suppression, and metadata-only outbox discovery. The reminder issue then gets
+  a normal GitHub Models issue-comment follow-up that must select
+  `repo-reader`, expose `gitclaw.search_files`, recover the channel-reminder
+  fixture token, and avoid hidden channel, account, provider, message,
+  reminder, and due-time sentinels.
 - A `gh`-driven channel-delivery-workflow E2E harness dispatches
   `.github/workflows/gitclaw-channel-delivery.yml`, verifies a source
   `gitclaw:assistant-turn` comment can be recorded as delivered, checks that

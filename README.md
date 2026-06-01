@@ -659,6 +659,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels reply --message-id <id>
 @gitclaw /channels task --task-id <id> --message-id <id>
 @gitclaw /channels clip --clip-id <id> --message-id <id>
+@gitclaw /channels remind --reminder-id <id> --message-id <id> --at <time>
 gitclaw proactive list
 gitclaw proactive schedule
 gitclaw proactive chain
@@ -892,6 +893,12 @@ clip issue without treating it as work. The clip issue holds the readable title
 and notes, a provider-facing clip link is queued back to the Slack/Telegram
 thread, and the source receipt stays body-free with only hashes, duplicate
 state, notification metadata, and delivery gates.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels remind
+--reminder-id <id> --message-id <id> --at <RFC3339-or-date>` creates or reuses
+a normal GitHub reminder issue with a `not_before` due gate, queues a
+provider-facing reminder link back to the mirrored thread, and keeps the source
+receipt body-free. Scheduled GitHub Actions can later use the reminder issue as
+the canonical wake-up lane without a socket or webhook.
 The live proactive-report, proactive-list, and proactive-schedule harnesses use
 the same two-proof shape for scheduled work: body-free workflow/prompt metadata
 first, then a normal GitHub Models repo-reader/search follow-up.
@@ -1119,6 +1126,7 @@ scripts/e2e/github-channel-pin-slash.sh
 scripts/e2e/github-channel-reply-slash.sh
 scripts/e2e/github-channel-task-slash.sh
 scripts/e2e/github-channel-clip-slash.sh
+scripts/e2e/github-channel-reminder-slash.sh
 scripts/e2e/github-channel-delivery-workflow.sh
 scripts/e2e/github-channel-outbox-workflow.sh
 scripts/e2e/github-config-risk-report.sh
@@ -1364,6 +1372,13 @@ to the mirrored thread, checks duplicate clip and notification suppression,
 exposes the clip-link notification through metadata-only outbox, and then
 continues on the clip issue with a real GitHub Models repo-reader/search
 follow-up.
+The channel-reminder slash harness turns the operator console into a scheduled
+nudge surface: a channel-ingested issue receives `@gitclaw /channels remind`,
+creates or reuses a GitHub reminder issue with a normalized `not_before` gate,
+queues a provider-facing reminder link back to the mirrored thread, checks
+duplicate reminder and notification suppression, exposes the reminder-link
+notification through metadata-only outbox, and then continues on the reminder
+issue with a real GitHub Models repo-reader/search follow-up.
 The channel-outbox workflow harness proves the missing outbound half of the
 bridge: a real channel-ingested message gets a GitHub Models/tool reply, the
 outbox exposes only pending assistant comments for provider delivery, delivery
