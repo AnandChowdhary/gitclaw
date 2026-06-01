@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T00:43:33Z",
+  "generated_at": "2026-06-01T00:44:54Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 468,
     "title": "@gitclaw session usage e2e 20260601T004212Z",
@@ -10,7 +10,8 @@
     "author": "AnandChowdhary",
     "author_association": "OWNER",
     "labels": [
-      "gitclaw"
+      "gitclaw",
+      "gitclaw:done"
     ]
   },
   "transcript": [
@@ -31,6 +32,24 @@
       "CommentID": 4588755408,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /session usage\n\nPlease audit assistant-turn token telemetry.\nHidden comment token: GITCLAW_SESSION_USAGE_COMMENT_20260601T004212Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4588758273,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Session Usage Report\n\nGenerated without a model call.\n\n- scope: `issue-thread`\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#468`\n- event_kind: `issue_comment`\n- session_usage_status: `ok`\n- usage_scope: `assistant-turn-marker-token-telemetry`\n- session_store: `github-issue-thread`\n- raw_comments: `2`\n- transcript_messages: `3`\n- assistant_turn_comments: `1`\n- usage_bearing_assistant_turns: `1`\n- assistant_turns_missing_usage_telemetry: `0`\n- model_backed_usage_turns: `1`\n- deterministic_usage_turns: `0`\n- model_names: `openai/gpt-4.1-nano`\n- usage_prompt_tokens: `10508`\n- usage_completion_tokens: `9`\n- usage_total_tokens: `10517`\n- usage_cache_read_tokens: `0`\n- usage_cache_write_tokens: `0`\n- latest_usage_source: `comment:4588755408`\n- latest_usage_model: `openai/gpt-4.1-nano`\n- latest_usage_prompt_tokens: `10508`\n- latest_usage_completion_tokens: `9`\n- latest_usage_total_tokens: `10517`\n- latest_usage_cache_read_tokens: `0`\n- latest_usage_cache_write_tokens: `0`\n- raw_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_replies_included: `false`\n- raw_prompts_included: `false`\n- raw_provider_usage_included: `false`\n- raw_provider_responses_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_search_queries_included: `false`\n- repository_mutation_allowed: `false`\n- llm_e2e_required_after_session_usage_change: `true`\n\nThis OpenClaw/Hermes-inspired report audits token and cache telemetry across the current GitHub issue session through assistant-turn markers only. It reports normalized prompt, completion, total, cache-read, and cache-write token counts by model and by turn; raw issue bodies, comment bodies, assistant replies, prompts, provider responses, search queries, and tool outputs are not included.\n\n### Usage Ledger\n- model=`openai/gpt-4.1-nano` assistant_turns=`1` usage_turns=`1` model_backed_turns=`1` deterministic_turns=`0` prompt_tokens=`10508` completion_tokens=`9` total_tokens=`10517` cache_read_tokens=`0` cache_write_tokens=`0` first_source=`comment:4588755408` last_source=`comment:4588755408` prompt_context_hashes=`1`\n\n### Usage Turn Evidence\n- source=`comment:4588755408` model=`openai/gpt-4.1-nano` prompt_context_sha256_12=`a863e9870a85` usage_present=`true` usage_prompt_tokens=`10508` usage_completion_tokens=`9` usage_total_tokens=`10517` usage_cache_read_tokens=`0` usage_cache_write_tokens=`0`\n\n### Usage Gates\n- usage_telemetry_gate=`pass`\n- model_backed_usage_gate=`pass`\n- raw_provider_usage_gate=`marker-attributes-only`\n- raw_provider_response_gate=`disabled`\n- raw_prompt_body_gate=`hashes-and-marker-attributes-only`\n- mutation_gate=`disabled`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4588760903,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -41,6 +60,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T00:43:05Z",
       "updated_at": "2026-06-01T00:43:05Z"
+    },
+    {
+      "id": 4588758273,
+      "body": "@gitclaw /session usage\n\nPlease audit assistant-turn token telemetry.\nHidden comment token: GITCLAW_SESSION_USAGE_COMMENT_20260601T004212Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T00:43:44Z",
+      "updated_at": "2026-06-01T00:43:44Z"
+    },
+    {
+      "id": 4588760903,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26729318709\" event_id=\"comment-4588758273\" model=\"gitclaw/session\" idempotency_key=\"03ba3364228b02ec036b8a17a431ae87\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26729318709\" --\u003e\n## GitClaw Session Usage Report\n\nGenerated without a model call.\n\n- scope: `issue-thread`\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#468`\n- event_kind: `issue_comment`\n- session_usage_status: `ok`\n- usage_scope: `assistant-turn-marker-token-telemetry`\n- session_store: `github-issue-thread`\n- raw_comments: `2`\n- transcript_messages: `3`\n- assistant_turn_comments: `1`\n- usage_bearing_assistant_turns: `1`\n- assistant_turns_missing_usage_telemetry: `0`\n- model_backed_usage_turns: `1`\n- deterministic_usage_turns: `0`\n- model_names: `openai/gpt-4.1-nano`\n- usage_prompt_tokens: `10508`\n- usage_completion_tokens: `9`\n- usage_total_tokens: `10517`\n- usage_cache_read_tokens: `0`\n- usage_cache_write_tokens: `0`\n- latest_usage_source: `comment:4588755408`\n- latest_usage_model: `openai/gpt-4.1-nano`\n- latest_usage_prompt_tokens: `10508`\n- latest_usage_completion_tokens: `9`\n- latest_usage_total_tokens: `10517`\n- latest_usage_cache_read_tokens: `0`\n- latest_usage_cache_write_tokens: `0`\n- raw_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_replies_included: `false`\n- raw_prompts_included: `false`\n- raw_provider_usage_included: `false`\n- raw_provider_responses_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_search_queries_included: `false`\n- repository_mutation_allowed: `false`\n- llm_e2e_required_after_session_usage_change: `true`\n\nThis OpenClaw/Hermes-inspired report audits token and cache telemetry across the current GitHub issue session through assistant-turn markers only. It reports normalized prompt, completion, total, cache-read, and cache-write token counts by model and by turn; raw issue bodies, comment bodies, assistant replies, prompts, provider responses, search queries, and tool outputs are not included.\n\n### Usage Ledger\n- model=`openai/gpt-4.1-nano` assistant_turns=`1` usage_turns=`1` model_backed_turns=`1` deterministic_turns=`0` prompt_tokens=`10508` completion_tokens=`9` total_tokens=`10517` cache_read_tokens=`0` cache_write_tokens=`0` first_source=`comment:4588755408` last_source=`comment:4588755408` prompt_context_hashes=`1`\n\n### Usage Turn Evidence\n- source=`comment:4588755408` model=`openai/gpt-4.1-nano` prompt_context_sha256_12=`a863e9870a85` usage_present=`true` usage_prompt_tokens=`10508` usage_completion_tokens=`9` usage_total_tokens=`10517` usage_cache_read_tokens=`0` usage_cache_write_tokens=`0`\n\n### Usage Gates\n- usage_telemetry_gate=`pass`\n- model_backed_usage_gate=`pass`\n- raw_provider_usage_gate=`marker-attributes-only`\n- raw_provider_response_gate=`disabled`\n- raw_prompt_body_gate=`hashes-and-marker-attributes-only`\n- mutation_gate=`disabled`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T00:44:30Z",
+      "updated_at": "2026-06-01T00:44:30Z"
     }
   ]
 }
