@@ -680,6 +680,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels decision --decision-id <id> --message-id <id>
 @gitclaw /channels digest --digest-id <id> --message-id <id>
 @gitclaw /channels request-run search_files --id <id> --message-id <id>
+@gitclaw /channels rehearse-skill repo-reader --id <id> --message-id <id>
 @gitclaw /channels remind --reminder-id <id> --message-id <id> --at <time>
 @gitclaw /channels done --message-id <id>
 gitclaw proactive list
@@ -935,6 +936,13 @@ the Slack/Telegram thread. It does not call a model, execute the tool, run
 shell commands, or mutate the repository; the source receipt stays body-free
 with hashes, review status, duplicate state, notification metadata, and
 delivery gates.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+rehearse-skill <skill> --id <id> --message-id <id>` opens or reuses a normal
+GitHub skill rehearsal issue and queues a provider-facing rehearsal link back
+to the Slack/Telegram thread. The channel action does not call a model, install
+skills, edit `SKILL.md`, or mutate the repository; the linked rehearsal issue
+is where a normal GitHub Models conversation can exercise the prompt-visible
+skill with usage telemetry.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels remind
 --reminder-id <id> --message-id <id> --at <RFC3339-or-date>` creates or reuses
 a normal GitHub reminder issue with a `not_before` due gate, queues a
@@ -1192,6 +1200,7 @@ scripts/e2e/github-channel-clip-slash.sh
 scripts/e2e/github-channel-decision-slash.sh
 scripts/e2e/github-channel-digest-slash.sh
 scripts/e2e/github-channel-tool-run-request-slash.sh
+scripts/e2e/github-channel-skill-rehearsal-slash.sh
 scripts/e2e/github-channel-reminder-slash.sh
 scripts/e2e/github-channel-done-slash.sh
 scripts/e2e/github-channel-delivery-workflow.sh
@@ -1485,6 +1494,13 @@ queues a provider-facing review link back to the mirrored thread, checks
 duplicate request and notification suppression, exposes the review-link
 notification through metadata-only outbox, and then continues on the review
 issue with a real GitHub Models repo-reader/search follow-up.
+The channel-skill-rehearsal slash harness turns the operator console into a
+skill practice surface: a channel-ingested issue receives `@gitclaw /channels
+rehearse-skill`, creates or reuses a GitHub skill rehearsal issue, queues a
+provider-facing rehearsal link back to the mirrored thread, checks duplicate
+rehearsal and notification suppression, exposes the rehearsal-link notification
+through metadata-only outbox, and then continues on the rehearsal issue with a
+real GitHub Models repo-reader/search follow-up.
 The channel-reminder slash harness turns the operator console into a scheduled
 nudge surface: a channel-ingested issue receives `@gitclaw /channels remind`,
 creates or reuses a GitHub reminder issue with a normalized `not_before` gate,

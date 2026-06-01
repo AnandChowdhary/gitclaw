@@ -983,6 +983,35 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		status.SetDone()
 		return nil
 	}
+	if IsChannelSkillRehearsalActionRequest(ev, cfg) {
+		channelSkillClient, ok := github.(interface {
+			SkillRehearsalIssueGitHubClient
+			ChannelSendGitHubClient
+		})
+		if !ok {
+			return failStartedTurn(ctx, cfg, github, ev, status, "channel", fmt.Errorf("github client cannot create channel skill rehearsals"))
+		}
+		req, err := BuildChannelSkillRehearsalActionRequest(ev, cfg, repoContext)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "channel", fmt.Errorf("build channel skill rehearsal action: %w", err))
+		}
+		result, err := RunChannelSkillRehearsal(ctx, cfg, channelSkillClient, req)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "channel", fmt.Errorf("run channel skill rehearsal action: %w", err))
+		}
+		body := RenderAssistantComment(Marker{
+			RunID:          envFirst("GITHUB_RUN_ID", "local"),
+			EventID:        eventID(ev),
+			Model:          "gitclaw/channels",
+			IdempotencyKey: key,
+			RunURL:         actionRunURL(ev),
+		}, RenderChannelSkillRehearsalActionReport(ev, req, result))
+		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post channel skill rehearsal action comment: %w", err))
+		}
+		status.SetDone()
+		return nil
+	}
 	if IsChannelTaskActionRequest(ev, cfg) {
 		channelClient, ok := github.(ChannelSendGitHubClient)
 		if !ok {

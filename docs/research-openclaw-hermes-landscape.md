@@ -171,6 +171,26 @@ Hermes MCP docs
 Hermes messaging docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/messaging/`).
 
+2026-06-02 channel-skill-rehearsal follow-up: OpenClaw's capabilities overview
+draws a useful boundary: tools are callable actions, skills are prompt-visible
+workflow instructions, and plugins add larger runtime/channel surfaces. Its
+skill docs also emphasize per-agent/shared skill visibility, allowlists, and a
+review-first Skill Workshop for agent-drafted changes. Hermes' MCP docs make
+the same pressure visible from the tool side by recommending per-server
+filtering so only the needed external capabilities are exposed. GitClaw should
+mirror this with a channel-native rehearsal lane: a Slack/Telegram thread can
+request `@gitclaw /channels rehearse-skill <skill>`, GitHub creates or reuses a
+normal `gitclaw:skill-rehearsal-issue`, the channel receives a rehearsal link,
+and any real model-backed exercise happens only on that GitHub issue with
+normal skill/tool/usage telemetry. The channel receipt stays body-free and
+reports hashes, match/validation counts, duplicate suppression, and outbox
+metadata. Sources: OpenClaw capabilities docs (`https://docs.openclaw.ai/tools`),
+OpenClaw skills docs (`https://docs.openclaw.ai/tools/skills`), OpenClaw
+creating-skills docs (`https://docs.openclaw.ai/tools/creating-skills`),
+OpenClaw hooks/message context docs
+(`https://docs.openclaw.ai/automation/hooks`), and Hermes MCP docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp/`).
+
 2026-05-30 skill-risk follow-up: current OpenClaw plugin-hook docs make prompt,
 model, tool-call, and heartbeat extension points explicit, while Hermes'
 toolsets and MCP docs emphasize filtering exposed capabilities per task. Recent
