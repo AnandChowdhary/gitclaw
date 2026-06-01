@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T23:30:34Z",
+  "generated_at": "2026-06-01T23:44:40Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 537,
+  "count": 538,
   "issues": [
     {
       "number": 3,
@@ -6766,6 +6766,20 @@
       "path": "issues/000623.json",
       "backup_generated_at": "2026-06-01T23:30:33Z",
       "event_name": "issue_comment",
+      "comment_count": 2,
+      "transcript_messages": 3
+    },
+    {
+      "number": 624,
+      "title": "GitClaw telegram thread channel-skill-rehearsal-e2e-20260601t234255z",
+      "path": "issues/000624.json",
+      "backup_generated_at": "2026-06-01T23:44:39Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:done",
+        "gitclaw:channel"
+      ],
       "comment_count": 2,
       "transcript_messages": 3
     }
