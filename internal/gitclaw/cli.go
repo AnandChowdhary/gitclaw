@@ -4681,13 +4681,15 @@ func runChannelDeliveryCommand(ctx context.Context, args []string) error {
 
 func runProactiveCommand(ctx context.Context, args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw proactive <list|schedule|risk|info|enqueue|init>")
+		return fmt.Errorf("usage: gitclaw proactive <list|schedule|chain|risk|info|enqueue|init>")
 	}
 	switch args[0] {
 	case "list":
 		return runProactiveListCommand(args[1:])
 	case "schedule", "schedules", "calendar", "cron":
 		return runProactiveScheduleCommand(args[1:])
+	case "chain", "chains", "dependencies", "dependency", "context-from", "context":
+		return runProactiveChainCommand(args[1:])
 	case "risk", "risk-audit":
 		return runProactiveRiskCommand(args[1:])
 	case "info":
@@ -4722,6 +4724,18 @@ func runProactiveScheduleCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderProactiveScheduleCLIReport(cfg))
+	return nil
+}
+
+func runProactiveChainCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown proactive chain argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderProactiveChainCLIReport(cfg))
 	return nil
 }
 

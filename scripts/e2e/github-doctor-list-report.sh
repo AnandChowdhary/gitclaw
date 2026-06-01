@@ -166,11 +166,11 @@ for expected in \
   'context_files_present: `6`' \
   'memory_notes: `1`' \
   'skill_files: `1`' \
-  'e2e_scripts: `220`' \
-  'e2e_live_issue_scripts: `213`' \
-  'e2e_cleanup_scripts: `220`' \
-  'e2e_model_coverage_scripts: `163`' \
-  'e2e_model_followup_scripts: `163`' \
+  'e2e_scripts: `221`' \
+  'e2e_live_issue_scripts: `214`' \
+  'e2e_cleanup_scripts: `221`' \
+  'e2e_model_coverage_scripts: `164`' \
+  'e2e_model_followup_scripts: `164`' \
   'e2e_session_coverage_scripts: `2`' \
   'e2e_backup_gate_scripts: `28`' \
   'e2e_workflow_dispatch_scripts: `21`' \
@@ -240,6 +240,7 @@ for expected in \
   'path=`scripts/e2e/github-prompt-context-report.sh`' \
   'path=`scripts/e2e/github-model-catalog-report.sh`' \
   'path=`scripts/e2e/github-proactive-schedule-report.sh`' \
+  'path=`scripts/e2e/github-proactive-chain-report.sh`' \
   'path=`scripts/e2e/github-research-catalog-report.sh`' \
   'path=`scripts/e2e/github-tools-catalog-report.sh`' \
   'path=`scripts/e2e/github-tools-snapshot-report.sh`' \

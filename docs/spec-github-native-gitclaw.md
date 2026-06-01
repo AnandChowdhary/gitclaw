@@ -504,6 +504,7 @@ GitClaw supports a deterministic proactive audit command:
 @gitclaw /proactive list
 @gitclaw /proactive risk
 @gitclaw /proactive info repo-hygiene
+@gitclaw /proactive chain
 @gitclaw /cron
 ```
 
@@ -566,6 +567,28 @@ surface must be paired with a live GitHub Models follow-up that selects
 `repo-reader`, exposes `gitclaw.search_files`, and recovers a bounded
 repository-search fixture token.
 
+The chain form:
+
+```text
+@gitclaw /proactive chain
+@gitclaw /cron chain
+```
+
+posts a `GitClaw Proactive Chain Report` for reviewed proactive job dependency
+metadata. A prompt can declare upstream context with
+`<!-- gitclaw:proactive-context-from repo-hygiene -->`; the report resolves
+those names against `.gitclaw/proactive/*.md`, emits prompt paths, prompt
+hashes, skill hints, edge counts, resolved job names, missing-source hashes,
+self-reference/cycle gates, and no runtime writes. This adapts Hermes cron's
+`context_from` chaining to GitHub issue-native proactive runs without adding a
+hidden scheduler database. It never prints prompt bodies, workflow bodies,
+issue/comment bodies, tool outputs, credentials, raw missing-source text, or
+secret values. The report includes
+`llm_e2e_required_after_proactive_chain_change=true`, so changes to this
+surface require deterministic local tests, a live issue E2E on the main repo,
+and a normal GitHub Models follow-up proving `repo-reader`,
+`gitclaw.search_files`, prompt provenance, and usage telemetry.
+
 The focused info form:
 
 ```text
@@ -591,6 +614,7 @@ issue:
 ```bash
 gitclaw proactive list
 gitclaw proactive schedule
+gitclaw proactive chain
 gitclaw proactive risk
 gitclaw proactive info repo-hygiene
 ```
@@ -7108,6 +7132,16 @@ examples/workflows/gitclaw.yml
   prompt skill hints, heartbeat-vs-cron timing boundary, and
   `llm_e2e_required_after_proactive_schedule_change: true` without a model call
   or body leakage. The same live harness then posts a normal issue-comment
+  follow-up that must make a GitHub Models call, select `repo-reader`, expose
+  `gitclaw.search_files`, recover a bounded repository-search fixture token,
+  and publish usage telemetry without leaking hidden issue tokens.
+- A `gh`-driven proactive-chain E2E harness verifies
+  `@gitclaw /proactive chain` and local `gitclaw proactive chain` expose
+  reviewed prompt dependency metadata for
+  `gitclaw:proactive-context-from`, including edge counts, resolved-source
+  names, missing-source hashes, self-reference/cycle gates, and
+  `llm_e2e_required_after_proactive_chain_change: true` without a model call or
+  body leakage. The same live harness then posts a normal issue-comment
   follow-up that must make a GitHub Models call, select `repo-reader`, expose
   `gitclaw.search_files`, recover a bounded repository-search fixture token,
   and publish usage telemetry without leaking hidden issue tokens.

@@ -549,6 +549,7 @@ gitclaw channels risk
 gitclaw channels info telegram
 gitclaw proactive list
 gitclaw proactive schedule
+gitclaw proactive chain
 gitclaw proactive risk
 gitclaw proactive info repo-hygiene
 gitclaw proactive init --name email-triage --cron "17 8 * * 1-5"
@@ -602,6 +603,13 @@ reports changed profile paths, statuses, counts, and hashes while excluding raw
 patches, profile bodies, skill bodies, issue/comment text, prompts, requested
 ref text, git subjects, author identities, sessions, backups, credentials, and
 secret values.
+
+`gitclaw proactive chain` maps reviewed `.gitclaw/proactive/*.md`
+`gitclaw:proactive-context-from` metadata into a body-free dependency report.
+It reports prompt paths, hashes, skill hints, resolved job names, missing-source
+hashes, and cycle/self-reference gates without printing prompt bodies,
+workflow bodies, issue/comment text, tool outputs, credentials, or secret
+values.
 
 `gitclaw profile snapshot` is the composite body-free fingerprint for the
 profile envelope. It ties the profile manifest, soul snapshot, memory
@@ -813,6 +821,7 @@ scripts/e2e/github-proactive-not-before.sh
 scripts/e2e/github-proactive-report.sh
 scripts/e2e/github-proactive-list-report.sh
 scripts/e2e/github-proactive-schedule-report.sh
+scripts/e2e/github-proactive-chain-report.sh
 scripts/e2e/github-proactive-info-report.sh
 scripts/e2e/github-proactive-risk-report.sh
 scripts/e2e/github-session-catalog-report.sh

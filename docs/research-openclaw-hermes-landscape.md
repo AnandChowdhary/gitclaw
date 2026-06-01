@@ -3419,6 +3419,27 @@ a second live GitHub Models issue-comment turn that selects `repo-reader`,
 exposes `gitclaw.search_files`, publishes usage telemetry, and recovers a
 bounded repository-search fixture token.
 
+### 2026-06-01 Proactive Chain Follow-Up
+
+Hermes cron documents `context_from` as a way to prepend one scheduled job's
+latest output into another isolated scheduled job, while OpenClaw frames skills
+as prompt-injected Markdown instructions and keeps scheduled work as explicit
+automation. GitClaw should adapt the dependency idea without a gateway database:
+reviewed `.gitclaw/proactive/*.md` files may declare
+`gitclaw:proactive-context-from` metadata, and
+`@gitclaw /proactive chain` / `gitclaw proactive chain` should expose a
+body-free dependency map over those declarations.
+
+The report should show prompt paths, prompt hashes, skill hints, resolved
+source job names, missing-source hashes, self-reference and cycle gates, and
+the one-issue-per-name-slot boundary. It must not print prompt bodies,
+workflow bodies, issue/comment bodies, tool outputs, raw missing-source text,
+credentials, or secret values. Acceptance requires deterministic unit coverage,
+a local CLI check, a live issue E2E on the main repository, and a second live
+GitHub Models issue-comment turn that selects `repo-reader`, exposes
+`gitclaw.search_files`, publishes usage telemetry, and recovers a bounded
+repository-search fixture token.
+
 ## Open Questions For Speccing
 
 1. Is `gitclaw` primarily for one user's repos, or for teams/organizations?

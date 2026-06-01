@@ -26,12 +26,13 @@ type proactiveWorkflow struct {
 }
 
 type proactivePrompt struct {
-	Name       string
-	Path       string
-	Bytes      int
-	Lines      int
-	SHA        string
-	SkillHints []string
+	Name        string
+	Path        string
+	Bytes       int
+	Lines       int
+	SHA         string
+	SkillHints  []string
+	ContextFrom []string
 }
 
 func IsProactiveReportRequest(ev Event, cfg Config) bool {
@@ -41,6 +42,9 @@ func IsProactiveReportRequest(ev Event, cfg Config) bool {
 func RenderProactiveReport(ev Event, cfg Config) string {
 	if isProactiveScheduleRequest(ev, cfg) {
 		return RenderProactiveScheduleReport(ev, cfg)
+	}
+	if isProactiveChainRequest(ev, cfg) {
+		return RenderProactiveChainReport(ev, cfg)
 	}
 	if isProactiveRiskRequest(ev, cfg) {
 		return renderProactiveRiskReport(ev, cfg, true)
@@ -232,12 +236,13 @@ func inspectProactiveSurface(root string) proactiveSurface {
 		text := string(body)
 		relPath := filepath.ToSlash(rel)
 		surface.Prompts = append(surface.Prompts, proactivePrompt{
-			Name:       proactivePromptName(relPath),
-			Path:       relPath,
-			Bytes:      len(body),
-			Lines:      lineCount(text),
-			SHA:        shortDocumentHash(text),
-			SkillHints: parseProactiveSkillHints(text),
+			Name:        proactivePromptName(relPath),
+			Path:        relPath,
+			Bytes:       len(body),
+			Lines:       lineCount(text),
+			SHA:         shortDocumentHash(text),
+			SkillHints:  parseProactiveSkillHints(text),
+			ContextFrom: parseProactiveContextFrom(text),
 		})
 	}
 	return surface
