@@ -180,6 +180,7 @@ Hidden comment token: ${comment_token}" >/dev/null
 session_run_json="$(wait_for_run issue_comment "$comment_started_at")" || die "timed out waiting for issue_comment workflow run"
 wait_for_assistant_count 2 || die "expected session trajectory report as second assistant comment"
 session_comment="$(latest_assistant_comment)"
+session_report_body="$(sed '1{/^<!-- gitclaw:assistant-turn /d;}' <<<"$session_comment")"
 
 for expected in \
   'model="gitclaw/session"' \
@@ -242,7 +243,7 @@ for expected in \
 done
 
 for leaked in "$hidden_token" "$comment_token" "$search_phrase" "Please export the body-free assistant-turn trajectory manifest" "https://github.com/AnandChowdhary/gitclaw/actions/runs/"; do
-  if grep -Fq "$leaked" <<<"$session_comment"; then
+  if grep -Fq "$leaked" <<<"$session_report_body"; then
     die "session trajectory report leaked ${leaked}"
   fi
 done
