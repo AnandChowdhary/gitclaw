@@ -2758,6 +2758,17 @@ target path, category, current target hash/size/load state, validation rollup,
 and risk rollup, then posts a body-free receipt in the source conversation.
 Duplicate open soul proposal issues are suppressed by marker and proposal id.
 
+When the same command includes `--notify-route <route>` or
+`--notify-routes <route-a,route-b>`, GitClaw also queues one reviewed outbound
+channel notification per route. The source receipt records only route/message
+body hashes, destination issue numbers, queue counts, duplicate counts, channel
+names, and provider-delivery gates; it never prints raw route names, raw
+provider thread ids, raw outbound body text, source text, candidate soul text,
+or existing soul text. The outbound channel comment may include the proposal
+issue, source issue, proposal id, target path, and review status so the
+external channel receives useful context, while actual provider delivery stays
+delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`.
+
 The soul proposal action does not write `.gitclaw/SOUL.md`,
 `.gitclaw/IDENTITY.md`, `.gitclaw/USER.md`, `.gitclaw/TOOLS.md`, memory files,
 or any related high-authority context; it does not generate candidate soul
@@ -9038,6 +9049,16 @@ examples/workflows/gitclaw.yml
   a live GitHub Models follow-up proving repo-local skill selection,
   prompt-visible repository search tool usage, and usage telemetry after the
   deterministic issue action.
+- A `gh`-driven soul-propose channel-notify E2E harness verifies
+  `@gitclaw /soul propose --target soul --id <id> --notify-route <route>`
+  opens or reuses the soul proposal issue, queues exactly one reviewed channel
+  notification, exposes it through metadata-only `channel-outbox`, suppresses
+  duplicate proposal ids and duplicate channel message IDs, performs no model
+  call during the deterministic action, and keeps source/soul bodies out of the
+  source receipt, proposal issue, channel receipt, and default outbox. The same
+  source issue then gets a normal GitHub Models follow-up that selects
+  `repo-reader`, exposes `gitclaw.search_files`, recovers the soul-notify
+  fixture token, and records usage telemetry.
 - A `gh`-driven soul-rehearse E2E harness verifies
   `@gitclaw /soul rehearse --target soul --id <id>` opens a body-free GitHub
   rehearsal issue labeled for normal GitClaw conversation, posts a source

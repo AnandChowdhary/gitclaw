@@ -3013,6 +3013,170 @@ func TestHandleSoulProposeCommandCreatesProposalIssueWithoutLLM(t *testing.T) {
 	}
 }
 
+func TestHandleSoulProposeCommandQueuesChannelNotificationWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	files := map[string]string{
+		".gitclaw/SOUL.md":              "Soul policy.",
+		".gitclaw/IDENTITY.md":          "Identity: GitClaw.",
+		".gitclaw/USER.md":              "User facts.",
+		".gitclaw/TOOLS.md":             "Tools.",
+		".gitclaw/MEMORY.md":            "Memory.",
+		".gitclaw/HEARTBEAT.md":         "Heartbeat.",
+		".gitclaw/memory/2026-05-29.md": "Daily note.",
+		channelRoutesPath: `routes:
+  - name: e2e-slack-route
+    channel: slack
+    thread_id_template: soul-proposal-{message_id}
+    author: gitclaw:test
+`,
+	}
+	for path, body := range files {
+		writeTestFile(t, root, path, body)
+	}
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 145,
+			"title": "@gitclaw /soul propose --target soul --id channel-tone-soul --notify-route e2e-slack-route",
+			"body": "Queue a high-authority style update and notify reviewers. Hidden token: SOUL_PROPOSE_NOTIFY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{145: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for soul propose notify action", llm.Calls)
+	}
+	if len(github.Issues) != 2 {
+		t.Fatalf("created issues = %d, want proposal issue and channel issue: %#v", len(github.Issues), github.Issues)
+	}
+	proposalIssue := github.Issues[0]
+	channelIssue := github.Issues[1]
+	if !strings.Contains(proposalIssue.Body, soulProposalIssueMarker) {
+		t.Fatalf("first issue should be soul proposal issue: %#v", proposalIssue)
+	}
+	if strings.Contains(proposalIssue.Body, "SOUL_PROPOSE_NOTIFY_SECRET") || strings.Contains(proposalIssue.Body, "notify reviewers") || strings.Contains(proposalIssue.Body, "e2e-slack-route") {
+		t.Fatalf("soul proposal issue leaked source or route:\n%s", proposalIssue.Body)
+	}
+	if !HasChannelThreadMarker(channelIssue.Body) || !strings.Contains(channelIssue.Body, `channel="slack"`) {
+		t.Fatalf("second issue should be slack channel issue: %#v", channelIssue)
+	}
+	if hasLabel(github.IssueLabels[channelIssue.Number], cfg.TriggerLabel) {
+		t.Fatalf("channel issue should not carry trigger label: %#v", github.IssueLabels[channelIssue.Number])
+	}
+	if !hasLabel(github.IssueLabels[channelIssue.Number], cfg.ChannelLabel) {
+		t.Fatalf("channel issue missing channel label: %#v", github.IssueLabels[channelIssue.Number])
+	}
+	channelComments := github.CommentsByIssue[channelIssue.Number]
+	if len(channelComments) != 1 {
+		t.Fatalf("channel issue comments = %d, want one notification: %#v", len(channelComments), channelComments)
+	}
+	for _, want := range []string{
+		"gitclaw:channel-outbound",
+		`message_id="gitclaw-soul-proposal-channel-tone-soul"`,
+		"GitClaw soul proposal",
+		"Review issue: #100 https://github.com/owner/repo/issues/100",
+		"Source issue: #145 https://github.com/owner/repo/issues/145",
+		"Proposal id: channel-tone-soul",
+		"Target path: .gitclaw/SOUL.md",
+		"Target category: soul",
+		"Review PR required: true",
+		"Soul file written: false",
+	} {
+		if !strings.Contains(channelComments[0].Body, want) {
+			t.Fatalf("channel notification missing %q:\n%s", want, channelComments[0].Body)
+		}
+	}
+	if strings.Contains(channelComments[0].Body, "SOUL_PROPOSE_NOTIFY_SECRET") || strings.Contains(channelComments[0].Body, "notify reviewers") {
+		t.Fatalf("channel notification leaked source body:\n%s", channelComments[0].Body)
+	}
+
+	receipt := github.CommentsByIssue[145][0].Body
+	for _, want := range []string{
+		"GitClaw Soul Proposal Issue Action",
+		"soul_proposal_status: `created`",
+		"channel_notification_requested: `true`",
+		"channel_notification_routes: `1`",
+		"channel_notification_queued: `1`",
+		"channel_notification_duplicates: `0`",
+		"channel_notification_target_issues_created: `1`",
+		"raw_channel_routes_included: `false`",
+		"raw_channel_notification_body_included: `false`",
+		"provider_delivery_performed: `false`",
+		"destination=`01` target_issue=`#101`",
+		"channel=`slack`",
+	} {
+		if !strings.Contains(receipt, want) {
+			t.Fatalf("soul propose notify receipt missing %q:\n%s", want, receipt)
+		}
+	}
+	for _, leaked := range []string{"SOUL_PROPOSE_NOTIFY_SECRET", "notify reviewers", "e2e-slack-route", "gitclaw-soul-proposal-channel-tone-soul"} {
+		if strings.Contains(receipt, leaked) {
+			t.Fatalf("soul propose notify receipt leaked %q:\n%s", leaked, receipt)
+		}
+	}
+
+	duplicateEv, err := ParseEvent("issue_comment", []byte(`{
+		"action": "created",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 145,
+			"title": "@gitclaw /soul propose --target soul --id channel-tone-soul --notify-route e2e-slack-route",
+			"body": "Queue a high-authority style update and notify reviewers.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"comment": {
+			"id": 14501,
+			"body": "@gitclaw /soul propose --target soul --id channel-tone-soul --notify-route e2e-slack-route\n\nDuplicate hidden token: SOUL_PROPOSE_NOTIFY_DUPLICATE_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"}
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent duplicate returned error: %v", err)
+	}
+	if err := Handle(context.Background(), duplicateEv, cfg, github, llm); err != nil {
+		t.Fatalf("Handle duplicate returned error: %v", err)
+	}
+	if len(github.Issues) != 2 {
+		t.Fatalf("duplicate created another issue: %#v", github.Issues)
+	}
+	if got := len(github.CommentsByIssue[channelIssue.Number]); got != 1 {
+		t.Fatalf("duplicate posted another channel notification: %d", got)
+	}
+	duplicateReceipt := github.CommentsByIssue[145][1].Body
+	for _, want := range []string{
+		"soul_proposal_status: `existing`",
+		"duplicate_suppressed: `true`",
+		"channel_notification_requested: `true`",
+		"channel_notification_queued: `0`",
+		"channel_notification_duplicates: `1`",
+	} {
+		if !strings.Contains(duplicateReceipt, want) {
+			t.Fatalf("duplicate soul propose notify receipt missing %q:\n%s", want, duplicateReceipt)
+		}
+	}
+	if strings.Contains(duplicateReceipt, "SOUL_PROPOSE_NOTIFY_DUPLICATE_SECRET") || strings.Contains(duplicateReceipt, "e2e-slack-route") {
+		t.Fatalf("duplicate soul propose notify receipt leaked sensitive content:\n%s", duplicateReceipt)
+	}
+}
+
 func TestHandleSoulSearchCommandPostsReportWithoutLLM(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/SOUL.md", "Repo-native operating guidance SOUL_SEARCH_HANDLER_SECRET.")

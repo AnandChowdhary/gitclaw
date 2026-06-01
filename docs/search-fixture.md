@@ -49,6 +49,7 @@ skills rehearsal unique search fixture phrase => GITCLAW_SKILLS_REHEARSAL_CONTEX
 bundle rehearsal unique search fixture phrase => GITCLAW_BUNDLE_REHEARSAL_CONTEXT_V1
 soul edit plan unique search fixture phrase => GITCLAW_SOUL_EDIT_PLAN_CONTEXT_V1
 soul propose unique search fixture phrase => GITCLAW_SOUL_PROPOSE_CONTEXT_V1
+soul proposal channel notify unique search fixture phrase => GITCLAW_SOUL_NOTIFY_CONTEXT_V1
 memory promote plan unique search fixture phrase => GITCLAW_MEMORY_PROMOTE_PLAN_CONTEXT_V1
 memory remember unique search fixture phrase => GITCLAW_MEMORY_REMEMBER_CONTEXT_V1
 memory rehearsal unique search fixture phrase => GITCLAW_MEMORY_REHEARSAL_CONTEXT_V1

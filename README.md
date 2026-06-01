@@ -108,6 +108,9 @@ Trusted issue threads can queue reviewed high-authority context changes with
 GitHub proposal issue, records source hashes and current target metadata, and
 keeps `.gitclaw/SOUL.md`, `.gitclaw/USER.md`, and related prompt-authority
 files untouched until a human-reviewed branch promotes the change.
+Add `--notify-route <route>` or `--notify-routes <a,b>` to also queue a
+body-safe Slack/Telegram channel notification for that proposal issue through
+the existing routebook, channel issue, outbox, and delivery receipt path.
 `@gitclaw /soul rehearse --target soul --id <id>` opens or reuses a dedicated
 GitHub conversation issue for trying the current high-authority context without
 generating candidate edits, writing `.gitclaw/` files, or calling a model in
@@ -1082,6 +1085,7 @@ scripts/e2e/github-soul-catalog-report.sh
 scripts/e2e/github-soul-snapshot-report.sh
 scripts/e2e/github-soul-provenance-report.sh
 scripts/e2e/github-soul-propose-issue.sh
+scripts/e2e/github-soul-propose-channel-notify.sh
 scripts/e2e/github-soul-rehearse-issue.sh
 scripts/e2e/github-sandbox-risk-report.sh
 scripts/e2e/github-tasks-ledger-report.sh
@@ -1243,6 +1247,11 @@ identity/profile context: a trusted `@gitclaw /soul propose --target soul --id
 candidate text out of issue-visible receipts, suppresses duplicate proposal
 requests, and then continues with a real GitHub Models repo-reader/search
 follow-up.
+The soul-propose channel-notify harness proves that the same review queue can
+also notify a reviewed Slack/Telegram route with `--notify-route`, queue a
+metadata-safe outbound channel message, suppress duplicate notifications, expose
+the pending provider work through `channel-outbox`, and then continue with a
+real GitHub Models repo-reader/search follow-up.
 The soul-rehearse harness covers the conversation side of high-authority
 context: a trusted `@gitclaw /soul rehearse --target soul --id <id>` turn opens
 or reuses a GitHub rehearsal issue, keeps source and target bodies out of
