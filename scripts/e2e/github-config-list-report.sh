@@ -155,7 +155,7 @@ for expected in \
   'tools_allowed_configured: `0`' \
   'tools_disabled_configured: `0`' \
   'workflows_present: `7`' \
-  'slash_commands: `33`' \
+  'slash_commands: `34`' \
   '/agents' \
   '/artifacts' \
   '/nodes' \

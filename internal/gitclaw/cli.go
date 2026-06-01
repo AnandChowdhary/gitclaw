@@ -87,6 +87,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runDiffsCommand(args[1:])
 	case "workspace", "workdir", "repo":
 		return runWorkspaceCommand(args[1:])
+	case "research", "landscape":
+		return runResearchCommand(args[1:])
 	case "prompt", "budget", "prompt-budget":
 		return runPromptCommand(args[1:])
 	case "session":
@@ -101,6 +103,34 @@ func RunCLI(ctx context.Context, args []string) error {
 	default:
 		return fmt.Errorf("unknown command %q", args[0])
 	}
+}
+
+func runResearchCommand(args []string) error {
+	if len(args) == 0 {
+		return runResearchCatalogCommand(nil)
+	}
+	switch args[0] {
+	case "catalog", "sources", "source", "coverage", "map", "verify", "list":
+		return runResearchCatalogCommand(args[1:])
+	default:
+		return fmt.Errorf("usage: gitclaw research [catalog|sources|coverage|verify]")
+	}
+}
+
+func runResearchCatalogCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown research catalog argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderResearchCLIReport(cfg, repoContext))
+	return nil
 }
 
 func runMemoryCommand(args []string) error {

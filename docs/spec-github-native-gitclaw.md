@@ -811,6 +811,52 @@ errors, API keys, tokens, or secret values. Any change to this surface requires
 local tests plus a live GitHub issue E2E that includes a normal GitHub Models
 follow-up turn with repo-reader/tool usage.
 
+### Research Catalog Command
+
+GitClaw treats the OpenClaw/Hermes research as a maintained product surface,
+not only as prose in a design note:
+
+```text
+@gitclaw /research
+@gitclaw /research catalog
+@gitclaw /research sources
+@gitclaw /research coverage
+@gitclaw /research verify
+@gitclaw /landscape
+```
+
+The command runs after preflight and repo-context loading, but before model
+inference. It posts a deterministic `GitClaw Research Catalog Report` with
+`model="gitclaw/research"`. The report maps official OpenClaw and Hermes
+sources to GitClaw's repo-native design choices:
+
+- OpenClaw gateway, channel, skill, and security docs;
+- Hermes skills, memory, cron, and checkpoint/rollback docs;
+- local research/spec/README file hashes;
+- adopted patterns such as issue-native sessions, workflow-dispatch channels,
+  repo-local soul/memory, progressive skill disclosure, proactive scheduled
+  jobs, checkpoint readiness, and backup durability;
+- rejected v1 patterns such as long-running sockets, agent-managed skill
+  writes, remote registry installs, delegation/subagents, and destructive
+  rollback.
+
+It does not browse or fetch sources at runtime. It reports source IDs, URLs,
+counts, local file hashes, pattern names, and gate decisions only. It never
+prints raw research notes, source bodies, issue/comment bodies, prompts,
+tool outputs, credentials, or secret values. Changes to this surface require a
+deterministic live `@gitclaw /research catalog` issue plus a normal GitHub
+Models repo-reader/search follow-up proving inference, selected skill,
+`gitclaw.search_files`, prompt provenance, and usage telemetry.
+
+Local operators can inspect the same map without opening an issue:
+
+```bash
+gitclaw research catalog
+gitclaw research sources
+gitclaw research coverage
+gitclaw research verify
+```
+
 ## Runtime Architecture
 
 ```text
@@ -861,6 +907,7 @@ GitHub issue/comment event
   `models list`, `models catalog`, `models usage`, `models cost`, `models risk`,
   `profile show`, `profile verify`,
   `context list`, `context risk`, `context info`,
+  `research catalog`, `research sources`, `research coverage`, `research verify`,
   `prompt list`, `prompt pack`, `prompt context`, `prompt cache`,
   `prompt compression`, `prompt risk`,
   `runs current`, `runs verify`, `runs history`,
@@ -7115,6 +7162,13 @@ examples/workflows/gitclaw.yml
   risk metadata. The same harness must then run a real GitHub Models follow-up
   conversation that proves model inference, prompt provenance, selected skills,
   and prompt-visible repository search tool usage.
+- A `gh`-driven research-catalog E2E harness verifies
+  `@gitclaw /research catalog` maps official OpenClaw/Hermes sources, local
+  research-file hashes, adopted GitHub-native patterns, and rejected v1
+  surfaces without a model call or body leakage. The same live issue must then
+  receive a normal GitHub Models follow-up that selects `repo-reader`, exposes
+  `gitclaw.search_files`, recovers the research-catalog repository-search
+  fixture token, and publishes prompt provenance plus usage telemetry.
 - A `gh`-driven context-references E2E harness verifies
   `@gitclaw /context references` reports `@file:` line ranges and `@folder:`
   metadata without dumping referenced bodies, issue text, or fixture tokens.

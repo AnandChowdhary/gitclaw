@@ -44,6 +44,7 @@ go run ./cmd/gitclaw profile catalog
 go run ./cmd/gitclaw profile manifest
 go run ./cmd/gitclaw profile risk
 go run ./cmd/gitclaw models catalog
+go run ./cmd/gitclaw research catalog
 go run ./cmd/gitclaw models usage
 go run ./cmd/gitclaw models cost
 go run ./cmd/gitclaw models risk
@@ -420,6 +421,10 @@ gitclaw models catalog
 gitclaw models usage
 gitclaw models cost
 gitclaw models risk
+gitclaw research catalog
+gitclaw research sources
+gitclaw research coverage
+gitclaw research verify
 gitclaw heartbeat risk
 gitclaw config list
 gitclaw config risk
@@ -488,6 +493,12 @@ gitclaw sandbox risk
 ```
 
 Use `gitclaw commands` for the full catalog.
+
+`gitclaw research catalog` is the body-free OpenClaw/Hermes research map. It
+reports reviewed official source IDs/URLs, local research-file hashes, adopted
+GitHub-native patterns, rejected v1 surfaces, and no-runtime-fetch gates
+without printing raw research notes, source bodies, issue/comment bodies,
+prompts, tool outputs, credentials, or secrets.
 
 `gitclaw profile catalog` is the compact discovery view for the repo-local
 agent profile. It maps profile commands and layers across identity, soul,
@@ -645,6 +656,7 @@ scripts/e2e/github-memory-timeline-report.sh
 scripts/e2e/github-memory-risk-report.sh
 scripts/e2e/github-migration-risk-report.sh
 scripts/e2e/github-model-catalog-report.sh
+scripts/e2e/github-research-catalog-report.sh
 scripts/e2e/github-model-usage-report.sh
 scripts/e2e/github-model-cost-report.sh
 scripts/e2e/github-model-risk-report.sh

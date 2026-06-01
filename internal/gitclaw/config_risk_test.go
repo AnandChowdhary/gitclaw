@@ -53,7 +53,7 @@ func TestConfigRiskCommandReportsCurrentSafeSurfaceWithoutBodies(t *testing.T) {
 		"tools_allowed_configured: `0`",
 		"tools_disabled_configured: `0`",
 		"tool_gate_conflicts: `0`",
-		"slash_commands: `33`",
+		"slash_commands: `34`",
 		"surfaces_with_risk_findings: `0`",
 		"config_risk_findings: `0`",
 		"high_risk_findings: `0`",

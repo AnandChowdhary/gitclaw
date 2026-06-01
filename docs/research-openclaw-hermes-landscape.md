@@ -1221,6 +1221,33 @@ deterministic catalog report plus a normal GitHub Models repo-reader/search
 follow-up proving actual inference, selected skill, prompt-visible tool
 metadata, and usage telemetry.
 
+2026-06-01 research-catalog follow-up: OpenClaw's current docs make the
+gateway, channels, skills, and security surfaces explicit: a single long-lived
+gateway owns channel sessions, clients and nodes connect over WebSocket, skills
+are Markdown `SKILL.md` directories with precedence and allowlists, and
+third-party skills remain untrusted. Hermes' current docs make the parallel
+runtime pressure explicit: `skills_list`/`skill_view` progressive disclosure,
+bounded `MEMORY.md`/`USER.md`, scheduled fresh cron sessions, and opt-in
+checkpoint/rollback with diff preview before restore. GitClaw should make this
+research itself inspectable: add `@gitclaw /research catalog` and
+`gitclaw research catalog` as a deterministic, body-free source and pattern
+map. The report should include official source IDs/URLs, local research-file
+hashes, adopted GitHub-native surfaces, and consciously rejected OpenClaw/Hermes
+features. It must not browse at runtime, dump research/source bodies, include
+issue/comment/prompt/tool-output bodies, fetch third-party repos, or mutate the
+spec. A live GitHub Models repo-reader/search follow-up must accompany changes
+so the research surface stays connected to real inference and tool use. Sources:
+OpenClaw architecture (`https://docs.openclaw.ai/concepts/architecture`),
+OpenClaw skills (`https://docs.openclaw.ai/tools/skills`), OpenClaw channels
+(`https://docs.openclaw.ai/channels`), OpenClaw security
+(`https://docs.openclaw.ai/gateway/security`), Hermes skills
+(`https://hermes-agent.nousresearch.com/docs/guides/work-with-skills/`),
+Hermes memory
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/memory/`),
+Hermes cron (`https://hermes-agent.nousresearch.com/docs/user-guide/features/cron/`),
+and Hermes checkpoints/rollback
+(`https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback`).
+
 2026-05-30 GPT-5 parameter follow-up: the first live `openai/gpt-5-nano`
 conversation failed because GitHub Models rejected `max_tokens` and requested
 `max_completion_tokens`. GitClaw should select the output-token request

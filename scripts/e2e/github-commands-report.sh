@@ -147,9 +147,9 @@ for expected in \
   "GitClaw Commands Report" \
   "Generated without a model call" \
   'trigger_prefix: `@gitclaw`' \
-  'commands: `33`' \
-  'aliases: `31`' \
-  'local_cli_helpers: `201`' \
+  'commands: `34`' \
+  'aliases: `32`' \
+  'local_cli_helpers: `205`' \
   'run_mode: `read-only`' \
   'llm_e2e_required_after_commands_report_change: `true`' \
   "### Slash Commands" \
@@ -202,6 +202,8 @@ for expected in \
   '/budget' \
   '/prompt-budget' \
   '/cron' \
+  '/research' \
+  '/landscape' \
   'gitclaw agents catalog' \
   'gitclaw agents list' \
   'gitclaw agents provenance' \
@@ -292,6 +294,10 @@ for expected in \
   'gitclaw proactive info <name>' \
   'gitclaw proactive init' \
   'gitclaw proactive enqueue' \
+  'gitclaw research catalog' \
+  'gitclaw research sources' \
+  'gitclaw research coverage' \
+  'gitclaw research verify' \
   'gitclaw session catalog' \
   'gitclaw session list --backup <issue.json>' \
   'gitclaw session provenance --backup <issue.json>' \
