@@ -9,6 +9,7 @@ import (
 
 type ChannelSendOptions struct {
 	Repo      string
+	Route     string
 	Channel   string
 	ThreadID  string
 	MessageID string
@@ -22,10 +23,17 @@ type ChannelSendResult struct {
 	CommentID   int64
 	Created     bool
 	Duplicate   bool
+	RouteName   string
+	RouteHash   string
 }
 
 func RunChannelSend(ctx context.Context, cfg Config, github ChannelSendGitHubClient, opts ChannelSendOptions) (ChannelSendResult, error) {
 	opts = normalizeChannelSendOptions(opts)
+	var err error
+	opts, err = applyChannelSendRoute(cfg, opts)
+	if err != nil {
+		return ChannelSendResult{}, err
+	}
 	if err := validateChannelSendOptions(opts); err != nil {
 		return ChannelSendResult{}, err
 	}
@@ -51,6 +59,8 @@ func RunChannelSend(ctx context.Context, cfg Config, github ChannelSendGitHubCli
 				IssueURL:    issueURL(opts.Repo, issue.Number),
 				Created:     created,
 				Duplicate:   true,
+				RouteName:   opts.Route,
+				RouteHash:   channelRouteHash(opts.Route),
 			}, nil
 		}
 	}
@@ -67,11 +77,14 @@ func RunChannelSend(ctx context.Context, cfg Config, github ChannelSendGitHubCli
 		IssueURL:    issueURL(opts.Repo, issue.Number),
 		CommentID:   posted.ID,
 		Created:     created,
+		RouteName:   opts.Route,
+		RouteHash:   channelRouteHash(opts.Route),
 	}, nil
 }
 
 func normalizeChannelSendOptions(opts ChannelSendOptions) ChannelSendOptions {
 	opts.Repo = strings.TrimSpace(opts.Repo)
+	opts.Route = cleanChannelRouteName(opts.Route)
 	opts.Channel = strings.ToLower(strings.TrimSpace(opts.Channel))
 	opts.ThreadID = strings.TrimSpace(opts.ThreadID)
 	opts.MessageID = strings.TrimSpace(opts.MessageID)
@@ -122,6 +135,13 @@ func channelOutboundMarkerFields(body string) (string, string, string) {
 	return markerAttribute(match[1], "channel"), markerAttribute(match[1], "thread_id"), markerAttribute(match[1], "message_id")
 }
 
+func channelRouteHash(route string) string {
+	if strings.TrimSpace(route) == "" {
+		return ""
+	}
+	return shortDocumentHash(route)
+}
+
 func writeChannelSendOutputs(result ChannelSendResult) error {
 	outputPath := os.Getenv("GITHUB_OUTPUT")
 	if outputPath == "" {
@@ -137,5 +157,7 @@ func writeChannelSendOutputs(result ChannelSendResult) error {
 	fmt.Fprintf(file, "comment_id=%d\n", result.CommentID)
 	fmt.Fprintf(file, "created=%t\n", result.Created)
 	fmt.Fprintf(file, "duplicate=%t\n", result.Duplicate)
+	fmt.Fprintf(file, "route_resolved=%t\n", result.RouteName != "")
+	fmt.Fprintf(file, "route_sha256_12=%s\n", result.RouteHash)
 	return nil
 }

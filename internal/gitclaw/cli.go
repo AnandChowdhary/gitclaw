@@ -4523,6 +4523,7 @@ func runChannelSendCommand(ctx context.Context, args []string) error {
 	}
 	opts := ChannelSendOptions{
 		Repo:      os.Getenv("GITHUB_REPOSITORY"),
+		Route:     os.Getenv("GITCLAW_CHANNEL_ROUTE"),
 		Channel:   os.Getenv("GITCLAW_CHANNEL"),
 		ThreadID:  os.Getenv("GITCLAW_CHANNEL_THREAD_ID"),
 		MessageID: os.Getenv("GITCLAW_CHANNEL_MESSAGE_ID"),
@@ -4536,6 +4537,12 @@ func runChannelSendCommand(ctx context.Context, args []string) error {
 				return fmt.Errorf("--repo requires a value")
 			}
 			opts.Repo = args[i+1]
+			i++
+		case "--route":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--route requires a value")
+			}
+			opts.Route = args[i+1]
 			i++
 		case "--channel":
 			if i+1 >= len(args) {
@@ -4582,7 +4589,16 @@ func runChannelSendCommand(ctx context.Context, args []string) error {
 	if err := writeChannelSendOutputs(result); err != nil {
 		return err
 	}
-	fmt.Printf("channel_send issue=%d comment=%d created=%t duplicate=%t url=%s\n", result.IssueNumber, result.CommentID, result.Created, result.Duplicate, result.IssueURL)
+	fmt.Printf(
+		"channel_send issue=%d comment=%d created=%t duplicate=%t route_resolved=%t route_sha256_12=%s url=%s\n",
+		result.IssueNumber,
+		result.CommentID,
+		result.Created,
+		result.Duplicate,
+		result.RouteName != "",
+		result.RouteHash,
+		result.IssueURL,
+	)
 	return nil
 }
 

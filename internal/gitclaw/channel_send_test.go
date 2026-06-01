@@ -46,6 +46,62 @@ func TestRunChannelSendQueuesOutboundMessage(t *testing.T) {
 	}
 }
 
+func TestRunChannelSendResolvesNamedRoute(t *testing.T) {
+	cfg := DefaultConfig()
+	cfg.Workdir = t.TempDir()
+	writeTestFile(t, cfg.Workdir, channelRoutesPath, `routes:
+  - name: team-demo
+    channel: slack
+    thread_id_template: route-thread-{message_id}
+    author: gitclaw:route
+`)
+	github := &FakeGitHub{}
+
+	result, err := RunChannelSend(context.Background(), cfg, github, ChannelSendOptions{
+		Repo:      "owner/repo",
+		Route:     "TEAM-demo",
+		MessageID: "notify-789",
+		Body:      "Route body with CHANNEL_ROUTE_TOKEN.",
+	})
+	if err != nil {
+		t.Fatalf("RunChannelSend returned error: %v", err)
+	}
+	if !result.Created || result.RouteName != "team-demo" || result.RouteHash == "" {
+		t.Fatalf("unexpected routed send result: %#v", result)
+	}
+	issue := github.Issues[0]
+	if !strings.Contains(issue.Body, `channel="slack"`) || !strings.Contains(issue.Body, `thread_id="route-thread-notify-789"`) {
+		t.Fatalf("created issue missing routed channel marker: %s", issue.Body)
+	}
+	comment := github.CommentsByIssue[result.IssueNumber][0].Body
+	for _, want := range []string{`author="gitclaw:route"`, `thread_id="route-thread-notify-789"`, "CHANNEL_ROUTE_TOKEN"} {
+		if !strings.Contains(comment, want) {
+			t.Fatalf("routed outbound comment missing %q:\n%s", want, comment)
+		}
+	}
+}
+
+func TestRunChannelSendRejectsConflictingNamedRoute(t *testing.T) {
+	cfg := DefaultConfig()
+	cfg.Workdir = t.TempDir()
+	writeTestFile(t, cfg.Workdir, channelRoutesPath, `routes:
+  - name: team-demo
+    channel: slack
+    thread_id: slack-thread
+`)
+
+	_, err := RunChannelSend(context.Background(), cfg, &FakeGitHub{}, ChannelSendOptions{
+		Repo:      "owner/repo",
+		Route:     "team-demo",
+		Channel:   "telegram",
+		MessageID: "notify-789",
+		Body:      "hello",
+	})
+	if err == nil || !strings.Contains(err.Error(), "resolves channel") {
+		t.Fatalf("expected channel conflict error, got %v", err)
+	}
+}
+
 func TestRunChannelSendReusesThreadAndDedupesMessage(t *testing.T) {
 	cfg := DefaultConfig()
 	github := &FakeGitHub{

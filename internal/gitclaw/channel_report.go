@@ -71,6 +71,8 @@ type channelSurface struct {
 	GatewayWorkflow  channelWorkflow
 	DeliveryWorkflow channelWorkflow
 	OutboxWorkflow   channelWorkflow
+	Routebook        configSurfaceFile
+	Routes           int
 }
 
 type channelWorkflow struct {
@@ -146,6 +148,9 @@ func renderChannelReport(ev Event, cfg Config, comments []Comment, includeIssue 
 	fmt.Fprintf(&b, "- send_workflow_dispatch_trigger: `%t`\n", surface.SendWorkflow.WorkflowDispatch)
 	fmt.Fprintf(&b, "- send_workflow_permissions_issues_write: `%t`\n", surface.SendWorkflow.IssuesWrite)
 	fmt.Fprintf(&b, "- send_workflow_inputs: `%d`\n", surface.SendWorkflow.Inputs)
+	fmt.Fprintf(&b, "- routebook_path: `%s`\n", channelRoutesPath)
+	fmt.Fprintf(&b, "- routebook_present: `%t`\n", surface.Routebook.Present)
+	fmt.Fprintf(&b, "- named_routes: `%d`\n", surface.Routes)
 	fmt.Fprintf(&b, "- state_workflow_path: `%s`\n", channelStateWorkflowPath)
 	fmt.Fprintf(&b, "- state_workflow_present: `%t`\n", surface.StateWorkflow.Present)
 	fmt.Fprintf(&b, "- state_workflow_dispatch_trigger: `%t`\n", surface.StateWorkflow.WorkflowDispatch)
@@ -275,6 +280,7 @@ func renderChannelReport(ev Event, cfg Config, comments []Comment, includeIssue 
 	b.WriteString("\n### Ingest Contract\n")
 	b.WriteString("- `gitclaw channel-ingest --channel <provider> --thread-id <thread> --message-id <message> --body <text>`\n")
 	b.WriteString("- `gitclaw channel-send --channel <provider> --thread-id <thread> --message-id <message> --body <text>` queues a GitHub-originated outbound message\n")
+	b.WriteString("- `gitclaw channel-send --route <name> --message-id <message> --body <text>` resolves a repo-reviewed named route\n")
 	b.WriteString("- `gitclaw channel-state --channel <provider> --account-id <account> --offset <offset>` stores durable provider offsets as hashes\n")
 	b.WriteString("- `gitclaw channel-gateway --channel <provider> --account-id <account> [--renew]` records a gateway lease and can self-renew through workflow dispatch\n")
 	b.WriteString("- `gitclaw channel-outbox --channel <provider> --account-id <account> --issue-number <issue> --out <file>` returns pending assistant replies for delivery\n")
@@ -348,11 +354,13 @@ func renderChannelInfoReport(ev Event, cfg Config, comments []Comment, provider 
 	writeChannelWorkflowInfo(&b, "gateway", surface.GatewayWorkflow)
 	writeChannelWorkflowInfo(&b, "delivery", surface.DeliveryWorkflow)
 	writeChannelWorkflowInfo(&b, "outbox", surface.OutboxWorkflow)
+	writeConfigSurfaceFile(&b, surface.Routebook)
 
 	b.WriteString("\n### Commands\n")
 	if ok {
 		fmt.Fprintf(&b, "- `gitclaw channel-ingest --channel %s --thread-id <thread> --message-id <message> --body <text>`\n", info.Name)
 		fmt.Fprintf(&b, "- `gitclaw channel-send --channel %s --thread-id <thread> --message-id <message> --body <text>`\n", info.Name)
+		b.WriteString("- `gitclaw channel-send --route <name> --message-id <message> --body <text>`\n")
 		fmt.Fprintf(&b, "- `gitclaw channel-state --channel %s --account-id <account> --offset <offset>`\n", info.Name)
 		fmt.Fprintf(&b, "- `gitclaw channel-gateway --channel %s --account-id <account> --renew`\n", info.Name)
 		fmt.Fprintf(&b, "- `gitclaw channel-outbox --channel %s --account-id <account> --issue-number <issue> --out <file>`\n", info.Name)
@@ -405,6 +413,9 @@ func renderChannelVerifyReport(ev Event, cfg Config, comments []Comment, include
 	fmt.Fprintf(&b, "- send_workflow_dispatch_trigger: `%t`\n", surface.SendWorkflow.WorkflowDispatch)
 	fmt.Fprintf(&b, "- send_workflow_permissions_issues_write: `%t`\n", surface.SendWorkflow.IssuesWrite)
 	fmt.Fprintf(&b, "- send_workflow_inputs: `%d`\n", surface.SendWorkflow.Inputs)
+	fmt.Fprintf(&b, "- routebook_path: `%s`\n", channelRoutesPath)
+	fmt.Fprintf(&b, "- routebook_present: `%t`\n", surface.Routebook.Present)
+	fmt.Fprintf(&b, "- named_routes: `%d`\n", surface.Routes)
 	fmt.Fprintf(&b, "- state_workflow_path: `%s`\n", channelStateWorkflowPath)
 	fmt.Fprintf(&b, "- state_workflow_present: `%t`\n", surface.StateWorkflow.Present)
 	fmt.Fprintf(&b, "- state_workflow_dispatch_trigger: `%t`\n", surface.StateWorkflow.WorkflowDispatch)
@@ -453,6 +464,7 @@ func renderChannelVerifyReport(ev Event, cfg Config, comments []Comment, include
 	b.WriteString("- workflow can create/update GitHub issues with `issues: write`\n")
 	b.WriteString("- workflow accepts `channel`, `thread_id`, `message_id`, `author`, and `body` inputs\n")
 	b.WriteString("- channel-send workflow can queue GitHub-originated outbound messages with `issues: write`\n")
+	b.WriteString("- channel-send workflow accepts optional named routes from `.gitclaw/channels/routes.yaml`\n")
 	b.WriteString("- channel state and gateway workflows are callable with `workflow_dispatch`\n")
 	b.WriteString("- gateway workflow can dispatch its renewal with `actions: write`\n")
 	b.WriteString("- outbox workflow can read pending assistant replies with `issues: read`\n")
@@ -604,6 +616,7 @@ func inspectChannelSurface(root string) channelSurface {
 		GatewayWorkflow:  channelWorkflow{Path: channelGatewayWorkflowPath},
 		DeliveryWorkflow: channelWorkflow{Path: channelDeliveryWorkflowPath},
 		OutboxWorkflow:   channelWorkflow{Path: channelOutboxWorkflowPath},
+		Routebook:        configSurfaceFile{Path: channelRoutesPath},
 	}
 	absRoot, err := filepath.Abs(root)
 	if err != nil {
@@ -615,6 +628,10 @@ func inspectChannelSurface(root string) channelSurface {
 	surface.GatewayWorkflow = inspectChannelWorkflow(absRoot, channelGatewayWorkflowPath)
 	surface.DeliveryWorkflow = inspectChannelWorkflow(absRoot, channelDeliveryWorkflowPath)
 	surface.OutboxWorkflow = inspectChannelWorkflow(absRoot, channelOutboxWorkflowPath)
+	surface.Routebook = inspectConfigSurfaceFile(absRoot, channelRoutesPath)
+	if routes, err := LoadChannelRoutes(absRoot); err == nil {
+		surface.Routes = len(routes)
+	}
 	return surface
 }
 

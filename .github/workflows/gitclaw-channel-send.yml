@@ -4,11 +4,14 @@ on:
   workflow_dispatch:
     inputs:
       channel:
-        description: External channel name, such as telegram or slack
-        required: true
+        description: External channel name, such as telegram or slack; required when route is empty
+        required: false
+      route:
+        description: Optional named route from .gitclaw/channels/routes.yaml
+        required: false
       thread_id:
-        description: External channel thread or chat id
-        required: true
+        description: External channel thread or chat id; required when route is empty
+        required: false
       message_id:
         description: Stable outbound message id
         required: true
@@ -21,7 +24,7 @@ on:
         required: true
 
 concurrency:
-  group: gitclaw-channel-send-${{ inputs.channel }}-${{ inputs.thread_id }}
+  group: gitclaw-channel-send-${{ inputs.route }}-${{ inputs.channel }}-${{ inputs.thread_id }}
   cancel-in-progress: false
 
 jobs:
@@ -44,6 +47,7 @@ jobs:
         run: |
           set -euo pipefail
           channel="$(jq -r '.inputs.channel // ""' "$GITHUB_EVENT_PATH")"
+          route="$(jq -r '.inputs.route // ""' "$GITHUB_EVENT_PATH")"
           thread_id="$(jq -r '.inputs.thread_id // ""' "$GITHUB_EVENT_PATH")"
           message_id="$(jq -r '.inputs.message_id // ""' "$GITHUB_EVENT_PATH")"
           author="$(jq -r '.inputs.author // "gitclaw"' "$GITHUB_EVENT_PATH")"
@@ -51,6 +55,7 @@ jobs:
           printf "::add-mask::%s\n" "$thread_id"
           printf "::add-mask::%s\n" "$message_id"
           GITCLAW_CHANNEL="$channel" \
+            GITCLAW_CHANNEL_ROUTE="$route" \
             GITCLAW_CHANNEL_THREAD_ID="$thread_id" \
             GITCLAW_CHANNEL_MESSAGE_ID="$message_id" \
             GITCLAW_CHANNEL_AUTHOR="$author" \

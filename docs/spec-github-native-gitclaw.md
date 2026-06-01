@@ -931,7 +931,8 @@ GitHub issue/comment event
   `session status`,
   `session coverage`,
   `heartbeat`, `heartbeat status`, `heartbeat risk`,
-  `channel-ingest`, `channel-send`, `channel-state`, `channel-gateway`,
+  `channel-ingest`, `channel-send`, `channel-send --route`,
+  `channel-state`, `channel-gateway`,
   `channel-outbox`, `channel-delivery`,
   `channels list`, `channels verify`, `channels risk`, `channels info`,
   `checkpoints catalog`, `checkpoints status`, `checkpoints list`,
@@ -4851,10 +4852,29 @@ gitclaw channel-send \
   --body "message to send"
 ```
 
+For scheduled jobs and proactive nudges, the same command can resolve a
+repo-reviewed route instead of carrying raw provider thread IDs in each
+dispatch:
+
+```bash
+gitclaw channel-send \
+  --repo OWNER/REPO \
+  --route team-alerts \
+  --message-id <stable-outbound-id> \
+  --body "message to send"
+```
+
+Routes live in `.gitclaw/channels/routes.yaml`. Each route has a `name`,
+`channel`, and either `thread_id` or `thread_id_template`; templates may use
+`{message_id}` and `{route}` so E2E and proactive jobs can create stable
+per-message GitHub channel threads without a server-side router.
+
 Behavior:
 
 - find or create the same `gitclaw:channel-thread` issue used by inbound
   channel ingest,
+- if `--route` is provided, resolve the route before validation and reject
+  conflicting explicit `--channel` or `--thread-id` values,
 - label it with `gitclaw:channel` but do not apply the normal `gitclaw`
   trigger label,
 - post one `gitclaw:channel-outbound` comment per `channel + message_id`,
@@ -4864,12 +4884,12 @@ Behavior:
   turn.
 
 `.github/workflows/gitclaw-channel-send.yml` wraps the command with
-`workflow_dispatch` and `issues: write`. This makes scheduled jobs and manual
-bridge tests able to queue Slack/Telegram work without a webhook server,
-socket service, or hidden delivery database. Changes to this workflow must
-prove duplicate suppression, pending outbox discovery, delivery receipt retry
-suppression, and a normal GitHub Models repo-reader/search follow-up on the
-same issue.
+`workflow_dispatch`, optional `route`, and `issues: write`. This makes
+scheduled jobs and manual bridge tests able to queue Slack/Telegram work
+without a webhook server, socket service, or hidden delivery database. Changes
+to this workflow must prove duplicate suppression, named-route resolution,
+pending outbox discovery, delivery receipt retry suppression, and a normal
+GitHub Models repo-reader/search follow-up on the same issue.
 
 ### Channel State Command
 
@@ -7179,6 +7199,13 @@ examples/workflows/gitclaw.yml
   that must make a GitHub Models call, select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-send fixture token, and avoid
   hidden account/provider/channel sentinels.
+- A `gh`-driven channel-send-route-workflow E2E harness dispatches the same
+  workflow with only `route`, `message_id`, and `body`, verifies
+  `.gitclaw/channels/routes.yaml` resolution, duplicate suppression, and a
+  metadata-only pending outbox entry, then posts a normal issue-comment
+  follow-up that must make a GitHub Models call, select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-send-route fixture token, and
+  avoid hidden route/account/channel sentinels.
 - A `gh`-driven channel-delivery-workflow E2E harness dispatches
   `.github/workflows/gitclaw-channel-delivery.yml`, verifies a source
   `gitclaw:assistant-turn` comment can be recorded as delivered, checks that

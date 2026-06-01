@@ -1,0 +1,5 @@
+routes:
+  - name: e2e-slack-route
+    channel: slack
+    thread_id_template: gitclaw-e2e-route-{message_id}
+    author: gitclaw:e2e

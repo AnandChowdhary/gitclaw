@@ -162,7 +162,7 @@ for expected in \
   'send_workflow_present: `true`' \
   'send_workflow_dispatch_trigger: `true`' \
   'send_workflow_permissions_issues_write: `true`' \
-  'send_workflow_inputs: `5`' \
+  'send_workflow_inputs: `6`' \
   'state_workflow_path: `.github/workflows/gitclaw-channel-state.yml`' \
   'state_workflow_present: `true`' \
   'state_workflow_dispatch_trigger: `true`' \

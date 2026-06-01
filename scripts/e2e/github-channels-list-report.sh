@@ -157,7 +157,7 @@ for expected in \
   'workflow_inputs: `5`' \
   'send_workflow_path: `.github/workflows/gitclaw-channel-send.yml`' \
   'send_workflow_present: `true`' \
-  'send_workflow_inputs: `5`' \
+  'send_workflow_inputs: `6`' \
   'state_workflow_present: `true`' \
   'state_workflow_inputs: `4`' \
   'gateway_workflow_present: `true`' \

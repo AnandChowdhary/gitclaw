@@ -3297,6 +3297,19 @@ search queries, or tool outputs. Acceptance requires a live GitHub Models
 repo-reader/search turn first, followed by the deterministic session-tools
 report proving the model-backed tool ledger from marker evidence.
 
+### 2026-06-01 Channel Route Follow-Up
+
+OpenClaw and Hermes both make agent state explicit and reviewable instead of
+burying it in an always-on service. GitClaw should apply that same lesson to
+Slack/Telegram addressing: routes belong in git, not in workflow YAML copies or
+external bridge databases. `.gitclaw/channels/routes.yaml` now provides named
+channel destinations with static `thread_id` values or `thread_id_template`
+values that can expand `{message_id}` and `{route}`. The executable surface is
+`gitclaw channel-send --route <name>`, wrapped by the channel-send
+`workflow_dispatch` workflow, with live E2E requiring duplicate suppression,
+metadata-only outbox discovery, and a real GitHub Models repo-reader/search
+follow-up on the routed issue.
+
 ### 2026-06-01 Session Skills Follow-Up
 
 OpenClaw's skill surfaces treat skills as named, inspectable prompt extensions,
