@@ -365,6 +365,17 @@ notes for prompt-boundary overrides, credential-looking material, hidden
 persistence, unbounded automation, and unreviewed host execution, while
 publishing only paths, counts, codes, categories, and line hashes.
 
+2026-06-01 memory-proposal-issue follow-up: Hermes' current memory docs keep
+`MEMORY.md` and `USER.md` bounded and prompt-injected, while OpenClaw's memory
+search docs emphasize indexed recall over Markdown memory files. GitClaw
+should preserve that memory-as-prompt-authority boundary by making
+`@gitclaw /memory remember --target <target> --id <id>` an issue-native review
+queue, not an agent write. The action should open or reuse a marked memory
+proposal issue, publish source hashes and target metadata, suppress duplicate
+proposal ids, and leave candidate generation, memory-file writes, model calls,
+and repository mutation for reviewed git changes. The live E2E must prove the
+deterministic action plus a real GitHub Models repo-reader/search follow-up.
+
 2026-05-29 backup-index follow-up: OpenClaw migration applies only after a
 reviewed plan and verified backup, while Hermes exposes session export as a
 portable artifact. GitClaw should make its backup branch similarly inspectable:

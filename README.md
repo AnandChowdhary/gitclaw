@@ -104,7 +104,7 @@ follow-up after the deterministic report.
 
 Memory:
 
-```bash
+```text
 gitclaw memory catalog
 gitclaw memory snapshot
 gitclaw memory provenance
@@ -114,6 +114,7 @@ gitclaw memory validate
 gitclaw memory timeline
 gitclaw memory list
 gitclaw memory promote-plan [target]
+@gitclaw /memory remember --target <target> --id <id>
 gitclaw memory info <path>
 gitclaw memory search <query>
 ```
@@ -140,6 +141,11 @@ author identities.
 promotion. It stays body-free and write-disabled, and its live harness now
 proves a real GitHub Models repo-reader follow-up after the deterministic
 report.
+Trusted issue threads can queue reviewed memory with
+`@gitclaw /memory remember --target long-term --id <id>`: GitClaw opens or
+reuses a GitHub proposal issue, records source hashes and memory target
+metadata, and keeps `.gitclaw/MEMORY.md` plus dated notes untouched until a
+human-reviewed branch promotes the change.
 
 Skills and bundles:
 
@@ -813,6 +819,7 @@ scripts/e2e/github-memory-snapshot-report.sh
 scripts/e2e/github-memory-provenance-report.sh
 scripts/e2e/github-memory-timeline-report.sh
 scripts/e2e/github-memory-risk-report.sh
+scripts/e2e/github-memory-remember-issue.sh
 scripts/e2e/github-migration-risk-report.sh
 scripts/e2e/github-model-catalog-report.sh
 scripts/e2e/github-research-catalog-report.sh
@@ -985,6 +992,11 @@ The skills-propose harness covers the action side of Skill Workshop: a trusted
 keeps source text out of receipts and proposal issue bodies, suppresses
 duplicate proposal requests, and then continues with a real GitHub Models
 repo-reader/search follow-up.
+The memory-remember harness applies the same action pattern to durable memory:
+a trusted `@gitclaw /memory remember --target long-term --id <id>` turn opens
+or reuses a GitHub memory proposal issue, keeps candidate/source text out of
+receipts and proposal bodies, suppresses duplicate proposal requests, and then
+continues with a real GitHub Models repo-reader/search follow-up.
 The channel-ingest harness proves the generic no-server bridge end to end:
 workflow-dispatch mirroring, duplicate provider-message suppression, and a
 normal model/tool follow-up on the canonical channel issue.

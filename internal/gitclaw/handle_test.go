@@ -3421,6 +3421,106 @@ func TestHandleMemoryPromotePlanCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 }
 
+func TestHandleMemoryRememberCommandCreatesProposalIssueWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/MEMORY.md", "Stable memory file.\n")
+	writeTestFile(t, root, ".gitclaw/memory/2026-05-29.md", "Daily memory file.\n")
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 143,
+			"title": "@gitclaw /memory remember --target long-term --id weekly-ops-memory",
+			"body": "Remember a durable weekly ops convention. Hidden memory proposal token: MEMORY_REMEMBER_ACTION_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{143: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for memory remember action", llm.Calls)
+	}
+	if len(github.Issues) != 1 {
+		t.Fatalf("created memory proposal issues = %d, want 1: %#v", len(github.Issues), github.Issues)
+	}
+	proposalIssue := github.Issues[0]
+	if proposalIssue.Title != "GitClaw memory proposal: weekly-ops-memory" || !strings.Contains(proposalIssue.Body, memoryProposalIssueMarker) {
+		t.Fatalf("unexpected memory proposal issue: %#v", proposalIssue)
+	}
+	for _, want := range []string{"proposal_id: weekly-ops-memory", "target_kind: long-term", "target_path: .gitclaw/MEMORY.md", "source_issue: #143", "raw_source_body_included: false", "raw_candidate_memory_included: false", "memory_file_written: false"} {
+		if !strings.Contains(proposalIssue.Body, want) {
+			t.Fatalf("memory proposal issue body missing %q:\n%s", want, proposalIssue.Body)
+		}
+	}
+	if strings.Contains(proposalIssue.Body, "MEMORY_REMEMBER_ACTION_SECRET") || strings.Contains(proposalIssue.Body, "Remember a durable weekly ops convention") {
+		t.Fatalf("memory proposal issue body leaked source request:\n%s", proposalIssue.Body)
+	}
+	if len(github.CommentsByIssue[143]) != 1 {
+		t.Fatalf("source comments = %d, want memory proposal receipt: %#v", len(github.CommentsByIssue[143]), github.CommentsByIssue[143])
+	}
+	receipt := github.CommentsByIssue[143][0].Body
+	for _, want := range []string{"GitClaw Memory Proposal Issue Action", "Generated without a model call", `model="gitclaw/memory"`, "memory_proposal_status: `created`", "memory_proposal_issue_created: `true`", "duplicate_suppressed: `false`", "memory_proposal_id: `weekly-ops-memory`", "normalized_target_kind: `long-term`", "normalized_target_path: `.gitclaw/MEMORY.md`", "proposal_store: `github-issue-to-git-reviewed-memory-file`", "raw_source_body_included: `false`", "raw_candidate_memory_included: `false`", "memory_file_written: `false`", "llm_e2e_required_after_memory_proposal_issue_change: `true`"} {
+		if !strings.Contains(receipt, want) {
+			t.Fatalf("memory remember receipt missing %q:\n%s", want, receipt)
+		}
+	}
+	for _, leaked := range []string{"MEMORY_REMEMBER_ACTION_SECRET", "Remember a durable weekly ops convention"} {
+		if strings.Contains(receipt, leaked) {
+			t.Fatalf("memory remember receipt leaked %q:\n%s", leaked, receipt)
+		}
+	}
+
+	commentEv, err := ParseEvent("issue_comment", []byte(`{
+		"action": "created",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 143,
+			"title": "@gitclaw /memory remember --target long-term --id weekly-ops-memory",
+			"body": "Remember a durable weekly ops convention.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"comment": {
+			"id": 89,
+			"body": "@gitclaw /memory remember --target long-term --id weekly-ops-memory\nDuplicate memory request hidden token: MEMORY_REMEMBER_DUPLICATE_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"}
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent comment returned error: %v", err)
+	}
+	if err := Handle(context.Background(), commentEv, cfg, github, llm); err != nil {
+		t.Fatalf("second Handle returned error: %v", err)
+	}
+	if len(github.Issues) != 1 {
+		t.Fatalf("duplicate memory proposal created another issue: %#v", github.Issues)
+	}
+	duplicateReceipt := github.CommentsByIssue[143][1].Body
+	for _, want := range []string{"memory_proposal_status: `existing`", "memory_proposal_issue_created: `false`", "duplicate_suppressed: `true`"} {
+		if !strings.Contains(duplicateReceipt, want) {
+			t.Fatalf("duplicate memory remember receipt missing %q:\n%s", want, duplicateReceipt)
+		}
+	}
+	if strings.Contains(duplicateReceipt, "MEMORY_REMEMBER_DUPLICATE_SECRET") {
+		t.Fatalf("duplicate memory remember receipt leaked comment body:\n%s", duplicateReceipt)
+	}
+}
+
 func TestHandleMemoryInfoCommandPostsFocusedReportWithoutLLM(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/MEMORY.md", "MEMORY_INFO_HANDLER_SECRET")

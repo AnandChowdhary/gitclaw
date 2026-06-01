@@ -1452,6 +1452,7 @@ larger session recall:
 @gitclaw /memory validate
 @gitclaw /memory timeline
 @gitclaw /memory promote-plan long-term
+@gitclaw /memory remember --target long-term --id weekly-ops-memory
 @gitclaw /memory info .gitclaw/memory/2026-05-29.md
 @gitclaw /memory search backup branch
 ```
@@ -1564,6 +1565,22 @@ candidate memory text. User-profile promotions route to `/soul edit-plan user`.
 Any implementation change to the planner must pair the deterministic report
 check with a normal issue-comment follow-up that uses GitHub Models, the
 repo-reader skill, and bounded repository search to prove tool visibility.
+
+When called as `@gitclaw /memory remember --target <target> --id <id>`,
+GitClaw performs the issue-native memory proposal action. It opens or reuses a
+dedicated GitHub issue marked with `gitclaw:memory-proposal-issue`, records the
+safe proposal id, source request hash, source issue/comment identity, target
+kind/path, current target hash/size, memory budget, latest dated note, and
+memory validation rollup, then posts a body-free receipt in the source
+conversation. Duplicate open memory proposal issues are suppressed by marker
+and proposal id.
+
+The memory proposal action does not write `.gitclaw/MEMORY.md`, does not write
+`.gitclaw/memory/*.md`, does not generate candidate memory, does not copy raw
+issue/comment text into the proposal issue or receipt, and does not call a
+model. It is a GitHub-native review queue entry: after review, a maintainer can
+draft compact memory on a normal branch, run memory validation/verification,
+and let the memory affect future prompts only through a reviewed git change.
 
 When called as `@gitclaw /memory validate`, the command renders only the
 memory-hygiene report. Local operators can run the same validation with:
@@ -7832,6 +7849,13 @@ examples/workflows/gitclaw.yml
   call, select `repo-reader`, expose `gitclaw.search_files`, recover a bounded
   repository-search fixture token, and publish usage telemetry without leaking
   hidden issue tokens.
+- A `gh`-driven memory-remember E2E harness verifies
+  `@gitclaw /memory remember --target long-term --id <id>` opens a body-free
+  GitHub memory proposal issue, posts a source receipt, suppresses duplicate
+  open proposal issues, avoids raw source/request/candidate leakage, and still
+  runs a live GitHub Models follow-up proving repo-local skill selection,
+  prompt-visible repository search tool usage, and usage telemetry after the
+  deterministic issue action.
 - A `gh`-driven memory-validate E2E harness verifies
   `@gitclaw /memory validate` reports memory hygiene without a model call or
   memory-body leakage.
