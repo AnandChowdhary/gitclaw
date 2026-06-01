@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T12:28:44Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 525,
+    "title": "GitClaw channel invite E2E 20260601T122711Z",
+    "body": "@gitclaw /channels invite e2e-slack-route,e2e-telegram-route --message-id invite-20260601T122711Z\n\nPlease join this GitHub issue from the routed channel.\n\nVisible invite note token for provider queue inspection: NOECHO_CHANNEL_INVITE_NOTE_20260601T122711Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": null
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel invite E2E 20260601T122711Z\n\n@gitclaw /channels invite e2e-slack-route,e2e-telegram-route --message-id invite-20260601T122711Z\n\nPlease join this GitHub issue from the routed channel.\n\nVisible invite note token for provider queue inspection: NOECHO_CHANNEL_INVITE_NOTE_20260601T122711Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Invite Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#525`\n- requested_channel_command: `/channels invite`\n- channel_invite_status: `queued`\n- invite_routes: `2`\n- invite_queued: `2`\n- invite_duplicates: `0`\n- target_issues_created: `2`\n- routes_sha256_12: `9892046e64ef`\n- message_id_sha256_12: `316dc3d2fce4`\n- message_id_auto: `false`\n- invite_note_sha256_12: `c4070e3b7c7a`\n- invite_note_bytes: `156`\n- invite_note_lines: `3`\n- invite_note_source: `trailing-lines`\n- outbound_body_sha256_12: `161b5179859e`\n- outbound_body_bytes: `384`\n- outbound_body_lines: `11`\n- raw_route_names_included: `false`\n- raw_issue_title_included: `false`\n- raw_invite_note_included: `false`\n- raw_outbound_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_invite_action_change: `true`\n- issue_title_sha256_12: `a157cb4bedd6`\n\nGitClaw queued an issue invitation on each reviewed route. The outbound channel body includes the source issue reference and optional note, but this receipt keeps route names, issue titles, notes, thread IDs, message IDs, and outbound bodies out of the source issue.\n\n### Destinations\n- destination=`01` target_issue=`#526` outbound_comment_id=`4592566252` target_issue_created=`true` duplicate_suppressed=`false` route_sha256_12=`ff6bd0e4b42c` channel=`slack` thread_id_sha256_12=`9c7061f8dcbc` message_id_sha256_12=`316dc3d2fce4` body_sha256_12=`161b5179859e`\n- destination=`02` target_issue=`#527` outbound_comment_id=`4592566593` target_issue_created=`true` duplicate_suppressed=`false` route_sha256_12=`325d7a85c564` channel=`telegram` thread_id_sha256_12=`f53b4ab61168` message_id_sha256_12=`316dc3d2fce4` body_sha256_12=`161b5179859e`\n\n### Follow-Up Delivery\n- provider gateways read pending invitations with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent invitations with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate invitations are suppressed independently for each route by `channel + message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4592566804,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4592566804,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26754841022\" event_id=\"issue-525\" model=\"gitclaw/channels\" idempotency_key=\"eb26cbae18b969c3bc9ae731a4403c13\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26754841022\" --\u003e\n## GitClaw Channel Invite Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#525`\n- requested_channel_command: `/channels invite`\n- channel_invite_status: `queued`\n- invite_routes: `2`\n- invite_queued: `2`\n- invite_duplicates: `0`\n- target_issues_created: `2`\n- routes_sha256_12: `9892046e64ef`\n- message_id_sha256_12: `316dc3d2fce4`\n- message_id_auto: `false`\n- invite_note_sha256_12: `c4070e3b7c7a`\n- invite_note_bytes: `156`\n- invite_note_lines: `3`\n- invite_note_source: `trailing-lines`\n- outbound_body_sha256_12: `161b5179859e`\n- outbound_body_bytes: `384`\n- outbound_body_lines: `11`\n- raw_route_names_included: `false`\n- raw_issue_title_included: `false`\n- raw_invite_note_included: `false`\n- raw_outbound_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_invite_action_change: `true`\n- issue_title_sha256_12: `a157cb4bedd6`\n\nGitClaw queued an issue invitation on each reviewed route. The outbound channel body includes the source issue reference and optional note, but this receipt keeps route names, issue titles, notes, thread IDs, message IDs, and outbound bodies out of the source issue.\n\n### Destinations\n- destination=`01` target_issue=`#526` outbound_comment_id=`4592566252` target_issue_created=`true` duplicate_suppressed=`false` route_sha256_12=`ff6bd0e4b42c` channel=`slack` thread_id_sha256_12=`9c7061f8dcbc` message_id_sha256_12=`316dc3d2fce4` body_sha256_12=`161b5179859e`\n- destination=`02` target_issue=`#527` outbound_comment_id=`4592566593` target_issue_created=`true` duplicate_suppressed=`false` route_sha256_12=`325d7a85c564` channel=`telegram` thread_id_sha256_12=`f53b4ab61168` message_id_sha256_12=`316dc3d2fce4` body_sha256_12=`161b5179859e`\n\n### Follow-Up Delivery\n- provider gateways read pending invitations with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent invitations with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate invitations are suppressed independently for each route by `channel + message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T12:28:14Z",
+      "updated_at": "2026-06-01T12:28:14Z"
+    }
+  ]
+}
