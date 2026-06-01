@@ -606,6 +606,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels invite e2e-slack-route,e2e-telegram-route --message-id <id>
 @gitclaw /channels huddle e2e-slack-route,e2e-telegram-route --huddle-id <id> --message-id <id>
 @gitclaw /channels poll e2e-slack-route,e2e-telegram-route --poll-id <id> --message-id <id>
+@gitclaw /channels rollcall e2e-slack-route,e2e-telegram-route --rollcall-id <id> --message-id <id>
 @gitclaw /channels react --message-id <id> --reaction eyes
 @gitclaw /channels reply --message-id <id>
 gitclaw proactive list
@@ -788,6 +789,12 @@ issue, writes the question and options there, labels it for normal GitClaw
 conversation, and queues provider-facing poll invites through reviewed routes.
 The source receipt stays body-free and reports only hashes, counts, issue
 numbers, and duplicate status.
+`@gitclaw /channels rollcall <route-a>,<route-b> --rollcall-id <id>
+--message-id <id>` creates or reuses a dedicated GitHub check-in issue, writes
+the prompt and instructions there, labels it for normal GitClaw conversation,
+and queues provider-facing rollcall invites through the same routebook/outbox
+path. It is meant for lightweight standups, attendance, status checks, and
+"everyone please respond here" moments without adding a server.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels react
 --message-id <id> --reaction <name>` queues a structured
 `gitclaw:channel-reaction` acknowledgement for the provider gateway. Duplicate
@@ -1007,6 +1014,7 @@ scripts/e2e/github-channel-broadcast-slash.sh
 scripts/e2e/github-channel-invite-slash.sh
 scripts/e2e/github-channel-huddle-slash.sh
 scripts/e2e/github-channel-poll-slash.sh
+scripts/e2e/github-channel-rollcall-slash.sh
 scripts/e2e/github-channel-reaction-slash.sh
 scripts/e2e/github-channel-reply-slash.sh
 scripts/e2e/github-channel-delivery-workflow.sh
@@ -1182,6 +1190,12 @@ labels it for normal GitClaw conversation, invites multiple reviewed routes
 through the provider queue, checks duplicate poll suppression, keeps question
 and option text out of the source receipt, and then continues on the poll issue
 with a real GitHub Models repo-reader/search follow-up.
+The channel-rollcall slash harness creates or reuses a dedicated GitHub
+rollcall issue, labels it for normal GitClaw conversation, invites multiple
+reviewed routes through the provider queue, checks duplicate check-in prompt
+suppression, keeps prompt/instruction text out of the source receipt, and then
+continues on the rollcall issue with a real GitHub Models repo-reader/search
+follow-up.
 The channel-reaction slash harness proves mirrored channel issues can do tiny
 social acknowledgements without composing a full reply: a channel-ingested issue
 receives `@gitclaw /channels react`, queues one structured provider reaction,

@@ -3899,3 +3899,18 @@ changes. GitClaw adopts that lesson as a GitHub-native profile review surface:
 profile files with metadata-only git diff commands. It emits status, numstat,
 path hashes, requested-ref hashes, and commit hashes while excluding raw
 patches, profile bodies, commit subjects, author identities, and secrets.
+
+## 2026-06-01 Channel Rollcall Follow-Up
+
+OpenClaw-style channel gateways and Hermes-style scheduled/team workflows are
+most useful when they can ask humans for small pieces of state, not only push
+reports at them. GitClaw's no-server version is
+`@gitclaw /channels rollcall <routes> --rollcall-id <id> --message-id <id>`:
+create a canonical GitHub check-in issue, label it for normal model-backed
+conversation, and queue provider-facing rollcall invites to reviewed
+Slack/Telegram routes. The source receipt stays metadata-only; the prompt and
+instructions live in the rollcall issue and routed outbound comments where
+humans actually need to read them. Acceptance must include live E2E that proves
+rollcall creation, route invite queues, duplicate suppression, metadata-only
+outbox discovery, and a real GitHub Models repo-reader/search follow-up on the
+rollcall issue itself.

@@ -5139,6 +5139,37 @@ invitation. Changes to this surface require a live E2E that creates the poll,
 validates queued route invites and body-free receipts, and then continues on
 the poll issue with a normal GitHub Models repo-reader/search follow-up.
 
+For lightweight status checks that should collect responses where participants
+already are, GitClaw also supports:
+
+```text
+@gitclaw /channels rollcall team-alerts,ops-alerts --rollcall-id <stable-rollcall-id> --message-id <stable-outbound-id>
+Prompt: What did you ship today?
+Instructions:
+- done
+- doing
+- blocked
+```
+
+`/channels rollcall`, `/channels check-in`, `/channels checkin`,
+`/channels standup`, and `/channels attendance` create or reuse one open issue
+carrying a hidden `gitclaw:channel-rollcall` marker for the stable rollcall id,
+label that issue with `gitclaw` so the conversation can continue normally, and
+queue one provider-facing check-in invitation per reviewed route. The rollcall
+issue is the human-readable room: it contains the prompt, optional
+instructions, source issue number, source issue URL, route count, and route
+hash. The source receipt remains body-free, reporting only the rollcall issue
+number/URL, rollcall id/prompt/instruction hashes, route counts, duplicate
+status, target issue/comment IDs, and delivery instructions. It does not call a
+model, call provider APIs, print raw route names, print raw rollcall ids, print
+raw prompt/instruction text, print raw thread/message IDs, or print the outbound
+invitation body. Duplicates are suppressed first by `rollcall_id` for the
+GitHub check-in issue and then by `channel + message_id` for each routed
+outbound invitation. Changes to this surface require a live E2E that creates
+the rollcall, validates queued route invites and body-free receipts, and then
+continues on the rollcall issue with a normal GitHub Models repo-reader/search
+follow-up.
+
 When the source issue is itself a `gitclaw:channel-thread`, GitClaw also
 accepts a structured reaction form:
 
@@ -5358,6 +5389,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels info telegram
 @gitclaw /channels send --route team-alerts --message-id alert-123
 @gitclaw /channels huddle team-alerts,ops-alerts --huddle-id design-room --message-id design-room-1
+@gitclaw /channels rollcall team-alerts,ops-alerts --rollcall-id standup --message-id standup-1
 ```
 
 The command runs after normal preflight and context loading, but before model
@@ -7648,6 +7680,15 @@ examples/workflows/gitclaw.yml
   follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
   recover the channel-poll fixture token, and avoid hidden route/account/channel
   sentinels.
+- A `gh`-driven channel-rollcall-slash E2E harness creates an ordinary GitHub
+  issue with `@gitclaw /channels rollcall ...`, verifies a labeled GitHub
+  rollcall issue, routebook-backed check-in invitations on each target channel
+  issue, body-free source receipt metadata, duplicate rollcall suppression from
+  a later issue comment with the same message id, and metadata-only outbox
+  discovery for each target issue. The rollcall issue then gets a normal GitHub
+  Models issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-rollcall fixture token, and avoid
+  hidden route/account/channel sentinels.
 - A `gh`-driven channel-reaction-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels react --message-id ... --reaction ...` on that mirrored
