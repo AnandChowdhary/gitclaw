@@ -109,5 +109,6 @@ agents provenance unique search fixture phrase => GITCLAW_AGENTS_PROVENANCE_CONT
 skills sources provenance unique search fixture phrase => GITCLAW_SKILLS_SOURCES_PROVENANCE_CONTEXT_V1
 skill source search unique search fixture phrase => GITCLAW_SKILL_SOURCE_SEARCH_CONTEXT_V1
 skill source lock unique search fixture phrase => GITCLAW_SKILL_SOURCE_LOCK_CONTEXT_V1
+skill source update plan unique search fixture phrase => GITCLAW_SKILL_SOURCE_UPDATE_PLAN_CONTEXT_V1
 nodes catalog unique search fixture phrase => GITCLAW_NODES_CATALOG_CONTEXT_V1
 artifacts catalog unique search fixture phrase => GITCLAW_ARTIFACTS_CATALOG_CONTEXT_V1

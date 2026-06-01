@@ -206,6 +206,20 @@ the repository, or print raw lockfiles, source refs, source YAML, skill
 bodies, issue/comment bodies, prompts, credentials, provider payloads, or
 secret values.
 
+2026-06-01 skill-source-update-plan follow-up: OpenClaw's skill update flow
+and ClawHub lock metadata imply maintainers need an update view, but GitClaw's
+GitHub-native runtime should not become a registry updater. Add
+`@gitclaw /skills sources update-plan` and
+`gitclaw skills sources update-plan` as a dry-run manual-review report over
+reviewed source pins. It should classify pins as current, stale, unpinned,
+missing, remote, or risky; show action/reason codes, source hash state,
+external lock presence/hash, and disabled registry/fetch/install/mutation
+gates; and require a real GitHub Models repo-reader/search follow-up after
+behavior changes. It must not contact registries, fetch remote refs, run
+installers, install dependencies, mutate `.gitclaw/SKILLS`, or print raw
+source refs, source YAML, skill bodies, lockfiles, issue/comment bodies,
+prompts, credentials, provider payloads, or secret values.
+
 2026-05-31 skill-runtime follow-up: OpenClaw's `SKILL.md` frontmatter and
 ClawHub format expose runtime metadata such as required env vars, binaries,
 `primaryEnv`, and install specs, while Hermes skills/tool docs frame these

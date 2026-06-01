@@ -445,6 +445,92 @@ func TestRenderSkillSourcesLockReportShowsReproducibilityWithoutBodies(t *testin
 	}
 }
 
+func TestRenderSkillSourcesUpdatePlanReportShowsNoFetchPlanWithoutBodies(t *testing.T) {
+	dir := t.TempDir()
+	hash := writeSkillSourceFixture(t, dir)
+	cfg := DefaultConfig()
+	cfg.Workdir = dir
+	repoContext, err := LoadRepoContextWithConfig(dir, nil, cfg)
+	if err != nil {
+		t.Fatalf("LoadRepoContextWithConfig returned error: %v", err)
+	}
+
+	report := RenderSkillSourcesUpdatePlanCLIReport(cfg, repoContext)
+	for _, want := range []string{
+		"GitClaw Skill Source Update Plan Report",
+		"scope: `local-cli`",
+		"Generated without a model call",
+		"skill_source_update_plan_status: `ok`",
+		"update_scope: `repo-local-source-pin-manual-review`",
+		"skill_source_status: `ok`",
+		"skill_source_specs: `1`",
+		"matched_skill_sources: `1`",
+		"hash_pinned_skill_sources: `1`",
+		"hash_matched_skill_sources: `1`",
+		"hash_mismatched_skill_sources: `0`",
+		"plan_entries: `1`",
+		"update_candidates: `0`",
+		"pinned_and_current_pins: `1`",
+		"stale_source_pins: `0`",
+		"unpinned_source_pins: `0`",
+		"missing_skill_pins: `0`",
+		"remote_source_pins: `0`",
+		"remote_fetch_allowed_pins: `0`",
+		"risk_finding_pins: `0`",
+		"external_clawhub_lock_path: `.clawhub/lock.json`",
+		"external_clawhub_lock_present: `false`",
+		"external_clawhub_lock_sha256_12: `none`",
+		"registry_contact_allowed: `false`",
+		"remote_fetch_allowed: `false`",
+		"installer_scripts_run: `false`",
+		"dependency_install_allowed: `false`",
+		"repository_mutation_allowed: `false`",
+		"raw_source_bodies_included: `false`",
+		"raw_source_refs_included: `false`",
+		"raw_skill_bodies_included: `false`",
+		"raw_remote_responses_included: `false`",
+		"llm_e2e_required_after_skill_source_update_plan_change: `true`",
+		"### Update Plan Entries",
+		"source_name=`repo-reader`",
+		"path=`.gitclaw/skill-sources/repo-reader.yaml`",
+		"skill_path=`.gitclaw/SKILLS/repo-reader/SKILL.md`",
+		"update_action=`none`",
+		"update_reasons=`none`",
+		"skill_matched=`true`",
+		"source_kind=`repo-local`",
+		"source_ref_present=`true`",
+		"trust_level=`repo-local`",
+		"install_mode=`manual-review`",
+		"requires_approval=`true`",
+		"remote_fetch_allowed=`false`",
+		"hash_pinned=`true`",
+		"expected_sha256_12=`" + hash + "`",
+		"current_skill_sha256_12=`" + hash + "`",
+		"hash_matched=`true`",
+		"risk_findings=`0`",
+		"risk_max_severity=`none`",
+		"risk_codes=`none`",
+		"### Update Gates",
+		"update_execution_gate=`disabled`",
+		"registry_gate=`disabled`",
+		"remote_fetch_gate=`disabled`",
+		"installer_gate=`disabled`",
+		"dependency_install_gate=`disabled`",
+		"mutation_gate=`disabled`",
+		"raw_body_gate=`hash_only`",
+		"model_e2e_gate=`required`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("skill source update-plan report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"SKILL_SOURCE_SKILL_BODY_SECRET", "Read repository context.", ".gitclaw/SKILLS/repo-reader/SKILL.md\nsource_kind"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("skill source update-plan report leaked %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestRenderSkillSourcesSearchReportFindsPinsWithoutBodies(t *testing.T) {
 	dir := t.TempDir()
 	hash := writeSkillSourceFixture(t, dir)
@@ -622,6 +708,17 @@ func TestSkillsSourcesCommandsReportPins(t *testing.T) {
 		}
 	}
 
+	updatePlanOutput := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"skills", "sources", "update-plan"}); err != nil {
+			t.Fatalf("skills sources update-plan returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"GitClaw Skill Source Update Plan Report", "skill_source_update_plan_status: `ok`", "plan_entries: `1`", "update_candidates: `0`", "update_action=`none`", "llm_e2e_required_after_skill_source_update_plan_change: `true`"} {
+		if !strings.Contains(updatePlanOutput, want) {
+			t.Fatalf("skills sources update-plan output missing %q:\n%s", want, updatePlanOutput)
+		}
+	}
+
 	searchOutput := captureStdout(t, func() {
 		if err := RunCLI(context.Background(), []string{"skills", "sources", "search", "repo-local", "manual-review"}); err != nil {
 			t.Fatalf("skills sources search returned error: %v", err)
@@ -643,8 +740,8 @@ func TestSkillsSourcesCommandsReportPins(t *testing.T) {
 			t.Fatalf("skills sources info output missing %q:\n%s", want, infoOutput)
 		}
 	}
-	if strings.Contains(listOutput, "SKILL_SOURCE_SKILL_BODY_SECRET") || strings.Contains(provenanceOutput, "SKILL_SOURCE_SKILL_BODY_SECRET") || strings.Contains(verifyOutput, "SKILL_SOURCE_SKILL_BODY_SECRET") || strings.Contains(lockOutput, "SKILL_SOURCE_SKILL_BODY_SECRET") || strings.Contains(searchOutput, "SKILL_SOURCE_SKILL_BODY_SECRET") || strings.Contains(infoOutput, "SKILL_SOURCE_SKILL_BODY_SECRET") {
-		t.Fatalf("skill source CLI leaked skill body:\nlist:\n%s\nprovenance:\n%s\nverify:\n%s\nlock:\n%s\nsearch:\n%s\ninfo:\n%s", listOutput, provenanceOutput, verifyOutput, lockOutput, searchOutput, infoOutput)
+	if strings.Contains(listOutput, "SKILL_SOURCE_SKILL_BODY_SECRET") || strings.Contains(provenanceOutput, "SKILL_SOURCE_SKILL_BODY_SECRET") || strings.Contains(verifyOutput, "SKILL_SOURCE_SKILL_BODY_SECRET") || strings.Contains(lockOutput, "SKILL_SOURCE_SKILL_BODY_SECRET") || strings.Contains(updatePlanOutput, "SKILL_SOURCE_SKILL_BODY_SECRET") || strings.Contains(searchOutput, "SKILL_SOURCE_SKILL_BODY_SECRET") || strings.Contains(infoOutput, "SKILL_SOURCE_SKILL_BODY_SECRET") {
+		t.Fatalf("skill source CLI leaked skill body:\nlist:\n%s\nprovenance:\n%s\nverify:\n%s\nlock:\n%s\nupdate-plan:\n%s\nsearch:\n%s\ninfo:\n%s", listOutput, provenanceOutput, verifyOutput, lockOutput, updatePlanOutput, searchOutput, infoOutput)
 	}
 }
 
@@ -795,6 +892,43 @@ func TestRenderSkillsReportRoutesSourcesLockWithoutBodies(t *testing.T) {
 	}
 	if strings.Contains(report, "SKILL_SOURCE_LOCK_ROUTE_BODY_SECRET") || strings.Contains(report, "SKILL_SOURCE_SKILL_BODY_SECRET") {
 		t.Fatalf("skill sources lock routed report leaked body text:\n%s", report)
+	}
+}
+
+func TestRenderSkillsReportRoutesSourcesUpdatePlanWithoutBodies(t *testing.T) {
+	dir := t.TempDir()
+	writeSkillSourceFixture(t, dir)
+	cfg := DefaultConfig()
+	cfg.Workdir = dir
+	repoContext, err := LoadRepoContextWithConfig(dir, nil, cfg)
+	if err != nil {
+		t.Fatalf("LoadRepoContextWithConfig returned error: %v", err)
+	}
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 134,
+			"title": "@gitclaw /skills sources update-plan",
+			"body": "Hidden skill source update-plan route token: SKILL_SOURCE_UPDATE_PLAN_ROUTE_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+
+	report := RenderSkillsReport(ev, cfg, repoContext)
+	for _, want := range []string{"GitClaw Skill Source Update Plan Report", "repository: `owner/repo`", "issue: `#134`", "skill_source_update_plan_status: `ok`", "update_scope: `repo-local-source-pin-manual-review`", "plan_entries: `1`", "update_candidates: `0`", "update_action=`none`", "issue_title_sha256_12:"} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("skill sources update-plan routed report missing %q:\n%s", want, report)
+		}
+	}
+	if strings.Contains(report, "SKILL_SOURCE_UPDATE_PLAN_ROUTE_BODY_SECRET") || strings.Contains(report, "SKILL_SOURCE_SKILL_BODY_SECRET") {
+		t.Fatalf("skill sources update-plan routed report leaked body text:\n%s", report)
 	}
 }
 
@@ -1021,6 +1155,74 @@ func TestHandleSkillsSourcesLockCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 	if !hasLabel(github.IssueLabels[133], "gitclaw:done") || hasLabel(github.IssueLabels[133], "gitclaw:running") || hasLabel(github.IssueLabels[133], "gitclaw:error") {
 		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[133])
+	}
+}
+
+func TestHandleSkillsSourcesUpdatePlanCommandPostsReportWithoutLLM(t *testing.T) {
+	dir := t.TempDir()
+	writeSkillSourceFixture(t, dir)
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 135,
+			"title": "@gitclaw /skills sources update-plan",
+			"body": "Hidden skill source update-plan handler token: SKILL_SOURCE_UPDATE_PLAN_HANDLER_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	cfg := DefaultConfig()
+	cfg.Workdir = dir
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{135: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic skill sources update-plan report", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{
+		"GitClaw Skill Source Update Plan Report",
+		"Generated without a model call",
+		"model=\"gitclaw/skills\"",
+		"repository: `owner/repo`",
+		"issue: `#135`",
+		"skill_source_update_plan_status: `ok`",
+		"update_scope: `repo-local-source-pin-manual-review`",
+		"plan_entries: `1`",
+		"update_candidates: `0`",
+		"pinned_and_current_pins: `1`",
+		"raw_source_bodies_included: `false`",
+		"raw_source_refs_included: `false`",
+		"raw_skill_bodies_included: `false`",
+		"raw_remote_responses_included: `false`",
+		"llm_e2e_required_after_skill_source_update_plan_change: `true`",
+		"source_name=`repo-reader`",
+		"update_action=`none`",
+		"update_reasons=`none`",
+		"### Update Gates",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("skill source update-plan handler report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SKILL_SOURCE_UPDATE_PLAN_HANDLER_BODY_SECRET", "SKILL_SOURCE_SKILL_BODY_SECRET", "Read repository context."} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("skill source update-plan handler report leaked %q:\n%s", leaked, body)
+		}
+	}
+	if !hasLabel(github.IssueLabels[135], "gitclaw:done") || hasLabel(github.IssueLabels[135], "gitclaw:running") || hasLabel(github.IssueLabels[135], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[135])
 	}
 }
 

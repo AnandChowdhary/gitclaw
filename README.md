@@ -138,6 +138,7 @@ gitclaw skills refresh-plan
 gitclaw skills sources
 gitclaw skills sources verify
 gitclaw skills sources lock
+gitclaw skills sources update-plan
 gitclaw skills sources provenance
 gitclaw skills sources risk
 gitclaw skills sources info <name>
@@ -186,6 +187,12 @@ source pins. It reports lock state, aggregate lock hash, expected/current skill
 hashes, stale/unpinned/missing counts, and `.clawhub/lock.json` presence/hash
 if present, without loading registry state or printing lockfile, source, or
 skill bodies.
+
+`gitclaw skills sources update-plan` is the no-fetch companion to
+OpenClaw/ClawHub-style skill updates. It reports which reviewed pins would need
+manual action because they are stale, unpinned, missing, remote, or risky, while
+keeping registry contact, remote fetch, installers, dependency installs, and
+repository mutation disabled.
 
 `gitclaw skills sources search <query>` searches reviewed source-pin metadata
 only: source name, path, skill path, source kind, trust level, install mode,
@@ -697,6 +704,7 @@ scripts/e2e/github-skills-sources-report.sh
 scripts/e2e/github-skills-sources-info-report.sh
 scripts/e2e/github-skills-sources-search-report.sh
 scripts/e2e/github-skills-sources-lock-report.sh
+scripts/e2e/github-skills-sources-update-plan-report.sh
 scripts/e2e/github-skills-sources-verify-report.sh
 scripts/e2e/github-skills-sources-provenance-report.sh
 scripts/e2e/github-skills-runtime-report.sh
@@ -825,6 +833,9 @@ tool grounding.
 The skill-source-lock harness checks the derived reproducibility lock for
 reviewed source pins, including stale/unpinned/missing counts and aggregate
 hashes, then requires a real GitHub Models repo-reader/search follow-up.
+The skill-source-update-plan harness checks the no-fetch/manual-review update
+planner for source pins, then requires a real GitHub Models repo-reader/search
+follow-up.
 The channel-ingest harness proves the generic no-server bridge end to end:
 workflow-dispatch mirroring, duplicate provider-message suppression, and a
 normal model/tool follow-up on the canonical channel issue.

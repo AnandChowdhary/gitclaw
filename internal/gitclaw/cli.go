@@ -2674,7 +2674,7 @@ func runMigrateRiskCommand(args []string) error {
 
 func runSkillsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw skills verify|risk|runtime|catalog|eligible|validate|check|list|provenance|select-plan <name>|refresh-plan|sources [verify|lock|provenance|risk|info <name>|search <query>]|proposals [risk]|proposal-plan <name>|install-plan <target>|upgrade-plan <target>|bundles [risk|provenance]|bundle <name>|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw skills verify|risk|runtime|catalog|eligible|validate|check|list|provenance|select-plan <name>|refresh-plan|sources [verify|lock|update-plan|provenance|risk|info <name>|search <query>]|proposals [risk]|proposal-plan <name>|install-plan <target>|upgrade-plan <target>|bundles [risk|provenance]|bundle <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -2829,6 +2829,13 @@ func runSkillsSourcesCommand(args []string) error {
 		fmt.Println(RenderSkillSourcesLockCLIReport(cfg, repoContext))
 		return nil
 	}
+	if args[0] == "update-plan" || args[0] == "updates" || args[0] == "sync-plan" {
+		if len(args) > 1 {
+			return fmt.Errorf("unknown skills sources update-plan argument %q", args[1])
+		}
+		fmt.Println(RenderSkillSourcesUpdatePlanCLIReport(cfg, repoContext))
+		return nil
+	}
 	if args[0] == "search" || args[0] == "find" {
 		if len(args) < 2 {
 			return fmt.Errorf("usage: gitclaw skills sources search <query>")
@@ -2854,7 +2861,7 @@ func runSkillsSourcesCommand(args []string) error {
 		}
 		return nil
 	}
-	return fmt.Errorf("usage: gitclaw skills sources [list|verify|lock|provenance|risk|info <name>|search <query>]")
+	return fmt.Errorf("usage: gitclaw skills sources [list|verify|lock|update-plan|provenance|risk|info <name>|search <query>]")
 }
 
 func runSkillsProposalPlanCommand(args []string, requestedAction string) error {

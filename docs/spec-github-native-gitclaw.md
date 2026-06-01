@@ -1634,6 +1634,7 @@ gitclaw skills refresh-plan
 gitclaw skills sources
 gitclaw skills sources verify
 gitclaw skills sources lock
+gitclaw skills sources update-plan
 gitclaw skills sources provenance
 gitclaw skills sources risk
 gitclaw skills sources info <name>
@@ -1682,6 +1683,7 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills sources
 @gitclaw /skills sources verify
 @gitclaw /skills sources lock
+@gitclaw /skills sources update-plan
 @gitclaw /skills sources provenance
 @gitclaw /skills sources risk
 @gitclaw /skills sources info repo-reader
@@ -1943,6 +1945,12 @@ query, return match fields and scores, and include
 `llm_e2e_required_after_skill_source_search_change=true` without printing raw
 query text, source refs, source YAML, skill bodies, prompts, issue text, or
 credentials.
+`@gitclaw /skills sources update-plan` and
+`gitclaw skills sources update-plan` are the no-fetch companion to
+OpenClaw/ClawHub-style updates: they report stale, unpinned, missing, remote,
+or risky pins as manual-review candidates, show source hash state and disabled
+registry/fetch/install/mutation gates, and never contact registries or mutate
+skills.
 
 Skill source reports never contact ClawHub, Hermes Hub, skills.sh, GitHub, or
 well-known endpoints; never fetch remote sources; never run installers; never
@@ -1953,6 +1961,7 @@ credentials, or secret values. The reports include
 `llm_e2e_required_after_skill_source_change=true` or
 `llm_e2e_required_after_skill_source_verify_change=true` or
 `llm_e2e_required_after_skill_source_lock_change=true` or
+`llm_e2e_required_after_skill_source_update_plan_change=true` or
 `llm_e2e_required_after_skill_source_info_change=true` or
 `llm_e2e_required_after_skill_source_search_change=true` or
 `llm_e2e_required_after_skill_source_provenance_change=true`; every source-pin
@@ -7445,6 +7454,13 @@ examples/workflows/gitclaw.yml
   presence/hash, and disabled registry/fetch/install/mutation gates. It then
   runs a real GitHub Models repo-reader/search follow-up with prompt, skill,
   `gitclaw.search_files`, and usage telemetry.
+- A `gh`-driven skills-sources-update-plan E2E harness verifies
+  `@gitclaw /skills sources update-plan` and local
+  `gitclaw skills sources update-plan` expose a body-free no-fetch update
+  planner for reviewed source pins: update actions/reasons, stale/unpinned/
+  missing/remote/risk counts, source hash state, and disabled registry/fetch/
+  install/mutation gates. It then runs a real GitHub Models repo-reader/search
+  follow-up with prompt, skill, `gitclaw.search_files`, and usage telemetry.
 - A `gh`-driven skills-sources-provenance E2E harness verifies
   `@gitclaw /skills sources provenance` and local
   `gitclaw skills sources provenance` expose body-free source-pin git history,
