@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T12:45:13Z",
+  "generated_at": "2026-06-01T12:47:00Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 474,
   "issues": [
@@ -5957,14 +5957,14 @@
       "number": 528,
       "title": "GitClaw tools request-run channel notify E2E 20260601t124211z",
       "path": "issues/000528.json",
-      "backup_generated_at": "2026-06-01T12:45:11Z",
+      "backup_generated_at": "2026-06-01T12:46:59Z",
       "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done"
       ],
-      "comment_count": 3,
-      "transcript_messages": 4
+      "comment_count": 5,
+      "transcript_messages": 6
     }
   ]
 }
