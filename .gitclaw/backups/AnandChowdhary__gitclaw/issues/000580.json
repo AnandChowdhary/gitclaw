@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T18:40:35Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 580,
+    "title": "GitClaw checkpoint rehearsal: checkpoint-rehearsal-20260601t183556z",
+    "body": "\u003c!-- gitclaw:checkpoint-rehearsal-issue id=\"checkpoint-rehearsal-20260601t183556z\" target_ref_sha256_12=\"af9b7019dd7f\" source_issue=\"579\" source_comment_id=\"0\" source_sha256_12=\"f1da5b2fcbea\" --\u003e\nGitClaw checkpoint rollback rehearsal issue.\n\n- rehearsal_id: checkpoint-rehearsal-20260601t183556z\n- target_ref: HEAD~1\n- target_ref_sha256_12: af9b7019dd7f\n- target_allowed: true\n- checkpoint_status: clean\n- rollback_preview_status: ok\n- branch: main\n- head_commit: 5da5e35ba299\n- target_commit: 61e45fe1df50\n- comparison_range_sha256_12: e4c7b0756d8a\n- commits_available: 2\n- changed_files: 13\n- preview_files_returned: 13\n- worktree_clean: true\n- staged_changes: 0\n- unstaged_changes: 0\n- untracked_files: 0\n- backup_branch: gitclaw-backups\n- backup_branch_local_ref: false\n- source_issue: #579\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/579\n- source_comment_id: 0\n- source_kind: issue\n- source_sha256_12: f1da5b2fcbea\n- rehearsal_mode: rollback-conversation\n- restore_mode: rehearsal-only\n- rollback_mode: inspect-only\n- repository_mutation_allowed: false\n- git_reset_allowed: false\n- git_clean_allowed: false\n- checkout_mutation_allowed: false\n- raw_source_body_included: false\n- raw_diffs_included: false\n- raw_file_bodies_included: false\n\nUse this issue to rehearse a rollback from git metadata without mutating the repository. Keep any real rollback as a reviewed branch or pull request after inspecting preview output and backup manifests.\n\n### Suggested Dry-Run Commands\n- `gitclaw checkpoints status`\n- `gitclaw checkpoints preview HEAD~1`\n- `gitclaw checkpoints risk`\n- `gitclaw rollback diff HEAD~1`\n- `gitclaw rollback risk`",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw checkpoint rehearsal: checkpoint-rehearsal-20260601t183556z\n\n\u003c!-- gitclaw:checkpoint-rehearsal-issue id=\"checkpoint-rehearsal-20260601t183556z\" target_ref_sha256_12=\"af9b7019dd7f\" source_issue=\"579\" source_comment_id=\"0\" source_sha256_12=\"f1da5b2fcbea\" --\u003e\nGitClaw checkpoint rollback rehearsal issue.\n\n- rehearsal_id: checkpoint-rehearsal-20260601t183556z\n- target_ref: HEAD~1\n- target_ref_sha256_12: af9b7019dd7f\n- target_allowed: true\n- checkpoint_status: clean\n- rollback_preview_status: ok\n- branch: main\n- head_commit: 5da5e35ba299\n- target_commit: 61e45fe1df50\n- comparison_range_sha256_12: e4c7b0756d8a\n- commits_available: 2\n- changed_files: 13\n- preview_files_returned: 13\n- worktree_clean: true\n- staged_changes: 0\n- unstaged_changes: 0\n- untracked_files: 0\n- backup_branch: gitclaw-backups\n- backup_branch_local_ref: false\n- source_issue: #579\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/579\n- source_comment_id: 0\n- source_kind: issue\n- source_sha256_12: f1da5b2fcbea\n- rehearsal_mode: rollback-conversation\n- restore_mode: rehearsal-only\n- rollback_mode: inspect-only\n- repository_mutation_allowed: false\n- git_reset_allowed: false\n- git_clean_allowed: false\n- checkout_mutation_allowed: false\n- raw_source_body_included: false\n- raw_diffs_included: false\n- raw_file_bodies_included: false\n\nUse this issue to rehearse a rollback from git metadata without mutating the repository. Keep any real rollback as a reviewed branch or pull request after inspecting preview output and backup manifests.\n\n### Suggested Dry-Run Commands\n- `gitclaw checkpoints status`\n- `gitclaw checkpoints preview HEAD~1`\n- `gitclaw checkpoints risk`\n- `gitclaw rollback diff HEAD~1`\n- `gitclaw rollback risk`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this checkpoint rollback rehearsal and use the repo-reader skill.\n\nSearch the repository for `checkpoint rehearsal unique search fixture phrase`.\nThe matching repository search result line ends with an all-caps token after the arrow.\nThat token starts with `GITCLAW_CHECKPOINT_REHEARSAL_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include source issue numbers, rehearsal issue numbers, rehearsal ids, target refs, branch names, source body, or hidden sentinels.\nDo not include this hidden follow-up token: NOECHO_CHECKPOINT_REHEARSAL_FOLLOWUP_20260601t183556z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4595449907,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHECKPOINT_REHEARSAL_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4595456057,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4595449907,
+      "body": "@gitclaw Continue this checkpoint rollback rehearsal and use the repo-reader skill.\n\nSearch the repository for `checkpoint rehearsal unique search fixture phrase`.\nThe matching repository search result line ends with an all-caps token after the arrow.\nThat token starts with `GITCLAW_CHECKPOINT_REHEARSAL_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include source issue numbers, rehearsal issue numbers, rehearsal ids, target refs, branch names, source body, or hidden sentinels.\nDo not include this hidden follow-up token: NOECHO_CHECKPOINT_REHEARSAL_FOLLOWUP_20260601t183556z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T18:39:15Z",
+      "updated_at": "2026-06-01T18:39:15Z"
+    },
+    {
+      "id": 4595456057,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26774485962\" event_id=\"comment-4595449907\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"50b4c196e75a68170efae92e8f0646cf\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26774485962\" prompt_context_sha256_12=\"2a064229663d\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"11046\" usage_completion_tokens=\"14\" usage_total_tokens=\"11060\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHECKPOINT_REHEARSAL_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T18:40:09Z",
+      "updated_at": "2026-06-01T18:40:09Z"
+    }
+  ]
+}
