@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T01:25:07Z",
+  "generated_at": "2026-06-01T01:26:25Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 471,
     "title": "@gitclaw session compaction e2e 20260601T012353Z",
@@ -10,7 +10,8 @@
     "author": "AnandChowdhary",
     "author_association": "OWNER",
     "labels": [
-      "gitclaw"
+      "gitclaw",
+      "gitclaw:done"
     ]
   },
   "transcript": [
@@ -31,6 +32,24 @@
       "CommentID": 4588888149,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /session compaction\n\nPlease audit the body-free session compaction readiness for this conversation.\nHidden comment token: GITCLAW_SESSION_COMPACTION_COMMENT_20260601T012353Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4588890655,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Session Compaction Report\n\nGenerated without a model call.\n\n- scope: `issue-thread`\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#471`\n- event_kind: `issue_comment`\n- session_compaction_status: `ok`\n- compaction_scope: `body-free-session-compaction-readiness`\n- compaction_strategy: `github-issue-thread-body-free-compaction-readiness`\n- compression_model: `hermes-dual-thresholds+openclaw-trajectory-pruning`\n- session_store: `github-issue-thread`\n- raw_comments: `2`\n- transcript_messages: `3`\n- user_messages: `2`\n- assistant_messages: `1`\n- trusted_messages: `3`\n- untrusted_messages: `0`\n- edited_messages: `0`\n- transcript_body_bytes: `570`\n- transcript_body_lines: `13`\n- estimated_transcript_tokens: `143`\n- max_prompt_bytes: `60000`\n- max_transcript_messages: `40`\n- max_transcript_message_bytes: `8000`\n- bounded_transcript_messages: `3`\n- omitted_older_messages: `0`\n- truncated_transcript_bodies: `0`\n- agent_compression_threshold_percent: `50`\n- agent_compression_threshold_bytes: `30000`\n- gateway_hygiene_threshold_percent: `85`\n- gateway_hygiene_threshold_bytes: `51000`\n- agent_compaction_recommended: `false`\n- gateway_hygiene_recommended: `false`\n- assistant_turn_comments: `1`\n- assistant_turns_with_prompt_provenance: `1`\n- assistant_turns_missing_prompt_provenance: `0`\n- unique_prompt_context_hashes: `1`\n- model_backed_assistant_turns: `1`\n- deterministic_assistant_turns: `0`\n- model_names: `openai/gpt-4.1-nano`\n- prompt_visible_skill_names: `repo-reader`\n- prompt_visible_tool_names: `gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files`\n- usage_bearing_assistant_turns: `1`\n- usage_prompt_tokens: `10514`\n- usage_completion_tokens: `9`\n- usage_total_tokens: `10523`\n- usage_cache_read_tokens: `0`\n- usage_cache_write_tokens: `0`\n- compression_engine_configured: `false`\n- lossy_summary_supported: `false`\n- lossless_session_search_supported: `true`\n- in_loop_context_compression_supported: `false`\n- pre_agent_gateway_hygiene_supported: `false`\n- session_split_supported: `false`\n- external_session_db_required: `false`\n- issue_thread_canonical_storage: `true`\n- backup_branch_replay_preferred: `true`\n- raw_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_replies_included: `false`\n- raw_prompts_included: `false`\n- raw_provider_usage_included: `false`\n- raw_provider_responses_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_search_queries_included: `false`\n- repository_mutation_allowed: `false`\n- compaction_mutation_allowed: `false`\n- compression_writes_memory_allowed: `false`\n- llm_e2e_required_after_session_compaction_change: `true`\n\nThis OpenClaw/Hermes-inspired report audits whether the GitHub issue session is nearing a compaction boundary. It models Hermes-style 50% in-loop and 85% gateway-hygiene thresholds plus OpenClaw-style trajectory pruning, but it is advisory only: GitClaw does not summarize, split, mutate memory, or write compressed state from this report. Raw issue bodies, comment bodies, assistant replies, prompts, provider responses, search queries, and tool outputs are not included.\n\n### Compaction Cards\n- message=`01` role=`user` source=`issue` actor=`AnandChowdhary` association=`OWNER` trusted=`true` edited=`false` bytes=`363` lines=`8` estimated_tokens=`91` sha256_12=`38450ec48b2a` in_current_prompt_pack=`true` omitted_by_limit=`false` truncated_by_limit=`false` compaction_region=`session-anchor` compaction_action=`keep-body-out-of-report` body_included=`false`\n- message=`02` role=`assistant` source=`comment:4588888149` actor=`github-actions[bot]` association=`NONE` trusted=`true` edited=`false` bytes=`25` lines=`1` estimated_tokens=`7` sha256_12=`1eb3886519bc` in_current_prompt_pack=`true` omitted_by_limit=`false` truncated_by_limit=`false` compaction_region=`conversation-tail` compaction_action=`keep-body-out-of-report` body_included=`false`\n- message=`03` role=`user` source=`comment:4588890655` actor=`AnandChowdhary` association=`OWNER` trusted=`true` edited=`false` bytes=`182` lines=`4` estimated_tokens=`46` sha256_12=`2cbb78af7896` in_current_prompt_pack=`true` omitted_by_limit=`false` truncated_by_limit=`false` compaction_region=`latest-turn` compaction_action=`keep-body-out-of-report` body_included=`false`\n\n### Compaction Gates\n- agent_compaction_gate=`pass`\n- gateway_hygiene_gate=`pass`\n- model_backed_gate=`pass`\n- lossless_recall_gate=`backup-json-and-session-search`\n- raw_body_gate=`hashes-counts-and-metadata-only`\n- mutation_gate=`disabled`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4588892941,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -41,6 +60,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T01:24:40Z",
       "updated_at": "2026-06-01T01:24:40Z"
+    },
+    {
+      "id": 4588890655,
+      "body": "@gitclaw /session compaction\n\nPlease audit the body-free session compaction readiness for this conversation.\nHidden comment token: GITCLAW_SESSION_COMPACTION_COMMENT_20260601T012353Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T01:25:19Z",
+      "updated_at": "2026-06-01T01:25:19Z"
+    },
+    {
+      "id": 4588892941,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26730366905\" event_id=\"comment-4588890655\" model=\"gitclaw/session\" idempotency_key=\"f3b0c94e93228a3a4cf130523cc495c0\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26730366905\" --\u003e\n## GitClaw Session Compaction Report\n\nGenerated without a model call.\n\n- scope: `issue-thread`\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#471`\n- event_kind: `issue_comment`\n- session_compaction_status: `ok`\n- compaction_scope: `body-free-session-compaction-readiness`\n- compaction_strategy: `github-issue-thread-body-free-compaction-readiness`\n- compression_model: `hermes-dual-thresholds+openclaw-trajectory-pruning`\n- session_store: `github-issue-thread`\n- raw_comments: `2`\n- transcript_messages: `3`\n- user_messages: `2`\n- assistant_messages: `1`\n- trusted_messages: `3`\n- untrusted_messages: `0`\n- edited_messages: `0`\n- transcript_body_bytes: `570`\n- transcript_body_lines: `13`\n- estimated_transcript_tokens: `143`\n- max_prompt_bytes: `60000`\n- max_transcript_messages: `40`\n- max_transcript_message_bytes: `8000`\n- bounded_transcript_messages: `3`\n- omitted_older_messages: `0`\n- truncated_transcript_bodies: `0`\n- agent_compression_threshold_percent: `50`\n- agent_compression_threshold_bytes: `30000`\n- gateway_hygiene_threshold_percent: `85`\n- gateway_hygiene_threshold_bytes: `51000`\n- agent_compaction_recommended: `false`\n- gateway_hygiene_recommended: `false`\n- assistant_turn_comments: `1`\n- assistant_turns_with_prompt_provenance: `1`\n- assistant_turns_missing_prompt_provenance: `0`\n- unique_prompt_context_hashes: `1`\n- model_backed_assistant_turns: `1`\n- deterministic_assistant_turns: `0`\n- model_names: `openai/gpt-4.1-nano`\n- prompt_visible_skill_names: `repo-reader`\n- prompt_visible_tool_names: `gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files`\n- usage_bearing_assistant_turns: `1`\n- usage_prompt_tokens: `10514`\n- usage_completion_tokens: `9`\n- usage_total_tokens: `10523`\n- usage_cache_read_tokens: `0`\n- usage_cache_write_tokens: `0`\n- compression_engine_configured: `false`\n- lossy_summary_supported: `false`\n- lossless_session_search_supported: `true`\n- in_loop_context_compression_supported: `false`\n- pre_agent_gateway_hygiene_supported: `false`\n- session_split_supported: `false`\n- external_session_db_required: `false`\n- issue_thread_canonical_storage: `true`\n- backup_branch_replay_preferred: `true`\n- raw_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_replies_included: `false`\n- raw_prompts_included: `false`\n- raw_provider_usage_included: `false`\n- raw_provider_responses_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_search_queries_included: `false`\n- repository_mutation_allowed: `false`\n- compaction_mutation_allowed: `false`\n- compression_writes_memory_allowed: `false`\n- llm_e2e_required_after_session_compaction_change: `true`\n\nThis OpenClaw/Hermes-inspired report audits whether the GitHub issue session is nearing a compaction boundary. It models Hermes-style 50% in-loop and 85% gateway-hygiene thresholds plus OpenClaw-style trajectory pruning, but it is advisory only: GitClaw does not summarize, split, mutate memory, or write compressed state from this report. Raw issue bodies, comment bodies, assistant replies, prompts, provider responses, search queries, and tool outputs are not included.\n\n### Compaction Cards\n- message=`01` role=`user` source=`issue` actor=`AnandChowdhary` association=`OWNER` trusted=`true` edited=`false` bytes=`363` lines=`8` estimated_tokens=`91` sha256_12=`38450ec48b2a` in_current_prompt_pack=`true` omitted_by_limit=`false` truncated_by_limit=`false` compaction_region=`session-anchor` compaction_action=`keep-body-out-of-report` body_included=`false`\n- message=`02` role=`assistant` source=`comment:4588888149` actor=`github-actions[bot]` association=`NONE` trusted=`true` edited=`false` bytes=`25` lines=`1` estimated_tokens=`7` sha256_12=`1eb3886519bc` in_current_prompt_pack=`true` omitted_by_limit=`false` truncated_by_limit=`false` compaction_region=`conversation-tail` compaction_action=`keep-body-out-of-report` body_included=`false`\n- message=`03` role=`user` source=`comment:4588890655` actor=`AnandChowdhary` association=`OWNER` trusted=`true` edited=`false` bytes=`182` lines=`4` estimated_tokens=`46` sha256_12=`2cbb78af7896` in_current_prompt_pack=`true` omitted_by_limit=`false` truncated_by_limit=`false` compaction_region=`latest-turn` compaction_action=`keep-body-out-of-report` body_included=`false`\n\n### Compaction Gates\n- agent_compaction_gate=`pass`\n- gateway_hygiene_gate=`pass`\n- model_backed_gate=`pass`\n- lossless_recall_gate=`backup-json-and-session-search`\n- raw_body_gate=`hashes-counts-and-metadata-only`\n- mutation_gate=`disabled`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T01:26:03Z",
+      "updated_at": "2026-06-01T01:26:03Z"
     }
   ]
 }
