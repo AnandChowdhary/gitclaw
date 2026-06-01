@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-01T20:15:38Z`
-- issue_count: `515`
+- generated_at: `2026-06-01T20:17:09Z`
+- issue_count: `516`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -520,3 +520,4 @@
 | #587 | @gitclaw /skills sources propose e2e-source-20260601t195236z --source github:example/e2e-source-20260601t195236z/.gitclaw/SKILLS/e2e-source-20260601t195236z/SKILL.md --skill-path .gitclaw/SKILLS/e2e-source-20260601t195236z/SKILL.md --id e2e-source-20260601t195236z-review | `2026-06-01T19:55:28Z` | 3 | 4 | `issues/000587.json` |
 | #588 | GitClaw skill source proposal: e2e-source-20260601t195236z | `2026-06-01T19:56:59Z` | 2 | 3 | `issues/000588.json` |
 | #589 | GitClaw backup restore request E2E 20260601t201244z | `2026-06-01T20:15:37Z` | 3 | 4 | `issues/000589.json` |
+| #590 | GitClaw backup restore request: #589 | `2026-06-01T20:17:07Z` | 2 | 3 | `issues/000590.json` |
