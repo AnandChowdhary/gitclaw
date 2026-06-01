@@ -202,6 +202,27 @@ func TestChannelDoneArtifactRefSupportsDecisionIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsDigestIssues(t *testing.T) {
+	body := RenderChannelDigestIssueBody(ChannelDigestOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		DigestID:          "digest-done-1",
+		Summary:           "Team channel reached a useful checkpoint",
+		Highlights:        "Move the rest of the follow-up to GitHub.",
+		SourceIssueNumber: 43,
+		SourceCommentID:   4300,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "digest" || ref.ID != "digest-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 43 || ref.SourceCommentID != 4300 {
+		t.Fatalf("unexpected digest artifact ref: %#v", ref)
+	}
+}
+
 func channelDoneQuoteJSON(t *testing.T, value string) string {
 	t.Helper()
 	quoted, err := json.Marshal(value)

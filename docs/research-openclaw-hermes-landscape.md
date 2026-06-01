@@ -133,6 +133,25 @@ OpenClaw docs (`https://docs.openclaw.ai/`), OpenClaw channel CLI docs
 (`https://docs.openclaw.ai/channels/index`), and Hermes cron docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/cron/`).
 
+2026-06-02 channel-digest follow-up: OpenClaw's current channel and session
+docs distinguish live provider health from bounded persisted session rows, and
+the channels overview frames chat apps as first-class places where an agent can
+meet the user. Hermes' messaging gateway similarly routes configured platforms
+through one background process, while Hermes cron can deliver fresh-session
+results to origin, explicit platforms, or `all`. GitClaw's serverless version
+should preserve the useful channel outcome without a socket by letting a
+mirrored channel issue produce a durable GitHub digest issue, queue one
+provider-facing digest link through `channel-outbox`, and continue the digest
+with a normal GitHub Models turn. This keeps source receipts body-free while
+still making the human-readable recap reviewable in git-backed issue state.
+Sources: OpenClaw docs (`https://docs.openclaw.ai/`), OpenClaw channel CLI docs
+(`https://docs.openclaw.ai/cli/channels`), OpenClaw sessions docs
+(`https://docs.openclaw.ai/cli/sessions`), OpenClaw chat channel docs
+(`https://docs.openclaw.ai/channels/index`), Hermes messaging gateway docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/messaging/`), and
+Hermes cron docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/cron/`).
+
 2026-05-30 skill-risk follow-up: current OpenClaw plugin-hook docs make prompt,
 model, tool-call, and heartbeat extension points explicit, while Hermes'
 toolsets and MCP docs emphasize filtering exposed capabilities per task. Recent

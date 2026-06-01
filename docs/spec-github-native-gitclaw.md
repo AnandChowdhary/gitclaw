@@ -5370,6 +5370,7 @@ accepts a structured reaction form:
 @gitclaw /channels task --task-id <stable-task-id> --message-id <provider-message-id>
 @gitclaw /channels clip --clip-id <stable-clip-id> --message-id <provider-message-id>
 @gitclaw /channels decision --decision-id <stable-decision-id> --message-id <provider-message-id>
+@gitclaw /channels digest --digest-id <stable-digest-id> --message-id <provider-message-id>
 @gitclaw /channels remind --reminder-id <stable-reminder-id> --message-id <provider-message-id> --at <RFC3339-or-date>
 @gitclaw /channels done --message-id <stable-outbound-id>
 ```
@@ -5526,6 +5527,35 @@ metadata-only decision-link outbox, checks duplicate suppression, and then
 continues on the decision issue with a normal GitHub Models repo-reader/search
 follow-up.
 
+The same channel-thread issue can also record a durable digest:
+
+```text
+@gitclaw /channels digest --digest-id <stable-digest-id> --message-id <provider-message-id>
+Summary: short digest summary
+Highlights:
+optional human-readable highlights
+```
+
+`/channels digest`, `/channels brief`, `/channels recap`,
+`/channels summary`, and `/channels summarize` infer the current channel and
+thread id from the issue marker when no explicit route/channel/thread target is
+provided. They create or reuse one open GitHub issue carrying a hidden
+`gitclaw:channel-digest` marker for the stable digest id, label it with
+`gitclaw` so normal conversation can continue there, and queue a
+provider-facing digest link back to the mirrored channel thread. The digest
+issue contains the human-readable summary and highlights because it is the
+durable recap log; the source receipt remains body-free, reporting only
+digest/thread/message/summary/highlight hashes, duplicate status, notification
+queue metadata, and delivery gates. It does not call a model, call provider
+APIs, print raw digest ids, print raw thread ids, print raw source or
+notification message ids, print channel message bodies, or print raw summary/
+highlights in the source receipt. Duplicates are suppressed first by
+`digest_id` for the GitHub digest issue and then by `channel +
+notify_message_id` for the provider-facing digest link. Changes to this
+surface require a live E2E that records the digest, validates the metadata-only
+digest-link outbox, checks duplicate suppression, and then continues on the
+digest issue with a normal GitHub Models repo-reader/search follow-up.
+
 The same channel-thread issue can also turn a mirrored provider message into a
 GitHub-native reminder:
 
@@ -5560,8 +5590,8 @@ validates the metadata-only reminder-link outbox, checks duplicate suppression,
 and then continues on the reminder issue with a normal GitHub Models
 repo-reader/search follow-up.
 
-The channel-created task, clip, decision, and reminder issues also accept a
-completion form:
+The channel-created task, clip, decision, digest, and reminder issues also
+accept a completion form:
 
 ```text
 @gitclaw /channels done --message-id <stable-outbound-id>
@@ -5600,10 +5630,19 @@ Behavior:
 - post one `gitclaw:channel-edit` comment per `channel + edit_id`,
 - create or reuse one `gitclaw:channel-task` issue per task id and queue one
   provider-facing task-link outbound comment per `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-clip` issue per clip id and queue one
+  provider-facing clip-link outbound comment per `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-decision` issue per decision id and
+  queue one provider-facing decision-link outbound comment per
+  `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-digest` issue per digest id and queue
+  one provider-facing digest-link outbound comment per
+  `channel + notify_message_id`,
 - create or reuse one `gitclaw:channel-reminder` issue per reminder id and
   queue one provider-facing reminder-link outbound comment per
   `channel + notify_message_id`,
-- close one `gitclaw:channel-task`, `gitclaw:channel-clip`, or
+- close one `gitclaw:channel-task`, `gitclaw:channel-clip`,
+  `gitclaw:channel-decision`, `gitclaw:channel-digest`, or
   `gitclaw:channel-reminder` issue and queue one provider-facing done
   acknowledgement per `channel + notify_message_id`,
 - suppress duplicate outbound message IDs,
@@ -5780,6 +5819,8 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels edit --message-id provider-msg-1 --edit-id edit-1
 @gitclaw /channels task --task-id channel-task-1 --message-id provider-msg-1
 @gitclaw /channels clip --clip-id channel-clip-1 --message-id provider-msg-1
+@gitclaw /channels decision --decision-id channel-decision-1 --message-id provider-msg-1
+@gitclaw /channels digest --digest-id channel-digest-1 --message-id provider-msg-1
 @gitclaw /channels room team-alerts,ops-alerts --room-id design-room --message-id design-room-1
 @gitclaw /channels huddle team-alerts,ops-alerts --huddle-id design-room --message-id design-room-1
 @gitclaw /channels rollcall team-alerts,ops-alerts --rollcall-id standup --message-id standup-1
@@ -8303,6 +8344,16 @@ examples/workflows/gitclaw.yml
   must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-decision fixture token, and avoid hidden channel, account, provider,
   message, and decision sentinels.
+- A `gh`-driven channel-digest-slash E2E harness creates a real channel-thread
+  issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels digest --digest-id ... --message-id ...` on that mirrored
+  thread, verifies GitHub digest issue creation, body-free source receipt
+  metadata, provider-facing digest-link queueing, duplicate digest and
+  notification suppression, and metadata-only outbox discovery. The digest
+  issue then gets a normal GitHub Models issue-comment follow-up that must
+  select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-digest fixture token, and avoid hidden channel, account, provider,
+  message, and digest sentinels.
 - A `gh`-driven channel-reminder-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels remind --reminder-id ... --message-id ... --at ...` on
