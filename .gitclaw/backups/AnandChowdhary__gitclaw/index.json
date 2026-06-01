@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T15:48:05Z",
+  "generated_at": "2026-06-01T15:49:56Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 492,
+  "count": 493,
   "issues": [
     {
       "number": 3,
@@ -6190,6 +6190,18 @@
       ],
       "comment_count": 3,
       "transcript_messages": 4
+    },
+    {
+      "number": 558,
+      "title": "GitClaw channel rollcall: GitClaw rollcall prompt 20260601T154446Z: include NOECHO_CHANNEL_ROLLCALL_PROMPT",
+      "path": "issues/000558.json",
+      "backup_generated_at": "2026-06-01T15:49:54Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }

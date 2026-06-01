@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-01T15:48:05Z`
-- issue_count: `492`
+- generated_at: `2026-06-01T15:49:56Z`
+- issue_count: `493`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -497,3 +497,4 @@
 | #554 | GitClaw memory rehearsal: .gitclaw/MEMORY.md (memory-rehearsal-20260601t150523z) | `2026-06-01T15:10:51Z` | 2 | 3 | `issues/000554.json` |
 | #555 | GitClaw telegram thread channel-reaction-e2e-20260601T152207Z | `2026-06-01T15:30:11Z` | 9 | 9 | `issues/000555.json` |
 | #557 | GitClaw channel rollcall E2E 20260601T154446Z | `2026-06-01T15:48:04Z` | 3 | 4 | `issues/000557.json` |
+| #558 | GitClaw channel rollcall: GitClaw rollcall prompt 20260601T154446Z: include NOECHO_CHANNEL_ROLLCALL_PROMPT | `2026-06-01T15:49:54Z` | 2 | 3 | `issues/000558.json` |

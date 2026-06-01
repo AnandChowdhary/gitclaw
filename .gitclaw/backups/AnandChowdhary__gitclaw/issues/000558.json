@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T15:49:54Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 558,
+    "title": "GitClaw channel rollcall: GitClaw rollcall prompt 20260601T154446Z: include NOECHO_CHANNEL_ROLLCALL_PROMPT",
+    "body": "\u003c!-- gitclaw:channel-rollcall rollcall_id=\"rollcall-20260601t154446z\" source_issue=\"557\" source_comment_id=\"0\" routes_sha256_12=\"9892046e64ef\" instructions_sha256_12=\"960715ba29e7\" --\u003e\nGitClaw channel rollcall.\n\n- source_issue: `#557`\n- source_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/557`\n- rollcall_id_sha256_12: `5400f84fb597`\n- routes_sha256_12: `9892046e64ef`\n- route_count: `2`\n- raw_route_names_included: `false`\n\n## Prompt\n\nGitClaw rollcall prompt 20260601T154446Z: include NOECHO_CHANNEL_ROLLCALL_PROMPT_20260601T154446Z\n\n## Instructions\n\n- Done\n- Doing\n- Blocked\n- Use the rollcall issue for the next model-backed conversation.\n\nCheck in by commenting here, or by replying through a mirrored channel thread invited into this rollcall.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel rollcall: GitClaw rollcall prompt 20260601T154446Z: include NOECHO_CHANNEL_ROLLCALL_PROMPT\n\n\u003c!-- gitclaw:channel-rollcall rollcall_id=\"rollcall-20260601t154446z\" source_issue=\"557\" source_comment_id=\"0\" routes_sha256_12=\"9892046e64ef\" instructions_sha256_12=\"960715ba29e7\" --\u003e\nGitClaw channel rollcall.\n\n- source_issue: `#557`\n- source_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/557`\n- rollcall_id_sha256_12: `5400f84fb597`\n- routes_sha256_12: `9892046e64ef`\n- route_count: `2`\n- raw_route_names_included: `false`\n\n## Prompt\n\nGitClaw rollcall prompt 20260601T154446Z: include NOECHO_CHANNEL_ROLLCALL_PROMPT_20260601T154446Z\n\n## Instructions\n\n- Done\n- Doing\n- Blocked\n- Use the rollcall issue for the next model-backed conversation.\n\nCheck in by commenting here, or by replying through a mirrored channel thread invited into this rollcall.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this rollcall and use the repo-reader skill.\n\nSearch the repository for `channel rollcall unique search fixture phrase`.\nThe matching repository search result line ends with an all-caps token after the arrow.\nThat token starts with `GITCLAW_CHANNEL_ROLLCALL_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include route names, target issue numbers, message ids, account hashes, source issue title, rollcall id, rollcall prompt, or prompt token.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_ROLLCALL_FOLLOWUP_20260601T154446Z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4594207824,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_ROLLCALL_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4594215947,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4594207824,
+      "body": "@gitclaw Continue this rollcall and use the repo-reader skill.\n\nSearch the repository for `channel rollcall unique search fixture phrase`.\nThe matching repository search result line ends with an all-caps token after the arrow.\nThat token starts with `GITCLAW_CHANNEL_ROLLCALL_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include route names, target issue numbers, message ids, account hashes, source issue title, rollcall id, rollcall prompt, or prompt token.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_ROLLCALL_FOLLOWUP_20260601T154446Z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T15:48:19Z",
+      "updated_at": "2026-06-01T15:48:19Z"
+    },
+    {
+      "id": 4594215947,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26765722858\" event_id=\"comment-4594207824\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"3bdf58b6da2f733814497a0c94fa734a\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26765722858\" prompt_context_sha256_12=\"fe7fbcfc3901\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10593\" usage_completion_tokens=\"12\" usage_total_tokens=\"10605\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_ROLLCALL_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T15:49:24Z",
+      "updated_at": "2026-06-01T15:49:24Z"
+    }
+  ]
+}
