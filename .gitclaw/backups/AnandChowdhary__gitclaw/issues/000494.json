@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T07:00:24Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 494,
+    "title": "GitClaw profile search e2e 20260601T065909Z",
+    "body": "@gitclaw /profile search skill_path PROFILE_SEARCH_ISSUE_QUERY_SECRET_20260601T065909Z\n\nLive profile-search E2E. Mention repo-reader so the search report proves selected profile surfaces without exposing raw profile bodies.\nDo not include this hidden profile search token: NOECHO_PROFILE_SEARCH_20260601T065909Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw profile search e2e 20260601T065909Z\n\n@gitclaw /profile search skill_path PROFILE_SEARCH_ISSUE_QUERY_SECRET_20260601T065909Z\n\nLive profile-search E2E. Mention repo-reader so the search report proves selected profile surfaces without exposing raw profile bodies.\nDo not include this hidden profile search token: NOECHO_PROFILE_SEARCH_20260601T065909Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Profile Search Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#494`\n- profile_search_status: `ok`\n- search_scope: `repo-local-profile-files`\n- query_sha256_12: `57ddbcadc6e4`\n- query_terms: `2`\n- max_results: `10`\n- profile_documents_loaded: `16`\n- manifest_entries: `36`\n- files_scanned: `31`\n- matched_files: `1`\n- matched_lines: `1`\n- results_returned: `1`\n- raw_bodies_included: `false`\n- raw_profile_bodies_included: `false`\n- raw_skill_bodies_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompt_bodies_included: `false`\n- raw_queries_included: `false`\n- external_profile_home_accessed: `false`\n- profile_export_supported: `false`\n- profile_import_supported: `false`\n- profile_switching_supported: `false`\n- profile_distribution_install_supported: `false`\n- profile_mutation_allowed: `false`\n- llm_e2e_required_after_profile_search_change: `true`\n- issue_title_sha256_12: `abf355d3a41f`\n\nThis report searches GitClaw's repo-local `.gitclaw/` profile envelope with a local lexical matcher. It reports only paths, categories, line numbers, scores, and hashes; raw profile files, skill bodies, memory bodies, tool outputs, issue/comment bodies, prompts, raw search queries, sessions, backup payloads, credentials, and secret values are not included.\n\n### Results\n- kind=`skill-source` name=`repo-reader` path=`.gitclaw/skill-sources/repo-reader.yaml` category=`skill-source` source=`repo-local` include_policy=`repo-reviewed-source` line=`2` score=`14` matched_terms=`1` selected=`false` enabled=`true` file_sha256_12=`63a150a2a0dc` line_sha256_12=`cb88ca6e72df`\n\n### Search Gates\n- query_gate=`sha256_12_only`\n- raw_body_gate=`hashes-and-line-hashes-only`\n- mutation_gate=`disabled`\n- external_profile_home_gate=`not_accessed`\n- session_payload_gate=`excluded`\n- backup_payload_gate=`excluded`\n- llm_e2e_gate=`required`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4590265867,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4590265867,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26740100408\" event_id=\"issue-494\" model=\"gitclaw/profile\" idempotency_key=\"ae235f0d573ec80f893eebad071b28c5\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26740100408\" --\u003e\n## GitClaw Profile Search Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#494`\n- profile_search_status: `ok`\n- search_scope: `repo-local-profile-files`\n- query_sha256_12: `57ddbcadc6e4`\n- query_terms: `2`\n- max_results: `10`\n- profile_documents_loaded: `16`\n- manifest_entries: `36`\n- files_scanned: `31`\n- matched_files: `1`\n- matched_lines: `1`\n- results_returned: `1`\n- raw_bodies_included: `false`\n- raw_profile_bodies_included: `false`\n- raw_skill_bodies_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompt_bodies_included: `false`\n- raw_queries_included: `false`\n- external_profile_home_accessed: `false`\n- profile_export_supported: `false`\n- profile_import_supported: `false`\n- profile_switching_supported: `false`\n- profile_distribution_install_supported: `false`\n- profile_mutation_allowed: `false`\n- llm_e2e_required_after_profile_search_change: `true`\n- issue_title_sha256_12: `abf355d3a41f`\n\nThis report searches GitClaw's repo-local `.gitclaw/` profile envelope with a local lexical matcher. It reports only paths, categories, line numbers, scores, and hashes; raw profile files, skill bodies, memory bodies, tool outputs, issue/comment bodies, prompts, raw search queries, sessions, backup payloads, credentials, and secret values are not included.\n\n### Results\n- kind=`skill-source` name=`repo-reader` path=`.gitclaw/skill-sources/repo-reader.yaml` category=`skill-source` source=`repo-local` include_policy=`repo-reviewed-source` line=`2` score=`14` matched_terms=`1` selected=`false` enabled=`true` file_sha256_12=`63a150a2a0dc` line_sha256_12=`cb88ca6e72df`\n\n### Search Gates\n- query_gate=`sha256_12_only`\n- raw_body_gate=`hashes-and-line-hashes-only`\n- mutation_gate=`disabled`\n- external_profile_home_gate=`not_accessed`\n- session_payload_gate=`excluded`\n- backup_payload_gate=`excluded`\n- llm_e2e_gate=`required`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T06:59:59Z",
+      "updated_at": "2026-06-01T06:59:59Z"
+    }
+  ]
+}
