@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T03:55:55Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 481,
+    "title": "@gitclaw /skills sources verify e2e 20260601T035448Z",
+    "body": "@gitclaw /skills sources verify\n\nLive skill source verify E2E. Keep the source-pin trust envelope body-free.\nDo not include this hidden skill source verify token: NOECHO_SKILL_SOURCE_VERIFY_20260601T035448Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /skills sources verify e2e 20260601T035448Z\n\n@gitclaw /skills sources verify\n\nLive skill source verify E2E. Keep the source-pin trust envelope body-free.\nDo not include this hidden skill source verify token: NOECHO_SKILL_SOURCE_VERIFY_20260601T035448Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Skill Source Verify Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#481`\n- skill_source_verify_status: `ok`\n- verification_scope: `repo-local-source-pin-trust`\n- skill_source_status: `ok`\n- skill_source_specs_dir: `.gitclaw/skill-sources`\n- skill_source_specs: `1`\n- parsed_skill_source_specs: `1`\n- matched_skill_sources: `1`\n- missing_skill_source_matches: `0`\n- hash_pinned_skill_sources: `1`\n- hash_matched_skill_sources: `1`\n- hash_mismatched_skill_sources: `0`\n- repo_local_source_refs: `1`\n- remote_source_refs: `0`\n- sources_requiring_approval: `1`\n- remote_fetch_allowed_specs: `0`\n- sources_with_risk_findings: `0`\n- skill_source_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- registry_contact_allowed: `false`\n- installer_scripts_run: `false`\n- dependency_install_allowed: `false`\n- repository_mutation_allowed: `false`\n- raw_source_bodies_included: `false`\n- raw_source_refs_included: `false`\n- raw_skill_bodies_included: `false`\n- llm_e2e_required_after_skill_source_change: `true`\n- source_pins_hashed: `1`\n- source_refs_hashed: `1`\n- current_skill_hashes_observed: `1`\n- registry_verification: `not_configured`\n- remote_fetch_verification: `static_source_pins_only`\n- install_verification: `disabled_gates_only`\n- remote_fetch_runtime_allowed: `false`\n- llm_e2e_required_after_skill_source_verify_change: `true`\n- issue_title_sha256_12: `90a8adf53068`\n\nThis report verifies reviewed skill source pins as repo-local trust envelopes. It reports source-pin hashes, source-ref hashes, current skill hashes, approval/no-fetch/no-install gates, and risk findings without contacting registries, fetching remote sources, running installers, mutating skills, or printing raw source refs, source YAML, skill bodies, issue bodies, comments, prompts, provider payloads, or secret values.\n\n### Source Pin Trust Cards\n- source_name=`repo-reader` path=`.gitclaw/skill-sources/repo-reader.yaml` skill_path=`.gitclaw/SKILLS/repo-reader/SKILL.md` skill_matched=`true` source_kind=`repo-local` source_ref_present=`true` source_ref_sha256_12=`42df45103ee5` trust_level=`repo-local` install_mode=`manual-review` requires_approval=`true` remote_fetch_allowed=`false` hash_pinned=`true` expected_sha256_12=`2f9e68a57bd6` current_skill_sha256_12=`2f9e68a57bd6` hash_matched=`true` bytes=`277` lines=`9` sha256_12=`63a150a2a0dc` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Verification Findings\n- severity=`info` code=`skill_source_registry_verification_not_configured` detail=`GitClaw v1 verifies reviewed repo-local source pins and hashes without contacting external skill registries`\n- severity=`info` code=`skill_source_remote_fetch_verification_static_only` detail=`remote source refs are not fetched; verification is limited to reviewed source-pin metadata and local skill hashes`\n- severity=`info` code=`skill_source_install_verification_disabled` detail=`skill source verification does not run installers or dependency managers`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4589404719,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4589404719,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26734253260\" event_id=\"issue-481\" model=\"gitclaw/skills\" idempotency_key=\"1615c23fcf874d7edbd8426fc66eb2ab\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26734253260\" --\u003e\n## GitClaw Skill Source Verify Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#481`\n- skill_source_verify_status: `ok`\n- verification_scope: `repo-local-source-pin-trust`\n- skill_source_status: `ok`\n- skill_source_specs_dir: `.gitclaw/skill-sources`\n- skill_source_specs: `1`\n- parsed_skill_source_specs: `1`\n- matched_skill_sources: `1`\n- missing_skill_source_matches: `0`\n- hash_pinned_skill_sources: `1`\n- hash_matched_skill_sources: `1`\n- hash_mismatched_skill_sources: `0`\n- repo_local_source_refs: `1`\n- remote_source_refs: `0`\n- sources_requiring_approval: `1`\n- remote_fetch_allowed_specs: `0`\n- sources_with_risk_findings: `0`\n- skill_source_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- registry_contact_allowed: `false`\n- installer_scripts_run: `false`\n- dependency_install_allowed: `false`\n- repository_mutation_allowed: `false`\n- raw_source_bodies_included: `false`\n- raw_source_refs_included: `false`\n- raw_skill_bodies_included: `false`\n- llm_e2e_required_after_skill_source_change: `true`\n- source_pins_hashed: `1`\n- source_refs_hashed: `1`\n- current_skill_hashes_observed: `1`\n- registry_verification: `not_configured`\n- remote_fetch_verification: `static_source_pins_only`\n- install_verification: `disabled_gates_only`\n- remote_fetch_runtime_allowed: `false`\n- llm_e2e_required_after_skill_source_verify_change: `true`\n- issue_title_sha256_12: `90a8adf53068`\n\nThis report verifies reviewed skill source pins as repo-local trust envelopes. It reports source-pin hashes, source-ref hashes, current skill hashes, approval/no-fetch/no-install gates, and risk findings without contacting registries, fetching remote sources, running installers, mutating skills, or printing raw source refs, source YAML, skill bodies, issue bodies, comments, prompts, provider payloads, or secret values.\n\n### Source Pin Trust Cards\n- source_name=`repo-reader` path=`.gitclaw/skill-sources/repo-reader.yaml` skill_path=`.gitclaw/SKILLS/repo-reader/SKILL.md` skill_matched=`true` source_kind=`repo-local` source_ref_present=`true` source_ref_sha256_12=`42df45103ee5` trust_level=`repo-local` install_mode=`manual-review` requires_approval=`true` remote_fetch_allowed=`false` hash_pinned=`true` expected_sha256_12=`2f9e68a57bd6` current_skill_sha256_12=`2f9e68a57bd6` hash_matched=`true` bytes=`277` lines=`9` sha256_12=`63a150a2a0dc` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Verification Findings\n- severity=`info` code=`skill_source_registry_verification_not_configured` detail=`GitClaw v1 verifies reviewed repo-local source pins and hashes without contacting external skill registries`\n- severity=`info` code=`skill_source_remote_fetch_verification_static_only` detail=`remote source refs are not fetched; verification is limited to reviewed source-pin metadata and local skill hashes`\n- severity=`info` code=`skill_source_install_verification_disabled` detail=`skill source verification does not run installers or dependency managers`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T03:55:33Z",
+      "updated_at": "2026-06-01T03:55:33Z"
+    }
+  ]
+}
