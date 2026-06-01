@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T22:04:50Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 611,
+    "title": "GitClaw channel task: Complete channel done task 20260601t220004z",
+    "body": "\u003c!-- gitclaw:channel-task task_id=\"channel-done-task-20260601t220004z\" channel=\"telegram\" thread_id_sha256_12=\"c7c767083011\" source_message_id_sha256_12=\"8e24c0a4d44a\" source_issue=\"610\" source_comment_id=\"4596863783\" --\u003e\nGitClaw channel task.\n\n- task_id: channel-done-task-20260601t220004z\n- source_channel: telegram\n- source_issue: #610\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/610\n- source_comment_id: 4596863783\n- thread_id_sha256_12: c7c767083011\n- source_message_id_sha256_12: 8e24c0a4d44a\n- task_mode: github-issue-task\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Task\n\nComplete channel done task 20260601t220004z\n\n## Notes\n\nVisible task note token: VISIBLE_CHANNEL_DONE_TASK_NOTES_20260601t220004z\n\nContinue the work in this GitHub issue. Use labels for task state and comments for handoffs.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel task: Complete channel done task 20260601t220004z\n\n\u003c!-- gitclaw:channel-task task_id=\"channel-done-task-20260601t220004z\" channel=\"telegram\" thread_id_sha256_12=\"c7c767083011\" source_message_id_sha256_12=\"8e24c0a4d44a\" source_issue=\"610\" source_comment_id=\"4596863783\" --\u003e\nGitClaw channel task.\n\n- task_id: channel-done-task-20260601t220004z\n- source_channel: telegram\n- source_issue: #610\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/610\n- source_comment_id: 4596863783\n- thread_id_sha256_12: c7c767083011\n- source_message_id_sha256_12: 8e24c0a4d44a\n- task_mode: github-issue-task\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Task\n\nComplete channel done task 20260601t220004z\n\n## Notes\n\nVisible task note token: VISIBLE_CHANNEL_DONE_TASK_NOTES_20260601t220004z\n\nContinue the work in this GitHub issue. Use labels for task state and comments for handoffs.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels done --message-id done-complete-notify-20260601t220004z\nDo not leak this done hidden token: NOECHO_CHANNEL_DONE_BODY_20260601t220004z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4596872189,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Done Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#611`\n- source_comment_id: `4596872189`\n- requested_channel_command: `/channels done`\n- channel_artifact_kind: `task`\n- channel_artifact_issue: `#611`\n- channel_artifact_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/611`\n- channel_artifact_closed: `true`\n- source_channel_issue: `#610`\n- notification_target_issue: `#610`\n- notification_comment_id: `4596876676`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- channel: `telegram`\n- thread_id_sha256_12: `c7c767083011`\n- artifact_id_sha256_12: `8036ca3edab1`\n- notify_message_id_sha256_12: `0f1d2b9965cf`\n- notify_message_id_auto: `false`\n- artifact_title_sha256_12: `98e386ae42a1`\n- notification_body_sha256_12: `17b50cc1da7f`\n- raw_artifact_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_artifact_title_included: `false`\n- raw_artifact_body_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_done_action_change: `true`\n- issue_title_sha256_12: `98e386ae42a1`\n\nGitClaw closed the GitHub-native channel artifact issue and queued a provider-facing acknowledgement back to the original mirrored channel thread. The acknowledgement is delivered later by `gitclaw channel-outbox` and `gitclaw channel-delivery`; this source receipt keeps artifact IDs, thread IDs, message IDs, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the done acknowledgement with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent acknowledgements with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate done acknowledgements are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4596876848,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4596872189,
+      "body": "@gitclaw /channels done --message-id done-complete-notify-20260601t220004z\nDo not leak this done hidden token: NOECHO_CHANNEL_DONE_BODY_20260601t220004z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T22:03:34Z",
+      "updated_at": "2026-06-01T22:03:34Z"
+    },
+    {
+      "id": 4596876848,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26784815489\" event_id=\"comment-4596872189\" model=\"gitclaw/channels\" idempotency_key=\"c586a7406c95eadb1b6469222915a9c3\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26784815489\" --\u003e\n## GitClaw Channel Done Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#611`\n- source_comment_id: `4596872189`\n- requested_channel_command: `/channels done`\n- channel_artifact_kind: `task`\n- channel_artifact_issue: `#611`\n- channel_artifact_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/611`\n- channel_artifact_closed: `true`\n- source_channel_issue: `#610`\n- notification_target_issue: `#610`\n- notification_comment_id: `4596876676`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- channel: `telegram`\n- thread_id_sha256_12: `c7c767083011`\n- artifact_id_sha256_12: `8036ca3edab1`\n- notify_message_id_sha256_12: `0f1d2b9965cf`\n- notify_message_id_auto: `false`\n- artifact_title_sha256_12: `98e386ae42a1`\n- notification_body_sha256_12: `17b50cc1da7f`\n- raw_artifact_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_artifact_title_included: `false`\n- raw_artifact_body_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_done_action_change: `true`\n- issue_title_sha256_12: `98e386ae42a1`\n\nGitClaw closed the GitHub-native channel artifact issue and queued a provider-facing acknowledgement back to the original mirrored channel thread. The acknowledgement is delivered later by `gitclaw channel-outbox` and `gitclaw channel-delivery`; this source receipt keeps artifact IDs, thread IDs, message IDs, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the done acknowledgement with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent acknowledgements with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate done acknowledgements are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T22:04:25Z",
+      "updated_at": "2026-06-01T22:04:25Z"
+    }
+  ]
+}
