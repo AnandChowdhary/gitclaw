@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T23:05:19Z",
+  "generated_at": "2026-06-01T23:06:51Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 620,
     "title": "GitClaw telegram thread channel-digest-e2e-20260601t230330z",
@@ -42,6 +42,24 @@
       "CommentID": 4597192765,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels digest --digest-id channel-digest-20260601t230330z --message-id digest-ingest-20260601t230330z --notify-message-id digest-notify-20260601t230330z\nSummary: Record GitHub-native channel digest 20260601t230330z\nHighlights:\nVisible digest highlights token: VISIBLE_CHANNEL_DIGEST_HIGHLIGHTS_20260601t230330z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4597196060,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Digest Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#620`\n- requested_channel_command: `/channels digest`\n- channel_digest_status: `recorded`\n- digest_issue: `#621`\n- digest_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/621`\n- digest_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#620`\n- notification_comment_id: `4597200185`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `814334ae412c`\n- source_message_id_sha256_12: `e395e7e93199`\n- notify_message_id_sha256_12: `ad483a10d134`\n- notify_message_id_auto: `false`\n- digest_id_sha256_12: `87d4e2121820`\n- digest_id_auto: `false`\n- digest_summary_sha256_12: `3569ad17d3e2`\n- digest_summary_bytes: `52`\n- digest_summary_lines: `1`\n- digest_highlights_sha256_12: `856e2560e2b6`\n- digest_highlights_bytes: `83`\n- digest_highlights_lines: `1`\n- notification_body_sha256_12: `22f25c604bab`\n- target_from_current_channel_issue: `true`\n- raw_digest_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_digest_summary_included: `false`\n- raw_digest_highlights_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_digest_action_change: `true`\n- issue_title_sha256_12: `42a2e7d04c91`\n\nGitClaw recorded a mirrored channel digest as a durable GitHub issue, then queued a provider-facing link back to the original thread. The digest issue contains the human-readable summary and highlights; this source receipt keeps provider IDs, digest IDs, summaries, highlights, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the digest-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent digest links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate digest issues are suppressed by `digest_id`; duplicate digest-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the digest issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4597200265,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -60,6 +78,30 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T23:04:50Z",
       "updated_at": "2026-06-01T23:04:50Z"
+    },
+    {
+      "id": 4597196060,
+      "body": "@gitclaw /channels digest --digest-id channel-digest-20260601t230330z --message-id digest-ingest-20260601t230330z --notify-message-id digest-notify-20260601t230330z\nSummary: Record GitHub-native channel digest 20260601t230330z\nHighlights:\nVisible digest highlights token: VISIBLE_CHANNEL_DIGEST_HIGHLIGHTS_20260601t230330z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T23:05:33Z",
+      "updated_at": "2026-06-01T23:05:33Z"
+    },
+    {
+      "id": 4597200185,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-digest-e2e-20260601t230330z\" message_id=\"digest-notify-20260601t230330z\" author=\"gitclaw\" --\u003e\nGitClaw channel digest recorded.\n\nDigest: #621\nURL: https://github.com/AnandChowdhary/gitclaw/issues/621\nSummary: Record GitHub-native channel digest 20260601t230330z\n\nRecorded in the linked GitHub issue.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T23:06:24Z",
+      "updated_at": "2026-06-01T23:06:24Z"
+    },
+    {
+      "id": 4597200265,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26787434359\" event_id=\"comment-4597196060\" model=\"gitclaw/channels\" idempotency_key=\"edf85448de996b2371f77eb903932b8e\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26787434359\" --\u003e\n## GitClaw Channel Digest Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#620`\n- requested_channel_command: `/channels digest`\n- channel_digest_status: `recorded`\n- digest_issue: `#621`\n- digest_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/621`\n- digest_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#620`\n- notification_comment_id: `4597200185`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `814334ae412c`\n- source_message_id_sha256_12: `e395e7e93199`\n- notify_message_id_sha256_12: `ad483a10d134`\n- notify_message_id_auto: `false`\n- digest_id_sha256_12: `87d4e2121820`\n- digest_id_auto: `false`\n- digest_summary_sha256_12: `3569ad17d3e2`\n- digest_summary_bytes: `52`\n- digest_summary_lines: `1`\n- digest_highlights_sha256_12: `856e2560e2b6`\n- digest_highlights_bytes: `83`\n- digest_highlights_lines: `1`\n- notification_body_sha256_12: `22f25c604bab`\n- target_from_current_channel_issue: `true`\n- raw_digest_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_digest_summary_included: `false`\n- raw_digest_highlights_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_digest_action_change: `true`\n- issue_title_sha256_12: `42a2e7d04c91`\n\nGitClaw recorded a mirrored channel digest as a durable GitHub issue, then queued a provider-facing link back to the original thread. The digest issue contains the human-readable summary and highlights; this source receipt keeps provider IDs, digest IDs, summaries, highlights, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the digest-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent digest links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate digest issues are suppressed by `digest_id`; duplicate digest-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the digest issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T23:06:25Z",
+      "updated_at": "2026-06-01T23:06:25Z"
     }
   ]
 }
