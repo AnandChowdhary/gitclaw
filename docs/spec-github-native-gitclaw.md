@@ -847,8 +847,8 @@ GitHub issue/comment event
   `orders list`, `orders verify`, `orders risk`,
   `profile show`, `profile verify`,
   `context list`, `context risk`, `context info`,
-  `prompt list`, `prompt pack`, `prompt cache`, `prompt compression`,
-  `prompt risk`,
+  `prompt list`, `prompt pack`, `prompt context`, `prompt cache`,
+  `prompt compression`, `prompt risk`,
   `runs current`, `runs verify`, `runs history`,
   `sandbox explain`, `sandbox verify`, `sandbox risk`,
   `memory catalog`, `memory provenance`, `memory verify`, `memory risk`, `memory validate`,
@@ -2866,6 +2866,7 @@ memory/context posture:
 @gitclaw /prompt
 @gitclaw /prompt list
 @gitclaw /prompt pack
+@gitclaw /prompt context
 @gitclaw /prompt cache
 @gitclaw /prompt compression
 @gitclaw /prompt risk
@@ -2924,6 +2925,17 @@ Any change to this surface requires a focused live E2E that first verifies
 that uses GitHub Models, a selected skill, and `gitclaw.search_files`. This
 keeps the deterministic budget map from becoming a substitute for testing real
 model/tool behavior.
+
+When called as `@gitclaw /prompt context`, the command posts a body-free
+prompt-context manifest for the same context inventory that normal model turns
+stamp into assistant-turn markers. It reports the `prompt_context_sha256_12`,
+context file paths, selected skill paths, prompt-visible skill/tool names,
+tool-output names, input/output hashes, byte/line counts, bounded transcript
+counts, and no-write gates. It never prints prompt text, issue/comment bodies,
+context bodies, skill bodies, tool output bodies, raw tool inputs,
+credentials, or secret values. Any change to this surface requires a live E2E
+that verifies the deterministic manifest and then performs a normal GitHub
+Models follow-up with a selected skill and `gitclaw.search_files`.
 
 When called as `@gitclaw /prompt cache`, the command posts a body-free
 cache-readiness report for the same prompt envelope. It does not enable
@@ -2995,6 +3007,7 @@ without opening an issue:
 ```bash
 gitclaw prompt list
 gitclaw prompt pack
+gitclaw prompt context
 gitclaw prompt cache
 gitclaw prompt compression
 gitclaw prompt risk
@@ -7661,6 +7674,11 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven prompt-pack E2E harness verifies `@gitclaw /prompt pack`
   reports body-free component order, threshold findings, and truncation
   projection metadata without a model call, then posts a normal GitHub Models
+  follow-up that proves selected skill and `gitclaw.search_files` tool usage.
+- A `gh`-driven prompt-context E2E harness verifies
+  `@gitclaw /prompt context` reports the body-free prompt-context hash,
+  context/skill/tool inventory, selected skill snapshot, tool-output hashes,
+  and raw-body gates without a model call, then posts a normal GitHub Models
   follow-up that proves selected skill and `gitclaw.search_files` tool usage.
 - A `gh`-driven prompt-cache E2E harness verifies `@gitclaw /prompt cache`
   reports body-free stable-prefix/cache-control/telemetry gap metadata without

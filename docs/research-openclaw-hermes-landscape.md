@@ -3197,6 +3197,26 @@ outputs. Acceptance requires a live GitHub Models repo-reader/search turn
 first, followed by the deterministic session-resume report proving model-backed
 provenance and usage evidence from marker metadata.
 
+### 2026-06-01 Prompt Context Manifest Follow-Up
+
+OpenClaw's current skills documentation emphasizes that visible skills are
+snapshotted per session and refreshed when the effective allowlist changes,
+while Hermes' context-compression/caching guidance treats prompt context as an
+auditable bounded input rather than an opaque blob. GitClaw already stamps a
+`prompt_context_sha256_12` marker on normal model replies; the missing operator
+surface is a deterministic manifest that explains what that hash covers without
+printing the context itself.
+
+Add `@gitclaw /prompt context` and `gitclaw prompt context`. The report should
+list prompt-visible context files, selected skills, deterministic tool outputs,
+prompt-visible skill/tool names, input/output hashes, transcript bound counts,
+and no-write gates. It must not print prompt text, issue bodies, comments,
+context file bodies, skill bodies, tool output bodies, raw tool inputs,
+credentials, or secret values. Acceptance requires the deterministic
+prompt-context manifest first, followed by a live GitHub Models
+repo-reader/search turn proving selected skill, prompt-context hash, tool
+visibility, and usage telemetry.
+
 ## Open Questions For Speccing
 
 1. Is `gitclaw` primarily for one user's repos, or for teams/organizations?

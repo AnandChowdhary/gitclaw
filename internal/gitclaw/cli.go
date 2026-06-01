@@ -1640,7 +1640,7 @@ func runWorkspaceRiskCommand(args []string) error {
 
 func runPromptCommand(args []string) error {
 	if len(args) > 1 || (len(args) == 1 && !isPromptCLISubcommand(args[0])) {
-		return fmt.Errorf("usage: gitclaw prompt [list|pack|cache|compression|risk]")
+		return fmt.Errorf("usage: gitclaw prompt [list|pack|context|cache|compression|risk]")
 	}
 	cfg, err := LoadEffectiveConfig()
 	if err != nil {
@@ -1666,13 +1666,17 @@ func runPromptCommand(args []string) error {
 		fmt.Println(RenderPromptCompressionCLIReport(cfg, repoContext))
 		return nil
 	}
+	if len(args) == 1 && (args[0] == "context" || args[0] == "manifest" || args[0] == "snapshot" || args[0] == "inputs") {
+		fmt.Println(RenderPromptContextCLIReport(cfg, repoContext))
+		return nil
+	}
 	fmt.Println(RenderPromptCLIReport(cfg, repoContext))
 	return nil
 }
 
 func isPromptCLISubcommand(arg string) bool {
 	switch arg {
-	case "list", "risk", "risk-audit", "pack", "pack-plan", "packing", "context-pack", "cache", "cache-plan", "cache-status", "cache-readiness", "compression", "compress", "compaction", "compact", "summarization", "summary":
+	case "list", "risk", "risk-audit", "pack", "pack-plan", "packing", "context-pack", "context", "manifest", "snapshot", "inputs", "cache", "cache-plan", "cache-status", "cache-readiness", "compression", "compress", "compaction", "compact", "summarization", "summary":
 		return true
 	default:
 		return false

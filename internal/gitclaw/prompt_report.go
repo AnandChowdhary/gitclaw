@@ -23,7 +23,7 @@ func IsPromptReportRequest(ev Event, cfg Config) bool {
 	if fields[0] != "/prompt" && fields[0] != "/budget" && fields[0] != "/prompt-budget" {
 		return false
 	}
-	return len(fields) < 2 || (!strings.EqualFold(fields[1], "risk") && !strings.EqualFold(fields[1], "risk-audit") && !isPromptPackFields(fields) && !isPromptCacheFields(fields))
+	return len(fields) < 2 || (!strings.EqualFold(fields[1], "risk") && !strings.EqualFold(fields[1], "risk-audit") && !isPromptPackFields(fields) && !isPromptCacheFields(fields) && !isPromptContextFields(fields))
 }
 
 func IsPromptRiskRequest(ev Event, cfg Config) bool {

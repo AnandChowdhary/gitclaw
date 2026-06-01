@@ -149,7 +149,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `33`' \
   'aliases: `31`' \
-  'local_cli_helpers: `199`' \
+  'local_cli_helpers: `200`' \
   'run_mode: `read-only`' \
   'llm_e2e_required_after_commands_report_change: `true`' \
   "### Slash Commands" \
@@ -283,6 +283,7 @@ for expected in \
   'gitclaw sandbox risk' \
   'gitclaw prompt list' \
   'gitclaw prompt pack' \
+  'gitclaw prompt context' \
   'gitclaw prompt cache' \
   'gitclaw prompt compression' \
   'gitclaw prompt risk' \

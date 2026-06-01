@@ -35,6 +35,7 @@ go run ./cmd/gitclaw tools risk
 go run ./cmd/gitclaw artifacts risk
 go run ./cmd/gitclaw context risk
 go run ./cmd/gitclaw prompt pack
+go run ./cmd/gitclaw prompt context
 go run ./cmd/gitclaw prompt cache
 go run ./cmd/gitclaw prompt compression
 go run ./cmd/gitclaw prompt risk
@@ -438,6 +439,7 @@ gitclaw rollback risk
 gitclaw context risk
 gitclaw prompt list
 gitclaw prompt pack
+gitclaw prompt context
 gitclaw prompt cache
 gitclaw prompt compression
 gitclaw prompt risk
@@ -548,6 +550,11 @@ The live prompt-report and prompt-list harnesses now use that gate for prompt
 diagnostics: prompt size, hash, truncation, context, skill, and tool metadata
 stay body-free, then a normal GitHub Models repo-reader/search follow-up proves
 prompt inspection has not replaced real model/tool execution.
+The live prompt-context harness applies the same rule to the exact context
+snapshot: context paths, selected skill paths, tool-output names, hashes, and
+the prompt-context identity stay body-free, then a normal GitHub Models
+repo-reader/search follow-up proves the snapshot corresponds to real model/tool
+execution.
 The live tools-report and tools-list harnesses apply the same rule to the tool
 surface: tool contracts, gate state, validation, and active-output hashes stay
 body-free, then a normal GitHub Models repo-reader/search follow-up proves real
@@ -618,6 +625,7 @@ scripts/e2e/github-checkpoints-catalog-report.sh
 scripts/e2e/github-checkpoints-risk-report.sh
 scripts/e2e/github-context-risk-report.sh
 scripts/e2e/github-prompt-pack-report.sh
+scripts/e2e/github-prompt-context-report.sh
 scripts/e2e/github-prompt-cache-report.sh
 scripts/e2e/github-prompt-compression-report.sh
 scripts/e2e/github-prompt-risk-report.sh

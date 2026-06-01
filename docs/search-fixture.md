@@ -22,6 +22,7 @@ mcp provenance unique search fixture phrase => GITCLAW_MCP_PROVENANCE_CONTEXT_V1
 defer plan unique search fixture phrase => GITCLAW_DEFER_PLAN_CONTEXT_V1
 
 prompt pack unique search fixture phrase => GITCLAW_PROMPT_PACK_CONTEXT_V1
+prompt context unique search fixture phrase => GITCLAW_PROMPT_CONTEXT_CONTEXT_V1
 
 prompt cache unique search fixture phrase => GITCLAW_PROMPT_CACHE_CONTEXT_V1
 prompt compression unique search fixture phrase => GITCLAW_PROMPT_COMPRESSION_CONTEXT_V1
