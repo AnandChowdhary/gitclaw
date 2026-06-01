@@ -149,7 +149,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `34`' \
   'aliases: `32`' \
-  'local_cli_helpers: `207`' \
+  'local_cli_helpers: `208`' \
   'run_mode: `read-only`' \
   'llm_e2e_required_after_commands_report_change: `true`' \
   "### Slash Commands" \
@@ -292,6 +292,7 @@ for expected in \
   'gitclaw prompt compression' \
   'gitclaw prompt risk' \
   'gitclaw proactive list' \
+  'gitclaw proactive schedule' \
   'gitclaw proactive risk' \
   'gitclaw proactive info <name>' \
   'gitclaw proactive init' \

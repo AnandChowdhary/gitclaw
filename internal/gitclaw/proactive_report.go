@@ -39,6 +39,9 @@ func IsProactiveReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderProactiveReport(ev Event, cfg Config) string {
+	if isProactiveScheduleRequest(ev, cfg) {
+		return RenderProactiveScheduleReport(ev, cfg)
+	}
 	if isProactiveRiskRequest(ev, cfg) {
 		return renderProactiveRiskReport(ev, cfg, true)
 	}

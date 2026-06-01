@@ -3272,6 +3272,27 @@ prompt-context manifest first, followed by a live GitHub Models
 repo-reader/search turn proving selected skill, prompt-context hash, tool
 visibility, and usage telemetry.
 
+### 2026-06-01 Proactive Schedule Follow-Up
+
+OpenClaw's scheduled-task docs keep exact recurring work distinct from
+heartbeat-style opportunistic wakeups, while Hermes cron keeps scheduled jobs
+as skill-backed fresh sessions with explicit project/runtime boundaries.
+GitClaw should expose the same distinction in the GitHub-native scheduler
+instead of making operators read workflow YAML directly. Add
+`@gitclaw /proactive schedule` and `gitclaw proactive schedule` as a body-free
+calendar report over `.github/workflows/gitclaw-proactive*.yml` and
+`.gitclaw/proactive/*.md`. The report should show workflow-dispatch support,
+cron entries, cadence classification, not-before support, prompt skill hints,
+fresh issue-thread strategy, and the explicit rule that heartbeat channels are
+approximate while GitHub Actions `schedule` is the exact timing boundary.
+
+The report must not print workflow bodies, prompt bodies, issue/comment bodies,
+tool outputs, credentials, or secret values. Acceptance requires deterministic
+unit coverage, a local CLI check, a live issue E2E on the main repository, and
+a second live GitHub Models issue-comment turn that selects `repo-reader`,
+exposes `gitclaw.search_files`, publishes usage telemetry, and recovers a
+bounded repository-search fixture token.
+
 ## Open Questions For Speccing
 
 1. Is `gitclaw` primarily for one user's repos, or for teams/organizations?

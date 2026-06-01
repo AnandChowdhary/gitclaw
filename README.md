@@ -478,6 +478,7 @@ gitclaw channels verify
 gitclaw channels risk
 gitclaw channels info telegram
 gitclaw proactive list
+gitclaw proactive schedule
 gitclaw proactive risk
 gitclaw proactive info repo-hygiene
 gitclaw proactive init --name email-triage --cron "17 8 * * 1-5"
@@ -563,9 +564,9 @@ still proves real repo-reader search.
 The live channels-verify harness applies the same model/tool gate to the
 positive bridge health check, so workflow permission/input changes prove both
 deterministic readiness and real repo-reader search.
-The live proactive-report and proactive-list harnesses use the same two-proof
-shape for scheduled work: body-free workflow/prompt metadata first, then a
-normal GitHub Models repo-reader/search follow-up.
+The live proactive-report, proactive-list, and proactive-schedule harnesses use
+the same two-proof shape for scheduled work: body-free workflow/prompt metadata
+first, then a normal GitHub Models repo-reader/search follow-up.
 The live prompt-report and prompt-list harnesses now use that gate for prompt
 diagnostics: prompt size, hash, truncation, context, skill, and tool metadata
 stay body-free, then a normal GitHub Models repo-reader/search follow-up proves
@@ -698,6 +699,7 @@ scripts/e2e/github-proactive-init.sh
 scripts/e2e/github-proactive-not-before.sh
 scripts/e2e/github-proactive-report.sh
 scripts/e2e/github-proactive-list-report.sh
+scripts/e2e/github-proactive-schedule-report.sh
 scripts/e2e/github-proactive-info-report.sh
 scripts/e2e/github-proactive-risk-report.sh
 scripts/e2e/github-session-catalog-report.sh
@@ -794,10 +796,10 @@ The channel-delivery workflow harness now proves outbound receipt safety:
 source assistant verification, hash-only provider message receipts, duplicate
 receipt suppression, and two normal model/tool turns without leaking the source
 assistant body.
-The proactive-report and proactive-list harnesses now require the deterministic
-scheduled-job inventory to be followed by a real issue-comment GitHub Models
-turn that selects `repo-reader`, exposes `gitclaw.search_files`, and recovers a
-fixture token from repository search.
+The proactive-report, proactive-list, and proactive-schedule harnesses now
+require the deterministic scheduled-job inventory to be followed by a real
+issue-comment GitHub Models turn that selects `repo-reader`, exposes
+`gitclaw.search_files`, and recovers a fixture token from repository search.
 The proactive-init harness now applies the same gate to generated scheduled
 jobs: it verifies body-free prompt/workflow creation, dispatches a real
 proactive issue, then continues that issue with a model-backed repo-reader
