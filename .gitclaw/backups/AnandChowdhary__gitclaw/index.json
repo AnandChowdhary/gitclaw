@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T16:53:20Z",
+  "generated_at": "2026-06-01T16:54:56Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 499,
   "issues": [
@@ -6269,14 +6269,14 @@
       "number": 569,
       "title": "GitClaw session handoff E2E 20260601T165018Z",
       "path": "issues/000569.json",
-      "backup_generated_at": "2026-06-01T16:53:19Z",
+      "backup_generated_at": "2026-06-01T16:54:55Z",
       "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done"
       ],
-      "comment_count": 3,
-      "transcript_messages": 4
+      "comment_count": 5,
+      "transcript_messages": 6
     }
   ]
 }

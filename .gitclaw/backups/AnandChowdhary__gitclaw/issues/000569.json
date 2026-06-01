@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T16:53:19Z",
+  "generated_at": "2026-06-01T16:54:55Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -50,6 +50,24 @@
       "CommentID": 4594687047,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /session handoff --id handoff-20260601t165018z\n\nRepeat the same handoff id.\nDo not leak this duplicate token: NOECHO_SESSION_HANDOFF_DUPLICATE_20260601T165018Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4594691633,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Session Handoff Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#569`\n- source_comment_id: `4594691633`\n- requested_session_command: `/session handoff`\n- session_handoff_status: `existing`\n- handoff_issue: `#570`\n- handoff_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/570`\n- handoff_issue_created: `false`\n- duplicate_suppressed: `true`\n- handoff_id_sha256_12: `298ceea47300`\n- handoff_mode: `github-issue-conversation`\n- handoff_issue_labeled_for_gitclaw: `true`\n- source_session_store: `github-issue-thread`\n- transcript_messages: `5`\n- raw_comments: `4`\n- user_messages: `3`\n- assistant_messages: `2`\n- assistant_turn_comments: `2`\n- assistant_turns_with_prompt_provenance: `1`\n- assistant_turns_missing_prompt_provenance: `1`\n- unique_prompt_context_hashes: `1`\n- model_backed_assistant_turns: `1`\n- deterministic_assistant_turns: `1`\n- model_names: `gitclaw/session, openai/gpt-4.1-nano`\n- prompt_visible_skill_names: `repo-reader`\n- prompt_visible_tool_names: `gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index`\n- usage_bearing_assistant_turns: `1`\n- usage_total_tokens: `10450`\n- next_issue_comment_resumes_handoff: `true`\n- source_issue_continuation_supported: `true`\n- github_actions_reentry_supported: `true`\n- workflow_event: `issue_comment`\n- workflow_dispatch_required: `false`\n- server_required: `false`\n- socket_required: `false`\n- external_session_db_required: `false`\n- backup_branch_replay_preferred: `true`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- raw_handoff_id_included: `false`\n- raw_source_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_replies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- source_sha256_12: `74e984c98fdd`\n- source_bytes: `168`\n- source_lines: `4`\n- llm_e2e_required_after_session_handoff_issue_change: `true`\n- issue_title_sha256_12: `fe616ccfd3d1`\n\nGitClaw opened or reused a labeled GitHub issue for continuing this session in a new lane. The action does not copy raw source bodies, comments, assistant replies, prompts, or tool outputs; the handoff issue carries counts, hashes, marker metadata, and reentry gates only.\n\n### Handoff Path\n- continue on handoff issue: `#570`\n- ask a normal `@gitclaw` follow-up there to prove the new lane has model, skill, tool, and usage telemetry\n- use `/session resume`, `/session provenance`, or `/session coverage` on either issue to audit the source and handoff sessions",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4594698100,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -76,6 +94,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T16:52:55Z",
       "updated_at": "2026-06-01T16:52:55Z"
+    },
+    {
+      "id": 4594691633,
+      "body": "@gitclaw /session handoff --id handoff-20260601t165018z\n\nRepeat the same handoff id.\nDo not leak this duplicate token: NOECHO_SESSION_HANDOFF_DUPLICATE_20260601T165018Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T16:53:35Z",
+      "updated_at": "2026-06-01T16:53:35Z"
+    },
+    {
+      "id": 4594698100,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26769111678\" event_id=\"comment-4594691633\" model=\"gitclaw/session\" idempotency_key=\"c594cece39b433ac759e082b5e611dea\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26769111678\" --\u003e\n## GitClaw Session Handoff Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#569`\n- source_comment_id: `4594691633`\n- requested_session_command: `/session handoff`\n- session_handoff_status: `existing`\n- handoff_issue: `#570`\n- handoff_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/570`\n- handoff_issue_created: `false`\n- duplicate_suppressed: `true`\n- handoff_id_sha256_12: `298ceea47300`\n- handoff_mode: `github-issue-conversation`\n- handoff_issue_labeled_for_gitclaw: `true`\n- source_session_store: `github-issue-thread`\n- transcript_messages: `5`\n- raw_comments: `4`\n- user_messages: `3`\n- assistant_messages: `2`\n- assistant_turn_comments: `2`\n- assistant_turns_with_prompt_provenance: `1`\n- assistant_turns_missing_prompt_provenance: `1`\n- unique_prompt_context_hashes: `1`\n- model_backed_assistant_turns: `1`\n- deterministic_assistant_turns: `1`\n- model_names: `gitclaw/session, openai/gpt-4.1-nano`\n- prompt_visible_skill_names: `repo-reader`\n- prompt_visible_tool_names: `gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index`\n- usage_bearing_assistant_turns: `1`\n- usage_total_tokens: `10450`\n- next_issue_comment_resumes_handoff: `true`\n- source_issue_continuation_supported: `true`\n- github_actions_reentry_supported: `true`\n- workflow_event: `issue_comment`\n- workflow_dispatch_required: `false`\n- server_required: `false`\n- socket_required: `false`\n- external_session_db_required: `false`\n- backup_branch_replay_preferred: `true`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- raw_handoff_id_included: `false`\n- raw_source_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_replies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- source_sha256_12: `74e984c98fdd`\n- source_bytes: `168`\n- source_lines: `4`\n- llm_e2e_required_after_session_handoff_issue_change: `true`\n- issue_title_sha256_12: `fe616ccfd3d1`\n\nGitClaw opened or reused a labeled GitHub issue for continuing this session in a new lane. The action does not copy raw source bodies, comments, assistant replies, prompts, or tool outputs; the handoff issue carries counts, hashes, marker metadata, and reentry gates only.\n\n### Handoff Path\n- continue on handoff issue: `#570`\n- ask a normal `@gitclaw` follow-up there to prove the new lane has model, skill, tool, and usage telemetry\n- use `/session resume`, `/session provenance`, or `/session coverage` on either issue to audit the source and handoff sessions",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T16:54:31Z",
+      "updated_at": "2026-06-01T16:54:31Z"
     }
   ]
 }
