@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T13:25:41Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 538,
+    "title": "GitClaw skills rehearsal E2E 20260601t132414z",
+    "body": "@gitclaw /skills rehearse repo-reader --id rehearsal-20260601t132414z\n\nCreate a live rehearsal lane for this reviewed skill.\nDo not include this hidden source token: NOECHO_SKILL_REHEARSAL_SOURCE_20260601t132414z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": null
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw skills rehearsal E2E 20260601t132414z\n\n@gitclaw /skills rehearse repo-reader --id rehearsal-20260601t132414z\n\nCreate a live rehearsal lane for this reviewed skill.\nDo not include this hidden source token: NOECHO_SKILL_REHEARSAL_SOURCE_20260601t132414z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Skill Rehearsal Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#538`\n- source_comment_id: `0`\n- requested_skill_command: `/skills rehearse`\n- skill_rehearsal_status: `created`\n- rehearsal_issue: `#539`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/539`\n- rehearsal_issue_created: `true`\n- duplicate_suppressed: `false`\n- rehearsal_id_sha256_12: `337c65b6f4b4`\n- requested_skill: `repo-reader`\n- matched_skills: `1`\n- available_skills: `1`\n- enabled_matches: `1`\n- disabled_matches: `0`\n- allowlist_blocked_matches: `0`\n- missing_env: `0`\n- missing_bins: `0`\n- selected_matches_this_turn: `1`\n- skill_validation_status: `ok`\n- skill_validation_errors: `0`\n- skill_validation_warnings: `0`\n- rehearsal_mode: `github-issue-conversation`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- skill_install_allowed: `false`\n- skill_update_allowed: `false`\n- active_skill_write_performed: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `7c90accf421f`\n- source_bytes: `258`\n- source_lines: `5`\n- raw_source_body_included: `false`\n- raw_skill_body_included: `false`\n- llm_e2e_required_after_skill_rehearsal_issue_change: `true`\n- issue_title_sha256_12: `b9739c057d18`\n\nGitClaw opened or reused a GitHub issue for trying a reviewed skill in a normal conversation. The action does not install skills, edit `SKILL.md`, fetch registries, or call a model; continue on the rehearsal issue to exercise the selected skill with GitHub Models.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#539`\n- ask a normal `@gitclaw` follow-up that mentions `repo-reader` or relies on the rehearsal issue body\n- verify the follow-up assistant marker includes prompt context, selected skill, prompt-visible tools, and usage telemetry",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4593005760,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4593005760,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26757703455\" event_id=\"issue-538\" model=\"gitclaw/skills\" idempotency_key=\"d2af3c1944e6ee40e5667b2bcc2cb0fc\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26757703455\" --\u003e\n## GitClaw Skill Rehearsal Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#538`\n- source_comment_id: `0`\n- requested_skill_command: `/skills rehearse`\n- skill_rehearsal_status: `created`\n- rehearsal_issue: `#539`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/539`\n- rehearsal_issue_created: `true`\n- duplicate_suppressed: `false`\n- rehearsal_id_sha256_12: `337c65b6f4b4`\n- requested_skill: `repo-reader`\n- matched_skills: `1`\n- available_skills: `1`\n- enabled_matches: `1`\n- disabled_matches: `0`\n- allowlist_blocked_matches: `0`\n- missing_env: `0`\n- missing_bins: `0`\n- selected_matches_this_turn: `1`\n- skill_validation_status: `ok`\n- skill_validation_errors: `0`\n- skill_validation_warnings: `0`\n- rehearsal_mode: `github-issue-conversation`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- skill_install_allowed: `false`\n- skill_update_allowed: `false`\n- active_skill_write_performed: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `7c90accf421f`\n- source_bytes: `258`\n- source_lines: `5`\n- raw_source_body_included: `false`\n- raw_skill_body_included: `false`\n- llm_e2e_required_after_skill_rehearsal_issue_change: `true`\n- issue_title_sha256_12: `b9739c057d18`\n\nGitClaw opened or reused a GitHub issue for trying a reviewed skill in a normal conversation. The action does not install skills, edit `SKILL.md`, fetch registries, or call a model; continue on the rehearsal issue to exercise the selected skill with GitHub Models.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#539`\n- ask a normal `@gitclaw` follow-up that mentions `repo-reader` or relies on the rehearsal issue body\n- verify the follow-up assistant marker includes prompt context, selected skill, prompt-visible tools, and usage telemetry",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T13:25:16Z",
+      "updated_at": "2026-06-01T13:25:16Z"
+    }
+  ]
+}
