@@ -194,14 +194,7 @@ outbound_comment_count() {
   gh issue view "$issue_number" \
     --repo "$repo" \
     --json comments \
-    --jq --arg msg "$reply_message_id" '[.comments[] | select(.body | contains("gitclaw:channel-outbound") and contains($msg))] | length'
-}
-
-outbound_comment_id() {
-  gh issue view "$issue_number" \
-    --repo "$repo" \
-    --json comments \
-    --jq --arg msg "$reply_message_id" '[.comments[] | select(.body | contains("gitclaw:channel-outbound") and contains($msg)) | .id] | .[-1] // ""'
+    | jq -r --arg msg "$reply_message_id" '[.comments[] | select(.body | contains("<!-- gitclaw:channel-outbound") and contains($msg))] | length'
 }
 
 find_state_issue_number() {
@@ -293,7 +286,7 @@ for leaked in "$outbound_body_token" "$reply_message_id" "$thread_id" "$ingest_h
 done
 
 [[ "$(outbound_comment_count)" == "1" ]] || die "channel reply did not queue exactly one outbound comment"
-source_comment_id="$(outbound_comment_id)"
+source_comment_id="$(sed -n 's/.*outbound_comment_id: `\([0-9][0-9]*\)`.*/\1/p' <<<"$reply_receipt" | head -n 1)"
 [[ -n "$source_comment_id" && "$source_comment_id" != "null" ]] || die "could not resolve outbound source comment id"
 issue_json="$(gh issue view "$issue_number" --repo "$repo" --json body,comments,labels)"
 grep -Fq "gitclaw:channel-thread" <<<"$(jq -r '.body' <<<"$issue_json")" || die "channel issue lost channel-thread marker"
