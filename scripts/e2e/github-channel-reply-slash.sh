@@ -377,8 +377,10 @@ gh issue comment "$issue_number" \
   --body "@gitclaw Continue after the channel reply action and use the repo-reader skill.
 
 Search the repository for \`${search_phrase}\`.
-The matching repository search result line has the form \`${search_phrase} => <token>\`.
-Reply with only the token after the arrow from the matching gitclaw.search_files tool output line.
+The matching repository search result line ends with an all-caps token after the arrow.
+That token starts with \`GITCLAW_CHANNEL_REPLY_SLASH_\`.
+Reply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.
+Do not reply with a placeholder like \`<token>\` or the word \`token\`.
 Do not include the channel thread id, reply message id, account hash, external message hash, outbound body token, or delivery state issue.
 Do not include this hidden follow-up token: ${followup_hidden_token}
 Keep the answer under 30 words." >/dev/null
