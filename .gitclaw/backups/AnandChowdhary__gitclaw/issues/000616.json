@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T22:29:27Z",
+  "generated_at": "2026-06-01T22:30:48Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 616,
     "title": "GitClaw proactive proactive-notify-e2e-20260601222611 notify-20260601222611",
@@ -42,6 +42,15 @@
       "CommentID": 4597009955,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "proactive_notify_search: GITCLAW_PROACTIVE_NOTIFY_CONTEXT_V1\nmode: channel-notify",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4597020984,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -60,6 +69,14 @@
       "author_association": "OWNER",
       "created_at": "2026-06-01T22:28:24Z",
       "updated_at": "2026-06-01T22:28:24Z"
+    },
+    {
+      "id": 4597020984,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26785901338\" event_id=\"comment-4597009955\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"639996e440706c5780ac1cf42f932710\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26785901338\" prompt_context_sha256_12=\"0373437ce7ba\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10606\" usage_completion_tokens=\"22\" usage_total_tokens=\"10628\" usage_cache_read_tokens=\"9728\" usage_cache_write_tokens=\"0\" --\u003e\nproactive_notify_search: GITCLAW_PROACTIVE_NOTIFY_CONTEXT_V1\nmode: channel-notify",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T22:30:23Z",
+      "updated_at": "2026-06-01T22:30:23Z"
     }
   ]
 }
