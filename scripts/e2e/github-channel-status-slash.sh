@@ -198,6 +198,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
+issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
   --repo "$repo" \
   --title "$issue_title" \
@@ -207,11 +208,17 @@ GitClaw channel bridge thread for channel-status E2E.")"
 issue_number="${issue_url##*/}"
 log "created channel issue #${issue_number}: ${issue_url}"
 
+wait_for_workflow_run "$main_workflow" "issues" "$issue_started_at" >/dev/null || die "timed out waiting for initial channel issue preflight"
+
+ingest_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \
   --repo "$repo" \
   --body "<!-- gitclaw:channel-message channel=\"${channel}\" thread_id=\"${thread_id}\" message_id=\"${target_message_id}\" author=\"telegram\" -->
 Mirrored channel message for channel-status E2E.
 Do not leak this ingest token: ${ingest_hidden_token}" >/dev/null
+
+wait_for_issue_comment_run "$ingest_started_at" >/dev/null || die "timed out waiting for inert channel ingest comment preflight"
+gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw >/dev/null
 
 status_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \
