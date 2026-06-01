@@ -3456,6 +3456,18 @@ memory, issue, comment, prompt, session, embedding, credential, and secret
 bodies. Acceptance requires deterministic tests, local CLI proof, a live issue
 E2E, and a GitHub Models repo-reader/search follow-up.
 
+2026-06-01 profile-snapshot follow-up: Hermes profiles isolate state per agent,
+while OpenClaw workspace files make durable assistant identity and context
+reviewable. GitClaw should combine those ideas with `@gitclaw /profile
+snapshot` and `gitclaw profile snapshot`: a body-free composite fingerprint
+over the profile manifest, soul snapshot, memory snapshot, skill snapshot, and
+tool snapshot. The report should expose component hashes, statuses, counts,
+and disabled export/import/switch/mutation/session/backup gates, while
+excluding raw profile files, skill bodies, memory bodies, tool outputs,
+issue/comment bodies, prompts, credentials, sessions, backup payloads, and
+secret values. Acceptance requires local tests, a live deterministic GitHub
+issue E2E, and a GitHub Models repo-reader/search follow-up.
+
 2026-05-31 soul-provenance follow-up: OpenClaw's Hermes migration path copies
 memory and skills into the new workspace rather than treating them as opaque
 runtime state, and Hermes profiles isolate config, sessions, skills, and

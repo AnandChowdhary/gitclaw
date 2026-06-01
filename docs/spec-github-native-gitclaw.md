@@ -2125,6 +2125,7 @@ Hermes profiles and OpenClaw workspace files:
 @gitclaw /profile
 @gitclaw /profiles
 @gitclaw /profile catalog
+@gitclaw /profile snapshot
 @gitclaw /profile manifest
 @gitclaw /profile export-plan
 @gitclaw /profile risk
@@ -2147,7 +2148,8 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 - available and selected skills plus skill bundle count,
 - deterministic tool contract and active-output counts,
 - soul, skill, and tool validation rollups,
-- body-free profile portability manifest metadata when explicitly requested.
+- body-free profile snapshot and portability manifest metadata when explicitly
+  requested.
 
 It never dumps profile file bodies, skill bodies, tool outputs, issue/comment
 bodies, prompts, or secrets. It is an operator confidence surface; the
@@ -2160,6 +2162,7 @@ Local operators can inspect the same profile envelope without opening an issue:
 gitclaw profile catalog
 gitclaw profile show
 gitclaw profile verify
+gitclaw profile snapshot
 gitclaw profile manifest
 gitclaw profile export-plan
 gitclaw profile risk
@@ -2179,6 +2182,20 @@ prompts, credentials, sessions, and backup payloads are excluded. Any catalog
 change must include live GitHub issue E2E plus a GitHub Models follow-up that
 selects `repo-reader`, exposes `gitclaw.search_files`, and recovers a
 repository-search fixture token.
+
+`@gitclaw /profile snapshot`, `@gitclaw /profile fingerprint`, and
+`gitclaw profile snapshot` produce a composite body-free fingerprint for the
+repo-local profile envelope. The report binds the profile manifest, soul
+snapshot, memory snapshot, skill snapshot, and tool snapshot with one
+`snapshot_sha256_12` plus component hashes. It reports component statuses,
+entry counts, prompt-visible counts, portability/selection/enabled counts, and
+disabled export/import/switching/mutation/session/backup/raw-body gates only.
+Raw profile files, skill bodies, memory bodies, tool outputs, prompts,
+issue/comment bodies, sessions, backup payloads, credentials, and secret
+values are excluded. Any change to this surface requires focused local tests,
+a live deterministic issue E2E, and a normal GitHub Models follow-up proving
+repo-reader selection, prompt-visible `gitclaw.search_files`, usage telemetry,
+and repository-search fixture recovery.
 
 `@gitclaw /profile manifest`, `@gitclaw /profile portability`, and
 `@gitclaw /profile export-plan` produce a deterministic dry-run manifest for
@@ -7711,6 +7728,13 @@ examples/workflows/gitclaw.yml
   inventory across identity, memory, skills, tools, model, proactive, channel,
   backup, and session gates. The same issue then receives a live GitHub Models
   follow-up that proves `repo-reader` selection, prompt-visible
+  `gitclaw.search_files`, usage telemetry, and repository-search fixture
+  recovery.
+- A `gh`-driven profile-snapshot E2E harness verifies
+  `@gitclaw /profile snapshot` produces a body-free composite profile
+  fingerprint across the profile manifest, soul snapshot, memory snapshot,
+  skill snapshot, and tool snapshot. The same issue then receives a live
+  GitHub Models follow-up that proves `repo-reader` selection, prompt-visible
   `gitclaw.search_files`, usage telemetry, and repository-search fixture
   recovery.
 - A `gh`-driven profile-manifest E2E harness verifies

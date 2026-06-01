@@ -222,12 +222,14 @@ func runProfileCommand(args []string) error {
 		return runProfileCatalogCommand(args[1:])
 	case "show", "verify", "list":
 		return runProfileShowCommand(args[1:])
+	case "snapshot", "snapshots", "fingerprint", "fingerprints", "lock", "lockfile":
+		return runProfileSnapshotCommand(args[1:])
 	case "manifest", "portability", "portable", "export-plan", "export", "package-plan", "distribution":
 		return runProfileManifestCommand(args[1:])
 	case "risk", "risk-audit":
 		return runProfileRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw profile [catalog|show|verify|list|manifest|export-plan|risk]")
+		return fmt.Errorf("usage: gitclaw profile [catalog|show|verify|list|snapshot|manifest|export-plan|risk]")
 	}
 }
 
@@ -260,6 +262,22 @@ func runProfileShowCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderProfileCLIReport(cfg, repoContext))
+	return nil
+}
+
+func runProfileSnapshotCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown profile snapshot argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "profile snapshot"}}, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderProfileSnapshotCLIReport(cfg, repoContext))
 	return nil
 }
 

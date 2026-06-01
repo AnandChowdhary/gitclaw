@@ -41,6 +41,7 @@ go run ./cmd/gitclaw prompt compression
 go run ./cmd/gitclaw prompt risk
 go run ./cmd/gitclaw diffs risk
 go run ./cmd/gitclaw profile catalog
+go run ./cmd/gitclaw profile snapshot
 go run ./cmd/gitclaw profile manifest
 go run ./cmd/gitclaw profile risk
 go run ./cmd/gitclaw models catalog
@@ -554,6 +555,7 @@ gitclaw workspace risk
 gitclaw workspace verify
 gitclaw profile catalog
 gitclaw profile show
+gitclaw profile snapshot
 gitclaw profile manifest
 gitclaw profile export-plan
 gitclaw profile risk
@@ -574,6 +576,13 @@ agent profile. It maps profile commands and layers across identity, soul,
 memory, skills, tools, models, proactive jobs, channels, backups, and sessions
 while keeping raw profile files, issue/comment bodies, prompts, tool outputs,
 credentials, sessions, and backup payloads out of the report.
+
+`gitclaw profile snapshot` is the composite body-free fingerprint for the
+profile envelope. It ties the profile manifest, soul snapshot, memory
+snapshot, skill snapshot, and tool snapshot together with one profile snapshot
+hash while keeping raw profile files, skills, memories, tool outputs,
+issue/comment bodies, sessions, backups, credentials, and secret values out of
+the report.
 
 `gitclaw workspace catalog` is the compact discovery view for the GitHub
 Actions checkout workspace. It maps workspace commands, policy/spec files, git
@@ -765,6 +774,7 @@ scripts/e2e/github-secrets-risk-report.sh
 scripts/e2e/github-plugins-risk-report.sh
 scripts/e2e/github-plugins-mcp-report.sh
 scripts/e2e/github-profile-catalog-report.sh
+scripts/e2e/github-profile-snapshot-report.sh
 scripts/e2e/github-profile-risk-report.sh
 scripts/e2e/github-channel-message.sh
 scripts/e2e/github-channels-info-report.sh
