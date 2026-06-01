@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T18:21:55Z",
+  "generated_at": "2026-06-01T18:37:21Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 507,
+  "count": 508,
   "issues": [
     {
       "number": 3,
@@ -6380,6 +6380,18 @@
       ],
       "comment_count": 2,
       "transcript_messages": 3
+    },
+    {
+      "number": 579,
+      "title": "GitClaw checkpoint rehearsal E2E 20260601t183556z",
+      "path": "issues/000579.json",
+      "backup_generated_at": "2026-06-01T18:37:20Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }
