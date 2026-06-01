@@ -1589,12 +1589,25 @@ memory validation rollup, then posts a body-free receipt in the source
 conversation. Duplicate open memory proposal issues are suppressed by marker
 and proposal id.
 
+The memory proposal action also accepts `--notify-route <route>` and
+`--notify-routes <a,b>`. When present, GitClaw resolves reviewed channel routes
+from `.gitclaw/channels/routes.yaml`, queues one metadata-safe
+`gitclaw:channel-outbound` notification per destination, and records only
+counts and hashes in the source receipt. The channel notification body may name
+the safe proposal id, review issue, source issue, target kind/path, validation
+status, and review boundary, but it must not copy raw source request text,
+candidate memory, existing memory bodies, or route names. Provider delivery
+remains outside the action and is handled by `gitclaw channel-outbox` plus
+`gitclaw channel-delivery`.
+
 The memory proposal action does not write `.gitclaw/MEMORY.md`, does not write
 `.gitclaw/memory/*.md`, does not generate candidate memory, does not copy raw
 issue/comment text into the proposal issue or receipt, and does not call a
-model. It is a GitHub-native review queue entry: after review, a maintainer can
-draft compact memory on a normal branch, run memory validation/verification,
-and let the memory affect future prompts only through a reviewed git change.
+model. When channel notifications are requested, it still does not call
+provider APIs. It is a GitHub-native review queue entry: after review, a
+maintainer can draft compact memory on a normal branch, run memory
+validation/verification, and let the memory affect future prompts only through
+a reviewed git change.
 
 When called as `@gitclaw /memory rehearse --target <target> --id <id>`,
 GitClaw performs the issue-native memory rehearsal action. It opens or reuses a
@@ -8774,6 +8787,14 @@ examples/workflows/gitclaw.yml
   runs a live GitHub Models follow-up proving repo-local skill selection,
   prompt-visible repository search tool usage, and usage telemetry after the
   deterministic issue action.
+- A `gh`-driven memory-remember channel-notify E2E harness verifies
+  the notify-route form of `@gitclaw /memory remember` opens the same
+  body-free memory proposal issue, queues a reviewed Slack/Telegram channel
+  notification through the routebook and channel issue, suppresses duplicate
+  outbound comments, exposes pending provider work through `channel-outbox`,
+  avoids raw memory/source/route leakage, and still runs a live GitHub Models
+  follow-up proving repo-local skill selection, prompt-visible repository
+  search tool usage, and usage telemetry.
 - A `gh`-driven memory-rehearse E2E harness verifies
   `@gitclaw /memory rehearse --target long-term --id <id>` opens a labeled
   GitHub memory rehearsal issue, posts a source receipt, suppresses duplicate

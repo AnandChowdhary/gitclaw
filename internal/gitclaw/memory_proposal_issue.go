@@ -18,6 +18,8 @@ type MemoryProposalIssueRequest struct {
 	Command            string
 	Subcommand         string
 	ProposalID         string
+	NotifyRoutes       []string
+	NotifyRoutesSHA    string
 	Target             memoryPromoteTarget
 	TargetPresent      bool
 	TargetSHA          string
@@ -39,10 +41,24 @@ type MemoryProposalIssueRequest struct {
 }
 
 type MemoryProposalIssueResult struct {
-	IssueNumber int
-	IssueURL    string
-	Created     bool
-	Duplicate   bool
+	IssueNumber         int
+	IssueURL            string
+	Created             bool
+	Duplicate           bool
+	ChannelNotification MemoryProposalChannelNotification
+}
+
+type MemoryProposalChannelNotification struct {
+	Requested           bool
+	Routes              int
+	Queued              int
+	Duplicates          int
+	TargetIssuesCreated int
+	MessageSHA          string
+	BodySHA             string
+	BodyBytes           int
+	BodyLines           int
+	Destinations        []ChannelBroadcastDestinationResult
 }
 
 func IsMemoryProposalIssueRequest(ev Event, cfg Config) bool {
@@ -67,7 +83,7 @@ func BuildMemoryProposalIssueRequest(ev Event, cfg Config, repoContext RepoConte
 		return MemoryProposalIssueRequest{}, fmt.Errorf("missing memory proposal issue command")
 	}
 	sourceText := activeRequestText(ev)
-	targetText, proposalID, err := parseMemoryProposalIssueArgs(fields[2:], sourceText)
+	targetText, proposalID, notifyRoutes, err := parseMemoryProposalIssueArgs(fields[2:], sourceText)
 	if err != nil {
 		return MemoryProposalIssueRequest{}, err
 	}
@@ -96,6 +112,8 @@ func BuildMemoryProposalIssueRequest(ev Event, cfg Config, repoContext RepoConte
 		Command:            fields[0],
 		Subcommand:         strings.ToLower(strings.Trim(fields[1], " \t\r\n.,:;!?")),
 		ProposalID:         proposalID,
+		NotifyRoutes:       normalizeChannelBroadcastRoutes(notifyRoutes),
+		NotifyRoutesSHA:    channelBroadcastRoutesHash(notifyRoutes),
 		Target:             target,
 		TargetPresent:      targetFile.Present,
 		TargetSHA:          targetFile.SHA,
@@ -115,6 +133,39 @@ func BuildMemoryProposalIssueRequest(ev Event, cfg Config, repoContext RepoConte
 		SourceLines:        lineCount(sourceText),
 		SourceKind:         sourceKind,
 	}, nil
+}
+
+func RunMemoryProposalChannelNotification(ctx context.Context, cfg Config, github ChannelSendGitHubClient, req MemoryProposalIssueRequest, result MemoryProposalIssueResult) (MemoryProposalChannelNotification, error) {
+	notification := MemoryProposalChannelNotification{
+		Requested: len(req.NotifyRoutes) > 0,
+		Routes:    len(req.NotifyRoutes),
+	}
+	if len(req.NotifyRoutes) == 0 {
+		return notification, nil
+	}
+	if result.IssueNumber <= 0 {
+		return notification, fmt.Errorf("missing memory proposal issue for channel notification")
+	}
+	body := RenderMemoryProposalChannelNotificationBody(req, result)
+	messageID := memoryProposalChannelNotificationMessageID(req)
+	broadcast, err := RunChannelBroadcast(ctx, cfg, github, ChannelBroadcastOptions{
+		Repo:      req.Repo,
+		Routes:    req.NotifyRoutes,
+		MessageID: messageID,
+		Body:      body,
+	})
+	if err != nil {
+		return notification, err
+	}
+	notification.Queued = broadcast.Queued
+	notification.Duplicates = broadcast.Duplicates
+	notification.TargetIssuesCreated = broadcast.Created
+	notification.MessageSHA = shortDocumentHash(messageID)
+	notification.BodySHA = shortDocumentHash(body)
+	notification.BodyBytes = len(body)
+	notification.BodyLines = lineCount(body)
+	notification.Destinations = broadcast.Destinations
+	return notification, nil
 }
 
 func RunMemoryProposalIssue(ctx context.Context, github MemoryProposalIssueGitHubClient, req MemoryProposalIssueRequest) (MemoryProposalIssueResult, error) {
@@ -200,6 +251,16 @@ func RenderMemoryProposalIssueActionReport(ev Event, req MemoryProposalIssueRequ
 	fmt.Fprintf(&b, "- memory_proposal_issue_created: `%t`\n", result.Created)
 	fmt.Fprintf(&b, "- duplicate_suppressed: `%t`\n", result.Duplicate)
 	fmt.Fprintf(&b, "- memory_proposal_id: `%s`\n", inlineCode(req.ProposalID))
+	fmt.Fprintf(&b, "- channel_notification_requested: `%t`\n", result.ChannelNotification.Requested)
+	fmt.Fprintf(&b, "- channel_notification_routes: `%d`\n", result.ChannelNotification.Routes)
+	fmt.Fprintf(&b, "- channel_notification_queued: `%d`\n", result.ChannelNotification.Queued)
+	fmt.Fprintf(&b, "- channel_notification_duplicates: `%d`\n", result.ChannelNotification.Duplicates)
+	fmt.Fprintf(&b, "- channel_notification_target_issues_created: `%d`\n", result.ChannelNotification.TargetIssuesCreated)
+	fmt.Fprintf(&b, "- channel_notification_routes_sha256_12: `%s`\n", noneIfEmpty(req.NotifyRoutesSHA))
+	fmt.Fprintf(&b, "- channel_notification_message_id_sha256_12: `%s`\n", noneIfEmpty(result.ChannelNotification.MessageSHA))
+	fmt.Fprintf(&b, "- channel_notification_body_sha256_12: `%s`\n", noneIfEmpty(result.ChannelNotification.BodySHA))
+	fmt.Fprintf(&b, "- channel_notification_body_bytes: `%d`\n", result.ChannelNotification.BodyBytes)
+	fmt.Fprintf(&b, "- channel_notification_body_lines: `%d`\n", result.ChannelNotification.BodyLines)
 	fmt.Fprintf(&b, "- normalized_target_kind: `%s`\n", req.Target.Kind)
 	fmt.Fprintf(&b, "- normalized_target_path: `%s`\n", req.Target.Path)
 	fmt.Fprintf(&b, "- target_present: `%t`\n", req.TargetPresent)
@@ -221,6 +282,9 @@ func RenderMemoryProposalIssueActionReport(ev Event, req MemoryProposalIssueRequ
 	fmt.Fprintf(&b, "- raw_source_body_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_candidate_memory_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_existing_memory_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_channel_routes_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_channel_notification_body_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- provider_delivery_performed: `%t`\n", false)
 	fmt.Fprintf(&b, "- memory_file_written: `%t`\n", false)
 	fmt.Fprintf(&b, "- repository_mutation_performed: `%t`\n", false)
 	fmt.Fprintf(&b, "- llm_e2e_required_after_memory_proposal_issue_change: `%t`\n", true)
@@ -231,13 +295,38 @@ func RenderMemoryProposalIssueActionReport(ev Event, req MemoryProposalIssueRequ
 	fmt.Fprintf(&b, "- review proposal issue: `#%d`\n", result.IssueNumber)
 	fmt.Fprintf(&b, "- if accepted, draft a compact memory diff for `%s` on a normal branch\n", req.Target.Path)
 	b.WriteString("- run `gitclaw memory validate`, `gitclaw memory verify`, and a live GitHub Models conversation E2E before promotion\n")
+	if result.ChannelNotification.Requested {
+		b.WriteString("\n### Channel Notifications\n")
+		if len(result.ChannelNotification.Destinations) == 0 {
+			b.WriteString("- none\n")
+		} else {
+			for _, destination := range result.ChannelNotification.Destinations {
+				fmt.Fprintf(
+					&b,
+					"- destination=`%02d` target_issue=`#%d` outbound_comment_id=`%d` target_issue_created=`%t` duplicate_suppressed=`%t` route_sha256_12=`%s` channel=`%s` thread_id_sha256_12=`%s` message_id_sha256_12=`%s` body_sha256_12=`%s`\n",
+					destination.Index,
+					destination.IssueNumber,
+					destination.CommentID,
+					destination.Created,
+					destination.Duplicate,
+					noneIfEmpty(destination.RouteHash),
+					destination.Channel,
+					noneIfEmpty(destination.ThreadHash),
+					noneIfEmpty(destination.MessageHash),
+					noneIfEmpty(destination.BodyHash),
+				)
+			}
+		}
+		b.WriteString("- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`\n")
+	}
 	return strings.TrimSpace(b.String())
 }
 
-func parseMemoryProposalIssueArgs(args []string, sourceText string) (string, string, error) {
+func parseMemoryProposalIssueArgs(args []string, sourceText string) (string, string, []string, error) {
 	target := "long-term"
 	targetSet := false
 	proposalID := ""
+	var notifyRoutes []string
 	for i := 0; i < len(args); i++ {
 		field := strings.TrimSpace(args[i])
 		if field == "" {
@@ -247,19 +336,25 @@ func parseMemoryProposalIssueArgs(args []string, sourceText string) (string, str
 		case "--target":
 			i++
 			if i >= len(args) {
-				return "", "", fmt.Errorf("--target requires a value")
+				return "", "", nil, fmt.Errorf("--target requires a value")
 			}
 			target = cleanMemoryPromoteTarget(args[i])
 			targetSet = true
 		case "--id":
 			i++
 			if i >= len(args) {
-				return "", "", fmt.Errorf("--id requires a value")
+				return "", "", nil, fmt.Errorf("--id requires a value")
 			}
 			proposalID = cleanMemoryProposalID(args[i])
+		case "--notify-route", "--notify-routes", "--channel-route", "--channel-routes":
+			i++
+			if i >= len(args) {
+				return "", "", nil, fmt.Errorf("%s requires a value", field)
+			}
+			notifyRoutes = append(notifyRoutes, splitChannelBroadcastRoutes(args[i])...)
 		default:
 			if strings.HasPrefix(field, "--") {
-				return "", "", fmt.Errorf("unknown memory proposal argument %q", field)
+				return "", "", nil, fmt.Errorf("unknown memory proposal argument %q", field)
 			}
 			if !targetSet {
 				target = cleanMemoryPromoteTarget(field)
@@ -270,7 +365,26 @@ func parseMemoryProposalIssueArgs(args []string, sourceText string) (string, str
 	if proposalID == "" {
 		proposalID = "memory-" + shortDocumentHash(sourceText)
 	}
-	return target, proposalID, nil
+	return target, proposalID, normalizeChannelBroadcastRoutes(notifyRoutes), nil
+}
+
+func RenderMemoryProposalChannelNotificationBody(req MemoryProposalIssueRequest, result MemoryProposalIssueResult) string {
+	var b strings.Builder
+	b.WriteString("GitClaw memory proposal\n\n")
+	fmt.Fprintf(&b, "Review issue: #%d %s\n", result.IssueNumber, result.IssueURL)
+	fmt.Fprintf(&b, "Source issue: #%d %s\n", req.SourceIssueNumber, issueURL(req.Repo, req.SourceIssueNumber))
+	fmt.Fprintf(&b, "Proposal id: %s\n", req.ProposalID)
+	fmt.Fprintf(&b, "Target kind: %s\n", req.Target.Kind)
+	fmt.Fprintf(&b, "Target path: %s\n", req.Target.Path)
+	fmt.Fprintf(&b, "Memory validation: %s\n", req.ValidationStatus)
+	fmt.Fprintf(&b, "Review PR required: %t\n", true)
+	fmt.Fprintf(&b, "Memory file written: %t\n", false)
+	b.WriteString("\nReview the GitHub memory proposal issue before drafting compact memory on a normal code-review branch. This notification did not call a model, generate candidate memory, write memory files, or mutate the repository.")
+	return strings.TrimSpace(b.String())
+}
+
+func memoryProposalChannelNotificationMessageID(req MemoryProposalIssueRequest) string {
+	return fmt.Sprintf("gitclaw-memory-proposal-%s", req.ProposalID)
 }
 
 func cleanMemoryProposalID(id string) string {

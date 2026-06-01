@@ -129,6 +129,7 @@ gitclaw memory timeline
 gitclaw memory list
 gitclaw memory promote-plan [target]
 @gitclaw /memory remember --target <target> --id <id>
+@gitclaw /memory remember --target <target> --id <id> --notify-route <route>
 @gitclaw /memory rehearse --target <target> --id <id>
 gitclaw memory info <path>
 gitclaw memory search <query>
@@ -161,6 +162,9 @@ Trusted issue threads can queue reviewed memory with
 reuses a GitHub proposal issue, records source hashes and memory target
 metadata, and keeps `.gitclaw/MEMORY.md` plus dated notes untouched until a
 human-reviewed branch promotes the change.
+Add `--notify-route <route>` or `--notify-routes <a,b>` to also queue a
+body-safe Slack/Telegram channel notification for that memory proposal through
+the reviewed routebook, channel issue, outbox, and delivery receipt path.
 `@gitclaw /memory rehearse --target long-term --id <id>` opens or reuses a
 dedicated GitHub conversation issue for trying the current memory context
 without generating candidate memory, writing `.gitclaw/` files, or calling a
@@ -1025,6 +1029,7 @@ scripts/e2e/github-memory-provenance-report.sh
 scripts/e2e/github-memory-timeline-report.sh
 scripts/e2e/github-memory-risk-report.sh
 scripts/e2e/github-memory-remember-issue.sh
+scripts/e2e/github-memory-remember-channel-notify.sh
 scripts/e2e/github-migration-risk-report.sh
 scripts/e2e/github-model-catalog-report.sh
 scripts/e2e/github-research-catalog-report.sh
@@ -1260,6 +1265,11 @@ a trusted `@gitclaw /memory remember --target long-term --id <id>` turn opens
 or reuses a GitHub memory proposal issue, keeps candidate/source text out of
 receipts and proposal bodies, suppresses duplicate proposal requests, and then
 continues with a real GitHub Models repo-reader/search follow-up.
+The memory-remember channel-notify harness proves the same durable-memory
+review queue can notify a reviewed Slack/Telegram route with `--notify-route`,
+queue a metadata-safe outbound channel message, suppress duplicate
+notifications, expose pending provider work through `channel-outbox`, and then
+continue with a real GitHub Models repo-reader/search follow-up.
 The memory-rehearse harness covers the conversation side of durable memory: a
 trusted `@gitclaw /memory rehearse --target long-term --id <id>` turn opens or
 reuses a GitHub rehearsal issue, keeps source text and target memory bodies out

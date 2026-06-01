@@ -213,6 +213,17 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		if err != nil {
 			return failStartedTurn(ctx, cfg, github, ev, status, "memory", fmt.Errorf("run memory proposal issue: %w", err))
 		}
+		if len(req.NotifyRoutes) > 0 {
+			channelClient, ok := github.(ChannelSendGitHubClient)
+			if !ok {
+				return failStartedTurn(ctx, cfg, github, ev, status, "memory", fmt.Errorf("github client cannot queue memory proposal channel notifications"))
+			}
+			notification, err := RunMemoryProposalChannelNotification(ctx, cfg, channelClient, req, result)
+			if err != nil {
+				return failStartedTurn(ctx, cfg, github, ev, status, "memory", fmt.Errorf("run memory proposal channel notification: %w", err))
+			}
+			result.ChannelNotification = notification
+		}
 		body := RenderAssistantComment(Marker{
 			RunID:          envFirst("GITHUB_RUN_ID", "local"),
 			EventID:        eventID(ev),

@@ -4031,6 +4031,168 @@ func TestHandleMemoryRememberCommandCreatesProposalIssueWithoutLLM(t *testing.T)
 	}
 }
 
+func TestHandleMemoryRememberCommandQueuesChannelNotificationWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/MEMORY.md", "Stable memory file.\n")
+	writeTestFile(t, root, ".gitclaw/memory/2026-05-29.md", "Daily memory file.\n")
+	writeTestFile(t, root, channelRoutesPath, `routes:
+  - name: e2e-telegram-route
+    channel: telegram
+    thread_id_template: memory-proposal-{message_id}
+    author: gitclaw:test
+`)
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 144,
+			"title": "@gitclaw /memory remember --target long-term --id weekly-memory-channel --notify-route e2e-telegram-route",
+			"body": "Remember a durable weekly ops convention and notify reviewers. Hidden memory proposal token: MEMORY_REMEMBER_NOTIFY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{144: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for memory remember notify action", llm.Calls)
+	}
+	if len(github.Issues) != 2 {
+		t.Fatalf("created issues = %d, want memory proposal issue and channel issue: %#v", len(github.Issues), github.Issues)
+	}
+	proposalIssue := github.Issues[0]
+	channelIssue := github.Issues[1]
+	if !strings.Contains(proposalIssue.Body, memoryProposalIssueMarker) {
+		t.Fatalf("first issue should be memory proposal issue: %#v", proposalIssue)
+	}
+	for _, leaked := range []string{"MEMORY_REMEMBER_NOTIFY_SECRET", "notify reviewers", "e2e-telegram-route"} {
+		if strings.Contains(proposalIssue.Body, leaked) {
+			t.Fatalf("memory proposal issue leaked %q:\n%s", leaked, proposalIssue.Body)
+		}
+	}
+	if !HasChannelThreadMarker(channelIssue.Body) || !strings.Contains(channelIssue.Body, `channel="telegram"`) {
+		t.Fatalf("second issue should be telegram channel issue: %#v", channelIssue)
+	}
+	if hasLabel(github.IssueLabels[channelIssue.Number], cfg.TriggerLabel) {
+		t.Fatalf("channel issue should not carry trigger label: %#v", github.IssueLabels[channelIssue.Number])
+	}
+	if !hasLabel(github.IssueLabels[channelIssue.Number], cfg.ChannelLabel) {
+		t.Fatalf("channel issue missing channel label: %#v", github.IssueLabels[channelIssue.Number])
+	}
+	channelComments := github.CommentsByIssue[channelIssue.Number]
+	if len(channelComments) != 1 {
+		t.Fatalf("channel issue comments = %d, want one notification: %#v", len(channelComments), channelComments)
+	}
+	for _, want := range []string{
+		"gitclaw:channel-outbound",
+		`message_id="gitclaw-memory-proposal-weekly-memory-channel"`,
+		"GitClaw memory proposal",
+		"Review issue: #100 https://github.com/owner/repo/issues/100",
+		"Source issue: #144 https://github.com/owner/repo/issues/144",
+		"Proposal id: weekly-memory-channel",
+		"Target kind: long-term",
+		"Target path: .gitclaw/MEMORY.md",
+		"Memory validation: ok",
+		"Review PR required: true",
+		"Memory file written: false",
+	} {
+		if !strings.Contains(channelComments[0].Body, want) {
+			t.Fatalf("channel notification missing %q:\n%s", want, channelComments[0].Body)
+		}
+	}
+	for _, leaked := range []string{"MEMORY_REMEMBER_NOTIFY_SECRET", "notify reviewers"} {
+		if strings.Contains(channelComments[0].Body, leaked) {
+			t.Fatalf("channel notification leaked %q:\n%s", leaked, channelComments[0].Body)
+		}
+	}
+
+	receipt := github.CommentsByIssue[144][0].Body
+	for _, want := range []string{
+		"GitClaw Memory Proposal Issue Action",
+		"memory_proposal_status: `created`",
+		"channel_notification_requested: `true`",
+		"channel_notification_routes: `1`",
+		"channel_notification_queued: `1`",
+		"channel_notification_duplicates: `0`",
+		"channel_notification_target_issues_created: `1`",
+		"raw_channel_routes_included: `false`",
+		"raw_channel_notification_body_included: `false`",
+		"provider_delivery_performed: `false`",
+		"destination=`01` target_issue=`#101`",
+		"channel=`telegram`",
+	} {
+		if !strings.Contains(receipt, want) {
+			t.Fatalf("memory remember notify receipt missing %q:\n%s", want, receipt)
+		}
+	}
+	for _, leaked := range []string{"MEMORY_REMEMBER_NOTIFY_SECRET", "notify reviewers", "e2e-telegram-route", "gitclaw-memory-proposal-weekly-memory-channel"} {
+		if strings.Contains(receipt, leaked) {
+			t.Fatalf("memory remember notify receipt leaked %q:\n%s", leaked, receipt)
+		}
+	}
+
+	commentEv, err := ParseEvent("issue_comment", []byte(`{
+		"action": "created",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 144,
+			"title": "@gitclaw /memory remember --target long-term --id weekly-memory-channel --notify-route e2e-telegram-route",
+			"body": "Remember a durable weekly ops convention.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"comment": {
+			"id": 90,
+			"body": "@gitclaw /memory remember --target long-term --id weekly-memory-channel --notify-route e2e-telegram-route\nDuplicate memory request hidden token: MEMORY_REMEMBER_NOTIFY_DUPLICATE_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"}
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent comment returned error: %v", err)
+	}
+	if err := Handle(context.Background(), commentEv, cfg, github, llm); err != nil {
+		t.Fatalf("second Handle returned error: %v", err)
+	}
+	if len(github.Issues) != 2 {
+		t.Fatalf("duplicate memory remember notify created another issue: %#v", github.Issues)
+	}
+	if len(github.CommentsByIssue[channelIssue.Number]) != 1 {
+		t.Fatalf("duplicate notification should not queue another outbound comment: %#v", github.CommentsByIssue[channelIssue.Number])
+	}
+	duplicateReceipt := github.CommentsByIssue[144][1].Body
+	for _, want := range []string{
+		"memory_proposal_status: `existing`",
+		"memory_proposal_issue_created: `false`",
+		"duplicate_suppressed: `true`",
+		"channel_notification_queued: `0`",
+		"channel_notification_duplicates: `1`",
+		"outbound_comment_id=`0`",
+	} {
+		if !strings.Contains(duplicateReceipt, want) {
+			t.Fatalf("duplicate memory remember notify receipt missing %q:\n%s", want, duplicateReceipt)
+		}
+	}
+	for _, leaked := range []string{"MEMORY_REMEMBER_NOTIFY_DUPLICATE_SECRET", "e2e-telegram-route"} {
+		if strings.Contains(duplicateReceipt, leaked) {
+			t.Fatalf("duplicate memory remember notify receipt leaked %q:\n%s", leaked, duplicateReceipt)
+		}
+	}
+}
+
 func TestHandleMemoryInfoCommandPostsFocusedReportWithoutLLM(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/MEMORY.md", "MEMORY_INFO_HANDLER_SECRET")
