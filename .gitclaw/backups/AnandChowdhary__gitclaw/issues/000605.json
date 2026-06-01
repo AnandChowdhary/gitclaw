@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T21:33:40Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 605,
+    "title": "GitClaw skill source proposal: e2e-source-notify-20260601t212900z",
+    "body": "\u003c!-- gitclaw:skill-source-proposal-issue id=\"e2e-source-notify-20260601t212900z-review\" name=\"e2e-source-notify-20260601t212900z\" source_ref_sha256_12=\"650af510a38d\" source_issue=\"604\" source_comment_id=\"0\" source_sha256_12=\"a0174fde94b0\" --\u003e\nGitClaw skill source proposal issue.\n\n- proposal_id: e2e-source-notify-20260601t212900z-review\n- source_name: e2e-source-notify-20260601t212900z\n- source_pin_path: .gitclaw/skill-sources/e2e-source-notify-20260601t212900z.yaml\n- proposed_skill_path: .gitclaw/SKILLS/e2e-source-notify-20260601t212900z/SKILL.md\n- source_kind: github\n- source_ref_sha256_12: 650af510a38d\n- trust_level: review-pending\n- install_mode: proposal-only\n- expected_sha256_12: none\n- requires_approval: true\n- remote_fetch_allowed: false\n- existing_source_pin_matches: 0\n- existing_source_pins: 1\n- existing_skill_matches: 0\n- available_skills: 1\n- current_source_risk_status: ok\n- current_source_risk_findings: 0\n- high_risk_findings: 0\n- source_issue: #604\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/604\n- source_comment_id: 0\n- request_kind: issue\n- source_sha256_12: a0174fde94b0\n- source_bytes: 568\n- source_lines: 5\n- review_pr_required: true\n- registry_contact_allowed: false\n- installer_scripts_run: false\n- dependency_install_allowed: false\n- source_pin_file_written: false\n- active_skill_write_performed: false\n- raw_source_ref_included: false\n- raw_source_body_included: false\n- raw_skill_body_included: false\n\nReview the source request, then draft `.gitclaw/skill-sources/e2e-source-notify-20260601t212900z.yaml` on a normal code-review branch if the proposed source pin is worth keeping. GitClaw does not fetch, install, or trust external skill sources from this issue.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw skill source proposal: e2e-source-notify-20260601t212900z\n\n\u003c!-- gitclaw:skill-source-proposal-issue id=\"e2e-source-notify-20260601t212900z-review\" name=\"e2e-source-notify-20260601t212900z\" source_ref_sha256_12=\"650af510a38d\" source_issue=\"604\" source_comment_id=\"0\" source_sha256_12=\"a0174fde94b0\" --\u003e\nGitClaw skill source proposal issue.\n\n- proposal_id: e2e-source-notify-20260601t212900z-review\n- source_name: e2e-source-notify-20260601t212900z\n- source_pin_path: .gitclaw/skill-sources/e2e-source-notify-20260601t212900z.yaml\n- proposed_skill_path: .gitclaw/SKILLS/e2e-source-notify-20260601t212900z/SKILL.md\n- source_kind: github\n- source_ref_sha256_12: 650af510a38d\n- trust_level: review-pending\n- install_mode: proposal-only\n- expected_sha256_12: none\n- requires_approval: true\n- remote_fetch_allowed: false\n- existing_source_pin_matches: 0\n- existing_source_pins: 1\n- existing_skill_matches: 0\n- available_skills: 1\n- current_source_risk_status: ok\n- current_source_risk_findings: 0\n- high_risk_findings: 0\n- source_issue: #604\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/604\n- source_comment_id: 0\n- request_kind: issue\n- source_sha256_12: a0174fde94b0\n- source_bytes: 568\n- source_lines: 5\n- review_pr_required: true\n- registry_contact_allowed: false\n- installer_scripts_run: false\n- dependency_install_allowed: false\n- source_pin_file_written: false\n- active_skill_write_performed: false\n- raw_source_ref_included: false\n- raw_source_body_included: false\n- raw_skill_body_included: false\n\nReview the source request, then draft `.gitclaw/skill-sources/e2e-source-notify-20260601t212900z.yaml` on a normal code-review branch if the proposed source pin is worth keeping. GitClaw does not fetch, install, or trust external skill sources from this issue.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this skill source proposal channel notification review and use the repo-reader skill.\n\nSearch the repository for `skills source proposal channel notify unique search fixture phrase`.\nThe matching repository search result line ends with an all-caps token after the arrow.\nThat token starts with `GITCLAW_SKILLS_SOURCE_NOTIFY_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nThe exact token includes `SKILLS_SOURCE_NOTIFY`; do not insert or remove words.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include the source ref, proposal id, source issue body, channel issue number, route name, account hash, or hidden sentinels.\nDo not include this hidden follow-up token: NOECHO_SKILLS_SOURCE_NOTIFY_FOLLOWUP_20260601t212900z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4596684926,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_SKILLS_SOURCE_NOTIFY_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4596690506,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4596684926,
+      "body": "@gitclaw Continue this skill source proposal channel notification review and use the repo-reader skill.\n\nSearch the repository for `skills source proposal channel notify unique search fixture phrase`.\nThe matching repository search result line ends with an all-caps token after the arrow.\nThat token starts with `GITCLAW_SKILLS_SOURCE_NOTIFY_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nThe exact token includes `SKILLS_SOURCE_NOTIFY`; do not insert or remove words.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include the source ref, proposal id, source issue body, channel issue number, route name, account hash, or hidden sentinels.\nDo not include this hidden follow-up token: NOECHO_SKILLS_SOURCE_NOTIFY_FOLLOWUP_20260601t212900z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T21:32:20Z",
+      "updated_at": "2026-06-01T21:32:20Z"
+    },
+    {
+      "id": 4596690506,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26783338832\" event_id=\"comment-4596684926\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"be30d14b60d709f4c87237d6fc2f2608\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26783338832\" prompt_context_sha256_12=\"0eb18ceb13de\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10951\" usage_completion_tokens=\"12\" usage_total_tokens=\"10963\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_SKILLS_SOURCE_NOTIFY_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T21:33:15Z",
+      "updated_at": "2026-06-01T21:33:15Z"
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T21:32:06Z",
+  "generated_at": "2026-06-01T21:33:41Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 524,
+  "count": 525,
   "issues": [
     {
       "number": 3,
@@ -6598,6 +6598,18 @@
       ],
       "comment_count": 3,
       "transcript_messages": 4
+    },
+    {
+      "number": 605,
+      "title": "GitClaw skill source proposal: e2e-source-notify-20260601t212900z",
+      "path": "issues/000605.json",
+      "backup_generated_at": "2026-06-01T21:33:40Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
