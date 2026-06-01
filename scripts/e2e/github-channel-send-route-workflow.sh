@@ -23,6 +23,12 @@ fi
 if [[ -z "$repo" ]]; then
   repo="$(gh repo view --json nameWithOwner --jq .nameWithOwner)"
 fi
+if [[ -z "${GH_TOKEN:-}" && -z "${GITHUB_TOKEN:-}" ]]; then
+  export GH_TOKEN="$(gh auth token)"
+fi
+if [[ -z "${GITHUB_TOKEN:-}" && -n "${GH_TOKEN:-}" ]]; then
+  export GITHUB_TOKEN="$GH_TOKEN"
+fi
 
 ensure_label() {
   local name="$1"
