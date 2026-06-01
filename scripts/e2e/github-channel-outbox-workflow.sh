@@ -172,10 +172,8 @@ latest_assistant_comment() {
 }
 
 latest_assistant_comment_id() {
-  gh issue view "$issue_number" \
-    --repo "$repo" \
-    --json comments \
-    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .id] | .[-1] // empty'
+  gh api "repos/${repo}/issues/${issue_number}/comments" \
+    --jq '[.[] | select(.body | contains("gitclaw:assistant-turn")) | .id] | .[-1] // empty'
 }
 
 error_count() {
