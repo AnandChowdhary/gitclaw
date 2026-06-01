@@ -162,18 +162,18 @@ for expected in \
   'config_file_present: `true`' \
   'model: `openai/gpt-5-nano`' \
   'run_mode: `read-only`' \
-  'workflows_present: `7`' \
+  'workflows_present: `8`' \
   'context_files_present: `6`' \
   'memory_notes: `1`' \
   'skill_files: `1`' \
-  'e2e_scripts: `221`' \
-  'e2e_live_issue_scripts: `214`' \
-  'e2e_cleanup_scripts: `221`' \
-  'e2e_model_coverage_scripts: `164`' \
-  'e2e_model_followup_scripts: `164`' \
+  'e2e_scripts: `222`' \
+  'e2e_live_issue_scripts: `215`' \
+  'e2e_cleanup_scripts: `222`' \
+  'e2e_model_coverage_scripts: `165`' \
+  'e2e_model_followup_scripts: `165`' \
   'e2e_session_coverage_scripts: `2`' \
   'e2e_backup_gate_scripts: `28`' \
-  'e2e_workflow_dispatch_scripts: `21`' \
+  'e2e_workflow_dispatch_scripts: `22`' \
   'enabled_skills: `1`' \
   'disabled_skills: `0`' \
   'allowlist_blocked_skills: `0`' \
@@ -196,6 +196,7 @@ for expected in \
   '`proactive_prompt`: `ok`' \
   '.gitclaw/config.yml' \
   '.github/workflows/gitclaw.yml' \
+  '.github/workflows/gitclaw-channel-outbox.yml' \
   '.gitclaw/SOUL.md' \
   '.gitclaw/SKILLS/repo-reader/SKILL.md' \
   '.gitclaw/proactive/repo-hygiene.md' \
@@ -246,6 +247,7 @@ for expected in \
   'path=`scripts/e2e/github-tools-snapshot-report.sh`' \
   'path=`scripts/e2e/github-tools-toolsets-info-report.sh`' \
   'path=`scripts/e2e/github-workspace-catalog-report.sh`' \
+  'path=`scripts/e2e/github-channel-outbox-workflow.sh`' \
   'path=`scripts/e2e/github-doctor-report.sh`' \
   'model_coverage=`true`' \
   'model_followup=`true`' \

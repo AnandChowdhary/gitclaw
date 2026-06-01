@@ -54,8 +54,8 @@ func TestRenderChannelRiskReportFlagsMirroredMessageWithoutBodies(t *testing.T) 
 		"verification_scope: `workflow_dispatch_channel_bridge`",
 		"supported_providers: `3`",
 		"scanned_providers: `3`",
-		"scanned_workflows: `4`",
-		"present_workflows: `4`",
+		"scanned_workflows: `5`",
+		"present_workflows: `5`",
 		"channel_message_comments: `1`",
 		"channel_message_comments_scanned: `1`",
 		"surfaces_with_risk_findings: `1`",
@@ -104,8 +104,8 @@ func TestChannelsRiskCommandReportsCurrentBridgeWithoutBodies(t *testing.T) {
 		"channel_risk_status: `ok`",
 		"verification_scope: `workflow_dispatch_channel_bridge`",
 		"supported_providers: `3`",
-		"scanned_workflows: `4`",
-		"present_workflows: `4`",
+		"scanned_workflows: `5`",
+		"present_workflows: `5`",
 		"channel_message_comments: `0`",
 		"channel_risk_findings: `0`",
 		"raw_bodies_included: `false`",
@@ -114,6 +114,7 @@ func TestChannelsRiskCommandReportsCurrentBridgeWithoutBodies(t *testing.T) {
 		"llm_e2e_required_after_channel_risk_change: `true`",
 		"kind=`provider` name=`slack`",
 		"kind=`workflow` name=`gateway`",
+		"kind=`workflow` name=`outbox`",
 		"risk_codes=`none`",
 		"### Risk Findings",
 		"- none",
@@ -295,5 +296,27 @@ jobs:
     timeout-minutes: 15
     steps:
       - run: go run ./cmd/gitclaw channel-delivery
+`)
+	writeTestFile(t, root, ".github/workflows/gitclaw-channel-outbox.yml", `name: GitClaw Channel Outbox
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        required: true
+      account_id:
+        required: true
+      issue_number:
+        required: true
+      include_body:
+        required: false
+      limit:
+        required: false
+permissions:
+  issues: read
+jobs:
+  outbox:
+    timeout-minutes: 10
+    steps:
+      - run: go run ./cmd/gitclaw channel-outbox --out "$RUNNER_TEMP/outbox.json"
 `)
 }

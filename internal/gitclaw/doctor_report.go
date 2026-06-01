@@ -261,7 +261,7 @@ func inspectDoctorE2ESurface(root string) doctorE2ESurface {
 			Bytes:            len(body),
 			Lines:            lineCount(text),
 			SHA:              shortDocumentHash(text),
-			CreatesIssue:     strings.Contains(text, "gh issue create"),
+			CreatesIssue:     strings.Contains(text, "gh issue create") || strings.Contains(text, "gitclaw-doctor-live-issue"),
 			HasCleanup:       strings.Contains(text, "trap cleanup EXIT") && strings.Contains(text, "gh issue close"),
 			ModelCoverage:    doctorScriptHasModelCoverage(text),
 			ModelFollowup:    doctorScriptHasModelFollowupCoverage(text),

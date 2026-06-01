@@ -164,7 +164,7 @@ for expected in \
   'verification_scope: `workflow_dispatch_channel_bridge`' \
   'supported_providers: `3`' \
   'scanned_providers: `3`' \
-  'scanned_workflows: `4`' \
+  'scanned_workflows: `5`' \
   'present_workflows: `4`' \
   'channel_message_comments: `0`' \
   'channel_message_comments_scanned: `0`' \

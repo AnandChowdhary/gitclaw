@@ -216,6 +216,12 @@ type ChannelDeliveryGitHubClient interface {
 	AddIssueLabels(ctx context.Context, repo string, issueNumber int, labels []string) error
 }
 
+type ChannelOutboxGitHubClient interface {
+	GetIssue(ctx context.Context, repo string, issueNumber int) (Issue, error)
+	ListOpenIssues(ctx context.Context, repo string, labels []string, limit int) ([]Issue, error)
+	ListIssueComments(ctx context.Context, repo string, issueNumber int) ([]Comment, error)
+}
+
 type ProactiveGitHubClient interface {
 	CreateIssue(ctx context.Context, repo, title, body string, labels []string) (Issue, error)
 	ListOpenIssues(ctx context.Context, repo string, labels []string, limit int) ([]Issue, error)

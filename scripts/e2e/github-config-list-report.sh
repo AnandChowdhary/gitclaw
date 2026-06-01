@@ -154,7 +154,7 @@ for expected in \
   'skills_disabled_configured: `0`' \
   'tools_allowed_configured: `0`' \
   'tools_disabled_configured: `0`' \
-  'workflows_present: `7`' \
+  'workflows_present: `8`' \
   'slash_commands: `34`' \
   '/agents' \
   '/artifacts' \
@@ -188,6 +188,7 @@ for expected in \
   '.github/workflows/gitclaw-channel-ingest.yml' \
   '.github/workflows/gitclaw-channel-state.yml' \
   '.github/workflows/gitclaw-channel-gateway.yml' \
+  '.github/workflows/gitclaw-channel-outbox.yml' \
   '.github/workflows/gitclaw-channel-delivery.yml'; do
   grep -Fq "$expected" <<<"$comments" || die "config list report missing ${expected}"
 done

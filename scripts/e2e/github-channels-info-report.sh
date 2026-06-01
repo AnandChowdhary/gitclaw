@@ -190,9 +190,11 @@ for expected in \
   '`state` path=`.github/workflows/gitclaw-channel-state.yml` present=`true`' \
   '`gateway` path=`.github/workflows/gitclaw-channel-gateway.yml` present=`true`' \
   '`delivery` path=`.github/workflows/gitclaw-channel-delivery.yml` present=`true`' \
+  '`outbox` path=`.github/workflows/gitclaw-channel-outbox.yml` present=`true`' \
   'gitclaw channel-ingest --channel telegram' \
   'gitclaw channel-state --channel telegram' \
   'gitclaw channel-gateway --channel telegram' \
+  'gitclaw channel-outbox --channel telegram' \
   'gitclaw channel-delivery --channel telegram' \
   'dispatch id: `telegram-<message_id>`'; do
   grep -Fq "$expected" <<<"$comments" || die "channels info report missing ${expected}"

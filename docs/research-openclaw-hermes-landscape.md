@@ -2628,6 +2628,14 @@ receipt path live: source assistant verification, hash-only provider receipt
 state, duplicate receipt suppression, and normal GitHub Models repo-reader/search
 continuation on the receipt state issue without leaking source reply bodies.
 
+2026-06-01 channel outbox follow-up: a channel bridge is not complete if it can
+only ingest provider messages or print bridge reports. The OpenClaw/Hermes shape
+has an explicit outbound edge: discover ready assistant replies, send them
+through the provider, and record a receipt. GitClaw's no-server equivalent is a
+`channel-outbox` workflow that exposes pending assistant comments to the runner,
+keeps logs/body-free metadata safe by default, and relies on
+`channel-delivery` receipts to make retries idempotent.
+
 Hermes' session docs also expose a practical backup primitive:
 `hermes sessions export backup.jsonl` writes conversation metadata and messages
 as durable JSONL. GitClaw should preserve the same principle, but use GitHub

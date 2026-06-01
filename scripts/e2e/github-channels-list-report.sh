@@ -161,6 +161,9 @@ for expected in \
   'gateway_workflow_inputs: `6`' \
   'delivery_workflow_present: `true`' \
   'delivery_workflow_inputs: `6`' \
+  'outbox_workflow_present: `true`' \
+  'outbox_workflow_permissions_issues_read: `true`' \
+  'outbox_workflow_inputs: `5`' \
   'channel_thread_issue: `false`' \
   'channel_message_comments_now: `0`' \
   'supported_providers: `telegram, slack, generic`' \
@@ -172,6 +175,7 @@ for expected in \
   'generic' \
   'gitclaw channel-ingest' \
   'gitclaw channel-gateway' \
+  'gitclaw channel-outbox' \
   'gitclaw channel-delivery' \
   'dispatch id: `<channel>-<message_id>`'; do
   grep -Fq "$expected" <<<"$comments" || die "channels list report missing ${expected}"

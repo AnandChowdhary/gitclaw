@@ -1,0 +1,66 @@
+name: GitClaw Channel Outbox
+
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: External channel name, such as telegram or slack
+        required: true
+      account_id:
+        description: External channel account, bot, or workspace id
+        required: true
+      issue_number:
+        description: GitHub channel-thread issue number to scan for assistant replies
+        required: true
+      include_body:
+        description: Write assistant reply bodies into the local outbox JSON file
+        required: false
+        default: "false"
+      limit:
+        description: Maximum pending replies to return
+        required: false
+        default: "50"
+
+concurrency:
+  group: gitclaw-channel-outbox-${{ inputs.channel }}-${{ inputs.account_id }}-${{ inputs.issue_number }}
+  cancel-in-progress: false
+
+jobs:
+  outbox:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      issues: read
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: stable
+
+      - id: outbox
+        run: |
+          set -euo pipefail
+          include_body="${GITCLAW_CHANNEL_OUTBOX_INCLUDE_BODY:-false}"
+          if [[ "$include_body" != "true" && "$include_body" != "false" ]]; then
+            echo "include_body must be true or false" >&2
+            exit 1
+          fi
+          limit="${GITCLAW_CHANNEL_OUTBOX_LIMIT:-50}"
+          if ! [[ "$limit" =~ ^[0-9]+$ ]] || [[ "$limit" -lt 1 ]] || [[ "$limit" -gt 100 ]]; then
+            echo "limit must be an integer from 1 to 100" >&2
+            exit 1
+          fi
+          go run ./cmd/gitclaw channel-outbox \
+            --out "${RUNNER_TEMP}/gitclaw-channel-outbox.json"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
+          GITCLAW_CHANNEL: ${{ inputs.channel }}
+          GITCLAW_CHANNEL_ACCOUNT_ID: ${{ inputs.account_id }}
+          GITCLAW_CHANNEL_ISSUE_NUMBER: ${{ inputs.issue_number }}
+          GITCLAW_CHANNEL_OUTBOX_INCLUDE_BODY: ${{ inputs.include_body }}
+          GITCLAW_CHANNEL_OUTBOX_LIMIT: ${{ inputs.limit }}

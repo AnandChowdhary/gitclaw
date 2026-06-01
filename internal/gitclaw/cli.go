@@ -43,6 +43,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runChannelGatewayCommand(ctx, args[1:])
 	case "channel-delivery":
 		return runChannelDeliveryCommand(ctx, args[1:])
+	case "channel-outbox":
+		return runChannelOutboxCommand(ctx, args[1:])
 	case "channels", "channel":
 		return runChannelsCommand(args[1:])
 	case "approvals", "approval":
@@ -4675,6 +4677,112 @@ func runChannelDeliveryCommand(ctx context.Context, args []string) error {
 		result.AccountHash,
 		result.ExternalMessageHash,
 		result.StateIssueURL,
+	)
+	return nil
+}
+
+func runChannelOutboxCommand(ctx context.Context, args []string) error {
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	opts := ChannelOutboxOptions{
+		Repo:        os.Getenv("GITHUB_REPOSITORY"),
+		Channel:     os.Getenv("GITCLAW_CHANNEL"),
+		AccountID:   os.Getenv("GITCLAW_CHANNEL_ACCOUNT_ID"),
+		OutPath:     os.Getenv("GITCLAW_CHANNEL_OUTBOX_PATH"),
+		IncludeBody: parseBoolEnv(os.Getenv("GITCLAW_CHANNEL_OUTBOX_INCLUDE_BODY")),
+	}
+	if value := os.Getenv("GITCLAW_CHANNEL_ISSUE_NUMBER"); value != "" {
+		parsed, err := parsePositiveInt(value, "GITCLAW_CHANNEL_ISSUE_NUMBER")
+		if err != nil {
+			return err
+		}
+		opts.IssueNumber = parsed
+	}
+	if value := os.Getenv("GITCLAW_CHANNEL_OUTBOX_LIMIT"); value != "" {
+		parsed, err := parsePositiveInt(value, "GITCLAW_CHANNEL_OUTBOX_LIMIT")
+		if err != nil {
+			return err
+		}
+		opts.Limit = parsed
+	}
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--repo requires a value")
+			}
+			opts.Repo = args[i+1]
+			i++
+		case "--channel":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--channel requires a value")
+			}
+			opts.Channel = args[i+1]
+			i++
+		case "--account-id":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--account-id requires a value")
+			}
+			opts.AccountID = args[i+1]
+			i++
+		case "--issue-number":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--issue-number requires a value")
+			}
+			parsed, err := parsePositiveInt(args[i+1], "--issue-number")
+			if err != nil {
+				return err
+			}
+			opts.IssueNumber = parsed
+			i++
+		case "--out":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--out requires a value")
+			}
+			opts.OutPath = args[i+1]
+			i++
+		case "--limit":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--limit requires a value")
+			}
+			parsed, err := parsePositiveInt(args[i+1], "--limit")
+			if err != nil {
+				return err
+			}
+			opts.Limit = parsed
+			i++
+		case "--include-body":
+			opts.IncludeBody = true
+		case "--no-include-body":
+			opts.IncludeBody = false
+		default:
+			return fmt.Errorf("unknown channel-outbox argument %q", args[i])
+		}
+	}
+	token := githubTokenFromEnv()
+	if token == "" {
+		return fmt.Errorf("missing GH_TOKEN or GITHUB_TOKEN")
+	}
+	result, err := RunChannelOutbox(ctx, cfg, NewRESTGitHubClient(token), opts)
+	if err != nil {
+		return err
+	}
+	if err := writeChannelOutboxOutputs(result); err != nil {
+		return err
+	}
+	fmt.Printf(
+		"channel_outbox issue=%d state_issue=%d assistant_comments=%d delivered=%d pending=%d returned=%d body_included=%t account_sha256_12=%s out=%s\n",
+		result.IssueNumber,
+		result.StateIssueNumber,
+		result.SourceAssistantComments,
+		result.DeliveredAssistantComments,
+		result.PendingMessages,
+		result.MessagesReturned,
+		result.BodyIncluded,
+		result.AccountHash,
+		inlineCodeOrNone(result.OutPath),
 	)
 	return nil
 }

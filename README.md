@@ -673,6 +673,11 @@ still proves real repo-reader search.
 The live channels-verify harness applies the same model/tool gate to the
 positive bridge health check, so workflow permission/input changes prove both
 deterministic readiness and real repo-reader search.
+The channel outbox path makes channels more than reports:
+`gitclaw channel-outbox --channel telegram --account-id <id> --issue-number <issue> --out outbox.json`
+returns undelivered assistant replies for a provider gateway, while
+`gitclaw channel-delivery` records the receipt after Telegram, Slack, or another
+sender posts the message.
 The live proactive-report, proactive-list, and proactive-schedule harnesses use
 the same two-proof shape for scheduled work: body-free workflow/prompt metadata
 first, then a normal GitHub Models repo-reader/search follow-up.
@@ -855,6 +860,15 @@ scripts/e2e/github-tools-risk-report.sh
 scripts/e2e/github-workspace-catalog-report.sh
 scripts/e2e/github-workspace-risk-report.sh
 scripts/e2e/github-channels-risk-report.sh
+scripts/e2e/github-channels-report.sh
+scripts/e2e/github-channels-list-report.sh
+scripts/e2e/github-channels-verify-report.sh
+scripts/e2e/github-channel-ingest.sh
+scripts/e2e/github-channel-state.sh
+scripts/e2e/github-channel-state-workflow.sh
+scripts/e2e/github-channel-gateway-workflow.sh
+scripts/e2e/github-channel-delivery-workflow.sh
+scripts/e2e/github-channel-outbox-workflow.sh
 scripts/e2e/github-config-risk-report.sh
 scripts/e2e/github-doctor-report.sh
 scripts/e2e/github-doctor-list-report.sh
@@ -941,6 +955,11 @@ The channel-delivery workflow harness now proves outbound receipt safety:
 source assistant verification, hash-only provider message receipts, duplicate
 receipt suppression, and two normal model/tool turns without leaking the source
 assistant body.
+The channel-outbox workflow harness proves the missing outbound half of the
+bridge: a real channel-ingested message gets a GitHub Models/tool reply, the
+outbox exposes only pending assistant comments for provider delivery, delivery
+receipts suppress retries, and a follow-up issue comment still makes a real
+model/tool call.
 The proactive-report, proactive-list, and proactive-schedule harnesses now
 require the deterministic scheduled-job inventory to be followed by a real
 issue-comment GitHub Models turn that selects `repo-reader`, exposes

@@ -198,6 +198,7 @@ func renderChannelRiskReport(ev Event, cfg Config, comments []Comment, includeIs
 	writeChannelWorkflowRiskCard(&b, "state", surface.StateWorkflow, 4, false, true)
 	writeChannelWorkflowRiskCard(&b, "gateway", surface.GatewayWorkflow, 6, true, true)
 	writeChannelWorkflowRiskCard(&b, "delivery", surface.DeliveryWorkflow, 6, false, true)
+	writeChannelWorkflowRiskCard(&b, "outbox", surface.OutboxWorkflow, 5, false, false)
 
 	b.WriteString("\n### Channel Message Risk Cards\n")
 	wroteMessage := false
@@ -224,7 +225,7 @@ func BuildChannelRiskReport(cfg Config, comments []Comment) ChannelRiskReport {
 		VerificationScope:                    "workflow_dispatch_channel_bridge",
 		SupportedProviders:                   len(channelProviderCatalog),
 		ScannedProviders:                     len(channelProviderCatalog),
-		ScannedWorkflows:                     4,
+		ScannedWorkflows:                     5,
 		ChannelMessageComments:               countChannelMessages(comments),
 		WakeStrategy:                         "workflow_dispatch",
 		StateStorage:                         "gitclaw:channel-state issue",
@@ -245,6 +246,7 @@ func BuildChannelRiskReport(cfg Config, comments []Comment) ChannelRiskReport {
 		{name: "state", workflow: surface.StateWorkflow, requiredInputs: 4, requiresActionsWrite: false, requiresIssuesWrite: true},
 		{name: "gateway", workflow: surface.GatewayWorkflow, requiredInputs: 6, requiresActionsWrite: true, requiresIssuesWrite: true},
 		{name: "delivery", workflow: surface.DeliveryWorkflow, requiredInputs: 6, requiresActionsWrite: false, requiresIssuesWrite: true},
+		{name: "outbox", workflow: surface.OutboxWorkflow, requiredInputs: 5, requiresActionsWrite: false, requiresIssuesWrite: false},
 	}
 	for _, item := range workflows {
 		if item.workflow.Present {

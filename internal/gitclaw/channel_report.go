@@ -11,6 +11,7 @@ const channelIngestWorkflowPath = ".github/workflows/gitclaw-channel-ingest.yml"
 const channelStateWorkflowPath = ".github/workflows/gitclaw-channel-state.yml"
 const channelGatewayWorkflowPath = ".github/workflows/gitclaw-channel-gateway.yml"
 const channelDeliveryWorkflowPath = ".github/workflows/gitclaw-channel-delivery.yml"
+const channelOutboxWorkflowPath = ".github/workflows/gitclaw-channel-outbox.yml"
 
 var channelReportProviders = []string{
 	"telegram",
@@ -67,6 +68,7 @@ type channelSurface struct {
 	StateWorkflow    channelWorkflow
 	GatewayWorkflow  channelWorkflow
 	DeliveryWorkflow channelWorkflow
+	OutboxWorkflow   channelWorkflow
 }
 
 type channelWorkflow struct {
@@ -78,6 +80,7 @@ type channelWorkflow struct {
 	SHA              string
 	WorkflowDispatch bool
 	ActionsWrite     bool
+	IssuesRead       bool
 	IssuesWrite      bool
 	Inputs           int
 }
@@ -152,6 +155,11 @@ func renderChannelReport(ev Event, cfg Config, comments []Comment, includeIssue 
 	fmt.Fprintf(&b, "- delivery_workflow_dispatch_trigger: `%t`\n", surface.DeliveryWorkflow.WorkflowDispatch)
 	fmt.Fprintf(&b, "- delivery_workflow_permissions_issues_write: `%t`\n", surface.DeliveryWorkflow.IssuesWrite)
 	fmt.Fprintf(&b, "- delivery_workflow_inputs: `%d`\n", surface.DeliveryWorkflow.Inputs)
+	fmt.Fprintf(&b, "- outbox_workflow_path: `%s`\n", channelOutboxWorkflowPath)
+	fmt.Fprintf(&b, "- outbox_workflow_present: `%t`\n", surface.OutboxWorkflow.Present)
+	fmt.Fprintf(&b, "- outbox_workflow_dispatch_trigger: `%t`\n", surface.OutboxWorkflow.WorkflowDispatch)
+	fmt.Fprintf(&b, "- outbox_workflow_permissions_issues_read: `%t`\n", surface.OutboxWorkflow.IssuesRead)
+	fmt.Fprintf(&b, "- outbox_workflow_inputs: `%d`\n", surface.OutboxWorkflow.Inputs)
 	if includeIssue {
 		fmt.Fprintf(&b, "- channel_thread_issue: `%t`\n", HasChannelThreadMarker(ev.Issue.Body))
 		fmt.Fprintf(&b, "- channel_message_comments_now: `%d`\n", channelMessages)
@@ -225,6 +233,19 @@ func renderChannelReport(ev Event, cfg Config, comments []Comment, includeIssue 
 			surface.DeliveryWorkflow.SHA,
 		)
 	}
+	if surface.OutboxWorkflow.Present {
+		fmt.Fprintf(
+			&b,
+			"- `%s` bytes=`%d` lines=`%d` workflow_dispatch=`%t` issues_read=`%t` inputs=`%d` sha256_12=`%s`\n",
+			surface.OutboxWorkflow.Path,
+			surface.OutboxWorkflow.Bytes,
+			surface.OutboxWorkflow.Lines,
+			surface.OutboxWorkflow.WorkflowDispatch,
+			surface.OutboxWorkflow.IssuesRead,
+			surface.OutboxWorkflow.Inputs,
+			surface.OutboxWorkflow.SHA,
+		)
+	}
 
 	b.WriteString("\n### Providers\n")
 	for _, provider := range channelReportProviders {
@@ -235,6 +256,7 @@ func renderChannelReport(ev Event, cfg Config, comments []Comment, includeIssue 
 	b.WriteString("- `gitclaw channel-ingest --channel <provider> --thread-id <thread> --message-id <message> --body <text>`\n")
 	b.WriteString("- `gitclaw channel-state --channel <provider> --account-id <account> --offset <offset>` stores durable provider offsets as hashes\n")
 	b.WriteString("- `gitclaw channel-gateway --channel <provider> --account-id <account> [--renew]` records a gateway lease and can self-renew through workflow dispatch\n")
+	b.WriteString("- `gitclaw channel-outbox --channel <provider> --account-id <account> --issue-number <issue> --out <file>` returns pending assistant replies for delivery\n")
 	b.WriteString("- `gitclaw channel-delivery --channel <provider> --account-id <account> --issue-number <issue> --comment-id <comment> --external-message-id <message>` records outbound delivery receipts\n")
 	b.WriteString("- one canonical issue per `channel + thread_id`\n")
 	b.WriteString("- one mirrored comment per `channel + message_id`\n")
@@ -303,12 +325,14 @@ func renderChannelInfoReport(ev Event, cfg Config, comments []Comment, provider 
 	writeChannelWorkflowInfo(&b, "state", surface.StateWorkflow)
 	writeChannelWorkflowInfo(&b, "gateway", surface.GatewayWorkflow)
 	writeChannelWorkflowInfo(&b, "delivery", surface.DeliveryWorkflow)
+	writeChannelWorkflowInfo(&b, "outbox", surface.OutboxWorkflow)
 
 	b.WriteString("\n### Commands\n")
 	if ok {
 		fmt.Fprintf(&b, "- `gitclaw channel-ingest --channel %s --thread-id <thread> --message-id <message> --body <text>`\n", info.Name)
 		fmt.Fprintf(&b, "- `gitclaw channel-state --channel %s --account-id <account> --offset <offset>`\n", info.Name)
 		fmt.Fprintf(&b, "- `gitclaw channel-gateway --channel %s --account-id <account> --renew`\n", info.Name)
+		fmt.Fprintf(&b, "- `gitclaw channel-outbox --channel %s --account-id <account> --issue-number <issue> --out <file>`\n", info.Name)
 		fmt.Fprintf(&b, "- `gitclaw channel-delivery --channel %s --account-id <account> --issue-number <issue> --comment-id <comment> --external-message-id <message>`\n", info.Name)
 		fmt.Fprintf(&b, "- dispatch id: `%s-<message_id>`\n", info.Name)
 	} else {
@@ -369,6 +393,11 @@ func renderChannelVerifyReport(ev Event, cfg Config, comments []Comment, include
 	fmt.Fprintf(&b, "- delivery_workflow_dispatch_trigger: `%t`\n", surface.DeliveryWorkflow.WorkflowDispatch)
 	fmt.Fprintf(&b, "- delivery_workflow_permissions_issues_write: `%t`\n", surface.DeliveryWorkflow.IssuesWrite)
 	fmt.Fprintf(&b, "- delivery_workflow_inputs: `%d`\n", surface.DeliveryWorkflow.Inputs)
+	fmt.Fprintf(&b, "- outbox_workflow_path: `%s`\n", channelOutboxWorkflowPath)
+	fmt.Fprintf(&b, "- outbox_workflow_present: `%t`\n", surface.OutboxWorkflow.Present)
+	fmt.Fprintf(&b, "- outbox_workflow_dispatch_trigger: `%t`\n", surface.OutboxWorkflow.WorkflowDispatch)
+	fmt.Fprintf(&b, "- outbox_workflow_permissions_issues_read: `%t`\n", surface.OutboxWorkflow.IssuesRead)
+	fmt.Fprintf(&b, "- outbox_workflow_inputs: `%d`\n", surface.OutboxWorkflow.Inputs)
 	fmt.Fprintf(&b, "- supported_providers: `%s`\n", strings.Join(channelReportProviders, ", "))
 	fmt.Fprintf(&b, "- wake_strategy: `%s`\n", "workflow_dispatch")
 	fmt.Fprintf(&b, "- llm_e2e_required_after_channel_verify_change: `%t`\n", true)
@@ -397,6 +426,7 @@ func renderChannelVerifyReport(ev Event, cfg Config, comments []Comment, include
 	b.WriteString("- workflow accepts `channel`, `thread_id`, `message_id`, `author`, and `body` inputs\n")
 	b.WriteString("- channel state and gateway workflows are callable with `workflow_dispatch`\n")
 	b.WriteString("- gateway workflow can dispatch its renewal with `actions: write`\n")
+	b.WriteString("- outbox workflow can read pending assistant replies with `issues: read`\n")
 	b.WriteString("- delivery workflow records outbound receipts with `issues: write`\n")
 	b.WriteString("- downstream wakeup uses dispatch id `<channel>-<message_id>`\n")
 
@@ -462,6 +492,19 @@ func channelVerifyFindings(surface channelSurface) []string {
 			findings = append(findings, "delivery_workflow_inputs_missing")
 		}
 	}
+	if !surface.OutboxWorkflow.Present {
+		findings = append(findings, "channel_outbox_workflow_missing")
+	} else {
+		if !surface.OutboxWorkflow.WorkflowDispatch {
+			findings = append(findings, "outbox_workflow_dispatch_missing")
+		}
+		if !surface.OutboxWorkflow.IssuesRead && !surface.OutboxWorkflow.IssuesWrite {
+			findings = append(findings, "outbox_workflow_issues_read_missing")
+		}
+		if surface.OutboxWorkflow.Inputs < 5 {
+			findings = append(findings, "outbox_workflow_inputs_missing")
+		}
+	}
 	return findings
 }
 
@@ -517,6 +560,7 @@ func inspectChannelSurface(root string) channelSurface {
 		StateWorkflow:    channelWorkflow{Path: channelStateWorkflowPath},
 		GatewayWorkflow:  channelWorkflow{Path: channelGatewayWorkflowPath},
 		DeliveryWorkflow: channelWorkflow{Path: channelDeliveryWorkflowPath},
+		OutboxWorkflow:   channelWorkflow{Path: channelOutboxWorkflowPath},
 	}
 	absRoot, err := filepath.Abs(root)
 	if err != nil {
@@ -526,6 +570,7 @@ func inspectChannelSurface(root string) channelSurface {
 	surface.StateWorkflow = inspectChannelWorkflow(absRoot, channelStateWorkflowPath)
 	surface.GatewayWorkflow = inspectChannelWorkflow(absRoot, channelGatewayWorkflowPath)
 	surface.DeliveryWorkflow = inspectChannelWorkflow(absRoot, channelDeliveryWorkflowPath)
+	surface.OutboxWorkflow = inspectChannelWorkflow(absRoot, channelOutboxWorkflowPath)
 	return surface
 }
 
@@ -543,6 +588,7 @@ func inspectChannelWorkflow(absRoot, rel string) channelWorkflow {
 	workflow.SHA = shortDocumentHash(text)
 	workflow.WorkflowDispatch = strings.Contains(text, "workflow_dispatch:")
 	workflow.ActionsWrite = strings.Contains(text, "actions: write")
+	workflow.IssuesRead = strings.Contains(text, "issues: read")
 	workflow.IssuesWrite = strings.Contains(text, "issues: write")
 	workflow.Inputs = countWorkflowInputKeys(text)
 	return workflow
@@ -555,13 +601,14 @@ func writeChannelWorkflowInfo(b *strings.Builder, name string, workflow channelW
 	}
 	fmt.Fprintf(
 		b,
-		"- `%s` path=`%s` present=`true` bytes=`%d` lines=`%d` workflow_dispatch=`%t` actions_write=`%t` issues_write=`%t` inputs=`%d` sha256_12=`%s`\n",
+		"- `%s` path=`%s` present=`true` bytes=`%d` lines=`%d` workflow_dispatch=`%t` actions_write=`%t` issues_read=`%t` issues_write=`%t` inputs=`%d` sha256_12=`%s`\n",
 		name,
 		workflow.Path,
 		workflow.Bytes,
 		workflow.Lines,
 		workflow.WorkflowDispatch,
 		workflow.ActionsWrite,
+		workflow.IssuesRead,
 		workflow.IssuesWrite,
 		workflow.Inputs,
 		workflow.SHA,

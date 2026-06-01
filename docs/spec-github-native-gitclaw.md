@@ -931,7 +931,8 @@ GitHub issue/comment event
   `session status`,
   `session coverage`,
   `heartbeat`, `heartbeat status`, `heartbeat risk`,
-  `channel-ingest`, `channel-state`, `channel-gateway`, `channel-delivery`,
+  `channel-ingest`, `channel-state`, `channel-gateway`, `channel-outbox`,
+  `channel-delivery`,
   `channels list`, `channels verify`, `channels risk`, `channels info`,
   `checkpoints catalog`, `checkpoints status`, `checkpoints list`,
   `checkpoints preview`, `checkpoints risk`, `checkpoints verify`,
@@ -4859,6 +4860,41 @@ state durable in GitHub issues. Changes to this workflow must prove hash-only
 lease state, duplicate lease suppression, and two normal GitHub Models
 repo-reader/search turns on the lease state issue.
 
+### Channel Outbox Command
+
+Provider gateways need a way to discover assistant replies that are ready to
+send back to Telegram, Slack, or another channel without scraping every issue
+comment themselves. GitClaw exposes that outbound queue as a body-safe outbox:
+
+```bash
+gitclaw channel-outbox \
+  --repo OWNER/REPO \
+  --channel telegram \
+  --account-id <provider-account-or-workspace-id> \
+  --issue-number <github-issue> \
+  --out outbox.json
+```
+
+Behavior:
+
+- verify the source issue carries a matching `gitclaw:channel-thread` marker,
+- list assistant comments carrying `gitclaw:assistant-turn`,
+- find the matching `gitclaw:channel-state` issue and read
+  `gitclaw:channel-delivery` receipts,
+- return only assistant comments that have not yet been delivered for
+  `channel + account_sha256_12 + source issue + source comment`,
+- write assistant bodies only to an explicit local `--out` JSON file when
+  `--include-body` is set,
+- keep stdout, `GITHUB_OUTPUT`, logs, state issues, and receipts metadata-only
+  by default.
+
+`.github/workflows/gitclaw-channel-outbox.yml` wraps the same command with
+`workflow_dispatch`, `issues: read`, and no artifact upload. A provider gateway
+can dispatch it, read the local runner file, send pending replies through the
+provider API, and then dispatch `gitclaw-channel-delivery.yml` for each sent
+comment. This gives the no-server bridge an explicit outbound edge without
+turning GitHub Actions logs into a transcript store.
+
 ### Channel Delivery Command
 
 Outbound channel bridges need the same idempotency discipline as inbound
@@ -4914,6 +4950,7 @@ inference. It posts a `gitclaw:assistant-turn` comment with
 
 - the canonical channel label,
 - the generic channel-ingest workflow path and metadata,
+- the channel outbox workflow path and metadata,
 - whether `workflow_dispatch` is configured,
 - whether the ingest workflow has `actions: write` and `issues: write`,
 - normalized workflow input count,
@@ -4967,13 +5004,14 @@ gitclaw channels risk
 gitclaw channels info telegram
 gitclaw channel-state --channel telegram --account-id <id> --offset <offset>
 gitclaw channel-gateway --channel telegram --account-id <id> --renew
+gitclaw channel-outbox --channel telegram --account-id <id> --issue-number <issue> --out <file>
 gitclaw channel-delivery --channel telegram --account-id <id> --issue-number <issue> --comment-id <comment> --external-message-id <message>
 ```
 
 The local report omits issue-only fields such as repository, issue number,
 channel-thread status, marker counts, and title hash, but still verifies the
-workflow-dispatch bridge shape, provider keys, labels, permissions, and ingest
-contract.
+workflow-dispatch bridge shape, provider keys, labels, permissions, ingest
+contract, outbox contract, and delivery receipt contract.
 
 ### Tier 2: Long-Running Actions Gateway
 
@@ -5004,6 +5042,7 @@ channel-gateway run starts
   -> connect to Telegram long poll and/or Slack Socket Mode
   -> mirror inbound messages to GitHub issues/comments
   -> wake the canonical issue via workflow_dispatch using channel event ID
+  -> read pending outbound GitClaw comments with channel-outbox
   -> mirror outbound GitClaw comments back to channel
   -> record outbound delivery receipt with channel-delivery
   -> before timeout, workflow_dispatch next channel-gateway run
@@ -7055,6 +7094,15 @@ examples/workflows/gitclaw.yml
   normal issue-comment follow-ups that must make GitHub Models calls, select
   `repo-reader`, expose `gitclaw.search_files`, recover distinct
   channel-delivery fixture tokens, and avoid hidden source/provider sentinels.
+- A `gh`-driven channel-outbox-workflow E2E harness dispatches
+  `.github/workflows/gitclaw-channel-outbox.yml`, verifies a real
+  channel-ingested GitHub Models/tool reply appears as one pending outbound
+  assistant comment, records delivery through
+  `.github/workflows/gitclaw-channel-delivery.yml`, then dispatches outbox again
+  to prove the receipt suppresses retries. The same harness posts a normal
+  issue-comment follow-up that must make another GitHub Models call, select
+  `repo-reader`, expose `gitclaw.search_files`, recover the channel-outbox
+  follow-up fixture token, and avoid hidden account/provider/channel sentinels.
 - A `gh`-driven channels-report E2E harness verifies `@gitclaw /channels`
   reports workflow dispatch, channel labels, provider keys, mirrored message
   marker counts, and `llm_e2e_required_after_channel_report_change: true`

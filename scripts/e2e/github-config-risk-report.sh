@@ -219,6 +219,7 @@ for expected in \
   'kind=`workflow-file` path=`.github/workflows/gitclaw-channel-ingest.yml` present=`true`' \
   'kind=`workflow-file` path=`.github/workflows/gitclaw-channel-state.yml` present=`true`' \
   'kind=`workflow-file` path=`.github/workflows/gitclaw-channel-gateway.yml` present=`true`' \
+  'kind=`workflow-file` path=`.github/workflows/gitclaw-channel-outbox.yml` present=`true`' \
   'kind=`workflow-file` path=`.github/workflows/gitclaw-channel-delivery.yml` present=`true`' \
   "### Trigger And Trust Risk Card" \
   'kind=`trigger-trust` trigger_mode=`label-or-prefix` trigger_label=`gitclaw` trigger_prefix=`@gitclaw` disabled_label=`gitclaw:disabled`' \
