@@ -261,6 +261,32 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		status.SetDone()
 		return nil
 	}
+	if IsToolRunRequestIssueRequest(ev, cfg) {
+		requestClient, ok := github.(ToolRunRequestIssueGitHubClient)
+		if !ok {
+			return failStartedTurn(ctx, cfg, github, ev, status, "tool", fmt.Errorf("github client cannot create tool run request issues"))
+		}
+		req, err := BuildToolRunRequestIssueRequest(ev, cfg, repoContext)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "tool", fmt.Errorf("build tool run request issue: %w", err))
+		}
+		result, err := RunToolRunRequestIssue(ctx, requestClient, req)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "tool", fmt.Errorf("run tool run request issue: %w", err))
+		}
+		body := RenderAssistantComment(Marker{
+			RunID:          envFirst("GITHUB_RUN_ID", "local"),
+			EventID:        eventID(ev),
+			Model:          "gitclaw/tools",
+			IdempotencyKey: key,
+			RunURL:         actionRunURL(ev),
+		}, RenderToolRunRequestIssueActionReport(ev, req, result))
+		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post tool run request issue comment: %w", err))
+		}
+		status.SetDone()
+		return nil
+	}
 	if IsToolsReportRequest(ev, cfg) {
 		body := RenderAssistantComment(Marker{
 			RunID:          envFirst("GITHUB_RUN_ID", "local"),
@@ -833,6 +859,8 @@ func safeFailureDiagnostic(phase string, cause error) string {
 		return "skill action could not be completed"
 	case "soul":
 		return "soul action could not be completed"
+	case "tool":
+		return "tool action could not be completed"
 	default:
 		_ = cause
 		return "assistant turn failed"

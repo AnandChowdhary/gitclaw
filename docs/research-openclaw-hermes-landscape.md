@@ -2241,6 +2241,17 @@ tool must be blocked behind a future write mode, `gitclaw:write-requested`,
 execute, mutate, call a model, or print raw tool inputs, outputs, approval
 payloads, issue/comment bodies, prompts, credentials, or secrets.
 
+2026-06-01 tools-run-request follow-up: OpenClaw's exec approvals and Hermes'
+tool/toolset authorization both make the pre-execution review object more
+important than the raw command body. GitClaw should therefore add an
+issue-native `@gitclaw /tools request-run <name> --id <id>` action that opens
+or reuses a dedicated GitHub review issue for the requested tool. The review
+issue should carry only the request id, normalized tool metadata, gate state,
+validation status, source hashes, and decision. It must not execute the tool,
+call a model, copy raw source text, copy raw tool inputs/outputs, or mutate the
+repo, and its E2E must still finish with a normal GitHub Models repo-reader
+search turn so action plumbing never replaces real conversation tests.
+
 2026-05-31 toolsets follow-up: Hermes' toolsets and OpenClaw's tool-policy
 surfaces both point to named, task-oriented capability profiles, but GitClaw
 should keep v1 stricter than either runtime. Add repo-reviewed

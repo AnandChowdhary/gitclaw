@@ -311,6 +311,11 @@ surface plus loaded tool guidance and prompt-visible active-output metadata. It
 emits one composite hash for drift checks while keeping registry contact,
 runtime MCP launch, structured tools, shell execution, repository mutation, and
 raw body gates disabled.
+`@gitclaw /tools request-run <name> --id <id>` is the issue-native action
+surface for reviewed tool execution requests. It opens or reuses a dedicated
+GitHub issue with only hashes, normalized tool metadata, validation gates, and
+review decisions; it does not call a model, execute a tool, copy raw source
+text, include raw tool inputs/outputs, or mutate the repository.
 
 Security:
 
@@ -912,6 +917,7 @@ scripts/e2e/github-tools-exposure-report.sh
 scripts/e2e/github-tools-defer-plan-report.sh
 scripts/e2e/github-tools-boundary-report.sh
 scripts/e2e/github-tools-approval-plan-report.sh
+scripts/e2e/github-tools-run-request-issue.sh
 scripts/e2e/github-tools-risk-report.sh
 scripts/e2e/github-workspace-catalog-report.sh
 scripts/e2e/github-workspace-risk-report.sh
@@ -1017,6 +1023,11 @@ identity/profile context: a trusted `@gitclaw /soul propose --target soul --id
 candidate text out of issue-visible receipts, suppresses duplicate proposal
 requests, and then continues with a real GitHub Models repo-reader/search
 follow-up.
+The tools-run-request harness applies the review-issue pattern to tool
+execution requests: `@gitclaw /tools request-run <name> --id <id>` opens or
+reuses a dedicated GitHub request issue, keeps source/tool bodies out of
+receipts and request bodies, suppresses duplicate requests, and then continues
+with a real GitHub Models repo-reader/search follow-up.
 The channel-ingest harness proves the generic no-server bridge end to end:
 workflow-dispatch mirroring, duplicate provider-message suppression, and a
 normal model/tool follow-up on the canonical channel issue.

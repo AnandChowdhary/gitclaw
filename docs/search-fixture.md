@@ -32,6 +32,7 @@ model catalog unique search fixture phrase => GITCLAW_MODEL_CATALOG_CONTEXT_V1
 research catalog unique search fixture phrase => GITCLAW_RESEARCH_CATALOG_CONTEXT_V1
 rollback preview unique search fixture phrase => GITCLAW_ROLLBACK_PREVIEW_CONTEXT_V1
 tool approval unique search fixture phrase => GITCLAW_TOOL_APPROVAL_CONTEXT_V1
+tool run request unique search fixture phrase => GITCLAW_TOOL_RUN_REQUEST_CONTEXT_V1
 approvals catalog unique search fixture phrase => GITCLAW_APPROVALS_CATALOG_CONTEXT_V1
 approval provenance unique search fixture phrase => GITCLAW_APPROVAL_PROVENANCE_CONTEXT_V1
 backup restore plan unique search fixture phrase => GITCLAW_BACKUP_RESTORE_PLAN_CONTEXT_V1
