@@ -20,6 +20,9 @@ on:
       not_before:
         description: Optional RFC3339 or YYYY-MM-DD due gate for reminder-style jobs
         required: false
+      notify_routes:
+        description: Optional comma-separated channel routes for a proactive notification
+        required: false
   schedule:
     - cron: "23 8 * * 1"
 
@@ -58,6 +61,7 @@ jobs:
           GITCLAW_PROACTIVE_PROMPT: ${{ github.event.inputs.prompt }}
           GITCLAW_PROACTIVE_PROMPT_FILE: ${{ github.event.inputs.prompt_file }}
           GITCLAW_PROACTIVE_NOT_BEFORE: ${{ github.event.inputs.not_before }}
+          GITCLAW_PROACTIVE_NOTIFY_ROUTES: ${{ github.event.inputs.notify_routes }}
 
       - if: ${{ steps.enqueue.outputs.issue_number != '' && steps.enqueue.outputs.issue_number != '0' }}
         run: |

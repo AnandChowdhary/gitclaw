@@ -33,6 +33,86 @@ func TestProactiveEnqueueCreatesIssueAndLabelsIt(t *testing.T) {
 	}
 }
 
+func TestProactiveEnqueueQueuesChannelNotification(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, channelRoutesPath, `routes:
+  - name: e2e-telegram-route
+    channel: telegram
+    thread_id_template: proactive-{message_id}
+    author: gitclaw:test
+`)
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	github := &FakeGitHub{}
+	opts := ProactiveEnqueueOptions{
+		Repo:         "owner/repo",
+		Name:         "Repo Hygiene",
+		Slot:         "2026-06-02",
+		Prompt:       "Run repository hygiene. Hidden prompt token: PROACTIVE_NOTIFY_PROMPT_SECRET.",
+		NotifyRoutes: []string{"e2e-telegram-route"},
+	}
+
+	result, err := RunProactiveEnqueue(context.Background(), cfg, github, opts, time.Time{})
+	if err != nil {
+		t.Fatalf("RunProactiveEnqueue returned error: %v", err)
+	}
+	if !result.Created || result.IssueNumber != 100 || result.ChannelNotification.Queued != 1 || result.ChannelNotification.Duplicates != 0 || result.ChannelNotification.TargetIssuesCreated != 1 {
+		t.Fatalf("unexpected proactive notification result: %#v", result)
+	}
+	if !result.ChannelNotification.Requested || result.ChannelNotification.Routes != 1 || result.ChannelNotification.MessageSHA == "" || result.ChannelNotification.BodySHA == "" {
+		t.Fatalf("missing channel notification metadata: %#v", result.ChannelNotification)
+	}
+	if len(result.ChannelNotification.Destinations) != 1 || result.ChannelNotification.Destinations[0].IssueNumber != 101 || result.ChannelNotification.Destinations[0].Channel != "telegram" {
+		t.Fatalf("unexpected channel destination: %#v", result.ChannelNotification.Destinations)
+	}
+	if len(github.Issues) != 2 {
+		t.Fatalf("expected proactive and channel issue, got %#v", github.Issues)
+	}
+	proactiveBody := github.Issues[0].Body
+	if !strings.Contains(proactiveBody, "PROACTIVE_NOTIFY_PROMPT_SECRET") {
+		t.Fatalf("proactive issue should contain the runnable prompt:\n%s", proactiveBody)
+	}
+	channelIssue := github.Issues[1]
+	if !strings.Contains(channelIssue.Body, "gitclaw:channel-thread") || !strings.Contains(channelIssue.Body, `thread_id="proactive-gitclaw-proactive-repo-hygiene-2026-06-02"`) {
+		t.Fatalf("channel issue body missing expected thread marker:\n%s", channelIssue.Body)
+	}
+	if len(github.CommentsByIssue[101]) != 1 {
+		t.Fatalf("expected one outbound channel comment, got %#v", github.CommentsByIssue[101])
+	}
+	outbound := github.CommentsByIssue[101][0].Body
+	for _, want := range []string{
+		"gitclaw:channel-outbound",
+		`message_id="gitclaw-proactive-repo-hygiene-2026-06-02"`,
+		"GitClaw proactive run",
+		"Run issue: #100 https://github.com/owner/repo/issues/100",
+		"Name: repo-hygiene",
+		"Slot: 2026-06-02",
+		"Created: true",
+		"Due: true",
+		"Not before: none",
+	} {
+		if !strings.Contains(outbound, want) {
+			t.Fatalf("outbound channel comment missing %q:\n%s", want, outbound)
+		}
+	}
+	for _, leaked := range []string{"PROACTIVE_NOTIFY_PROMPT_SECRET", "Run repository hygiene", "e2e-telegram-route"} {
+		if strings.Contains(outbound, leaked) {
+			t.Fatalf("outbound channel comment leaked %q:\n%s", leaked, outbound)
+		}
+	}
+
+	duplicate, err := RunProactiveEnqueue(context.Background(), cfg, github, opts, time.Time{})
+	if err != nil {
+		t.Fatalf("duplicate RunProactiveEnqueue returned error: %v", err)
+	}
+	if duplicate.Created || duplicate.IssueNumber != 100 || duplicate.ChannelNotification.Queued != 0 || duplicate.ChannelNotification.Duplicates != 1 || duplicate.ChannelNotification.TargetIssuesCreated != 0 {
+		t.Fatalf("unexpected duplicate notification result: %#v", duplicate)
+	}
+	if len(github.Issues) != 2 || len(github.CommentsByIssue[101]) != 1 {
+		t.Fatalf("duplicate enqueue should not create another issue/comment: issues=%#v comments=%#v", github.Issues, github.CommentsByIssue[101])
+	}
+}
+
 func TestProactiveEnqueueReusesSameSlotIssue(t *testing.T) {
 	cfg := DefaultConfig()
 	body := RenderProactiveRunBody(ProactiveEnqueueOptions{
@@ -79,17 +159,21 @@ func TestProactiveEnqueueDefaultsSlotToUTCDate(t *testing.T) {
 func TestProactiveEnqueueSkipsBeforeNotBefore(t *testing.T) {
 	github := &FakeGitHub{}
 	result, err := RunProactiveEnqueue(context.Background(), DefaultConfig(), github, ProactiveEnqueueOptions{
-		Repo:       "owner/repo",
-		Name:       "Reminder",
-		Slot:       "due-2026-05-30",
-		PromptFile: filepath.Join(t.TempDir(), "missing.md"),
-		NotBefore:  "2026-05-30T10:00:00Z",
+		Repo:         "owner/repo",
+		Name:         "Reminder",
+		Slot:         "due-2026-05-30",
+		PromptFile:   filepath.Join(t.TempDir(), "missing.md"),
+		NotBefore:    "2026-05-30T10:00:00Z",
+		NotifyRoutes: []string{"e2e-telegram-route"},
 	}, time.Date(2026, 5, 30, 9, 59, 0, 0, time.UTC))
 	if err != nil {
 		t.Fatalf("RunProactiveEnqueue returned error before due gate: %v", err)
 	}
 	if !result.Skipped || result.Due || result.IssueNumber != 0 || result.Name != "reminder" {
 		t.Fatalf("unexpected skipped result: %#v", result)
+	}
+	if !result.ChannelNotification.Requested || result.ChannelNotification.Routes != 1 || result.ChannelNotification.Queued != 0 {
+		t.Fatalf("not-before skip should record requested notification without queueing it: %#v", result.ChannelNotification)
 	}
 	if len(github.Issues) != 0 {
 		t.Fatalf("not-before skip should not touch GitHub: %#v", github.Issues)

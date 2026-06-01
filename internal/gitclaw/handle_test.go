@@ -6487,6 +6487,17 @@ func (f *FakeGitHub) AddIssueLabels(ctx context.Context, repo string, issueNumbe
 		}
 		f.IssueLabels[issueNumber] = append(f.IssueLabels[issueNumber], label)
 	}
+	for i := range f.Issues {
+		if f.Issues[i].Number != issueNumber {
+			continue
+		}
+		for _, label := range labels {
+			if label == "" || hasLabel(f.Issues[i].Labels, label) {
+				continue
+			}
+			f.Issues[i].Labels = append(f.Issues[i].Labels, label)
+		}
+	}
 	return nil
 }
 

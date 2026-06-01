@@ -5357,13 +5357,15 @@ func runProactiveEnqueueCommand(ctx context.Context, args []string) error {
 		return err
 	}
 	opts := ProactiveEnqueueOptions{
-		Repo:       os.Getenv("GITHUB_REPOSITORY"),
-		Name:       os.Getenv("GITCLAW_PROACTIVE_NAME"),
-		Slot:       os.Getenv("GITCLAW_PROACTIVE_SLOT"),
-		Prompt:     os.Getenv("GITCLAW_PROACTIVE_PROMPT"),
-		PromptFile: os.Getenv("GITCLAW_PROACTIVE_PROMPT_FILE"),
-		NotBefore:  os.Getenv("GITCLAW_PROACTIVE_NOT_BEFORE"),
+		Repo:         os.Getenv("GITHUB_REPOSITORY"),
+		Name:         os.Getenv("GITCLAW_PROACTIVE_NAME"),
+		Slot:         os.Getenv("GITCLAW_PROACTIVE_SLOT"),
+		Prompt:       os.Getenv("GITCLAW_PROACTIVE_PROMPT"),
+		PromptFile:   os.Getenv("GITCLAW_PROACTIVE_PROMPT_FILE"),
+		NotBefore:    os.Getenv("GITCLAW_PROACTIVE_NOT_BEFORE"),
+		NotifyRoutes: splitChannelBroadcastRoutes(os.Getenv("GITCLAW_PROACTIVE_NOTIFY_ROUTES")),
 	}
+	opts.NotifyRoutes = append(opts.NotifyRoutes, splitChannelBroadcastRoutes(os.Getenv("GITCLAW_PROACTIVE_NOTIFY_ROUTE"))...)
 	for i := 0; i < len(args); i++ {
 		switch args[i] {
 		case "--repo":
@@ -5402,6 +5404,12 @@ func runProactiveEnqueueCommand(ctx context.Context, args []string) error {
 			}
 			opts.NotBefore = args[i+1]
 			i++
+		case "--notify-route", "--notify-routes", "--channel-route", "--channel-routes":
+			if i+1 >= len(args) {
+				return fmt.Errorf("%s requires a value", args[i])
+			}
+			opts.NotifyRoutes = append(opts.NotifyRoutes, splitChannelBroadcastRoutes(args[i+1])...)
+			i++
 		default:
 			return fmt.Errorf("unknown proactive enqueue argument %q", args[i])
 		}
@@ -5414,7 +5422,25 @@ func runProactiveEnqueueCommand(ctx context.Context, args []string) error {
 	if err := writeProactiveOutputs(result); err != nil {
 		return err
 	}
-	fmt.Printf("proactive_enqueue issue=%d name=%s slot=%s created=%t due=%t skipped=%t not_before=%s llm_e2e_required_after_proactive_not_before_change=true url=%s\n", result.IssueNumber, result.Name, result.Slot, result.Created, result.Due, result.Skipped, result.NotBefore, result.IssueURL)
+	fmt.Printf(
+		"proactive_enqueue issue=%d name=%s slot=%s created=%t due=%t skipped=%t not_before=%s channel_notification_requested=%t channel_notification_routes=%d channel_notification_queued=%d channel_notification_duplicates=%d channel_notification_target_issues_created=%d channel_notification_routes_sha256_12=%s channel_notification_message_id_sha256_12=%s channel_notification_body_sha256_12=%s llm_e2e_required_after_proactive_not_before_change=true llm_e2e_required_after_proactive_channel_notify_change=true url=%s\n",
+		result.IssueNumber,
+		result.Name,
+		result.Slot,
+		result.Created,
+		result.Due,
+		result.Skipped,
+		result.NotBefore,
+		result.ChannelNotification.Requested,
+		result.ChannelNotification.Routes,
+		result.ChannelNotification.Queued,
+		result.ChannelNotification.Duplicates,
+		result.ChannelNotification.TargetIssuesCreated,
+		noneIfEmpty(result.ChannelNotification.RoutesSHA),
+		noneIfEmpty(result.ChannelNotification.MessageSHA),
+		noneIfEmpty(result.ChannelNotification.BodySHA),
+		result.IssueURL,
+	)
 	return nil
 }
 

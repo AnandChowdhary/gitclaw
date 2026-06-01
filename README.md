@@ -686,6 +686,7 @@ gitclaw proactive risk
 gitclaw proactive info repo-hygiene
 gitclaw proactive init --name email-triage --cron "17 8 * * 1-5"
 gitclaw proactive enqueue --name repo-hygiene --slot "$(date -u +%F)"
+gitclaw proactive enqueue --name repo-hygiene --slot "$(date -u +%F)" --notify-route e2e-telegram-route
 gitclaw workspace catalog
 gitclaw workspace risk
 gitclaw workspace verify
@@ -927,6 +928,15 @@ message IDs, titles, notes, or channel message bodies.
 The live proactive-report, proactive-list, and proactive-schedule harnesses use
 the same two-proof shape for scheduled work: body-free workflow/prompt metadata
 first, then a normal GitHub Models repo-reader/search follow-up.
+`gitclaw proactive enqueue --notify-route <route>` and
+`--notify-routes <a,b>` make proactive jobs channel-useful without adding a
+server: after a due proactive issue exists, GitClaw queues one body-safe
+Slack/Telegram notification per reviewed route. The workflow/CLI output reports
+only counts and short hashes, the channel body points to the GitHub issue, and
+provider delivery remains delegated to `gitclaw channel-outbox` plus
+`gitclaw channel-delivery`. The live proactive channel-notify harness proves the
+enqueue path, duplicate suppression, outbox visibility, prompt non-leakage, and
+a real GitHub Models repo-reader/search follow-up on the proactive issue.
 The live prompt-report and prompt-list harnesses now use that gate for prompt
 diagnostics: prompt size, hash, truncation, context, skill, and tool metadata
 stay body-free, then a normal GitHub Models repo-reader/search follow-up proves
@@ -1087,6 +1097,7 @@ scripts/e2e/github-channels-info-report.sh
 scripts/e2e/github-proactive.sh
 scripts/e2e/github-proactive-init.sh
 scripts/e2e/github-proactive-not-before.sh
+scripts/e2e/github-proactive-channel-notify.sh
 scripts/e2e/github-proactive-report.sh
 scripts/e2e/github-proactive-list-report.sh
 scripts/e2e/github-proactive-schedule-report.sh

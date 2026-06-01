@@ -86,6 +86,7 @@ proactive schedule unique search fixture phrase => GITCLAW_PROACTIVE_SCHEDULE_CO
 proactive chain unique search fixture phrase => GITCLAW_PROACTIVE_CHAIN_CONTEXT_V1
 proactive init unique search fixture phrase => GITCLAW_PROACTIVE_INIT_CONTEXT_V1
 proactive not-before unique search fixture phrase => GITCLAW_PROACTIVE_NOT_BEFORE_CONTEXT_V1
+proactive channel notify unique search fixture phrase => GITCLAW_PROACTIVE_NOTIFY_CONTEXT_V1
 channels info unique search fixture phrase => GITCLAW_CHANNELS_INFO_CONTEXT_V1
 channels report unique search fixture phrase => GITCLAW_CHANNELS_REPORT_CONTEXT_V1
 channels list unique search fixture phrase => GITCLAW_CHANNELS_LIST_CONTEXT_V1

@@ -123,8 +123,9 @@ func renderProactiveReport(ev Event, cfg Config, includeIssue bool) string {
 	}
 
 	b.WriteString("\n### Enqueue Contract\n")
-	b.WriteString("- `gitclaw proactive enqueue --name <name> --slot <slot> --prompt-file .gitclaw/proactive/<name>.md [--not-before <rfc3339-or-date>]`\n")
+	b.WriteString("- `gitclaw proactive enqueue --name <name> --slot <slot> --prompt-file .gitclaw/proactive/<name>.md [--not-before <rfc3339-or-date>] [--notify-route <route>]`\n")
 	b.WriteString("- `--not-before` skips issue creation until the due gate has passed, which supports reminder-style scheduled jobs\n")
+	b.WriteString("- `--notify-route` / `--notify-routes` queues body-safe Slack/Telegram notifications through reviewed channel routes after a due proactive issue exists\n")
 	b.WriteString("- one issue per `name + slot`\n")
 	b.WriteString("- dispatch id: `proactive-<name>-<slot>`\n")
 
@@ -195,8 +196,9 @@ func renderProactiveInfoReport(ev Event, cfg Config, name string, includeIssue b
 	writeProactiveWorkflowInfo(&b, generatedWorkflow)
 
 	b.WriteString("\n### Enqueue Contract\n")
-	fmt.Fprintf(&b, "- `gitclaw proactive enqueue --name %s --slot <slot> --prompt-file %s [--not-before <rfc3339-or-date>]`\n", name, promptPath)
+	fmt.Fprintf(&b, "- `gitclaw proactive enqueue --name %s --slot <slot> --prompt-file %s [--not-before <rfc3339-or-date>] [--notify-route <route>]`\n", name, promptPath)
 	fmt.Fprintf(&b, "- dispatch id: `proactive-%s-<slot>`\n", name)
+	b.WriteString("- optional channel notification delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`\n")
 	b.WriteString("- scheduled workflows should dispatch `.github/workflows/gitclaw.yml` only after enqueue returns a nonzero issue number\n")
 
 	if len(matches) == 0 && len(surface.Prompts) > 0 {

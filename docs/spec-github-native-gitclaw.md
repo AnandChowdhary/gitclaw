@@ -383,7 +383,8 @@ gitclaw proactive enqueue \
   --name email-triage \
   --slot 2026-05-29 \
   --prompt-file .gitclaw/proactive/email-triage.md \
-  --not-before 2026-05-29T08:17:00Z
+  --not-before 2026-05-29T08:17:00Z \
+  --notify-route team-ops
 ```
 
 It is exposed through `.github/workflows/gitclaw-proactive.yml` for manual
@@ -441,6 +442,28 @@ enqueue CLI output includes
 due gate require both skipped-run log evidence and a live due-run
 GitHub Models follow-up that uses `repo-reader` and bounded repository search.
 
+`--notify-route <route>` and `--notify-routes <a,b>` make proactive jobs useful
+in Slack/Telegram-style channels without adding sockets, webhooks, or provider
+API calls to the enqueue step. After a due proactive issue exists, GitClaw
+resolves reviewed routes from `.gitclaw/channels/routes.yaml`, queues one
+`gitclaw:channel-outbound` notification per destination, and writes only route
+counts, short hashes, queue counts, duplicate counts, and target issue counts to
+workflow outputs/logs. The notification body may name the proactive run issue,
+normalized job name, slot, due state, creation state, and not-before gate; it
+must not copy the raw proactive prompt, prompt file body, route names, provider
+thread IDs, provider tokens, or model/tool output. If `--not-before` skips the
+run, no issue or channel notification is created. Delivery to Telegram, Slack,
+or another provider remains delegated to `gitclaw channel-outbox` and
+`gitclaw channel-delivery`.
+
+Changes to proactive channel notifications must run focused local tests and a
+live E2E that proves all of the following: a real proactive workflow/CLI enqueue
+creates or reuses a proactive issue, queues a channel notification, suppresses a
+duplicate notification for the same `name + slot + message_id`, exposes pending
+delivery through `channel-outbox` without leaking prompt text or route names,
+and continues the proactive issue with a normal GitHub Models turn that uses
+`repo-reader` and bounded repository search.
+
 Reference proactive workflow shape:
 
 ```yaml
@@ -451,6 +474,9 @@ on:
     inputs:
       not_before:
         description: Optional RFC3339 or YYYY-MM-DD due gate
+        required: false
+      notify_routes:
+        description: Optional comma-separated channel routes
         required: false
   schedule:
     - cron: "17 8 * * 1-5"
@@ -481,6 +507,7 @@ jobs:
           --prompt-file .gitclaw/proactive/email-triage.md
         env:
           GITCLAW_PROACTIVE_NOT_BEFORE: ${{ github.event.inputs.not_before }}
+          GITCLAW_PROACTIVE_NOTIFY_ROUTES: ${{ github.event.inputs.notify_routes }}
       - if: ${{ steps.enqueue.outputs.issue_number != '' && steps.enqueue.outputs.issue_number != '0' }}
         run: >
           gh workflow run .github/workflows/gitclaw.yml
