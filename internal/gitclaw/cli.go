@@ -39,6 +39,8 @@ func RunCLI(ctx context.Context, args []string) error {
 		return runChannelIngestCommand(ctx, args[1:])
 	case "channel-send":
 		return runChannelSendCommand(ctx, args[1:])
+	case "channel-status":
+		return runChannelStatusCommand(ctx, args[1:])
 	case "channel-react", "channel-reaction":
 		return runChannelReactionCommand(ctx, args[1:])
 	case "channel-state":
@@ -4691,6 +4693,114 @@ func runChannelReactionCommand(ctx context.Context, args []string) error {
 	return nil
 }
 
+func runChannelStatusCommand(ctx context.Context, args []string) error {
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	opts := ChannelStatusOptions{
+		Repo:            os.Getenv("GITHUB_REPOSITORY"),
+		Route:           os.Getenv("GITCLAW_CHANNEL_ROUTE"),
+		Channel:         os.Getenv("GITCLAW_CHANNEL"),
+		ThreadID:        os.Getenv("GITCLAW_CHANNEL_THREAD_ID"),
+		TargetMessageID: os.Getenv("GITCLAW_CHANNEL_MESSAGE_ID"),
+		StatusID:        os.Getenv("GITCLAW_CHANNEL_STATUS_ID"),
+		State:           os.Getenv("GITCLAW_CHANNEL_STATUS_STATE"),
+		Author:          os.Getenv("GITCLAW_CHANNEL_AUTHOR"),
+		Body:            os.Getenv("GITCLAW_CHANNEL_BODY"),
+	}
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--repo":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--repo requires a value")
+			}
+			opts.Repo = args[i+1]
+			i++
+		case "--route":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--route requires a value")
+			}
+			opts.Route = args[i+1]
+			i++
+		case "--channel":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--channel requires a value")
+			}
+			opts.Channel = args[i+1]
+			i++
+		case "--thread-id":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--thread-id requires a value")
+			}
+			opts.ThreadID = args[i+1]
+			i++
+		case "--message-id", "--target-message-id":
+			if i+1 >= len(args) {
+				return fmt.Errorf("%s requires a value", args[i])
+			}
+			opts.TargetMessageID = args[i+1]
+			i++
+		case "--status-id", "--update-id":
+			if i+1 >= len(args) {
+				return fmt.Errorf("%s requires a value", args[i])
+			}
+			opts.StatusID = args[i+1]
+			i++
+		case "--state", "--status":
+			if i+1 >= len(args) {
+				return fmt.Errorf("%s requires a value", args[i])
+			}
+			opts.State = args[i+1]
+			i++
+		case "--author":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--author requires a value")
+			}
+			opts.Author = args[i+1]
+			i++
+		case "--body":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--body requires a value")
+			}
+			opts.Body = args[i+1]
+			i++
+		default:
+			return fmt.Errorf("unknown channel-status argument %q", args[i])
+		}
+	}
+	if opts.State == "" {
+		opts.State = "working"
+	}
+	if opts.Body == "" {
+		opts.Body = defaultChannelStatusBody(opts.State)
+	}
+	token := githubTokenFromEnv()
+	if token == "" {
+		return fmt.Errorf("missing GH_TOKEN or GITHUB_TOKEN")
+	}
+	result, err := RunChannelStatus(ctx, cfg, NewRESTGitHubClient(token), opts)
+	if err != nil {
+		return err
+	}
+	if err := writeChannelStatusOutputs(result); err != nil {
+		return err
+	}
+	fmt.Printf(
+		"channel_status issue=%d comment=%d created=%t duplicate=%t route_resolved=%t route_sha256_12=%s status_id_sha256_12=%s status_state_sha256_12=%s url=%s\n",
+		result.IssueNumber,
+		result.CommentID,
+		result.Created,
+		result.Duplicate,
+		result.RouteName != "",
+		result.RouteHash,
+		result.StatusIDHash,
+		result.StateHash,
+		result.IssueURL,
+	)
+	return nil
+}
+
 func runChannelGatewayCommand(ctx context.Context, args []string) error {
 	cfg, err := LoadEffectiveConfig()
 	if err != nil {
@@ -4972,12 +5082,13 @@ func runChannelOutboxCommand(ctx context.Context, args []string) error {
 		return err
 	}
 	fmt.Printf(
-		"channel_outbox issue=%d state_issue=%d assistant_comments=%d outbound_comments=%d reaction_comments=%d deliverable_comments=%d delivered=%d pending=%d returned=%d body_included=%t account_sha256_12=%s out=%s\n",
+		"channel_outbox issue=%d state_issue=%d assistant_comments=%d outbound_comments=%d reaction_comments=%d status_comments=%d deliverable_comments=%d delivered=%d pending=%d returned=%d body_included=%t account_sha256_12=%s out=%s\n",
 		result.IssueNumber,
 		result.StateIssueNumber,
 		result.SourceAssistantComments,
 		result.SourceOutboundComments,
 		result.SourceReactionComments,
+		result.SourceStatusComments,
 		result.SourceDeliverableComments,
 		result.DeliveredAssistantComments,
 		result.PendingMessages,

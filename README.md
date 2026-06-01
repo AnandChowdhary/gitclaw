@@ -626,6 +626,7 @@ gitclaw channels risk
 gitclaw channels info telegram
 gitclaw channel-send --channel slack --thread-id <thread> --message-id <id> --body "hello"
 gitclaw channel-send --route e2e-slack-route --message-id <id> --body "hello"
+gitclaw channel-status --channel slack --thread-id <thread> --message-id <id> --status-id <id> --state working
 gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --reaction eyes
 @gitclaw /channels send --route e2e-slack-route --message-id <id>
 @gitclaw /channels probe --route e2e-slack-route --message-id <id>
@@ -635,6 +636,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels huddle e2e-slack-route,e2e-telegram-route --huddle-id <id> --message-id <id>
 @gitclaw /channels poll e2e-slack-route,e2e-telegram-route --poll-id <id> --message-id <id>
 @gitclaw /channels rollcall e2e-slack-route,e2e-telegram-route --rollcall-id <id> --message-id <id>
+@gitclaw /channels status --message-id <id> --status-id <id> --state working
 @gitclaw /channels react --message-id <id> --reaction eyes
 @gitclaw /channels pin --message-id <id>
 @gitclaw /channels reply --message-id <id>
@@ -838,6 +840,11 @@ the prompt and instructions there, labels it for normal GitClaw conversation,
 and queues provider-facing rollcall invites through the same routebook/outbox
 path. It is meant for lightweight standups, attendance, status checks, and
 "everyone please respond here" moments without adding a server.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels status
+--message-id <id> --status-id <id> --state working` queues a structured
+`gitclaw:channel-status` progress update for provider gateways. The status body
+is deliverable through `channel-outbox`, while the source receipt reports only
+hashes, duplicate status, and delivery gates.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels react
 --message-id <id> --reaction <name>` queues a structured
 `gitclaw:channel-reaction` acknowledgement for the provider gateway. Duplicate
@@ -1081,6 +1088,7 @@ scripts/e2e/github-channel-room-slash.sh
 scripts/e2e/github-channel-huddle-slash.sh
 scripts/e2e/github-channel-poll-slash.sh
 scripts/e2e/github-channel-rollcall-slash.sh
+scripts/e2e/github-channel-status-slash.sh
 scripts/e2e/github-channel-reaction-slash.sh
 scripts/e2e/github-channel-pin-slash.sh
 scripts/e2e/github-channel-reply-slash.sh
@@ -1286,6 +1294,11 @@ social acknowledgements without composing a full reply: a channel-ingested issue
 receives `@gitclaw /channels react`, queues one structured provider reaction,
 exposes it through metadata-only outbox, records delivery, suppresses duplicate
 reactions, and then runs a real GitHub Models repo-reader/search follow-up.
+The channel-status slash harness proves mirrored channel issues can send
+provider-visible progress without a socket: a channel issue receives
+`@gitclaw /channels status`, queues one structured status update, exposes it
+through metadata-only outbox, records delivery, suppresses duplicate status
+ids, and then runs a real GitHub Models repo-reader/search follow-up.
 The channel-pin slash harness proves the same operator-console path has a
 one-word shortcut: a channel-ingested issue receives `@gitclaw /channels pin`,
 queues a default `pushpin` provider reaction, exposes and delivers it through

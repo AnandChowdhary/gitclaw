@@ -126,7 +126,7 @@ func verifyChannelDeliverySource(ctx context.Context, github ChannelDeliveryGitH
 			continue
 		}
 		if !isChannelDeliverableComment(comment.Body) {
-			return fmt.Errorf("source comment is not a GitClaw assistant turn or channel outbound message")
+			return fmt.Errorf("source comment is not a GitClaw assistant turn or channel deliverable message")
 		}
 		return nil
 	}
@@ -134,7 +134,7 @@ func verifyChannelDeliverySource(ctx context.Context, github ChannelDeliveryGitH
 }
 
 func isChannelDeliverableComment(body string) bool {
-	return HasGitClawMarker(body) || HasChannelOutboundMarker(body) || HasChannelReactionMarker(body)
+	return HasGitClawMarker(body) || HasChannelOutboundMarker(body) || HasChannelReactionMarker(body) || HasChannelStatusMarker(body)
 }
 
 func RenderChannelDeliveryComment(opts ChannelDeliveryOptions, accountHash, externalHash string) string {

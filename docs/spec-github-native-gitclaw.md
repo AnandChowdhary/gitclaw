@@ -5263,11 +5263,28 @@ When the source issue is itself a `gitclaw:channel-thread`, GitClaw also
 accepts a structured reaction form:
 
 ```text
+@gitclaw /channels status --message-id <provider-message-id> --status-id <stable-status-id> --state working
 @gitclaw /channels react --message-id <provider-message-id> --reaction eyes
 @gitclaw /channels pin --message-id <provider-message-id>
 @gitclaw /channels task --task-id <stable-task-id> --message-id <provider-message-id>
 @gitclaw /channels clip --clip-id <stable-clip-id> --message-id <provider-message-id>
 ```
+
+`/channels status`, `/channels progress`, and `/channels typing` infer the
+current channel and thread id from the issue marker when no explicit
+route/channel/thread target is provided, then post one
+`gitclaw:channel-status` comment on the same canonical channel issue. This is
+the GitHub-native progress/streaming substitute: provider gateways can deliver
+small "queued", "typing", "working", "blocked", or "done" updates through
+`channel-outbox` without a resident socket. Duplicate updates are suppressed
+by `channel + status_id`. The source receipt reports only target issue/comment
+ids, target message hash, status id hash, status state hash, status body hash,
+route/thread hashes, duplicate status, and delivery gates. It does not call a
+model, call provider APIs, print raw route names, print raw thread ids, print
+raw target message ids, print raw status ids, print raw status states, print
+status bodies, or print channel message bodies. The pending update appears in
+`channel-outbox` as kind `channel-status`, and `channel-delivery` records the
+provider receipt for the status comment.
 
 `/channels react`, `/channels reaction`, `/channels emoji`, `/channels ack`,
 `/channels pin`, `/channels star`, and `/channels bookmark` infer the current
@@ -7875,6 +7892,15 @@ examples/workflows/gitclaw.yml
   Models issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-rollcall fixture token, and avoid
   hidden route/account/channel sentinels.
+- A `gh`-driven channel-status-slash E2E harness creates a real channel-thread
+  issue, posts `@gitclaw /channels status --message-id ... --status-id ...
+  --state working` on that mirrored thread, verifies same-issue structured
+  status queueing, body-free receipt metadata, duplicate suppression,
+  metadata-only outbox discovery with kind `channel-status`, and
+  channel-delivery workflow receipts. The same issue then gets a normal GitHub
+  Models issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-status fixture token, and avoid
+  hidden channel, account, provider, status, and body sentinels.
 - A `gh`-driven channel-reaction-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels react --message-id ... --reaction ...` on that mirrored

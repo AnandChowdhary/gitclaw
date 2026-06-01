@@ -4005,3 +4005,18 @@ and keeps raw diffs, file bodies, and source request bodies out of band. The
 rehearsal issue carries readable dry-run commands and can then receive a normal
 GitHub Models repo-reader/search follow-up to prove the conversation lane still
 has tool grounding.
+
+## 2026-06-01 Channel Status Follow-Up
+
+OpenClaw's channel documentation emphasizes provider routing, group policies,
+message delivery, and live progress surfaces; Hermes' gateway posture also
+treats progress notifications as part of channel UX rather than only final
+assistant replies. GitClaw's serverless equivalent is
+`@gitclaw /channels status --message-id <id> --status-id <id> --state working`:
+inside a mirrored `gitclaw:channel-thread` issue it posts a structured
+`gitclaw:channel-status` comment for provider gateways to deliver through
+`channel-outbox`, then `channel-delivery` records the sent receipt. The source
+action remains model-free and provider-free, reports only hashes and delivery
+gates, suppresses duplicates by `channel + status_id`, and requires a live
+GitHub Models repo-reader/search follow-up to prove the channel issue still
+supports ordinary grounded conversation.
