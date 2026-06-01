@@ -2097,6 +2097,18 @@ never calls a model. Reviewers continue on the proposal issue for a real
 GitHub Models discussion before drafting the source-pin YAML on a normal
 code-review branch.
 
+The source-pin proposal action also accepts `--notify-route <route>` and
+`--notify-routes <a,b>`. When present, GitClaw resolves reviewed channel routes
+from `.gitclaw/channels/routes.yaml`, queues a metadata-safe
+`gitclaw:channel-outbound` notification for each route, and records only
+counts and hashes in the source receipt. The outbound channel body may include
+the safe source name, source kind, source-ref hash, source-pin path, proposed
+skill path, and review issue URL, but it must not include raw source refs,
+raw source request text, candidate skill bodies, or route names. Provider
+delivery remains delegated to `gitclaw channel-outbox` and
+`gitclaw channel-delivery`; the proposal action itself never calls provider
+APIs.
+
 Skill source reports never contact ClawHub, Hermes Hub, skills.sh, GitHub, or
 well-known endpoints; never fetch remote sources; never run installers; never
 install dependencies; never write `.gitclaw/SKILLS`; and never print raw
@@ -8943,6 +8955,13 @@ examples/workflows/gitclaw.yml
   requests, avoids raw source/request leakage, and then runs the live GitHub
   Models follow-up on the proposal issue itself to prove selected skill
   context, prompt-visible repository search tool usage, and usage telemetry.
+- A `gh`-driven skills-source-propose channel-notify E2E harness verifies
+  the notify-route form of `@gitclaw /skills sources propose` opens the same
+  body-free, labeled source-pin proposal issue, queues a reviewed
+  Slack/Telegram channel notification through the routebook and channel issue
+  without raw source-ref leakage, suppresses duplicate outbound comments,
+  exposes pending provider work through `channel-outbox`, and still runs the
+  live GitHub Models follow-up on the proposal issue itself.
 - A `gh`-driven skills-rehearse E2E harness verifies
   `@gitclaw /skills rehearse <name> --id <id>` opens a body-free GitHub
   rehearsal issue labeled for normal GitClaw conversation, posts a source

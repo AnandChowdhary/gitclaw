@@ -22,6 +22,8 @@ type SkillSourceProposalIssueRequest struct {
 	Subcommand               string
 	ProposalID               string
 	SourceName               string
+	NotifyRoutes             []string
+	NotifyRoutesSHA          string
 	SourceRefSHA             string
 	SourceKind               string
 	SkillPath                string
@@ -47,10 +49,24 @@ type SkillSourceProposalIssueRequest struct {
 }
 
 type SkillSourceProposalIssueResult struct {
-	IssueNumber int
-	IssueURL    string
-	Created     bool
-	Duplicate   bool
+	IssueNumber         int
+	IssueURL            string
+	Created             bool
+	Duplicate           bool
+	ChannelNotification SkillSourceProposalChannelNotification
+}
+
+type SkillSourceProposalChannelNotification struct {
+	Requested           bool
+	Routes              int
+	Queued              int
+	Duplicates          int
+	TargetIssuesCreated int
+	MessageSHA          string
+	BodySHA             string
+	BodyBytes           int
+	BodyLines           int
+	Destinations        []ChannelBroadcastDestinationResult
 }
 
 func IsSkillSourceProposalIssueRequest(ev Event, cfg Config) bool {
@@ -131,6 +147,8 @@ func BuildSkillSourceProposalIssueRequest(ev Event, cfg Config, repoContext Repo
 		Subcommand:               strings.ToLower(strings.Trim(fields[2], " \t\r\n.,:;!?")),
 		ProposalID:               args.ProposalID,
 		SourceName:               args.SourceName,
+		NotifyRoutes:             normalizeChannelBroadcastRoutes(args.NotifyRoutes),
+		NotifyRoutesSHA:          channelBroadcastRoutesHash(args.NotifyRoutes),
 		SourceRefSHA:             shortDocumentHash(args.SourceRef),
 		SourceKind:               args.SourceKind,
 		SkillPath:                filepath.ToSlash(args.SkillPath),
@@ -154,6 +172,39 @@ func BuildSkillSourceProposalIssueRequest(ev Event, cfg Config, repoContext Repo
 		SourceLines:              lineCount(sourceText),
 		SourceKindOfRequest:      sourceKind,
 	}, nil
+}
+
+func RunSkillSourceProposalChannelNotification(ctx context.Context, cfg Config, github ChannelSendGitHubClient, req SkillSourceProposalIssueRequest, result SkillSourceProposalIssueResult) (SkillSourceProposalChannelNotification, error) {
+	notification := SkillSourceProposalChannelNotification{
+		Requested: len(req.NotifyRoutes) > 0,
+		Routes:    len(req.NotifyRoutes),
+	}
+	if len(req.NotifyRoutes) == 0 {
+		return notification, nil
+	}
+	if result.IssueNumber <= 0 {
+		return notification, fmt.Errorf("missing skill source proposal issue for channel notification")
+	}
+	body := RenderSkillSourceProposalChannelNotificationBody(req, result)
+	messageID := skillSourceProposalChannelNotificationMessageID(req)
+	broadcast, err := RunChannelBroadcast(ctx, cfg, github, ChannelBroadcastOptions{
+		Repo:      req.Repo,
+		Routes:    req.NotifyRoutes,
+		MessageID: messageID,
+		Body:      body,
+	})
+	if err != nil {
+		return notification, err
+	}
+	notification.Queued = broadcast.Queued
+	notification.Duplicates = broadcast.Duplicates
+	notification.TargetIssuesCreated = broadcast.Created
+	notification.MessageSHA = shortDocumentHash(messageID)
+	notification.BodySHA = shortDocumentHash(body)
+	notification.BodyBytes = len(body)
+	notification.BodyLines = lineCount(body)
+	notification.Destinations = broadcast.Destinations
+	return notification, nil
 }
 
 func RunSkillSourceProposalIssue(ctx context.Context, cfg Config, github SkillSourceProposalIssueGitHubClient, req SkillSourceProposalIssueRequest) (SkillSourceProposalIssueResult, error) {
@@ -252,6 +303,16 @@ func RenderSkillSourceProposalIssueActionReport(ev Event, req SkillSourceProposa
 	fmt.Fprintf(&b, "- duplicate_suppressed: `%t`\n", result.Duplicate)
 	fmt.Fprintf(&b, "- proposal_id_sha256_12: `%s`\n", shortDocumentHash(req.ProposalID))
 	fmt.Fprintf(&b, "- source_name: `%s`\n", inlineCode(req.SourceName))
+	fmt.Fprintf(&b, "- channel_notification_requested: `%t`\n", result.ChannelNotification.Requested)
+	fmt.Fprintf(&b, "- channel_notification_routes: `%d`\n", result.ChannelNotification.Routes)
+	fmt.Fprintf(&b, "- channel_notification_queued: `%d`\n", result.ChannelNotification.Queued)
+	fmt.Fprintf(&b, "- channel_notification_duplicates: `%d`\n", result.ChannelNotification.Duplicates)
+	fmt.Fprintf(&b, "- channel_notification_target_issues_created: `%d`\n", result.ChannelNotification.TargetIssuesCreated)
+	fmt.Fprintf(&b, "- channel_notification_routes_sha256_12: `%s`\n", noneIfEmpty(req.NotifyRoutesSHA))
+	fmt.Fprintf(&b, "- channel_notification_message_id_sha256_12: `%s`\n", noneIfEmpty(result.ChannelNotification.MessageSHA))
+	fmt.Fprintf(&b, "- channel_notification_body_sha256_12: `%s`\n", noneIfEmpty(result.ChannelNotification.BodySHA))
+	fmt.Fprintf(&b, "- channel_notification_body_bytes: `%d`\n", result.ChannelNotification.BodyBytes)
+	fmt.Fprintf(&b, "- channel_notification_body_lines: `%d`\n", result.ChannelNotification.BodyLines)
 	fmt.Fprintf(&b, "- source_pin_path: `%s`\n", req.SourcePinPath)
 	fmt.Fprintf(&b, "- proposed_skill_path: `%s`\n", req.SkillPath)
 	fmt.Fprintf(&b, "- source_kind: `%s`\n", req.SourceKind)
@@ -282,6 +343,9 @@ func RenderSkillSourceProposalIssueActionReport(ev Event, req SkillSourceProposa
 	fmt.Fprintf(&b, "- raw_source_ref_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_source_body_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_skill_body_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_channel_routes_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_channel_notification_body_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- provider_delivery_performed: `%t`\n", false)
 	fmt.Fprintf(&b, "- source_pin_file_written: `%t`\n", false)
 	fmt.Fprintf(&b, "- active_skill_write_performed: `%t`\n", false)
 	fmt.Fprintf(&b, "- repository_mutation_performed: `%t`\n", false)
@@ -293,12 +357,37 @@ func RenderSkillSourceProposalIssueActionReport(ev Event, req SkillSourceProposa
 	fmt.Fprintf(&b, "- continue on proposal issue: `#%d`\n", result.IssueNumber)
 	fmt.Fprintf(&b, "- if accepted, draft `%s` on a normal branch and review it as code\n", req.SourcePinPath)
 	b.WriteString("- run `gitclaw skills sources verify`, `gitclaw skills sources risk`, and a live GitHub Models conversation E2E before promotion\n")
+	if result.ChannelNotification.Requested {
+		b.WriteString("\n### Channel Notifications\n")
+		if len(result.ChannelNotification.Destinations) == 0 {
+			b.WriteString("- none\n")
+		} else {
+			for _, destination := range result.ChannelNotification.Destinations {
+				fmt.Fprintf(
+					&b,
+					"- destination=`%02d` target_issue=`#%d` outbound_comment_id=`%d` target_issue_created=`%t` duplicate_suppressed=`%t` route_sha256_12=`%s` channel=`%s` thread_id_sha256_12=`%s` message_id_sha256_12=`%s` body_sha256_12=`%s`\n",
+					destination.Index,
+					destination.IssueNumber,
+					destination.CommentID,
+					destination.Created,
+					destination.Duplicate,
+					noneIfEmpty(destination.RouteHash),
+					destination.Channel,
+					noneIfEmpty(destination.ThreadHash),
+					noneIfEmpty(destination.MessageHash),
+					noneIfEmpty(destination.BodyHash),
+				)
+			}
+		}
+		b.WriteString("- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`\n")
+	}
 	return strings.TrimSpace(b.String())
 }
 
 type skillSourceProposalIssueArgs struct {
 	ProposalID         string
 	SourceName         string
+	NotifyRoutes       []string
 	SourceRef          string
 	SourceKind         string
 	SkillPath          string
@@ -336,6 +425,12 @@ func parseSkillSourceProposalIssueArgs(args []string, sourceText string) (skillS
 				return parsed, fmt.Errorf("%s requires a value", field)
 			}
 			parsed.SourceRef = strings.Trim(strings.TrimSpace(args[i]), "`\"'")
+		case "--notify-route", "--notify-routes", "--channel-route", "--channel-routes":
+			i++
+			if i >= len(args) {
+				return parsed, fmt.Errorf("%s requires a value", field)
+			}
+			parsed.NotifyRoutes = append(parsed.NotifyRoutes, splitChannelBroadcastRoutes(args[i])...)
 		case "--source-kind", "--kind":
 			i++
 			if i >= len(args) {
@@ -401,7 +496,29 @@ func parseSkillSourceProposalIssueArgs(args []string, sourceText string) (skillS
 	if parsed.SourceName == "" {
 		parsed.SourceName = normalizeSkillInstallCandidate("skill-source-" + shortDocumentHash(sourceText))
 	}
+	parsed.NotifyRoutes = normalizeChannelBroadcastRoutes(parsed.NotifyRoutes)
 	return parsed, nil
+}
+
+func RenderSkillSourceProposalChannelNotificationBody(req SkillSourceProposalIssueRequest, result SkillSourceProposalIssueResult) string {
+	var b strings.Builder
+	b.WriteString("GitClaw skill source proposal\n\n")
+	fmt.Fprintf(&b, "Review issue: #%d %s\n", result.IssueNumber, result.IssueURL)
+	fmt.Fprintf(&b, "Source issue: #%d %s\n", req.SourceIssueNumber, issueURL(req.Repo, req.SourceIssueNumber))
+	fmt.Fprintf(&b, "Source name: %s\n", req.SourceName)
+	fmt.Fprintf(&b, "Source kind: %s\n", req.SourceKind)
+	fmt.Fprintf(&b, "Source ref sha256_12: %s\n", req.SourceRefSHA)
+	fmt.Fprintf(&b, "Source pin path: %s\n", req.SourcePinPath)
+	fmt.Fprintf(&b, "Proposed skill path: %s\n", req.SkillPath)
+	fmt.Fprintf(&b, "Trust level: %s\n", req.TrustLevel)
+	fmt.Fprintf(&b, "Install mode: %s\n", req.InstallMode)
+	fmt.Fprintf(&b, "Review PR required: %t\n", true)
+	b.WriteString("\nReview the GitHub source-pin proposal issue before drafting source YAML on a normal code-review branch. This notification did not call a model, fetch external sources, run installers, write source pins, write active skills, or mutate the repository.")
+	return strings.TrimSpace(b.String())
+}
+
+func skillSourceProposalChannelNotificationMessageID(req SkillSourceProposalIssueRequest) string {
+	return fmt.Sprintf("gitclaw-skill-source-proposal-%s", req.ProposalID)
 }
 
 func skillSourceProposalNameFromRef(sourceRef string) string {

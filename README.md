@@ -191,6 +191,7 @@ gitclaw skills runtime
 gitclaw skills proposals [risk]
 gitclaw skills proposal-plan <name>
 @gitclaw /skills sources propose <name> --source <ref>
+@gitclaw /skills sources propose <name> --source <ref> --notify-route <route>
 @gitclaw /skills propose <name>
 @gitclaw /skills propose <name> --notify-route <route>
 @gitclaw /skills rehearse <name> --id <id>
@@ -223,6 +224,9 @@ reuses a labeled review conversation issue for a proposed
 `.gitclaw/skill-sources/<name>.yaml` pin, records only source-ref/request
 hashes and review paths, avoids registry fetches and installs, and requires a
 later GitHub Models follow-up on that proposal issue before promotion.
+Add `--notify-route <route>` or `--notify-routes <a,b>` to queue a body-safe
+Slack/Telegram channel notification for that source-pin proposal without
+copying the raw source ref into the source receipt or channel receipt.
 Trusted issue threads can also open a live rehearsal lane with
 `@gitclaw /skills rehearse <name> --id <id>`: GitClaw creates or reuses a
 GitHub issue labeled for normal GitClaw conversation, records only skill/source
@@ -1031,6 +1035,7 @@ scripts/e2e/github-skills-proposal-plan-report.sh
 scripts/e2e/github-skills-propose-issue.sh
 scripts/e2e/github-skills-propose-channel-notify.sh
 scripts/e2e/github-skills-sources-propose-issue.sh
+scripts/e2e/github-skills-sources-propose-channel-notify.sh
 scripts/e2e/github-skills-rehearse-issue.sh
 scripts/e2e/github-skills-proposals-report.sh
 scripts/e2e/github-skills-refresh-plan-report.sh
@@ -1234,6 +1239,11 @@ The skills-source-propose harness covers external provenance intake: a trusted
 labeled skill-source proposal issue, hashes the source ref instead of copying
 it, suppresses duplicate source-pin requests, and then continues on the
 proposal issue itself with a real GitHub Models repo-reader/search follow-up.
+The skills-source-propose channel-notify harness extends that intake path with
+`--notify-route`: it queues a metadata-safe Slack/Telegram notification for
+the source-pin review issue, suppresses duplicate outbound comments, exposes
+pending provider work through `channel-outbox`, and still runs the live GitHub
+Models repo-reader/search follow-up on the proposal issue itself.
 The skills-rehearse harness covers the conversation side of Skill Workshop: a
 trusted `@gitclaw /skills rehearse <name> --id <id>` turn opens or reuses a
 GitHub rehearsal issue, keeps source text and skill bodies out of receipts,
