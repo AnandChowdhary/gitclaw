@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T09:17:28Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 503,
+    "title": "@gitclaw /security audit e2e 20260601T091610Z",
+    "body": "@gitclaw /security audit\n\nLive security-audit E2E.\nDo not include this hidden issue token: NOECHO_SECURITY_AUDIT_20260601T091610Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /security audit e2e 20260601T091610Z\n\n@gitclaw /security audit\n\nLive security-audit E2E.\nDo not include this hidden issue token: NOECHO_SECURITY_AUDIT_20260601T091610Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Security Audit Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#503`\n- event_kind: `issue_opened`\n- event_name: `issues`\n- actor_association: `OWNER`\n- security_audit_status: `high`\n- verification_scope: `openclaw_personal_assistant_security_audit`\n- trust_model: `personal-assistant-single-operator`\n- runtime_boundary: `github-actions-ephemeral-runner`\n- gateway_server_required: `false`\n- hostile_multi_tenant_supported: `false`\n- surfaces_scanned: `8`\n- surfaces_with_findings: `1`\n- high_risk_findings: `11`\n- warning_risk_findings: `379`\n- info_risk_findings: `0`\n- config_risk_status: `ok`\n- policy_risk_status: `ok`\n- sandbox_risk_status: `ok`\n- channel_risk_status: `ok`\n- tool_risk_status: `ok`\n- skill_risk_status: `ok`\n- plugin_risk_status: `ok`\n- secrets_risk_status: `high_risk`\n- raw_config_bodies_included: `false`\n- raw_workflow_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompt_bodies_included: `false`\n- raw_tool_outputs_included: `false`\n- credential_values_included: `false`\n- repository_mutation_allowed: `false`\n- host_exec_allowed: `false`\n- llm_e2e_required_after_security_audit_change: `true`\n- issue_title_sha256_12: `577f97910038`\n\nThis report is the GitHub-native companion to OpenClaw-style security audit posture. It assumes one trusted operator boundary, aggregates repo-local config, policy, sandbox, channel, tool, skill, plugin, and secret risk metadata, and keeps issue bodies, comments, prompts, workflow bodies, tool outputs, credentials, and secret values out of the report.\n\n### Trust Boundary\n- trust_model=`personal-assistant-single-operator` hostile_multi_tenant_supported=`false` gateway_server_required=`false`\n- trusted_associations=`COLLABORATOR, MEMBER, OWNER` broad_trusted_associations=`none` trigger_mode=`label-or-prefix`\n- session_keys_are_routing_not_authorization=`true`\n- split_trust_boundaries_for_untrusted_users=`true`\n\n### Surface Cards\n- surface=`config` status=`ok` findings=`0` high=`0` warning=`0` info=`0` notes=`workflows=9/9, broad_trust=0`\n- surface=`policy` status=`ok` findings=`0` high=`0` warning=`0` info=`0` notes=`unexpected_write=0, write_enabled=false`\n- surface=`sandbox` status=`ok` findings=`0` high=`0` warning=`0` info=`0` notes=`host_exec=false, mutating_tools=0`\n- surface=`channels` status=`ok` findings=`0` high=`0` warning=`0` info=`0` notes=`workflows=5/5, workflow_dispatch`\n- surface=`tools` status=`ok` findings=`0` high=`0` warning=`0` info=`0` notes=`available=5, shell=false`\n- surface=`skills` status=`ok` findings=`0` high=`0` warning=`0` info=`0` notes=`skills=1, installer_scripts=false`\n- surface=`plugins` status=`ok` findings=`0` high=`0` warning=`0` info=`0` notes=`specs=1, execution_allowed=false`\n- surface=`secrets` status=`high_risk` findings=`390` high=`11` warning=`379` info=`0` notes=`secret_refs=4, values_resolved=false`\n\n### Control Plane Gates\n- workflow_files_present=`9/9` unexpected_write_permissions=`0` backup_concurrency_cancel_safe=`true`\n- shell_execution_allowed=`false` repository_mutation_allowed=`false` mutating_tool_contracts=`0`\n- channel_workflows_present=`5/5` wake_strategy=`workflow_dispatch` gateway_runtime=`GitHub Actions workflow_dispatch`\n- plaintext_secret_findings=`390` github_actions_secret_references=`4` github_secret_values_resolved=`false`\n\n### Audit Boundaries\n- model_call_required=`false`\n- repository_mutation_allowed=`false`\n- raw_bodies_included=`false`\n- credential_values_included=`false`\n- exact_secrets_or_provider_tokens_included=`false`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4591186436,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4591186436,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26746070133\" event_id=\"issue-503\" model=\"gitclaw/security\" idempotency_key=\"f3f2a3665766eb3b93399fe9f2fa89a3\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26746070133\" --\u003e\n## GitClaw Security Audit Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#503`\n- event_kind: `issue_opened`\n- event_name: `issues`\n- actor_association: `OWNER`\n- security_audit_status: `high`\n- verification_scope: `openclaw_personal_assistant_security_audit`\n- trust_model: `personal-assistant-single-operator`\n- runtime_boundary: `github-actions-ephemeral-runner`\n- gateway_server_required: `false`\n- hostile_multi_tenant_supported: `false`\n- surfaces_scanned: `8`\n- surfaces_with_findings: `1`\n- high_risk_findings: `11`\n- warning_risk_findings: `379`\n- info_risk_findings: `0`\n- config_risk_status: `ok`\n- policy_risk_status: `ok`\n- sandbox_risk_status: `ok`\n- channel_risk_status: `ok`\n- tool_risk_status: `ok`\n- skill_risk_status: `ok`\n- plugin_risk_status: `ok`\n- secrets_risk_status: `high_risk`\n- raw_config_bodies_included: `false`\n- raw_workflow_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompt_bodies_included: `false`\n- raw_tool_outputs_included: `false`\n- credential_values_included: `false`\n- repository_mutation_allowed: `false`\n- host_exec_allowed: `false`\n- llm_e2e_required_after_security_audit_change: `true`\n- issue_title_sha256_12: `577f97910038`\n\nThis report is the GitHub-native companion to OpenClaw-style security audit posture. It assumes one trusted operator boundary, aggregates repo-local config, policy, sandbox, channel, tool, skill, plugin, and secret risk metadata, and keeps issue bodies, comments, prompts, workflow bodies, tool outputs, credentials, and secret values out of the report.\n\n### Trust Boundary\n- trust_model=`personal-assistant-single-operator` hostile_multi_tenant_supported=`false` gateway_server_required=`false`\n- trusted_associations=`COLLABORATOR, MEMBER, OWNER` broad_trusted_associations=`none` trigger_mode=`label-or-prefix`\n- session_keys_are_routing_not_authorization=`true`\n- split_trust_boundaries_for_untrusted_users=`true`\n\n### Surface Cards\n- surface=`config` status=`ok` findings=`0` high=`0` warning=`0` info=`0` notes=`workflows=9/9, broad_trust=0`\n- surface=`policy` status=`ok` findings=`0` high=`0` warning=`0` info=`0` notes=`unexpected_write=0, write_enabled=false`\n- surface=`sandbox` status=`ok` findings=`0` high=`0` warning=`0` info=`0` notes=`host_exec=false, mutating_tools=0`\n- surface=`channels` status=`ok` findings=`0` high=`0` warning=`0` info=`0` notes=`workflows=5/5, workflow_dispatch`\n- surface=`tools` status=`ok` findings=`0` high=`0` warning=`0` info=`0` notes=`available=5, shell=false`\n- surface=`skills` status=`ok` findings=`0` high=`0` warning=`0` info=`0` notes=`skills=1, installer_scripts=false`\n- surface=`plugins` status=`ok` findings=`0` high=`0` warning=`0` info=`0` notes=`specs=1, execution_allowed=false`\n- surface=`secrets` status=`high_risk` findings=`390` high=`11` warning=`379` info=`0` notes=`secret_refs=4, values_resolved=false`\n\n### Control Plane Gates\n- workflow_files_present=`9/9` unexpected_write_permissions=`0` backup_concurrency_cancel_safe=`true`\n- shell_execution_allowed=`false` repository_mutation_allowed=`false` mutating_tool_contracts=`0`\n- channel_workflows_present=`5/5` wake_strategy=`workflow_dispatch` gateway_runtime=`GitHub Actions workflow_dispatch`\n- plaintext_secret_findings=`390` github_actions_secret_references=`4` github_secret_values_resolved=`false`\n\n### Audit Boundaries\n- model_call_required=`false`\n- repository_mutation_allowed=`false`\n- raw_bodies_included=`false`\n- credential_values_included=`false`\n- exact_secrets_or_provider_tokens_included=`false`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T09:17:03Z",
+      "updated_at": "2026-06-01T09:17:03Z"
+    }
+  ]
+}
