@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T22:04:52Z",
+  "generated_at": "2026-06-01T22:06:40Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 528,
   "issues": [
@@ -6641,13 +6641,14 @@
       "number": 611,
       "title": "GitClaw channel task: Complete channel done task 20260601t220004z",
       "path": "issues/000611.json",
-      "backup_generated_at": "2026-06-01T22:04:50Z",
+      "backup_generated_at": "2026-06-01T22:06:38Z",
       "event_name": "issue_comment",
       "labels": [
-        "gitclaw"
+        "gitclaw",
+        "gitclaw:done"
       ],
-      "comment_count": 2,
-      "transcript_messages": 3
+      "comment_count": 4,
+      "transcript_messages": 5
     }
   ]
 }
