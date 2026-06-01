@@ -550,6 +550,7 @@ gitclaw channels risk
 gitclaw channels info telegram
 gitclaw channel-send --channel slack --thread-id <thread> --message-id <id> --body "hello"
 gitclaw channel-send --route e2e-slack-route --message-id <id> --body "hello"
+@gitclaw /channels send --route e2e-slack-route --message-id <id>
 gitclaw proactive list
 gitclaw proactive schedule
 gitclaw proactive chain
@@ -696,6 +697,10 @@ outbox/delivery receipt path handles provider delivery without a server.
 Named routes in `.gitclaw/channels/routes.yaml` make that usable for
 proactive jobs: `gitclaw channel-send --route <name>` resolves a reviewed
 Slack/Telegram channel and thread template before queuing the outbound comment.
+Trusted GitHub issues and comments can also use the same routebook directly:
+`@gitclaw /channels send --route <name> --message-id <id>` queues an outbound
+channel comment, then posts a body-free receipt on the source issue while
+leaving provider delivery to `channel-outbox` and `channel-delivery`.
 The live proactive-report, proactive-list, and proactive-schedule harnesses use
 the same two-proof shape for scheduled work: body-free workflow/prompt metadata
 first, then a normal GitHub Models repo-reader/search follow-up.
@@ -893,6 +898,7 @@ scripts/e2e/github-channel-state-workflow.sh
 scripts/e2e/github-channel-gateway-workflow.sh
 scripts/e2e/github-channel-send-workflow.sh
 scripts/e2e/github-channel-send-route-workflow.sh
+scripts/e2e/github-channel-send-slash.sh
 scripts/e2e/github-channel-delivery-workflow.sh
 scripts/e2e/github-channel-outbox-workflow.sh
 scripts/e2e/github-config-risk-report.sh
@@ -991,6 +997,11 @@ workflow-dispatch provides only `route`, `message_id`, and `body`, GitClaw
 resolves `.gitclaw/channels/routes.yaml`, queues the outbound comment, suppresses
 duplicates, exposes pending outbox work without bodies, and then runs a real
 GitHub Models repo-reader/search follow-up on the same issue.
+The channel-send slash harness proves channels are usable from ordinary GitHub
+conversation too: `@gitclaw /channels send` resolves a named route, queues an
+outbound channel comment, posts a body-free receipt, suppresses duplicate
+message IDs from a later comment, exposes pending outbox work without bodies,
+and then runs a real GitHub Models repo-reader/search follow-up.
 The channel-outbox workflow harness proves the missing outbound half of the
 bridge: a real channel-ingested message gets a GitHub Models/tool reply, the
 outbox exposes only pending assistant comments for provider delivery, delivery

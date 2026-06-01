@@ -3310,6 +3310,19 @@ values that can expand `{message_id}` and `{route}`. The executable surface is
 metadata-only outbox discovery, and a real GitHub Models repo-reader/search
 follow-up on the routed issue.
 
+2026-06-01 channel action follow-up: route-backed outbound messages should also
+be available from the normal GitHub issue conversation, not only from a manual
+workflow dispatch or scheduled job. OpenClaw's channel command surface and
+Hermes' gateway-style "send to channel" behavior both imply an operator can ask
+the assistant to speak into a channel. GitClaw's serverless version is
+`@gitclaw /channels send --route <name> --message-id <id>`: it resolves the
+repo-reviewed route, queues one `gitclaw:channel-outbound` comment on the
+canonical channel issue, posts a body-free receipt on the source issue, and
+leaves actual provider delivery to the existing outbox/delivery receipt path.
+Acceptance must include a live slash-command E2E plus a real GitHub Models
+repo-reader/search follow-up, so channel actions do not become another
+deterministic-only report surface.
+
 ### 2026-06-01 Session Skills Follow-Up
 
 OpenClaw's skill surfaces treat skills as named, inspectable prompt extensions,

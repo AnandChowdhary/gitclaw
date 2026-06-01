@@ -1094,6 +1094,82 @@ permissions:
 	}
 }
 
+func TestHandleChannelsSendActionQueuesRouteWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, channelRoutesPath, `routes:
+  - name: team-demo
+    channel: slack
+    thread_id_template: route-thread-{message_id}
+    author: gitclaw:test
+`)
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 151,
+			"title": "@gitclaw /channels send --route team-demo",
+			"body": "Outbound message body.\n\nCHANNEL_SEND_ACTION_SECRET",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{151: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for channel send action", llm.Calls)
+	}
+	if len(github.Issues) != 1 {
+		t.Fatalf("created issues = %d, want one channel issue: %#v", len(github.Issues), github.Issues)
+	}
+	channelIssue := github.Issues[0]
+	if !HasChannelThreadMarker(channelIssue.Body) || !strings.Contains(channelIssue.Body, `channel="slack"`) || !strings.Contains(channelIssue.Body, "route-thread-gitclaw-slash-issue-151-") {
+		t.Fatalf("channel issue missing routed thread marker: %s", channelIssue.Body)
+	}
+	if hasLabel(github.IssueLabels[channelIssue.Number], cfg.TriggerLabel) || !hasLabel(github.IssueLabels[channelIssue.Number], cfg.ChannelLabel) {
+		t.Fatalf("unexpected channel issue labels: %#v", github.IssueLabels[channelIssue.Number])
+	}
+	channelComments := github.CommentsByIssue[channelIssue.Number]
+	if len(channelComments) != 1 {
+		t.Fatalf("channel comments = %d, want 1: %#v", len(channelComments), channelComments)
+	}
+	outbound := channelComments[0].Body
+	for _, want := range []string{"gitclaw:channel-outbound", `channel="slack"`, `author="gitclaw:test"`, "CHANNEL_SEND_ACTION_SECRET"} {
+		if !strings.Contains(outbound, want) {
+			t.Fatalf("outbound comment missing %q:\n%s", want, outbound)
+		}
+	}
+
+	sourceComments := github.CommentsByIssue[151]
+	if len(sourceComments) != 1 {
+		t.Fatalf("source comments = %d, want action receipt: %#v", len(sourceComments), sourceComments)
+	}
+	receipt := sourceComments[0].Body
+	for _, want := range []string{"GitClaw Channel Send Action", "Generated without a model call", `model="gitclaw/channels"`, "requested_channel_command: `/channels send`", "channel_send_status: `queued`", "route_resolved: `true`", "target_issue_created: `true`", "message_id_auto: `true`", "raw_outbound_body_included: `false`", "provider_delivery_performed: `false`", "llm_e2e_required_after_channel_send_action_change: `true`"} {
+		if !strings.Contains(receipt, want) {
+			t.Fatalf("channel send action receipt missing %q:\n%s", want, receipt)
+		}
+	}
+	for _, leaked := range []string{"CHANNEL_SEND_ACTION_SECRET", "Outbound message body.", "route-thread-gitclaw-slash"} {
+		if strings.Contains(receipt, leaked) {
+			t.Fatalf("channel send action receipt leaked %q:\n%s", leaked, receipt)
+		}
+	}
+	if !hasLabel(github.IssueLabels[151], "gitclaw:done") || hasLabel(github.IssueLabels[151], "gitclaw:running") || hasLabel(github.IssueLabels[151], "gitclaw:error") {
+		t.Fatalf("unexpected source labels: %#v", github.IssueLabels[151])
+	}
+}
+
 func TestHandleChannelsVerifyCommandPostsReportWithoutLLM(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".github/workflows/gitclaw-channel-ingest.yml", `name: GitClaw Channel Ingest

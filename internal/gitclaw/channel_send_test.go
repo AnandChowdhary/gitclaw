@@ -46,6 +46,35 @@ func TestRunChannelSendQueuesOutboundMessage(t *testing.T) {
 	}
 }
 
+func TestBuildChannelSendActionRequestSupportsRouteAndTrailingBody(t *testing.T) {
+	ev := Event{
+		Kind:      EventIssueOpened,
+		EventName: "issues",
+		Repo:      "owner/repo",
+		Issue: Issue{
+			Number: 9,
+			Title:  "@gitclaw /channels send team-demo",
+			Body:   "Body that should be queued.\n\nCHANNEL_SEND_ACTION_PARSE_TOKEN",
+		},
+	}
+	req, err := BuildChannelSendActionRequest(ev, DefaultConfig())
+	if err != nil {
+		t.Fatalf("BuildChannelSendActionRequest returned error: %v", err)
+	}
+	if req.Options.Route != "team-demo" || req.Options.Channel != "" {
+		t.Fatalf("unexpected target parsing: %#v", req.Options)
+	}
+	if !req.AutoMessageID || !strings.HasPrefix(req.Options.MessageID, "gitclaw-slash-issue-9-") {
+		t.Fatalf("expected auto message id, got %#v", req)
+	}
+	if req.BodySource != "trailing-lines" || !strings.Contains(req.Options.Body, "CHANNEL_SEND_ACTION_PARSE_TOKEN") {
+		t.Fatalf("unexpected body parsing: %#v", req)
+	}
+	if req.OutboundBodySHA == "" || req.RequestedRouteHash == "" || req.RequestedMsgHash == "" {
+		t.Fatalf("expected body/route/message hashes: %#v", req)
+	}
+}
+
 func TestRunChannelSendResolvesNamedRoute(t *testing.T) {
 	cfg := DefaultConfig()
 	cfg.Workdir = t.TempDir()

@@ -4869,6 +4869,22 @@ Routes live in `.gitclaw/channels/routes.yaml`. Each route has a `name`,
 `{message_id}` and `{route}` so E2E and proactive jobs can create stable
 per-message GitHub channel threads without a server-side router.
 
+The same reviewed routebook is available from ordinary GitHub conversation:
+
+```text
+@gitclaw /channels send --route team-alerts --message-id <stable-outbound-id>
+message to send
+```
+
+`/channels send`, `/channels say`, and `/channels notify` run after normal
+preflight, require a trusted actor, do not call the model, and post a
+body-free receipt on the source issue. If `--message-id` is omitted, GitClaw
+derives a deterministic id from the triggering issue/comment and body hash.
+Receipts report target issue/comment IDs, route/thread/message/body hashes,
+duplicate status, and delivery instructions, but never print raw outbound
+bodies, raw thread IDs, raw message IDs, provider credentials, or provider API
+responses.
+
 Behavior:
 
 - find or create the same `gitclaw:channel-thread` issue used by inbound
@@ -4879,6 +4895,8 @@ Behavior:
   trigger label,
 - post one `gitclaw:channel-outbound` comment per `channel + message_id`,
 - suppress duplicate outbound message IDs,
+- for issue-native `/channels send`, post a `model="gitclaw/channels"`
+  receipt back to the source issue,
 - leave provider delivery to `channel-outbox` plus `channel-delivery`, so
   provider credentials and message send APIs stay outside the core assistant
   turn.
@@ -5045,10 +5063,11 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels verify
 @gitclaw /channels risk
 @gitclaw /channels info telegram
+@gitclaw /channels send --route team-alerts --message-id alert-123
 ```
 
 The command runs after normal preflight and context loading, but before model
-inference. It posts a `gitclaw:assistant-turn` comment with
+inference. Audit subcommands post a `gitclaw:assistant-turn` comment with
 `model="gitclaw/channels"` and summarizes:
 
 - the canonical channel label,
@@ -5064,6 +5083,14 @@ inference. It posts a `gitclaw:assistant-turn` comment with
 It never dumps channel message, issue, command, or workflow bodies. This keeps
 Slack/Telegram bridge debugging GitHub-native and auditable without making the
 channel bridge itself a privileged hidden conversation store.
+
+`@gitclaw /channels send --route <name>` is the action subcommand. It uses the
+same `model="gitclaw/channels"` marker for the source-issue receipt, but it
+queues a `gitclaw:channel-outbound` comment on the canonical channel issue
+instead of producing only an audit report. This is the GitHub-native operator
+equivalent of asking the assistant to "say this in Slack/Telegram" while
+keeping route resolution, duplicate suppression, and provider delivery
+auditable in issues.
 
 `@gitclaw /channels verify` uses the same data surface but switches from
 inventory to health posture. It reports `channel_verify_status`, confirms the
@@ -5105,6 +5132,7 @@ gitclaw channels list
 gitclaw channels verify
 gitclaw channels risk
 gitclaw channels info telegram
+gitclaw channel-send --route team-alerts --message-id alert-123 --body "message to send"
 gitclaw channel-state --channel telegram --account-id <id> --offset <offset>
 gitclaw channel-gateway --channel telegram --account-id <id> --renew
 gitclaw channel-outbox --channel telegram --account-id <id> --issue-number <issue> --out <file>
@@ -7205,6 +7233,14 @@ examples/workflows/gitclaw.yml
   metadata-only pending outbox entry, then posts a normal issue-comment
   follow-up that must make a GitHub Models call, select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-send-route fixture token, and
+  avoid hidden route/account/channel sentinels.
+- A `gh`-driven channel-send-slash E2E harness creates an ordinary GitHub issue
+  with `@gitclaw /channels send --route ...`, verifies the routebook-backed
+  outbound comment, body-free source receipt, duplicate suppression from a
+  later issue comment with the same message id, and metadata-only outbox
+  discovery. The same source issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-send-slash fixture token, and
   avoid hidden route/account/channel sentinels.
 - A `gh`-driven channel-delivery-workflow E2E harness dispatches
   `.github/workflows/gitclaw-channel-delivery.yml`, verifies a source

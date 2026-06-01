@@ -25,6 +25,10 @@ type ChannelSendResult struct {
 	Duplicate   bool
 	RouteName   string
 	RouteHash   string
+	Channel     string
+	ThreadHash  string
+	MessageHash string
+	BodyHash    string
 }
 
 func RunChannelSend(ctx context.Context, cfg Config, github ChannelSendGitHubClient, opts ChannelSendOptions) (ChannelSendResult, error) {
@@ -61,6 +65,10 @@ func RunChannelSend(ctx context.Context, cfg Config, github ChannelSendGitHubCli
 				Duplicate:   true,
 				RouteName:   opts.Route,
 				RouteHash:   channelRouteHash(opts.Route),
+				Channel:     opts.Channel,
+				ThreadHash:  shortDocumentHash(opts.ThreadID),
+				MessageHash: shortDocumentHash(opts.MessageID),
+				BodyHash:    shortDocumentHash(opts.Body),
 			}, nil
 		}
 	}
@@ -79,6 +87,10 @@ func RunChannelSend(ctx context.Context, cfg Config, github ChannelSendGitHubCli
 		Created:     created,
 		RouteName:   opts.Route,
 		RouteHash:   channelRouteHash(opts.Route),
+		Channel:     opts.Channel,
+		ThreadHash:  shortDocumentHash(opts.ThreadID),
+		MessageHash: shortDocumentHash(opts.MessageID),
+		BodyHash:    shortDocumentHash(opts.Body),
 	}, nil
 }
 
