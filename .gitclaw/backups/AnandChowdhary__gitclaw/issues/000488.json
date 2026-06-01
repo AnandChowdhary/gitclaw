@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T05:26:46Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 488,
+    "title": "@gitclaw /memory snapshot e2e 20260601T052526Z",
+    "body": "@gitclaw /memory snapshot\n\nLive memory-snapshot E2E.\nDo not include this hidden issue token: NOECHO_MEMORY_SNAPSHOT_20260601T052526Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /memory snapshot e2e 20260601T052526Z\n\n@gitclaw /memory snapshot\n\nLive memory-snapshot E2E.\nDo not include this hidden issue token: NOECHO_MEMORY_SNAPSHOT_20260601T052526Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Memory Snapshot Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#488`\n- memory_snapshot_status: `ok`\n- snapshot_version: `gitclaw-memory-snapshot-v1`\n- snapshot_scope: `repo-local-durable-memory`\n- snapshot_sha256_12: `fb22124c52ab`\n- snapshot_entries: `2`\n- long_term_entries: `1`\n- dated_note_entries: `1`\n- memory_note_entries: `0`\n- prompt_visible_entries: `2`\n- loaded_memory_entries: `2`\n- omitted_memory_entries: `0`\n- memory_files: `2`\n- long_term_memory_present: `true`\n- long_term_memory_loaded: `true`\n- dated_memory_notes: `1`\n- canonical_dated_memory_notes: `1`\n- noncanonical_dated_memory_notes: `0`\n- loaded_memory_notes: `1`\n- max_loaded_memory_notes: `3`\n- first_memory_note: `.gitclaw/memory/2026-05-29.md`\n- latest_memory_note: `.gitclaw/memory/2026-05-29.md`\n- timeline_span_days: `0`\n- largest_gap_days: `0`\n- gaps_over_one_day: `0`\n- raw_memory_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompt_bodies_included: `false`\n- raw_session_bodies_included: `false`\n- embedding_vectors_included: `false`\n- external_provider_accessed: `false`\n- memory_writes_allowed: `false`\n- background_promotion_active: `false`\n- llm_e2e_required_after_memory_snapshot_change: `true`\n- memory_validation_status: `ok`\n- memory_validation_errors: `0`\n- memory_validation_warnings: `0`\n- long_term_memory_present: `true`\n- long_term_memory_loaded: `true`\n- dated_memory_notes: `1`\n- canonical_dated_memory_notes: `1`\n- noncanonical_dated_memory_notes: `0`\n- loaded_memory_notes: `1`\n- max_loaded_memory_notes: `3`\n- empty_memory_files: `0`\n- memory_files_at_limit: `0`\n- potential_secret_findings: `0`\n- memory_risk_status: `ok`\n- memory_risk_findings: `0`\n- issue_title_sha256_12: `3743388a1940`\n\nThis report fingerprints GitClaw's durable repo-local memory in the spirit of OpenClaw Markdown memory and Hermes profile/session boundaries. It emits per-memory-file metadata plus one composite snapshot hash only; raw memory bodies, issue bodies, comments, prompts, session transcripts, embedding vectors, credentials, and secret values are not included.\n\n### Snapshot Entries\n- position=`1` kind=`long-term` path=`.gitclaw/MEMORY.md` source=`repo-local` role=`stable-summary` date=`long-term` present=`true` canonical=`true` latest=`false` loaded_for_this_turn=`true` prompt_visible=`true` bytes=`11916` lines=`175` sha256_12=`9179d59e37bc` at_context_limit=`false` gap_days_since_previous_note=`n/a` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` validation_findings=`0`\n- position=`2` kind=`dated-note` path=`.gitclaw/memory/2026-05-29.md` source=`repo-local` role=`latest-daily-note` date=`2026-05-29` present=`true` canonical=`true` latest=`true` loaded_for_this_turn=`true` prompt_visible=`true` bytes=`5921` lines=`100` sha256_12=`9dfb2d04fd81` at_context_limit=`false` gap_days_since_previous_note=`first` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` validation_findings=`0`\n\n### Snapshot Gates\n- validation_gate=`pass`\n- risk_gate=`pass`\n- memory_write_gate=`disabled`\n- external_provider_gate=`not_configured`\n- session_search_gate=`github-issues-and-backups`\n- background_promotion_gate=`disabled`\n- raw_body_gate=`hash_only`\n- snapshot_hash_gate=`composite-sha256_12`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4589796984,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4589796984,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26736861453\" event_id=\"issue-488\" model=\"gitclaw/memory\" idempotency_key=\"04b1e76200b3598e87260a0147db71ed\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26736861453\" --\u003e\n## GitClaw Memory Snapshot Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#488`\n- memory_snapshot_status: `ok`\n- snapshot_version: `gitclaw-memory-snapshot-v1`\n- snapshot_scope: `repo-local-durable-memory`\n- snapshot_sha256_12: `fb22124c52ab`\n- snapshot_entries: `2`\n- long_term_entries: `1`\n- dated_note_entries: `1`\n- memory_note_entries: `0`\n- prompt_visible_entries: `2`\n- loaded_memory_entries: `2`\n- omitted_memory_entries: `0`\n- memory_files: `2`\n- long_term_memory_present: `true`\n- long_term_memory_loaded: `true`\n- dated_memory_notes: `1`\n- canonical_dated_memory_notes: `1`\n- noncanonical_dated_memory_notes: `0`\n- loaded_memory_notes: `1`\n- max_loaded_memory_notes: `3`\n- first_memory_note: `.gitclaw/memory/2026-05-29.md`\n- latest_memory_note: `.gitclaw/memory/2026-05-29.md`\n- timeline_span_days: `0`\n- largest_gap_days: `0`\n- gaps_over_one_day: `0`\n- raw_memory_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompt_bodies_included: `false`\n- raw_session_bodies_included: `false`\n- embedding_vectors_included: `false`\n- external_provider_accessed: `false`\n- memory_writes_allowed: `false`\n- background_promotion_active: `false`\n- llm_e2e_required_after_memory_snapshot_change: `true`\n- memory_validation_status: `ok`\n- memory_validation_errors: `0`\n- memory_validation_warnings: `0`\n- long_term_memory_present: `true`\n- long_term_memory_loaded: `true`\n- dated_memory_notes: `1`\n- canonical_dated_memory_notes: `1`\n- noncanonical_dated_memory_notes: `0`\n- loaded_memory_notes: `1`\n- max_loaded_memory_notes: `3`\n- empty_memory_files: `0`\n- memory_files_at_limit: `0`\n- potential_secret_findings: `0`\n- memory_risk_status: `ok`\n- memory_risk_findings: `0`\n- issue_title_sha256_12: `3743388a1940`\n\nThis report fingerprints GitClaw's durable repo-local memory in the spirit of OpenClaw Markdown memory and Hermes profile/session boundaries. It emits per-memory-file metadata plus one composite snapshot hash only; raw memory bodies, issue bodies, comments, prompts, session transcripts, embedding vectors, credentials, and secret values are not included.\n\n### Snapshot Entries\n- position=`1` kind=`long-term` path=`.gitclaw/MEMORY.md` source=`repo-local` role=`stable-summary` date=`long-term` present=`true` canonical=`true` latest=`false` loaded_for_this_turn=`true` prompt_visible=`true` bytes=`11916` lines=`175` sha256_12=`9179d59e37bc` at_context_limit=`false` gap_days_since_previous_note=`n/a` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` validation_findings=`0`\n- position=`2` kind=`dated-note` path=`.gitclaw/memory/2026-05-29.md` source=`repo-local` role=`latest-daily-note` date=`2026-05-29` present=`true` canonical=`true` latest=`true` loaded_for_this_turn=`true` prompt_visible=`true` bytes=`5921` lines=`100` sha256_12=`9dfb2d04fd81` at_context_limit=`false` gap_days_since_previous_note=`first` risk_findings=`0` risk_max_severity=`none` risk_codes=`none` validation_findings=`0`\n\n### Snapshot Gates\n- validation_gate=`pass`\n- risk_gate=`pass`\n- memory_write_gate=`disabled`\n- external_provider_gate=`not_configured`\n- session_search_gate=`github-issues-and-backups`\n- background_promotion_gate=`disabled`\n- raw_body_gate=`hash_only`\n- snapshot_hash_gate=`composite-sha256_12`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T05:26:20Z",
+      "updated_at": "2026-06-01T05:26:20Z"
+    }
+  ]
+}
