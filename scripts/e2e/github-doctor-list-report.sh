@@ -166,11 +166,11 @@ for expected in \
   'context_files_present: `6`' \
   'memory_notes: `1`' \
   'skill_files: `1`' \
-  'e2e_scripts: `201`' \
-  'e2e_live_issue_scripts: `194`' \
-  'e2e_cleanup_scripts: `201`' \
-  'e2e_model_coverage_scripts: `144`' \
-  'e2e_model_followup_scripts: `144`' \
+  'e2e_scripts: `202`' \
+  'e2e_live_issue_scripts: `195`' \
+  'e2e_cleanup_scripts: `202`' \
+  'e2e_model_coverage_scripts: `145`' \
+  'e2e_model_followup_scripts: `145`' \
   'e2e_session_coverage_scripts: `2`' \
   'e2e_backup_gate_scripts: `27`' \
   'e2e_workflow_dispatch_scripts: `21`' \
@@ -224,6 +224,7 @@ for expected in \
   'path=`scripts/e2e/github-session-compaction.sh`' \
   'path=`scripts/e2e/github-session-resume.sh`' \
   'path=`scripts/e2e/github-prompt-context-report.sh`' \
+  'path=`scripts/e2e/github-model-catalog-report.sh`' \
   'path=`scripts/e2e/github-tools-catalog-report.sh`' \
   'path=`scripts/e2e/github-workspace-catalog-report.sh`' \
   'path=`scripts/e2e/github-doctor-report.sh`' \

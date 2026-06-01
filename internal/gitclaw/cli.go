@@ -1414,6 +1414,17 @@ func runModelsCommand(args []string) error {
 		fmt.Println(RenderModelCLIReport(cfg))
 		return nil
 	}
+	if args[0] == "catalog" || args[0] == "default" || args[0] == "defaults" || args[0] == "selection" || args[0] == "select" || args[0] == "available" {
+		if len(args) > 1 {
+			return fmt.Errorf("unknown models catalog argument %q", args[1])
+		}
+		cfg, err := LoadEffectiveConfig()
+		if err != nil {
+			return err
+		}
+		fmt.Println(RenderModelCatalogCLIReport(cfg))
+		return nil
+	}
 	if args[0] == "risk" || args[0] == "risk-audit" {
 		if len(args) > 1 {
 			return fmt.Errorf("unknown models risk argument %q", args[1])
@@ -1455,7 +1466,7 @@ func runModelsCommand(args []string) error {
 		fmt.Println(RenderModelCostCLIReport(cfg, repoContext))
 		return nil
 	}
-	return fmt.Errorf("usage: gitclaw models [list|usage|cost|risk]")
+	return fmt.Errorf("usage: gitclaw models [list|catalog|usage|cost|risk]")
 }
 
 func runConfigCommand(args []string) error {

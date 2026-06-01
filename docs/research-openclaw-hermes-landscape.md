@@ -1209,6 +1209,18 @@ currently includes `openai/gpt-5-nano` and does not include
 `openai/gpt-5.4-mini`, so the default should move to `openai/gpt-5-nano` while
 keeping `GITCLAW_MODEL` overrides for repos with different catalog access.
 
+2026-06-01 model-catalog follow-up: GitHub's current REST docs make the
+versioned catalog endpoint (`X-GitHub-Api-Version: 2026-03-10`) the source for
+supported model IDs, but direct catalog probes can be rate-limited just like
+inference. GitClaw should add `@gitclaw /models catalog` and
+`gitclaw models catalog` as a deterministic, body-free reviewed-snapshot
+surface: configured model, fallback models, default candidate, OpenAI/GPT-5
+catalog counts, `openai/gpt-5.4-mini` absence, catalog/inference doc URLs, raw
+response gates, and no credential leakage. Acceptance requires the
+deterministic catalog report plus a normal GitHub Models repo-reader/search
+follow-up proving actual inference, selected skill, prompt-visible tool
+metadata, and usage telemetry.
+
 2026-05-30 GPT-5 parameter follow-up: the first live `openai/gpt-5-nano`
 conversation failed because GitHub Models rejected `max_tokens` and requested
 `max_completion_tokens`. GitClaw should select the output-token request

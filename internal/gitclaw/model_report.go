@@ -16,6 +16,9 @@ func IsModelReportRequest(ev Event, cfg Config) bool {
 }
 
 func RenderModelReport(ev Event, cfg Config) string {
+	if IsModelCatalogRequest(ev, cfg) {
+		return RenderModelCatalogReport(ev, cfg)
+	}
 	if IsModelCostRequest(ev, cfg) {
 		return RenderModelCostReport(ev, cfg, nil, nil, RepoContext{})
 	}

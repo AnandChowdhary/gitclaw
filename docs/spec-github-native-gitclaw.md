@@ -700,6 +700,7 @@ GitClaw supports a deterministic model/provider audit command:
 ```text
 @gitclaw /models
 @gitclaw /models list
+@gitclaw /models catalog
 @gitclaw /models usage
 @gitclaw /models cost
 @gitclaw /models risk
@@ -722,6 +723,17 @@ inference. It posts a `gitclaw:assistant-turn` comment with
 - retryable status categories,
 - fallback enablement and primary attempts before fallback,
 - prompt-artifact enablement.
+
+`@gitclaw /models catalog` adds the reviewed GitHub Models catalog/default
+surface. It reports the configured model, fallback models, default candidate,
+catalog snapshot date, catalog API version, catalog/inference documentation
+URLs, reviewed OpenAI/GPT-5 entry counts, whether `openai/gpt-5.4-mini` is
+present, whether the configured model matches the reviewed default candidate,
+and no-live-probe/no-raw-response gates. It never prints raw catalog responses,
+provider responses, prompts, issue bodies, comments, credentials, or secret
+values. Changes to this surface require a deterministic catalog issue E2E plus
+a normal GitHub Models follow-up that proves selected `repo-reader`,
+`gitclaw.search_files`, prompt provenance, and usage telemetry.
 
 `@gitclaw /models usage` adds the body-free token telemetry view inspired by
 OpenClaw's `/status` and `/usage` split and Hermes' use of API-reported token
@@ -761,6 +773,7 @@ Local operators can inspect the same model wiring without opening an issue:
 
 ```bash
 gitclaw models list
+gitclaw models catalog
 gitclaw models usage
 gitclaw models cost
 gitclaw models risk
@@ -845,6 +858,7 @@ GitHub issue/comment event
   `nodes catalog`, `nodes list`, `nodes risk`, `nodes verify`,
   `migrate plan`, `migrate risk`,
   `orders list`, `orders verify`, `orders risk`,
+  `models list`, `models catalog`, `models usage`, `models cost`, `models risk`,
   `profile show`, `profile verify`,
   `context list`, `context risk`, `context info`,
   `prompt list`, `prompt pack`, `prompt context`, `prompt cache`,
@@ -6781,6 +6795,13 @@ examples/workflows/gitclaw.yml
 - A `gh`-driven models-list E2E harness verifies `@gitclaw /models list` is
   an explicit report alias, while local `gitclaw models list` exposes the same
   provider wiring without issue-only fields.
+- A `gh`-driven model-catalog E2E harness verifies
+  `@gitclaw /models catalog` and local `gitclaw models catalog` expose the
+  reviewed GitHub Models catalog/default snapshot, `openai/gpt-5-nano`
+  default candidate, fallback catalog membership, `openai/gpt-5.4-mini`
+  absence, no-live-probe gates, and raw-response/body exclusions without a
+  model call, then runs a real GitHub Models follow-up proving repo-reader
+  search and normalized usage-marker persistence on the model-backed turn.
 - A `gh`-driven model-usage E2E harness verifies `@gitclaw /models usage` and
   local `gitclaw models usage` expose normalized token telemetry, prompt
   projection, raw-payload exclusion, and cost-estimation gaps without a model

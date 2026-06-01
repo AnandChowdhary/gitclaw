@@ -648,16 +648,5 @@ func sortModelRiskFindings(findings []ModelRiskFinding) {
 }
 
 func isKnownGitHubModelsModel(model string) bool {
-	switch strings.ToLower(strings.TrimSpace(model)) {
-	case "openai/gpt-5-nano",
-		"openai/gpt-5-mini",
-		"openai/gpt-5",
-		"openai/gpt-5-chat",
-		"openai/gpt-4.1-nano",
-		"openai/gpt-4.1-mini",
-		"openai/gpt-4.1":
-		return true
-	default:
-		return false
-	}
+	return lookupReviewedModelCatalogEntry(model).ID != ""
 }

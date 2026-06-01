@@ -43,6 +43,7 @@ go run ./cmd/gitclaw diffs risk
 go run ./cmd/gitclaw profile catalog
 go run ./cmd/gitclaw profile manifest
 go run ./cmd/gitclaw profile risk
+go run ./cmd/gitclaw models catalog
 go run ./cmd/gitclaw models usage
 go run ./cmd/gitclaw models cost
 go run ./cmd/gitclaw models risk
@@ -415,6 +416,7 @@ Operational surfaces:
 
 ```bash
 gitclaw models list
+gitclaw models catalog
 gitclaw models usage
 gitclaw models cost
 gitclaw models risk
@@ -642,6 +644,7 @@ scripts/e2e/github-memory-provenance-report.sh
 scripts/e2e/github-memory-timeline-report.sh
 scripts/e2e/github-memory-risk-report.sh
 scripts/e2e/github-migration-risk-report.sh
+scripts/e2e/github-model-catalog-report.sh
 scripts/e2e/github-model-usage-report.sh
 scripts/e2e/github-model-cost-report.sh
 scripts/e2e/github-model-risk-report.sh
