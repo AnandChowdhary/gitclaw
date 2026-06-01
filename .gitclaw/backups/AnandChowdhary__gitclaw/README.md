@@ -1,6 +1,6 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-01T23:06:52Z`
+- generated_at: `2026-06-01T23:08:19Z`
 - issue_count: `534`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
@@ -538,4 +538,4 @@
 | #616 | GitClaw proactive proactive-notify-e2e-20260601222611 notify-20260601222611 | `2026-06-01T22:30:48Z` | 3 | 4 | `issues/000616.json` |
 | #618 | GitClaw telegram thread channel-decision-e2e-20260601t224624z | `2026-06-01T22:51:01Z` | 7 | 7 | `issues/000618.json` |
 | #619 | GitClaw channel decision: Record GitHub-native channel decision 20260601t224624z | `2026-06-01T22:52:31Z` | 2 | 3 | `issues/000619.json` |
-| #620 | GitClaw telegram thread channel-digest-e2e-20260601t230330z | `2026-06-01T23:06:51Z` | 5 | 5 | `issues/000620.json` |
+| #620 | GitClaw telegram thread channel-digest-e2e-20260601t230330z | `2026-06-01T23:08:18Z` | 7 | 7 | `issues/000620.json` |
