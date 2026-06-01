@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T13:46:55Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 540,
+    "title": "GitClaw channel probe E2E 20260601t134521z",
+    "body": "@gitclaw /channels probe --route e2e-slack-route --message-id probe-20260601t134521z\n\nProbe this reviewed route without copying this raw source text.\nDo not include this hidden source token: NOECHO_CHANNEL_PROBE_SOURCE_20260601t134521z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": null
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel probe E2E 20260601t134521z\n\n@gitclaw /channels probe --route e2e-slack-route --message-id probe-20260601t134521z\n\nProbe this reviewed route without copying this raw source text.\nDo not include this hidden source token: NOECHO_CHANNEL_PROBE_SOURCE_20260601t134521z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Probe Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#540`\n- source_comment_id: `0`\n- requested_channel_command: `/channels probe`\n- channel_probe_status: `queued`\n- target_issue: `#541`\n- target_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/541`\n- outbound_comment_id: `4593174899`\n- target_issue_created: `true`\n- duplicate_suppressed: `false`\n- route_resolved: `true`\n- requested_route_sha256_12: `ff6bd0e4b42c`\n- resolved_route_sha256_12: `ff6bd0e4b42c`\n- channel: `slack`\n- thread_id_sha256_12: `1d60626dbb9a`\n- message_id_sha256_12: `72cd448303c8`\n- message_id_auto: `false`\n- probe_body_sha256_12: `0e8a3e3c79a6`\n- probe_body_bytes: `482`\n- probe_body_lines: `14`\n- source_kind: `issue`\n- source_sha256_12: `97b7b9cbf422`\n- source_bytes: `278`\n- source_lines: `5`\n- operator_note_sha256_12: `343e43f3c257`\n- operator_note_bytes: `149`\n- operator_note_lines: `2`\n- raw_route_names_included: `false`\n- raw_thread_ids_included: `false`\n- raw_message_ids_included: `false`\n- raw_source_body_included: `false`\n- raw_probe_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_probe_action_change: `true`\n- issue_title_sha256_12: `bf2b048e463a`\n\nGitClaw queued a provider-facing route probe as a `gitclaw:channel-outbound` comment on the canonical channel issue. The probe is meant to test reviewed route resolution, pending outbox visibility, and delivery receipts without calling provider APIs from the issue action.\n\n### Probe Path\n- provider gateway reads the pending probe with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateway records successful send with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate probes are suppressed by `channel + message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4593175138,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4593175138,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26758831640\" event_id=\"issue-540\" model=\"gitclaw/channels\" idempotency_key=\"b927e21f5fbc07364ef5203d3fdec0a1\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26758831640\" --\u003e\n## GitClaw Channel Probe Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#540`\n- source_comment_id: `0`\n- requested_channel_command: `/channels probe`\n- channel_probe_status: `queued`\n- target_issue: `#541`\n- target_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/541`\n- outbound_comment_id: `4593174899`\n- target_issue_created: `true`\n- duplicate_suppressed: `false`\n- route_resolved: `true`\n- requested_route_sha256_12: `ff6bd0e4b42c`\n- resolved_route_sha256_12: `ff6bd0e4b42c`\n- channel: `slack`\n- thread_id_sha256_12: `1d60626dbb9a`\n- message_id_sha256_12: `72cd448303c8`\n- message_id_auto: `false`\n- probe_body_sha256_12: `0e8a3e3c79a6`\n- probe_body_bytes: `482`\n- probe_body_lines: `14`\n- source_kind: `issue`\n- source_sha256_12: `97b7b9cbf422`\n- source_bytes: `278`\n- source_lines: `5`\n- operator_note_sha256_12: `343e43f3c257`\n- operator_note_bytes: `149`\n- operator_note_lines: `2`\n- raw_route_names_included: `false`\n- raw_thread_ids_included: `false`\n- raw_message_ids_included: `false`\n- raw_source_body_included: `false`\n- raw_probe_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_probe_action_change: `true`\n- issue_title_sha256_12: `bf2b048e463a`\n\nGitClaw queued a provider-facing route probe as a `gitclaw:channel-outbound` comment on the canonical channel issue. The probe is meant to test reviewed route resolution, pending outbox visibility, and delivery receipts without calling provider APIs from the issue action.\n\n### Probe Path\n- provider gateway reads the pending probe with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateway records successful send with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate probes are suppressed by `channel + message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T13:46:21Z",
+      "updated_at": "2026-06-01T13:46:21Z"
+    }
+  ]
+}

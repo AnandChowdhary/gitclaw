@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T13:29:16Z",
+  "generated_at": "2026-06-01T13:46:57Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 479,
+  "count": 480,
   "issues": [
     {
       "number": 3,
@@ -6027,6 +6027,15 @@
       ],
       "comment_count": 2,
       "transcript_messages": 3
+    },
+    {
+      "number": 540,
+      "title": "GitClaw channel probe E2E 20260601t134521z",
+      "path": "issues/000540.json",
+      "backup_generated_at": "2026-06-01T13:46:55Z",
+      "event_name": "issues",
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }
