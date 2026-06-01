@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T19:06:28Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 582,
+    "title": "GitClaw telegram thread channel-status-e2e-20260601T190342Z",
+    "body": "\u003c!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"channel-status-e2e-20260601T190342Z\" --\u003e\nGitClaw channel bridge thread for channel-status E2E.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw",
+      "gitclaw:channel"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw telegram thread channel-status-e2e-20260601T190342Z\n\n\u003c!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"channel-status-e2e-20260601T190342Z\" --\u003e\nGitClaw channel bridge thread for channel-status E2E.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "Mirrored channel message for channel-status E2E.\nDo not leak this ingest token: NOECHO_CHANNEL_STATUS_INGEST_20260601T190342Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4595622614,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels status --message-id status-ingest-20260601T190342Z --status-id status-update-20260601T190342Z --state working\nWorking through the channel request.\nVisible status update token for provider queue inspection: VISIBLE_CHANNEL_STATUS_BODY_20260601T190342Z\nDo not include this source hidden token in the receipt: NOECHO_CHANNEL_STATUS_SOURCE_20260601T190342Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4595626855,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Status Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#582`\n- requested_channel_command: `/channels status`\n- channel_status_status: `queued`\n- target_issue: `#582`\n- target_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/582`\n- status_comment_id: `4595633996`\n- target_issue_created: `false`\n- duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `f9ea7c7b837d`\n- target_message_id_sha256_12: `f162284fc4bf`\n- status_id_sha256_12: `ff3b54e5a7e8`\n- status_id_auto: `false`\n- status_state_sha256_12: `dd5ace9e018d`\n- status_body_sha256_12: `3ec8990731d5`\n- status_body_bytes: `242`\n- status_body_lines: `3`\n- status_body_source: `trailing-lines`\n- target_from_current_channel_issue: `true`\n- target_issue_is_source: `true`\n- raw_route_name_included: `false`\n- raw_thread_id_included: `false`\n- raw_target_message_id_included: `false`\n- raw_status_id_included: `false`\n- raw_status_state_included: `false`\n- raw_status_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_status_action_change: `true`\n- issue_title_sha256_12: `2dc3293a46d2`\n\nGitClaw queued a structured `gitclaw:channel-status` comment on the canonical channel issue. Provider tokens, provider APIs, raw thread IDs, raw target message IDs, raw status IDs, raw status states, and status bodies are not included in this receipt.\n\n### Follow-Up Delivery\n- provider gateways read pending status updates with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent status updates with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate status updates are suppressed by `channel + status_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4595634167,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4595622614,
+      "body": "\u003c!-- gitclaw:channel-message channel=\"telegram\" thread_id=\"channel-status-e2e-20260601T190342Z\" message_id=\"status-ingest-20260601T190342Z\" author=\"telegram\" --\u003e\nMirrored channel message for channel-status E2E.\nDo not leak this ingest token: NOECHO_CHANNEL_STATUS_INGEST_20260601T190342Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T19:04:19Z",
+      "updated_at": "2026-06-01T19:04:19Z"
+    },
+    {
+      "id": 4595626855,
+      "body": "@gitclaw /channels status --message-id status-ingest-20260601T190342Z --status-id status-update-20260601T190342Z --state working\nWorking through the channel request.\nVisible status update token for provider queue inspection: VISIBLE_CHANNEL_STATUS_BODY_20260601T190342Z\nDo not include this source hidden token in the receipt: NOECHO_CHANNEL_STATUS_SOURCE_20260601T190342Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T19:04:58Z",
+      "updated_at": "2026-06-01T19:04:58Z"
+    },
+    {
+      "id": 4595633996,
+      "body": "\u003c!-- gitclaw:channel-status channel=\"telegram\" thread_id=\"channel-status-e2e-20260601T190342Z\" target_message_id=\"status-ingest-20260601T190342Z\" status_id=\"status-update-20260601t190342z\" state=\"working\" author=\"gitclaw\" --\u003e\nWorking through the channel request.\nVisible status update token for provider queue inspection: VISIBLE_CHANNEL_STATUS_BODY_20260601T190342Z\nDo not include this source hidden token in the receipt: NOECHO_CHANNEL_STATUS_SOURCE_20260601T190342Z",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T19:05:55Z",
+      "updated_at": "2026-06-01T19:05:55Z"
+    },
+    {
+      "id": 4595634167,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26775802127\" event_id=\"comment-4595626855\" model=\"gitclaw/channels\" idempotency_key=\"42cdbd71cbbb1d2fea34d7651b89845c\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26775802127\" --\u003e\n## GitClaw Channel Status Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#582`\n- requested_channel_command: `/channels status`\n- channel_status_status: `queued`\n- target_issue: `#582`\n- target_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/582`\n- status_comment_id: `4595633996`\n- target_issue_created: `false`\n- duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `f9ea7c7b837d`\n- target_message_id_sha256_12: `f162284fc4bf`\n- status_id_sha256_12: `ff3b54e5a7e8`\n- status_id_auto: `false`\n- status_state_sha256_12: `dd5ace9e018d`\n- status_body_sha256_12: `3ec8990731d5`\n- status_body_bytes: `242`\n- status_body_lines: `3`\n- status_body_source: `trailing-lines`\n- target_from_current_channel_issue: `true`\n- target_issue_is_source: `true`\n- raw_route_name_included: `false`\n- raw_thread_id_included: `false`\n- raw_target_message_id_included: `false`\n- raw_status_id_included: `false`\n- raw_status_state_included: `false`\n- raw_status_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_status_action_change: `true`\n- issue_title_sha256_12: `2dc3293a46d2`\n\nGitClaw queued a structured `gitclaw:channel-status` comment on the canonical channel issue. Provider tokens, provider APIs, raw thread IDs, raw target message IDs, raw status IDs, raw status states, and status bodies are not included in this receipt.\n\n### Follow-Up Delivery\n- provider gateways read pending status updates with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent status updates with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate status updates are suppressed by `channel + status_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T19:05:56Z",
+      "updated_at": "2026-06-01T19:05:56Z"
+    }
+  ]
+}
