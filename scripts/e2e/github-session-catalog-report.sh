@@ -176,9 +176,9 @@ for expected in \
   'session_model: `github-issue-thread-plus-backup-json`' \
   'canonical_session_store: `github-issue-thread`' \
   "local_backup_store: \`${backup_store_label}\`" \
-  'catalog_entries: `9`' \
-  'issue_side_commands: `9`' \
-  'local_backup_commands: `8`' \
+  'catalog_entries: `10`' \
+  'issue_side_commands: `10`' \
+  'local_backup_commands: `9`' \
   'raw_bodies_included: `false`' \
   'raw_tool_outputs_included: `false`' \
   'repository_mutation_allowed: `false`' \
@@ -188,11 +188,13 @@ for expected in \
   'command=`catalog` issue_intent=`@gitclaw /session catalog` local_command=`gitclaw session catalog` execution=`metadata-only` gate=`body-free-output` raw_bodies_included=`false` mutation_allowed=`false`' \
   'command=`provenance` issue_intent=`@gitclaw /session provenance` local_command=`gitclaw session provenance --backup <issue.json>`' \
   'command=`tools` issue_intent=`@gitclaw /session tools` local_command=`gitclaw session tools --backup <issue.json>`' \
+  'command=`skills` issue_intent=`@gitclaw /session skills` local_command=`gitclaw session skills --backup <issue.json>`' \
   'command=`search` issue_intent=`@gitclaw /session search <query>` local_command=`gitclaw session search <query> --backup <issue.json>`' \
   'issue_thread_gate=`canonical-session-is-github-issue-thread`' \
   'local_backup_gate=`fetched-backup-json-required-for-local-transcript-inspection`' \
   'provenance_gate=`assistant-turn-marker-prompt-context`' \
   'tools_gate=`assistant-turn-marker-tool-context`' \
+  'skills_gate=`assistant-turn-marker-skill-context`' \
   'search_gate=`query-hash-and-line-hash-metadata`' \
   'transcript_messages_now: `1`'; do
   grep -Fq "$expected" <<<"$comments" || die "session catalog report missing ${expected}"
@@ -210,15 +212,17 @@ for expected in \
   "GitClaw Session Catalog Report" \
   'scope: `local-cli`' \
   'session_catalog_status: `ok`' \
-  'catalog_entries: `9`' \
-  'issue_side_commands: `9`' \
-  'local_backup_commands: `8`' \
+  'catalog_entries: `10`' \
+  'issue_side_commands: `10`' \
+  'local_backup_commands: `9`' \
   'raw_bodies_included: `false`' \
   'command=`provenance` issue_intent=`@gitclaw /session provenance` local_command=`gitclaw session provenance --backup <issue.json>`' \
   'command=`tools` issue_intent=`@gitclaw /session tools` local_command=`gitclaw session tools --backup <issue.json>`' \
+  'command=`skills` issue_intent=`@gitclaw /session skills` local_command=`gitclaw session skills --backup <issue.json>`' \
   'command=`status` issue_intent=`@gitclaw /session status` local_command=`gitclaw session status --backup <issue.json>`' \
   'provenance_gate=`assistant-turn-marker-prompt-context`' \
   'tools_gate=`assistant-turn-marker-tool-context`' \
+  'skills_gate=`assistant-turn-marker-skill-context`' \
   'coverage_gate=`prompt-provenance-skill-tool-telemetry`'; do
   grep -Fq "$expected" <<<"$cli_catalog" || die "local session catalog missing ${expected}"
 done

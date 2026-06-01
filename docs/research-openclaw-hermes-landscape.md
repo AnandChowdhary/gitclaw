@@ -3096,6 +3096,25 @@ search queries, or tool outputs. Acceptance requires a live GitHub Models
 repo-reader/search turn first, followed by the deterministic session-tools
 report proving the model-backed tool ledger from marker evidence.
 
+### 2026-06-01 Session Skills Follow-Up
+
+OpenClaw's skill surfaces treat skills as named, inspectable prompt extensions,
+and Hermes' skills flow leans on progressive disclosure: the agent should know
+which skill was selected without exposing raw skill bodies in every audit. The
+session audit layer should make that skill provenance visible at conversation
+scope, just as the tool ledger now does for prompt-visible tools.
+
+Add `@gitclaw /session skills` and
+`gitclaw session skills --backup <issue.json>`. The report should aggregate
+assistant-turn marker attributes across the GitHub issue thread or backup JSON:
+prompt-visible skill names, selected skill marker counts, model-backed skill
+turns, deterministic skill turns, prompt-context hash counts, usage totals, and
+per-skill ledger cards. It must not print issue bodies, comments, assistant
+replies, prompts, raw skill bodies, search queries, or tool outputs. Acceptance
+requires a live GitHub Models repo-reader/search turn first, followed by the
+deterministic session-skills report proving the model-backed skill ledger from
+marker evidence.
+
 ## Open Questions For Speccing
 
 1. Is `gitclaw` primarily for one user's repos, or for teams/organizations?

@@ -35,9 +35,9 @@ func TestRenderSessionCatalogReportListsBodyFreeSessionSurface(t *testing.T) {
 		"session_model: `github-issue-thread-plus-backup-json`",
 		"canonical_session_store: `github-issue-thread`",
 		"local_backup_store: `gitclaw-backups issue JSON`",
-		"catalog_entries: `9`",
-		"issue_side_commands: `9`",
-		"local_backup_commands: `8`",
+		"catalog_entries: `10`",
+		"issue_side_commands: `10`",
+		"local_backup_commands: `9`",
 		"raw_bodies_included: `false`",
 		"raw_tool_outputs_included: `false`",
 		"repository_mutation_allowed: `false`",
@@ -47,10 +47,12 @@ func TestRenderSessionCatalogReportListsBodyFreeSessionSurface(t *testing.T) {
 		"command=`catalog` issue_intent=`@gitclaw /session catalog` local_command=`gitclaw session catalog` execution=`metadata-only` gate=`body-free-output` raw_bodies_included=`false` mutation_allowed=`false`",
 		"command=`provenance` issue_intent=`@gitclaw /session provenance` local_command=`gitclaw session provenance --backup <issue.json>` execution=`current-issue-or-local-backup` gate=`assistant-turn-marker-prompt-context`",
 		"command=`tools` issue_intent=`@gitclaw /session tools` local_command=`gitclaw session tools --backup <issue.json>` execution=`current-issue-or-local-backup` gate=`assistant-turn-marker-tool-context`",
+		"command=`skills` issue_intent=`@gitclaw /session skills` local_command=`gitclaw session skills --backup <issue.json>` execution=`current-issue-or-local-backup` gate=`assistant-turn-marker-skill-context`",
 		"command=`search` issue_intent=`@gitclaw /session search <query>` local_command=`gitclaw session search <query> --backup <issue.json>`",
 		"issue_thread_gate=`canonical-session-is-github-issue-thread`",
 		"provenance_gate=`assistant-turn-marker-prompt-context`",
 		"tools_gate=`assistant-turn-marker-tool-context`",
+		"skills_gate=`assistant-turn-marker-skill-context`",
 		"search_gate=`query-hash-and-line-hash-metadata`",
 		"coverage_gate=`prompt-provenance-skill-tool-telemetry`",
 	} {
@@ -342,6 +344,103 @@ func TestRenderSessionReportRoutesToolsCommandWithoutBodies(t *testing.T) {
 	for _, leaked := range []string{"SESSION_TOOLS_ROUTE_SECRET", "SESSION_TOOLS_ROUTE_ISSUE_SECRET"} {
 		if strings.Contains(body, leaked) {
 			t.Fatalf("session tools route leaked %q:\n%s", leaked, body)
+		}
+	}
+}
+
+func TestRenderSessionSkillsReportShowsSkillLedgerWithoutBodies(t *testing.T) {
+	comments := []Comment{
+		{
+			ID:                58,
+			Body:              "<!-- gitclaw:assistant-turn run_id=\"run-1\" model=\"openai/gpt-4.1-nano\" prompt_context_sha256_12=\"abc123abc123\" context_documents=\"2\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.search_files\" usage_prompt_tokens=\"100\" usage_completion_tokens=\"9\" usage_total_tokens=\"109\" -->\nSESSION_SKILLS_MODEL_ASSISTANT_SECRET",
+			User:              User{Login: "github-actions[bot]", Type: "Bot"},
+			AuthorAssociation: "NONE",
+		},
+		{
+			ID:                59,
+			Body:              "<!-- gitclaw:assistant-turn run_id=\"run-2\" model=\"gitclaw/session\" prompt_context_sha256_12=\"def456def456\" context_documents=\"1\" selected_skills=\"1\" tool_outputs=\"0\" skills=\"repo-reader\" -->\nSESSION_SKILLS_DETERMINISTIC_SECRET",
+			User:              User{Login: "github-actions[bot]", Type: "Bot"},
+			AuthorAssociation: "NONE",
+		},
+	}
+	transcript := []TranscriptMessage{
+		{Role: "assistant", Body: "SESSION_SKILLS_MODEL_ASSISTANT_SECRET", Actor: "github-actions[bot]", CommentID: 58, Trusted: true},
+		{Role: "assistant", Body: "SESSION_SKILLS_DETERMINISTIC_SECRET", Actor: "github-actions[bot]", CommentID: 59, Trusted: true},
+	}
+	body := RenderSessionSkillsReport(BuildSessionSkillsReport("issue-thread", "", Event{Repo: "owner/repo", Kind: "issue_comment", Issue: Issue{Number: 10}}, comments, transcript))
+	for _, want := range []string{
+		"GitClaw Session Skills Report",
+		"scope: `issue-thread`",
+		"repository: `owner/repo`",
+		"issue: `#10`",
+		"event_kind: `issue_comment`",
+		"session_skills_status: `ok`",
+		"provenance_scope: `assistant-turn-marker-skill-context`",
+		"session_store: `github-issue-thread`",
+		"raw_comments: `2`",
+		"transcript_messages: `2`",
+		"assistant_turn_comments: `2`",
+		"skill_backed_assistant_turns: `2`",
+		"assistant_turns_missing_skill_context: `0`",
+		"unique_prompt_visible_skills: `1`",
+		"prompt_visible_skill_names: `repo-reader`",
+		"selected_skill_markers: `2`",
+		"model_backed_skill_turns: `1`",
+		"deterministic_skill_turns: `1`",
+		"model_names: `gitclaw/session, openai/gpt-4.1-nano`",
+		"usage_total_tokens: `109`",
+		"raw_bodies_included: `false`",
+		"raw_issue_bodies_included: `false`",
+		"raw_comment_bodies_included: `false`",
+		"raw_assistant_replies_included: `false`",
+		"raw_prompts_included: `false`",
+		"raw_skill_bodies_included: `false`",
+		"raw_tool_outputs_included: `false`",
+		"raw_search_queries_included: `false`",
+		"repository_mutation_allowed: `false`",
+		"llm_e2e_required_after_session_skills_change: `true`",
+		"### Skill Ledger",
+		"skill=`repo-reader` prompt_visible_turns=`2` model_backed_turns=`1` deterministic_turns=`1` first_source=`comment:58` last_source=`comment:59` models=`gitclaw/session, openai/gpt-4.1-nano` prompt_context_hashes=`2`",
+		"### Skill Turn Evidence",
+		"source=`comment:58` model=`openai/gpt-4.1-nano` prompt_context_sha256_12=`abc123abc123` selected_skills=`1` skills=`repo-reader` usage_present=`true` usage_total_tokens=`109`",
+		"source=`comment:59` model=`gitclaw/session` prompt_context_sha256_12=`def456def456` selected_skills=`1` skills=`repo-reader` usage_present=`false` usage_total_tokens=`0`",
+		"### Skill Gates",
+		"skill_context_gate=`pass`",
+		"model_backed_skill_gate=`pass`",
+		"usage_telemetry_gate=`pass`",
+		"raw_skill_body_gate=`marker-attributes-only`",
+		"raw_tool_output_gate=`marker-attributes-only`",
+		"mutation_gate=`disabled`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("session skills report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SESSION_SKILLS_MODEL_ASSISTANT_SECRET", "SESSION_SKILLS_DETERMINISTIC_SECRET"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("session skills report leaked %q:\n%s", leaked, body)
+		}
+	}
+}
+
+func TestRenderSessionReportRoutesSkillsCommandWithoutBodies(t *testing.T) {
+	comments := []Comment{{
+		ID:   60,
+		Body: "<!-- gitclaw:assistant-turn model=\"openai/gpt-4.1-nano\" prompt_context_sha256_12=\"abc123abc123\" context_documents=\"1\" selected_skills=\"1\" tool_outputs=\"1\" skills=\"repo-reader\" tools=\"gitclaw.search_files\" usage_total_tokens=\"12\" -->\nSESSION_SKILLS_ROUTE_SECRET",
+	}}
+	body := RenderSessionReport(Event{
+		Repo:  "owner/repo",
+		Kind:  "issue_comment",
+		Issue: Issue{Number: 11, Title: "@gitclaw /session skills", Body: "SESSION_SKILLS_ROUTE_ISSUE_SECRET"},
+	}, DefaultConfig(), comments, nil)
+	for _, want := range []string{"GitClaw Session Skills Report", "session_skills_status: `ok`", "provenance_scope: `assistant-turn-marker-skill-context`", "skill_backed_assistant_turns: `1`", "prompt_visible_skill_names: `repo-reader`", "usage_total_tokens: `12`"} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("session skills route missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SESSION_SKILLS_ROUTE_SECRET", "SESSION_SKILLS_ROUTE_ISSUE_SECRET"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("session skills route leaked %q:\n%s", leaked, body)
 		}
 	}
 }
