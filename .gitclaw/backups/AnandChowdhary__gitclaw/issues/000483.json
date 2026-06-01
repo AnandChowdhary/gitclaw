@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T04:28:57Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 483,
+    "title": "@gitclaw /skills sources lock e2e 20260601T042739Z",
+    "body": "@gitclaw /skills sources lock\n\nLive skill source lock E2E. Keep the source-pin lock report body-free.\nDo not include this hidden skill source lock token: NOECHO_SKILL_SOURCE_LOCK_20260601T042739Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /skills sources lock e2e 20260601T042739Z\n\n@gitclaw /skills sources lock\n\nLive skill source lock E2E. Keep the source-pin lock report body-free.\nDo not include this hidden skill source lock token: NOECHO_SKILL_SOURCE_LOCK_20260601T042739Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Skill Source Lock Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#483`\n- skill_source_lock_status: `ok`\n- lock_scope: `repo-local-source-pin-reproducibility`\n- skill_source_status: `ok`\n- skill_source_specs_dir: `.gitclaw/skill-sources`\n- skill_source_specs: `1`\n- parsed_skill_source_specs: `1`\n- matched_skill_sources: `1`\n- missing_skill_source_matches: `0`\n- hash_pinned_skill_sources: `1`\n- hash_matched_skill_sources: `1`\n- hash_mismatched_skill_sources: `0`\n- repo_local_source_refs: `1`\n- remote_source_refs: `0`\n- sources_requiring_approval: `1`\n- remote_fetch_allowed_specs: `0`\n- sources_with_risk_findings: `0`\n- skill_source_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- registry_contact_allowed: `false`\n- installer_scripts_run: `false`\n- dependency_install_allowed: `false`\n- repository_mutation_allowed: `false`\n- raw_source_bodies_included: `false`\n- raw_source_refs_included: `false`\n- raw_skill_bodies_included: `false`\n- llm_e2e_required_after_skill_source_change: `true`\n- lock_entries: `1`\n- locked_source_pins: `1`\n- reproducible_source_pins: `1`\n- stale_source_pins: `0`\n- unpinned_source_pins: `0`\n- missing_skill_pins: `0`\n- remote_fetch_allowed_pins: `0`\n- risk_finding_pins: `0`\n- external_clawhub_lock_path: `.clawhub/lock.json`\n- external_clawhub_lock_present: `false`\n- external_clawhub_lock_sha256_12: `none`\n- lock_manifest_sha256_12: `435ef6fe2ee7`\n- registry_contact_allowed: `false`\n- remote_fetch_allowed: `false`\n- installer_scripts_run: `false`\n- dependency_install_allowed: `false`\n- repository_mutation_allowed: `false`\n- raw_lockfile_included: `false`\n- raw_source_bodies_included: `false`\n- raw_source_refs_included: `false`\n- raw_skill_bodies_included: `false`\n- llm_e2e_required_after_skill_source_lock_change: `true`\n- issue_title_sha256_12: `0b0bcb012b65`\n\nThis report projects a reproducibility lock from reviewed repo-local source pins. It mirrors OpenClaw/ClawHub tracked-install pressure without loading registry state: source pins, source refs, and local skills are represented by hashes and gates only.\n\n### Lock Entries\n- source_name=`repo-reader` path=`.gitclaw/skill-sources/repo-reader.yaml` skill_path=`.gitclaw/SKILLS/repo-reader/SKILL.md` lock_state=`locked` skill_matched=`true` source_kind=`repo-local` source_ref_present=`true` source_ref_sha256_12=`42df45103ee5` trust_level=`repo-local` install_mode=`manual-review` requires_approval=`true` remote_fetch_allowed=`false` hash_pinned=`true` expected_sha256_12=`2f9e68a57bd6` current_skill_sha256_12=`2f9e68a57bd6` hash_matched=`true` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Lock Gates\n- lockfile_gate=`derived-from-reviewed-source-pins`\n- external_clawhub_lock_gate=`presence-and-hash-only`\n- registry_gate=`disabled`\n- remote_fetch_gate=`disabled`\n- installer_gate=`disabled`\n- dependency_install_gate=`disabled`\n- mutation_gate=`disabled`\n- raw_body_gate=`hash_only`\n- model_e2e_gate=`required`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4589562953,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4589562953,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26735154304\" event_id=\"issue-483\" model=\"gitclaw/skills\" idempotency_key=\"2315b2bb82dc4b40677f210d35be266e\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26735154304\" --\u003e\n## GitClaw Skill Source Lock Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#483`\n- skill_source_lock_status: `ok`\n- lock_scope: `repo-local-source-pin-reproducibility`\n- skill_source_status: `ok`\n- skill_source_specs_dir: `.gitclaw/skill-sources`\n- skill_source_specs: `1`\n- parsed_skill_source_specs: `1`\n- matched_skill_sources: `1`\n- missing_skill_source_matches: `0`\n- hash_pinned_skill_sources: `1`\n- hash_matched_skill_sources: `1`\n- hash_mismatched_skill_sources: `0`\n- repo_local_source_refs: `1`\n- remote_source_refs: `0`\n- sources_requiring_approval: `1`\n- remote_fetch_allowed_specs: `0`\n- sources_with_risk_findings: `0`\n- skill_source_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- registry_contact_allowed: `false`\n- installer_scripts_run: `false`\n- dependency_install_allowed: `false`\n- repository_mutation_allowed: `false`\n- raw_source_bodies_included: `false`\n- raw_source_refs_included: `false`\n- raw_skill_bodies_included: `false`\n- llm_e2e_required_after_skill_source_change: `true`\n- lock_entries: `1`\n- locked_source_pins: `1`\n- reproducible_source_pins: `1`\n- stale_source_pins: `0`\n- unpinned_source_pins: `0`\n- missing_skill_pins: `0`\n- remote_fetch_allowed_pins: `0`\n- risk_finding_pins: `0`\n- external_clawhub_lock_path: `.clawhub/lock.json`\n- external_clawhub_lock_present: `false`\n- external_clawhub_lock_sha256_12: `none`\n- lock_manifest_sha256_12: `435ef6fe2ee7`\n- registry_contact_allowed: `false`\n- remote_fetch_allowed: `false`\n- installer_scripts_run: `false`\n- dependency_install_allowed: `false`\n- repository_mutation_allowed: `false`\n- raw_lockfile_included: `false`\n- raw_source_bodies_included: `false`\n- raw_source_refs_included: `false`\n- raw_skill_bodies_included: `false`\n- llm_e2e_required_after_skill_source_lock_change: `true`\n- issue_title_sha256_12: `0b0bcb012b65`\n\nThis report projects a reproducibility lock from reviewed repo-local source pins. It mirrors OpenClaw/ClawHub tracked-install pressure without loading registry state: source pins, source refs, and local skills are represented by hashes and gates only.\n\n### Lock Entries\n- source_name=`repo-reader` path=`.gitclaw/skill-sources/repo-reader.yaml` skill_path=`.gitclaw/SKILLS/repo-reader/SKILL.md` lock_state=`locked` skill_matched=`true` source_kind=`repo-local` source_ref_present=`true` source_ref_sha256_12=`42df45103ee5` trust_level=`repo-local` install_mode=`manual-review` requires_approval=`true` remote_fetch_allowed=`false` hash_pinned=`true` expected_sha256_12=`2f9e68a57bd6` current_skill_sha256_12=`2f9e68a57bd6` hash_matched=`true` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Lock Gates\n- lockfile_gate=`derived-from-reviewed-source-pins`\n- external_clawhub_lock_gate=`presence-and-hash-only`\n- registry_gate=`disabled`\n- remote_fetch_gate=`disabled`\n- installer_gate=`disabled`\n- dependency_install_gate=`disabled`\n- mutation_gate=`disabled`\n- raw_body_gate=`hash_only`\n- model_e2e_gate=`required`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T04:28:33Z",
+      "updated_at": "2026-06-01T04:28:33Z"
+    }
+  ]
+}
