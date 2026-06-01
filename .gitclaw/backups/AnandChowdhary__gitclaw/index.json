@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T13:08:18Z",
+  "generated_at": "2026-06-01T13:09:57Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 476,
   "issues": [
@@ -5983,10 +5983,13 @@
       "number": 534,
       "title": "GitClaw channel huddle E2E 20260601T130645Z",
       "path": "issues/000534.json",
-      "backup_generated_at": "2026-06-01T13:08:17Z",
-      "event_name": "issues",
-      "comment_count": 1,
-      "transcript_messages": 2
+      "backup_generated_at": "2026-06-01T13:09:57Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw:done"
+      ],
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
