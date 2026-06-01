@@ -35,9 +35,9 @@ func TestRenderSessionCatalogReportListsBodyFreeSessionSurface(t *testing.T) {
 		"session_model: `github-issue-thread-plus-backup-json`",
 		"canonical_session_store: `github-issue-thread`",
 		"local_backup_store: `gitclaw-backups issue JSON`",
-		"catalog_entries: `11`",
-		"issue_side_commands: `11`",
-		"local_backup_commands: `10`",
+		"catalog_entries: `12`",
+		"issue_side_commands: `12`",
+		"local_backup_commands: `11`",
 		"raw_bodies_included: `false`",
 		"raw_tool_outputs_included: `false`",
 		"repository_mutation_allowed: `false`",
@@ -49,12 +49,14 @@ func TestRenderSessionCatalogReportListsBodyFreeSessionSurface(t *testing.T) {
 		"command=`tools` issue_intent=`@gitclaw /session tools` local_command=`gitclaw session tools --backup <issue.json>` execution=`current-issue-or-local-backup` gate=`assistant-turn-marker-tool-context`",
 		"command=`skills` issue_intent=`@gitclaw /session skills` local_command=`gitclaw session skills --backup <issue.json>` execution=`current-issue-or-local-backup` gate=`assistant-turn-marker-skill-context`",
 		"command=`usage` issue_intent=`@gitclaw /session usage` local_command=`gitclaw session usage --backup <issue.json>` execution=`current-issue-or-local-backup` gate=`assistant-turn-marker-token-telemetry`",
+		"command=`trajectory` issue_intent=`@gitclaw /session trajectory` local_command=`gitclaw session trajectory --backup <issue.json>` execution=`current-issue-or-local-backup` gate=`body-free-assistant-turn-manifest`",
 		"command=`search` issue_intent=`@gitclaw /session search <query>` local_command=`gitclaw session search <query> --backup <issue.json>`",
 		"issue_thread_gate=`canonical-session-is-github-issue-thread`",
 		"provenance_gate=`assistant-turn-marker-prompt-context`",
 		"tools_gate=`assistant-turn-marker-tool-context`",
 		"skills_gate=`assistant-turn-marker-skill-context`",
 		"usage_gate=`assistant-turn-marker-token-telemetry`",
+		"trajectory_gate=`body-free-assistant-turn-manifest`",
 		"search_gate=`query-hash-and-line-hash-metadata`",
 		"coverage_gate=`prompt-provenance-skill-tool-telemetry`",
 	} {
@@ -546,6 +548,118 @@ func TestRenderSessionReportRoutesUsageCommandWithoutBodies(t *testing.T) {
 	for _, leaked := range []string{"SESSION_USAGE_ROUTE_SECRET", "SESSION_USAGE_ROUTE_ISSUE_SECRET"} {
 		if strings.Contains(body, leaked) {
 			t.Fatalf("session usage route leaked %q:\n%s", leaked, body)
+		}
+	}
+}
+
+func TestRenderSessionTrajectoryReportShowsBodyFreeManifest(t *testing.T) {
+	comments := []Comment{
+		{
+			ID:                64,
+			Body:              "<!-- gitclaw:assistant-turn run_id=\"run-1\" event_id=\"issue-12\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"idem-1\" run_url=\"https://github.com/owner/repo/actions/runs/123\" prompt_context_sha256_12=\"abc123abc123\" context_documents=\"2\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.search_files\" usage_prompt_tokens=\"100\" usage_completion_tokens=\"9\" usage_total_tokens=\"109\" usage_cache_read_tokens=\"7\" usage_cache_write_tokens=\"2\" -->\nSESSION_TRAJECTORY_MODEL_ASSISTANT_SECRET",
+			User:              User{Login: "github-actions[bot]", Type: "Bot"},
+			AuthorAssociation: "NONE",
+		},
+		{
+			ID:                65,
+			Body:              "<!-- gitclaw:assistant-turn run_id=\"run-2\" event_id=\"comment-2\" model=\"gitclaw/session\" idempotency_key=\"idem-2\" run_url=\"https://github.com/owner/repo/actions/runs/124\" prompt_context_sha256_12=\"def456def456\" context_documents=\"1\" selected_skills=\"1\" tool_outputs=\"0\" skills=\"repo-reader\" usage_total_tokens=\"5\" -->\nSESSION_TRAJECTORY_DETERMINISTIC_SECRET",
+			User:              User{Login: "github-actions[bot]", Type: "Bot"},
+			AuthorAssociation: "NONE",
+		},
+	}
+	transcript := []TranscriptMessage{
+		{Role: "assistant", Body: "SESSION_TRAJECTORY_MODEL_ASSISTANT_SECRET", Actor: "github-actions[bot]", CommentID: 64, Trusted: true},
+		{Role: "assistant", Body: "SESSION_TRAJECTORY_DETERMINISTIC_SECRET", Actor: "github-actions[bot]", CommentID: 65, Trusted: true},
+	}
+	body := RenderSessionTrajectoryReport(BuildSessionTrajectoryReport("issue-thread", "", Event{Repo: "owner/repo", Kind: "issue_comment", Issue: Issue{Number: 13}}, comments, transcript))
+	for _, want := range []string{
+		"GitClaw Session Trajectory Report",
+		"scope: `issue-thread`",
+		"repository: `owner/repo`",
+		"issue: `#13`",
+		"event_kind: `issue_comment`",
+		"session_trajectory_status: `ok`",
+		"trajectory_scope: `body-free-assistant-turn-manifest`",
+		"export_format: `gitclaw.session-trajectory.v1`",
+		"session_store: `github-issue-thread`",
+		"raw_comments: `2`",
+		"transcript_messages: `2`",
+		"assistant_turn_comments: `2`",
+		"trajectory_turns: `2`",
+		"model_backed_assistant_turns: `1`",
+		"deterministic_assistant_turns: `1`",
+		"model_names: `gitclaw/session, openai/gpt-4.1-nano`",
+		"prompt_visible_skill_names: `repo-reader`",
+		"prompt_visible_tool_names: `gitclaw.list_files, gitclaw.search_files`",
+		"unique_prompt_context_hashes: `2`",
+		"run_metadata_turns: `2`",
+		"unique_run_id_hashes: `2`",
+		"context_documents_total: `3`",
+		"selected_skills_total: `2`",
+		"tool_outputs_total: `3`",
+		"usage_bearing_assistant_turns: `2`",
+		"usage_prompt_tokens: `100`",
+		"usage_completion_tokens: `9`",
+		"usage_total_tokens: `114`",
+		"usage_cache_read_tokens: `7`",
+		"usage_cache_write_tokens: `2`",
+		"raw_bodies_included: `false`",
+		"raw_issue_bodies_included: `false`",
+		"raw_comment_bodies_included: `false`",
+		"raw_assistant_replies_included: `false`",
+		"raw_prompts_included: `false`",
+		"raw_provider_responses_included: `false`",
+		"raw_tool_outputs_included: `false`",
+		"raw_search_queries_included: `false`",
+		"repository_mutation_allowed: `false`",
+		"llm_e2e_required_after_session_trajectory_change: `true`",
+		"### Trajectory Manifest",
+		"turn=`01` source=`comment:64` model=`openai/gpt-4.1-nano` deterministic=`false`",
+		"prompt_context_sha256_12=`abc123abc123` context_documents=`2` selected_skills=`1` tool_outputs=`3` skills=`repo-reader` tools=`gitclaw.list_files, gitclaw.search_files` usage_present=`true` usage_prompt_tokens=`100` usage_completion_tokens=`9` usage_total_tokens=`109`",
+		"turn=`02` source=`comment:65` model=`gitclaw/session` deterministic=`true`",
+		"prompt_context_sha256_12=`def456def456` context_documents=`1` selected_skills=`1` tool_outputs=`0` skills=`repo-reader` tools=`none` usage_present=`true`",
+		"run_id_sha256_12=",
+		"event_id_sha256_12=",
+		"idempotency_key_sha256_12=",
+		"run_url_sha256_12=",
+		"assistant_comment_sha256_12=",
+		"prompt_provenance_gate=`pass`",
+		"model_backed_gate=`pass`",
+		"run_metadata_gate=`pass`",
+		"usage_telemetry_gate=`pass`",
+		"raw_body_gate=`hashes-and-marker-attributes-only`",
+		"raw_provider_response_gate=`disabled`",
+		"mutation_gate=`disabled`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("session trajectory report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SESSION_TRAJECTORY_MODEL_ASSISTANT_SECRET", "SESSION_TRAJECTORY_DETERMINISTIC_SECRET", "https://github.com/owner/repo/actions/runs/123", "run-1", "idem-1"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("session trajectory report leaked %q:\n%s", leaked, body)
+		}
+	}
+}
+
+func TestRenderSessionReportRoutesTrajectoryCommandWithoutBodies(t *testing.T) {
+	comments := []Comment{{
+		ID:   66,
+		Body: "<!-- gitclaw:assistant-turn run_id=\"run-1\" event_id=\"issue-13\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"idem-1\" run_url=\"https://github.com/owner/repo/actions/runs/123\" prompt_context_sha256_12=\"abc123abc123\" context_documents=\"1\" selected_skills=\"1\" tool_outputs=\"1\" skills=\"repo-reader\" tools=\"gitclaw.search_files\" usage_prompt_tokens=\"10\" usage_completion_tokens=\"2\" usage_total_tokens=\"12\" -->\nSESSION_TRAJECTORY_ROUTE_SECRET",
+	}}
+	body := RenderSessionReport(Event{
+		Repo:  "owner/repo",
+		Kind:  "issue_comment",
+		Issue: Issue{Number: 13, Title: "@gitclaw /session trajectory", Body: "SESSION_TRAJECTORY_ROUTE_ISSUE_SECRET"},
+	}, DefaultConfig(), comments, nil)
+	for _, want := range []string{"GitClaw Session Trajectory Report", "session_trajectory_status: `ok`", "trajectory_scope: `body-free-assistant-turn-manifest`", "trajectory_turns: `1`", "model_backed_assistant_turns: `1`", "usage_total_tokens: `12`", "run_metadata_gate=`pass`"} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("session trajectory route missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SESSION_TRAJECTORY_ROUTE_SECRET", "SESSION_TRAJECTORY_ROUTE_ISSUE_SECRET", "https://github.com/owner/repo/actions/runs/123"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("session trajectory route leaked %q:\n%s", leaked, body)
 		}
 	}
 }

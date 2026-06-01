@@ -267,6 +267,7 @@ gitclaw session provenance --backup <issue.json>
 gitclaw session tools --backup <issue.json>
 gitclaw session skills --backup <issue.json>
 gitclaw session usage --backup <issue.json>
+gitclaw session trajectory --backup <issue.json>
 gitclaw session status --backup <issue.json>
 gitclaw session stats --backup <issue.json>
 gitclaw session coverage --backup <issue.json>
@@ -312,6 +313,13 @@ model and by turn, including prompt, completion, total, cache-read, and
 cache-write token counts, without printing issue bodies, comments, assistant
 replies, prompts, provider responses, search queries, or tool outputs.
 
+`gitclaw session trajectory --backup <issue.json>` is the body-free trajectory
+manifest for a backed-up issue session. It combines assistant-turn marker
+metadata, run/idempotency hashes, prompt-context hashes, prompt-visible
+skills/tools, model names, and usage counters without printing issue bodies,
+comments, assistant replies, prompts, provider responses, search queries, run
+URLs, or tool outputs.
+
 `gitclaw backup provenance` is the body-free git-history audit for fetched
 `gitclaw-backups` branches. It verifies the backup tree, then reports whether
 the index, README, and issue payload files are tracked, clean, and backed by
@@ -355,6 +363,11 @@ The live session-usage harness follows the same model-first shape, then
 verifies `@gitclaw /session usage` reports normalized token/cache telemetry,
 model-backed usage turns, prompt-context evidence, and raw-provider/body-free
 gates without leaking hidden issue or comment text.
+
+The live session-trajectory harness follows the same model-first shape, then
+verifies `@gitclaw /session trajectory` reports an export-like assistant-turn
+manifest with model, run-hash, prompt-context, skill/tool, and usage evidence
+without leaking hidden issue/comment text or raw run URLs.
 
 `gitclaw backup restore-plan` is a dry-run recovery plan for a fetched backup
 payload. Its live harness pairs deterministic restore metadata checks with a
@@ -634,6 +647,7 @@ scripts/e2e/github-session-provenance.sh
 scripts/e2e/github-session-tools.sh
 scripts/e2e/github-session-skills.sh
 scripts/e2e/github-session-usage.sh
+scripts/e2e/github-session-trajectory.sh
 scripts/e2e/github-session-risk-report.sh
 scripts/e2e/github-session-status-report.sh
 scripts/e2e/github-session-stats-report.sh

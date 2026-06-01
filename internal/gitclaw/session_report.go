@@ -67,6 +67,9 @@ func RenderSessionReport(ev Event, cfg Config, comments []Comment, transcript []
 	if requestedSessionUsage(ev, cfg) {
 		return RenderSessionUsageReport(BuildSessionUsageReport("issue-thread", "", ev, comments, transcript))
 	}
+	if requestedSessionTrajectory(ev, cfg) {
+		return RenderSessionTrajectoryReport(BuildSessionTrajectoryReport("issue-thread", "", ev, comments, transcript))
+	}
 	if requestedSessionStatus(ev, cfg) {
 		return RenderSessionStatusReport(ev, cfg, comments, transcript)
 	}
@@ -276,6 +279,11 @@ func requestedSessionSkills(ev Event, cfg Config) bool {
 func requestedSessionUsage(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && fields[0] == "/session" && (strings.EqualFold(fields[1], "usage") || strings.EqualFold(fields[1], "tokens") || strings.EqualFold(fields[1], "token-use") || strings.EqualFold(fields[1], "token-usage"))
+}
+
+func requestedSessionTrajectory(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && fields[0] == "/session" && (strings.EqualFold(fields[1], "trajectory") || strings.EqualFold(fields[1], "trace") || strings.EqualFold(fields[1], "manifest") || strings.EqualFold(fields[1], "export-trajectory"))
 }
 
 func requestedSessionRisk(ev Event, cfg Config) bool {

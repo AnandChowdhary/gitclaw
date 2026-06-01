@@ -3135,6 +3135,26 @@ requires a live GitHub Models repo-reader/search turn first, followed by the
 deterministic session-usage report proving model-backed token telemetry from
 marker evidence.
 
+### 2026-06-01 Session Trajectory Follow-Up
+
+OpenClaw's trajectory bundles export a session artifact split across metadata,
+artifacts, usage, prompt-cache, compaction, assistant text, and tool metadata;
+Hermes sessions likewise preserve structured session metadata, message history,
+model configuration, token counts, and parent/continuation lineage. GitClaw
+should provide the same operator affordance for a GitHub issue conversation
+without writing raw transcript exports back into the issue.
+
+Add `@gitclaw /session trajectory` and
+`gitclaw session trajectory --backup <issue.json>`. The report should aggregate
+assistant-turn marker attributes into a body-free trajectory manifest:
+run/idempotency hashes, model names, prompt-context hashes, prompt-visible
+skills/tools, context document counts, selected skill counts, tool-output
+counts, usage counters, and assistant-comment hashes. It must not print issue
+bodies, comments, assistant replies, prompts, provider responses, raw run URLs,
+search queries, or tool outputs. Acceptance requires a live GitHub Models
+repo-reader/search turn first, followed by the deterministic session-trajectory
+report proving model-backed trajectory evidence from marker metadata.
+
 ## Open Questions For Speccing
 
 1. Is `gitclaw` primarily for one user's repos, or for teams/organizations?
