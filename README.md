@@ -199,6 +199,7 @@ gitclaw bundles risk
 gitclaw bundles provenance
 gitclaw bundles info <name>
 gitclaw bundles search <query>
+@gitclaw /bundles rehearse <name> --id <id>
 ```
 
 `gitclaw skills install-plan <target>` and `gitclaw skills upgrade-plan
@@ -269,6 +270,13 @@ bundle instructions, skill bodies, prompts, issue text, or credentials.
 hashing the raw query and reporting only match fields, paths, skill refs, and
 instruction hashes. Its live harness proves the deterministic body-free search
 report, then posts a normal GitHub Models repo-reader/search follow-up.
+
+Trusted issue threads can open a bundle rehearsal lane with
+`@gitclaw /bundles rehearse <name> --id <id>`: GitClaw creates or reuses a
+GitHub issue labeled for normal conversation, records only bundle/source
+metadata and hashes, suppresses raw bundle YAML, bundle instructions, skill
+bodies, and source text, and requires the next comment on that issue to prove
+real GitHub Models skill/tool usage.
 
 Migration:
 
@@ -969,6 +977,7 @@ scripts/e2e/github-bundles-catalog-report.sh
 scripts/e2e/github-bundles-search-report.sh
 scripts/e2e/github-bundles-provenance-report.sh
 scripts/e2e/github-bundles-risk-report.sh
+scripts/e2e/github-bundles-rehearse-issue.sh
 scripts/e2e/github-orders-risk-report.sh
 scripts/e2e/github-policy-risk-report.sh
 scripts/e2e/github-approvals-catalog-report.sh
@@ -1136,6 +1145,12 @@ trusted `@gitclaw /skills rehearse <name> --id <id>` turn opens or reuses a
 GitHub rehearsal issue, keeps source text and skill bodies out of receipts,
 suppresses duplicate rehearsal requests, and then continues on the rehearsal
 issue itself with a real GitHub Models repo-reader/search follow-up.
+The bundle-rehearse harness applies that conversation-lane pattern to
+Hermes-style task profiles: a trusted `@gitclaw /bundles rehearse <name> --id
+<id>` turn opens or reuses a GitHub rehearsal issue, keeps source text, bundle
+YAML, bundle instructions, and skill bodies out of receipts, suppresses
+duplicate rehearsal requests, and then continues on the rehearsal issue itself
+with a real GitHub Models repo-reader/search follow-up.
 The memory-remember harness applies the same action pattern to durable memory:
 a trusted `@gitclaw /memory remember --target long-term --id <id>` turn opens
 or reuses a GitHub memory proposal issue, keeps candidate/source text out of

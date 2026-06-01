@@ -3949,3 +3949,16 @@ tool inputs, creating a run request, calling a model in the deterministic
 source action, or mutating the repository. The rehearsal issue can then receive
 a normal GitHub Models follow-up that proves prompt-visible tool behavior
 through `repo-reader` and bounded repository search.
+
+## 2026-06-01 Skill Bundle Rehearsal Follow-Up
+
+Hermes-style skill bundles are more like small task profiles than static
+inventory: they combine existing skills with a short instruction so the user
+can ask for a mode of work. GitClaw should therefore expose
+`@gitclaw /bundles rehearse <name> --id <id>` as an issue-native conversation
+lane, not another report. The deterministic source action opens or reuses a
+GitHub issue, records bundle hashes, resolved skill counts, instruction hashes,
+and disabled mutation/install gates, and withholds raw source text, bundle
+YAML, bundle instructions, and skill bodies. Acceptance must include a live
+GitHub Models follow-up on that rehearsal issue proving selected skill context,
+prompt-visible repository search, and token usage telemetry.

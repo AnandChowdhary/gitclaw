@@ -1091,6 +1091,32 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		status.SetDone()
 		return nil
 	}
+	if IsSkillBundleRehearsalIssueRequest(ev, cfg) {
+		rehearsalClient, ok := github.(SkillBundleRehearsalIssueGitHubClient)
+		if !ok {
+			return failStartedTurn(ctx, cfg, github, ev, status, "skill", fmt.Errorf("github client cannot create skill bundle rehearsal issues"))
+		}
+		req, err := BuildSkillBundleRehearsalIssueRequest(ev, cfg, repoContext)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "skill", fmt.Errorf("build skill bundle rehearsal issue: %w", err))
+		}
+		result, err := RunSkillBundleRehearsalIssue(ctx, cfg, rehearsalClient, req)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "skill", fmt.Errorf("run skill bundle rehearsal issue: %w", err))
+		}
+		body := RenderAssistantComment(Marker{
+			RunID:          envFirst("GITHUB_RUN_ID", "local"),
+			EventID:        eventID(ev),
+			Model:          "gitclaw/skills",
+			IdempotencyKey: key,
+			RunURL:         actionRunURL(ev),
+		}, RenderSkillBundleRehearsalIssueActionReport(ev, req, result))
+		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post skill bundle rehearsal issue comment: %w", err))
+		}
+		status.SetDone()
+		return nil
+	}
 	if IsSkillRehearsalIssueRequest(ev, cfg) {
 		rehearsalClient, ok := github.(SkillRehearsalIssueGitHubClient)
 		if !ok {

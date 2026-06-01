@@ -1743,6 +1743,7 @@ gitclaw bundles risk
 gitclaw bundles provenance
 gitclaw bundles info <name>
 gitclaw bundles search <query>
+@gitclaw /bundles rehearse <name> --id <id>
 gitclaw skills info <name>
 gitclaw skills search <query>
 ```
@@ -1797,6 +1798,7 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /bundles risk
 @gitclaw /bundles provenance
 @gitclaw /bundles info repo-context
+@gitclaw /bundles rehearse repo-context --id repo-context-lab
 @gitclaw /skills info repo-reader
 @gitclaw /skills search repository context
 ```
@@ -1934,6 +1936,18 @@ bodies, bundle instructions, skill bodies, issue/comment bodies, prompts, raw
 provider errors, credentials, or secret values. Any change to this surface
 requires focused local tests plus a live GitHub Models follow-up E2E proving
 normal inference, selected skills, and prompt-visible tools still work.
+
+`@gitclaw /bundles rehearse <name> --id <id>` opens or reuses a dedicated
+GitHub issue for trying a repo-local bundle as a task-profile conversation
+lane. The source action is deterministic and posts only metadata: request
+hashes, bundle path/hash, skill-ref counts, resolved/missing skill counts,
+instruction presence/hash, risk rollups, duplicate state, and disabled
+mutation/install gates. It does not call a model, install or update skills,
+edit bundle YAML, print raw source text, print bundle instructions, or print
+skill bodies. The created issue is labeled for normal GitClaw conversation;
+the required E2E must then comment on that issue and prove a real GitHub
+Models turn with selected `repo-reader`, prompt-context provenance,
+`gitclaw.search_files`, and usage telemetry.
 
 When a user invokes a repo-local bundle slash command such as
 `@gitclaw /repo-context explain go.mod`, GitClaw selects every enabled,
@@ -6796,6 +6810,8 @@ assert the expected comments/labels, and close the issue in cleanup.
    - create another real issue with `@gitclaw /bundles catalog`,
    - create a third real issue with `@gitclaw /bundles info repo-context`,
    - create a fourth real issue with `@gitclaw /bundles risk`,
+   - create another real issue with
+     `@gitclaw /bundles rehearse repo-context --id <id>`,
    - assert the reply is marked `model="gitclaw/skills"`,
    - assert the report lists available skill metadata and selected skill paths,
    - assert the catalog report lists compact eligibility counts, load modes,
@@ -8564,6 +8580,13 @@ examples/workflows/gitclaw.yml
   skill-body leakage, and then runs the live GitHub Models follow-up on the
   rehearsal issue itself to prove selected skill context, prompt-visible
   repository search tool usage, and usage telemetry.
+- A `gh`-driven skill-bundle rehearse E2E harness verifies
+  `@gitclaw /bundles rehearse <name> --id <id>` opens a body-free GitHub
+  rehearsal issue for a Hermes-style task profile, posts a source receipt,
+  suppresses duplicate open rehearsal issues, avoids raw source, bundle YAML,
+  bundle instruction, and skill-body leakage, and then runs the live GitHub
+  Models follow-up on the rehearsal issue itself to prove selected skill
+  context, prompt-visible repository search tool usage, and usage telemetry.
 - A `gh`-driven skills-proposals E2E harness verifies
   `@gitclaw /skills proposals risk` inventories the repo-local proposal store,
   reports lifecycle counts, risk gates, no auto-apply support, no proposal or
