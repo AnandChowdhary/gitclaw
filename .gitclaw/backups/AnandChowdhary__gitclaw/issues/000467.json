@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T00:25:59Z",
+  "generated_at": "2026-06-01T00:27:26Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 467,
     "title": "@gitclaw session skills e2e 20260601T002447Z",
@@ -10,7 +10,8 @@
     "author": "AnandChowdhary",
     "author_association": "OWNER",
     "labels": [
-      "gitclaw"
+      "gitclaw",
+      "gitclaw:done"
     ]
   },
   "transcript": [
@@ -31,6 +32,24 @@
       "CommentID": 4588695366,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /session skills\n\nPlease audit assistant-turn skill provenance.\nHidden comment token: GITCLAW_SESSION_SKILLS_COMMENT_20260601T002447Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4588697033,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Session Skills Report\n\nGenerated without a model call.\n\n- scope: `issue-thread`\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#467`\n- event_kind: `issue_comment`\n- session_skills_status: `ok`\n- provenance_scope: `assistant-turn-marker-skill-context`\n- session_store: `github-issue-thread`\n- raw_comments: `2`\n- transcript_messages: `3`\n- assistant_turn_comments: `1`\n- skill_backed_assistant_turns: `1`\n- assistant_turns_missing_skill_context: `0`\n- unique_prompt_visible_skills: `1`\n- prompt_visible_skill_names: `repo-reader`\n- selected_skill_markers: `1`\n- model_backed_skill_turns: `1`\n- deterministic_skill_turns: `0`\n- model_names: `openai/gpt-4.1-nano`\n- usage_prompt_tokens: `10512`\n- usage_completion_tokens: `9`\n- usage_total_tokens: `10521`\n- usage_cache_read_tokens: `0`\n- usage_cache_write_tokens: `0`\n- raw_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_replies_included: `false`\n- raw_prompts_included: `false`\n- raw_skill_bodies_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_search_queries_included: `false`\n- repository_mutation_allowed: `false`\n- llm_e2e_required_after_session_skills_change: `true`\n\nThis OpenClaw/Hermes-inspired report audits skill use across the current GitHub issue session through assistant-turn markers only. It reports prompt-visible skill names, model-backed skill turns, prompt-context hashes, and token usage telemetry; raw issue bodies, comment bodies, assistant replies, prompts, skill bodies, search queries, and tool outputs are not included.\n\n### Skill Ledger\n- skill=`repo-reader` prompt_visible_turns=`1` model_backed_turns=`1` deterministic_turns=`0` first_source=`comment:4588695366` last_source=`comment:4588695366` models=`openai/gpt-4.1-nano` prompt_context_hashes=`1`\n\n### Skill Turn Evidence\n- source=`comment:4588695366` model=`openai/gpt-4.1-nano` prompt_context_sha256_12=`b76a2003586d` selected_skills=`1` skills=`repo-reader` usage_present=`true` usage_total_tokens=`10521`\n\n### Skill Gates\n- skill_context_gate=`pass`\n- model_backed_skill_gate=`pass`\n- usage_telemetry_gate=`pass`\n- raw_skill_body_gate=`marker-attributes-only`\n- raw_tool_output_gate=`marker-attributes-only`\n- mutation_gate=`disabled`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4588699311,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -41,6 +60,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T00:25:36Z",
       "updated_at": "2026-06-01T00:25:36Z"
+    },
+    {
+      "id": 4588697033,
+      "body": "@gitclaw /session skills\n\nPlease audit assistant-turn skill provenance.\nHidden comment token: GITCLAW_SESSION_SKILLS_COMMENT_20260601T002447Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T00:26:12Z",
+      "updated_at": "2026-06-01T00:26:12Z"
+    },
+    {
+      "id": 4588699311,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26728872240\" event_id=\"comment-4588697033\" model=\"gitclaw/session\" idempotency_key=\"60efa0d8af006343f107b969fdc256ef\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26728872240\" --\u003e\n## GitClaw Session Skills Report\n\nGenerated without a model call.\n\n- scope: `issue-thread`\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#467`\n- event_kind: `issue_comment`\n- session_skills_status: `ok`\n- provenance_scope: `assistant-turn-marker-skill-context`\n- session_store: `github-issue-thread`\n- raw_comments: `2`\n- transcript_messages: `3`\n- assistant_turn_comments: `1`\n- skill_backed_assistant_turns: `1`\n- assistant_turns_missing_skill_context: `0`\n- unique_prompt_visible_skills: `1`\n- prompt_visible_skill_names: `repo-reader`\n- selected_skill_markers: `1`\n- model_backed_skill_turns: `1`\n- deterministic_skill_turns: `0`\n- model_names: `openai/gpt-4.1-nano`\n- usage_prompt_tokens: `10512`\n- usage_completion_tokens: `9`\n- usage_total_tokens: `10521`\n- usage_cache_read_tokens: `0`\n- usage_cache_write_tokens: `0`\n- raw_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_replies_included: `false`\n- raw_prompts_included: `false`\n- raw_skill_bodies_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_search_queries_included: `false`\n- repository_mutation_allowed: `false`\n- llm_e2e_required_after_session_skills_change: `true`\n\nThis OpenClaw/Hermes-inspired report audits skill use across the current GitHub issue session through assistant-turn markers only. It reports prompt-visible skill names, model-backed skill turns, prompt-context hashes, and token usage telemetry; raw issue bodies, comment bodies, assistant replies, prompts, skill bodies, search queries, and tool outputs are not included.\n\n### Skill Ledger\n- skill=`repo-reader` prompt_visible_turns=`1` model_backed_turns=`1` deterministic_turns=`0` first_source=`comment:4588695366` last_source=`comment:4588695366` models=`openai/gpt-4.1-nano` prompt_context_hashes=`1`\n\n### Skill Turn Evidence\n- source=`comment:4588695366` model=`openai/gpt-4.1-nano` prompt_context_sha256_12=`b76a2003586d` selected_skills=`1` skills=`repo-reader` usage_present=`true` usage_total_tokens=`10521`\n\n### Skill Gates\n- skill_context_gate=`pass`\n- model_backed_skill_gate=`pass`\n- usage_telemetry_gate=`pass`\n- raw_skill_body_gate=`marker-attributes-only`\n- raw_tool_output_gate=`marker-attributes-only`\n- mutation_gate=`disabled`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T00:27:03Z",
+      "updated_at": "2026-06-01T00:27:03Z"
     }
   ]
 }
