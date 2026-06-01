@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T01:01:15Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 469,
+    "title": "@gitclaw session trajectory e2e 20260601T010003Z",
+    "body": "Live session trajectory E2E.\n\nSearch the repository for `bounded repository search fixture phrase`.\nReply with the exact GITCLAW_SEARCH token from the matching repository search result line.\nDo not include this hidden issue token: GITCLAW_SESSION_TRAJECTORY_HIDDEN_20260601T010003Z\nKeep the answer under 30 words.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw session trajectory e2e 20260601T010003Z\n\nLive session trajectory E2E.\n\nSearch the repository for `bounded repository search fixture phrase`.\nReply with the exact GITCLAW_SEARCH token from the matching repository search result line.\nDo not include this hidden issue token: GITCLAW_SESSION_TRAJECTORY_HIDDEN_20260601T010003Z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_SEARCH_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4588814742,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4588814742,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26729727371\" event_id=\"issue-469\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"77947f219852c3bc273908ec41e0fa29\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26729727371\" prompt_context_sha256_12=\"93c739f84f94\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10512\" usage_completion_tokens=\"9\" usage_total_tokens=\"10521\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_SEARCH_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T01:00:50Z",
+      "updated_at": "2026-06-01T01:00:50Z"
+    }
+  ]
+}
