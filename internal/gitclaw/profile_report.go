@@ -17,6 +17,9 @@ func RenderProfileReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isProfileProvenanceRequest(ev, cfg) {
 		return renderProfileProvenanceReport(ev, cfg, repoContext, true)
 	}
+	if isProfileSearchRequest(ev, cfg) {
+		return renderProfileSearchReport(ev, cfg, repoContext, requestedProfileSearchQuery(ev, cfg), defaultProfileSearchMaxResults, true)
+	}
 	if isProfileSnapshotRequest(ev, cfg) {
 		return renderProfileSnapshotReport(ev, cfg, repoContext, true)
 	}

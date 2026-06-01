@@ -3616,3 +3616,14 @@ bodies, raw descriptions, env names, issue bodies, prompts, and tool outputs.
 - Security of OpenClaw Agents: https://arxiv.org/abs/2605.25435
 - OpenClawBench: https://arxiv.org/abs/2605.29253
 - Cloud Security Alliance Hermes/OpenClaw research note: https://labs.cloudsecurityalliance.org/wp-content/uploads/2026/05/CSA_research_note_hermes_agent_CVEs_20260504-csa-styled.pdf
+
+## 2026-06-01 Profile Search Follow-Up
+
+OpenClaw's memory docs keep search close to durable workspace files, while
+Hermes' sessions, skills, and tool-search docs emphasize indexable local state
+and progressive disclosure before loading larger bodies. The GitClaw analogue
+is intentionally narrower for v1: `@gitclaw /profile search <query>` searches
+only reviewed repo-local `.gitclaw/` profile files and emits no raw bodies or
+raw query text. The report posts hashes, line numbers, matched-term counts,
+scores, and manifest metadata, then requires a separate live GitHub Models
+follow-up to prove ordinary conversational search and tool usage still work.

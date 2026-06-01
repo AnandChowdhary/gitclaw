@@ -224,6 +224,8 @@ func runProfileCommand(args []string) error {
 		return runProfileShowCommand(args[1:])
 	case "provenance", "history", "git", "git-history":
 		return runProfileProvenanceCommand(args[1:])
+	case "search":
+		return runProfileSearchCommand(args[1:])
 	case "snapshot", "snapshots", "fingerprint", "fingerprints", "lock", "lockfile":
 		return runProfileSnapshotCommand(args[1:])
 	case "manifest", "portability", "portable", "export-plan", "export", "package-plan", "distribution":
@@ -231,7 +233,7 @@ func runProfileCommand(args []string) error {
 	case "risk", "risk-audit":
 		return runProfileRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw profile [catalog|show|verify|list|provenance|snapshot|manifest|export-plan|risk]")
+		return fmt.Errorf("usage: gitclaw profile [catalog|show|verify|list|provenance|search <query>|snapshot|manifest|export-plan|risk]")
 	}
 }
 
@@ -296,6 +298,23 @@ func runProfileProvenanceCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderProfileProvenanceCLIReport(cfg, repoContext))
+	return nil
+}
+
+func runProfileSearchCommand(args []string) error {
+	query := cleanMemorySearchQuery(strings.Join(args, " "))
+	if query == "" {
+		return fmt.Errorf("usage: gitclaw profile search <query>")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "profile search " + query}}, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderProfileSearchCLIReport(cfg, repoContext, query))
 	return nil
 }
 

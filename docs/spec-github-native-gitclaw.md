@@ -2126,6 +2126,7 @@ Hermes profiles and OpenClaw workspace files:
 @gitclaw /profiles
 @gitclaw /profile catalog
 @gitclaw /profile provenance
+@gitclaw /profile search <query>
 @gitclaw /profile snapshot
 @gitclaw /profile manifest
 @gitclaw /profile export-plan
@@ -2150,8 +2151,8 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 - deterministic tool contract and active-output counts,
 - soul, skill, and tool validation rollups,
 - body-free profile git provenance metadata when explicitly requested,
-- body-free profile snapshot and portability manifest metadata when explicitly
-  requested.
+- body-free profile search, snapshot, and portability manifest metadata when
+  explicitly requested.
 
 It never dumps profile file bodies, skill bodies, tool outputs, issue/comment
 bodies, prompts, or secrets. It is an operator confidence surface; the
@@ -2165,6 +2166,7 @@ gitclaw profile catalog
 gitclaw profile show
 gitclaw profile verify
 gitclaw profile provenance
+gitclaw profile search <query>
 gitclaw profile snapshot
 gitclaw profile manifest
 gitclaw profile export-plan
@@ -2197,6 +2199,20 @@ secret values. Any change to this surface requires focused local tests, a live
 deterministic issue E2E, and a normal GitHub Models follow-up proving
 repo-reader selection, prompt-visible `gitclaw.search_files`, usage telemetry,
 and repository-search fixture recovery.
+
+`@gitclaw /profile search <query>` and `gitclaw profile search <query>` search
+the repo-local `.gitclaw/` profile envelope with a deterministic lexical
+matcher. This is the GitHub-native, body-free sibling of OpenClaw-style memory
+search and Hermes-style session/tool search: it can inspect reviewed profile
+files locally, but the posted report includes only the query hash, term count,
+profile manifest counts, searched paths, line numbers, scores, matched-term
+counts, file hashes, and line hashes. Raw profile files, skill bodies, memory
+bodies, tool outputs, issue/comment bodies, prompts, sessions, backup payloads,
+credentials, and raw search queries are excluded. Any change to this surface
+requires focused local tests, a live deterministic issue E2E, and a normal
+GitHub Models follow-up proving repo-reader selection, prompt-visible
+`gitclaw.search_files`, usage telemetry, and repository-search fixture
+recovery.
 
 `@gitclaw /profile snapshot`, `@gitclaw /profile fingerprint`, and
 `gitclaw profile snapshot` produce a composite body-free fingerprint for the
@@ -7750,6 +7766,14 @@ examples/workflows/gitclaw.yml
   repo-local `.gitclaw/` profile surfaces, including tracked/dirty state, last
   commit IDs/dates, and commit-subject hashes without raw profile bodies,
   commit subjects, or author identities. The same issue then receives a live
+  GitHub Models follow-up that proves `repo-reader` selection, prompt-visible
+  `gitclaw.search_files`, usage telemetry, and repository-search fixture
+  recovery.
+- A `gh`-driven profile-search E2E harness verifies
+  `@gitclaw /profile search <query>` produces a body-free lexical search
+  report over repo-local `.gitclaw/` profile files with query hashes, line
+  hashes, scores, and no raw profile, issue, comment, prompt, tool, session,
+  backup, credential, or raw query leakage. The same issue then receives a live
   GitHub Models follow-up that proves `repo-reader` selection, prompt-visible
   `gitclaw.search_files`, usage telemetry, and repository-search fixture
   recovery.

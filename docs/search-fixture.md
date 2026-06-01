@@ -86,6 +86,7 @@ channel delivery unique search fixture phrase => GITCLAW_CHANNEL_DELIVERY_CONTEX
 channel delivery followup unique search fixture phrase => GITCLAW_CHANNEL_DELIVERY_FOLLOWUP_CONTEXT_V1
 profile catalog unique search fixture phrase => GITCLAW_PROFILE_CATALOG_CONTEXT_V1
 profile provenance unique search fixture phrase => GITCLAW_PROFILE_PROVENANCE_CONTEXT_V1
+profile search unique search fixture phrase => GITCLAW_PROFILE_SEARCH_CONTEXT_V1
 profile snapshot unique search fixture phrase => GITCLAW_PROFILE_SNAPSHOT_CONTEXT_V1
 session catalog unique search fixture phrase => GITCLAW_SESSION_CATALOG_CONTEXT_V1
 proactive run unique search fixture phrase => GITCLAW_PROACTIVE_RUN_CONTEXT_V1
