@@ -315,6 +315,7 @@ gitclaw tools approval-plan <name>
 gitclaw tools run-plan <name>
 gitclaw tools info <name>
 gitclaw tools search <query>
+@gitclaw /tools rehearse <name> --id <id>
 ```
 
 `gitclaw tools catalog` is the compact progressive-disclosure index for the
@@ -335,6 +336,12 @@ text, include raw tool inputs/outputs, or mutate the repository.
 Add `--notify-route <route>` or `--notify-routes <a,b>` to queue a body-safe
 Slack/Telegram channel notification for the review issue through the existing
 routebook, outbox, and delivery receipt path.
+`@gitclaw /tools rehearse <name> --id <id>` opens or reuses a labeled GitHub
+conversation issue for trying a tool contract without creating a run request.
+The source receipt is body-free and model-free; the rehearsal issue records the
+normalized tool, gate state, validation summary, and no-execution flags, then a
+normal comment on that issue can exercise GitHub Models and prompt-visible
+tool behavior.
 
 Security:
 
@@ -993,6 +1000,7 @@ scripts/e2e/github-tools-exposure-report.sh
 scripts/e2e/github-tools-defer-plan-report.sh
 scripts/e2e/github-tools-boundary-report.sh
 scripts/e2e/github-tools-approval-plan-report.sh
+scripts/e2e/github-tools-rehearse-issue.sh
 scripts/e2e/github-tools-run-request-issue.sh
 scripts/e2e/github-tools-run-request-channel-notify.sh
 scripts/e2e/github-tools-risk-report.sh
@@ -1127,6 +1135,11 @@ execution requests: `@gitclaw /tools request-run <name> --id <id>` opens or
 reuses a dedicated GitHub request issue, keeps source/tool bodies out of
 receipts and request bodies, suppresses duplicate requests, and then continues
 with a real GitHub Models repo-reader/search follow-up.
+The tools-rehearse harness covers the conversation side of tools:
+`@gitclaw /tools rehearse <name> --id <id>` opens or reuses a labeled GitHub
+rehearsal issue, keeps source/tool inputs and outputs out of receipts,
+suppresses duplicate rehearsal requests, and then continues on the rehearsal
+issue itself with a real GitHub Models repo-reader/search follow-up.
 The tools-run-request channel-notify harness proves the same review issue can
 also notify a reviewed Slack/Telegram route with `--notify-route`, queue a
 metadata-safe channel outbound message, suppress duplicate notifications, expose

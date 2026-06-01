@@ -3914,3 +3914,17 @@ humans actually need to read them. Acceptance must include live E2E that proves
 rollcall creation, route invite queues, duplicate suppression, metadata-only
 outbox discovery, and a real GitHub Models repo-reader/search follow-up on the
 rollcall issue itself.
+
+## 2026-06-01 Tools Rehearsal Follow-Up
+
+OpenClaw and Hermes both treat tools as scoped capabilities rather than free
+text commands: the useful pattern is a visible contract, progressive
+disclosure, and explicit review before higher-risk action. GitClaw already has
+body-free reports and reviewed `request-run` issues; the missing conversation
+primitive is a safe tool lab. `@gitclaw /tools rehearse <name> --id <id>`
+should create a labeled GitHub issue for discussing and trying the current tool
+contract in normal GitClaw chat, without executing the tool, generating raw
+tool inputs, creating a run request, calling a model in the deterministic
+source action, or mutating the repository. The rehearsal issue can then receive
+a normal GitHub Models follow-up that proves prompt-visible tool behavior
+through `repo-reader` and bounded repository search.

@@ -2881,6 +2881,7 @@ OpenClaw's tool policy visibility and Hermes' toolset inventory:
 @gitclaw /tools toolsets info repo-read
 @gitclaw /tools approval-plan search_files
 @gitclaw /tools run-plan search_files
+@gitclaw /tools rehearse search_files --id search-contract-lab
 @gitclaw /tools request-run search_files --id reviewed-search-run
 @gitclaw /tools request-run search_files --id reviewed-search-run --notify-route team-alerts
 @gitclaw /tools info read_file
@@ -3128,6 +3129,21 @@ raw tool names from the issue, raw inputs, raw outputs, issue/comment bodies,
 prompts, or file bodies. Any implementation change to tool behavior must pair
 the deterministic run-plan E2E with a live GitHub Models conversation E2E so
 the real model path stays tested too.
+
+When called as `@gitclaw /tools rehearse <name> --id <id>`, the command opens
+or reuses a dedicated GitHub issue marked `gitclaw:tool-rehearsal-issue` and
+labeled with `gitclaw` so a normal model-backed conversation can continue
+there. This is not a run request and not tool execution: it records the
+rehearsal id, normalized tool, matched contract, gate state, validation
+summary, source hashes, and no-execution flags in a separate conversation
+issue, then posts a body-free receipt back to the source issue. It never calls
+a model, executes a tool, generates raw tool inputs, creates a reviewed
+tool-run request, makes network calls, mutates the repository, or emits the
+raw source request, raw requested tool text, raw tool inputs, raw tool outputs,
+prompts, credentials, or file bodies. Duplicate open rehearsals are suppressed
+by rehearsal id. Any implementation change to this action must pair the
+deterministic create/reuse E2E with a live GitHub Models follow-up on the
+rehearsal issue using `repo-reader` and bounded repository search.
 
 When called as `@gitclaw /tools request-run <name> --id <id>`, the command
 opens or reuses a dedicated GitHub issue marked
@@ -6848,6 +6864,8 @@ assert the expected comments/labels, and close the issue in cleanup.
    - create another real issue with `@gitclaw /tools info read_file`,
    - create another real issue with `@gitclaw /tools run-plan search_files`,
    - create another real issue with
+     `@gitclaw /tools rehearse search_files --id <id>`,
+   - create another real issue with
      `@gitclaw /tools request-run search_files --id <id>`,
    - ask for a concrete file read and search fixture phrase,
    - assert the reply is marked `model="gitclaw/tools"`,
@@ -6864,6 +6882,11 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the run-plan report includes one contract, gate state, active-output
      hashes, review steps, no shell/network/repository/model execution, and
      no raw inputs or outputs,
+   - assert the rehearse action opens a dedicated labeled conversation issue,
+     suppresses a duplicate rehearsal id, records validation/gate metadata,
+     performs no model/tool execution, generates no tool inputs, creates no run
+     request, and keeps raw source/tool bodies out of both the receipt and
+     rehearsal issue,
    - assert the request-run action opens a dedicated review issue, suppresses a
      duplicate request id, records validation/gate metadata, performs no
      model/tool execution, and keeps raw source/tool bodies out of both the
@@ -8728,6 +8751,16 @@ examples/workflows/gitclaw.yml
   a normal follow-up comment that requires repo-reader search so GitHub Models
   performs a real LLM call with prompt context, selected skill, and
   prompt-visible tool provenance.
+- A `gh`-driven tools-rehearse E2E harness verifies
+  `@gitclaw /tools rehearse search_files --id <id>` opens or reuses one labeled
+  GitHub rehearsal issue marked `gitclaw:tool-rehearsal-issue`, records
+  normalized tool, validation, gate, source-hash, and no-execution metadata,
+  suppresses duplicate rehearsal ids, performs no model/tool execution,
+  generates no raw tool inputs, creates no run request, and keeps source/tool
+  bodies out of both the source receipt and rehearsal issue. The rehearsal
+  issue then gets a normal GitHub Models issue-comment follow-up that must
+  select `repo-reader`, expose `gitclaw.search_files`, recover the
+  tools-rehearsal fixture token, and avoid hidden source/tool sentinels.
 - A `gh`-driven tools-run-request E2E harness verifies
   `@gitclaw /tools request-run search_files --id <id>` opens or reuses one
   GitHub review issue marked `gitclaw:tool-run-request-issue`, records
