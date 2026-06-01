@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T07:36:29Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 496,
+    "title": "@gitclaw /proactive chain e2e 20260601T073510Z",
+    "body": "Live proactive-chain-report E2E.\n\nHidden proactive chain report body token: NOECHO_PROACTIVE_CHAIN_20260601T073510Z\nThis should produce a deterministic proactive chain report without a model call.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /proactive chain e2e 20260601T073510Z\n\nLive proactive-chain-report E2E.\n\nHidden proactive chain report body token: NOECHO_PROACTIVE_CHAIN_20260601T073510Z\nThis should produce a deterministic proactive chain report without a model call.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Proactive Chain Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#496`\n- requested_proactive_command: `chain`\n- proactive_command_status: `ok`\n- proactive_chain_status: `no_chains`\n- chain_strategy: `github-actions-issue-thread-context-from`\n- upstream_pattern: `hermes-cron-context-from-openclaw-skill-backed-jobs`\n- prompt_files: `1`\n- prompt_files_with_context_from: `0`\n- chain_edges: `0`\n- missing_context_sources: `0`\n- self_references: `0`\n- cycle_nodes: `0`\n- skill_backed_prompt_files: `1`\n- prompt_skill_hints: `1`\n- fresh_issue_thread_per_name_slot: `true`\n- context_from_metadata_only: `true`\n- recursive_schedule_creation_allowed: `false`\n- no_agent_mode_supported: `false`\n- raw_prompt_bodies_included: `false`\n- raw_workflow_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_tool_outputs_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_proactive_chain_change: `true`\n- proactive_run_issue: `false`\n- issue_title_sha256_12: `4d3d1aa976fd`\n\nThis report maps reviewed proactive prompt dependency metadata. It adapts Hermes cron `context_from` chaining to GitHub issue-native proactive runs by reporting only prompt paths, hashes, skill hints, resolved job names, and missing-source hashes; prompt bodies, workflow bodies, issue/comment bodies, tool outputs, credentials, and secret values are not included.\n\n### Prompt Chain Cards\n- kind=`prompt-chain` name=`repo-hygiene` path=`.gitclaw/proactive/repo-hygiene.md` bytes=`702` lines=`16` skill_hints=`repo-reader` context_from_refs=`0` resolved_context_sources=`none` missing_context_source_hashes=`none` self_reference=`false` in_cycle=`false` sha256_12=`13ff11d7e50c` raw_prompt_body_included=`false`\n\n### Chain Edges\n- none\n\n### Chain Gates\n- context_from_gate=`no-chains`\n- prompt_body_gate=`metadata-hashes-and-context-refs-only`\n- skill_hint_gate=`metadata-only`\n- issue_thread_gate=`one-proactive-run-issue-per-name-slot`\n- scheduler_gate=`github-actions-workflow-dispatch`\n- recursive_schedule_gate=`disabled-inside-proactive-run`\n- model_e2e_gate=`required`\n\n### Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4590472985,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4590472985,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26741535648\" event_id=\"issue-496\" model=\"gitclaw/proactive\" idempotency_key=\"a0b61d6bd75f8afa0db92a09a45d87dd\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26741535648\" --\u003e\n## GitClaw Proactive Chain Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#496`\n- requested_proactive_command: `chain`\n- proactive_command_status: `ok`\n- proactive_chain_status: `no_chains`\n- chain_strategy: `github-actions-issue-thread-context-from`\n- upstream_pattern: `hermes-cron-context-from-openclaw-skill-backed-jobs`\n- prompt_files: `1`\n- prompt_files_with_context_from: `0`\n- chain_edges: `0`\n- missing_context_sources: `0`\n- self_references: `0`\n- cycle_nodes: `0`\n- skill_backed_prompt_files: `1`\n- prompt_skill_hints: `1`\n- fresh_issue_thread_per_name_slot: `true`\n- context_from_metadata_only: `true`\n- recursive_schedule_creation_allowed: `false`\n- no_agent_mode_supported: `false`\n- raw_prompt_bodies_included: `false`\n- raw_workflow_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_tool_outputs_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_proactive_chain_change: `true`\n- proactive_run_issue: `false`\n- issue_title_sha256_12: `4d3d1aa976fd`\n\nThis report maps reviewed proactive prompt dependency metadata. It adapts Hermes cron `context_from` chaining to GitHub issue-native proactive runs by reporting only prompt paths, hashes, skill hints, resolved job names, and missing-source hashes; prompt bodies, workflow bodies, issue/comment bodies, tool outputs, credentials, and secret values are not included.\n\n### Prompt Chain Cards\n- kind=`prompt-chain` name=`repo-hygiene` path=`.gitclaw/proactive/repo-hygiene.md` bytes=`702` lines=`16` skill_hints=`repo-reader` context_from_refs=`0` resolved_context_sources=`none` missing_context_source_hashes=`none` self_reference=`false` in_cycle=`false` sha256_12=`13ff11d7e50c` raw_prompt_body_included=`false`\n\n### Chain Edges\n- none\n\n### Chain Gates\n- context_from_gate=`no-chains`\n- prompt_body_gate=`metadata-hashes-and-context-refs-only`\n- skill_hint_gate=`metadata-only`\n- issue_thread_gate=`one-proactive-run-issue-per-name-slot`\n- scheduler_gate=`github-actions-workflow-dispatch`\n- recursive_schedule_gate=`disabled-inside-proactive-run`\n- model_e2e_gate=`required`\n\n### Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T07:36:04Z",
+      "updated_at": "2026-06-01T07:36:04Z"
+    }
+  ]
+}
