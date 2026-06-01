@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T02:41:33Z",
+  "generated_at": "2026-06-01T02:58:54Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 436,
+  "count": 437,
   "issues": [
     {
       "number": 3,
@@ -5474,6 +5474,18 @@
       ],
       "comment_count": 3,
       "transcript_messages": 4
+    },
+    {
+      "number": 477,
+      "title": "@gitclaw /rollback diff HEAD~1 e2e 20260601T025736Z",
+      "path": "issues/000477.json",
+      "backup_generated_at": "2026-06-01T02:58:52Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }
