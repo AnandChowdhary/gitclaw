@@ -1,15 +1,17 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T15:46:12Z",
+  "generated_at": "2026-06-01T15:48:04Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 557,
     "title": "GitClaw channel rollcall E2E 20260601T154446Z",
     "body": "@gitclaw /channels rollcall e2e-slack-route,e2e-telegram-route --rollcall-id rollcall-20260601T154446Z --message-id rollcall-msg-20260601T154446Z\n\nPrompt: GitClaw rollcall prompt 20260601T154446Z: include NOECHO_CHANNEL_ROLLCALL_PROMPT_20260601T154446Z\nInstructions:\n- Done\n- Doing\n- Blocked\n- Use the rollcall issue for the next model-backed conversation.",
     "author": "AnandChowdhary",
     "author_association": "OWNER",
-    "labels": null
+    "labels": [
+      "gitclaw:done"
+    ]
   },
   "transcript": [
     {
@@ -29,6 +31,24 @@
       "CommentID": 4594188273,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels rollcall e2e-slack-route,e2e-telegram-route --rollcall-id rollcall-20260601T154446Z --message-id rollcall-msg-20260601T154446Z\nPrompt: Do not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_ROLLCALL_DUPLICATE_20260601T154446Z\nInstructions:\n- Again",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4594194059,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Rollcall Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#557`\n- requested_channel_command: `/channels rollcall`\n- channel_rollcall_status: `duplicate`\n- rollcall_issue: `#558`\n- rollcall_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/558`\n- rollcall_issue_created: `false`\n- rollcall_id_sha256_12: `5400f84fb597`\n- rollcall_id_auto: `false`\n- rollcall_prompt_sha256_12: `0e5a5dbae23b`\n- rollcall_prompt_bytes: `109`\n- rollcall_prompt_lines: `1`\n- rollcall_instructions_sha256_12: `2d926e09c8a2`\n- rollcall_instructions_bytes: `7`\n- rollcall_instructions_lines: `1`\n- rollcall_source: `trailing-lines`\n- rollcall_routes: `2`\n- rollcall_invites_queued: `0`\n- rollcall_invite_duplicates: `2`\n- target_issues_created: `0`\n- routes_sha256_12: `9892046e64ef`\n- message_id_sha256_12: `9a4eea49f785`\n- message_id_auto: `false`\n- outbound_body_sha256_12: `bd91e4a596f4`\n- outbound_body_bytes: `342`\n- outbound_body_lines: `13`\n- raw_route_names_included: `false`\n- raw_rollcall_id_included: `false`\n- raw_prompt_included: `false`\n- raw_instructions_included: `false`\n- raw_outbound_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_rollcall_action_change: `true`\n- issue_title_sha256_12: `82d2d46d30d1`\n\nGitClaw created or reused a GitHub rollcall issue, then queued one provider-facing check-in invitation per reviewed route. The rollcall issue contains the human-readable prompt and instructions; this source receipt keeps route names, rollcall IDs, prompt text, instructions, thread IDs, message IDs, and outbound bodies out of band.\n\n### Destinations\n- destination=`01` target_issue=`#559` outbound_comment_id=`0` target_issue_created=`false` duplicate_suppressed=`true` route_sha256_12=`ff6bd0e4b42c` channel=`slack` thread_id_sha256_12=`3fb41a5b6185` message_id_sha256_12=`9a4eea49f785` body_sha256_12=`bd91e4a596f4`\n- destination=`02` target_issue=`#560` outbound_comment_id=`0` target_issue_created=`false` duplicate_suppressed=`true` route_sha256_12=`325d7a85c564` channel=`telegram` thread_id_sha256_12=`1d40c4088b05` message_id_sha256_12=`9a4eea49f785` body_sha256_12=`bd91e4a596f4`\n\n### Follow-Up Delivery\n- provider gateways read pending rollcall invites with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent rollcall invites with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate rollcall invites are suppressed independently for each route by `channel + message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4594202157,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -39,6 +59,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T15:45:47Z",
       "updated_at": "2026-06-01T15:45:47Z"
+    },
+    {
+      "id": 4594194059,
+      "body": "@gitclaw /channels rollcall e2e-slack-route,e2e-telegram-route --rollcall-id rollcall-20260601T154446Z --message-id rollcall-msg-20260601T154446Z\nPrompt: Do not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_ROLLCALL_DUPLICATE_20260601T154446Z\nInstructions:\n- Again",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T15:46:33Z",
+      "updated_at": "2026-06-01T15:46:33Z"
+    },
+    {
+      "id": 4594202157,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26765625636\" event_id=\"comment-4594194059\" model=\"gitclaw/channels\" idempotency_key=\"ceba516d9d5dd177b82d8f28c42d664f\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26765625636\" --\u003e\n## GitClaw Channel Rollcall Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#557`\n- requested_channel_command: `/channels rollcall`\n- channel_rollcall_status: `duplicate`\n- rollcall_issue: `#558`\n- rollcall_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/558`\n- rollcall_issue_created: `false`\n- rollcall_id_sha256_12: `5400f84fb597`\n- rollcall_id_auto: `false`\n- rollcall_prompt_sha256_12: `0e5a5dbae23b`\n- rollcall_prompt_bytes: `109`\n- rollcall_prompt_lines: `1`\n- rollcall_instructions_sha256_12: `2d926e09c8a2`\n- rollcall_instructions_bytes: `7`\n- rollcall_instructions_lines: `1`\n- rollcall_source: `trailing-lines`\n- rollcall_routes: `2`\n- rollcall_invites_queued: `0`\n- rollcall_invite_duplicates: `2`\n- target_issues_created: `0`\n- routes_sha256_12: `9892046e64ef`\n- message_id_sha256_12: `9a4eea49f785`\n- message_id_auto: `false`\n- outbound_body_sha256_12: `bd91e4a596f4`\n- outbound_body_bytes: `342`\n- outbound_body_lines: `13`\n- raw_route_names_included: `false`\n- raw_rollcall_id_included: `false`\n- raw_prompt_included: `false`\n- raw_instructions_included: `false`\n- raw_outbound_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_rollcall_action_change: `true`\n- issue_title_sha256_12: `82d2d46d30d1`\n\nGitClaw created or reused a GitHub rollcall issue, then queued one provider-facing check-in invitation per reviewed route. The rollcall issue contains the human-readable prompt and instructions; this source receipt keeps route names, rollcall IDs, prompt text, instructions, thread IDs, message IDs, and outbound bodies out of band.\n\n### Destinations\n- destination=`01` target_issue=`#559` outbound_comment_id=`0` target_issue_created=`false` duplicate_suppressed=`true` route_sha256_12=`ff6bd0e4b42c` channel=`slack` thread_id_sha256_12=`3fb41a5b6185` message_id_sha256_12=`9a4eea49f785` body_sha256_12=`bd91e4a596f4`\n- destination=`02` target_issue=`#560` outbound_comment_id=`0` target_issue_created=`false` duplicate_suppressed=`true` route_sha256_12=`325d7a85c564` channel=`telegram` thread_id_sha256_12=`1d40c4088b05` message_id_sha256_12=`9a4eea49f785` body_sha256_12=`bd91e4a596f4`\n\n### Follow-Up Delivery\n- provider gateways read pending rollcall invites with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent rollcall invites with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate rollcall invites are suppressed independently for each route by `channel + message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T15:47:35Z",
+      "updated_at": "2026-06-01T15:47:35Z"
     }
   ]
 }
