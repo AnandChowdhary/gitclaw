@@ -279,6 +279,7 @@ func renderChannelReport(ev Event, cfg Config, comments []Comment, includeIssue 
 
 	b.WriteString("\n### Ingest Contract\n")
 	b.WriteString("- `/channels send --route <name>` queues a reviewed outbound channel message from an issue or comment\n")
+	b.WriteString("- `/channels huddle <routes> --huddle-id <id> --message-id <message>` creates a GitHub huddle issue and invites reviewed routes\n")
 	b.WriteString("- `gitclaw channel-ingest --channel <provider> --thread-id <thread> --message-id <message> --body <text>`\n")
 	b.WriteString("- `gitclaw channel-send --channel <provider> --thread-id <thread> --message-id <message> --body <text>` queues a GitHub-originated outbound message\n")
 	b.WriteString("- `gitclaw channel-send --route <name> --message-id <message> --body <text>` resolves a repo-reviewed named route\n")
@@ -467,6 +468,7 @@ func renderChannelVerifyReport(ev Event, cfg Config, comments []Comment, include
 	b.WriteString("- workflow accepts `channel`, `thread_id`, `message_id`, `author`, and `body` inputs\n")
 	b.WriteString("- channel-send workflow can queue GitHub-originated outbound messages with `issues: write`\n")
 	b.WriteString("- `/channels send` can queue a reviewed outbound message from a trusted issue/comment without calling a model\n")
+	b.WriteString("- `/channels huddle` can create a GitHub huddle issue and queue reviewed route invitations without calling a model\n")
 	b.WriteString("- channel-send workflow accepts optional named routes from `.gitclaw/channels/routes.yaml`\n")
 	b.WriteString("- channel state and gateway workflows are callable with `workflow_dispatch`\n")
 	b.WriteString("- gateway workflow can dispatch its renewal with `actions: write`\n")

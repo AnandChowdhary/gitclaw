@@ -5004,6 +5004,33 @@ or print the outbound invitation body. Duplicates are suppressed per route by
 the same `channel + message_id` queue semantics as other outbound channel
 messages.
 
+For opening a dedicated GitHub discussion room and inviting channels into it,
+GitClaw also supports:
+
+```text
+@gitclaw /channels huddle team-alerts,ops-alerts --huddle-id <stable-huddle-id> --message-id <stable-outbound-id>
+Topic: short huddle topic
+Agenda:
+optional agenda to include in the huddle and routed channel invitation
+```
+
+`/channels huddle`, `/channels room`, and `/channels jam` create or reuse one
+open issue carrying a hidden `gitclaw:channel-huddle` marker for the stable
+huddle id, label that issue with `gitclaw` so the conversation can continue
+normally, and queue one provider-facing huddle invitation per reviewed route.
+The huddle issue is the human-readable room: it contains the topic, agenda,
+source issue number, source issue URL, route count, and route hash. The source
+receipt remains body-free, reporting only the huddle issue number/URL, huddle
+id/topic/agenda hashes, route counts, duplicate status, target issue/comment
+IDs, and delivery instructions. It does not call a model, call provider APIs,
+print raw route names, print raw huddle ids, print raw topic/agenda text, print
+raw thread/message IDs, or print the outbound invitation body. Duplicates are
+suppressed first by `huddle_id` for the GitHub room and then by
+`channel + message_id` for each routed outbound invitation. Changes to this
+surface require a live E2E that creates the huddle, validates queued route
+invites and body-free receipts, and then continues on the huddle issue with a
+normal GitHub Models repo-reader/search follow-up.
+
 When the source issue is itself a `gitclaw:channel-thread`, GitClaw also
 accepts a shorter reply form:
 
@@ -5200,6 +5227,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels risk
 @gitclaw /channels info telegram
 @gitclaw /channels send --route team-alerts --message-id alert-123
+@gitclaw /channels huddle team-alerts,ops-alerts --huddle-id design-room --message-id design-room-1
 ```
 
 The command runs after normal preflight and context loading, but before model

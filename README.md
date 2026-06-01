@@ -579,6 +579,7 @@ gitclaw channel-send --route e2e-slack-route --message-id <id> --body "hello"
 @gitclaw /channels send --route e2e-slack-route --message-id <id>
 @gitclaw /channels broadcast e2e-slack-route,e2e-telegram-route --message-id <id>
 @gitclaw /channels invite e2e-slack-route,e2e-telegram-route --message-id <id>
+@gitclaw /channels huddle e2e-slack-route,e2e-telegram-route --huddle-id <id> --message-id <id>
 @gitclaw /channels reply --message-id <id>
 gitclaw proactive list
 gitclaw proactive schedule
@@ -743,6 +744,12 @@ per route, and still leaves actual provider delivery to outbox/delivery.
 issue invitation from the source issue number, URL, title, and optional note,
 queues it to each reviewed route, and keeps raw route names, notes, titles, and
 outbound invite bodies out of the source receipt.
+`@gitclaw /channels huddle <route-a>,<route-b> --huddle-id <id> --message-id
+<id>` creates or reuses a dedicated GitHub huddle issue, labels it for normal
+GitClaw conversation, writes the human-readable topic and agenda there, and
+queues provider-facing huddle invites through the same routebook/outbox path.
+The source receipt stays body-free and reports only hashes, counts, issue
+numbers, and duplicate status.
 The live proactive-report, proactive-list, and proactive-schedule harnesses use
 the same two-proof shape for scheduled work: body-free workflow/prompt metadata
 first, then a normal GitHub Models repo-reader/search follow-up.
@@ -948,6 +955,7 @@ scripts/e2e/github-channel-send-route-workflow.sh
 scripts/e2e/github-channel-send-slash.sh
 scripts/e2e/github-channel-broadcast-slash.sh
 scripts/e2e/github-channel-invite-slash.sh
+scripts/e2e/github-channel-huddle-slash.sh
 scripts/e2e/github-channel-reply-slash.sh
 scripts/e2e/github-channel-delivery-workflow.sh
 scripts/e2e/github-channel-outbox-workflow.sh
@@ -1086,6 +1094,11 @@ The channel-invite slash harness shares a live GitHub issue to multiple
 reviewed routes, verifies the queued provider invite body on each channel issue,
 checks duplicate invite suppression, keeps raw routes/notes/titles out of the
 source receipt, and then runs a real GitHub Models repo-reader/search follow-up.
+The channel-huddle slash harness creates or reuses a dedicated GitHub huddle
+issue, labels it for normal GitClaw conversation, invites multiple reviewed
+routes through the provider queue, checks duplicate huddle suppression, and then
+continues on the huddle issue with a real GitHub Models repo-reader/search
+follow-up.
 The channel-reply slash harness proves mirrored channel issues can act as
 operator consoles: a channel-ingested issue receives `@gitclaw /channels reply`,
 queues an outbound message back onto the same thread, suppresses duplicate
