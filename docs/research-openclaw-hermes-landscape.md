@@ -2694,6 +2694,17 @@ through the provider, and record a receipt. GitClaw's no-server equivalent is a
 keeps logs/body-free metadata safe by default, and relies on
 `channel-delivery` receipts to make retries idempotent.
 
+2026-06-01 channel broadcast follow-up: OpenClaw-style channel gateways and
+Hermes-style messaging gateways both make one-to-many delivery a gateway
+concern rather than a model concern. GitClaw should keep the same boundary in a
+serverless form: `@gitclaw /channels broadcast <routes> --message-id <id>`
+should fan one reviewed source message out to multiple `.gitclaw/channels`
+routes, queue one `gitclaw:channel-outbound` comment per route, and report only
+route/thread/message/body hashes in the source receipt. Provider APIs,
+provider tokens, raw route names, raw thread IDs, raw message IDs, and raw
+outbound bodies must stay out of the receipt, and the live E2E must still end
+with a normal GitHub Models repo-reader/search turn.
+
 Hermes' session docs also expose a practical backup primitive:
 `hermes sessions export backup.jsonl` writes conversation metadata and messages
 as durable JSONL. GitClaw should preserve the same principle, but use GitHub

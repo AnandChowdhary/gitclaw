@@ -4952,6 +4952,22 @@ duplicate status, and delivery instructions, but never print raw outbound
 bodies, raw thread IDs, raw message IDs, provider credentials, or provider API
 responses.
 
+For multi-route announcements, GitClaw also supports:
+
+```text
+@gitclaw /channels broadcast team-alerts,ops-alerts --message-id <stable-outbound-id>
+message to send
+```
+
+`/channels broadcast`, `/channels fanout`, and `/channels announce` require
+reviewed route names from `.gitclaw/channels/routes.yaml`. They queue one
+`gitclaw:channel-outbound` comment per route, report route/thread/message/body
+hashes, duplicate counts, and target issue/comment IDs, and never call a model,
+call provider APIs, print raw route names, print raw thread/message IDs, print
+raw outbound bodies, or perform provider delivery. Duplicates are suppressed
+per route by the same `channel + message_id` queue semantics as single-route
+sends.
+
 When the source issue is itself a `gitclaw:channel-thread`, GitClaw also
 accepts a shorter reply form:
 
@@ -7338,6 +7354,15 @@ examples/workflows/gitclaw.yml
   issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-send-slash fixture token, and
   avoid hidden route/account/channel sentinels.
+- A `gh`-driven channel-broadcast-slash E2E harness creates an ordinary GitHub
+  issue with `@gitclaw /channels broadcast ...`, verifies one routebook-backed
+  outbound comment per reviewed route, body-free source receipt metadata,
+  duplicate broadcast suppression from a later issue comment with the same
+  message id, and metadata-only outbox discovery for each target issue. The
+  same source issue then gets a normal GitHub Models issue-comment follow-up
+  that must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-broadcast fixture token, and avoid hidden route/account/channel
+  sentinels.
 - A `gh`-driven channel-reply-slash E2E harness creates a real channel-thread
   issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels reply --message-id ...` on that mirrored thread, verifies

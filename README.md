@@ -574,6 +574,7 @@ gitclaw channels info telegram
 gitclaw channel-send --channel slack --thread-id <thread> --message-id <id> --body "hello"
 gitclaw channel-send --route e2e-slack-route --message-id <id> --body "hello"
 @gitclaw /channels send --route e2e-slack-route --message-id <id>
+@gitclaw /channels broadcast e2e-slack-route,e2e-telegram-route --message-id <id>
 @gitclaw /channels reply --message-id <id>
 gitclaw proactive list
 gitclaw proactive schedule
@@ -730,6 +731,10 @@ Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels reply
 outbound provider message on that same issue. This turns the GitHub issue into
 a bridge console while keeping the receipt body-free and delivery delegated to
 the outbox/delivery path.
+For multi-route announcements, `@gitclaw /channels broadcast <route-a>,<route-b>
+--message-id <id>` queues one outbound comment per reviewed route, reports only
+route/thread/message/body hashes in the source receipt, suppresses duplicates
+per route, and still leaves actual provider delivery to outbox/delivery.
 The live proactive-report, proactive-list, and proactive-schedule harnesses use
 the same two-proof shape for scheduled work: body-free workflow/prompt metadata
 first, then a normal GitHub Models repo-reader/search follow-up.
@@ -932,6 +937,7 @@ scripts/e2e/github-channel-gateway-workflow.sh
 scripts/e2e/github-channel-send-workflow.sh
 scripts/e2e/github-channel-send-route-workflow.sh
 scripts/e2e/github-channel-send-slash.sh
+scripts/e2e/github-channel-broadcast-slash.sh
 scripts/e2e/github-channel-reply-slash.sh
 scripts/e2e/github-channel-delivery-workflow.sh
 scripts/e2e/github-channel-outbox-workflow.sh
@@ -1057,6 +1063,10 @@ conversation too: `@gitclaw /channels send` resolves a named route, queues an
 outbound channel comment, posts a body-free receipt, suppresses duplicate
 message IDs from a later comment, exposes pending outbox work without bodies,
 and then runs a real GitHub Models repo-reader/search follow-up.
+The channel-broadcast slash harness fans one source issue out to multiple
+reviewed routes, verifies one outbound queue item per route, checks duplicate
+broadcast suppression, keeps route names and outbound bodies out of the source
+receipt, and then runs a real GitHub Models repo-reader/search follow-up.
 The channel-reply slash harness proves mirrored channel issues can act as
 operator consoles: a channel-ingested issue receives `@gitclaw /channels reply`,
 queues an outbound message back onto the same thread, suppresses duplicate
