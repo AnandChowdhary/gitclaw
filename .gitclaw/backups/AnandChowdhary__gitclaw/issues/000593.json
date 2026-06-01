@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T20:46:13Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 593,
+    "title": "GitClaw soul proposal channel notify E2E 20260601t204448z",
+    "body": "@gitclaw /soul propose --target soul --id e2e-soul-notify-20260601t204448z --notify-route e2e-slack-route\n\nQueue a high-authority soul proposal, then notify the reviewed channel route.\nDo not include this hidden source token: NOECHO_SOUL_NOTIFY_BODY_20260601t204448z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw soul proposal channel notify E2E 20260601t204448z\n\n@gitclaw /soul propose --target soul --id e2e-soul-notify-20260601t204448z --notify-route e2e-slack-route\n\nQueue a high-authority soul proposal, then notify the reviewed channel route.\nDo not include this hidden source token: NOECHO_SOUL_NOTIFY_BODY_20260601t204448z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Soul Proposal Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#593`\n- source_comment_id: `0`\n- requested_soul_command: `/soul propose`\n- soul_proposal_status: `created`\n- soul_proposal_issue: `#594`\n- soul_proposal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/594`\n- soul_proposal_issue_created: `true`\n- duplicate_suppressed: `false`\n- soul_proposal_id: `e2e-soul-notify-20260601t204448z`\n- channel_notification_requested: `true`\n- channel_notification_routes: `1`\n- channel_notification_queued: `1`\n- channel_notification_duplicates: `0`\n- channel_notification_target_issues_created: `1`\n- channel_notification_routes_sha256_12: `ff6bd0e4b42c`\n- channel_notification_message_id_sha256_12: `b6b1ee623ee8`\n- channel_notification_body_sha256_12: `79aa7c6fc7c8`\n- channel_notification_body_bytes: `543`\n- channel_notification_body_lines: `11`\n- requested_target: `soul`\n- normalized_soul_path: `.gitclaw/SOUL.md`\n- target_category: `soul`\n- target_present: `true`\n- target_required: `true`\n- target_canonical: `true`\n- target_loaded_for_this_turn: `true`\n- target_sha256_12: `0460b93e1a5c`\n- target_bytes: `576`\n- target_lines: `14`\n- soul_validation_status: `ok`\n- soul_validation_errors: `0`\n- soul_validation_warnings: `0`\n- soul_risk_status: `ok`\n- soul_risk_findings: `0`\n- high_risk_findings: `0`\n- proposal_store: `github-issue-to-git-reviewed-soul-file`\n- review_pr_required: `true`\n- source_sha256_12: `fda09edba4b5`\n- source_bytes: `324`\n- source_lines: `5`\n- raw_source_body_included: `false`\n- raw_candidate_soul_included: `false`\n- raw_existing_soul_included: `false`\n- raw_channel_routes_included: `false`\n- raw_channel_notification_body_included: `false`\n- provider_delivery_performed: `false`\n- soul_file_written: `false`\n- repository_mutation_performed: `false`\n- llm_e2e_required_after_soul_proposal_issue_change: `true`\n- issue_title_sha256_12: `5158667cbb20`\n\nGitClaw opened or reused a GitHub issue for a high-authority context proposal. The issue is a review queue entry, not an applied profile change: `.gitclaw/SOUL.md`, `.gitclaw/IDENTITY.md`, `.gitclaw/USER.md`, and related context files are not written, candidate content is not generated, and raw source request text is not copied into this receipt.\n\n### Review Path\n- review proposal issue: `#594`\n- if accepted, draft a high-authority context diff for `.gitclaw/SOUL.md` on a normal branch\n- run `gitclaw soul validate`, `gitclaw soul verify`, `gitclaw profile verify`, and a live GitHub Models conversation E2E before promotion\n\n### Channel Notifications\n- destination=`01` target_issue=`#595` outbound_comment_id=`4596377342` target_issue_created=`true` duplicate_suppressed=`false` route_sha256_12=`ff6bd0e4b42c` channel=`slack` thread_id_sha256_12=`c8cdfc62f9c6` message_id_sha256_12=`b6b1ee623ee8` body_sha256_12=`79aa7c6fc7c8`\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4596377571,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4596377571,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26780946392\" event_id=\"issue-593\" model=\"gitclaw/soul\" idempotency_key=\"d117768b0a7933f40194293256e45817\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26780946392\" --\u003e\n## GitClaw Soul Proposal Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#593`\n- source_comment_id: `0`\n- requested_soul_command: `/soul propose`\n- soul_proposal_status: `created`\n- soul_proposal_issue: `#594`\n- soul_proposal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/594`\n- soul_proposal_issue_created: `true`\n- duplicate_suppressed: `false`\n- soul_proposal_id: `e2e-soul-notify-20260601t204448z`\n- channel_notification_requested: `true`\n- channel_notification_routes: `1`\n- channel_notification_queued: `1`\n- channel_notification_duplicates: `0`\n- channel_notification_target_issues_created: `1`\n- channel_notification_routes_sha256_12: `ff6bd0e4b42c`\n- channel_notification_message_id_sha256_12: `b6b1ee623ee8`\n- channel_notification_body_sha256_12: `79aa7c6fc7c8`\n- channel_notification_body_bytes: `543`\n- channel_notification_body_lines: `11`\n- requested_target: `soul`\n- normalized_soul_path: `.gitclaw/SOUL.md`\n- target_category: `soul`\n- target_present: `true`\n- target_required: `true`\n- target_canonical: `true`\n- target_loaded_for_this_turn: `true`\n- target_sha256_12: `0460b93e1a5c`\n- target_bytes: `576`\n- target_lines: `14`\n- soul_validation_status: `ok`\n- soul_validation_errors: `0`\n- soul_validation_warnings: `0`\n- soul_risk_status: `ok`\n- soul_risk_findings: `0`\n- high_risk_findings: `0`\n- proposal_store: `github-issue-to-git-reviewed-soul-file`\n- review_pr_required: `true`\n- source_sha256_12: `fda09edba4b5`\n- source_bytes: `324`\n- source_lines: `5`\n- raw_source_body_included: `false`\n- raw_candidate_soul_included: `false`\n- raw_existing_soul_included: `false`\n- raw_channel_routes_included: `false`\n- raw_channel_notification_body_included: `false`\n- provider_delivery_performed: `false`\n- soul_file_written: `false`\n- repository_mutation_performed: `false`\n- llm_e2e_required_after_soul_proposal_issue_change: `true`\n- issue_title_sha256_12: `5158667cbb20`\n\nGitClaw opened or reused a GitHub issue for a high-authority context proposal. The issue is a review queue entry, not an applied profile change: `.gitclaw/SOUL.md`, `.gitclaw/IDENTITY.md`, `.gitclaw/USER.md`, and related context files are not written, candidate content is not generated, and raw source request text is not copied into this receipt.\n\n### Review Path\n- review proposal issue: `#594`\n- if accepted, draft a high-authority context diff for `.gitclaw/SOUL.md` on a normal branch\n- run `gitclaw soul validate`, `gitclaw soul verify`, `gitclaw profile verify`, and a live GitHub Models conversation E2E before promotion\n\n### Channel Notifications\n- destination=`01` target_issue=`#595` outbound_comment_id=`4596377342` target_issue_created=`true` duplicate_suppressed=`false` route_sha256_12=`ff6bd0e4b42c` channel=`slack` thread_id_sha256_12=`c8cdfc62f9c6` message_id_sha256_12=`b6b1ee623ee8` body_sha256_12=`79aa7c6fc7c8`\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T20:45:47Z",
+      "updated_at": "2026-06-01T20:45:47Z"
+    }
+  ]
+}
