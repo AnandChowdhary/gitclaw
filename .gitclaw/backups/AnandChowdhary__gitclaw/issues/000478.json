@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T03:17:27Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 478,
+    "title": "@gitclaw /proactive schedule e2e 20260601T031609Z",
+    "body": "Live proactive-schedule-report E2E.\n\nHidden proactive schedule report body token: NOECHO_PROACTIVE_SCHEDULE_20260601T031609Z\nThis should produce a deterministic proactive schedule report without a model call.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /proactive schedule e2e 20260601T031609Z\n\nLive proactive-schedule-report E2E.\n\nHidden proactive schedule report body token: NOECHO_PROACTIVE_SCHEDULE_20260601T031609Z\nThis should produce a deterministic proactive schedule report without a model call.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Proactive Schedule Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#478`\n- requested_proactive_command: `schedule`\n- proactive_command_status: `ok`\n- proactive_schedule_status: `ok`\n- schedule_strategy: `github-actions-cron-to-issue-dispatch`\n- upstream_pattern: `openclaw-cron-hermes-cron-skill-backed-fresh-session`\n- scheduler_runtime: `GitHub Actions schedule`\n- state_storage: `gitclaw:proactive-run issues`\n- workflow_files_indexed: `1`\n- workflow_files_present: `1`\n- scheduled_workflows: `1`\n- workflow_dispatch_workflows: `1`\n- cron_entries: `1`\n- cron_entries_valid: `1`\n- prompt_files: `1`\n- skill_backed_prompt_files: `1`\n- prompt_skill_hints: `1`\n- not_before_supported_workflows: `1`\n- exact_timing_supported: `true`\n- heartbeat_is_approximate_channel: `true`\n- fresh_issue_thread_per_name_slot: `true`\n- recursive_schedule_creation_allowed: `false`\n- no_agent_mode_supported: `false`\n- raw_workflow_bodies_included: `false`\n- raw_prompt_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_tool_outputs_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_proactive_schedule_change: `true`\n- proactive_run_issue: `false`\n- issue_title_sha256_12: `e55669c32b81`\n\nThis schedule report maps GitClaw's reviewed GitHub Actions cron jobs to proactive issue threads. It adapts OpenClaw's exact cron-vs-heartbeat split and Hermes' skill-backed cron jobs while keeping workflow bodies, prompt bodies, issue/comment bodies, tool outputs, credentials, and secret values out of the report.\n\n### Workflow Schedule Entries\n- kind=`workflow-schedule` name=`generic` path=`.github/workflows/gitclaw-proactive.yml` present=`true` workflow_dispatch=`true` schedule=`true` cron_index=`1` cron=`23 8 * * 1` cron_sha256_12=`d40cf3b966b0` cadence=`weekly` prompt_file_refs=`2` not_before_supported=`true` sha256_12=`91d1e5f4b023` raw_workflow_body_included=`false`\n\n### Prompt Schedule Cards\n- kind=`prompt-schedule` name=`repo-hygiene` path=`.gitclaw/proactive/repo-hygiene.md` bytes=`702` lines=`16` skill_hints=`repo-reader` sha256_12=`13ff11d7e50c` raw_prompt_body_included=`false`\n\n### Schedule Gates\n- proactive_schedule_gate=`ok`\n- schedule_source_gate=`reviewed-github-workflow`\n- exact_timing_gate=`github-actions-cron`\n- heartbeat_boundary_gate=`heartbeat-is-approximate-monitoring-not-exact-schedule`\n- issue_thread_gate=`one-proactive-run-issue-per-name-slot`\n- dispatch_gate=`workflow-dispatch-to-main-handler`\n- prompt_body_gate=`metadata-hashes-and-skill-hints-only`\n- recursive_schedule_gate=`disabled-inside-proactive-run`\n- model_e2e_gate=`required`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4589260547,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4589260547,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26733219386\" event_id=\"issue-478\" model=\"gitclaw/proactive\" idempotency_key=\"1a79a19a4b0ef96720457bc8e6524af9\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26733219386\" --\u003e\n## GitClaw Proactive Schedule Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#478`\n- requested_proactive_command: `schedule`\n- proactive_command_status: `ok`\n- proactive_schedule_status: `ok`\n- schedule_strategy: `github-actions-cron-to-issue-dispatch`\n- upstream_pattern: `openclaw-cron-hermes-cron-skill-backed-fresh-session`\n- scheduler_runtime: `GitHub Actions schedule`\n- state_storage: `gitclaw:proactive-run issues`\n- workflow_files_indexed: `1`\n- workflow_files_present: `1`\n- scheduled_workflows: `1`\n- workflow_dispatch_workflows: `1`\n- cron_entries: `1`\n- cron_entries_valid: `1`\n- prompt_files: `1`\n- skill_backed_prompt_files: `1`\n- prompt_skill_hints: `1`\n- not_before_supported_workflows: `1`\n- exact_timing_supported: `true`\n- heartbeat_is_approximate_channel: `true`\n- fresh_issue_thread_per_name_slot: `true`\n- recursive_schedule_creation_allowed: `false`\n- no_agent_mode_supported: `false`\n- raw_workflow_bodies_included: `false`\n- raw_prompt_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_tool_outputs_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_proactive_schedule_change: `true`\n- proactive_run_issue: `false`\n- issue_title_sha256_12: `e55669c32b81`\n\nThis schedule report maps GitClaw's reviewed GitHub Actions cron jobs to proactive issue threads. It adapts OpenClaw's exact cron-vs-heartbeat split and Hermes' skill-backed cron jobs while keeping workflow bodies, prompt bodies, issue/comment bodies, tool outputs, credentials, and secret values out of the report.\n\n### Workflow Schedule Entries\n- kind=`workflow-schedule` name=`generic` path=`.github/workflows/gitclaw-proactive.yml` present=`true` workflow_dispatch=`true` schedule=`true` cron_index=`1` cron=`23 8 * * 1` cron_sha256_12=`d40cf3b966b0` cadence=`weekly` prompt_file_refs=`2` not_before_supported=`true` sha256_12=`91d1e5f4b023` raw_workflow_body_included=`false`\n\n### Prompt Schedule Cards\n- kind=`prompt-schedule` name=`repo-hygiene` path=`.gitclaw/proactive/repo-hygiene.md` bytes=`702` lines=`16` skill_hints=`repo-reader` sha256_12=`13ff11d7e50c` raw_prompt_body_included=`false`\n\n### Schedule Gates\n- proactive_schedule_gate=`ok`\n- schedule_source_gate=`reviewed-github-workflow`\n- exact_timing_gate=`github-actions-cron`\n- heartbeat_boundary_gate=`heartbeat-is-approximate-monitoring-not-exact-schedule`\n- issue_thread_gate=`one-proactive-run-issue-per-name-slot`\n- dispatch_gate=`workflow-dispatch-to-main-handler`\n- prompt_body_gate=`metadata-hashes-and-skill-hints-only`\n- recursive_schedule_gate=`disabled-inside-proactive-run`\n- model_e2e_gate=`required`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T03:17:01Z",
+      "updated_at": "2026-06-01T03:17:01Z"
+    }
+  ]
+}

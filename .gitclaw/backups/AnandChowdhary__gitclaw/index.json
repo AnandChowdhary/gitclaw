@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T03:00:13Z",
+  "generated_at": "2026-06-01T03:17:29Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 437,
+  "count": 438,
   "issues": [
     {
       "number": 3,
@@ -5487,6 +5487,18 @@
       ],
       "comment_count": 3,
       "transcript_messages": 4
+    },
+    {
+      "number": 478,
+      "title": "@gitclaw /proactive schedule e2e 20260601T031609Z",
+      "path": "issues/000478.json",
+      "backup_generated_at": "2026-06-01T03:17:27Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }
