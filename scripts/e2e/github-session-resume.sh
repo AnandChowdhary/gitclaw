@@ -210,7 +210,7 @@ for expected in \
   'deterministic_assistant_turns: `0`' \
   'model_names: `openai/' \
   'prompt_visible_skill_names: `repo-reader`' \
-  'prompt_visible_tool_names: `gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files`' \
+  'prompt_visible_tool_names: `gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index`' \
   'latest_assistant_model: `openai/' \
   'latest_assistant_prompt_context_sha256_12: `' \
   'usage_bearing_assistant_turns: `1`' \
@@ -247,7 +247,7 @@ for expected in \
   'kind=`latest-assistant` source=`comment:' \
   'kind=`latest-model-turn` source=`comment:' \
   'prompt_context_sha256_12=`' \
-  'skills=`repo-reader` tools=`gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files` usage_present=`true`' \
+  'skills=`repo-reader` tools=`gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index` usage_present=`true`' \
   'body_included=`false` identifier_included=`false`' \
   "### Latest Assistant Marker" \
   'model=`openai/' \
