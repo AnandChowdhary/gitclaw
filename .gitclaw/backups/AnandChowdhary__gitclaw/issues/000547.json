@@ -1,15 +1,17 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T14:43:40Z",
+  "generated_at": "2026-06-01T14:45:28Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 547,
     "title": "GitClaw channel poll E2E 20260601T144151Z",
     "body": "@gitclaw /channels poll e2e-slack-route,e2e-telegram-route --poll-id poll-20260601T144151Z --message-id poll-msg-20260601T144151Z\n\nQuestion: Which tiny channel feature should GitClaw ship for NOECHO_CHANNEL_POLL_QUESTION_20260601T144151Z?\nOptions:\n- Ship the tiny poll\n- Keep the huddle only",
     "author": "AnandChowdhary",
     "author_association": "OWNER",
-    "labels": null
+    "labels": [
+      "gitclaw:done"
+    ]
   },
   "transcript": [
     {
@@ -29,6 +31,24 @@
       "CommentID": 4593661193,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels poll e2e-slack-route,e2e-telegram-route --poll-id poll-20260601T144151Z --message-id poll-msg-20260601T144151Z\nQuestion: Do not include this duplicate token anywhere: NOECHO_CHANNEL_POLL_DUPLICATE_20260601T144151Z\nOptions:\n- Again\n- Later",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4593668683,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Poll Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#547`\n- requested_channel_command: `/channels poll`\n- channel_poll_status: `duplicate`\n- poll_issue: `#548`\n- poll_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/548`\n- poll_issue_created: `false`\n- poll_id_sha256_12: `697b666d3c89`\n- poll_id_auto: `false`\n- poll_question_sha256_12: `059992fac4dc`\n- poll_question_bytes: `92`\n- poll_question_lines: `1`\n- poll_options_sha256_12: `7b64e18f8ed7`\n- poll_options: `2`\n- poll_source: `trailing-lines`\n- poll_routes: `2`\n- poll_invites_queued: `0`\n- poll_invite_duplicates: `2`\n- target_issues_created: `0`\n- routes_sha256_12: `9892046e64ef`\n- message_id_sha256_12: `08eccb483b25`\n- message_id_auto: `false`\n- outbound_body_sha256_12: `794ebdbec87c`\n- outbound_body_bytes: `316`\n- outbound_body_lines: `14`\n- raw_route_names_included: `false`\n- raw_poll_id_included: `false`\n- raw_question_included: `false`\n- raw_options_included: `false`\n- raw_outbound_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_poll_action_change: `true`\n- issue_title_sha256_12: `5428d19d0ff6`\n\nGitClaw created or reused a GitHub poll issue, then queued one provider-facing poll invitation per reviewed route. The poll issue contains the human-readable question and options; this source receipt keeps route names, poll IDs, question text, option text, thread IDs, message IDs, and outbound bodies out of band.\n\n### Destinations\n- destination=`01` target_issue=`#549` outbound_comment_id=`0` target_issue_created=`false` duplicate_suppressed=`true` route_sha256_12=`ff6bd0e4b42c` channel=`slack` thread_id_sha256_12=`b88e1f401a7f` message_id_sha256_12=`08eccb483b25` body_sha256_12=`794ebdbec87c`\n- destination=`02` target_issue=`#550` outbound_comment_id=`0` target_issue_created=`false` duplicate_suppressed=`true` route_sha256_12=`325d7a85c564` channel=`telegram` thread_id_sha256_12=`6b0770b7e315` message_id_sha256_12=`08eccb483b25` body_sha256_12=`794ebdbec87c`\n\n### Follow-Up Delivery\n- provider gateways read pending poll invites with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent poll invites with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate poll invites are suppressed independently for each route by `channel + message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4593678278,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -39,6 +59,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T14:43:09Z",
       "updated_at": "2026-06-01T14:43:09Z"
+    },
+    {
+      "id": 4593668683,
+      "body": "@gitclaw /channels poll e2e-slack-route,e2e-telegram-route --poll-id poll-20260601T144151Z --message-id poll-msg-20260601T144151Z\nQuestion: Do not include this duplicate token anywhere: NOECHO_CHANNEL_POLL_DUPLICATE_20260601T144151Z\nOptions:\n- Again\n- Later",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T14:43:58Z",
+      "updated_at": "2026-06-01T14:43:58Z"
+    },
+    {
+      "id": 4593678278,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26762139698\" event_id=\"comment-4593668683\" model=\"gitclaw/channels\" idempotency_key=\"b8b58f038ad49d9a26c3f390f7a63a78\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26762139698\" --\u003e\n## GitClaw Channel Poll Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#547`\n- requested_channel_command: `/channels poll`\n- channel_poll_status: `duplicate`\n- poll_issue: `#548`\n- poll_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/548`\n- poll_issue_created: `false`\n- poll_id_sha256_12: `697b666d3c89`\n- poll_id_auto: `false`\n- poll_question_sha256_12: `059992fac4dc`\n- poll_question_bytes: `92`\n- poll_question_lines: `1`\n- poll_options_sha256_12: `7b64e18f8ed7`\n- poll_options: `2`\n- poll_source: `trailing-lines`\n- poll_routes: `2`\n- poll_invites_queued: `0`\n- poll_invite_duplicates: `2`\n- target_issues_created: `0`\n- routes_sha256_12: `9892046e64ef`\n- message_id_sha256_12: `08eccb483b25`\n- message_id_auto: `false`\n- outbound_body_sha256_12: `794ebdbec87c`\n- outbound_body_bytes: `316`\n- outbound_body_lines: `14`\n- raw_route_names_included: `false`\n- raw_poll_id_included: `false`\n- raw_question_included: `false`\n- raw_options_included: `false`\n- raw_outbound_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_poll_action_change: `true`\n- issue_title_sha256_12: `5428d19d0ff6`\n\nGitClaw created or reused a GitHub poll issue, then queued one provider-facing poll invitation per reviewed route. The poll issue contains the human-readable question and options; this source receipt keeps route names, poll IDs, question text, option text, thread IDs, message IDs, and outbound bodies out of band.\n\n### Destinations\n- destination=`01` target_issue=`#549` outbound_comment_id=`0` target_issue_created=`false` duplicate_suppressed=`true` route_sha256_12=`ff6bd0e4b42c` channel=`slack` thread_id_sha256_12=`b88e1f401a7f` message_id_sha256_12=`08eccb483b25` body_sha256_12=`794ebdbec87c`\n- destination=`02` target_issue=`#550` outbound_comment_id=`0` target_issue_created=`false` duplicate_suppressed=`true` route_sha256_12=`325d7a85c564` channel=`telegram` thread_id_sha256_12=`6b0770b7e315` message_id_sha256_12=`08eccb483b25` body_sha256_12=`794ebdbec87c`\n\n### Follow-Up Delivery\n- provider gateways read pending poll invites with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent poll invites with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate poll invites are suppressed independently for each route by `channel + message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T14:45:00Z",
+      "updated_at": "2026-06-01T14:45:00Z"
     }
   ]
 }
