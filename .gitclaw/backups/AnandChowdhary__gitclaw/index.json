@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T01:06:23Z",
+  "generated_at": "2026-06-01T01:25:08Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 430,
+  "count": 431,
   "issues": [
     {
       "number": 3,
@@ -5396,6 +5396,18 @@
       ],
       "comment_count": 3,
       "transcript_messages": 4
+    },
+    {
+      "number": 471,
+      "title": "@gitclaw session compaction e2e 20260601T012353Z",
+      "path": "issues/000471.json",
+      "backup_generated_at": "2026-06-01T01:25:07Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }
