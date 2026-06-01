@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T07:00:26Z",
+  "generated_at": "2026-06-01T07:01:56Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 454,
   "issues": [
@@ -5698,13 +5698,14 @@
       "number": 494,
       "title": "GitClaw profile search e2e 20260601T065909Z",
       "path": "issues/000494.json",
-      "backup_generated_at": "2026-06-01T07:00:24Z",
-      "event_name": "issues",
+      "backup_generated_at": "2026-06-01T07:01:55Z",
+      "event_name": "issue_comment",
       "labels": [
-        "gitclaw"
+        "gitclaw",
+        "gitclaw:done"
       ],
-      "comment_count": 1,
-      "transcript_messages": 2
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }

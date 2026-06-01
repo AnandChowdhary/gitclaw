@@ -1,6 +1,6 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-01T07:00:26Z`
+- generated_at: `2026-06-01T07:01:56Z`
 - issue_count: `454`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
@@ -458,4 +458,4 @@
 | #491 | @gitclaw /profile snapshot e2e 20260601T061752Z | `2026-06-01T06:20:24Z` | 3 | 4 | `issues/000491.json` |
 | #492 | @gitclaw /profile provenance e2e 20260601T063908Z | `2026-06-01T06:41:53Z` | 3 | 4 | `issues/000492.json` |
 | #493 | @gitclaw /profile search skill_path e2e 20260601T065634Z | `2026-06-01T06:57:42Z` | 1 | 2 | `issues/000493.json` |
-| #494 | GitClaw profile search e2e 20260601T065909Z | `2026-06-01T07:00:24Z` | 1 | 2 | `issues/000494.json` |
+| #494 | GitClaw profile search e2e 20260601T065909Z | `2026-06-01T07:01:55Z` | 3 | 4 | `issues/000494.json` |
