@@ -1150,13 +1150,15 @@ func runMemoryValidateCommand(args []string) error {
 
 func runSoulCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw soul catalog|anchors|provenance|verify|risk|validate|list|edit-plan <path>|info <path>|search <query>")
+		return fmt.Errorf("usage: gitclaw soul catalog|anchors|snapshot|provenance|verify|risk|validate|list|edit-plan <path>|info <path>|search <query>")
 	}
 	switch args[0] {
 	case "catalog", "index", "profile-catalog", "authority-catalog":
 		return runSoulCatalogCommand(args[1:])
 	case "anchors", "anchor", "authority", "map":
 		return runSoulAnchorsCommand(args[1:])
+	case "snapshot", "snapshots", "fingerprint", "fingerprints", "lock", "lockfile":
+		return runSoulSnapshotCommand(args[1:])
 	case "provenance", "history", "timeline":
 		return runSoulProvenanceCommand(args[1:])
 	case "verify":
@@ -1207,6 +1209,22 @@ func runSoulAnchorsCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSoulAnchorsReport(repoContext))
+	return nil
+}
+
+func runSoulSnapshotCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown soul snapshot argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSoulSnapshotCLIReport(repoContext))
 	return nil
 }
 

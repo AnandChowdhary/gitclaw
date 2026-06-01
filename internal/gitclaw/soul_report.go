@@ -45,6 +45,9 @@ func RenderSoulReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isSoulAnchorsRequest(ev, cfg) {
 		return renderSoulAnchorsReport(ev, repoContext, true)
 	}
+	if isSoulSnapshotRequest(ev, cfg) {
+		return renderSoulSnapshotReport(ev, repoContext, true)
+	}
 	if isSoulProvenanceRequest(ev, cfg) {
 		return RenderSoulProvenanceReport(ev, cfg, repoContext)
 	}

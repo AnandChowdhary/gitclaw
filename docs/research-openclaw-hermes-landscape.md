@@ -3427,6 +3427,15 @@ authority layers, load modes, reason codes, short hashes, validation/risk
 gates, and disabled mutation/profile-export gates, with no raw soul,
 identity, user, memory, tool, prompt, issue, comment, or description bodies.
 
+2026-06-01 soul-snapshot follow-up: the same OpenClaw workspace-file and Hermes
+profile boundary also needs a stable comparison point for backups and restores.
+GitClaw should add `@gitclaw /soul snapshot` and `gitclaw soul snapshot` as a
+metadata-only fingerprint: one composite snapshot hash plus per-anchor
+load-state and short body hashes, with registry contact, profile export,
+repository mutation, and raw bodies disabled. This gives maintainers a quick
+"did the agent's durable identity/context change?" check without exporting the
+profile.
+
 2026-05-31 skill-provenance follow-up: OpenClaw's skills CLI can list, check,
 install, update, verify, and workshop proposed skills, while its skills
 security docs warn that third-party skills are trusted code and should be

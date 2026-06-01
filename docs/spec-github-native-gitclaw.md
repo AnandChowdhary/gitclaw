@@ -941,7 +941,7 @@ GitHub issue/comment event
   `skills proposals`, `skills proposal-plan`, `skills install-plan`,
   `skills upgrade-plan`, `skills info`, `skills search`,
   `bundles list`, `bundles risk`, `bundles info`,
-  `soul catalog`, `soul provenance`, `soul verify`, `soul risk`,
+  `soul catalog`, `soul anchors`, `soul snapshot`, `soul provenance`, `soul verify`, `soul risk`,
   `soul validate`, `soul list`, `soul edit-plan`, `soul info`, `soul search`,
   `tools verify`, `tools risk`, `tools validate`, `tools list`,
   `tools exposure`, `tools exposure risk`, `tools defer-plan`,
@@ -2359,6 +2359,7 @@ Validation is visible in the `/soul` report and locally through:
 ```bash
 gitclaw soul catalog
 gitclaw soul anchors
+gitclaw soul snapshot
 gitclaw soul provenance
 gitclaw soul verify
 gitclaw soul risk
@@ -2381,6 +2382,7 @@ by OpenClaw and Hermes' portable workspace files:
 @gitclaw /soul
 @gitclaw /soul catalog
 @gitclaw /soul anchors
+@gitclaw /soul snapshot
 @gitclaw /soul provenance
 @gitclaw /soul list
 @gitclaw /soul verify
@@ -2433,6 +2435,18 @@ frontmatter/description presence, validation gates, risk gates, and mutation
 gates only. It never emits raw file, issue, comment, prompt, or secret bodies.
 Changes to this report must be paired with a live GitHub Models follow-up E2E
 that proves normal inference and prompt-visible tool provenance.
+
+When called as `@gitclaw /soul snapshot`, `@gitclaw /soul fingerprint`, or
+`@gitclaw /soul lock`, the command posts a deterministic body-free fingerprint
+of the same anchor graph. It emits per-anchor paths, categories, roles,
+authority layers, load states, short body hashes, risk counts, and one
+composite `snapshot_sha256_12` over the metadata. This is the OpenClaw/Hermes
+profile-lock equivalent for GitClaw: enough to compare whether the repo-stored
+agent identity, user profile, memory, tools, heartbeat, and policy surface
+changed, without exporting or mutating the profile. Registry contact,
+profile export, repository mutation, and raw-body gates remain disabled.
+Snapshot changes require a live GitHub issue E2E plus a normal GitHub Models
+repo-reader/search follow-up.
 
 When called as `@gitclaw /soul catalog`, `@gitclaw /soul index`,
 `@gitclaw /soul profile-catalog`, or `@gitclaw /soul authority-catalog`, the
@@ -7603,6 +7617,13 @@ examples/workflows/gitclaw.yml
   repo-local soul/profile/memory/policy anchors, then posts a normal follow-up
   requiring repo-reader search so GitHub Models proves model inference, prompt
   provenance, selected skills, and prompt-visible tool names.
+- A `gh`-driven soul-snapshot E2E harness verifies
+  `@gitclaw /soul snapshot` exposes the body-free composite fingerprint for
+  repo-local high-authority context, including anchor load states, short
+  hashes, disabled export/mutation gates, and a `snapshot_sha256_12`. It then
+  posts a normal repo-reader/search follow-up so GitHub Models proves model
+  inference, prompt provenance, selected skills, prompt-visible tools, and
+  usage telemetry.
 - A `gh`-driven soul-provenance E2E harness verifies
   `@gitclaw /soul provenance` exposes tracked git provenance for loaded
   high-authority context files, including commit IDs/dates and commit-subject

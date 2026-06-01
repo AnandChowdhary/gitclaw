@@ -70,6 +70,7 @@ High-authority context:
 ```bash
 gitclaw soul catalog
 gitclaw soul anchors
+gitclaw soul snapshot
 gitclaw soul provenance
 gitclaw soul verify
 gitclaw soul risk
@@ -85,6 +86,11 @@ context. It reports anchor names, authority layers, load modes, reason codes,
 counts, short hashes, and disabled mutation/profile-export gates without
 printing raw soul, user, memory, tool, prompt, issue, comment, or description
 bodies.
+
+`gitclaw soul snapshot` is the body-free fingerprint for repo-stored
+high-authority context. It reports each soul/profile/memory/policy anchor's
+load state and short hash plus one composite snapshot hash, with registry,
+profile-export, mutation, and raw-body gates disabled.
 
 `gitclaw soul edit-plan <path>` is a dry-run planner for high-authority
 context changes. It reports normalized target metadata and write-disabled
@@ -749,6 +755,7 @@ scripts/e2e/github-session-stats-report.sh
 scripts/e2e/github-session-coverage.sh
 scripts/e2e/github-skills-provenance-report.sh
 scripts/e2e/github-soul-catalog-report.sh
+scripts/e2e/github-soul-snapshot-report.sh
 scripts/e2e/github-soul-provenance-report.sh
 scripts/e2e/github-sandbox-risk-report.sh
 scripts/e2e/github-tasks-ledger-report.sh

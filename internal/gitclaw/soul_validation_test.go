@@ -182,6 +182,73 @@ func TestRenderSoulAnchorsReportShowsAuthorityMapWithoutBodies(t *testing.T) {
 	}
 }
 
+func TestRenderSoulSnapshotReportShowsCompositeFingerprintWithoutBodies(t *testing.T) {
+	repoContext := RepoContext{Documents: []ContextDocument{
+		{Path: ".gitclaw/SOUL.md", Body: "---\ndescription: Repo-local soul.\n---\nSOUL_SNAPSHOT_BODY_TOKEN"},
+		{Path: ".gitclaw/IDENTITY.md", Body: "Identity."},
+		{Path: ".gitclaw/USER.md", Body: "USER_SNAPSHOT_BODY_TOKEN"},
+		{Path: ".gitclaw/TOOLS.md", Body: "Tools."},
+		{Path: ".gitclaw/MEMORY.md", Body: "Memory."},
+		{Path: ".gitclaw/HEARTBEAT.md", Body: "Heartbeat."},
+		{Path: ".gitclaw/STANDING_ORDERS.md", Body: "Orders."},
+		{Path: ".gitclaw/memory/2026-05-29.md", Body: "Memory note."},
+	}}
+	body := RenderSoulSnapshotCLIReport(repoContext)
+	for _, want := range []string{
+		"GitClaw Soul Snapshot Report",
+		"scope: `local-cli`",
+		"soul_snapshot_status: `ok`",
+		"snapshot_version: `gitclaw-soul-snapshot-v1`",
+		"snapshot_scope: `repo-local-high-authority-context`",
+		"snapshot_sha256_12:",
+		"snapshot_entries: `17`",
+		"loaded_snapshot_entries: `8`",
+		"required_snapshot_entries: `6`",
+		"required_loaded_entries: `6`",
+		"missing_required_entries: `0`",
+		"optional_loaded_entries: `2`",
+		"memory_note_entries: `1`",
+		"prompt_visible_entries: `8`",
+		"registry_contact_allowed: `false`",
+		"profile_export_allowed: `false`",
+		"soul_writes_allowed: `false`",
+		"repository_mutation_allowed: `false`",
+		"raw_bodies_included: `false`",
+		"raw_descriptions_included: `false`",
+		"llm_e2e_required_after_soul_snapshot_change: `true`",
+		"soul_validation_status: `ok`",
+		"soul_risk_status: `ok`",
+		"### Snapshot Entries",
+		"name=`agent-instructions` path=`AGENTS.md`",
+		"load_state=`optional-missing`",
+		"name=`soul` path=`.gitclaw/SOUL.md` category=`soul` role=`persona-boundaries` authority=`core` source=`repo-local` required=`true` loaded=`true`",
+		"load_state=`required-loaded`",
+		"name=`standing-orders` path=`.gitclaw/STANDING_ORDERS.md`",
+		"name=`memory-note` path=`.gitclaw/memory/2026-05-29.md` category=`memory-note`",
+		"latest_memory_note=`true`",
+		"sha256_12=",
+		"risk_findings=`0`",
+		"risk_codes=`none`",
+		"### Snapshot Gates",
+		"validation_gate=`pass`",
+		"risk_gate=`pass`",
+		"registry_gate=`disabled`",
+		"profile_export_gate=`disabled`",
+		"mutation_gate=`disabled`",
+		"body_hash_gate=`sha256_12`",
+		"snapshot_hash_gate=`composite-sha256_12`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("soul snapshot report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SOUL_SNAPSHOT_BODY_TOKEN", "USER_SNAPSHOT_BODY_TOKEN", "Repo-local soul"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("soul snapshot report leaked body token %q:\n%s", leaked, body)
+		}
+	}
+}
+
 func TestRenderSoulCatalogReportShowsAuthorityCatalogWithoutBodies(t *testing.T) {
 	repoContext := RepoContext{Documents: []ContextDocument{
 		{Path: ".gitclaw/SOUL.md", Body: "---\ndescription: Repo-local soul.\n---\nSOUL_CATALOG_BODY_TOKEN"},
@@ -330,6 +397,53 @@ func TestRenderSoulReportRoutesAnchorsWithoutBodies(t *testing.T) {
 	for _, leaked := range []string{"SOUL_ANCHOR_ROUTE_BODY_TOKEN", "USER_ANCHOR_ROUTE_BODY_TOKEN", "SOUL_ANCHOR_ROUTE_ISSUE_SECRET"} {
 		if strings.Contains(body, leaked) {
 			t.Fatalf("soul anchors route report leaked %q:\n%s", leaked, body)
+		}
+	}
+}
+
+func TestRenderSoulReportRoutesSnapshotWithoutBodies(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SOUL.md", "SOUL_SNAPSHOT_ROUTE_BODY_TOKEN")
+	writeTestFile(t, root, ".gitclaw/IDENTITY.md", "Identity.")
+	writeTestFile(t, root, ".gitclaw/USER.md", "USER_SNAPSHOT_ROUTE_BODY_TOKEN")
+	writeTestFile(t, root, ".gitclaw/TOOLS.md", "Tools.")
+	writeTestFile(t, root, ".gitclaw/MEMORY.md", "Memory.")
+	writeTestFile(t, root, ".gitclaw/HEARTBEAT.md", "Heartbeat.")
+	writeTestFile(t, root, ".gitclaw/memory/2026-05-29.md", "Memory note.")
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	ctx, err := LoadRepoContext(root, []TranscriptMessage{{Role: "user", Body: "soul snapshot"}})
+	if err != nil {
+		t.Fatalf("LoadRepoContext returned error: %v", err)
+	}
+	ev := Event{
+		Repo: "owner/repo",
+		Issue: Issue{
+			Number: 46,
+			Title:  "@gitclaw /soul snapshot",
+			Body:   "Hidden soul snapshot issue token: SOUL_SNAPSHOT_ROUTE_ISSUE_SECRET.",
+		},
+	}
+	body := RenderSoulReport(ev, cfg, ctx)
+	for _, want := range []string{
+		"GitClaw Soul Snapshot Report",
+		"repository: `owner/repo`",
+		"issue: `#46`",
+		"soul_snapshot_status: `ok`",
+		"snapshot_version: `gitclaw-soul-snapshot-v1`",
+		"snapshot_sha256_12:",
+		"issue_title_sha256_12:",
+		"name=`soul` path=`.gitclaw/SOUL.md`",
+		"raw_bodies_included: `false`",
+		"llm_e2e_required_after_soul_snapshot_change: `true`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("soul snapshot route report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SOUL_SNAPSHOT_ROUTE_BODY_TOKEN", "USER_SNAPSHOT_ROUTE_BODY_TOKEN", "SOUL_SNAPSHOT_ROUTE_ISSUE_SECRET"} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("soul snapshot route report leaked %q:\n%s", leaked, body)
 		}
 	}
 }
