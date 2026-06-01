@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T21:14:32Z",
+  "generated_at": "2026-06-01T21:17:12Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 522,
+  "count": 523,
   "issues": [
     {
       "number": 3,
@@ -6566,6 +6566,18 @@
       "title": "GitClaw skills proposal channel notify E2E 20260601t211307z",
       "path": "issues/000599.json",
       "backup_generated_at": "2026-06-01T21:14:31Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
+    },
+    {
+      "number": 601,
+      "title": "GitClaw skills proposal channel notify E2E 20260601t211539z",
+      "path": "issues/000601.json",
+      "backup_generated_at": "2026-06-01T21:17:11Z",
       "event_name": "issues",
       "labels": [
         "gitclaw"
