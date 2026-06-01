@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T18:16:50Z",
+  "generated_at": "2026-06-01T18:18:28Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 577,
     "title": "GitClaw telegram thread channel-clip-e2e-20260601t181505z",
@@ -42,6 +42,24 @@
       "CommentID": 4595289549,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels clip --clip-id channel-clip-20260601t181505z --message-id clip-ingest-20260601t181505z --notify-message-id clip-notify-20260601t181505z\nTitle: Save channel clip 20260601t181505z\nNotes:\nVisible clip note token: VISIBLE_CHANNEL_CLIP_NOTES_20260601t181505z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4595294315,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Clip Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#577`\n- requested_channel_command: `/channels clip`\n- channel_clip_status: `saved`\n- clip_issue: `#578`\n- clip_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/578`\n- clip_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#577`\n- notification_comment_id: `4595300463`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `71a8a76152cf`\n- source_message_id_sha256_12: `b77e492f34b7`\n- notify_message_id_sha256_12: `ec14a3fcc2ad`\n- notify_message_id_auto: `false`\n- clip_id_sha256_12: `15f104c379c0`\n- clip_id_auto: `false`\n- clip_title_sha256_12: `627ee83aa4fe`\n- clip_title_bytes: `34`\n- clip_title_lines: `1`\n- clip_notes_sha256_12: `77e3615e0fd0`\n- clip_notes_bytes: `68`\n- clip_notes_lines: `1`\n- notification_body_sha256_12: `36b12ca81d36`\n- target_from_current_channel_issue: `true`\n- raw_clip_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_clip_title_included: `false`\n- raw_clip_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_clip_action_change: `true`\n- issue_title_sha256_12: `cb2f1426a603`\n\nGitClaw saved a mirrored channel message or thread moment as a durable GitHub clip issue, then queued a provider-facing link back to the original thread. The clip issue contains the human-readable saved context; this source receipt keeps provider IDs, clip IDs, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the clip-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent clip links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate clip issues are suppressed by `clip_id`; duplicate clip-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the clip issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4595300627,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -60,6 +78,30 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T18:16:25Z",
       "updated_at": "2026-06-01T18:16:25Z"
+    },
+    {
+      "id": 4595294315,
+      "body": "@gitclaw /channels clip --clip-id channel-clip-20260601t181505z --message-id clip-ingest-20260601t181505z --notify-message-id clip-notify-20260601t181505z\nTitle: Save channel clip 20260601t181505z\nNotes:\nVisible clip note token: VISIBLE_CHANNEL_CLIP_NOTES_20260601t181505z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T18:17:06Z",
+      "updated_at": "2026-06-01T18:17:06Z"
+    },
+    {
+      "id": 4595300463,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-clip-e2e-20260601t181505z\" message_id=\"clip-notify-20260601t181505z\" author=\"gitclaw\" --\u003e\nGitClaw channel clip saved.\n\nClip: #578\nURL: https://github.com/AnandChowdhary/gitclaw/issues/578\nTitle: Save channel clip 20260601t181505z\n\nSaved in the linked GitHub issue.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T18:17:58Z",
+      "updated_at": "2026-06-01T18:17:58Z"
+    },
+    {
+      "id": 4595300627,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26773354394\" event_id=\"comment-4595294315\" model=\"gitclaw/channels\" idempotency_key=\"c8900cd767510b50ab1b14d530aee60e\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26773354394\" --\u003e\n## GitClaw Channel Clip Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#577`\n- requested_channel_command: `/channels clip`\n- channel_clip_status: `saved`\n- clip_issue: `#578`\n- clip_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/578`\n- clip_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#577`\n- notification_comment_id: `4595300463`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `71a8a76152cf`\n- source_message_id_sha256_12: `b77e492f34b7`\n- notify_message_id_sha256_12: `ec14a3fcc2ad`\n- notify_message_id_auto: `false`\n- clip_id_sha256_12: `15f104c379c0`\n- clip_id_auto: `false`\n- clip_title_sha256_12: `627ee83aa4fe`\n- clip_title_bytes: `34`\n- clip_title_lines: `1`\n- clip_notes_sha256_12: `77e3615e0fd0`\n- clip_notes_bytes: `68`\n- clip_notes_lines: `1`\n- notification_body_sha256_12: `36b12ca81d36`\n- target_from_current_channel_issue: `true`\n- raw_clip_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_clip_title_included: `false`\n- raw_clip_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_clip_action_change: `true`\n- issue_title_sha256_12: `cb2f1426a603`\n\nGitClaw saved a mirrored channel message or thread moment as a durable GitHub clip issue, then queued a provider-facing link back to the original thread. The clip issue contains the human-readable saved context; this source receipt keeps provider IDs, clip IDs, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the clip-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent clip links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate clip issues are suppressed by `clip_id`; duplicate clip-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the clip issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T18:18:00Z",
+      "updated_at": "2026-06-01T18:18:00Z"
     }
   ]
 }
