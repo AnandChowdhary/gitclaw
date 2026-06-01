@@ -149,7 +149,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `35`' \
   'aliases: `33`' \
-  'local_cli_helpers: `230`' \
+  'local_cli_helpers: `231`' \
   'run_mode: `read-only`' \
   'llm_e2e_required_after_commands_report_change: `true`' \
   "### Slash Commands" \

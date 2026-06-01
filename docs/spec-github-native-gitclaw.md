@@ -5264,6 +5264,7 @@ accepts a structured reaction form:
 
 ```text
 @gitclaw /channels status --message-id <provider-message-id> --status-id <stable-status-id> --state working
+@gitclaw /channels edit --message-id <provider-message-id> --edit-id <stable-edit-id>
 @gitclaw /channels react --message-id <provider-message-id> --reaction eyes
 @gitclaw /channels pin --message-id <provider-message-id>
 @gitclaw /channels task --task-id <stable-task-id> --message-id <provider-message-id>
@@ -5285,6 +5286,20 @@ raw target message ids, print raw status ids, print raw status states, print
 status bodies, or print channel message bodies. The pending update appears in
 `channel-outbox` as kind `channel-status`, and `channel-delivery` records the
 provider receipt for the status comment.
+
+`/channels edit`, `/channels update`, and `/channels replace` infer the current
+channel and thread id from the issue marker when no explicit route/channel/thread
+target is provided, then post one `gitclaw:channel-edit` comment on the same
+canonical channel issue. This gives provider gateways a serverless edit/update
+operation for messages that already exist in Slack, Telegram, or a future
+provider surface. Duplicate edits are suppressed by `channel + edit_id`. The
+source receipt reports only target issue/comment ids, target message hash, edit
+id hash, edit body hash, route/thread hashes, duplicate status, and delivery
+gates. It does not call a model, call provider APIs, print raw route names,
+print raw thread ids, print raw target message ids, print raw edit ids, print
+replacement bodies, or print channel message bodies. The pending update appears
+in `channel-outbox` as kind `channel-edit`, and `channel-delivery` records the
+provider receipt for the edit comment.
 
 `/channels react`, `/channels reaction`, `/channels emoji`, `/channels ack`,
 `/channels pin`, `/channels star`, and `/channels bookmark` infer the current
@@ -5389,6 +5404,8 @@ Behavior:
 - post one `gitclaw:channel-outbound` comment per `channel + message_id`,
 - post one `gitclaw:channel-reaction` comment per
   `channel + target_message_id + reaction`,
+- post one `gitclaw:channel-status` comment per `channel + status_id`,
+- post one `gitclaw:channel-edit` comment per `channel + edit_id`,
 - create or reuse one `gitclaw:channel-task` issue per task id and queue one
   provider-facing task-link outbound comment per `channel + notify_message_id`,
 - suppress duplicate outbound message IDs,
@@ -5561,6 +5578,8 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels risk
 @gitclaw /channels info telegram
 @gitclaw /channels send --route team-alerts --message-id alert-123
+@gitclaw /channels status --message-id provider-msg-1 --status-id status-1 --state working
+@gitclaw /channels edit --message-id provider-msg-1 --edit-id edit-1
 @gitclaw /channels task --task-id channel-task-1 --message-id provider-msg-1
 @gitclaw /channels clip --clip-id channel-clip-1 --message-id provider-msg-1
 @gitclaw /channels room team-alerts,ops-alerts --room-id design-room --message-id design-room-1
@@ -7901,6 +7920,15 @@ examples/workflows/gitclaw.yml
   Models issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-status fixture token, and avoid
   hidden channel, account, provider, status, and body sentinels.
+- A `gh`-driven channel-edit-slash E2E harness creates a real channel-thread
+  issue, posts `@gitclaw /channels edit --message-id ... --edit-id ...` on
+  that mirrored thread, verifies same-issue structured edit queueing,
+  body-free receipt metadata, duplicate suppression, metadata-only outbox
+  discovery with kind `channel-edit`, and channel-delivery workflow receipts.
+  The same issue then gets a normal GitHub Models issue-comment follow-up that
+  must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-edit fixture token, and avoid hidden channel, account, provider,
+  edit, target-message, and replacement-body sentinels.
 - A `gh`-driven channel-reaction-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels react --message-id ... --reaction ...` on that mirrored

@@ -4020,3 +4020,20 @@ action remains model-free and provider-free, reports only hashes and delivery
 gates, suppresses duplicates by `channel + status_id`, and requires a live
 GitHub Models repo-reader/search follow-up to prove the channel issue still
 supports ordinary grounded conversation.
+
+## 2026-06-01 Channel Edit Follow-Up
+
+OpenClaw's current channel configuration docs expose provider action surfaces
+such as messages, reactions, pins, threads, streaming/progress, and capability
+probes; its channel CLI docs also separate runtime status, capabilities,
+resolution, and logs. Hermes-style runtimes similarly treat channels as live
+transport surfaces that sit beside skills, memory, approvals, and scheduling.
+GitClaw's no-server version should make provider message lifecycle operations
+reviewable too: `@gitclaw /channels edit --message-id <id> --edit-id <id>`
+inside a mirrored `gitclaw:channel-thread` issue posts a structured
+`gitclaw:channel-edit` comment for provider gateways to deliver through
+`channel-outbox`, then `channel-delivery` records the applied edit receipt.
+The source action stays deterministic, model-free, and provider-free, reports
+only hashes and delivery gates, suppresses duplicates by `channel + edit_id`,
+and requires a live GitHub Models repo-reader/search follow-up to prove the
+channel issue still supports ordinary grounded conversation.

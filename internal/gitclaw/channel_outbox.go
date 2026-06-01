@@ -31,6 +31,7 @@ type ChannelOutboxResult struct {
 	SourceOutboundComments     int
 	SourceReactionComments     int
 	SourceStatusComments       int
+	SourceEditComments         int
 	SourceDeliverableComments  int
 	DeliveredAssistantComments int
 	PendingMessages            int
@@ -62,6 +63,7 @@ type channelOutboxFile struct {
 	SourceOutboundComments    int                    `json:"source_outbound_comments"`
 	SourceReactionComments    int                    `json:"source_reaction_comments"`
 	SourceStatusComments      int                    `json:"source_status_comments"`
+	SourceEditComments        int                    `json:"source_edit_comments"`
 	SourceDeliverableComments int                    `json:"source_deliverable_comments"`
 	DeliveredAssistantReplies int                    `json:"delivered_assistant_comments"`
 	PendingMessages           int                    `json:"pending_messages"`
@@ -133,6 +135,8 @@ func RunChannelOutbox(ctx context.Context, cfg Config, github ChannelOutboxGitHu
 			result.SourceReactionComments++
 		} else if kind == "channel-status" {
 			result.SourceStatusComments++
+		} else if kind == "channel-edit" {
+			result.SourceEditComments++
 		}
 		if delivered[comment.ID] {
 			result.DeliveredAssistantComments++
@@ -174,16 +178,26 @@ func channelOutboxDeliverable(body, channel, threadID string) (string, string, s
 		reactionChannel, reactionThread, reactionMessageID, reaction := channelReactionMarkerFields(body)
 		if reactionChannel == "" {
 			statusChannel, statusThread, _, statusID, state := channelStatusMarkerFields(body)
-			if statusChannel == "" {
+			if statusChannel != "" {
+				if statusChannel != channel {
+					return "", "", "", false
+				}
+				if statusThread != "" && threadID != "" && statusThread != threadID {
+					return "", "", "", false
+				}
+				return "channel-status", StripChannelStatusMarker(body), channelStateHash(statusID + "|" + state), true
+			}
+			editChannel, editThread, targetMessageID, editID := channelEditMarkerFields(body)
+			if editChannel == "" {
 				return "", "", "", false
 			}
-			if statusChannel != channel {
+			if editChannel != channel {
 				return "", "", "", false
 			}
-			if statusThread != "" && threadID != "" && statusThread != threadID {
+			if editThread != "" && threadID != "" && editThread != threadID {
 				return "", "", "", false
 			}
-			return "channel-status", StripChannelStatusMarker(body), channelStateHash(statusID + "|" + state), true
+			return "channel-edit", StripChannelEditMarker(body), channelStateHash(editID + "|" + targetMessageID), true
 		}
 		if reactionChannel != channel {
 			return "", "", "", false
@@ -292,6 +306,7 @@ func writeChannelOutboxFile(opts ChannelOutboxOptions, result ChannelOutboxResul
 		SourceOutboundComments:    result.SourceOutboundComments,
 		SourceReactionComments:    result.SourceReactionComments,
 		SourceStatusComments:      result.SourceStatusComments,
+		SourceEditComments:        result.SourceEditComments,
 		SourceDeliverableComments: result.SourceDeliverableComments,
 		DeliveredAssistantReplies: result.DeliveredAssistantComments,
 		PendingMessages:           result.PendingMessages,
@@ -323,6 +338,7 @@ func writeChannelOutboxOutputs(result ChannelOutboxResult) error {
 	fmt.Fprintf(file, "state_issue_number=%d\n", result.StateIssueNumber)
 	fmt.Fprintf(file, "state_issue_url=%s\n", result.StateIssueURL)
 	fmt.Fprintf(file, "source_assistant_comments=%d\n", result.SourceAssistantComments)
+	fmt.Fprintf(file, "source_edit_comments=%d\n", result.SourceEditComments)
 	fmt.Fprintf(file, "delivered_assistant_comments=%d\n", result.DeliveredAssistantComments)
 	fmt.Fprintf(file, "pending_messages=%d\n", result.PendingMessages)
 	fmt.Fprintf(file, "messages_returned=%d\n", result.MessagesReturned)
