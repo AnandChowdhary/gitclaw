@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T12:28:45Z",
+  "generated_at": "2026-06-01T12:30:28Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 473,
   "issues": [
@@ -5945,10 +5945,13 @@
       "number": 525,
       "title": "GitClaw channel invite E2E 20260601T122711Z",
       "path": "issues/000525.json",
-      "backup_generated_at": "2026-06-01T12:28:44Z",
-      "event_name": "issues",
-      "comment_count": 1,
-      "transcript_messages": 2
+      "backup_generated_at": "2026-06-01T12:30:27Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw:done"
+      ],
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
