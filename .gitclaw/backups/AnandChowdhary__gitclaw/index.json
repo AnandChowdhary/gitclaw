@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T07:01:56Z",
+  "generated_at": "2026-06-01T07:17:26Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 454,
+  "count": 455,
   "issues": [
     {
       "number": 3,
@@ -5706,6 +5706,18 @@
       ],
       "comment_count": 3,
       "transcript_messages": 4
+    },
+    {
+      "number": 495,
+      "title": "GitClaw profile diff e2e 20260601T071612Z",
+      "path": "issues/000495.json",
+      "backup_generated_at": "2026-06-01T07:17:25Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }

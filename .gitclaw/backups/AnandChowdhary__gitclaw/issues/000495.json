@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T07:17:25Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 495,
+    "title": "GitClaw profile diff e2e 20260601T071612Z",
+    "body": "@gitclaw /profile diff HEAD~1 PROFILE_DIFF_ISSUE_QUERY_SECRET_20260601T071612Z\n\nLive profile-diff E2E. Mention repo-reader so the diff report proves profile git metadata without exposing raw profile bodies or patches.\nDo not include this hidden profile diff token: NOECHO_PROFILE_DIFF_20260601T071612Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw profile diff e2e 20260601T071612Z\n\n@gitclaw /profile diff HEAD~1 PROFILE_DIFF_ISSUE_QUERY_SECRET_20260601T071612Z\n\nLive profile-diff E2E. Mention repo-reader so the diff report proves profile git metadata without exposing raw profile bodies or patches.\nDo not include this hidden profile diff token: NOECHO_PROFILE_DIFF_20260601T071612Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Profile Diff Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#495`\n- profile_diff_status: `no_changes`\n- diff_scope: `repo-local-profile-files`\n- base_ref_sha256_12: `af9b7019dd7f`\n- base_ref_resolved: `true`\n- base_commit_sha256_12: `2669883ad3d9`\n- head_commit_sha256_12: `49389731e65e`\n- profile_diff_sha256_12: `7d1ee43401fc`\n- current_manifest_entries: `36`\n- current_profile_surfaces: `31`\n- changed_profile_files: `0`\n- added_profile_files: `0`\n- modified_profile_files: `0`\n- deleted_profile_files: `0`\n- renamed_profile_files: `0`\n- binary_profile_files: `0`\n- profile_file_limit: `50`\n- profile_files_returned: `0`\n- git_available: `true`\n- git_repository: `true`\n- raw_diffs_included: `false`\n- raw_profile_bodies_included: `false`\n- raw_skill_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompt_bodies_included: `false`\n- raw_git_subjects_included: `false`\n- author_identities_included: `false`\n- raw_requested_refs_included: `false`\n- external_profile_home_accessed: `false`\n- profile_mutation_allowed: `false`\n- profile_export_supported: `false`\n- profile_import_supported: `false`\n- profile_switching_supported: `false`\n- llm_e2e_required_after_profile_diff_change: `true`\n- issue_title_sha256_12: `141a099b28c7`\n\nThis report compares repo-local `.gitclaw/` profile files against a git base ref using metadata-only diff commands. It reports path metadata, statuses, numstat counts, and hashes only; raw patches, profile files, skill bodies, issue/comment bodies, prompts, requested ref text, git subjects, author identities, sessions, backup payloads, credentials, and secret values are not included.\n\n### Profile Diff Cards\n- none\n\n### Diff Gates\n- base_ref_gate=`pass`\n- raw_diff_gate=`numstat-and-status-only`\n- raw_body_gate=`hashes-only`\n- requested_ref_gate=`sha256_12_only`\n- git_subject_gate=`excluded`\n- mutation_gate=`disabled`\n- external_profile_home_gate=`not_accessed`\n- session_payload_gate=`excluded`\n- backup_payload_gate=`excluded`\n- llm_e2e_gate=`required`\n\n### Findings\n- none",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4590361270,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4590361270,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26740759259\" event_id=\"issue-495\" model=\"gitclaw/profile\" idempotency_key=\"3b36e428b6386fcee1dd72b985305519\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26740759259\" --\u003e\n## GitClaw Profile Diff Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#495`\n- profile_diff_status: `no_changes`\n- diff_scope: `repo-local-profile-files`\n- base_ref_sha256_12: `af9b7019dd7f`\n- base_ref_resolved: `true`\n- base_commit_sha256_12: `2669883ad3d9`\n- head_commit_sha256_12: `49389731e65e`\n- profile_diff_sha256_12: `7d1ee43401fc`\n- current_manifest_entries: `36`\n- current_profile_surfaces: `31`\n- changed_profile_files: `0`\n- added_profile_files: `0`\n- modified_profile_files: `0`\n- deleted_profile_files: `0`\n- renamed_profile_files: `0`\n- binary_profile_files: `0`\n- profile_file_limit: `50`\n- profile_files_returned: `0`\n- git_available: `true`\n- git_repository: `true`\n- raw_diffs_included: `false`\n- raw_profile_bodies_included: `false`\n- raw_skill_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompt_bodies_included: `false`\n- raw_git_subjects_included: `false`\n- author_identities_included: `false`\n- raw_requested_refs_included: `false`\n- external_profile_home_accessed: `false`\n- profile_mutation_allowed: `false`\n- profile_export_supported: `false`\n- profile_import_supported: `false`\n- profile_switching_supported: `false`\n- llm_e2e_required_after_profile_diff_change: `true`\n- issue_title_sha256_12: `141a099b28c7`\n\nThis report compares repo-local `.gitclaw/` profile files against a git base ref using metadata-only diff commands. It reports path metadata, statuses, numstat counts, and hashes only; raw patches, profile files, skill bodies, issue/comment bodies, prompts, requested ref text, git subjects, author identities, sessions, backup payloads, credentials, and secret values are not included.\n\n### Profile Diff Cards\n- none\n\n### Diff Gates\n- base_ref_gate=`pass`\n- raw_diff_gate=`numstat-and-status-only`\n- raw_body_gate=`hashes-only`\n- requested_ref_gate=`sha256_12_only`\n- git_subject_gate=`excluded`\n- mutation_gate=`disabled`\n- external_profile_home_gate=`not_accessed`\n- session_payload_gate=`excluded`\n- backup_payload_gate=`excluded`\n- llm_e2e_gate=`required`\n\n### Findings\n- none",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T07:17:02Z",
+      "updated_at": "2026-06-01T07:17:02Z"
+    }
+  ]
+}
