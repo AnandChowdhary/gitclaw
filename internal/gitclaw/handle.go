@@ -163,6 +163,32 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		status.SetDone()
 		return nil
 	}
+	if IsMemoryRehearsalIssueRequest(ev, cfg) {
+		rehearsalClient, ok := github.(MemoryRehearsalIssueGitHubClient)
+		if !ok {
+			return failStartedTurn(ctx, cfg, github, ev, status, "memory", fmt.Errorf("github client cannot create memory rehearsal issues"))
+		}
+		req, err := BuildMemoryRehearsalIssueRequest(ev, cfg, repoContext)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "memory", fmt.Errorf("build memory rehearsal issue: %w", err))
+		}
+		result, err := RunMemoryRehearsalIssue(ctx, cfg, rehearsalClient, req)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "memory", fmt.Errorf("run memory rehearsal issue: %w", err))
+		}
+		body := RenderAssistantComment(Marker{
+			RunID:          envFirst("GITHUB_RUN_ID", "local"),
+			EventID:        eventID(ev),
+			Model:          "gitclaw/memory",
+			IdempotencyKey: key,
+			RunURL:         actionRunURL(ev),
+		}, RenderMemoryRehearsalIssueActionReport(ev, req, result))
+		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post memory rehearsal issue comment: %w", err))
+		}
+		status.SetDone()
+		return nil
+	}
 	if IsMemoryProposalIssueRequest(ev, cfg) {
 		proposalClient, ok := github.(MemoryProposalIssueGitHubClient)
 		if !ok {

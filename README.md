@@ -126,6 +126,7 @@ gitclaw memory timeline
 gitclaw memory list
 gitclaw memory promote-plan [target]
 @gitclaw /memory remember --target <target> --id <id>
+@gitclaw /memory rehearse --target <target> --id <id>
 gitclaw memory info <path>
 gitclaw memory search <query>
 ```
@@ -157,6 +158,10 @@ Trusted issue threads can queue reviewed memory with
 reuses a GitHub proposal issue, records source hashes and memory target
 metadata, and keeps `.gitclaw/MEMORY.md` plus dated notes untouched until a
 human-reviewed branch promotes the change.
+`@gitclaw /memory rehearse --target long-term --id <id>` opens or reuses a
+dedicated GitHub conversation issue for trying the current memory context
+without generating candidate memory, writing `.gitclaw/` files, or calling a
+model in the source action.
 
 Skills and bundles:
 
@@ -858,6 +863,7 @@ scripts/e2e/github-backup-catalog-report.sh
 scripts/e2e/github-backup-snapshot.sh
 scripts/e2e/github-backup-search.sh
 scripts/e2e/github-backup-export-jsonl.sh
+scripts/e2e/github-memory-rehearse-issue.sh
 scripts/e2e/github-backup-rehearse-issue.sh
 scripts/e2e/github-agents-catalog-report.sh
 scripts/e2e/github-agents-provenance-report.sh
@@ -1082,6 +1088,11 @@ a trusted `@gitclaw /memory remember --target long-term --id <id>` turn opens
 or reuses a GitHub memory proposal issue, keeps candidate/source text out of
 receipts and proposal bodies, suppresses duplicate proposal requests, and then
 continues with a real GitHub Models repo-reader/search follow-up.
+The memory-rehearse harness covers the conversation side of durable memory: a
+trusted `@gitclaw /memory rehearse --target long-term --id <id>` turn opens or
+reuses a GitHub rehearsal issue, keeps source text and target memory bodies out
+of receipts, suppresses duplicate rehearsal requests, and then continues on the
+rehearsal issue itself with a real GitHub Models repo-reader/search follow-up.
 The soul-propose harness applies the same review queue to high-authority
 identity/profile context: a trusted `@gitclaw /soul propose --target soul --id
 <id>` turn opens or reuses a GitHub soul proposal issue, keeps source and

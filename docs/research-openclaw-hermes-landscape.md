@@ -389,6 +389,18 @@ proposal ids, and leave candidate generation, memory-file writes, model calls,
 and repository mutation for reviewed git changes. The live E2E must prove the
 deterministic action plus a real GitHub Models repo-reader/search follow-up.
 
+2026-06-01 memory-rehearsal follow-up: OpenClaw's current memory overview makes
+the boundary crisp: long-term `MEMORY.md` is compact curated prompt authority,
+dated notes are working memory, memory search is a retrieval layer, and
+promotion/dreaming stay reviewable. Hermes' feature docs similarly split
+persistent memory, skills, and session recall. GitClaw should add
+`@gitclaw /memory rehearse --target <target> --id <id>` as the conversation
+side of that boundary: open or reuse a labeled rehearsal issue with target
+metadata, source hashes, validation rollup, no-write gates, and duplicate
+suppression, but do not generate candidate memory, copy raw memory bodies, call
+a model, or write `.gitclaw/MEMORY.md`. The live E2E must then comment on the
+rehearsal issue and prove a real GitHub Models repo-reader/search follow-up.
+
 2026-05-29 backup-index follow-up: OpenClaw migration applies only after a
 reviewed plan and verified backup, while Hermes exposes session export as a
 portable artifact. GitClaw should make its backup branch similarly inspectable:

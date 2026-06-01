@@ -1453,6 +1453,7 @@ larger session recall:
 @gitclaw /memory timeline
 @gitclaw /memory promote-plan long-term
 @gitclaw /memory remember --target long-term --id weekly-ops-memory
+@gitclaw /memory rehearse --target long-term --id weekly-ops-rehearsal
 @gitclaw /memory info .gitclaw/memory/2026-05-29.md
 @gitclaw /memory search backup branch
 ```
@@ -1581,6 +1582,25 @@ issue/comment text into the proposal issue or receipt, and does not call a
 model. It is a GitHub-native review queue entry: after review, a maintainer can
 draft compact memory on a normal branch, run memory validation/verification,
 and let the memory affect future prompts only through a reviewed git change.
+
+When called as `@gitclaw /memory rehearse --target <target> --id <id>`,
+GitClaw performs the issue-native memory rehearsal action. It opens or reuses a
+dedicated GitHub issue marked with `gitclaw:memory-rehearsal-issue`, labels it
+with `gitclaw` so the conversation can continue normally, records the safe
+rehearsal id, source request hash, source issue/comment identity, target
+kind/path, current target hash/size, memory budget, latest dated note, and
+memory validation rollup, then posts a body-free receipt in the source
+conversation. Duplicate open memory rehearsal issues are suppressed by marker
+and rehearsal id.
+
+The memory rehearsal action does not write `.gitclaw/MEMORY.md`, does not write
+`.gitclaw/memory/*.md`, does not generate candidate memory, does not copy raw
+issue/comment text or current memory bodies into the source receipt, and does
+not call a model. It is a GitHub-native conversation lane for trying the
+current prompt-visible memory. Proposed memory changes still belong in
+`/memory remember` or a normal reviewed branch. Any implementation change must
+pair the deterministic source action with a real GitHub Models follow-up on the
+rehearsal issue itself.
 
 When called as `@gitclaw /memory validate`, the command renders only the
 memory-hygiene report. Local operators can run the same validation with:
@@ -8202,6 +8222,13 @@ examples/workflows/gitclaw.yml
   runs a live GitHub Models follow-up proving repo-local skill selection,
   prompt-visible repository search tool usage, and usage telemetry after the
   deterministic issue action.
+- A `gh`-driven memory-rehearse E2E harness verifies
+  `@gitclaw /memory rehearse --target long-term --id <id>` opens a labeled
+  GitHub memory rehearsal issue, posts a source receipt, suppresses duplicate
+  open rehearsal issues, avoids raw source/current-memory/candidate leakage,
+  and then runs a live GitHub Models follow-up on the rehearsal issue proving
+  repo-local skill selection, prompt-visible repository search tool usage, and
+  usage telemetry after the deterministic issue action.
 - A `gh`-driven memory-validate E2E harness verifies
   `@gitclaw /memory validate` reports memory hygiene without a model call or
   memory-body leakage.
