@@ -176,9 +176,9 @@ for expected in \
   'session_model: `github-issue-thread-plus-backup-json`' \
   'canonical_session_store: `github-issue-thread`' \
   "local_backup_store: \`${backup_store_label}\`" \
-  'catalog_entries: `13`' \
-  'issue_side_commands: `13`' \
-  'local_backup_commands: `12`' \
+  'catalog_entries: `14`' \
+  'issue_side_commands: `14`' \
+  'local_backup_commands: `13`' \
   'raw_bodies_included: `false`' \
   'raw_tool_outputs_included: `false`' \
   'repository_mutation_allowed: `false`' \
@@ -192,6 +192,7 @@ for expected in \
   'command=`usage` issue_intent=`@gitclaw /session usage` local_command=`gitclaw session usage --backup <issue.json>`' \
   'command=`trajectory` issue_intent=`@gitclaw /session trajectory` local_command=`gitclaw session trajectory --backup <issue.json>`' \
   'command=`compaction` issue_intent=`@gitclaw /session compaction` local_command=`gitclaw session compaction --backup <issue.json>`' \
+  'command=`resume` issue_intent=`@gitclaw /session resume` local_command=`gitclaw session resume --backup <issue.json>`' \
   'command=`search` issue_intent=`@gitclaw /session search <query>` local_command=`gitclaw session search <query> --backup <issue.json>`' \
   'issue_thread_gate=`canonical-session-is-github-issue-thread`' \
   'local_backup_gate=`fetched-backup-json-required-for-local-transcript-inspection`' \
@@ -201,6 +202,7 @@ for expected in \
   'usage_gate=`assistant-turn-marker-token-telemetry`' \
   'trajectory_gate=`body-free-assistant-turn-manifest`' \
   'compaction_gate=`body-free-session-compaction-readiness`' \
+  'resume_gate=`github-issue-comment-continuation-readiness`' \
   'search_gate=`query-hash-and-line-hash-metadata`' \
   'transcript_messages_now: `1`'; do
   grep -Fq "$expected" <<<"$comments" || die "session catalog report missing ${expected}"
@@ -218,9 +220,9 @@ for expected in \
   "GitClaw Session Catalog Report" \
   'scope: `local-cli`' \
   'session_catalog_status: `ok`' \
-  'catalog_entries: `13`' \
-  'issue_side_commands: `13`' \
-  'local_backup_commands: `12`' \
+  'catalog_entries: `14`' \
+  'issue_side_commands: `14`' \
+  'local_backup_commands: `13`' \
   'raw_bodies_included: `false`' \
   'command=`provenance` issue_intent=`@gitclaw /session provenance` local_command=`gitclaw session provenance --backup <issue.json>`' \
   'command=`tools` issue_intent=`@gitclaw /session tools` local_command=`gitclaw session tools --backup <issue.json>`' \
@@ -228,6 +230,7 @@ for expected in \
   'command=`usage` issue_intent=`@gitclaw /session usage` local_command=`gitclaw session usage --backup <issue.json>`' \
   'command=`trajectory` issue_intent=`@gitclaw /session trajectory` local_command=`gitclaw session trajectory --backup <issue.json>`' \
   'command=`compaction` issue_intent=`@gitclaw /session compaction` local_command=`gitclaw session compaction --backup <issue.json>`' \
+  'command=`resume` issue_intent=`@gitclaw /session resume` local_command=`gitclaw session resume --backup <issue.json>`' \
   'command=`status` issue_intent=`@gitclaw /session status` local_command=`gitclaw session status --backup <issue.json>`' \
   'provenance_gate=`assistant-turn-marker-prompt-context`' \
   'tools_gate=`assistant-turn-marker-tool-context`' \
@@ -235,6 +238,7 @@ for expected in \
   'usage_gate=`assistant-turn-marker-token-telemetry`' \
   'trajectory_gate=`body-free-assistant-turn-manifest`' \
   'compaction_gate=`body-free-session-compaction-readiness`' \
+  'resume_gate=`github-issue-comment-continuation-readiness`' \
   'coverage_gate=`prompt-provenance-skill-tool-telemetry`'; do
   grep -Fq "$expected" <<<"$cli_catalog" || die "local session catalog missing ${expected}"
 done

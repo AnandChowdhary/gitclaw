@@ -3176,6 +3176,27 @@ persist compressed state. Acceptance requires a live GitHub Models
 repo-reader/search turn first, followed by the deterministic session-compaction
 report proving model-backed provenance and usage evidence from marker metadata.
 
+### 2026-06-01 Session Resume Follow-Up
+
+Hermes' session resume and parent/continuation lineage patterns point to a
+simple GitHub-native rule for GitClaw: the issue thread is the session, and the
+next issue comment is the continuation. OpenClaw's session/trajectory surfaces
+make this inspectable by separating the conversational body from metadata,
+markers, hashes, and usage evidence.
+
+Add `@gitclaw /session resume` and
+`gitclaw session resume --backup <issue.json>`. The report should prove
+continuation readiness through a stable issue-thread resume key, labels,
+latest-message hashes, assistant-turn prompt provenance, model-backed turn
+evidence, token/cache telemetry, and reentry gates for the `issue_comment`
+workflow. It must explicitly report that no server, socket, workflow-dispatch
+bridge, or hidden external session database is required for ordinary GitHub
+issue conversations. It must not print issue bodies, comments, assistant
+replies, prompts, provider payloads, search queries, raw run URLs, or tool
+outputs. Acceptance requires a live GitHub Models repo-reader/search turn
+first, followed by the deterministic session-resume report proving model-backed
+provenance and usage evidence from marker metadata.
+
 ## Open Questions For Speccing
 
 1. Is `gitclaw` primarily for one user's repos, or for teams/organizations?

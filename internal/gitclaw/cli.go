@@ -1681,7 +1681,7 @@ func isPromptCLISubcommand(arg string) bool {
 
 func runSessionCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw session catalog | gitclaw session list --backup <issue.json> | gitclaw session provenance --backup <issue.json> | gitclaw session tools --backup <issue.json> | gitclaw session skills --backup <issue.json> | gitclaw session usage --backup <issue.json> | gitclaw session trajectory --backup <issue.json> | gitclaw session compaction --backup <issue.json> | gitclaw session status --backup <issue.json> | gitclaw session stats --backup <issue.json> | gitclaw session coverage --backup <issue.json> | gitclaw session risk --backup <issue.json> | gitclaw session search <query> --backup <issue.json>")
+		return fmt.Errorf("usage: gitclaw session catalog | gitclaw session list --backup <issue.json> | gitclaw session provenance --backup <issue.json> | gitclaw session tools --backup <issue.json> | gitclaw session skills --backup <issue.json> | gitclaw session usage --backup <issue.json> | gitclaw session trajectory --backup <issue.json> | gitclaw session compaction --backup <issue.json> | gitclaw session resume --backup <issue.json> | gitclaw session status --backup <issue.json> | gitclaw session stats --backup <issue.json> | gitclaw session coverage --backup <issue.json> | gitclaw session risk --backup <issue.json> | gitclaw session search <query> --backup <issue.json>")
 	}
 	switch args[0] {
 	case "catalog", "commands", "capabilities":
@@ -1700,6 +1700,8 @@ func runSessionCommand(args []string) error {
 		return runSessionTrajectoryCommand(args[1:])
 	case "compaction", "compact", "compression", "compress", "summarization":
 		return runSessionCompactionCommand(args[1:])
+	case "resume", "handoff", "continuation", "continue", "yield":
+		return runSessionResumeCommand(args[1:])
 	case "status", "readback":
 		return runSessionStatusCommand(args[1:])
 	case "stats", "summary":
@@ -1899,6 +1901,35 @@ func runSessionCompactionCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSessionCompactionCLIReport(backupPath, backup, cfg))
+	return nil
+}
+
+func runSessionResumeCommand(args []string) error {
+	backupPath := ""
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--backup":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--backup requires a value")
+			}
+			backupPath = args[i+1]
+			i++
+		default:
+			return fmt.Errorf("unknown session resume argument %q", args[i])
+		}
+	}
+	if backupPath == "" {
+		return fmt.Errorf("usage: gitclaw session resume --backup <issue.json>")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	backup, err := ReadIssueBackupFile(backupPath)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSessionResumeCLIReport(backupPath, backup, cfg))
 	return nil
 }
 

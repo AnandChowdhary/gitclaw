@@ -149,7 +149,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `33`' \
   'aliases: `31`' \
-  'local_cli_helpers: `198`' \
+  'local_cli_helpers: `199`' \
   'run_mode: `read-only`' \
   'llm_e2e_required_after_commands_report_change: `true`' \
   "### Slash Commands" \
@@ -299,6 +299,7 @@ for expected in \
   'gitclaw session usage --backup <issue.json>' \
   'gitclaw session trajectory --backup <issue.json>' \
   'gitclaw session compaction --backup <issue.json>' \
+  'gitclaw session resume --backup <issue.json>' \
   'gitclaw session status --backup <issue.json>' \
   'gitclaw session stats --backup <issue.json>' \
   'gitclaw session coverage --backup <issue.json>' \

@@ -106,6 +106,7 @@ func renderSessionCatalogReport(opts sessionCatalogRenderOptions) string {
 	b.WriteString("- usage_gate=`assistant-turn-marker-token-telemetry`\n")
 	b.WriteString("- trajectory_gate=`body-free-assistant-turn-manifest`\n")
 	b.WriteString("- compaction_gate=`body-free-session-compaction-readiness`\n")
+	b.WriteString("- resume_gate=`github-issue-comment-continuation-readiness`\n")
 	b.WriteString("- search_gate=`query-hash-and-line-hash-metadata`\n")
 	b.WriteString("- coverage_gate=`prompt-provenance-skill-tool-telemetry`\n")
 	b.WriteString("- channel_boundary_gate=`provider-session-keys-collapse-to-canonical-github-issue`\n")
@@ -123,6 +124,7 @@ func sessionCatalogEntries() []sessionCatalogEntry {
 		{Name: "usage", IssueIntent: "@gitclaw /session usage", LocalCommand: "gitclaw session usage --backup <issue.json>", Execution: "current-issue-or-local-backup", Gate: "assistant-turn-marker-token-telemetry"},
 		{Name: "trajectory", IssueIntent: "@gitclaw /session trajectory", LocalCommand: "gitclaw session trajectory --backup <issue.json>", Execution: "current-issue-or-local-backup", Gate: "body-free-assistant-turn-manifest"},
 		{Name: "compaction", IssueIntent: "@gitclaw /session compaction", LocalCommand: "gitclaw session compaction --backup <issue.json>", Execution: "current-issue-or-local-backup", Gate: "body-free-session-compaction-readiness"},
+		{Name: "resume", IssueIntent: "@gitclaw /session resume", LocalCommand: "gitclaw session resume --backup <issue.json>", Execution: "current-issue-or-local-backup", Gate: "github-issue-comment-continuation-readiness"},
 		{Name: "status", IssueIntent: "@gitclaw /session status", LocalCommand: "gitclaw session status --backup <issue.json>", Execution: "current-issue-or-local-backup", Gate: "latest-message-hashes"},
 		{Name: "stats", IssueIntent: "@gitclaw /session stats", LocalCommand: "gitclaw session stats --backup <issue.json>", Execution: "current-issue-or-local-backup", Gate: "aggregate-counts-and-provenance"},
 		{Name: "coverage", IssueIntent: "@gitclaw /session coverage", LocalCommand: "gitclaw session coverage --backup <issue.json>", Execution: "current-issue-or-local-backup", Gate: "model-skill-tool-provenance"},

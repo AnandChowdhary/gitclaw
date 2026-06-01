@@ -269,6 +269,7 @@ gitclaw session skills --backup <issue.json>
 gitclaw session usage --backup <issue.json>
 gitclaw session trajectory --backup <issue.json>
 gitclaw session compaction --backup <issue.json>
+gitclaw session resume --backup <issue.json>
 gitclaw session status --backup <issue.json>
 gitclaw session stats --backup <issue.json>
 gitclaw session coverage --backup <issue.json>
@@ -328,6 +329,13 @@ transcript sizes, bounded-message counts, per-message hashes, provenance,
 model/usage telemetry, and disabled mutation gates without summarizing,
 splitting, mutating memory, or printing raw bodies.
 
+`gitclaw session resume --backup <issue.json>` is the body-free continuation
+readiness audit. It reports the GitHub issue-thread resume key, labels,
+latest-message hashes, assistant-marker provenance, model/usage telemetry, and
+reentry gates proving the next issue comment can continue the same session
+without a server, socket, workflow-dispatch bridge, or hidden external session
+database.
+
 `gitclaw backup provenance` is the body-free git-history audit for fetched
 `gitclaw-backups` branches. It verifies the backup tree, then reports whether
 the index, README, and issue payload files are tracked, clean, and backed by
@@ -382,6 +390,11 @@ verifies `@gitclaw /session compaction` reports threshold readiness,
 bounded-transcript cards, model-backed provenance, usage telemetry, and
 disabled summary/mutation gates without leaking hidden issue/comment text or
 raw run URLs.
+
+The live session-resume harness follows the same model-first shape, then
+verifies `@gitclaw /session resume` reports GitHub issue-thread continuation
+readiness, resume anchors, latest assistant marker provenance, and reentry
+gates without leaking hidden issue/comment text or raw run URLs.
 
 `gitclaw backup restore-plan` is a dry-run recovery plan for a fetched backup
 payload. Its live harness pairs deterministic restore metadata checks with a
@@ -663,6 +676,7 @@ scripts/e2e/github-session-skills.sh
 scripts/e2e/github-session-usage.sh
 scripts/e2e/github-session-trajectory.sh
 scripts/e2e/github-session-compaction.sh
+scripts/e2e/github-session-resume.sh
 scripts/e2e/github-session-risk-report.sh
 scripts/e2e/github-session-status-report.sh
 scripts/e2e/github-session-stats-report.sh

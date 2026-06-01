@@ -73,6 +73,9 @@ func RenderSessionReport(ev Event, cfg Config, comments []Comment, transcript []
 	if requestedSessionCompaction(ev, cfg) {
 		return RenderSessionCompactionReport(BuildSessionCompactionReport("issue-thread", "", ev, cfg, comments, transcript))
 	}
+	if requestedSessionResume(ev, cfg) {
+		return RenderSessionResumeReport(ev, cfg, comments, transcript)
+	}
 	if requestedSessionStatus(ev, cfg) {
 		return RenderSessionStatusReport(ev, cfg, comments, transcript)
 	}
