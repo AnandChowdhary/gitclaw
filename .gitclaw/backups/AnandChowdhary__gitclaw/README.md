@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-01T23:47:30Z`
-- issue_count: `538`
+- generated_at: `2026-06-01T23:49:03Z`
+- issue_count: `539`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -543,3 +543,4 @@
 | #622 | GitClaw telegram thread channel-tool-request-e2e-20260601t232409z | `2026-06-01T23:29:00Z` | 7 | 7 | `issues/000622.json` |
 | #623 | GitClaw tool run request: channel-tool-request-20260601t232409z | `2026-06-01T23:30:33Z` | 2 | 3 | `issues/000623.json` |
 | #624 | GitClaw telegram thread channel-skill-rehearsal-e2e-20260601t234255z | `2026-06-01T23:47:29Z` | 7 | 7 | `issues/000624.json` |
+| #625 | GitClaw skill rehearsal: repo-reader (channel-skill-rehearsal-20260601t234255z) | `2026-06-01T23:49:02Z` | 2 | 3 | `issues/000625.json` |

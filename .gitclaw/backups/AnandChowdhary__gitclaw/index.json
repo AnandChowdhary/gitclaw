@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T23:47:30Z",
+  "generated_at": "2026-06-01T23:49:03Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 538,
+  "count": 539,
   "issues": [
     {
       "number": 3,
@@ -6782,6 +6782,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 625,
+      "title": "GitClaw skill rehearsal: repo-reader (channel-skill-rehearsal-20260601t234255z)",
+      "path": "issues/000625.json",
+      "backup_generated_at": "2026-06-01T23:49:02Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
