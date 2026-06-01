@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T00:08:09Z",
+  "generated_at": "2026-06-01T00:09:29Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 466,
     "title": "@gitclaw session tools e2e 20260601T000652Z",
@@ -10,7 +10,8 @@
     "author": "AnandChowdhary",
     "author_association": "OWNER",
     "labels": [
-      "gitclaw"
+      "gitclaw",
+      "gitclaw:done"
     ]
   },
   "transcript": [
@@ -31,6 +32,24 @@
       "CommentID": 4588643490,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /session tools\n\nPlease audit assistant-turn tool provenance.\nHidden comment token: GITCLAW_SESSION_TOOLS_COMMENT_20260601T000652Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4588644941,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Session Tools Report\n\nGenerated without a model call.\n\n- scope: `issue-thread`\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#466`\n- event_kind: `issue_comment`\n- session_tools_status: `ok`\n- provenance_scope: `assistant-turn-marker-tool-context`\n- session_store: `github-issue-thread`\n- raw_comments: `2`\n- transcript_messages: `3`\n- assistant_turn_comments: `1`\n- tool_backed_assistant_turns: `1`\n- assistant_turns_missing_tool_context: `0`\n- unique_prompt_visible_tools: `3`\n- prompt_visible_tool_names: `gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files`\n- prompt_visible_tool_output_markers: `3`\n- model_backed_tool_turns: `1`\n- deterministic_tool_turns: `0`\n- model_names: `openai/gpt-4.1-nano`\n- usage_prompt_tokens: `10512`\n- usage_completion_tokens: `9`\n- usage_total_tokens: `10521`\n- usage_cache_read_tokens: `0`\n- usage_cache_write_tokens: `0`\n- raw_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_replies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_inputs_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_search_queries_included: `false`\n- repository_mutation_allowed: `false`\n- llm_e2e_required_after_session_tools_change: `true`\n\nThis OpenClaw/Hermes-inspired report audits tool use across the current GitHub issue session through assistant-turn markers only. It reports prompt-visible tool names, model-backed tool turns, prompt-context hashes, and token usage telemetry; raw issue bodies, comment bodies, assistant replies, prompts, tool inputs, search queries, and tool outputs are not included.\n\n### Tool Ledger\n- tool=`gitclaw.list_files` prompt_visible_turns=`1` model_backed_turns=`1` deterministic_turns=`0` first_source=`comment:4588643490` last_source=`comment:4588643490` models=`openai/gpt-4.1-nano` prompt_context_hashes=`1`\n- tool=`gitclaw.search_files` prompt_visible_turns=`1` model_backed_turns=`1` deterministic_turns=`0` first_source=`comment:4588643490` last_source=`comment:4588643490` models=`openai/gpt-4.1-nano` prompt_context_hashes=`1`\n- tool=`gitclaw.skill_index` prompt_visible_turns=`1` model_backed_turns=`1` deterministic_turns=`0` first_source=`comment:4588643490` last_source=`comment:4588643490` models=`openai/gpt-4.1-nano` prompt_context_hashes=`1`\n\n### Tool Turn Evidence\n- source=`comment:4588643490` model=`openai/gpt-4.1-nano` prompt_context_sha256_12=`ebffb99c1105` tool_outputs=`3` tools=`gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files` usage_present=`true` usage_total_tokens=`10521`\n\n### Tool Gates\n- tool_context_gate=`pass`\n- model_backed_tool_gate=`pass`\n- usage_telemetry_gate=`pass`\n- raw_tool_input_gate=`marker-attributes-only`\n- raw_tool_output_gate=`marker-attributes-only`\n- mutation_gate=`disabled`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4588646913,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -41,6 +60,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T00:07:47Z",
       "updated_at": "2026-06-01T00:07:47Z"
+    },
+    {
+      "id": 4588644941,
+      "body": "@gitclaw /session tools\n\nPlease audit assistant-turn tool provenance.\nHidden comment token: GITCLAW_SESSION_TOOLS_COMMENT_20260601T000652Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T00:08:19Z",
+      "updated_at": "2026-06-01T00:08:19Z"
+    },
+    {
+      "id": 4588646913,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26728448233\" event_id=\"comment-4588644941\" model=\"gitclaw/session\" idempotency_key=\"c33001060ce079367de9e54d5c1506c1\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26728448233\" --\u003e\n## GitClaw Session Tools Report\n\nGenerated without a model call.\n\n- scope: `issue-thread`\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#466`\n- event_kind: `issue_comment`\n- session_tools_status: `ok`\n- provenance_scope: `assistant-turn-marker-tool-context`\n- session_store: `github-issue-thread`\n- raw_comments: `2`\n- transcript_messages: `3`\n- assistant_turn_comments: `1`\n- tool_backed_assistant_turns: `1`\n- assistant_turns_missing_tool_context: `0`\n- unique_prompt_visible_tools: `3`\n- prompt_visible_tool_names: `gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files`\n- prompt_visible_tool_output_markers: `3`\n- model_backed_tool_turns: `1`\n- deterministic_tool_turns: `0`\n- model_names: `openai/gpt-4.1-nano`\n- usage_prompt_tokens: `10512`\n- usage_completion_tokens: `9`\n- usage_total_tokens: `10521`\n- usage_cache_read_tokens: `0`\n- usage_cache_write_tokens: `0`\n- raw_bodies_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_replies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_inputs_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_search_queries_included: `false`\n- repository_mutation_allowed: `false`\n- llm_e2e_required_after_session_tools_change: `true`\n\nThis OpenClaw/Hermes-inspired report audits tool use across the current GitHub issue session through assistant-turn markers only. It reports prompt-visible tool names, model-backed tool turns, prompt-context hashes, and token usage telemetry; raw issue bodies, comment bodies, assistant replies, prompts, tool inputs, search queries, and tool outputs are not included.\n\n### Tool Ledger\n- tool=`gitclaw.list_files` prompt_visible_turns=`1` model_backed_turns=`1` deterministic_turns=`0` first_source=`comment:4588643490` last_source=`comment:4588643490` models=`openai/gpt-4.1-nano` prompt_context_hashes=`1`\n- tool=`gitclaw.search_files` prompt_visible_turns=`1` model_backed_turns=`1` deterministic_turns=`0` first_source=`comment:4588643490` last_source=`comment:4588643490` models=`openai/gpt-4.1-nano` prompt_context_hashes=`1`\n- tool=`gitclaw.skill_index` prompt_visible_turns=`1` model_backed_turns=`1` deterministic_turns=`0` first_source=`comment:4588643490` last_source=`comment:4588643490` models=`openai/gpt-4.1-nano` prompt_context_hashes=`1`\n\n### Tool Turn Evidence\n- source=`comment:4588643490` model=`openai/gpt-4.1-nano` prompt_context_sha256_12=`ebffb99c1105` tool_outputs=`3` tools=`gitclaw.list_files, gitclaw.skill_index, gitclaw.search_files` usage_present=`true` usage_total_tokens=`10521`\n\n### Tool Gates\n- tool_context_gate=`pass`\n- model_backed_tool_gate=`pass`\n- usage_telemetry_gate=`pass`\n- raw_tool_input_gate=`marker-attributes-only`\n- raw_tool_output_gate=`marker-attributes-only`\n- mutation_gate=`disabled`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T00:09:07Z",
+      "updated_at": "2026-06-01T00:09:07Z"
     }
   ]
 }
