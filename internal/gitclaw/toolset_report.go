@@ -143,9 +143,17 @@ func renderToolsetInfoReport(ev Event, cfg Config, name string, includeIssue boo
 	fmt.Fprintf(&b, "- toolset_info_status: `%s`\n", status)
 	fmt.Fprintf(&b, "- available_toolsets: `%d`\n", report.Toolsets)
 	fmt.Fprintf(&b, "- matched_toolsets: `%d`\n", len(matches))
+	fmt.Fprintf(&b, "- runtime_toolset_selection: `%s`\n", report.RuntimeToolsetSelection)
+	fmt.Fprintf(&b, "- registry_verification: `%s`\n", report.RegistryVerification)
+	fmt.Fprintf(&b, "- toolset_activation_supported: `%t`\n", report.ToolsetActivationSupported)
+	fmt.Fprintf(&b, "- repository_mutation_allowed: `%t`\n", report.RepositoryMutationAllowed)
+	fmt.Fprintf(&b, "- shell_execution_allowed: `%t`\n", report.ShellExecutionAllowed)
+	fmt.Fprintf(&b, "- network_tool_execution_allowed: `%t`\n", report.NetworkToolExecutionAllowed)
 	fmt.Fprintf(&b, "- raw_requested_toolset_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_toolset_bodies_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_toolset_instructions_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_tool_outputs_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_toolset_info_change: `%t`\n", true)
 	if includeIssue {
 		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
 	}
@@ -162,6 +170,15 @@ func renderToolsetInfoReport(ev Event, cfg Config, name string, includeIssue boo
 	}
 	sortToolRiskFindings(findings)
 	writeToolsetRiskFindings(&b, findings)
+
+	b.WriteString("\n### Info Gates\n")
+	fmt.Fprintf(&b, "- toolset_info_gate=`%s`\n", status)
+	b.WriteString("- activation_gate=`disabled`\n")
+	b.WriteString("- mutation_gate=`disabled`\n")
+	b.WriteString("- shell_execution_gate=`disabled`\n")
+	b.WriteString("- network_execution_gate=`disabled`\n")
+	b.WriteString("- raw_body_gate=`hash_only`\n")
+	b.WriteString("- model_e2e_gate=`required`\n")
 
 	if len(matches) == 0 {
 		b.WriteString("\n### Available Toolsets\n")

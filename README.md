@@ -722,6 +722,7 @@ scripts/e2e/github-tasks-ledger-report.sh
 scripts/e2e/github-tasks-risk-report.sh
 scripts/e2e/github-tools-catalog-report.sh
 scripts/e2e/github-tools-toolsets-report.sh
+scripts/e2e/github-tools-toolsets-info-report.sh
 scripts/e2e/github-tools-exposure-report.sh
 scripts/e2e/github-tools-defer-plan-report.sh
 scripts/e2e/github-tools-boundary-report.sh
@@ -782,6 +783,9 @@ The runs-report harness now applies that proof to the current-turn ledger:
 issue-visible run provenance stays body-free and read-only, then a normal
 GitHub Models repo-reader/search follow-up proves the live run path still
 executes with prompt, skill, tool, and usage telemetry.
+The toolset-info harness focuses that same proof on one repo-reviewed toolset
+profile: it verifies activation and mutation gates, keeps reviewed guidance
+body-free, then requires a real GitHub Models repo-reader/search follow-up.
 The channel-ingest harness proves the generic no-server bridge end to end:
 workflow-dispatch mirroring, duplicate provider-message suppression, and a
 normal model/tool follow-up on the canonical channel issue.

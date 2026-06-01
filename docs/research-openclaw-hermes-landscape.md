@@ -2130,6 +2130,21 @@ hashes, tool refs, gate counts, and risk codes only. It must not activate
 toolsets, run tools, print reviewed instructions, leak git subjects or author
 identities, or skip the live GitHub Models follow-up E2E.
 
+2026-06-01 toolset-info follow-up: OpenClaw's tool overview makes active tool
+visibility a policy result, while Hermes' toolsets reference defines named
+capability bundles for platform, session, and task scope. GitClaw's
+serverless version should expose a focused readback for one repo-reviewed
+toolset without implying runtime activation. Tighten
+`@gitclaw /tools toolsets info <name>` and
+`gitclaw tools toolsets info <name>` so the report includes the normalized
+lookup hash, match status, activation/mutation/network gates, resolved tool
+refs, risk codes, and a dedicated
+`llm_e2e_required_after_toolset_info_change=true` release marker. Acceptance
+requires local deterministic tests, local CLI proof, a live main-repo issue
+E2E, and a real GitHub Models repo-reader/search follow-up that proves prompt
+provenance, selected skill names, prompt-visible tools, usage telemetry, and no
+toolset body leakage.
+
 2026-05-30 migration-plan follow-up: OpenClaw's migration posture is
 preview-first, secret-redacted, and backup-backed, while Hermes' profiles keep
 agent state isolated by config, `.env`, `SOUL.md`, memories, sessions, skills,

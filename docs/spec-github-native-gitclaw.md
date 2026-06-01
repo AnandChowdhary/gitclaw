@@ -2739,8 +2739,11 @@ commit-subject hashes only. They never print raw toolset YAML, reviewed
 instructions, tool outputs, git commit subjects, author identities,
 issue/comment bodies, prompts, credentials, or secret values.
 `@gitclaw /tools toolsets info <name>` and
-`gitclaw tools toolsets info <name>` show one profile. All four reports are
-body-free, and changes require a live GitHub Models follow-up E2E.
+`gitclaw tools toolsets info <name>` show one profile with the normalized
+lookup hash, match status, activation/mutation/network gates, resolved tool
+refs, risk codes, and `llm_e2e_required_after_toolset_info_change=true`. All
+four reports are body-free, and changes require a live GitHub Models follow-up
+E2E.
 
 When called as `@gitclaw /tools validate`, the command posts only the
 validation report: tool contract counts, active-output counts, status,
@@ -7082,6 +7085,15 @@ examples/workflows/gitclaw.yml
   body-free git history without a model call. The same harness then posts a
   normal repo-reader follow-up that must make a real GitHub Models call and
   prove prompt provenance, selected skill names, and prompt-visible tool names.
+- A `gh`-driven toolsets-info E2E harness verifies
+  `@gitclaw /tools toolsets info repo-read` and local
+  `gitclaw tools toolsets info repo-read` expose one repo-reviewed toolset
+  profile, activation/mutation/network gates, resolved tool refs, risk codes,
+  and `llm_e2e_required_after_toolset_info_change=true` without a model call
+  or body leakage. The same live issue then receives a normal repo-reader
+  follow-up that must make a GitHub Models call, expose `gitclaw.search_files`,
+  recover a bounded repository-search fixture token, and publish usage
+  telemetry.
 - A `gh`-driven backup-index E2E harness verifies the dedicated backup branch
   contains issue JSON plus a repo-scoped `index.json` and `README.md` after a
   deterministic context turn, without leaking hidden issue-body tokens. The
