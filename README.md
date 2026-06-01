@@ -83,6 +83,7 @@ gitclaw soul validate
 gitclaw soul list
 gitclaw soul edit-plan <path>
 @gitclaw /soul propose --target <path> --id <id>
+@gitclaw /soul rehearse --target <path> --id <id>
 gitclaw soul info <path>
 gitclaw soul search <query>
 ```
@@ -107,6 +108,10 @@ Trusted issue threads can queue reviewed high-authority context changes with
 GitHub proposal issue, records source hashes and current target metadata, and
 keeps `.gitclaw/SOUL.md`, `.gitclaw/USER.md`, and related prompt-authority
 files untouched until a human-reviewed branch promotes the change.
+`@gitclaw /soul rehearse --target soul --id <id>` opens or reuses a dedicated
+GitHub conversation issue for trying the current high-authority context without
+generating candidate edits, writing `.gitclaw/` files, or calling a model in
+the source action.
 
 Memory:
 
@@ -946,6 +951,7 @@ scripts/e2e/github-soul-catalog-report.sh
 scripts/e2e/github-soul-snapshot-report.sh
 scripts/e2e/github-soul-provenance-report.sh
 scripts/e2e/github-soul-propose-issue.sh
+scripts/e2e/github-soul-rehearse-issue.sh
 scripts/e2e/github-sandbox-risk-report.sh
 scripts/e2e/github-tasks-ledger-report.sh
 scripts/e2e/github-tasks-risk-report.sh
@@ -1074,6 +1080,11 @@ identity/profile context: a trusted `@gitclaw /soul propose --target soul --id
 candidate text out of issue-visible receipts, suppresses duplicate proposal
 requests, and then continues with a real GitHub Models repo-reader/search
 follow-up.
+The soul-rehearse harness covers the conversation side of high-authority
+context: a trusted `@gitclaw /soul rehearse --target soul --id <id>` turn opens
+or reuses a GitHub rehearsal issue, keeps source and target bodies out of
+receipts, suppresses duplicate rehearsal requests, and then continues on the
+rehearsal issue itself with a real GitHub Models repo-reader/search follow-up.
 The tools-run-request harness applies the review-issue pattern to tool
 execution requests: `@gitclaw /tools request-run <name> --id <id>` opens or
 reuses a dedicated GitHub request issue, keeps source/tool bodies out of

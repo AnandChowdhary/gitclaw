@@ -97,6 +97,32 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		status.SetDone()
 		return nil
 	}
+	if IsSoulRehearsalIssueRequest(ev, cfg) {
+		rehearsalClient, ok := github.(SoulRehearsalIssueGitHubClient)
+		if !ok {
+			return failStartedTurn(ctx, cfg, github, ev, status, "soul", fmt.Errorf("github client cannot create soul rehearsal issues"))
+		}
+		req, err := BuildSoulRehearsalIssueRequest(ev, cfg, repoContext)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "soul", fmt.Errorf("build soul rehearsal issue: %w", err))
+		}
+		result, err := RunSoulRehearsalIssue(ctx, cfg, rehearsalClient, req)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "soul", fmt.Errorf("run soul rehearsal issue: %w", err))
+		}
+		body := RenderAssistantComment(Marker{
+			RunID:          envFirst("GITHUB_RUN_ID", "local"),
+			EventID:        eventID(ev),
+			Model:          "gitclaw/soul",
+			IdempotencyKey: key,
+			RunURL:         actionRunURL(ev),
+		}, RenderSoulRehearsalIssueActionReport(ev, req, result))
+		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post soul rehearsal issue comment: %w", err))
+		}
+		status.SetDone()
+		return nil
+	}
 	if IsSoulProposalIssueRequest(ev, cfg) {
 		proposalClient, ok := github.(SoulProposalIssueGitHubClient)
 		if !ok {

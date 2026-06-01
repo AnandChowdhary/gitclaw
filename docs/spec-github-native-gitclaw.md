@@ -2544,6 +2544,7 @@ gitclaw soul validate
 gitclaw soul list
 gitclaw soul edit-plan <path>
 @gitclaw /soul propose --target <path> --id <id>
+@gitclaw /soul rehearse --target <path> --id <id>
 gitclaw soul info <path>
 gitclaw soul search <query> --max-results 10
 ```
@@ -2568,6 +2569,7 @@ by OpenClaw and Hermes' portable workspace files:
 @gitclaw /soul validate
 @gitclaw /soul edit-plan soul
 @gitclaw /soul propose --target soul --id warm-tone-soul
+@gitclaw /soul rehearse --target soul --id warm-tone-soul
 @gitclaw /soul info soul
 @gitclaw /soul search durable state layer
 ```
@@ -2699,6 +2701,27 @@ and does not call a model. It is a GitHub-native review queue entry: after
 review, a maintainer can draft the high-authority context diff on a normal
 branch, run soul/profile validation and risk checks, and let the change affect
 future prompts only through a reviewed git change.
+
+When called as `@gitclaw /soul rehearse --target <path> --id <id>`, GitClaw
+performs the issue-native soul rehearsal action. It opens or reuses a dedicated
+GitHub issue marked with `gitclaw:soul-rehearsal-issue`, labels it with the
+normal trigger label, records the source hash, source issue/comment identity,
+normalized target path, category, current target hash/size/load state,
+validation rollup, risk rollup, and no-write/no-generation gates, then posts a
+body-free receipt in the source conversation. Duplicate open soul rehearsal
+issues are suppressed by marker and rehearsal id.
+
+The soul rehearsal action does not write `.gitclaw/SOUL.md`,
+`.gitclaw/IDENTITY.md`, `.gitclaw/USER.md`, `.gitclaw/TOOLS.md`, memory files,
+or any related high-authority context; it does not generate candidate soul
+text, does not copy raw target/source bodies into the rehearsal issue or
+receipt, does not mutate the repository, and does not call a model in the
+source action. The new issue is a GitHub-native conversation lane for trying
+the current high-authority behavior. Every change to this surface must create a
+real rehearsal issue, suppress a duplicate request, and then continue on the
+rehearsal issue with a GitHub Models turn that proves prompt provenance,
+selected `repo-reader`, prompt-visible `gitclaw.search_files`, and usage
+telemetry.
 
 When called as `@gitclaw /soul validate`, the command posts only the
 validation report: status, error/warning totals, required-file counts,
@@ -8460,6 +8483,13 @@ examples/workflows/gitclaw.yml
   a live GitHub Models follow-up proving repo-local skill selection,
   prompt-visible repository search tool usage, and usage telemetry after the
   deterministic issue action.
+- A `gh`-driven soul-rehearse E2E harness verifies
+  `@gitclaw /soul rehearse --target soul --id <id>` opens a body-free GitHub
+  rehearsal issue labeled for normal GitClaw conversation, posts a source
+  receipt, suppresses duplicate open rehearsal issues, avoids raw
+  source/target/candidate leakage, and then continues on the rehearsal issue
+  itself with a live GitHub Models follow-up proving repo-local skill
+  selection, prompt-visible repository search tool usage, and usage telemetry.
 - A `gh`-driven soul-validate E2E harness verifies
   `@gitclaw /soul validate` exposes the body-free validation report without
   falling back to the full context inventory.

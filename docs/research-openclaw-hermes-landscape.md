@@ -898,6 +898,19 @@ self-modification, model calls, and repository mutation behind reviewed git
 changes. The live E2E must prove both the deterministic action and a real
 GitHub Models repo-reader/search follow-up.
 
+2026-06-01 soul-rehearsal follow-up: OpenClaw's system prompt docs treat
+bootstrap files such as `SOUL.md`, `IDENTITY.md`, `USER.md`, `TOOLS.md`, and
+`MEMORY.md` as high-authority prompt inputs, and the `SOUL.md` guide frames
+personality as concise, versioned behavior rather than a giant changelog.
+GitClaw should add the matching conversation lane:
+`@gitclaw /soul rehearse --target <path> --id <id>` opens or reuses a labeled
+issue for testing the current target in normal conversation. It should record
+target hashes, validation/risk rollups, source hashes, no-write gates, and
+duplicate suppression, but it must not copy target bodies, generate candidate
+edits, write `.gitclaw/` files, mutate the repo, or call a model in the source
+action. Acceptance requires a real GitHub Models repo-reader/search follow-up
+on the rehearsal issue itself.
+
 2026-05-30 soul-verify follow-up: OpenClaw's `SOUL.md` convention and Hermes'
 profile/memory boundary suggest a second audit surface beyond validation:
 provenance. GitClaw should add `@gitclaw /soul verify` and

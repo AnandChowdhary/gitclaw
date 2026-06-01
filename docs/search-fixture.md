@@ -119,6 +119,7 @@ backup stats unique search fixture phrase => GITCLAW_BACKUP_STATS_CONTEXT_V1
 backup snapshot unique search fixture phrase => GITCLAW_BACKUP_SNAPSHOT_CONTEXT_V1
 soul catalog unique search fixture phrase => GITCLAW_SOUL_CATALOG_CONTEXT_V1
 soul snapshot unique search fixture phrase => GITCLAW_SOUL_SNAPSHOT_CONTEXT_V1
+soul rehearsal unique search fixture phrase => GITCLAW_SOUL_REHEARSAL_CONTEXT_V1
 backup freshness unique search fixture phrase => GITCLAW_BACKUP_FRESHNESS_CONTEXT_V1
 backup continuity unique search fixture phrase => GITCLAW_BACKUP_CONTINUITY_CONTEXT_V1
 skills catalog unique search fixture phrase => GITCLAW_SKILLS_CATALOG_CONTEXT_V1
