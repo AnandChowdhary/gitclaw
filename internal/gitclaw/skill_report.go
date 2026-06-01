@@ -116,6 +116,9 @@ func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isSkillsCatalogRequest(ev, cfg) {
 		return renderSkillCatalogReport(ev, repoContext, true)
 	}
+	if isSkillsSnapshotRequest(ev, cfg) {
+		return renderSkillSnapshotReport(ev, cfg, repoContext, true)
+	}
 	if sourceName := requestedSkillSourceInfoName(ev, cfg); sourceName != "" {
 		return renderSkillSourceInfoReport(ev, cfg, repoContext, sourceName, true)
 	}

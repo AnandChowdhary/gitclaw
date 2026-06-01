@@ -98,6 +98,7 @@ soul snapshot unique search fixture phrase => GITCLAW_SOUL_SNAPSHOT_CONTEXT_V1
 backup freshness unique search fixture phrase => GITCLAW_BACKUP_FRESHNESS_CONTEXT_V1
 backup continuity unique search fixture phrase => GITCLAW_BACKUP_CONTINUITY_CONTEXT_V1
 skills catalog unique search fixture phrase => GITCLAW_SKILLS_CATALOG_CONTEXT_V1
+skills snapshot unique search fixture phrase => GITCLAW_SKILLS_SNAPSHOT_CONTEXT_V1
 backup list unique search fixture phrase => GITCLAW_BACKUP_LIST_CONTEXT_V1
 backup manifest unique search fixture phrase => GITCLAW_BACKUP_MANIFEST_CONTEXT_V1
 tools catalog unique search fixture phrase => GITCLAW_TOOLS_CATALOG_CONTEXT_V1

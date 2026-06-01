@@ -109,8 +109,7 @@ func isSkillsRefreshPlanRequest(ev Event, cfg Config) bool {
 	}
 	return strings.EqualFold(fields[1], "refresh-plan") ||
 		strings.EqualFold(fields[1], "refresh") ||
-		strings.EqualFold(fields[1], "reload-plan") ||
-		strings.EqualFold(fields[1], "snapshot")
+		strings.EqualFold(fields[1], "reload-plan")
 }
 
 func skillRefreshPlanFindings(validation SkillValidationReport) []skillRefreshPlanFinding {

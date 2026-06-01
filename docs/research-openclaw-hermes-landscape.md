@@ -2351,6 +2351,19 @@ keeps install/update/mutation/model calls/raw bodies disabled. Pair any refresh
 behavior change with a live GitHub Models E2E that proves selected skills and
 tool usage still work.
 
+2026-06-01 skill-snapshot follow-up: OpenClaw and Hermes both make skill state
+inspectable, but their resident runtimes can keep mutable skill snapshots and
+perform lifecycle operations outside a single request. GitClaw should expose
+that pressure as `@gitclaw /skills snapshot` and `gitclaw skills snapshot`: a
+body-free lockfile-style report over repo-local skills, prompt-visible selected
+skill bodies, bundles, and reviewed source pins. The report should emit only
+paths, counts, short hashes, validation/risk/source gates, disabled
+registry/fetch/install/mutation gates, and one composite `snapshot_sha256_12`.
+Changes require deterministic no-leakage tests plus a live GitHub Models
+follow-up that selects `repo-reader`, exposes `gitclaw.search_files`, and
+recovers a dedicated repository-search fixture token through actual tool
+output.
+
 2026-05-31 skill-proposal-plan follow-up: OpenClaw's current skills CLI adds a
 Skills Workshop proposal lifecycle where drafts are durable but not active
 until applied, and Hermes' skills posture emphasizes reusable procedural

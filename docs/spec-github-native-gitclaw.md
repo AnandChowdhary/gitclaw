@@ -937,7 +937,7 @@ GitHub issue/comment event
   `memory catalog`, `memory snapshot`, `memory provenance`, `memory verify`, `memory risk`, `memory validate`,
   `memory timeline`, `memory list`, `memory promote-plan`, `memory info`, `memory search`,
   `skills validate`,
-  `skills list`, `skills catalog`, `skills provenance`, `skills select-plan`, `skills refresh-plan`,
+  `skills list`, `skills catalog`, `skills snapshot`, `skills provenance`, `skills select-plan`, `skills refresh-plan`,
   `skills proposals`, `skills proposal-plan`, `skills install-plan`,
   `skills upgrade-plan`, `skills info`, `skills search`,
   `bundles list`, `bundles risk`, `bundles info`,
@@ -1642,6 +1642,7 @@ gitclaw skills validate
 gitclaw skills check
 gitclaw skills list
 gitclaw skills catalog
+gitclaw skills snapshot
 gitclaw skills provenance
 gitclaw skills select-plan <name>
 gitclaw skills refresh-plan
@@ -1691,6 +1692,7 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills check
 @gitclaw /skills catalog
 @gitclaw /skills eligible
+@gitclaw /skills snapshot
 @gitclaw /skills provenance
 @gitclaw /skills select-plan repo-reader
 @gitclaw /skills refresh-plan
@@ -1743,6 +1745,9 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 - compact catalog eligibility metadata when explicitly requested: eligible and
   ineligible counts, load modes, reason codes, selected state, always-on state,
   description hashes, body hashes, and disabled registry/install/update gates.
+- lockfile-style skill snapshot metadata when explicitly requested: composite
+  snapshot hash, local skill cards, selected-skill prompt hashes, bundle
+  instruction hashes, source-pin hashes, and validation/risk/source gates.
 - dry-run selection planning metadata when explicitly requested.
 - skill refresh-boundary planning metadata when explicitly requested.
 - dry-run install/upgrade planning metadata when explicitly requested.
@@ -1762,6 +1767,20 @@ reason codes, requirement counts, selected/always state, risk counts,
 validation/risk rollups, and description/body hashes. It never prints raw
 skill bodies, raw descriptions, issue bodies, comments, prompts, tool inputs,
 tool outputs, env names, or installer targets.
+
+When called as `@gitclaw /skills snapshot`, `@gitclaw /skills fingerprint`,
+`@gitclaw /skills lock`, or locally as `gitclaw skills snapshot`, GitClaw
+posts a `GitClaw Skill Snapshot Report`. This is the OpenClaw/Hermes-style
+skill-state lockfile for the serverless Actions runtime: it fingerprints
+repo-local skills, prompt-visible selected skill bodies, skill bundles, and
+reviewed source pins as counts, paths, short hashes, and one composite
+`snapshot_sha256_12`. The report carries validation, risk, and source-pin
+gates plus `llm_e2e_required_after_skill_snapshot_change: true`; every change
+to this surface must include deterministic report tests and a live GitHub
+Models follow-up that proves actual conversation, skill selection, and
+`gitclaw.search_files` tool visibility still work. It never prints raw skill
+bodies, descriptions, bundle instructions, source refs, issue/comment bodies,
+prompts, provider payloads, credentials, or secret values.
 
 When called as `@gitclaw /skills provenance`, `@gitclaw /skills history`, or
 `@gitclaw /skills timeline`, the command posts a body-free git provenance map
@@ -6076,6 +6095,7 @@ assert the expected comments/labels, and close the issue in cleanup.
    - create a real issue with `@gitclaw /skills`,
    - create a second real issue with `@gitclaw /skills list`,
    - create another real issue with `@gitclaw /skills catalog`,
+   - create another real issue with `@gitclaw /skills snapshot`,
    - create another real issue with `@gitclaw /skills provenance`,
    - create another real issue with `@gitclaw /bundles catalog`,
    - create a third real issue with `@gitclaw /bundles info repo-context`,
@@ -6085,6 +6105,9 @@ assert the expected comments/labels, and close the issue in cleanup.
    - assert the catalog report lists compact eligibility counts, load modes,
      reason codes, selected/always state, description hashes, body hashes,
      no-registry/no-install gates, and no raw descriptions or skill bodies,
+   - assert the snapshot report lists composite snapshot hash, skill cards,
+     selected-skill prompt hashes, bundle instruction hashes, source-pin hashes,
+     validation/risk/source gates, and no raw skill/source/bundle bodies,
    - assert the bundle info report lists bundle path, referenced/resolved
      skills, selected-for-turn state, instruction presence, and hashes,
    - assert the bundle catalog report lists compact orchestration metadata,
@@ -7551,6 +7574,14 @@ examples/workflows/gitclaw.yml
   issue/comment/prompt/skill body leakage. It then runs a live GitHub Models
   follow-up conversation that proves repo-local skill selection and tool usage
   still work.
+- A `gh`-driven skills-snapshot E2E harness verifies
+  `@gitclaw /skills snapshot` exposes a body-free composite skill fingerprint
+  across repo-local skills, selected prompt-visible skill bodies, skill
+  bundles, and reviewed source pins without a model call. The same live issue
+  then receives a normal GitHub Models follow-up that must select
+  `repo-reader`, expose `gitclaw.search_files`, recover the skills-snapshot
+  repository-search fixture token, emit usage telemetry, and avoid hidden
+  sentinel leakage.
 - A `gh`-driven skills-sources E2E harness verifies
   `@gitclaw /skills sources risk` and local `gitclaw skills sources risk`
   expose body-free source-pin provenance, expected/current skill hashes,

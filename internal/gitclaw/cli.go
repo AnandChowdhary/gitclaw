@@ -2728,7 +2728,7 @@ func runMigrateRiskCommand(args []string) error {
 
 func runSkillsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw skills verify|risk|runtime|catalog|eligible|validate|check|list|provenance|select-plan <name>|refresh-plan|sources [verify|lock|update-plan|provenance|risk|info <name>|search <query>]|proposals [risk]|proposal-plan <name>|install-plan <target>|upgrade-plan <target>|bundles [risk|provenance]|bundle <name>|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw skills verify|risk|runtime|catalog|snapshot|eligible|validate|check|list|provenance|select-plan <name>|refresh-plan|sources [verify|lock|update-plan|provenance|risk|info <name>|search <query>]|proposals [risk]|proposal-plan <name>|install-plan <target>|upgrade-plan <target>|bundles [risk|provenance]|bundle <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "verify":
@@ -2739,6 +2739,8 @@ func runSkillsCommand(args []string) error {
 		return runSkillsRuntimeCommand(args[1:])
 	case "catalog", "eligible", "eligibility", "index":
 		return runSkillsCatalogCommand(args[1:])
+	case "snapshot", "snapshots", "fingerprint", "fingerprints", "lock", "lockfile":
+		return runSkillsSnapshotCommand(args[1:])
 	case "validate", "check":
 		return runSkillsValidateCommand(args[1:])
 	case "list":
@@ -2747,7 +2749,7 @@ func runSkillsCommand(args []string) error {
 		return runSkillsProvenanceCommand(args[1:])
 	case "select-plan", "selection-plan":
 		return runSkillsSelectPlanCommand(args[1:])
-	case "refresh-plan", "refresh", "reload-plan", "snapshot":
+	case "refresh-plan", "refresh", "reload-plan":
 		return runSkillsRefreshPlanCommand(args[1:])
 	case "sources", "source":
 		return runSkillsSourcesCommand(args[1:])
@@ -2784,6 +2786,22 @@ func runSkillsCommand(args []string) error {
 	default:
 		return fmt.Errorf("unknown skills command %q", args[0])
 	}
+}
+
+func runSkillsSnapshotCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown skills snapshot argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "skills snapshot"}}, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSkillSnapshotCLIReport(cfg, repoContext))
+	return nil
 }
 
 func runSkillsCatalogCommand(args []string) error {

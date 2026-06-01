@@ -145,6 +145,7 @@ gitclaw skills validate
 gitclaw skills check
 gitclaw skills list
 gitclaw skills catalog
+gitclaw skills snapshot
 gitclaw skills provenance
 gitclaw skills select-plan <name>
 gitclaw skills refresh-plan
@@ -173,6 +174,12 @@ gitclaw bundles search <query>
 
 `gitclaw skills install-plan <target>` and `gitclaw skills upgrade-plan
 <target>` are dry-run, review-first planners for repo-local skill changes.
+
+`gitclaw skills snapshot` is the body-free fingerprint for repo-local skills,
+prompt-visible selected skills, skill bundles, and reviewed source pins. It
+prints short hashes, counts, validation/risk/source gates, and one composite
+snapshot hash without exposing raw skill bodies, descriptions, source refs, or
+bundle instructions.
 They report target/match hashes and no-fetch, no-install, no-mutation gates,
 and their live harnesses prove real GitHub Models repo-reader follow-ups after
 the deterministic report.
@@ -733,6 +740,7 @@ scripts/e2e/github-model-risk-report.sh
 scripts/e2e/github-skills-proposal-plan-report.sh
 scripts/e2e/github-skills-proposals-report.sh
 scripts/e2e/github-skills-refresh-plan-report.sh
+scripts/e2e/github-skills-snapshot-report.sh
 scripts/e2e/github-skills-sources-report.sh
 scripts/e2e/github-skills-sources-info-report.sh
 scripts/e2e/github-skills-sources-search-report.sh
