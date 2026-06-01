@@ -140,6 +140,7 @@ gitclaw skills sources verify
 gitclaw skills sources provenance
 gitclaw skills sources risk
 gitclaw skills sources info <name>
+gitclaw skills sources search <query>
 gitclaw skills runtime
 gitclaw skills proposals [risk]
 gitclaw skills proposal-plan <name>
@@ -178,6 +179,12 @@ envelope. It reports source-pin hashes, source-ref hashes, current skill
 hashes, registry/fetch/install gates, and risk rollups without contacting a
 registry, fetching remote sources, running installers, or printing source or
 skill bodies.
+
+`gitclaw skills sources search <query>` searches reviewed source-pin metadata
+only: source name, path, skill path, source kind, trust level, install mode,
+hashes, and risk codes. It hashes the raw query and never prints raw query
+text, source refs, source YAML, skill bodies, issue text, prompts, or
+credentials.
 
 `gitclaw bundles catalog` is the compact orchestration index for Hermes-style
 skill bundles. It reports repo-local bundle roles, selected/load state,
@@ -681,6 +688,7 @@ scripts/e2e/github-skills-proposals-report.sh
 scripts/e2e/github-skills-refresh-plan-report.sh
 scripts/e2e/github-skills-sources-report.sh
 scripts/e2e/github-skills-sources-info-report.sh
+scripts/e2e/github-skills-sources-search-report.sh
 scripts/e2e/github-skills-sources-verify-report.sh
 scripts/e2e/github-skills-sources-provenance-report.sh
 scripts/e2e/github-skills-runtime-report.sh
@@ -802,6 +810,10 @@ The skill-source-verify harness checks all reviewed source pins as a
 ClawHub/Hermes-inspired trust envelope: source-pin hashes, source-ref hashes,
 current skill hashes, registry/fetch/install gates, and then a real GitHub
 Models repo-reader/search follow-up.
+The skill-source-search harness checks body-free progressive-disclosure search
+over reviewed source-pin metadata, then requires the same real GitHub Models
+repo-reader/search follow-up so deterministic search cannot mask broken LLM
+tool grounding.
 The channel-ingest harness proves the generic no-server bridge end to end:
 workflow-dispatch mirroring, duplicate provider-message suppression, and a
 normal model/tool follow-up on the canonical channel issue.

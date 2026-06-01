@@ -12,6 +12,7 @@ import (
 )
 
 const skillSourcesDir = ".gitclaw/skill-sources"
+const defaultSkillSourceSearchMaxResults = 10
 
 type skillSourceDocument struct {
 	Name               string
@@ -61,6 +62,27 @@ type SkillSourceRiskFinding struct {
 	Field    string
 	Line     int
 	LineSHA  string
+}
+
+type SkillSourceSearchResult struct {
+	Card        SkillSourceCard
+	MatchFields []string
+	Score       int
+}
+
+type SkillSourceSearchReport struct {
+	Status                  string
+	QueryHash               string
+	QueryTerms              int
+	MaxResults              int
+	AvailableSourcePins     int
+	MatchedSourcePins       int
+	ResultsReturned         int
+	RawQueryIncluded        bool
+	RawSourceBodiesIncluded bool
+	RawSourceRefsIncluded   bool
+	RawSkillBodiesIncluded  bool
+	Results                 []SkillSourceSearchResult
 }
 
 type SkillSourceReport struct {
@@ -123,6 +145,10 @@ func RenderSkillSourcesVerifyCLIReport(cfg Config, repoContext RepoContext) stri
 	return renderSkillSourcesVerifyReport(Event{}, cfg, repoContext, false)
 }
 
+func RenderSkillSourcesSearchCLIReport(cfg Config, repoContext RepoContext, query string) string {
+	return renderSkillSourcesSearchReport(Event{}, cfg, repoContext, query, defaultSkillSourceSearchMaxResults, false)
+}
+
 func RenderSkillSourceInfoCLIReport(cfg Config, repoContext RepoContext, name string) string {
 	return renderSkillSourceInfoReport(Event{}, cfg, repoContext, name, false)
 }
@@ -163,6 +189,92 @@ func renderSkillSourcesRiskReport(ev Event, cfg Config, repoContext RepoContext,
 
 	b.WriteString("\n### Risk Findings\n")
 	writeSkillSourceRiskFindings(&b, report.Findings)
+	return strings.TrimSpace(b.String())
+}
+
+func BuildSkillSourceSearchReport(cfg Config, repoContext RepoContext, query string, maxResults int) SkillSourceSearchReport {
+	query = cleanSkillSearchQuery(query)
+	if maxResults <= 0 {
+		maxResults = defaultSkillSourceSearchMaxResults
+	}
+	source := BuildSkillSourceReport(cfg, repoContext)
+	report := SkillSourceSearchReport{
+		Status:                  "ok",
+		QueryHash:               shortDocumentHash(query),
+		QueryTerms:              len(skillSearchTerms(query)),
+		MaxResults:              maxResults,
+		AvailableSourcePins:     len(source.Cards),
+		RawQueryIncluded:        false,
+		RawSourceBodiesIncluded: false,
+		RawSourceRefsIncluded:   false,
+		RawSkillBodiesIncluded:  false,
+	}
+	if query == "" {
+		report.Status = "no_query"
+		return report
+	}
+	terms := skillSearchTerms(query)
+	if len(terms) == 0 {
+		report.Status = "no_query"
+		return report
+	}
+	for _, card := range source.Cards {
+		score, fields := skillSourceSearchScore(card, query, terms)
+		if score == 0 {
+			continue
+		}
+		report.MatchedSourcePins++
+		results := SkillSourceSearchResult{Card: card, MatchFields: fields, Score: score}
+		report.Results = append(report.Results, results)
+	}
+	sort.Slice(report.Results, func(i, j int) bool {
+		if report.Results[i].Score != report.Results[j].Score {
+			return report.Results[i].Score > report.Results[j].Score
+		}
+		return report.Results[i].Card.Path < report.Results[j].Card.Path
+	})
+	if len(report.Results) > maxResults {
+		report.Results = report.Results[:maxResults]
+	}
+	report.ResultsReturned = len(report.Results)
+	if report.MatchedSourcePins == 0 {
+		report.Status = "no_matches"
+	}
+	return report
+}
+
+func renderSkillSourcesSearchReport(ev Event, cfg Config, repoContext RepoContext, query string, maxResults int, includeIssue bool) string {
+	report := BuildSkillSourceSearchReport(cfg, repoContext, query, maxResults)
+	var b strings.Builder
+	b.WriteString("## GitClaw Skill Source Search Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	writeSkillSourceHeader(&b, ev, includeIssue)
+	fmt.Fprintf(&b, "- skill_source_search_status: `%s`\n", report.Status)
+	fmt.Fprintf(&b, "- query_sha256_12: `%s`\n", report.QueryHash)
+	fmt.Fprintf(&b, "- query_terms: `%d`\n", report.QueryTerms)
+	fmt.Fprintf(&b, "- max_results: `%d`\n", report.MaxResults)
+	fmt.Fprintf(&b, "- available_source_pins: `%d`\n", report.AvailableSourcePins)
+	fmt.Fprintf(&b, "- matched_source_pins: `%d`\n", report.MatchedSourcePins)
+	fmt.Fprintf(&b, "- results_returned: `%d`\n", report.ResultsReturned)
+	fmt.Fprintf(&b, "- raw_query_included: `%t`\n", report.RawQueryIncluded)
+	fmt.Fprintf(&b, "- raw_source_bodies_included: `%t`\n", report.RawSourceBodiesIncluded)
+	fmt.Fprintf(&b, "- raw_source_refs_included: `%t`\n", report.RawSourceRefsIncluded)
+	fmt.Fprintf(&b, "- raw_skill_bodies_included: `%t`\n", report.RawSkillBodiesIncluded)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_skill_source_search_change: `%t`\n", true)
+	if includeIssue {
+		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
+	}
+	b.WriteByte('\n')
+	b.WriteString("This report searches reviewed skill source-pin metadata only: source name, path, skill path, source kind, trust level, install mode, expected/current hashes, and risk codes. Raw search queries, raw source refs, source YAML, skill bodies, issue bodies, comments, prompts, provider payloads, and secret values are not included.\n\n")
+
+	b.WriteString("### Matches\n")
+	writeSkillSourceSearchResults(&b, report.Results)
+
+	if report.ResultsReturned == 0 {
+		source := BuildSkillSourceReport(cfg, repoContext)
+		b.WriteString("\n### Available Skill Sources\n")
+		writeSkillSourceCards(&b, source.Cards)
+	}
 	return strings.TrimSpace(b.String())
 }
 
@@ -703,6 +815,50 @@ func writeSkillSourceRiskFindings(b *strings.Builder, findings []SkillSourceRisk
 	}
 }
 
+func writeSkillSourceSearchResults(b *strings.Builder, results []SkillSourceSearchResult) {
+	if len(results) == 0 {
+		b.WriteString("- none\n")
+		return
+	}
+	for _, result := range results {
+		card := result.Card
+		sourceRefSHA := "none"
+		if card.SourceRefPresent {
+			sourceRefSHA = card.SourceRefSHA
+		}
+		currentSHA := "none"
+		if card.SkillSHA != "" {
+			currentSHA = card.SkillSHA
+		}
+		expectedSHA := "none"
+		if card.ExpectedSHA != "" {
+			expectedSHA = card.ExpectedSHA
+		}
+		fmt.Fprintf(b, "- source_name=`%s` path=`%s` skill_path=`%s` match_fields=`%s` score=`%d` skill_matched=`%t` source_kind=`%s` source_ref_present=`%t` source_ref_sha256_12=`%s` trust_level=`%s` install_mode=`%s` requires_approval=`%t` remote_fetch_allowed=`%t` hash_pinned=`%t` expected_sha256_12=`%s` current_skill_sha256_12=`%s` hash_matched=`%t` risk_findings=`%d` risk_max_severity=`%s` risk_codes=`%s`\n",
+			inlineCode(card.Name),
+			card.Path,
+			card.SkillPath,
+			inlineList(result.MatchFields),
+			result.Score,
+			card.SkillMatched,
+			inlineCode(card.SourceKind),
+			card.SourceRefPresent,
+			sourceRefSHA,
+			inlineCode(card.TrustLevel),
+			inlineCode(card.InstallMode),
+			card.RequiresApproval,
+			card.RemoteFetchAllowed,
+			card.HashPinned,
+			expectedSHA,
+			currentSHA,
+			card.HashMatched,
+			len(card.RiskFindings),
+			skillSourceRiskMaxSeverity(card.RiskFindings),
+			inlineListOrNone(skillSourceRiskCodes(card.RiskFindings)),
+		)
+	}
+}
+
 func writeSkillSourceVerifyFindings(b *strings.Builder, report SkillSourceVerifyReport) {
 	b.WriteString("- severity=`info` code=`skill_source_registry_verification_not_configured` detail=`GitClaw v1 verifies reviewed repo-local source pins and hashes without contacting external skill registries`\n")
 	b.WriteString("- severity=`info` code=`skill_source_remote_fetch_verification_static_only` detail=`remote source refs are not fetched; verification is limited to reviewed source-pin metadata and local skill hashes`\n")
@@ -769,6 +925,32 @@ func sortSkillSourceRiskFindings(findings []SkillSourceRiskFinding) {
 	})
 }
 
+func skillSourceSearchScore(card SkillSourceCard, query string, terms []string) (int, []string) {
+	fields := map[string]string{
+		"name":              card.Name,
+		"path":              card.Path,
+		"skill_path":        card.SkillPath,
+		"source_kind":       card.SourceKind,
+		"trust_level":       card.TrustLevel,
+		"install_mode":      card.InstallMode,
+		"expected_sha":      card.ExpectedSHA,
+		"current_skill_sha": card.SkillSHA,
+		"risk_codes":        strings.Join(skillSourceRiskCodes(card.RiskFindings), " "),
+	}
+	weights := map[string]int{
+		"name":              80,
+		"path":              35,
+		"skill_path":        40,
+		"source_kind":       55,
+		"trust_level":       45,
+		"install_mode":      45,
+		"expected_sha":      8,
+		"current_skill_sha": 8,
+		"risk_codes":        50,
+	}
+	return scoreSearchFields(fields, weights, strings.ToLower(cleanSkillSearchQuery(query)), terms)
+}
+
 func skillSourceSeverityRank(severity string) int {
 	switch severity {
 	case "high":
@@ -802,6 +984,23 @@ func isSkillSourcesVerifyRequest(ev Event, cfg Config) bool {
 		fields[0] == "/skills" &&
 		(strings.EqualFold(fields[1], "sources") || strings.EqualFold(fields[1], "source")) &&
 		(strings.EqualFold(fields[2], "verify") || strings.EqualFold(fields[2], "check"))
+}
+
+func requestedSkillSourceSearchQuery(ev Event, cfg Config) string {
+	fields := activeSlashCommandFields(ev, cfg)
+	if len(fields) < 4 {
+		return ""
+	}
+	if fields[0] != "/skills" {
+		return ""
+	}
+	if !strings.EqualFold(fields[1], "sources") && !strings.EqualFold(fields[1], "source") {
+		return ""
+	}
+	if !strings.EqualFold(fields[2], "search") && !strings.EqualFold(fields[2], "find") {
+		return ""
+	}
+	return cleanSkillSearchQuery(strings.Join(fields[3:], " "))
 }
 
 func requestedSkillSourceInfoName(ev Event, cfg Config) string {

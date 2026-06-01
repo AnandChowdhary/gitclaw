@@ -1636,6 +1636,7 @@ gitclaw skills sources verify
 gitclaw skills sources provenance
 gitclaw skills sources risk
 gitclaw skills sources info <name>
+gitclaw skills sources search <query>
 gitclaw skills runtime
 gitclaw skills proposals [risk]
 gitclaw skills proposal-plan <name>
@@ -1682,6 +1683,7 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills sources provenance
 @gitclaw /skills sources risk
 @gitclaw /skills sources info repo-reader
+@gitclaw /skills sources search repo-local
 @gitclaw /skills runtime
 @gitclaw /skills requirements
 @gitclaw /skills metadata
@@ -1926,6 +1928,14 @@ info <name>` and `gitclaw skills sources info <name>` show one focused source
 pin with no-registry/no-fetch/no-install/no-mutation gates, hash-only raw-body
 boundaries, risk rollups, and
 `llm_e2e_required_after_skill_source_info_change=true`.
+`@gitclaw /skills sources search <query>` and
+`gitclaw skills sources search <query>` search only reviewed source-pin
+metadata: source name, path, skill path, source kind, trust level, install
+mode, expected/current hashes, and risk codes. Search reports hash the raw
+query, return match fields and scores, and include
+`llm_e2e_required_after_skill_source_search_change=true` without printing raw
+query text, source refs, source YAML, skill bodies, prompts, issue text, or
+credentials.
 
 Skill source reports never contact ClawHub, Hermes Hub, skills.sh, GitHub, or
 well-known endpoints; never fetch remote sources; never run installers; never
@@ -1936,6 +1946,7 @@ secret values. The reports include
 `llm_e2e_required_after_skill_source_change=true` or
 `llm_e2e_required_after_skill_source_verify_change=true` or
 `llm_e2e_required_after_skill_source_info_change=true` or
+`llm_e2e_required_after_skill_source_search_change=true` or
 `llm_e2e_required_after_skill_source_provenance_change=true`; every source-pin
 behavior change must ship with a live GitHub Models follow-up E2E.
 
@@ -7432,6 +7443,14 @@ examples/workflows/gitclaw.yml
   live-LLM follow-up marker. The same live issue then runs a real GitHub
   Models repo-reader/search follow-up with prompt, skill, tool, and usage
   telemetry.
+- A `gh`-driven skills-sources-search E2E harness verifies
+  `@gitclaw /skills sources search repo-local manual-review` and local
+  `gitclaw skills sources search repo-local manual-review` expose body-free
+  progressive-disclosure search over reviewed source-pin metadata, hash the
+  raw query, report match fields and scores, and exclude source refs, source
+  YAML, skill bodies, prompts, issue text, and credentials. The same live
+  issue then runs a real GitHub Models repo-reader/search follow-up with
+  prompt, skill, `gitclaw.search_files`, and usage telemetry.
 - A `gh`-driven skills-runtime E2E harness verifies
   `@gitclaw /skills runtime` and local `gitclaw skills runtime` expose
   body-free OpenClaw-compatible env/bin/install runtime metadata counts,

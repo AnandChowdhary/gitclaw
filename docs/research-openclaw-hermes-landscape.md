@@ -179,6 +179,18 @@ sources, contact ClawHub/Hermes Hub/skills.sh/GitHub, run installers, mutate
 skills, or print raw source refs, source YAML, skill bodies, prompts, issue
 bodies, comments, credentials, provider payloads, or secret values.
 
+2026-06-01 skill-source-search follow-up: OpenClaw and Hermes both lean on
+progressive disclosure: compact indexes first, focused body loading only after
+a capability is intentionally selected. GitClaw should apply that same shape to
+reviewed source pins by adding `@gitclaw /skills sources search <query>` and
+`gitclaw skills sources search <query>`. The search should cover only
+body-free metadata (source name, path, skill path, source kind, trust level,
+install mode, expected/current hashes, and risk codes), hash the raw query,
+return matched fields and scores, and require a live GitHub Models
+repo-reader/search follow-up after behavior changes. It should not print raw
+query text, raw source refs, source YAML, skill bodies, issue/comment bodies,
+prompts, credentials, provider payloads, or secret values.
+
 2026-05-31 skill-runtime follow-up: OpenClaw's `SKILL.md` frontmatter and
 ClawHub format expose runtime metadata such as required env vars, binaries,
 `primaryEnv`, and install specs, while Hermes skills/tool docs frame these

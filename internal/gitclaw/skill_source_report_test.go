@@ -359,6 +359,65 @@ func TestRenderSkillSourcesVerifyReportShowsTrustEnvelopeWithoutBodies(t *testin
 	}
 }
 
+func TestRenderSkillSourcesSearchReportFindsPinsWithoutBodies(t *testing.T) {
+	dir := t.TempDir()
+	hash := writeSkillSourceFixture(t, dir)
+	cfg := DefaultConfig()
+	cfg.Workdir = dir
+	repoContext, err := LoadRepoContextWithConfig(dir, nil, cfg)
+	if err != nil {
+		t.Fatalf("LoadRepoContextWithConfig returned error: %v", err)
+	}
+
+	report := RenderSkillSourcesSearchCLIReport(cfg, repoContext, "repo-local manual-review ZZZSECRET")
+	for _, want := range []string{
+		"GitClaw Skill Source Search Report",
+		"scope: `local-cli`",
+		"Generated without a model call",
+		"skill_source_search_status: `ok`",
+		"query_sha256_12:",
+		"query_terms: `3`",
+		"max_results: `10`",
+		"available_source_pins: `1`",
+		"matched_source_pins: `1`",
+		"results_returned: `1`",
+		"raw_query_included: `false`",
+		"raw_source_bodies_included: `false`",
+		"raw_source_refs_included: `false`",
+		"raw_skill_bodies_included: `false`",
+		"llm_e2e_required_after_skill_source_search_change: `true`",
+		"### Matches",
+		"source_name=`repo-reader`",
+		"path=`.gitclaw/skill-sources/repo-reader.yaml`",
+		"skill_path=`.gitclaw/SKILLS/repo-reader/SKILL.md`",
+		"match_fields=`install_mode, source_kind, trust_level`",
+		"skill_matched=`true`",
+		"source_kind=`repo-local`",
+		"source_ref_present=`true`",
+		"source_ref_sha256_12=",
+		"trust_level=`repo-local`",
+		"install_mode=`manual-review`",
+		"requires_approval=`true`",
+		"remote_fetch_allowed=`false`",
+		"hash_pinned=`true`",
+		"expected_sha256_12=`" + hash + "`",
+		"current_skill_sha256_12=`" + hash + "`",
+		"hash_matched=`true`",
+		"risk_findings=`0`",
+		"risk_max_severity=`none`",
+		"risk_codes=`none`",
+	} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("skill source search report missing %q:\n%s", want, report)
+		}
+	}
+	for _, leaked := range []string{"ZZZSECRET", "SKILL_SOURCE_SKILL_BODY_SECRET", "Read repository context.", ".gitclaw/SKILLS/repo-reader/SKILL.md\nsource_kind"} {
+		if strings.Contains(report, leaked) {
+			t.Fatalf("skill source search report leaked %q:\n%s", leaked, report)
+		}
+	}
+}
+
 func TestRenderSkillSourceInfoReportFocusesOnePinWithoutBodies(t *testing.T) {
 	dir := t.TempDir()
 	hash := writeSkillSourceFixture(t, dir)
@@ -466,6 +525,17 @@ func TestSkillsSourcesCommandsReportPins(t *testing.T) {
 		}
 	}
 
+	searchOutput := captureStdout(t, func() {
+		if err := RunCLI(context.Background(), []string{"skills", "sources", "search", "repo-local", "manual-review"}); err != nil {
+			t.Fatalf("skills sources search returned error: %v", err)
+		}
+	})
+	for _, want := range []string{"GitClaw Skill Source Search Report", "skill_source_search_status: `ok`", "matched_source_pins: `1`", "source_name=`repo-reader`", "llm_e2e_required_after_skill_source_search_change: `true`"} {
+		if !strings.Contains(searchOutput, want) {
+			t.Fatalf("skills sources search output missing %q:\n%s", want, searchOutput)
+		}
+	}
+
 	infoOutput := captureStdout(t, func() {
 		if err := RunCLI(context.Background(), []string{"skills", "sources", "info", "repo-reader"}); err != nil {
 			t.Fatalf("skills sources info returned error: %v", err)
@@ -476,8 +546,8 @@ func TestSkillsSourcesCommandsReportPins(t *testing.T) {
 			t.Fatalf("skills sources info output missing %q:\n%s", want, infoOutput)
 		}
 	}
-	if strings.Contains(listOutput, "SKILL_SOURCE_SKILL_BODY_SECRET") || strings.Contains(provenanceOutput, "SKILL_SOURCE_SKILL_BODY_SECRET") || strings.Contains(verifyOutput, "SKILL_SOURCE_SKILL_BODY_SECRET") || strings.Contains(infoOutput, "SKILL_SOURCE_SKILL_BODY_SECRET") {
-		t.Fatalf("skill source CLI leaked skill body:\nlist:\n%s\nprovenance:\n%s\nverify:\n%s\ninfo:\n%s", listOutput, provenanceOutput, verifyOutput, infoOutput)
+	if strings.Contains(listOutput, "SKILL_SOURCE_SKILL_BODY_SECRET") || strings.Contains(provenanceOutput, "SKILL_SOURCE_SKILL_BODY_SECRET") || strings.Contains(verifyOutput, "SKILL_SOURCE_SKILL_BODY_SECRET") || strings.Contains(searchOutput, "SKILL_SOURCE_SKILL_BODY_SECRET") || strings.Contains(infoOutput, "SKILL_SOURCE_SKILL_BODY_SECRET") {
+		t.Fatalf("skill source CLI leaked skill body:\nlist:\n%s\nprovenance:\n%s\nverify:\n%s\nsearch:\n%s\ninfo:\n%s", listOutput, provenanceOutput, verifyOutput, searchOutput, infoOutput)
 	}
 }
 
@@ -591,6 +661,43 @@ func TestRenderSkillsReportRoutesSourcesVerifyWithoutBodies(t *testing.T) {
 	}
 	if strings.Contains(report, "SKILL_SOURCE_VERIFY_ROUTE_BODY_SECRET") || strings.Contains(report, "SKILL_SOURCE_SKILL_BODY_SECRET") {
 		t.Fatalf("skill sources verify routed report leaked body text:\n%s", report)
+	}
+}
+
+func TestRenderSkillsReportRoutesSourcesSearchWithoutBodies(t *testing.T) {
+	dir := t.TempDir()
+	writeSkillSourceFixture(t, dir)
+	cfg := DefaultConfig()
+	cfg.Workdir = dir
+	repoContext, err := LoadRepoContextWithConfig(dir, nil, cfg)
+	if err != nil {
+		t.Fatalf("LoadRepoContextWithConfig returned error: %v", err)
+	}
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 130,
+			"title": "@gitclaw /skills sources search repo-local manual-review",
+			"body": "Hidden skill source search route token: SKILL_SOURCE_SEARCH_ROUTE_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+
+	report := RenderSkillsReport(ev, cfg, repoContext)
+	for _, want := range []string{"GitClaw Skill Source Search Report", "repository: `owner/repo`", "issue: `#130`", "skill_source_search_status: `ok`", "matched_source_pins: `1`", "source_name=`repo-reader`", "issue_title_sha256_12:"} {
+		if !strings.Contains(report, want) {
+			t.Fatalf("skill sources search routed report missing %q:\n%s", want, report)
+		}
+	}
+	if strings.Contains(report, "SKILL_SOURCE_SEARCH_ROUTE_BODY_SECRET") || strings.Contains(report, "SKILL_SOURCE_SKILL_BODY_SECRET") {
+		t.Fatalf("skill sources search routed report leaked body text:\n%s", report)
 	}
 }
 
@@ -712,6 +819,73 @@ func TestHandleSkillsSourcesVerifyCommandPostsReportWithoutLLM(t *testing.T) {
 	}
 	if !hasLabel(github.IssueLabels[129], "gitclaw:done") || hasLabel(github.IssueLabels[129], "gitclaw:running") || hasLabel(github.IssueLabels[129], "gitclaw:error") {
 		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[129])
+	}
+}
+
+func TestHandleSkillsSourcesSearchCommandPostsReportWithoutLLM(t *testing.T) {
+	dir := t.TempDir()
+	writeSkillSourceFixture(t, dir)
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 131,
+			"title": "@gitclaw /skills sources search repo-local manual-review",
+			"body": "Hidden skill source search handler token: SKILL_SOURCE_SEARCH_HANDLER_BODY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	cfg := DefaultConfig()
+	cfg.Workdir = dir
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{131: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for deterministic skill sources search report", llm.Calls)
+	}
+	if len(github.Posted) != 1 {
+		t.Fatalf("posted %d comments, want 1", len(github.Posted))
+	}
+	body := github.Posted[0].Body
+	for _, want := range []string{
+		"GitClaw Skill Source Search Report",
+		"Generated without a model call",
+		"model=\"gitclaw/skills\"",
+		"repository: `owner/repo`",
+		"issue: `#131`",
+		"skill_source_search_status: `ok`",
+		"query_sha256_12:",
+		"query_terms: `2`",
+		"available_source_pins: `1`",
+		"matched_source_pins: `1`",
+		"results_returned: `1`",
+		"raw_query_included: `false`",
+		"raw_source_bodies_included: `false`",
+		"raw_source_refs_included: `false`",
+		"raw_skill_bodies_included: `false`",
+		"llm_e2e_required_after_skill_source_search_change: `true`",
+		"source_name=`repo-reader`",
+		"match_fields=`install_mode, source_kind, trust_level`",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("skill source search handler report missing %q:\n%s", want, body)
+		}
+	}
+	for _, leaked := range []string{"SKILL_SOURCE_SEARCH_HANDLER_BODY_SECRET", "SKILL_SOURCE_SKILL_BODY_SECRET", "Read repository context."} {
+		if strings.Contains(body, leaked) {
+			t.Fatalf("skill source search handler report leaked %q:\n%s", leaked, body)
+		}
+	}
+	if !hasLabel(github.IssueLabels[131], "gitclaw:done") || hasLabel(github.IssueLabels[131], "gitclaw:running") || hasLabel(github.IssueLabels[131], "gitclaw:error") {
+		t.Fatalf("unexpected final labels: %#v", github.IssueLabels[131])
 	}
 }
 
