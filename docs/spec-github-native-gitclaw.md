@@ -2125,6 +2125,7 @@ Hermes profiles and OpenClaw workspace files:
 @gitclaw /profile
 @gitclaw /profiles
 @gitclaw /profile catalog
+@gitclaw /profile provenance
 @gitclaw /profile snapshot
 @gitclaw /profile manifest
 @gitclaw /profile export-plan
@@ -2148,6 +2149,7 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 - available and selected skills plus skill bundle count,
 - deterministic tool contract and active-output counts,
 - soul, skill, and tool validation rollups,
+- body-free profile git provenance metadata when explicitly requested,
 - body-free profile snapshot and portability manifest metadata when explicitly
   requested.
 
@@ -2162,6 +2164,7 @@ Local operators can inspect the same profile envelope without opening an issue:
 gitclaw profile catalog
 gitclaw profile show
 gitclaw profile verify
+gitclaw profile provenance
 gitclaw profile snapshot
 gitclaw profile manifest
 gitclaw profile export-plan
@@ -2182,6 +2185,18 @@ prompts, credentials, sessions, and backup payloads are excluded. Any catalog
 change must include live GitHub issue E2E plus a GitHub Models follow-up that
 selects `repo-reader`, exposes `gitclaw.search_files`, and recovers a
 repository-search fixture token.
+
+`@gitclaw /profile provenance`, `@gitclaw /profile history`, and
+`gitclaw profile provenance` map the repo-local `.gitclaw/` profile envelope
+to body-free git provenance. The report enumerates profile paths, categories,
+content hashes, tracked state, dirty state, last commit IDs/dates, and
+commit-subject hashes only. It intentionally excludes raw profile files, skill
+bodies, memory bodies, tool outputs, issue/comment bodies, prompts, git commit
+subjects, author identities, sessions, backup payloads, credentials, and
+secret values. Any change to this surface requires focused local tests, a live
+deterministic issue E2E, and a normal GitHub Models follow-up proving
+repo-reader selection, prompt-visible `gitclaw.search_files`, usage telemetry,
+and repository-search fixture recovery.
 
 `@gitclaw /profile snapshot`, `@gitclaw /profile fingerprint`, and
 `gitclaw profile snapshot` produce a composite body-free fingerprint for the
@@ -7728,6 +7743,14 @@ examples/workflows/gitclaw.yml
   inventory across identity, memory, skills, tools, model, proactive, channel,
   backup, and session gates. The same issue then receives a live GitHub Models
   follow-up that proves `repo-reader` selection, prompt-visible
+  `gitclaw.search_files`, usage telemetry, and repository-search fixture
+  recovery.
+- A `gh`-driven profile-provenance E2E harness verifies
+  `@gitclaw /profile provenance` produces a body-free git-history map for
+  repo-local `.gitclaw/` profile surfaces, including tracked/dirty state, last
+  commit IDs/dates, and commit-subject hashes without raw profile bodies,
+  commit subjects, or author identities. The same issue then receives a live
+  GitHub Models follow-up that proves `repo-reader` selection, prompt-visible
   `gitclaw.search_files`, usage telemetry, and repository-search fixture
   recovery.
 - A `gh`-driven profile-snapshot E2E harness verifies

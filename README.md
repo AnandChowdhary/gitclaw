@@ -41,6 +41,7 @@ go run ./cmd/gitclaw prompt compression
 go run ./cmd/gitclaw prompt risk
 go run ./cmd/gitclaw diffs risk
 go run ./cmd/gitclaw profile catalog
+go run ./cmd/gitclaw profile provenance
 go run ./cmd/gitclaw profile snapshot
 go run ./cmd/gitclaw profile manifest
 go run ./cmd/gitclaw profile risk
@@ -555,6 +556,7 @@ gitclaw workspace risk
 gitclaw workspace verify
 gitclaw profile catalog
 gitclaw profile show
+gitclaw profile provenance
 gitclaw profile snapshot
 gitclaw profile manifest
 gitclaw profile export-plan
@@ -576,6 +578,13 @@ agent profile. It maps profile commands and layers across identity, soul,
 memory, skills, tools, models, proactive jobs, channels, backups, and sessions
 while keeping raw profile files, issue/comment bodies, prompts, tool outputs,
 credentials, sessions, and backup payloads out of the report.
+
+`gitclaw profile provenance` maps the repo-local profile envelope to git
+history without printing raw profile bodies. It reports profile path hashes,
+tracked/dirty state, last commit IDs/dates, and commit-subject hashes only, so
+profile changes stay reviewable in git while author identities, commit
+subjects, issue/comment bodies, prompts, sessions, backups, credentials, and
+secret values stay out of issue-visible output.
 
 `gitclaw profile snapshot` is the composite body-free fingerprint for the
 profile envelope. It ties the profile manifest, soul snapshot, memory
@@ -774,6 +783,7 @@ scripts/e2e/github-secrets-risk-report.sh
 scripts/e2e/github-plugins-risk-report.sh
 scripts/e2e/github-plugins-mcp-report.sh
 scripts/e2e/github-profile-catalog-report.sh
+scripts/e2e/github-profile-provenance-report.sh
 scripts/e2e/github-profile-snapshot-report.sh
 scripts/e2e/github-profile-risk-report.sh
 scripts/e2e/github-channel-message.sh

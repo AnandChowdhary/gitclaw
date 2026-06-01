@@ -222,6 +222,8 @@ func runProfileCommand(args []string) error {
 		return runProfileCatalogCommand(args[1:])
 	case "show", "verify", "list":
 		return runProfileShowCommand(args[1:])
+	case "provenance", "history", "git", "git-history":
+		return runProfileProvenanceCommand(args[1:])
 	case "snapshot", "snapshots", "fingerprint", "fingerprints", "lock", "lockfile":
 		return runProfileSnapshotCommand(args[1:])
 	case "manifest", "portability", "portable", "export-plan", "export", "package-plan", "distribution":
@@ -229,7 +231,7 @@ func runProfileCommand(args []string) error {
 	case "risk", "risk-audit":
 		return runProfileRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw profile [catalog|show|verify|list|snapshot|manifest|export-plan|risk]")
+		return fmt.Errorf("usage: gitclaw profile [catalog|show|verify|list|provenance|snapshot|manifest|export-plan|risk]")
 	}
 }
 
@@ -278,6 +280,22 @@ func runProfileSnapshotCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderProfileSnapshotCLIReport(cfg, repoContext))
+	return nil
+}
+
+func runProfileProvenanceCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown profile provenance argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "profile provenance"}}, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderProfileProvenanceCLIReport(cfg, repoContext))
 	return nil
 }
 

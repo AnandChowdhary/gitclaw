@@ -177,7 +177,7 @@ for expected in \
   'profile_store: `.gitclaw/`' \
   'profile_scope: `repository`' \
   'profile_surface: `identity, user, soul, memory, skills, bundles, tools, models, proactive, hooks, channels, backups, sessions`' \
-  'catalog_entries: `7`' \
+  'catalog_entries: `8`' \
   'profile_layers: `13`' \
   'raw_bodies_included: `false`' \
   'raw_profile_payloads_included: `false`' \
@@ -192,6 +192,7 @@ for expected in \
   'profile_export_supported: `false`' \
   'llm_e2e_required_after_profile_catalog_change: `true`' \
   'command=`catalog` issue_intent=`@gitclaw /profile catalog` local_command=`gitclaw profile catalog` execution=`metadata-only` gate=`body-free-output` raw_bodies_included=`false` mutation_allowed=`false`' \
+  'command=`provenance` issue_intent=`@gitclaw /profile provenance` local_command=`gitclaw profile provenance`' \
   'command=`snapshot` issue_intent=`@gitclaw /profile snapshot` local_command=`gitclaw profile snapshot`' \
   'command=`manifest` issue_intent=`@gitclaw /profile manifest` local_command=`gitclaw profile manifest`' \
   'command=`risk` issue_intent=`@gitclaw /profile risk` local_command=`gitclaw profile risk`' \
@@ -220,10 +221,11 @@ for expected in \
   'scope: `local-cli`' \
   'profile_catalog_status: `ok`' \
   'catalog_strategy: `compact-repo-local-profile-discovery`' \
-  'catalog_entries: `7`' \
+  'catalog_entries: `8`' \
   'profile_layers: `13`' \
   'raw_bodies_included: `false`' \
   'command=`catalog` issue_intent=`@gitclaw /profile catalog` local_command=`gitclaw profile catalog`' \
+  'command=`provenance` issue_intent=`@gitclaw /profile provenance` local_command=`gitclaw profile provenance`' \
   'command=`snapshot` issue_intent=`@gitclaw /profile snapshot` local_command=`gitclaw profile snapshot`' \
   'command=`export-plan` issue_intent=`@gitclaw /profile export-plan` local_command=`gitclaw profile export-plan`' \
   'layer=`memory` store=`.gitclaw/MEMORY.md + .gitclaw/memory/*.md`' \

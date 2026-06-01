@@ -108,6 +108,15 @@ files. The agent should expose hashes, tracked state, approval/audit-only
 metadata, and risk codes, while keeping hook bodies, handler bodies, commit
 subjects, and author identities out of issue-visible output.
 
+2026-06-01 profile-provenance follow-up: OpenClaw's workspace model and
+Hermes' named profile model both treat agent state as a durable, inspectable
+surface rather than a hidden runtime cache. GitClaw's GitHub-native equivalent
+should make the repo-local `.gitclaw/` profile reviewable through git history:
+content hashes, tracked/dirty state, last commit IDs/dates, and
+commit-subject hashes are useful operator signals, while raw profile bodies,
+commit subjects, author identities, session payloads, backup payloads, and
+credentials should stay out of issue-visible output.
+
 2026-05-30 skill-risk follow-up: current OpenClaw plugin-hook docs make prompt,
 model, tool-call, and heartbeat extension points explicit, while Hermes'
 toolsets and MCP docs emphasize filtering exposed capabilities per task. Recent

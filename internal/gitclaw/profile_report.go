@@ -14,6 +14,9 @@ func RenderProfileReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isProfileCatalogRequest(ev, cfg) {
 		return RenderProfileCatalogReport(ev, cfg, repoContext)
 	}
+	if isProfileProvenanceRequest(ev, cfg) {
+		return renderProfileProvenanceReport(ev, cfg, repoContext, true)
+	}
 	if isProfileSnapshotRequest(ev, cfg) {
 		return renderProfileSnapshotReport(ev, cfg, repoContext, true)
 	}
