@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T21:30:23Z",
+  "generated_at": "2026-06-01T21:32:04Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 604,
     "title": "GitClaw skill source proposal channel notify E2E 20260601t212900z",
@@ -10,7 +10,8 @@
     "author": "AnandChowdhary",
     "author_association": "OWNER",
     "labels": [
-      "gitclaw"
+      "gitclaw",
+      "gitclaw:done"
     ]
   },
   "transcript": [
@@ -31,6 +32,24 @@
       "CommentID": 4596669697,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /skills sources propose e2e-source-notify-20260601t212900z --source github:example/e2e-source-notify-20260601t212900z/.gitclaw/SKILLS/e2e-source-notify-20260601t212900z/SKILL.md --id e2e-source-notify-20260601t212900z-review --notify-route e2e-slack-route\n\nRepeat the same source proposal notification.\nDo not include this hidden duplicate token: NOECHO_SKILLS_SOURCE_NOTIFY_DUPLICATE_20260601t212900z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4596674135,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Skill Source Proposal Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#604`\n- source_comment_id: `4596674135`\n- requested_skill_command: `/skills sources propose`\n- skill_source_proposal_status: `existing`\n- skill_source_proposal_issue: `#605`\n- skill_source_proposal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/605`\n- skill_source_proposal_issue_created: `false`\n- duplicate_suppressed: `true`\n- proposal_id_sha256_12: `92cfc203b36b`\n- source_name: `e2e-source-notify-20260601t212900z`\n- channel_notification_requested: `true`\n- channel_notification_routes: `1`\n- channel_notification_queued: `0`\n- channel_notification_duplicates: `1`\n- channel_notification_target_issues_created: `0`\n- channel_notification_routes_sha256_12: `ff6bd0e4b42c`\n- channel_notification_message_id_sha256_12: `6aec5bb3fa2f`\n- channel_notification_body_sha256_12: `6d2e66a57229`\n- channel_notification_body_bytes: `770`\n- channel_notification_body_lines: `14`\n- source_pin_path: `.gitclaw/skill-sources/e2e-source-notify-20260601t212900z.yaml`\n- proposed_skill_path: `.gitclaw/SKILLS/e2e-source-notify-20260601t212900z/SKILL.md`\n- source_kind: `github`\n- source_ref_sha256_12: `650af510a38d`\n- trust_level: `review-pending`\n- install_mode: `proposal-only`\n- expected_sha256_12: `none`\n- requires_approval: `true`\n- remote_fetch_allowed: `false`\n- existing_source_pin_matches: `0`\n- existing_source_pins: `1`\n- existing_skill_matches: `0`\n- available_skills: `1`\n- current_source_risk_status: `ok`\n- current_source_risk_findings: `0`\n- high_risk_findings: `0`\n- proposal_store: `github-issue-to-git-reviewed-skill-source-pin`\n- review_pr_required: `true`\n- proposal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- registry_contact_allowed: `false`\n- remote_fetch_runtime_allowed: `false`\n- installer_scripts_run: `false`\n- dependency_install_allowed: `false`\n- source_sha256_12: `fb4bcc327466`\n- source_bytes: `410`\n- source_lines: `4`\n- raw_source_ref_included: `false`\n- raw_source_body_included: `false`\n- raw_skill_body_included: `false`\n- raw_channel_routes_included: `false`\n- raw_channel_notification_body_included: `false`\n- provider_delivery_performed: `false`\n- source_pin_file_written: `false`\n- active_skill_write_performed: `false`\n- repository_mutation_performed: `false`\n- llm_e2e_required_after_skill_source_proposal_issue_change: `true`\n- issue_title_sha256_12: `6e708fed7122`\n\nGitClaw opened or reused a GitHub issue for reviewing a skill source pin. The action does not fetch registries, install skills, write `.gitclaw/skill-sources`, or call a model; continue on the proposal issue to use GitHub Models for review discussion.\n\n### Review Path\n- continue on proposal issue: `#605`\n- if accepted, draft `.gitclaw/skill-sources/e2e-source-notify-20260601t212900z.yaml` on a normal branch and review it as code\n- run `gitclaw skills sources verify`, `gitclaw skills sources risk`, and a live GitHub Models conversation E2E before promotion\n\n### Channel Notifications\n- destination=`01` target_issue=`#606` outbound_comment_id=`0` target_issue_created=`false` duplicate_suppressed=`true` route_sha256_12=`ff6bd0e4b42c` channel=`slack` thread_id_sha256_12=`57d8f3b4eae1` message_id_sha256_12=`6aec5bb3fa2f` body_sha256_12=`6d2e66a57229`\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4596679779,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -41,6 +60,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T21:29:58Z",
       "updated_at": "2026-06-01T21:29:58Z"
+    },
+    {
+      "id": 4596674135,
+      "body": "@gitclaw /skills sources propose e2e-source-notify-20260601t212900z --source github:example/e2e-source-notify-20260601t212900z/.gitclaw/SKILLS/e2e-source-notify-20260601t212900z/SKILL.md --id e2e-source-notify-20260601t212900z-review --notify-route e2e-slack-route\n\nRepeat the same source proposal notification.\nDo not include this hidden duplicate token: NOECHO_SKILLS_SOURCE_NOTIFY_DUPLICATE_20260601t212900z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T21:30:41Z",
+      "updated_at": "2026-06-01T21:30:41Z"
+    },
+    {
+      "id": 4596679779,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26783261542\" event_id=\"comment-4596674135\" model=\"gitclaw/skills\" idempotency_key=\"e03cdfccf5c6aa7ce8a214364c964843\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26783261542\" --\u003e\n## GitClaw Skill Source Proposal Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#604`\n- source_comment_id: `4596674135`\n- requested_skill_command: `/skills sources propose`\n- skill_source_proposal_status: `existing`\n- skill_source_proposal_issue: `#605`\n- skill_source_proposal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/605`\n- skill_source_proposal_issue_created: `false`\n- duplicate_suppressed: `true`\n- proposal_id_sha256_12: `92cfc203b36b`\n- source_name: `e2e-source-notify-20260601t212900z`\n- channel_notification_requested: `true`\n- channel_notification_routes: `1`\n- channel_notification_queued: `0`\n- channel_notification_duplicates: `1`\n- channel_notification_target_issues_created: `0`\n- channel_notification_routes_sha256_12: `ff6bd0e4b42c`\n- channel_notification_message_id_sha256_12: `6aec5bb3fa2f`\n- channel_notification_body_sha256_12: `6d2e66a57229`\n- channel_notification_body_bytes: `770`\n- channel_notification_body_lines: `14`\n- source_pin_path: `.gitclaw/skill-sources/e2e-source-notify-20260601t212900z.yaml`\n- proposed_skill_path: `.gitclaw/SKILLS/e2e-source-notify-20260601t212900z/SKILL.md`\n- source_kind: `github`\n- source_ref_sha256_12: `650af510a38d`\n- trust_level: `review-pending`\n- install_mode: `proposal-only`\n- expected_sha256_12: `none`\n- requires_approval: `true`\n- remote_fetch_allowed: `false`\n- existing_source_pin_matches: `0`\n- existing_source_pins: `1`\n- existing_skill_matches: `0`\n- available_skills: `1`\n- current_source_risk_status: `ok`\n- current_source_risk_findings: `0`\n- high_risk_findings: `0`\n- proposal_store: `github-issue-to-git-reviewed-skill-source-pin`\n- review_pr_required: `true`\n- proposal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- registry_contact_allowed: `false`\n- remote_fetch_runtime_allowed: `false`\n- installer_scripts_run: `false`\n- dependency_install_allowed: `false`\n- source_sha256_12: `fb4bcc327466`\n- source_bytes: `410`\n- source_lines: `4`\n- raw_source_ref_included: `false`\n- raw_source_body_included: `false`\n- raw_skill_body_included: `false`\n- raw_channel_routes_included: `false`\n- raw_channel_notification_body_included: `false`\n- provider_delivery_performed: `false`\n- source_pin_file_written: `false`\n- active_skill_write_performed: `false`\n- repository_mutation_performed: `false`\n- llm_e2e_required_after_skill_source_proposal_issue_change: `true`\n- issue_title_sha256_12: `6e708fed7122`\n\nGitClaw opened or reused a GitHub issue for reviewing a skill source pin. The action does not fetch registries, install skills, write `.gitclaw/skill-sources`, or call a model; continue on the proposal issue to use GitHub Models for review discussion.\n\n### Review Path\n- continue on proposal issue: `#605`\n- if accepted, draft `.gitclaw/skill-sources/e2e-source-notify-20260601t212900z.yaml` on a normal branch and review it as code\n- run `gitclaw skills sources verify`, `gitclaw skills sources risk`, and a live GitHub Models conversation E2E before promotion\n\n### Channel Notifications\n- destination=`01` target_issue=`#606` outbound_comment_id=`0` target_issue_created=`false` duplicate_suppressed=`true` route_sha256_12=`ff6bd0e4b42c` channel=`slack` thread_id_sha256_12=`57d8f3b4eae1` message_id_sha256_12=`6aec5bb3fa2f` body_sha256_12=`6d2e66a57229`\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T21:31:34Z",
+      "updated_at": "2026-06-01T21:31:34Z"
     }
   ]
 }
