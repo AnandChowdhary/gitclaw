@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T23:44:39Z",
+  "generated_at": "2026-06-01T23:46:03Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 624,
     "title": "GitClaw telegram thread channel-skill-rehearsal-e2e-20260601t234255z",
@@ -42,6 +42,24 @@
       "CommentID": 4597383399,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels rehearse-skill repo-reader --id channel-skill-rehearsal-20260601t234255z --message-id skill-rehearsal-ingest-20260601t234255z --notify-message-id skill-rehearsal-notify-20260601t234255z\n\nPlease rehearse a channel-origin repo-reader skill request.\nDo not include this hidden source token: NOECHO_CHANNEL_SKILL_REHEARSAL_SOURCE_20260601t234255z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4597386339,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Skill Rehearsal Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#624`\n- source_comment_id: `4597386339`\n- source_kind: `channel_comment`\n- requested_channel_command: `/channels rehearse-skill`\n- channel_skill_rehearsal_status: `created`\n- rehearsal_issue: `#625`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/625`\n- rehearsal_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#624`\n- notification_comment_id: `4597390116`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- channel: `telegram`\n- thread_id_sha256_12: `11b794d91906`\n- source_message_id_sha256_12: `3702d07cfd39`\n- notify_message_id_sha256_12: `dc7552b2101d`\n- notify_message_id_auto: `false`\n- rehearsal_id_sha256_12: `d7f12303d48f`\n- rehearsal_id_auto: `false`\n- requested_skill_sha256_12: `ba915a2978d8`\n- requested_skill_terms: `1`\n- requested_skill: `repo-reader`\n- matched_skills: `1`\n- available_skills: `1`\n- enabled_matches: `1`\n- disabled_matches: `0`\n- allowlist_blocked_matches: `0`\n- missing_env: `0`\n- missing_bins: `0`\n- selected_matches_this_turn: `1`\n- skill_validation_status: `ok`\n- skill_validation_errors: `0`\n- skill_validation_warnings: `0`\n- notification_body_sha256_12: `2bbf30e488d4`\n- notification_body_bytes: `358`\n- notification_body_lines: `8`\n- target_from_current_channel_issue: `true`\n- rehearsal_mode: `github-issue-conversation`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- skill_install_allowed: `false`\n- skill_update_allowed: `false`\n- active_skill_write_performed: `false`\n- raw_rehearsal_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_skill_body_included: `false`\n- provider_delivery_performed: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `b6d50f8ee85b`\n- source_bytes: `361`\n- source_lines: `4`\n- llm_e2e_required_after_channel_skill_rehearsal_change: `true`\n- issue_title_sha256_12: `86502a1c2f43`\n\nGitClaw opened or reused a GitHub issue for trying a reviewed skill from a mirrored channel thread, then queued a provider-facing rehearsal link back to that thread. This action does not call a model, install skills, edit `SKILL.md`, copy raw channel bodies, or mutate the repository.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#625`\n- ask a normal `@gitclaw` follow-up on the rehearsal issue to exercise prompt-visible skill behavior\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4597390167,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -60,6 +78,30 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T23:44:14Z",
       "updated_at": "2026-06-01T23:44:14Z"
+    },
+    {
+      "id": 4597386339,
+      "body": "@gitclaw /channels rehearse-skill repo-reader --id channel-skill-rehearsal-20260601t234255z --message-id skill-rehearsal-ingest-20260601t234255z --notify-message-id skill-rehearsal-notify-20260601t234255z\n\nPlease rehearse a channel-origin repo-reader skill request.\nDo not include this hidden source token: NOECHO_CHANNEL_SKILL_REHEARSAL_SOURCE_20260601t234255z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T23:44:51Z",
+      "updated_at": "2026-06-01T23:44:51Z"
+    },
+    {
+      "id": 4597390116,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-skill-rehearsal-e2e-20260601t234255z\" message_id=\"skill-rehearsal-notify-20260601t234255z\" author=\"gitclaw\" --\u003e\nGitClaw channel skill rehearsal\n\nRehearsal issue: #625\nURL: https://github.com/AnandChowdhary/gitclaw/issues/625\nRequested skill: repo-reader\nMatched skills: 1\nEnabled matches: 1\n\nContinue in the linked GitHub issue to rehearse this skill with a normal model-backed conversation. This notification did not execute a model, install a skill, edit `SKILL.md`, or mutate the repository.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T23:45:39Z",
+      "updated_at": "2026-06-01T23:45:39Z"
+    },
+    {
+      "id": 4597390167,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26789031006\" event_id=\"comment-4597386339\" model=\"gitclaw/channels\" idempotency_key=\"654baa27a4ef282bf9349f63a7573b37\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26789031006\" --\u003e\n## GitClaw Channel Skill Rehearsal Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#624`\n- source_comment_id: `4597386339`\n- source_kind: `channel_comment`\n- requested_channel_command: `/channels rehearse-skill`\n- channel_skill_rehearsal_status: `created`\n- rehearsal_issue: `#625`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/625`\n- rehearsal_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#624`\n- notification_comment_id: `4597390116`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- channel: `telegram`\n- thread_id_sha256_12: `11b794d91906`\n- source_message_id_sha256_12: `3702d07cfd39`\n- notify_message_id_sha256_12: `dc7552b2101d`\n- notify_message_id_auto: `false`\n- rehearsal_id_sha256_12: `d7f12303d48f`\n- rehearsal_id_auto: `false`\n- requested_skill_sha256_12: `ba915a2978d8`\n- requested_skill_terms: `1`\n- requested_skill: `repo-reader`\n- matched_skills: `1`\n- available_skills: `1`\n- enabled_matches: `1`\n- disabled_matches: `0`\n- allowlist_blocked_matches: `0`\n- missing_env: `0`\n- missing_bins: `0`\n- selected_matches_this_turn: `1`\n- skill_validation_status: `ok`\n- skill_validation_errors: `0`\n- skill_validation_warnings: `0`\n- notification_body_sha256_12: `2bbf30e488d4`\n- notification_body_bytes: `358`\n- notification_body_lines: `8`\n- target_from_current_channel_issue: `true`\n- rehearsal_mode: `github-issue-conversation`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- skill_install_allowed: `false`\n- skill_update_allowed: `false`\n- active_skill_write_performed: `false`\n- raw_rehearsal_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_skill_body_included: `false`\n- provider_delivery_performed: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `b6d50f8ee85b`\n- source_bytes: `361`\n- source_lines: `4`\n- llm_e2e_required_after_channel_skill_rehearsal_change: `true`\n- issue_title_sha256_12: `86502a1c2f43`\n\nGitClaw opened or reused a GitHub issue for trying a reviewed skill from a mirrored channel thread, then queued a provider-facing rehearsal link back to that thread. This action does not call a model, install skills, edit `SKILL.md`, copy raw channel bodies, or mutate the repository.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#625`\n- ask a normal `@gitclaw` follow-up on the rehearsal issue to exercise prompt-visible skill behavior\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T23:45:40Z",
+      "updated_at": "2026-06-01T23:45:40Z"
     }
   ]
 }
