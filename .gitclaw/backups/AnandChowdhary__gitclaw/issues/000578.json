@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T18:21:53Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 578,
+    "title": "GitClaw channel clip: Save channel clip 20260601t181505z",
+    "body": "\u003c!-- gitclaw:channel-clip clip_id=\"channel-clip-20260601t181505z\" channel=\"telegram\" thread_id_sha256_12=\"71a8a76152cf\" source_message_id_sha256_12=\"b77e492f34b7\" source_issue=\"577\" source_comment_id=\"4595294315\" --\u003e\nGitClaw channel clip.\n\n- clip_id: channel-clip-20260601t181505z\n- source_channel: telegram\n- source_issue: #577\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/577\n- source_comment_id: 4595294315\n- thread_id_sha256_12: 71a8a76152cf\n- source_message_id_sha256_12: b77e492f34b7\n- clip_mode: github-issue-clip\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Clip\n\nSave channel clip 20260601t181505z\n\n## Notes\n\nVisible clip note token: VISIBLE_CHANNEL_CLIP_NOTES_20260601t181505z\n\nUse this issue as the durable GitHub home for the saved channel context.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel clip: Save channel clip 20260601t181505z\n\n\u003c!-- gitclaw:channel-clip clip_id=\"channel-clip-20260601t181505z\" channel=\"telegram\" thread_id_sha256_12=\"71a8a76152cf\" source_message_id_sha256_12=\"b77e492f34b7\" source_issue=\"577\" source_comment_id=\"4595294315\" --\u003e\nGitClaw channel clip.\n\n- clip_id: channel-clip-20260601t181505z\n- source_channel: telegram\n- source_issue: #577\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/577\n- source_comment_id: 4595294315\n- thread_id_sha256_12: 71a8a76152cf\n- source_message_id_sha256_12: b77e492f34b7\n- clip_mode: github-issue-clip\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Clip\n\nSave channel clip 20260601t181505z\n\n## Notes\n\nVisible clip note token: VISIBLE_CHANNEL_CLIP_NOTES_20260601t181505z\n\nUse this issue as the durable GitHub home for the saved channel context.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created clip and use the repo-reader skill.\n\nSearch the repository for `channel clip unique search fixture phrase`.\nThe matching repository search result line has the form `channel clip unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_CLIP_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include clip ids, message ids, thread ids, account hashes, issue numbers, clip titles, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_CLIP_FOLLOWUP_20260601t181505z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4595319053,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_CLIP_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4595325894,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4595319053,
+      "body": "@gitclaw Continue this channel-created clip and use the repo-reader skill.\n\nSearch the repository for `channel clip unique search fixture phrase`.\nThe matching repository search result line has the form `channel clip unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_CLIP_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include clip ids, message ids, thread ids, account hashes, issue numbers, clip titles, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_CLIP_FOLLOWUP_20260601t181505z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T18:20:34Z",
+      "updated_at": "2026-06-01T18:20:34Z"
+    },
+    {
+      "id": 4595325894,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26773530605\" event_id=\"comment-4595319053\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"c7b9e46826955d9d1dc5edefe45a729c\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26773530605\" prompt_context_sha256_12=\"9066d02ddc6e\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10604\" usage_completion_tokens=\"11\" usage_total_tokens=\"10615\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_CLIP_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T18:21:28Z",
+      "updated_at": "2026-06-01T18:21:28Z"
+    }
+  ]
+}
