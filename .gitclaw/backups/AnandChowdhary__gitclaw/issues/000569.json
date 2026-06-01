@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T16:51:51Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 569,
+    "title": "GitClaw session handoff E2E 20260601T165018Z",
+    "body": "@gitclaw Use repo-reader skill.\n\nSearch the repository for `session handoff source unique search fixture phrase`.\nReply with the exact GITCLAW_SESSION_HANDOFF_SOURCE token from the matching repository search result line.\nDo not include this hidden issue token: NOECHO_SESSION_HANDOFF_SOURCE_20260601T165018Z\nKeep the answer under 30 words.",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw session handoff E2E 20260601T165018Z\n\n@gitclaw Use repo-reader skill.\n\nSearch the repository for `session handoff source unique search fixture phrase`.\nReply with the exact GITCLAW_SESSION_HANDOFF_SOURCE token from the matching repository search result line.\nDo not include this hidden issue token: NOECHO_SESSION_HANDOFF_SOURCE_20260601T165018Z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_SESSION_HANDOFF_SOURCE_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4594675983,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4594675983,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26768946007\" event_id=\"issue-569\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"f3609a57fff17225ac0674914500121c\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26768946007\" prompt_context_sha256_12=\"e0b0c90f71aa\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10438\" usage_completion_tokens=\"12\" usage_total_tokens=\"10450\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_SESSION_HANDOFF_SOURCE_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T16:51:21Z",
+      "updated_at": "2026-06-01T16:51:21Z"
+    }
+  ]
+}
