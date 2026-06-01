@@ -143,7 +143,7 @@ report.
 
 Skills and bundles:
 
-```bash
+```text
 gitclaw skills verify
 gitclaw skills risk
 gitclaw skills validate
@@ -165,6 +165,7 @@ gitclaw skills sources search <query>
 gitclaw skills runtime
 gitclaw skills proposals [risk]
 gitclaw skills proposal-plan <name>
+@gitclaw /skills propose <name>
 gitclaw skills install-plan <target>
 gitclaw skills upgrade-plan <target>
 gitclaw skills info <name>
@@ -179,15 +180,20 @@ gitclaw bundles search <query>
 
 `gitclaw skills install-plan <target>` and `gitclaw skills upgrade-plan
 <target>` are dry-run, review-first planners for repo-local skill changes.
+Trusted issue threads can start the same review queue with
+`@gitclaw /skills propose <name>`: GitClaw opens or reuses a GitHub issue for
+the proposal, records source/request hashes and review paths, and keeps active
+`SKILL.md` files untouched until a human-reviewed branch converts the proposal
+into repository files.
+The install/upgrade planners report target/match hashes and no-fetch,
+no-install, no-mutation gates, and their live harnesses prove real GitHub
+Models repo-reader follow-ups after the deterministic report.
 
 `gitclaw skills snapshot` is the body-free fingerprint for repo-local skills,
 prompt-visible selected skills, skill bundles, and reviewed source pins. It
 prints short hashes, counts, validation/risk/source gates, and one composite
 snapshot hash without exposing raw skill bodies, descriptions, source refs, or
 bundle instructions.
-They report target/match hashes and no-fetch, no-install, no-mutation gates,
-and their live harnesses prove real GitHub Models repo-reader follow-ups after
-the deterministic report.
 
 `gitclaw skills catalog` is a compact eligibility index inspired by the
 OpenClaw/Hermes `skills_list`/`skill_view` split. It reports prompt eligibility,
@@ -814,6 +820,7 @@ scripts/e2e/github-model-usage-report.sh
 scripts/e2e/github-model-cost-report.sh
 scripts/e2e/github-model-risk-report.sh
 scripts/e2e/github-skills-proposal-plan-report.sh
+scripts/e2e/github-skills-propose-issue.sh
 scripts/e2e/github-skills-proposals-report.sh
 scripts/e2e/github-skills-refresh-plan-report.sh
 scripts/e2e/github-skills-snapshot-report.sh
@@ -973,6 +980,11 @@ hashes, then requires a real GitHub Models repo-reader/search follow-up.
 The skill-source-update-plan harness checks the no-fetch/manual-review update
 planner for source pins, then requires a real GitHub Models repo-reader/search
 follow-up.
+The skills-propose harness covers the action side of Skill Workshop: a trusted
+`@gitclaw /skills propose <name>` turn opens or reuses a GitHub proposal issue,
+keeps source text out of receipts and proposal issue bodies, suppresses
+duplicate proposal requests, and then continues with a real GitHub Models
+repo-reader/search follow-up.
 The channel-ingest harness proves the generic no-server bridge end to end:
 workflow-dispatch mirroring, duplicate provider-message suppression, and a
 normal model/tool follow-up on the canonical channel issue.

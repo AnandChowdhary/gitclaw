@@ -2014,6 +2014,111 @@ SKILL_PROPOSAL_PLAN_HANDLER_SECRET
 	}
 }
 
+func TestHandleSkillsProposeCommandCreatesProposalIssueWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Read repository files.
+---
+
+Use repo files.
+`)
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 142,
+			"title": "@gitclaw /skills propose weekly-review",
+			"body": "Capture the reusable weekly review workflow. Hidden proposal token: SKILL_PROPOSE_ACTION_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{142: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for skills propose action", llm.Calls)
+	}
+	if len(github.Issues) != 1 {
+		t.Fatalf("created proposal issues = %d, want 1: %#v", len(github.Issues), github.Issues)
+	}
+	proposalIssue := github.Issues[0]
+	if proposalIssue.Title != "GitClaw skill proposal: weekly-review" || !strings.Contains(proposalIssue.Body, skillProposalIssueMarker) {
+		t.Fatalf("unexpected proposal issue: %#v", proposalIssue)
+	}
+	for _, want := range []string{"proposal_name: weekly-review", "planned_action: propose-create", "proposal_path: .gitclaw/skill-proposals/weekly-review/PROPOSAL.md", "destination_path: .gitclaw/SKILLS/weekly-review/SKILL.md", "source_issue: #142", "raw_source_body_included: false", "active_skill_write_performed: false"} {
+		if !strings.Contains(proposalIssue.Body, want) {
+			t.Fatalf("proposal issue body missing %q:\n%s", want, proposalIssue.Body)
+		}
+	}
+	if strings.Contains(proposalIssue.Body, "SKILL_PROPOSE_ACTION_SECRET") || strings.Contains(proposalIssue.Body, "Capture the reusable weekly review workflow") {
+		t.Fatalf("proposal issue body leaked source request:\n%s", proposalIssue.Body)
+	}
+	if len(github.CommentsByIssue[142]) != 1 {
+		t.Fatalf("source comments = %d, want proposal receipt: %#v", len(github.CommentsByIssue[142]), github.CommentsByIssue[142])
+	}
+	receipt := github.CommentsByIssue[142][0].Body
+	for _, want := range []string{"GitClaw Skill Proposal Issue Action", "Generated without a model call", `model="gitclaw/skills"`, "proposal_issue_status: `created`", "proposal_issue_created: `true`", "duplicate_suppressed: `false`", "planned_proposal_action: `propose-create`", "safe_name_candidate: `weekly-review`", "proposal_store: `github-issue-to-git-reviewed-proposal-file`", "raw_source_body_included: `false`", "proposal_file_written: `false`", "active_skill_write_performed: `false`", "llm_e2e_required_after_skill_proposal_issue_change: `true`"} {
+		if !strings.Contains(receipt, want) {
+			t.Fatalf("skills propose receipt missing %q:\n%s", want, receipt)
+		}
+	}
+	for _, leaked := range []string{"SKILL_PROPOSE_ACTION_SECRET", "Capture the reusable weekly review workflow"} {
+		if strings.Contains(receipt, leaked) {
+			t.Fatalf("skills propose receipt leaked %q:\n%s", leaked, receipt)
+		}
+	}
+
+	commentEv, err := ParseEvent("issue_comment", []byte(`{
+		"action": "created",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 142,
+			"title": "@gitclaw /skills propose weekly-review",
+			"body": "Capture the reusable weekly review workflow.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"comment": {
+			"id": 88,
+			"body": "@gitclaw /skills propose weekly-review\nDuplicate request hidden token: SKILL_PROPOSE_DUPLICATE_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"}
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent comment returned error: %v", err)
+	}
+	if err := Handle(context.Background(), commentEv, cfg, github, llm); err != nil {
+		t.Fatalf("second Handle returned error: %v", err)
+	}
+	if len(github.Issues) != 1 {
+		t.Fatalf("duplicate proposal created another issue: %#v", github.Issues)
+	}
+	duplicateReceipt := github.CommentsByIssue[142][1].Body
+	for _, want := range []string{"proposal_issue_status: `existing`", "proposal_issue_created: `false`", "duplicate_suppressed: `true`"} {
+		if !strings.Contains(duplicateReceipt, want) {
+			t.Fatalf("duplicate skills propose receipt missing %q:\n%s", want, duplicateReceipt)
+		}
+	}
+	if strings.Contains(duplicateReceipt, "SKILL_PROPOSE_DUPLICATE_SECRET") {
+		t.Fatalf("duplicate skills propose receipt leaked comment body:\n%s", duplicateReceipt)
+	}
+}
+
 func TestHandleSkillsProposalsCommandPostsReportWithoutLLM(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/skill-proposals/repo-reader/PROPOSAL.md", `---

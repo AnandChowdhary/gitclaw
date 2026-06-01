@@ -2397,6 +2397,18 @@ write proposal files, update active skills, auto-apply, or self-improve. The
 E2E harness must pair the deterministic body-free plan with a real GitHub
 Models repo-reader/search follow-up.
 
+2026-06-01 skill-proposal-issue follow-up: the same Skills Workshop pressure
+should not stop at another report. GitClaw can make a small, useful
+OpenClaw/Hermes-style lifecycle action by turning `@gitclaw /skills propose
+<name>` into a GitHub-native review queue entry: open or reuse a marked
+proposal issue, publish source hashes and review paths, suppress duplicates,
+and avoid copying raw source text. This keeps the durable workflow in GitHub
+issues before any repository files exist, while preserving the hard GitClaw
+boundary that active skill writes, proposal-file writes, model calls,
+installer runs, and self-improvement require reviewed git changes. The live
+E2E must prove both the deterministic action and a real GitHub Models
+repo-reader/search follow-up.
+
 2026-05-31 skill-proposals-store follow-up: OpenClaw's Skill Workshop exposes
 status, pending, quarantine, inspect, apply, and reject actions over gateway
 state, while Hermes keeps skills mutable in a profile home and supports hub

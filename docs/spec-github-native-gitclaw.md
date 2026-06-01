@@ -1684,6 +1684,7 @@ gitclaw skills sources search <query>
 gitclaw skills runtime
 gitclaw skills proposals [risk]
 gitclaw skills proposal-plan <name>
+@gitclaw /skills propose <name>
 gitclaw skills install-plan <target>
 gitclaw skills upgrade-plan <target>
 gitclaw bundles catalog
@@ -1737,6 +1738,7 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills proposals
 @gitclaw /skills proposals risk
 @gitclaw /skills proposal-plan repo-reader
+@gitclaw /skills propose repo-reader
 @gitclaw /skills install-plan repo-reader
 @gitclaw /skills upgrade-plan repo-reader
 @gitclaw /bundles
@@ -2076,6 +2078,21 @@ safe paths, and finding codes; raw proposal text, issue/comment bodies, and
 full skill bodies stay out of the issue-visible report. Accepted proposal work
 must land through normal reviewed git changes and then pass skill validation,
 skill risk checks, and a live GitHub Models conversation E2E.
+
+When called as `@gitclaw /skills propose <name>`, GitClaw performs the
+issue-native proposal action. It opens or reuses a dedicated GitHub issue
+marked with `gitclaw:skill-proposal-issue`, records the safe proposal name,
+source request hash, source issue/comment identity, proposal path, destination
+skill path, and create/update intent, then posts a body-free receipt in the
+source conversation. Duplicate open proposal issues are suppressed by marker
+and safe name.
+
+The proposal issue action does not write `.gitclaw/skill-proposals`, does not
+write `.gitclaw/SKILLS`, does not copy raw issue/comment text into the
+proposal issue or receipt, and does not call a model. It is a GitHub-native
+review queue entry: after review, a maintainer can draft the proposal file on
+a normal branch, run validation/risk checks, and promote it to an active skill
+only through a reviewed git change.
 
 When called as `@gitclaw /skills proposals`, `@gitclaw /skills proposals
 risk`, or `gitclaw skills proposals [risk]`, GitClaw inventories the reviewed
@@ -7968,6 +7985,12 @@ examples/workflows/gitclaw.yml
   improvement, no proposal/skill writes, and no raw body leakage. It then runs
   a live GitHub Models follow-up conversation that proves repo-local skill
   selection and prompt-visible repository search tool usage.
+- A `gh`-driven skills-propose E2E harness verifies
+  `@gitclaw /skills propose <name>` opens a body-free GitHub proposal issue,
+  posts a source receipt, suppresses duplicate open proposal issues, avoids
+  raw source/request leakage, and still runs a live GitHub Models follow-up
+  proving repo-local skill selection, prompt-visible repository search tool
+  usage, and usage telemetry after the deterministic issue action.
 - A `gh`-driven skills-proposals E2E harness verifies
   `@gitclaw /skills proposals risk` inventories the repo-local proposal store,
   reports lifecycle counts, risk gates, no auto-apply support, no proposal or
