@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T04:14:29Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 482,
+    "title": "@gitclaw /skills sources search repo-local manual-review",
+    "body": "@gitclaw /skills sources search repo-local manual-review\n\nLive skill source search E2E 20260601T041316Z. Keep the source-pin search report body-free.\nDo not include this hidden skill source search token: NOECHO_SKILL_SOURCE_SEARCH_20260601T041316Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /skills sources search repo-local manual-review\n\n@gitclaw /skills sources search repo-local manual-review\n\nLive skill source search E2E 20260601T041316Z. Keep the source-pin search report body-free.\nDo not include this hidden skill source search token: NOECHO_SKILL_SOURCE_SEARCH_20260601T041316Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Skill Source Search Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#482`\n- skill_source_search_status: `ok`\n- query_sha256_12: `1c9df70dd5ba`\n- query_terms: `2`\n- max_results: `10`\n- available_source_pins: `1`\n- matched_source_pins: `1`\n- results_returned: `1`\n- raw_query_included: `false`\n- raw_source_bodies_included: `false`\n- raw_source_refs_included: `false`\n- raw_skill_bodies_included: `false`\n- llm_e2e_required_after_skill_source_search_change: `true`\n- issue_title_sha256_12: `d7ce5cf64973`\n\nThis report searches reviewed skill source-pin metadata only: source name, path, skill path, source kind, trust level, install mode, expected/current hashes, and risk codes. Raw search queries, raw source refs, source YAML, skill bodies, issue bodies, comments, prompts, provider payloads, and secret values are not included.\n\n### Matches\n- source_name=`repo-reader` path=`.gitclaw/skill-sources/repo-reader.yaml` skill_path=`.gitclaw/SKILLS/repo-reader/SKILL.md` match_fields=`install_mode, source_kind, trust_level` score=`71` skill_matched=`true` source_kind=`repo-local` source_ref_present=`true` source_ref_sha256_12=`42df45103ee5` trust_level=`repo-local` install_mode=`manual-review` requires_approval=`true` remote_fetch_allowed=`false` hash_pinned=`true` expected_sha256_12=`2f9e68a57bd6` current_skill_sha256_12=`2f9e68a57bd6` hash_matched=`true` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4589484651,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4589484651,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26734762599\" event_id=\"issue-482\" model=\"gitclaw/skills\" idempotency_key=\"cd0781141e5e31b86fc809a7c4da805c\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26734762599\" --\u003e\n## GitClaw Skill Source Search Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#482`\n- skill_source_search_status: `ok`\n- query_sha256_12: `1c9df70dd5ba`\n- query_terms: `2`\n- max_results: `10`\n- available_source_pins: `1`\n- matched_source_pins: `1`\n- results_returned: `1`\n- raw_query_included: `false`\n- raw_source_bodies_included: `false`\n- raw_source_refs_included: `false`\n- raw_skill_bodies_included: `false`\n- llm_e2e_required_after_skill_source_search_change: `true`\n- issue_title_sha256_12: `d7ce5cf64973`\n\nThis report searches reviewed skill source-pin metadata only: source name, path, skill path, source kind, trust level, install mode, expected/current hashes, and risk codes. Raw search queries, raw source refs, source YAML, skill bodies, issue bodies, comments, prompts, provider payloads, and secret values are not included.\n\n### Matches\n- source_name=`repo-reader` path=`.gitclaw/skill-sources/repo-reader.yaml` skill_path=`.gitclaw/SKILLS/repo-reader/SKILL.md` match_fields=`install_mode, source_kind, trust_level` score=`71` skill_matched=`true` source_kind=`repo-local` source_ref_present=`true` source_ref_sha256_12=`42df45103ee5` trust_level=`repo-local` install_mode=`manual-review` requires_approval=`true` remote_fetch_allowed=`false` hash_pinned=`true` expected_sha256_12=`2f9e68a57bd6` current_skill_sha256_12=`2f9e68a57bd6` hash_matched=`true` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T04:14:05Z",
+      "updated_at": "2026-06-01T04:14:05Z"
+    }
+  ]
+}
