@@ -58,6 +58,9 @@ func RenderSessionReport(ev Event, cfg Config, comments []Comment, transcript []
 	if requestedSessionProvenance(ev, cfg) {
 		return RenderSessionProvenanceReport(BuildSessionProvenanceReport("issue-thread", "", ev, comments, transcript))
 	}
+	if requestedSessionTools(ev, cfg) {
+		return RenderSessionToolsReport(BuildSessionToolsReport("issue-thread", "", ev, comments, transcript))
+	}
 	if requestedSessionStatus(ev, cfg) {
 		return RenderSessionStatusReport(ev, cfg, comments, transcript)
 	}
@@ -252,6 +255,11 @@ func requestedSessionCatalog(ev Event, cfg Config) bool {
 func requestedSessionProvenance(ev Event, cfg Config) bool {
 	fields := activeSlashCommandFields(ev, cfg)
 	return len(fields) >= 2 && fields[0] == "/session" && (strings.EqualFold(fields[1], "provenance") || strings.EqualFold(fields[1], "prompt-provenance") || strings.EqualFold(fields[1], "evidence") || strings.EqualFold(fields[1], "lineage"))
+}
+
+func requestedSessionTools(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 2 && fields[0] == "/session" && (strings.EqualFold(fields[1], "tools") || strings.EqualFold(fields[1], "tool") || strings.EqualFold(fields[1], "tool-ledger") || strings.EqualFold(fields[1], "tool-use") || strings.EqualFold(fields[1], "tool-usage"))
 }
 
 func requestedSessionRisk(ev Event, cfg Config) bool {

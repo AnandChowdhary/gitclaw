@@ -264,6 +264,7 @@ gitclaw backup retention-plan
 gitclaw session catalog
 gitclaw session list --backup <issue.json>
 gitclaw session provenance --backup <issue.json>
+gitclaw session tools --backup <issue.json>
 gitclaw session status --backup <issue.json>
 gitclaw session stats --backup <issue.json>
 gitclaw session coverage --backup <issue.json>
@@ -290,6 +291,12 @@ provenance audit for a backed-up issue session. It reports assistant-turn
 marker counts, prompt-context hashes, prompt-visible skills/tools, model names,
 and token usage telemetry without printing issue bodies, comments, assistant
 replies, prompts, search queries, or tool outputs.
+
+`gitclaw session tools --backup <issue.json>` is the named tool-use ledger for
+a backed-up issue session. It aggregates prompt-visible tools across
+assistant-turn markers, model-backed tool turns, prompt-context hash counts, and
+token usage telemetry without printing issue bodies, comments, assistant
+replies, prompts, tool inputs, search queries, or tool outputs.
 
 `gitclaw backup provenance` is the body-free git-history audit for fetched
 `gitclaw-backups` branches. It verifies the backup tree, then reports whether
@@ -319,6 +326,11 @@ The live session-provenance harness starts with a normal GitHub Models
 repo-reader/search turn, then verifies `@gitclaw /session provenance` reports
 the model marker, prompt-context hash, selected skill, prompt-visible tools, and
 usage telemetry without leaking hidden issue or comment text.
+
+The live session-tools harness follows the same model-first shape, then verifies
+`@gitclaw /session tools` reports the session-level tool ledger, model-backed
+tool turn, prompt-visible tools, and usage telemetry without leaking hidden
+issue or comment text.
 
 `gitclaw backup restore-plan` is a dry-run recovery plan for a fetched backup
 payload. Its live harness pairs deterministic restore metadata checks with a
@@ -595,6 +607,7 @@ scripts/e2e/github-proactive-info-report.sh
 scripts/e2e/github-proactive-risk-report.sh
 scripts/e2e/github-session-catalog-report.sh
 scripts/e2e/github-session-provenance.sh
+scripts/e2e/github-session-tools.sh
 scripts/e2e/github-session-risk-report.sh
 scripts/e2e/github-session-status-report.sh
 scripts/e2e/github-session-stats-report.sh

@@ -821,7 +821,7 @@ GitHub issue/comment event
 - Subcommands: `preflight`, `handle`, `backup`, `backup coverage`,
   `backup search`, `backup provenance`, `backup timeline`, `backup info`,
   `backup freshness`, `backup continuity`, `backup retention-plan`,
-  `session provenance`, `session status`, `session coverage`,
+  `session provenance`, `session tools`, `session status`, `session coverage`,
   `heartbeat`, `heartbeat status`, `heartbeat risk`,
   `channel-ingest`, `channel-state`, `channel-gateway`, `channel-delivery`,
   `channels list`, `channels verify`, `channels risk`, `channels info`,
@@ -965,6 +965,7 @@ transcript/session CLIs and Hermes' saved/searchable sessions:
 @gitclaw /session catalog
 @gitclaw /session list
 @gitclaw /session provenance
+@gitclaw /session tools
 @gitclaw /session status
 @gitclaw /session readback
 @gitclaw /session stats
@@ -999,6 +1000,7 @@ Local operators can inspect a backed-up issue session without calling GitHub:
 gitclaw session catalog
 gitclaw session list --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session provenance --backup .gitclaw/backups/owner/repo/issues/000123.json
+gitclaw session tools --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session status --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session stats --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session coverage --backup .gitclaw/backups/owner/repo/issues/000123.json
@@ -1028,6 +1030,16 @@ before model inference and audits the current GitHub issue thread using the
 same marker attributes. It never prints issue bodies, comment bodies, assistant
 replies, prompts, raw search queries, or tool outputs, and carries
 `llm_e2e_required_after_session_provenance_change: true`.
+
+`gitclaw session tools --backup <issue.json>` is the named
+OpenClaw/Hermes-inspired tool-use ledger for a backed-up issue session. It
+aggregates prompt-visible tool names across assistant-turn markers, model-backed
+tool turns, deterministic tool turns, prompt-context hash counts, and token
+usage telemetry. The issue-side `@gitclaw /session tools` form runs before
+model inference and audits the current GitHub issue thread using the same
+marker attributes. It never prints issue bodies, comment bodies, assistant
+replies, prompts, tool inputs, raw search queries, or tool outputs, and carries
+`llm_e2e_required_after_session_tools_change: true`.
 
 `gitclaw session status --backup <issue.json>` is the compact Hermes-inspired
 readback surface. It emits session labels, transcript/comment counts, latest
@@ -1062,6 +1074,7 @@ Backed-up sessions can also be searched locally without a GitHub API call:
 ```bash
 gitclaw session coverage --backup .gitclaw/backups/owner/repo/issues/000123.json --require-tool gitclaw.search_files
 gitclaw session provenance --backup .gitclaw/backups/owner/repo/issues/000123.json
+gitclaw session tools --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session status --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session stats --backup .gitclaw/backups/owner/repo/issues/000123.json
 gitclaw session risk --backup .gitclaw/backups/owner/repo/issues/000123.json
@@ -7514,6 +7527,11 @@ examples/workflows/gitclaw.yml
   `@gitclaw /session provenance` reports assistant-turn marker provenance,
   prompt-context hashes, selected skill/tool telemetry, model names, and token
   usage without leaking hidden issue or comment tokens.
+- A `gh`-driven session-tools E2E harness first runs a normal GitHub Models
+  repo-reader/search conversation, then verifies `@gitclaw /session tools`
+  reports the session-level tool ledger, model-backed tool turns,
+  prompt-visible tool names, prompt-context evidence, and token usage without
+  leaking hidden issue or comment tokens.
 - A `gh`-driven session-stats E2E harness first runs a normal GitHub Models
   conversation with repo-reader and `gitclaw.search_files`, then verifies
   `@gitclaw /session stats` reports model/provenance/session totals without

@@ -3078,6 +3078,24 @@ bodies. The live E2E must pair the deterministic anchors report with a normal
 GitHub Models follow-up that proves repo-reader and prompt-visible tool
 provenance still work.
 
+### 2026-06-01 Session Tools Follow-Up
+
+OpenClaw's sessions/transcripts surfaces and Hermes' sessions view both make
+conversation state inspectable without requiring a separate hidden database,
+while Hermes' tools docs make tool availability and safety boundaries a named
+part of the agent surface. GitClaw should connect those two ideas with a
+session-level tool ledger, not just a current-turn tool report.
+
+Add `@gitclaw /session tools` and
+`gitclaw session tools --backup <issue.json>`. The report should aggregate
+assistant-turn marker attributes across the GitHub issue thread or backup JSON:
+prompt-visible tool names, model-backed tool turns, deterministic tool turns,
+prompt-context hash counts, usage totals, and per-tool ledger cards. It must
+not print issue bodies, comments, assistant replies, prompts, tool inputs,
+search queries, or tool outputs. Acceptance requires a live GitHub Models
+repo-reader/search turn first, followed by the deterministic session-tools
+report proving the model-backed tool ledger from marker evidence.
+
 ## Open Questions For Speccing
 
 1. Is `gitclaw` primarily for one user's repos, or for teams/organizations?
