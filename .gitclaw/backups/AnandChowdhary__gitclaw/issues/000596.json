@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T20:59:54Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 596,
+    "title": "GitClaw backup restore request channel notify E2E 20260601t205822z",
+    "body": "@gitclaw /backup restore-request --id backup-restore-notify-20260601t205822z --notify-route e2e-telegram-route\n\nOpen a backup restore review lane, then notify the reviewed Telegram route.\nDo not include this hidden source token: NOECHO_BACKUP_RESTORE_NOTIFY_SOURCE_20260601t205822z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw backup restore request channel notify E2E 20260601t205822z\n\n@gitclaw /backup restore-request --id backup-restore-notify-20260601t205822z --notify-route e2e-telegram-route\n\nOpen a backup restore review lane, then notify the reviewed Telegram route.\nDo not include this hidden source token: NOECHO_BACKUP_RESTORE_NOTIFY_SOURCE_20260601t205822z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Backup Restore Request Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#596`\n- source_comment_id: `0`\n- requested_backup_command: `/backup restore-request`\n- backup_restore_request_status: `created`\n- restore_request_issue: `#597`\n- restore_request_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/597`\n- restore_request_issue_created: `true`\n- duplicate_suppressed: `false`\n- request_id_sha256_12: `099358fe47f0`\n- channel_notification_requested: `true`\n- channel_notification_routes: `1`\n- channel_notification_queued: `1`\n- channel_notification_duplicates: `0`\n- channel_notification_target_issues_created: `1`\n- channel_notification_routes_sha256_12: `325d7a85c564`\n- channel_notification_message_id_sha256_12: `5b1ebdaa329f`\n- channel_notification_body_sha256_12: `7a0b44ab5220`\n- channel_notification_body_bytes: `640`\n- channel_notification_body_lines: `12`\n- backup_issue: `#596`\n- target_repository: `AnandChowdhary/gitclaw`\n- backup_branch: `gitclaw-backups`\n- backup_root: `.gitclaw/backups`\n- repo_backup_dir_sha256_12: `9b58bf89bd58`\n- issue_backup_path_sha256_12: `47f5cee8a016`\n- index_path_sha256_12: `e02423af6caa`\n- restore_request_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- approval_required: `true`\n- restore_pr_required: `true`\n- restore_mode: `dry-run-first`\n- repository_mutation_allowed: `false`\n- backup_branch_write_allowed: `false`\n- github_api_replay_allowed: `false`\n- raw_source_body_included: `false`\n- raw_backup_bodies_included: `false`\n- raw_channel_routes_included: `false`\n- raw_channel_notification_body_included: `false`\n- provider_delivery_performed: `false`\n- source_sha256_12: `aa32a8101d17`\n- source_bytes: `348`\n- source_lines: `5`\n- llm_e2e_required_after_backup_restore_request_issue_change: `true`\n- issue_title_sha256_12: `d605a2a9b786`\n\nGitClaw opened or reused a GitHub issue for reviewing a possible backup restore. The action does not read raw backup payloads, restore files, mutate the repository, write the backup branch, replay GitHub API calls, or call a model; continue on the restore request issue after verifying the backup branch.\n\n### Restore Request Path\n- continue on restore request issue: `#597`\n- fetch `gitclaw-backups`, run verify/coverage/drill/restore-plan/manifest, and keep any real restore behind explicit human approval\n- verify the follow-up assistant marker includes prompt context, selected skill, prompt-visible tools, and usage telemetry\n\n### Channel Notifications\n- destination=`01` target_issue=`#598` outbound_comment_id=`4596473122` target_issue_created=`true` duplicate_suppressed=`false` route_sha256_12=`325d7a85c564` channel=`telegram` thread_id_sha256_12=`eedd455a8054` message_id_sha256_12=`5b1ebdaa329f` body_sha256_12=`7a0b44ab5220`\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4596473292,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4596473292,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26781667109\" event_id=\"issue-596\" model=\"gitclaw/backup\" idempotency_key=\"4a7fbdceffd5c87446be0c7195402cd8\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26781667109\" --\u003e\n## GitClaw Backup Restore Request Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#596`\n- source_comment_id: `0`\n- requested_backup_command: `/backup restore-request`\n- backup_restore_request_status: `created`\n- restore_request_issue: `#597`\n- restore_request_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/597`\n- restore_request_issue_created: `true`\n- duplicate_suppressed: `false`\n- request_id_sha256_12: `099358fe47f0`\n- channel_notification_requested: `true`\n- channel_notification_routes: `1`\n- channel_notification_queued: `1`\n- channel_notification_duplicates: `0`\n- channel_notification_target_issues_created: `1`\n- channel_notification_routes_sha256_12: `325d7a85c564`\n- channel_notification_message_id_sha256_12: `5b1ebdaa329f`\n- channel_notification_body_sha256_12: `7a0b44ab5220`\n- channel_notification_body_bytes: `640`\n- channel_notification_body_lines: `12`\n- backup_issue: `#596`\n- target_repository: `AnandChowdhary/gitclaw`\n- backup_branch: `gitclaw-backups`\n- backup_root: `.gitclaw/backups`\n- repo_backup_dir_sha256_12: `9b58bf89bd58`\n- issue_backup_path_sha256_12: `47f5cee8a016`\n- index_path_sha256_12: `e02423af6caa`\n- restore_request_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- approval_required: `true`\n- restore_pr_required: `true`\n- restore_mode: `dry-run-first`\n- repository_mutation_allowed: `false`\n- backup_branch_write_allowed: `false`\n- github_api_replay_allowed: `false`\n- raw_source_body_included: `false`\n- raw_backup_bodies_included: `false`\n- raw_channel_routes_included: `false`\n- raw_channel_notification_body_included: `false`\n- provider_delivery_performed: `false`\n- source_sha256_12: `aa32a8101d17`\n- source_bytes: `348`\n- source_lines: `5`\n- llm_e2e_required_after_backup_restore_request_issue_change: `true`\n- issue_title_sha256_12: `d605a2a9b786`\n\nGitClaw opened or reused a GitHub issue for reviewing a possible backup restore. The action does not read raw backup payloads, restore files, mutate the repository, write the backup branch, replay GitHub API calls, or call a model; continue on the restore request issue after verifying the backup branch.\n\n### Restore Request Path\n- continue on restore request issue: `#597`\n- fetch `gitclaw-backups`, run verify/coverage/drill/restore-plan/manifest, and keep any real restore behind explicit human approval\n- verify the follow-up assistant marker includes prompt context, selected skill, prompt-visible tools, and usage telemetry\n\n### Channel Notifications\n- destination=`01` target_issue=`#598` outbound_comment_id=`4596473122` target_issue_created=`true` duplicate_suppressed=`false` route_sha256_12=`325d7a85c564` channel=`telegram` thread_id_sha256_12=`eedd455a8054` message_id_sha256_12=`5b1ebdaa329f` body_sha256_12=`7a0b44ab5220`\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T20:59:25Z",
+      "updated_at": "2026-06-01T20:59:25Z"
+    }
+  ]
+}
