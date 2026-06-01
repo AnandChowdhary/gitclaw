@@ -101,6 +101,7 @@ Memory:
 
 ```bash
 gitclaw memory catalog
+gitclaw memory snapshot
 gitclaw memory provenance
 gitclaw memory verify
 gitclaw memory risk
@@ -117,6 +118,12 @@ reports OpenClaw/Hermes-inspired memory layers, prompt visibility, load modes,
 reason codes, counts, hashes, validation/risk gates, and disabled mutation
 gates without printing raw memory, issue, comment, prompt, session, or
 embedding bodies.
+
+`gitclaw memory snapshot` is the durable-memory fingerprint for backups and
+restores. It reports per-memory-file metadata and one composite snapshot hash
+for `.gitclaw/MEMORY.md` plus dated memory notes, with raw memory, issue,
+comment, prompt, session, and embedding bodies excluded and write/provider
+gates disabled.
 
 `gitclaw memory provenance` maps repo-local memory files to body-free git
 history. It reports tracked/dirty state, last commit IDs/dates, commit-subject
@@ -700,6 +707,7 @@ scripts/e2e/github-hooks-catalog-report.sh
 scripts/e2e/github-hooks-risk-report.sh
 scripts/e2e/github-hooks-provenance-report.sh
 scripts/e2e/github-memory-catalog-report.sh
+scripts/e2e/github-memory-snapshot-report.sh
 scripts/e2e/github-memory-provenance-report.sh
 scripts/e2e/github-memory-timeline-report.sh
 scripts/e2e/github-memory-risk-report.sh

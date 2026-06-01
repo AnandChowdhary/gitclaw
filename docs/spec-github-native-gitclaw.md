@@ -934,7 +934,7 @@ GitHub issue/comment event
   `prompt compression`, `prompt risk`,
   `runs current`, `runs verify`, `runs history`,
   `sandbox explain`, `sandbox verify`, `sandbox risk`,
-  `memory catalog`, `memory provenance`, `memory verify`, `memory risk`, `memory validate`,
+  `memory catalog`, `memory snapshot`, `memory provenance`, `memory verify`, `memory risk`, `memory validate`,
   `memory timeline`, `memory list`, `memory promote-plan`, `memory info`, `memory search`,
   `skills validate`,
   `skills list`, `skills catalog`, `skills provenance`, `skills select-plan`, `skills refresh-plan`,
@@ -1418,6 +1418,7 @@ larger session recall:
 @gitclaw /memory
 @gitclaw /memory list
 @gitclaw /memory catalog
+@gitclaw /memory snapshot
 @gitclaw /memory provenance
 @gitclaw /memory verify
 @gitclaw /memory risk
@@ -1460,6 +1461,18 @@ rollups, short hashes, disabled write/provider/background-promotion gates, and
 memory bodies, issue bodies, comments, prompts, session transcripts, embedding
 vectors, credentials, or secret values. Local operators can run the same report
 with `gitclaw memory catalog`.
+
+When called as `@gitclaw /memory snapshot`, `@gitclaw /memory fingerprint`, or
+`@gitclaw /memory lock`, the command posts a stable, body-free fingerprint for
+durable repo-local memory. It combines `.gitclaw/MEMORY.md` and dated
+`.gitclaw/memory/*.md` notes into per-entry metadata plus one composite
+`snapshot_sha256_12`, including prompt-visible load state, first/latest note
+metadata, gap counts, validation/risk rollups, and disabled write/provider/
+background-promotion gates. It never includes raw memory bodies, issue bodies,
+comments, prompts, session transcripts, embedding vectors, credentials, or
+secret values. Local operators can run the same report with
+`gitclaw memory snapshot`; `fingerprint`, `lock`, and `lockfile` are accepted
+aliases.
 
 When called as `@gitclaw /memory provenance`, the command posts a body-free git
 history map for repo-local memory files. It reports durable memory counts,
@@ -1530,6 +1543,7 @@ memory-hygiene report. Local operators can run the same validation with:
 
 ```bash
 gitclaw memory catalog
+gitclaw memory snapshot
 gitclaw memory provenance
 gitclaw memory verify
 gitclaw memory risk
@@ -7367,6 +7381,13 @@ examples/workflows/gitclaw.yml
   issue-comment follow-up that must make a GitHub Models call, select
   `repo-reader`, expose `gitclaw.search_files`, recover a bounded
   repository-search fixture token, and publish usage telemetry.
+- A `gh`-driven memory-snapshot E2E harness verifies
+  `@gitclaw /memory snapshot` exposes the body-free durable-memory fingerprint,
+  composite snapshot hash, prompt-visible load state, validation/risk gates,
+  and disabled write/provider/session gates without a model call. It then
+  posts a normal issue-comment follow-up that must make a GitHub Models call,
+  select `repo-reader`, expose `gitclaw.search_files`, recover the
+  memory-snapshot repository-search fixture token, and publish usage telemetry.
 - A `gh`-driven memory-provenance E2E harness verifies
   `@gitclaw /memory provenance` maps repo-local memory files to body-free git
   history with tracked/dirty state, commit IDs/dates, subject hashes,

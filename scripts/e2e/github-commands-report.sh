@@ -149,7 +149,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `34`' \
   'aliases: `32`' \
-  'local_cli_helpers: `214`' \
+  'local_cli_helpers: `215`' \
   'run_mode: `read-only`' \
   'llm_e2e_required_after_commands_report_change: `true`' \
   "### Slash Commands" \
@@ -350,6 +350,7 @@ for expected in \
   'gitclaw commands' \
   'gitclaw bundles catalog' \
   'gitclaw memory catalog' \
+  'gitclaw memory snapshot' \
   'gitclaw memory provenance' \
   'gitclaw memory verify' \
   'gitclaw memory risk' \

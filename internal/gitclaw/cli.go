@@ -135,11 +135,13 @@ func runResearchCatalogCommand(args []string) error {
 
 func runMemoryCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw memory catalog|provenance|verify|risk|validate|timeline|list|promote-plan [target]|info <path>|search <query>")
+		return fmt.Errorf("usage: gitclaw memory catalog|snapshot|provenance|verify|risk|validate|timeline|list|promote-plan [target]|info <path>|search <query>")
 	}
 	switch args[0] {
 	case "catalog", "index", "memory-catalog", "discovery", "eligible":
 		return runMemoryCatalogCommand(args[1:])
+	case "snapshot", "snapshots", "fingerprint", "fingerprints", "lock", "lockfile":
+		return runMemorySnapshotCommand(args[1:])
 	case "provenance", "git-history":
 		return runMemoryProvenanceCommand(args[1:])
 	case "verify":
@@ -161,6 +163,22 @@ func runMemoryCommand(args []string) error {
 	default:
 		return fmt.Errorf("unknown memory command %q", args[0])
 	}
+}
+
+func runMemorySnapshotCommand(args []string) error {
+	if len(args) > 0 {
+		return fmt.Errorf("unknown memory snapshot argument %q", args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, nil, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderMemorySnapshotCLIReport(cfg, repoContext))
+	return nil
 }
 
 func runMemoryCatalogCommand(args []string) error {

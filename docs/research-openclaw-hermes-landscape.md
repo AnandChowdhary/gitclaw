@@ -3422,6 +3422,18 @@ maintainer can inspect repo-local memory ordering, prompt visibility,
 first/latest note, dated-note gaps, validation/risk gates, hashes, and the
 LLM-backed E2E requirement without dumping memory bodies.
 
+2026-06-01 memory-snapshot follow-up: the same durable-memory boundary needs a
+stable comparison point for backup reviews, restore planning, and profile
+migration. GitClaw should add `@gitclaw /memory snapshot` and
+`gitclaw memory snapshot`, with `fingerprint` and `lock` aliases, as a
+body-free composite fingerprint over `.gitclaw/MEMORY.md` plus dated
+`.gitclaw/memory/*.md` notes. The report should show per-file metadata,
+prompt-visible load state, validation/risk gates, disabled write/provider/
+background-promotion gates, and one `snapshot_sha256_12`, while excluding raw
+memory, issue, comment, prompt, session, embedding, credential, and secret
+bodies. Acceptance requires deterministic tests, local CLI proof, a live issue
+E2E, and a GitHub Models repo-reader/search follow-up.
+
 2026-05-31 soul-provenance follow-up: OpenClaw's Hermes migration path copies
 memory and skills into the new workspace rather than treating them as opaque
 runtime state, and Hermes profiles isolate config, sessions, skills, and

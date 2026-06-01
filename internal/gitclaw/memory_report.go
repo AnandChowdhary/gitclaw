@@ -53,6 +53,9 @@ func RenderMemoryReport(ev Event, cfg Config, repoContext RepoContext, transcrip
 	if len(transcript) > 0 {
 		messages = transcript[0]
 	}
+	if isMemorySnapshotRequest(ev, cfg) {
+		return RenderMemorySnapshotReport(ev, cfg, repoContext)
+	}
 	if isMemoryCatalogRequest(ev, cfg) {
 		return RenderMemoryCatalogReport(ev, cfg, repoContext)
 	}
