@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T12:50:05Z",
+  "generated_at": "2026-06-01T12:51:42Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 531,
     "title": "GitClaw tools request-run channel notify E2E 20260601t124842z",
@@ -10,7 +10,8 @@
     "author": "AnandChowdhary",
     "author_association": "OWNER",
     "labels": [
-      "gitclaw"
+      "gitclaw",
+      "gitclaw:done"
     ]
   },
   "transcript": [
@@ -31,6 +32,24 @@
       "CommentID": 4592728106,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /tools request-run search_files --id e2e-tool-notify-20260601t124842z --notify-route e2e-slack-route\n\nRepeat the same tool-run request notification.\nDo not include this hidden duplicate token: NOECHO_TOOL_NOTIFY_DUPLICATE_20260601t124842z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4592733503,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Tool Run Request Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#531`\n- source_comment_id: `4592733503`\n- requested_tool_command: `/tools request-run`\n- tool_run_request_status: `existing`\n- tool_run_request_issue: `#532`\n- tool_run_request_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/532`\n- tool_run_request_issue_created: `false`\n- duplicate_suppressed: `true`\n- tool_run_request_id: `e2e-tool-notify-20260601t124842z`\n- channel_notification_requested: `true`\n- channel_notification_routes: `1`\n- channel_notification_queued: `0`\n- channel_notification_duplicates: `1`\n- channel_notification_target_issues_created: `0`\n- channel_notification_routes_sha256_12: `ff6bd0e4b42c`\n- channel_notification_message_id_sha256_12: `3f4723a47056`\n- channel_notification_body_sha256_12: `dd58bbfd9dd6`\n- channel_notification_body_bytes: `532`\n- channel_notification_body_lines: `10`\n- requested_tool_sha256_12: `25014698ad95`\n- requested_tool_terms: `1`\n- normalized_tool: `gitclaw.search_files`\n- matched_tool: `gitclaw.search_files`\n- matched_tools: `1`\n- available_tools: `5`\n- active_outputs_for_tool: `1`\n- tool_enabled: `true`\n- disabled_by_config: `false`\n- blocked_by_allowlist: `false`\n- tool_mode: `read-only`\n- tool_trigger_sha256_12: `2eaf037f964c`\n- mutating_contract: `false`\n- approval_required: `false`\n- run_allowed_now: `true`\n- review_decision: `review_required_read_only_tool`\n- tool_validation_status: `ok`\n- tool_validation_errors: `0`\n- tool_validation_warnings: `0`\n- request_store: `github-issue-to-reviewed-tool-run`\n- review_required: `true`\n- source_sha256_12: `bcfc6c932452`\n- source_bytes: `247`\n- source_lines: `4`\n- model_call_performed: `false`\n- tool_execution_performed: `false`\n- raw_source_body_included: `false`\n- raw_tool_name_included: `false`\n- raw_tool_inputs_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_channel_routes_included: `false`\n- raw_channel_notification_body_included: `false`\n- provider_delivery_performed: `false`\n- repository_mutation_performed: `false`\n- llm_e2e_required_after_tool_run_request_issue_change: `true`\n- issue_title_sha256_12: `94a7c0681289`\n\nGitClaw opened or reused a GitHub issue for a reviewed tool-run request. The request is not execution: no tool is called, no model is called, no raw source text is copied, and no repository mutation is performed.\n\n### Review Path\n- review request issue: `#532`\n- if accepted, continue in a normal model-backed issue turn or future approved workflow\n- run `gitclaw tools verify`, `gitclaw tools risk`, and a live GitHub Models conversation E2E after changing tool behavior\n\n### Channel Notifications\n- destination=`01` target_issue=`#533` outbound_comment_id=`0` target_issue_created=`false` duplicate_suppressed=`true` route_sha256_12=`ff6bd0e4b42c` channel=`slack` thread_id_sha256_12=`2101c3a9d364` message_id_sha256_12=`3f4723a47056` body_sha256_12=`dd58bbfd9dd6`\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4592740036,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -41,6 +60,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T12:49:39Z",
       "updated_at": "2026-06-01T12:49:39Z"
+    },
+    {
+      "id": 4592733503,
+      "body": "@gitclaw /tools request-run search_files --id e2e-tool-notify-20260601t124842z --notify-route e2e-slack-route\n\nRepeat the same tool-run request notification.\nDo not include this hidden duplicate token: NOECHO_TOOL_NOTIFY_DUPLICATE_20260601t124842z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T12:50:23Z",
+      "updated_at": "2026-06-01T12:50:23Z"
+    },
+    {
+      "id": 4592740036,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26755959581\" event_id=\"comment-4592733503\" model=\"gitclaw/tools\" idempotency_key=\"65b3ae65dc0fe4dd9d5b0281f221cdf3\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26755959581\" --\u003e\n## GitClaw Tool Run Request Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#531`\n- source_comment_id: `4592733503`\n- requested_tool_command: `/tools request-run`\n- tool_run_request_status: `existing`\n- tool_run_request_issue: `#532`\n- tool_run_request_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/532`\n- tool_run_request_issue_created: `false`\n- duplicate_suppressed: `true`\n- tool_run_request_id: `e2e-tool-notify-20260601t124842z`\n- channel_notification_requested: `true`\n- channel_notification_routes: `1`\n- channel_notification_queued: `0`\n- channel_notification_duplicates: `1`\n- channel_notification_target_issues_created: `0`\n- channel_notification_routes_sha256_12: `ff6bd0e4b42c`\n- channel_notification_message_id_sha256_12: `3f4723a47056`\n- channel_notification_body_sha256_12: `dd58bbfd9dd6`\n- channel_notification_body_bytes: `532`\n- channel_notification_body_lines: `10`\n- requested_tool_sha256_12: `25014698ad95`\n- requested_tool_terms: `1`\n- normalized_tool: `gitclaw.search_files`\n- matched_tool: `gitclaw.search_files`\n- matched_tools: `1`\n- available_tools: `5`\n- active_outputs_for_tool: `1`\n- tool_enabled: `true`\n- disabled_by_config: `false`\n- blocked_by_allowlist: `false`\n- tool_mode: `read-only`\n- tool_trigger_sha256_12: `2eaf037f964c`\n- mutating_contract: `false`\n- approval_required: `false`\n- run_allowed_now: `true`\n- review_decision: `review_required_read_only_tool`\n- tool_validation_status: `ok`\n- tool_validation_errors: `0`\n- tool_validation_warnings: `0`\n- request_store: `github-issue-to-reviewed-tool-run`\n- review_required: `true`\n- source_sha256_12: `bcfc6c932452`\n- source_bytes: `247`\n- source_lines: `4`\n- model_call_performed: `false`\n- tool_execution_performed: `false`\n- raw_source_body_included: `false`\n- raw_tool_name_included: `false`\n- raw_tool_inputs_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_channel_routes_included: `false`\n- raw_channel_notification_body_included: `false`\n- provider_delivery_performed: `false`\n- repository_mutation_performed: `false`\n- llm_e2e_required_after_tool_run_request_issue_change: `true`\n- issue_title_sha256_12: `94a7c0681289`\n\nGitClaw opened or reused a GitHub issue for a reviewed tool-run request. The request is not execution: no tool is called, no model is called, no raw source text is copied, and no repository mutation is performed.\n\n### Review Path\n- review request issue: `#532`\n- if accepted, continue in a normal model-backed issue turn or future approved workflow\n- run `gitclaw tools verify`, `gitclaw tools risk`, and a live GitHub Models conversation E2E after changing tool behavior\n\n### Channel Notifications\n- destination=`01` target_issue=`#533` outbound_comment_id=`0` target_issue_created=`false` duplicate_suppressed=`true` route_sha256_12=`ff6bd0e4b42c` channel=`slack` thread_id_sha256_12=`2101c3a9d364` message_id_sha256_12=`3f4723a47056` body_sha256_12=`dd58bbfd9dd6`\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T12:51:13Z",
+      "updated_at": "2026-06-01T12:51:13Z"
     }
   ]
 }
