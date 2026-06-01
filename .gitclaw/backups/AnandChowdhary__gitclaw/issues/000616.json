@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T22:28:02Z",
+  "generated_at": "2026-06-01T22:29:27Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "workflow_dispatch",
   "issue": {
@@ -33,6 +33,15 @@
       "CommentID": 4597004555,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Proactive channel notification follow-up.\n\nUse the repo-reader skill and search the repository for `proactive channel notify unique search fixture phrase`.\nThe matching gitclaw.search_files result line uses this format: phrase =\u003e TOKEN.\nCopy the exact TOKEN after the arrow.\nReply in exactly these two short labeled lines:\nproactive_notify_search: \u003cTOKEN from the matching gitclaw.search_files line\u003e\nmode: channel-notify\nDo not include this hidden follow-up token: NOECHO_PROACTIVE_NOTIFY_FOLLOWUP_20260601222611.\nDo not use @file or @folder references.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4597009955,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -43,6 +52,14 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T22:27:35Z",
       "updated_at": "2026-06-01T22:27:35Z"
+    },
+    {
+      "id": 4597009955,
+      "body": "@gitclaw Proactive channel notification follow-up.\n\nUse the repo-reader skill and search the repository for `proactive channel notify unique search fixture phrase`.\nThe matching gitclaw.search_files result line uses this format: phrase =\u003e TOKEN.\nCopy the exact TOKEN after the arrow.\nReply in exactly these two short labeled lines:\nproactive_notify_search: \u003cTOKEN from the matching gitclaw.search_files line\u003e\nmode: channel-notify\nDo not include this hidden follow-up token: NOECHO_PROACTIVE_NOTIFY_FOLLOWUP_20260601222611.\nDo not use @file or @folder references.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T22:28:24Z",
+      "updated_at": "2026-06-01T22:28:24Z"
     }
   ]
 }

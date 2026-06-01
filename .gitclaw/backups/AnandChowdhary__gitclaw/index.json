@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T22:28:03Z",
+  "generated_at": "2026-06-01T22:29:27Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 531,
   "issues": [
@@ -6684,15 +6684,15 @@
       "number": 616,
       "title": "GitClaw proactive proactive-notify-e2e-20260601222611 notify-20260601222611",
       "path": "issues/000616.json",
-      "backup_generated_at": "2026-06-01T22:28:02Z",
+      "backup_generated_at": "2026-06-01T22:29:27Z",
       "event_name": "workflow_dispatch",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:proactive"
       ],
-      "comment_count": 1,
-      "transcript_messages": 2
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
