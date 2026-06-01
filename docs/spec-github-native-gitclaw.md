@@ -1084,6 +1084,7 @@ transcript/session CLIs and Hermes' saved/searchable sessions:
 @gitclaw /session trajectory
 @gitclaw /session compaction
 @gitclaw /session resume
+@gitclaw /session handoff --id <id>
 @gitclaw /session status
 @gitclaw /session readback
 @gitclaw /session stats
@@ -1223,6 +1224,18 @@ socket, or a hidden external session database, and it does not print issue
 bodies, comment bodies, assistant replies, prompts, raw provider payloads, raw
 search queries, raw run URLs, or tool outputs. It carries
 `llm_e2e_required_after_session_resume_change: true`.
+
+`@gitclaw /session handoff --id <id>` is the issue-native session fork. It runs
+before model inference, computes the same body-free session resume/provenance
+counts for the current issue thread, creates or reuses a labeled handoff issue,
+and posts a source receipt with only issue numbers, counts, hashes, duplicate
+status, and reentry gates. The handoff issue stores the raw handoff id and
+metadata marker, not raw source issue bodies, comments, assistant replies,
+prompts, tool outputs, provider payloads, or search queries. A normal
+`@gitclaw` comment on the handoff issue then uses the existing `issue_comment`
+workflow and GitHub Models runner; no server, socket, workflow-dispatch session
+bridge, or external session database is required. It carries
+`llm_e2e_required_after_session_handoff_issue_change: true`.
 
 `gitclaw session status --backup <issue.json>` is the compact Hermes-inspired
 readback surface. It emits session labels, transcript/comment counts, latest
@@ -8995,6 +9008,12 @@ examples/workflows/gitclaw.yml
   reports GitHub issue-thread continuation readiness, resume anchors, latest
   assistant marker provenance, usage telemetry, and issue-comment reentry gates
   without leaking hidden issue/comment tokens or raw run URLs.
+- A `gh`-driven session-handoff E2E harness first runs a normal GitHub Models
+  repo-reader/search conversation, then verifies
+  `@gitclaw /session handoff --id <id>` creates or reuses a labeled handoff
+  issue, reports body-free duplicate/reentry/session metadata on the source
+  issue, and then continues on the handoff issue with another real GitHub
+  Models repo-reader/search conversation.
 - A `gh`-driven session-stats E2E harness first runs a normal GitHub Models
   conversation with repo-reader and `gitclaw.search_files`, then verifies
   `@gitclaw /session stats` reports model/provenance/session totals without

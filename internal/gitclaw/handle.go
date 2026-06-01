@@ -693,6 +693,32 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		status.SetDone()
 		return nil
 	}
+	if IsSessionHandoffIssueRequest(ev, cfg) {
+		handoffClient, ok := github.(SessionHandoffIssueGitHubClient)
+		if !ok {
+			return failStartedTurn(ctx, cfg, github, ev, status, "session", fmt.Errorf("github client cannot create session handoff issues"))
+		}
+		req, err := BuildSessionHandoffIssueRequest(ev, cfg, comments, transcript)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "session", fmt.Errorf("build session handoff issue: %w", err))
+		}
+		result, err := RunSessionHandoffIssue(ctx, cfg, handoffClient, req)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "session", fmt.Errorf("run session handoff issue: %w", err))
+		}
+		body := RenderAssistantComment(Marker{
+			RunID:          envFirst("GITHUB_RUN_ID", "local"),
+			EventID:        eventID(ev),
+			Model:          "gitclaw/session",
+			IdempotencyKey: key,
+			RunURL:         actionRunURL(ev),
+		}, RenderSessionHandoffIssueActionReport(ev, req, result))
+		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post session handoff issue comment: %w", err))
+		}
+		status.SetDone()
+		return nil
+	}
 	if IsSessionReportRequest(ev, cfg) {
 		body := RenderAssistantComment(Marker{
 			RunID:          envFirst("GITHUB_RUN_ID", "local"),
@@ -1202,6 +1228,8 @@ func safeFailureDiagnostic(phase string, cause error) string {
 		return "assistant comment could not be posted"
 	case "channel":
 		return "channel action could not be completed"
+	case "session":
+		return "session action could not be completed"
 	case "memory":
 		return "memory action could not be completed"
 	case "skill":

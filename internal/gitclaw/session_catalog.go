@@ -125,6 +125,7 @@ func sessionCatalogEntries() []sessionCatalogEntry {
 		{Name: "trajectory", IssueIntent: "@gitclaw /session trajectory", LocalCommand: "gitclaw session trajectory --backup <issue.json>", Execution: "current-issue-or-local-backup", Gate: "body-free-assistant-turn-manifest"},
 		{Name: "compaction", IssueIntent: "@gitclaw /session compaction", LocalCommand: "gitclaw session compaction --backup <issue.json>", Execution: "current-issue-or-local-backup", Gate: "body-free-session-compaction-readiness"},
 		{Name: "resume", IssueIntent: "@gitclaw /session resume", LocalCommand: "gitclaw session resume --backup <issue.json>", Execution: "current-issue-or-local-backup", Gate: "github-issue-comment-continuation-readiness"},
+		{Name: "handoff", IssueIntent: "@gitclaw /session handoff --id <id>", Execution: "create-or-reuse-handoff-issue", Gate: "body-free-session-fork"},
 		{Name: "status", IssueIntent: "@gitclaw /session status", LocalCommand: "gitclaw session status --backup <issue.json>", Execution: "current-issue-or-local-backup", Gate: "latest-message-hashes"},
 		{Name: "stats", IssueIntent: "@gitclaw /session stats", LocalCommand: "gitclaw session stats --backup <issue.json>", Execution: "current-issue-or-local-backup", Gate: "aggregate-counts-and-provenance"},
 		{Name: "coverage", IssueIntent: "@gitclaw /session coverage", LocalCommand: "gitclaw session coverage --backup <issue.json>", Execution: "current-issue-or-local-backup", Gate: "model-skill-tool-provenance"},

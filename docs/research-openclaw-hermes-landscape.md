@@ -3629,6 +3629,16 @@ outputs. Acceptance requires a live GitHub Models repo-reader/search turn
 first, followed by the deterministic session-resume report proving model-backed
 provenance and usage evidence from marker metadata.
 
+### 2026-06-01 Session Handoff Issue Follow-Up
+
+Hermes' handoff/resume lineage and OpenClaw's session-export instincts are most
+useful here when they become another GitHub issue, not another opaque runtime
+state file. GitClaw should support `@gitclaw /session handoff --id <id>` as a
+serverless session fork: create or reuse a labeled handoff issue, copy only
+counts, short hashes, prompt-provenance marker metadata, usage totals, and
+reentry gates, then let normal `issue_comment` Actions runs continue the new
+lane with GitHub Models and repo-reader tools.
+
 ### 2026-06-01 Prompt Context Manifest Follow-Up
 
 OpenClaw's current skills documentation emphasizes that visible skills are

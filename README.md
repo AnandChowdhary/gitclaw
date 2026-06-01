@@ -383,6 +383,7 @@ gitclaw session usage --backup <issue.json>
 gitclaw session trajectory --backup <issue.json>
 gitclaw session compaction --backup <issue.json>
 gitclaw session resume --backup <issue.json>
+@gitclaw /session handoff --id <id>
 gitclaw session status --backup <issue.json>
 gitclaw session stats --backup <issue.json>
 gitclaw session coverage --backup <issue.json>
@@ -455,6 +456,12 @@ reentry gates proving the next issue comment can continue the same session
 without a server, socket, workflow-dispatch bridge, or hidden external session
 database.
 
+`@gitclaw /session handoff --id <id>` creates or reuses a labeled GitHub issue
+as a fresh conversation lane for the current session. The source issue gets a
+body-free receipt with only hashes, counts, duplicate status, and reentry gates;
+the handoff issue carries the raw handoff id and session metadata, then normal
+comments there run through the regular GitHub Models workflow.
+
 `gitclaw backup provenance` is the body-free git-history audit for fetched
 `gitclaw-backups` branches. It verifies the backup tree, then reports whether
 the index, README, and issue payload files are tracked, clean, and backed by
@@ -519,6 +526,10 @@ The live session-resume harness follows the same model-first shape, then
 verifies `@gitclaw /session resume` reports GitHub issue-thread continuation
 readiness, resume anchors, latest assistant marker provenance, and reentry
 gates without leaking hidden issue/comment text or raw run URLs.
+The live session-handoff harness starts with a model-backed repo-reader/search
+turn, verifies `@gitclaw /session handoff --id <id>` opens or reuses a labeled
+body-free handoff issue, checks duplicate suppression, then continues on the
+handoff issue with another real GitHub Models repo-reader/search turn.
 
 `gitclaw backup restore-plan` is a dry-run recovery plan for a fetched backup
 payload. Its live harness pairs deterministic restore metadata checks with a
@@ -986,6 +997,7 @@ scripts/e2e/github-session-usage.sh
 scripts/e2e/github-session-trajectory.sh
 scripts/e2e/github-session-compaction.sh
 scripts/e2e/github-session-resume.sh
+scripts/e2e/github-session-handoff-issue.sh
 scripts/e2e/github-session-risk-report.sh
 scripts/e2e/github-session-status-report.sh
 scripts/e2e/github-session-stats-report.sh
