@@ -45,6 +45,7 @@ backup retention plan unique search fixture phrase => GITCLAW_BACKUP_RETENTION_P
 skills install plan unique search fixture phrase => GITCLAW_SKILLS_INSTALL_PLAN_CONTEXT_V1
 skills upgrade plan unique search fixture phrase => GITCLAW_SKILLS_UPGRADE_PLAN_CONTEXT_V1
 skills propose unique search fixture phrase => GITCLAW_SKILLS_PROPOSE_CONTEXT_V1
+skills propose channel notify unique search fixture phrase => GITCLAW_SKILLS_NOTIFY_CONTEXT_V1
 skills source proposal unique search fixture phrase => GITCLAW_SKILLS_SOURCE_PROPOSAL_CONTEXT_V1
 skills rehearsal unique search fixture phrase => GITCLAW_SKILLS_REHEARSAL_CONTEXT_V1
 bundle rehearsal unique search fixture phrase => GITCLAW_BUNDLE_REHEARSAL_CONTEXT_V1

@@ -2194,6 +2194,167 @@ Use repo files.
 	}
 }
 
+func TestHandleSkillsProposeCommandQueuesChannelNotificationWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---
+name: repo-reader
+description: Read repository files.
+---
+
+Use repo files.
+`)
+	writeTestFile(t, root, channelRoutesPath, `routes:
+  - name: e2e-telegram-route
+    channel: telegram
+    thread_id_template: skill-proposal-{message_id}
+    author: gitclaw:test
+`)
+	ev, err := ParseEvent("issues", []byte(`{
+		"action": "opened",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 147,
+			"title": "@gitclaw /skills propose weekly-channel --notify-route e2e-telegram-route",
+			"body": "Capture a reusable channel review skill and notify reviewers. Hidden token: SKILL_PROPOSE_NOTIFY_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	github := &FakeGitHub{CommentsByIssue: map[int][]Comment{147: nil}}
+	llm := &FakeLLM{Response: "should not be called"}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for skills propose notify action", llm.Calls)
+	}
+	if len(github.Issues) != 2 {
+		t.Fatalf("created issues = %d, want proposal issue and channel issue: %#v", len(github.Issues), github.Issues)
+	}
+	proposalIssue := github.Issues[0]
+	channelIssue := github.Issues[1]
+	if !strings.Contains(proposalIssue.Body, skillProposalIssueMarker) {
+		t.Fatalf("first issue should be skill proposal issue: %#v", proposalIssue)
+	}
+	if strings.Contains(proposalIssue.Body, "SKILL_PROPOSE_NOTIFY_SECRET") || strings.Contains(proposalIssue.Body, "notify reviewers") || strings.Contains(proposalIssue.Body, "e2e-telegram-route") {
+		t.Fatalf("skill proposal issue leaked source or route:\n%s", proposalIssue.Body)
+	}
+	if !HasChannelThreadMarker(channelIssue.Body) || !strings.Contains(channelIssue.Body, `channel="telegram"`) {
+		t.Fatalf("second issue should be telegram channel issue: %#v", channelIssue)
+	}
+	if hasLabel(github.IssueLabels[channelIssue.Number], cfg.TriggerLabel) {
+		t.Fatalf("channel issue should not carry trigger label: %#v", github.IssueLabels[channelIssue.Number])
+	}
+	if !hasLabel(github.IssueLabels[channelIssue.Number], cfg.ChannelLabel) {
+		t.Fatalf("channel issue missing channel label: %#v", github.IssueLabels[channelIssue.Number])
+	}
+	channelComments := github.CommentsByIssue[channelIssue.Number]
+	if len(channelComments) != 1 {
+		t.Fatalf("channel issue comments = %d, want one notification: %#v", len(channelComments), channelComments)
+	}
+	for _, want := range []string{
+		"gitclaw:channel-outbound",
+		`message_id="gitclaw-skill-proposal-weekly-channel"`,
+		"GitClaw skill proposal",
+		"Review issue: #100 https://github.com/owner/repo/issues/100",
+		"Source issue: #147 https://github.com/owner/repo/issues/147",
+		"Proposal name: weekly-channel",
+		"Planned action: propose-create",
+		"Proposal path: .gitclaw/skill-proposals/weekly-channel/PROPOSAL.md",
+		"Destination path: .gitclaw/SKILLS/weekly-channel/SKILL.md",
+		"Review PR required: true",
+		"Active skill written: false",
+	} {
+		if !strings.Contains(channelComments[0].Body, want) {
+			t.Fatalf("channel notification missing %q:\n%s", want, channelComments[0].Body)
+		}
+	}
+	if strings.Contains(channelComments[0].Body, "SKILL_PROPOSE_NOTIFY_SECRET") || strings.Contains(channelComments[0].Body, "notify reviewers") {
+		t.Fatalf("channel notification leaked source body:\n%s", channelComments[0].Body)
+	}
+
+	receipt := github.CommentsByIssue[147][0].Body
+	for _, want := range []string{
+		"GitClaw Skill Proposal Issue Action",
+		"proposal_issue_status: `created`",
+		"channel_notification_requested: `true`",
+		"channel_notification_routes: `1`",
+		"channel_notification_queued: `1`",
+		"channel_notification_duplicates: `0`",
+		"channel_notification_target_issues_created: `1`",
+		"raw_channel_routes_included: `false`",
+		"raw_channel_notification_body_included: `false`",
+		"provider_delivery_performed: `false`",
+		"destination=`01` target_issue=`#101`",
+		"channel=`telegram`",
+	} {
+		if !strings.Contains(receipt, want) {
+			t.Fatalf("skills propose notify receipt missing %q:\n%s", want, receipt)
+		}
+	}
+	for _, leaked := range []string{"SKILL_PROPOSE_NOTIFY_SECRET", "notify reviewers", "e2e-telegram-route"} {
+		if strings.Contains(receipt, leaked) {
+			t.Fatalf("skills propose notify receipt leaked %q:\n%s", leaked, receipt)
+		}
+	}
+
+	commentEv, err := ParseEvent("issue_comment", []byte(`{
+		"action": "created",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 147,
+			"title": "@gitclaw /skills propose weekly-channel --notify-route e2e-telegram-route",
+			"body": "Capture a reusable channel review skill.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}]
+		},
+		"comment": {
+			"id": 89,
+			"body": "@gitclaw /skills propose weekly-channel --notify-route e2e-telegram-route\nDuplicate request hidden token: SKILL_PROPOSE_NOTIFY_DUPLICATE_SECRET.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"}
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent comment returned error: %v", err)
+	}
+	if err := Handle(context.Background(), commentEv, cfg, github, llm); err != nil {
+		t.Fatalf("second Handle returned error: %v", err)
+	}
+	if len(github.Issues) != 2 {
+		t.Fatalf("duplicate skills propose notify created another issue: %#v", github.Issues)
+	}
+	if len(github.CommentsByIssue[channelIssue.Number]) != 1 {
+		t.Fatalf("duplicate notification should not queue another outbound comment: %#v", github.CommentsByIssue[channelIssue.Number])
+	}
+	duplicateReceipt := github.CommentsByIssue[147][1].Body
+	for _, want := range []string{
+		"proposal_issue_status: `existing`",
+		"proposal_issue_created: `false`",
+		"duplicate_suppressed: `true`",
+		"channel_notification_queued: `0`",
+		"channel_notification_duplicates: `1`",
+		"outbound_comment_id=`0`",
+	} {
+		if !strings.Contains(duplicateReceipt, want) {
+			t.Fatalf("duplicate skills propose notify receipt missing %q:\n%s", want, duplicateReceipt)
+		}
+	}
+	if strings.Contains(duplicateReceipt, "SKILL_PROPOSE_NOTIFY_DUPLICATE_SECRET") {
+		t.Fatalf("duplicate skills propose notify receipt leaked comment body:\n%s", duplicateReceipt)
+	}
+}
+
 func TestHandleSkillsProposalsCommandPostsReportWithoutLLM(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, ".gitclaw/skill-proposals/repo-reader/PROPOSAL.md", `---

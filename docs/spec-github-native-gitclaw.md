@@ -2170,12 +2170,23 @@ skill path, and create/update intent, then posts a body-free receipt in the
 source conversation. Duplicate open proposal issues are suppressed by marker
 and safe name.
 
+The proposal action also accepts `--notify-route <route>` and
+`--notify-routes <a,b>`. When present, GitClaw resolves reviewed channel routes
+from `.gitclaw/channels/routes.yaml`, queues one metadata-safe
+`gitclaw:channel-outbound` notification per destination, and records only
+counts and hashes in the source receipt. The channel notification body may name
+the safe proposal name, review issue, proposal path, and destination skill
+path, but it must not copy raw source request text, candidate skill bodies, or
+route names. Provider delivery remains outside the action and is handled by
+`gitclaw channel-outbox` plus `gitclaw channel-delivery`.
+
 The proposal issue action does not write `.gitclaw/skill-proposals`, does not
 write `.gitclaw/SKILLS`, does not copy raw issue/comment text into the
-proposal issue or receipt, and does not call a model. It is a GitHub-native
-review queue entry: after review, a maintainer can draft the proposal file on
-a normal branch, run validation/risk checks, and promote it to an active skill
-only through a reviewed git change.
+proposal issue or receipt, and does not call a model. When channel
+notifications are requested, it still does not call provider APIs. It is a
+GitHub-native review queue entry: after review, a maintainer can draft the
+proposal file on a normal branch, run validation/risk checks, and promote it
+to an active skill only through a reviewed git change.
 
 When called as `@gitclaw /skills rehearse <name> --id <id>`, GitClaw performs
 the issue-native rehearsal action. It opens or reuses a dedicated GitHub issue
@@ -8917,6 +8928,14 @@ examples/workflows/gitclaw.yml
   raw source/request leakage, and still runs a live GitHub Models follow-up
   proving repo-local skill selection, prompt-visible repository search tool
   usage, and usage telemetry after the deterministic issue action.
+- A `gh`-driven skills-propose channel-notify E2E harness verifies
+  `@gitclaw /skills propose <name> --notify-route <route>` opens the same
+  body-free proposal issue, queues a reviewed Slack/Telegram channel
+  notification through the routebook and channel issue, suppresses duplicate
+  channel outbound comments, exposes pending provider work through
+  `channel-outbox`, avoids raw source/request/route leakage in receipts, and
+  still runs a live GitHub Models follow-up proving repo-local skill selection,
+  prompt-visible repository search tool usage, and usage telemetry.
 - A `gh`-driven skills-source-propose E2E harness verifies
   `@gitclaw /skills sources propose <name> --source <ref>` opens a body-free,
   labeled GitHub source-pin proposal issue, hashes the source ref instead of

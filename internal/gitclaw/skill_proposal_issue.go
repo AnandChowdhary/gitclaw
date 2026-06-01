@@ -20,6 +20,8 @@ type SkillProposalIssueRequest struct {
 	RequestedAction      string
 	PlannedAction        string
 	Target               skillInstallPlanTarget
+	NotifyRoutes         []string
+	NotifyRoutesSHA      string
 	ProposalPath         string
 	DestinationPath      string
 	ExistingSkillMatches int
@@ -33,10 +35,24 @@ type SkillProposalIssueRequest struct {
 }
 
 type SkillProposalIssueResult struct {
-	IssueNumber int
-	IssueURL    string
-	Created     bool
-	Duplicate   bool
+	IssueNumber         int
+	IssueURL            string
+	Created             bool
+	Duplicate           bool
+	ChannelNotification SkillProposalChannelNotification
+}
+
+type SkillProposalChannelNotification struct {
+	Requested           bool
+	Routes              int
+	Queued              int
+	Duplicates          int
+	TargetIssuesCreated int
+	MessageSHA          string
+	BodySHA             string
+	BodyBytes           int
+	BodyLines           int
+	Destinations        []ChannelBroadcastDestinationResult
 }
 
 func IsSkillProposalIssueRequest(ev Event, cfg Config) bool {
@@ -63,6 +79,7 @@ func BuildSkillProposalIssueRequest(ev Event, cfg Config, repoContext RepoContex
 	if len(fields) < 3 {
 		return SkillProposalIssueRequest{}, fmt.Errorf("missing skill proposal target")
 	}
+	sourceText := activeRequestText(ev)
 	requestedAction := "auto"
 	switch strings.ToLower(strings.Trim(fields[1], " \t\r\n.,:;!?")) {
 	case "propose-create":
@@ -70,7 +87,11 @@ func BuildSkillProposalIssueRequest(ev Event, cfg Config, repoContext RepoContex
 	case "propose-update":
 		requestedAction = "propose-update"
 	}
-	target := classifySkillInstallTarget(fields[2])
+	targetText, notifyRoutes, err := parseSkillProposalIssueArgs(fields[2:])
+	if err != nil {
+		return SkillProposalIssueRequest{}, err
+	}
+	target := classifySkillInstallTarget(targetText)
 	if target.Candidate == "" {
 		return SkillProposalIssueRequest{}, fmt.Errorf("missing safe skill proposal name")
 	}
@@ -78,7 +99,6 @@ func BuildSkillProposalIssueRequest(ev Event, cfg Config, repoContext RepoContex
 		return SkillProposalIssueRequest{}, fmt.Errorf("invalid safe skill proposal name %q", target.Candidate)
 	}
 	matches := matchingInstallPlanSkillSummaries(repoContext.SkillSummaries, target)
-	sourceText := activeRequestText(ev)
 	sourceKind := "issue"
 	var sourceCommentID int64
 	if ev.Comment != nil {
@@ -92,6 +112,8 @@ func BuildSkillProposalIssueRequest(ev Event, cfg Config, repoContext RepoContex
 		RequestedAction:      requestedAction,
 		PlannedAction:        plannedSkillProposalAction(requestedAction, len(matches)),
 		Target:               target,
+		NotifyRoutes:         normalizeChannelBroadcastRoutes(notifyRoutes),
+		NotifyRoutesSHA:      channelBroadcastRoutesHash(notifyRoutes),
 		ProposalPath:         skillProposalPlanPath(target.Candidate),
 		DestinationPath:      skillInstallDestinationPath(target.Candidate),
 		ExistingSkillMatches: len(matches),
@@ -103,6 +125,39 @@ func BuildSkillProposalIssueRequest(ev Event, cfg Config, repoContext RepoContex
 		SourceLines:          lineCount(sourceText),
 		SourceKind:           sourceKind,
 	}, nil
+}
+
+func RunSkillProposalChannelNotification(ctx context.Context, cfg Config, github ChannelSendGitHubClient, req SkillProposalIssueRequest, result SkillProposalIssueResult) (SkillProposalChannelNotification, error) {
+	notification := SkillProposalChannelNotification{
+		Requested: len(req.NotifyRoutes) > 0,
+		Routes:    len(req.NotifyRoutes),
+	}
+	if len(req.NotifyRoutes) == 0 {
+		return notification, nil
+	}
+	if result.IssueNumber <= 0 {
+		return notification, fmt.Errorf("missing skill proposal issue for channel notification")
+	}
+	body := RenderSkillProposalChannelNotificationBody(req, result)
+	messageID := skillProposalChannelNotificationMessageID(req)
+	broadcast, err := RunChannelBroadcast(ctx, cfg, github, ChannelBroadcastOptions{
+		Repo:      req.Repo,
+		Routes:    req.NotifyRoutes,
+		MessageID: messageID,
+		Body:      body,
+	})
+	if err != nil {
+		return notification, err
+	}
+	notification.Queued = broadcast.Queued
+	notification.Duplicates = broadcast.Duplicates
+	notification.TargetIssuesCreated = broadcast.Created
+	notification.MessageSHA = shortDocumentHash(messageID)
+	notification.BodySHA = shortDocumentHash(body)
+	notification.BodyBytes = len(body)
+	notification.BodyLines = lineCount(body)
+	notification.Destinations = broadcast.Destinations
+	return notification, nil
 }
 
 func RunSkillProposalIssue(ctx context.Context, github SkillProposalIssueGitHubClient, req SkillProposalIssueRequest) (SkillProposalIssueResult, error) {
@@ -184,6 +239,16 @@ func RenderSkillProposalIssueActionReport(ev Event, req SkillProposalIssueReques
 	fmt.Fprintf(&b, "- duplicate_suppressed: `%t`\n", result.Duplicate)
 	fmt.Fprintf(&b, "- requested_action: `%s`\n", req.RequestedAction)
 	fmt.Fprintf(&b, "- planned_proposal_action: `%s`\n", req.PlannedAction)
+	fmt.Fprintf(&b, "- channel_notification_requested: `%t`\n", result.ChannelNotification.Requested)
+	fmt.Fprintf(&b, "- channel_notification_routes: `%d`\n", result.ChannelNotification.Routes)
+	fmt.Fprintf(&b, "- channel_notification_queued: `%d`\n", result.ChannelNotification.Queued)
+	fmt.Fprintf(&b, "- channel_notification_duplicates: `%d`\n", result.ChannelNotification.Duplicates)
+	fmt.Fprintf(&b, "- channel_notification_target_issues_created: `%d`\n", result.ChannelNotification.TargetIssuesCreated)
+	fmt.Fprintf(&b, "- channel_notification_routes_sha256_12: `%s`\n", noneIfEmpty(req.NotifyRoutesSHA))
+	fmt.Fprintf(&b, "- channel_notification_message_id_sha256_12: `%s`\n", noneIfEmpty(result.ChannelNotification.MessageSHA))
+	fmt.Fprintf(&b, "- channel_notification_body_sha256_12: `%s`\n", noneIfEmpty(result.ChannelNotification.BodySHA))
+	fmt.Fprintf(&b, "- channel_notification_body_bytes: `%d`\n", result.ChannelNotification.BodyBytes)
+	fmt.Fprintf(&b, "- channel_notification_body_lines: `%d`\n", result.ChannelNotification.BodyLines)
 	fmt.Fprintf(&b, "- target_type: `%s`\n", req.Target.Type)
 	fmt.Fprintf(&b, "- target_sha256_12: `%s`\n", req.Target.Hash)
 	fmt.Fprintf(&b, "- target_terms: `%d`\n", req.Target.Terms)
@@ -200,6 +265,9 @@ func RenderSkillProposalIssueActionReport(ev Event, req SkillProposalIssueReques
 	fmt.Fprintf(&b, "- raw_source_body_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_proposal_issue_body_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_skill_body_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_channel_routes_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_channel_notification_body_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- provider_delivery_performed: `%t`\n", false)
 	fmt.Fprintf(&b, "- proposal_file_written: `%t`\n", false)
 	fmt.Fprintf(&b, "- active_skill_write_performed: `%t`\n", false)
 	fmt.Fprintf(&b, "- repository_mutation_performed: `%t`\n", false)
@@ -211,7 +279,83 @@ func RenderSkillProposalIssueActionReport(ev Event, req SkillProposalIssueReques
 	fmt.Fprintf(&b, "- review proposal issue: `#%d`\n", result.IssueNumber)
 	fmt.Fprintf(&b, "- if accepted, draft `%s` on a normal branch and review it as code\n", req.ProposalPath)
 	fmt.Fprintf(&b, "- only after review should the proposal become `%s`\n", req.DestinationPath)
+	if result.ChannelNotification.Requested {
+		b.WriteString("\n### Channel Notifications\n")
+		if len(result.ChannelNotification.Destinations) == 0 {
+			b.WriteString("- none\n")
+		} else {
+			for _, destination := range result.ChannelNotification.Destinations {
+				fmt.Fprintf(
+					&b,
+					"- destination=`%02d` target_issue=`#%d` outbound_comment_id=`%d` target_issue_created=`%t` duplicate_suppressed=`%t` route_sha256_12=`%s` channel=`%s` thread_id_sha256_12=`%s` message_id_sha256_12=`%s` body_sha256_12=`%s`\n",
+					destination.Index,
+					destination.IssueNumber,
+					destination.CommentID,
+					destination.Created,
+					destination.Duplicate,
+					noneIfEmpty(destination.RouteHash),
+					destination.Channel,
+					noneIfEmpty(destination.ThreadHash),
+					noneIfEmpty(destination.MessageHash),
+					noneIfEmpty(destination.BodyHash),
+				)
+			}
+		}
+		b.WriteString("- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`\n")
+	}
 	return strings.TrimSpace(b.String())
+}
+
+func parseSkillProposalIssueArgs(args []string) (string, []string, error) {
+	target := ""
+	var notifyRoutes []string
+	for i := 0; i < len(args); i++ {
+		field := strings.TrimSpace(args[i])
+		if field == "" {
+			continue
+		}
+		switch field {
+		case "--name", "--skill", "--target":
+			i++
+			if i >= len(args) {
+				return "", nil, fmt.Errorf("%s requires a value", field)
+			}
+			target = strings.TrimSpace(args[i])
+		case "--notify-route", "--notify-routes", "--channel-route", "--channel-routes":
+			i++
+			if i >= len(args) {
+				return "", nil, fmt.Errorf("%s requires a value", field)
+			}
+			notifyRoutes = append(notifyRoutes, splitChannelBroadcastRoutes(args[i])...)
+		default:
+			if strings.HasPrefix(field, "--") {
+				return "", nil, fmt.Errorf("unknown skill proposal argument %q", field)
+			}
+			if target == "" {
+				target = field
+			}
+		}
+	}
+	return target, normalizeChannelBroadcastRoutes(notifyRoutes), nil
+}
+
+func RenderSkillProposalChannelNotificationBody(req SkillProposalIssueRequest, result SkillProposalIssueResult) string {
+	var b strings.Builder
+	b.WriteString("GitClaw skill proposal\n\n")
+	fmt.Fprintf(&b, "Review issue: #%d %s\n", result.IssueNumber, result.IssueURL)
+	fmt.Fprintf(&b, "Source issue: #%d %s\n", req.SourceIssueNumber, issueURL(req.Repo, req.SourceIssueNumber))
+	fmt.Fprintf(&b, "Proposal name: %s\n", req.Target.Candidate)
+	fmt.Fprintf(&b, "Planned action: %s\n", req.PlannedAction)
+	fmt.Fprintf(&b, "Proposal path: %s\n", req.ProposalPath)
+	fmt.Fprintf(&b, "Destination path: %s\n", req.DestinationPath)
+	fmt.Fprintf(&b, "Review PR required: %t\n", true)
+	fmt.Fprintf(&b, "Active skill written: %t\n", false)
+	b.WriteString("\nReview the GitHub proposal issue before drafting a reusable skill on a normal code-review branch. This notification did not call a model, generate a skill body, write proposal files, write active skills, or mutate the repository.")
+	return strings.TrimSpace(b.String())
+}
+
+func skillProposalChannelNotificationMessageID(req SkillProposalIssueRequest) string {
+	return fmt.Sprintf("gitclaw-skill-proposal-%s", req.Target.Candidate)
 }
 
 func skillProposalIssueMatches(body, name string) bool {

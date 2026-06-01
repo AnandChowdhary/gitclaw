@@ -192,6 +192,7 @@ gitclaw skills proposals [risk]
 gitclaw skills proposal-plan <name>
 @gitclaw /skills sources propose <name> --source <ref>
 @gitclaw /skills propose <name>
+@gitclaw /skills propose <name> --notify-route <route>
 @gitclaw /skills rehearse <name> --id <id>
 gitclaw skills install-plan <target>
 gitclaw skills upgrade-plan <target>
@@ -213,6 +214,9 @@ Trusted issue threads can start the same review queue with
 the proposal, records source/request hashes and review paths, and keeps active
 `SKILL.md` files untouched until a human-reviewed branch converts the proposal
 into repository files.
+Add `--notify-route <route>` or `--notify-routes <a,b>` to also queue a
+body-safe Slack/Telegram channel notification for that proposal issue through
+the existing routebook, channel issue, outbox, and delivery receipt path.
 External skill provenance gets the same issue-native treatment with
 `@gitclaw /skills sources propose <name> --source <ref>`: GitClaw opens or
 reuses a labeled review conversation issue for a proposed
@@ -1025,6 +1029,7 @@ scripts/e2e/github-model-cost-report.sh
 scripts/e2e/github-model-risk-report.sh
 scripts/e2e/github-skills-proposal-plan-report.sh
 scripts/e2e/github-skills-propose-issue.sh
+scripts/e2e/github-skills-propose-channel-notify.sh
 scripts/e2e/github-skills-sources-propose-issue.sh
 scripts/e2e/github-skills-rehearse-issue.sh
 scripts/e2e/github-skills-proposals-report.sh
@@ -1219,6 +1224,11 @@ The skills-propose harness covers the action side of Skill Workshop: a trusted
 keeps source text out of receipts and proposal issue bodies, suppresses
 duplicate proposal requests, and then continues with a real GitHub Models
 repo-reader/search follow-up.
+The skills-propose channel-notify harness proves the same review queue can
+also notify a reviewed Slack/Telegram route with `--notify-route`, queue a
+metadata-safe outbound channel message, suppress duplicate notifications,
+expose the pending provider work through `channel-outbox`, and then continue
+with a real GitHub Models repo-reader/search follow-up.
 The skills-source-propose harness covers external provenance intake: a trusted
 `@gitclaw /skills sources propose <name> --source <ref>` turn opens or reuses a
 labeled skill-source proposal issue, hashes the source ref instead of copying
