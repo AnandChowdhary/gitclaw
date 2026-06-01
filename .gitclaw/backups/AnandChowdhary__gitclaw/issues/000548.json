@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T14:47:13Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 548,
+    "title": "GitClaw channel poll: Which tiny channel feature should GitClaw ship for NOECHO_CHANNEL_POLL_QUESTION_",
+    "body": "\u003c!-- gitclaw:channel-poll poll_id=\"poll-20260601t144151z\" source_issue=\"547\" source_comment_id=\"0\" routes_sha256_12=\"9892046e64ef\" options_sha256_12=\"7ac0cfee2e98\" --\u003e\nGitClaw channel poll.\n\n- source_issue: `#547`\n- source_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/547`\n- poll_id_sha256_12: `697b666d3c89`\n- routes_sha256_12: `9892046e64ef`\n- route_count: `2`\n- option_count: `2`\n- raw_route_names_included: `false`\n\n## Question\n\nWhich tiny channel feature should GitClaw ship for NOECHO_CHANNEL_POLL_QUESTION_20260601T144151Z?\n\n## Options\n\n1. Ship the tiny poll\n2. Keep the huddle only\n\nVote by commenting with the option number or option text. Participants can continue here from GitHub, or through a mirrored channel thread invited into this poll.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel poll: Which tiny channel feature should GitClaw ship for NOECHO_CHANNEL_POLL_QUESTION_\n\n\u003c!-- gitclaw:channel-poll poll_id=\"poll-20260601t144151z\" source_issue=\"547\" source_comment_id=\"0\" routes_sha256_12=\"9892046e64ef\" options_sha256_12=\"7ac0cfee2e98\" --\u003e\nGitClaw channel poll.\n\n- source_issue: `#547`\n- source_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/547`\n- poll_id_sha256_12: `697b666d3c89`\n- routes_sha256_12: `9892046e64ef`\n- route_count: `2`\n- option_count: `2`\n- raw_route_names_included: `false`\n\n## Question\n\nWhich tiny channel feature should GitClaw ship for NOECHO_CHANNEL_POLL_QUESTION_20260601T144151Z?\n\n## Options\n\n1. Ship the tiny poll\n2. Keep the huddle only\n\nVote by commenting with the option number or option text. Participants can continue here from GitHub, or through a mirrored channel thread invited into this poll.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel poll and use the repo-reader skill.\n\nSearch the repository for `channel poll unique search fixture phrase`.\nThe matching repository search result line ends with an all-caps token after the arrow.\nThat token starts with `GITCLAW_CHANNEL_POLL_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include route names, target issue numbers, message ids, account hashes, source issue title, poll id, poll question, or option text.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_POLL_FOLLOWUP_20260601T144151Z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4593684541,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_POLL_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4593693545,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4593684541,
+      "body": "@gitclaw Continue this channel poll and use the repo-reader skill.\n\nSearch the repository for `channel poll unique search fixture phrase`.\nThe matching repository search result line ends with an all-caps token after the arrow.\nThat token starts with `GITCLAW_CHANNEL_POLL_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include route names, target issue numbers, message ids, account hashes, source issue title, poll id, poll question, or option text.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_POLL_FOLLOWUP_20260601T144151Z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T14:45:43Z",
+      "updated_at": "2026-06-01T14:45:43Z"
+    },
+    {
+      "id": 4593693545,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26762239647\" event_id=\"comment-4593684541\" model=\"openai/gpt-5-nano\" idempotency_key=\"e0274c89a1495affe1027c28581e19b9\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26762239647\" prompt_context_sha256_12=\"b80e18514b68\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10551\" usage_completion_tokens=\"532\" usage_total_tokens=\"11083\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_POLL_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T14:46:47Z",
+      "updated_at": "2026-06-01T14:46:47Z"
+    }
+  ]
+}

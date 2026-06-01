@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T14:45:29Z",
+  "generated_at": "2026-06-01T14:47:14Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 485,
+  "count": 486,
   "issues": [
     {
       "number": 3,
@@ -6102,6 +6102,18 @@
       ],
       "comment_count": 3,
       "transcript_messages": 4
+    },
+    {
+      "number": 548,
+      "title": "GitClaw channel poll: Which tiny channel feature should GitClaw ship for NOECHO_CHANNEL_POLL_QUESTION_",
+      "path": "issues/000548.json",
+      "backup_generated_at": "2026-06-01T14:47:13Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
