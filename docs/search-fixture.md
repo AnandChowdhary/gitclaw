@@ -42,6 +42,7 @@ backup retention plan unique search fixture phrase => GITCLAW_BACKUP_RETENTION_P
 skills install plan unique search fixture phrase => GITCLAW_SKILLS_INSTALL_PLAN_CONTEXT_V1
 skills upgrade plan unique search fixture phrase => GITCLAW_SKILLS_UPGRADE_PLAN_CONTEXT_V1
 skills propose unique search fixture phrase => GITCLAW_SKILLS_PROPOSE_CONTEXT_V1
+skills rehearsal unique search fixture phrase => GITCLAW_SKILLS_REHEARSAL_CONTEXT_V1
 soul edit plan unique search fixture phrase => GITCLAW_SOUL_EDIT_PLAN_CONTEXT_V1
 soul propose unique search fixture phrase => GITCLAW_SOUL_PROPOSE_CONTEXT_V1
 memory promote plan unique search fixture phrase => GITCLAW_MEMORY_PROMOTE_PLAN_CONTEXT_V1

@@ -1756,6 +1756,7 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills proposals risk
 @gitclaw /skills proposal-plan repo-reader
 @gitclaw /skills propose repo-reader
+@gitclaw /skills rehearse repo-reader --id repo-reader-lab
 @gitclaw /skills install-plan repo-reader
 @gitclaw /skills upgrade-plan repo-reader
 @gitclaw /bundles
@@ -2110,6 +2111,23 @@ proposal issue or receipt, and does not call a model. It is a GitHub-native
 review queue entry: after review, a maintainer can draft the proposal file on
 a normal branch, run validation/risk checks, and promote it to an active skill
 only through a reviewed git change.
+
+When called as `@gitclaw /skills rehearse <name> --id <id>`, GitClaw performs
+the issue-native rehearsal action. It opens or reuses a dedicated GitHub issue
+marked with `gitclaw:skill-rehearsal-issue`, labels it with the GitClaw trigger
+label so normal comments become ordinary agent turns, records the requested
+skill, source issue/comment identity, source hash, validation rollup, and
+matched-skill counts, then posts a body-free receipt in the source
+conversation. Duplicate open rehearsal issues are suppressed by the hidden
+marker and safe rehearsal id.
+
+The rehearsal action does not install skills, edit `.gitclaw/SKILLS`, fetch
+remote registries, run setup scripts, copy raw issue/comment text, copy raw
+skill bodies, or call a model. It is a conversation lane for trying the current
+reviewed skill behavior: after creation, a maintainer comments on the
+rehearsal issue, and the live E2E must prove a real GitHub Models response
+with `prompt_context_sha256_12`, selected skill metadata, prompt-visible
+tools, `gitclaw.search_files`, and token usage telemetry.
 
 When called as `@gitclaw /skills proposals`, `@gitclaw /skills proposals
 risk`, or `gitclaw skills proposals [risk]`, GitClaw inventories the reviewed
@@ -8184,6 +8202,13 @@ examples/workflows/gitclaw.yml
   raw source/request leakage, and still runs a live GitHub Models follow-up
   proving repo-local skill selection, prompt-visible repository search tool
   usage, and usage telemetry after the deterministic issue action.
+- A `gh`-driven skills-rehearse E2E harness verifies
+  `@gitclaw /skills rehearse <name> --id <id>` opens a body-free GitHub
+  rehearsal issue labeled for normal GitClaw conversation, posts a source
+  receipt, suppresses duplicate open rehearsal issues, avoids raw source and
+  skill-body leakage, and then runs the live GitHub Models follow-up on the
+  rehearsal issue itself to prove selected skill context, prompt-visible
+  repository search tool usage, and usage telemetry.
 - A `gh`-driven skills-proposals E2E harness verifies
   `@gitclaw /skills proposals risk` inventories the repo-local proposal store,
   reports lifecycle counts, risk gates, no auto-apply support, no proposal or

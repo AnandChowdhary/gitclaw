@@ -174,6 +174,19 @@ no-mutation gates. The report should stay body-free and require a live GitHub
 Models repo-reader/search follow-up after any behavior change, so the
 deterministic audit never replaces testing real skill selection and tool use.
 
+2026-06-01 skill-rehearsal follow-up: OpenClaw's Skills Workshop and Hermes'
+progressive-disclosure skill flow both imply a missing middle step between
+metadata review and installation/update work: try the current reviewed skill
+in a normal conversation without mutating the repo. GitClaw should add
+`@gitclaw /skills rehearse <name> --id <id>` as a GitHub-native rehearsal lane
+that opens or reuses a labeled issue, records source hashes and skill
+metadata, suppresses duplicates, and refuses installs, edits, registries,
+setup scripts, raw source copies, raw skill-body copies, or model calls during
+the setup action. The required proof should happen after creation: comment on
+the rehearsal issue and require a live GitHub Models response with selected
+skill, prompt context, prompt-visible tools, `gitclaw.search_files`, and usage
+telemetry.
+
 2026-06-01 skill-source-verify follow-up: OpenClaw exposes a ClawHub
 `skills verify` trust envelope and ClawHub skill pages surface scan state
 before install, while Hermes keeps skill discovery compact and loads full
