@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T22:51:02Z",
+  "generated_at": "2026-06-01T22:52:33Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 532,
+  "count": 533,
   "issues": [
     {
       "number": 3,
@@ -6707,6 +6707,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 619,
+      "title": "GitClaw channel decision: Record GitHub-native channel decision 20260601t224624z",
+      "path": "issues/000619.json",
+      "backup_generated_at": "2026-06-01T22:52:31Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }

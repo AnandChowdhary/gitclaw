@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T22:52:31Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 619,
+    "title": "GitClaw channel decision: Record GitHub-native channel decision 20260601t224624z",
+    "body": "\u003c!-- gitclaw:channel-decision decision_id=\"channel-decision-20260601t224624z\" channel=\"telegram\" thread_id_sha256_12=\"1f8189ee579b\" source_message_id_sha256_12=\"b541aba7dbfa\" source_issue=\"618\" source_comment_id=\"4597113140\" --\u003e\nGitClaw channel decision.\n\n- decision_id: channel-decision-20260601t224624z\n- source_channel: telegram\n- source_issue: #618\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/618\n- source_comment_id: 4597113140\n- thread_id_sha256_12: 1f8189ee579b\n- source_message_id_sha256_12: b541aba7dbfa\n- decision_mode: github-issue-decision\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Decision\n\nRecord GitHub-native channel decision 20260601t224624z\n\n## Rationale\n\nVisible decision rationale token: VISIBLE_CHANNEL_DECISION_RATIONALE_20260601t224624z\n\nUse this issue as the durable GitHub home for the recorded channel decision.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel decision: Record GitHub-native channel decision 20260601t224624z\n\n\u003c!-- gitclaw:channel-decision decision_id=\"channel-decision-20260601t224624z\" channel=\"telegram\" thread_id_sha256_12=\"1f8189ee579b\" source_message_id_sha256_12=\"b541aba7dbfa\" source_issue=\"618\" source_comment_id=\"4597113140\" --\u003e\nGitClaw channel decision.\n\n- decision_id: channel-decision-20260601t224624z\n- source_channel: telegram\n- source_issue: #618\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/618\n- source_comment_id: 4597113140\n- thread_id_sha256_12: 1f8189ee579b\n- source_message_id_sha256_12: b541aba7dbfa\n- decision_mode: github-issue-decision\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Decision\n\nRecord GitHub-native channel decision 20260601t224624z\n\n## Rationale\n\nVisible decision rationale token: VISIBLE_CHANNEL_DECISION_RATIONALE_20260601t224624z\n\nUse this issue as the durable GitHub home for the recorded channel decision.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created decision and use the repo-reader skill.\n\nSearch the repository for `channel decision unique search fixture phrase`.\nThe matching repository search result line has the form `channel decision unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_DECISION_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include decision ids, message ids, thread ids, account hashes, issue numbers, decision text, or rationale.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_DECISION_FOLLOWUP_20260601t224624z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4597126750,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_DECISION_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4597130412,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4597126750,
+      "body": "@gitclaw Continue this channel-created decision and use the repo-reader skill.\n\nSearch the repository for `channel decision unique search fixture phrase`.\nThe matching repository search result line has the form `channel decision unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_DECISION_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include decision ids, message ids, thread ids, account hashes, issue numbers, decision text, or rationale.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_DECISION_FOLLOWUP_20260601t224624z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T22:51:15Z",
+      "updated_at": "2026-06-01T22:51:15Z"
+    },
+    {
+      "id": 4597130412,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26786856481\" event_id=\"comment-4597126750\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"087312851e81aaee7346f5fe3e9a7cb5\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26786856481\" prompt_context_sha256_12=\"9d382827b69b\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10632\" usage_completion_tokens=\"11\" usage_total_tokens=\"10643\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_DECISION_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T22:52:04Z",
+      "updated_at": "2026-06-01T22:52:04Z"
+    }
+  ]
+}
