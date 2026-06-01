@@ -389,6 +389,7 @@ gitclaw backup export-jsonl
 gitclaw backup restore-plan
 gitclaw backup retention-plan
 @gitclaw /backup rehearse --id <id>
+@gitclaw /backup restore-request --id <id>
 gitclaw session catalog
 gitclaw session list --backup <issue.json>
 gitclaw session provenance --backup <issue.json>
@@ -556,6 +557,13 @@ for a dry-run recovery rehearsal. The source receipt is body-free and
 model-free; the rehearsal issue records the expected backup branch paths and
 dry-run gates, then normal comments on that issue exercise GitHub Models and
 repo-reader tools.
+
+`@gitclaw /backup restore-request --id <id>` opens or reuses a dedicated
+GitHub issue for reviewing a possible restore. It records the expected backup
+branch paths, approval gates, and dry-run commands, but the action does not
+read backup payloads, mutate the repository, replay GitHub API calls, or call a
+model. Continue on the generated restore-request issue to discuss the recovery
+with GitHub Models after local backup verification.
 
 `gitclaw backup retention-plan` is a dry-run cleanup plan for fetched backups.
 Its live harness now also proves a real GitHub Models repo-reader follow-up
@@ -963,6 +971,7 @@ scripts/e2e/github-backup-search.sh
 scripts/e2e/github-backup-export-jsonl.sh
 scripts/e2e/github-memory-rehearse-issue.sh
 scripts/e2e/github-backup-rehearse-issue.sh
+scripts/e2e/github-backup-restore-request-issue.sh
 scripts/e2e/github-agents-catalog-report.sh
 scripts/e2e/github-agents-provenance-report.sh
 scripts/e2e/github-agents-risk-report.sh
@@ -1286,6 +1295,12 @@ conversation lane: `@gitclaw /backup rehearse` opens a labeled rehearsal issue,
 verifies the real `gitclaw-backups` branch with coverage/drill/restore-plan,
 suppresses duplicate rehearsal requests, and then runs a real GitHub Models
 repo-reader/search follow-up on the rehearsal issue.
+The backup-restore-request harness proves recovery approval can also become its
+own GitHub conversation lane: `@gitclaw /backup restore-request` opens a
+labeled review issue, verifies the real `gitclaw-backups` branch with
+verify/coverage/drill/restore-plan/manifest, suppresses duplicate restore
+requests, and then runs a real GitHub Models repo-reader/search follow-up on
+the restore-request issue.
 The channel-broadcast slash harness fans one source issue out to multiple
 reviewed routes, verifies one outbound queue item per route, checks duplicate
 broadcast suppression, keeps route names and outbound bodies out of the source

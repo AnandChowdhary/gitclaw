@@ -39,6 +39,7 @@ tool request notification unique search fixture phrase => GITCLAW_TOOL_NOTIFY_CO
 approvals catalog unique search fixture phrase => GITCLAW_APPROVALS_CATALOG_CONTEXT_V1
 approval provenance unique search fixture phrase => GITCLAW_APPROVAL_PROVENANCE_CONTEXT_V1
 backup restore plan unique search fixture phrase => GITCLAW_BACKUP_RESTORE_PLAN_CONTEXT_V1
+backup restore request unique search fixture phrase => GITCLAW_BACKUP_RESTORE_REQUEST_CONTEXT_V1
 backup retention plan unique search fixture phrase => GITCLAW_BACKUP_RETENTION_PLAN_CONTEXT_V1
 skills install plan unique search fixture phrase => GITCLAW_SKILLS_INSTALL_PLAN_CONTEXT_V1
 skills upgrade plan unique search fixture phrase => GITCLAW_SKILLS_UPGRADE_PLAN_CONTEXT_V1

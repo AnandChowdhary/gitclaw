@@ -5949,6 +5949,8 @@ comment with `model="gitclaw/backup"` and summarizes:
   `restore-plan`, or `retention-plan`),
 - the recovery rehearsal issue action
   (`@gitclaw /backup rehearse --id <stable-rehearsal-id>`),
+- the restore request issue action
+  (`@gitclaw /backup restore-request --id <stable-request-id>`),
 - the matching local `gitclaw backup ...` command to run against a fetched
   `gitclaw-backups` branch,
 - that issue-side execution is metadata-only because the backup branch is
@@ -6122,6 +6124,48 @@ duplicate rehearsal request, and finally comments on the rehearsal issue with a
 repo-reader search task that must make a GitHub Models call with prompt
 context, selected skill, prompt-visible `gitclaw.search_files`, and usage
 telemetry.
+
+```text
+@gitclaw /backup restore-request --id <stable-request-id>
+```
+
+Aliases are `/backup request-restore`, `/backup restore-issue`,
+`/backup recovery-request`, and `/backup request-recovery`; `/backups` may be
+used instead of `/backup`. The action runs before model inference, creates or
+reuses one open GitHub issue marked with
+`gitclaw:backup-restore-request-issue`, and labels that issue with the normal
+trigger label so the operator can continue the restore review as a GitHub
+Models conversation.
+
+The source receipt is body-free and model-free. It includes the restore request
+issue number, duplicate suppression status, backup issue number, target
+repository, backup branch/root, hashes for repo backup paths, and explicit
+restore gates:
+
+- `approval_required: true`,
+- `restore_pr_required: true`,
+- `restore_mode: dry-run-first`,
+- `repository_mutation_allowed: false`,
+- `backup_branch_write_allowed: false`,
+- `github_api_replay_allowed: false`,
+- `raw_source_body_included: false`,
+- `raw_backup_bodies_included: false`.
+
+The action does not read raw backup payloads, restore files, mutate the
+repository, write the backup branch, replay GitHub API calls, or call a model.
+The generated restore request issue body may include the stable request id,
+expected backup paths, and dry-run commands because it is the operator-facing
+review lane, but it must not copy raw source text. Duplicate suppression is
+keyed by the hidden restore-request marker and sanitized id.
+
+Every change to this surface must run a live E2E that creates a real source
+issue, verifies the restore-request issue was opened and labeled, fetches the
+real `gitclaw-backups` branch, runs `gitclaw backup verify`, `gitclaw backup
+coverage`, `gitclaw backup drill`, `gitclaw backup restore-plan`, and
+`gitclaw backup manifest` for the source issue, posts a duplicate restore
+request, and finally comments on the restore-request issue with a repo-reader
+search task that must make a GitHub Models call with prompt context, selected
+skill, prompt-visible `gitclaw.search_files`, and usage telemetry.
 
 ## Backup Risk Command
 
@@ -7523,7 +7567,29 @@ assert the expected comments/labels, and close the issue in cleanup.
      with prompt provenance, selected skills, prompt-visible tool names, and
      usage markers.
 
-48. **Backup retention plan**
+48. **Backup restore request issue**
+
+   - create a real issue with `@gitclaw /backup restore-request --id <id>`,
+   - assert the source receipt is generated without a model call, creates a
+     labeled restore-request issue, suppresses raw source text, and exposes
+     only hashes for backup paths,
+   - inspect the restore-request issue body and assert it contains the stable
+     marker, backup branch/root, expected issue backup path, approval gates,
+     dry-run commands, and no raw source body,
+   - wait for the successful backup job,
+   - fetch the real `gitclaw-backups` branch,
+   - run `gitclaw backup verify`, `gitclaw backup coverage`,
+     `gitclaw backup drill`, `gitclaw backup restore-plan`, and
+     `gitclaw backup manifest` for the source issue,
+   - assert all local reports are body-free where applicable and non-mutating,
+   - post a duplicate `@gitclaw /backup restore-request --id <id>` comment and
+     assert it reuses the same restore-request issue,
+   - post a normal follow-up comment on the restore-request issue that requires
+     repo-reader search and assert the next assistant turn used GitHub Models
+     with prompt provenance, selected skills, prompt-visible tool names, and
+     usage markers.
+
+49. **Backup retention plan**
 
    - create a real issue with `@gitclaw /backup retention-plan`,
    - assert the issue-side report lists `requested_backup_command:
@@ -7674,6 +7740,10 @@ MVP is not complete until:
   exported as one JSONL transcript record per reconstructed message,
 - the backup restore-plan harness verifies a real backed-up issue can produce
   a non-mutating restore plan with counts and hashes but no raw body leakage,
+- the backup restore-request harness verifies a restore approval lane opens a
+  labeled GitHub issue, validates the real backup branch with local dry-run
+  commands, suppresses duplicate restore requests, and then proves a normal
+  model-backed repo-reader/search follow-up on that generated issue,
 - the backup retention-plan harness verifies a fetched backup branch can
   produce a dry-run keep-latest plan with kept/prune-candidate paths and hashes
   but no raw title/body leakage,

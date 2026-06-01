@@ -785,6 +785,32 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		status.SetDone()
 		return nil
 	}
+	if IsBackupRestoreRequestIssueRequest(ev, cfg) {
+		restoreClient, ok := github.(BackupRestoreRequestIssueGitHubClient)
+		if !ok {
+			return failStartedTurn(ctx, cfg, github, ev, status, "backup", fmt.Errorf("github client cannot create backup restore request issues"))
+		}
+		req, err := BuildBackupRestoreRequestIssueRequest(ev, cfg)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "backup", fmt.Errorf("build backup restore request issue: %w", err))
+		}
+		result, err := RunBackupRestoreRequestIssue(ctx, cfg, restoreClient, req)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "backup", fmt.Errorf("run backup restore request issue: %w", err))
+		}
+		body := RenderAssistantComment(Marker{
+			RunID:          envFirst("GITHUB_RUN_ID", "local"),
+			EventID:        eventID(ev),
+			Model:          "gitclaw/backup",
+			IdempotencyKey: key,
+			RunURL:         actionRunURL(ev),
+		}, RenderBackupRestoreRequestIssueActionReport(ev, req, result))
+		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post backup restore request issue comment: %w", err))
+		}
+		status.SetDone()
+		return nil
+	}
 	if IsBackupReportRequest(ev, cfg) {
 		body := RenderAssistantComment(Marker{
 			RunID:          envFirst("GITHUB_RUN_ID", "local"),
