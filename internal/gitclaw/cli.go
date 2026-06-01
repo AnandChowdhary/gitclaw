@@ -226,6 +226,8 @@ func runProfileCommand(args []string) error {
 		return runProfileProvenanceCommand(args[1:])
 	case "search":
 		return runProfileSearchCommand(args[1:])
+	case "diff", "changes", "compare":
+		return runProfileDiffCommand(args[1:])
 	case "snapshot", "snapshots", "fingerprint", "fingerprints", "lock", "lockfile":
 		return runProfileSnapshotCommand(args[1:])
 	case "manifest", "portability", "portable", "export-plan", "export", "package-plan", "distribution":
@@ -233,7 +235,7 @@ func runProfileCommand(args []string) error {
 	case "risk", "risk-audit":
 		return runProfileRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw profile [catalog|show|verify|list|provenance|search <query>|snapshot|manifest|export-plan|risk]")
+		return fmt.Errorf("usage: gitclaw profile [catalog|show|verify|list|provenance|search <query>|diff [base-ref]|snapshot|manifest|export-plan|risk]")
 	}
 }
 
@@ -315,6 +317,26 @@ func runProfileSearchCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderProfileSearchCLIReport(cfg, repoContext, query))
+	return nil
+}
+
+func runProfileDiffCommand(args []string) error {
+	if len(args) > 1 {
+		return fmt.Errorf("usage: gitclaw profile diff [base-ref]")
+	}
+	baseRef := defaultProfileDiffBaseRef
+	if len(args) == 1 {
+		baseRef = strings.TrimSpace(args[0])
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "profile diff"}}, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderProfileDiffCLIReport(cfg, repoContext, baseRef))
 	return nil
 }
 

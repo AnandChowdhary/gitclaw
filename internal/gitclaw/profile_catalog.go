@@ -141,6 +141,7 @@ func profileCatalogEntries() []profileCatalogEntry {
 		{Name: "verify", IssueIntent: "@gitclaw /profile verify", LocalCommand: "gitclaw profile verify", Execution: "repo-local-validation", Gate: "soul-skill-tool-validation"},
 		{Name: "provenance", IssueIntent: "@gitclaw /profile provenance", LocalCommand: "gitclaw profile provenance", Execution: "repo-local-git-history", Gate: "commit-subject-hashes-only"},
 		{Name: "search", IssueIntent: "@gitclaw /profile search <query>", LocalCommand: "gitclaw profile search <query>", Execution: "body-free-profile-search", Gate: "query-hash-and-line-hashes"},
+		{Name: "diff", IssueIntent: "@gitclaw /profile diff [base-ref]", LocalCommand: "gitclaw profile diff [base-ref]", Execution: "body-free-profile-git-diff", Gate: "numstat-and-status-only"},
 		{Name: "snapshot", IssueIntent: "@gitclaw /profile snapshot", LocalCommand: "gitclaw profile snapshot", Execution: "composite-profile-fingerprint", Gate: "body-free-snapshot"},
 		{Name: "manifest", IssueIntent: "@gitclaw /profile manifest", LocalCommand: "gitclaw profile manifest", Execution: "dry-run-portability-manifest", Gate: "no-profile-export"},
 		{Name: "export-plan", IssueIntent: "@gitclaw /profile export-plan", LocalCommand: "gitclaw profile export-plan", Execution: "dry-run-portability-plan", Gate: "no-profile-export"},

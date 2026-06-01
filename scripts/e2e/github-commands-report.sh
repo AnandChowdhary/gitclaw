@@ -149,7 +149,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `34`' \
   'aliases: `32`' \
-  'local_cli_helpers: `220`' \
+  'local_cli_helpers: `221`' \
   'run_mode: `read-only`' \
   'llm_e2e_required_after_commands_report_change: `true`' \
   "### Slash Commands" \
@@ -274,6 +274,7 @@ for expected in \
   'gitclaw profile verify' \
   'gitclaw profile provenance' \
   'gitclaw profile search <query>' \
+  'gitclaw profile diff [base-ref]' \
   'gitclaw profile snapshot' \
   'gitclaw profile manifest' \
   'gitclaw profile export-plan' \

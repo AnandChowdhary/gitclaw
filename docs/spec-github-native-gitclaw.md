@@ -2127,6 +2127,7 @@ Hermes profiles and OpenClaw workspace files:
 @gitclaw /profile catalog
 @gitclaw /profile provenance
 @gitclaw /profile search <query>
+@gitclaw /profile diff [base-ref]
 @gitclaw /profile snapshot
 @gitclaw /profile manifest
 @gitclaw /profile export-plan
@@ -2151,8 +2152,8 @@ before model inference. It posts a `gitclaw:assistant-turn` comment with
 - deterministic tool contract and active-output counts,
 - soul, skill, and tool validation rollups,
 - body-free profile git provenance metadata when explicitly requested,
-- body-free profile search, snapshot, and portability manifest metadata when
-  explicitly requested.
+- body-free profile search, git-diff, snapshot, and portability manifest
+  metadata when explicitly requested.
 
 It never dumps profile file bodies, skill bodies, tool outputs, issue/comment
 bodies, prompts, or secrets. It is an operator confidence surface; the
@@ -2167,6 +2168,7 @@ gitclaw profile show
 gitclaw profile verify
 gitclaw profile provenance
 gitclaw profile search <query>
+gitclaw profile diff [base-ref]
 gitclaw profile snapshot
 gitclaw profile manifest
 gitclaw profile export-plan
@@ -2213,6 +2215,21 @@ requires focused local tests, a live deterministic issue E2E, and a normal
 GitHub Models follow-up proving repo-reader selection, prompt-visible
 `gitclaw.search_files`, usage telemetry, and repository-search fixture
 recovery.
+
+`@gitclaw /profile diff [base-ref]`, `@gitclaw /profile changes`, and
+`gitclaw profile diff [base-ref]` compare repo-local `.gitclaw/` profile files
+against a git base ref using `git diff --name-status` and `git diff --numstat`
+metadata only. This is GitClaw's repo-native profile review loop inspired by
+Hermes checkpoints/worktree diffs and OpenClaw's preview-before-migration
+posture. The report emits the requested-ref hash, resolved base/head commit
+hashes, changed profile counts, path/status cards, numstat counts, and file
+hashes. It excludes raw patches, profile bodies, skill bodies, memory bodies,
+issue/comment bodies, prompts, requested ref text, git subjects, author
+identities, sessions, backup payloads, credentials, and secret values. Any
+change to this surface requires focused local tests, a live deterministic issue
+E2E, and a normal GitHub Models follow-up proving repo-reader selection,
+prompt-visible `gitclaw.search_files`, usage telemetry, and repository-search
+fixture recovery.
 
 `@gitclaw /profile snapshot`, `@gitclaw /profile fingerprint`, and
 `gitclaw profile snapshot` produce a composite body-free fingerprint for the
@@ -7775,6 +7792,15 @@ examples/workflows/gitclaw.yml
   hashes, scores, and no raw profile, issue, comment, prompt, tool, session,
   backup, credential, or raw query leakage. The same issue then receives a live
   GitHub Models follow-up that proves `repo-reader` selection, prompt-visible
+  `gitclaw.search_files`, usage telemetry, and repository-search fixture
+  recovery.
+- A `gh`-driven profile-diff E2E harness verifies
+  `@gitclaw /profile diff [base-ref]` produces a body-free profile git-diff
+  report using status/numstat metadata, requested-ref hashes, resolved commit
+  hashes, and no raw patches, profile bodies, issue/comment text, prompts,
+  requested ref text, git subjects, author identities, sessions, backup
+  payloads, credentials, or secrets. The same issue then receives a live GitHub
+  Models follow-up that proves `repo-reader` selection, prompt-visible
   `gitclaw.search_files`, usage telemetry, and repository-search fixture
   recovery.
 - A `gh`-driven profile-snapshot E2E harness verifies

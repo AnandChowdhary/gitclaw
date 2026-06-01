@@ -43,6 +43,7 @@ go run ./cmd/gitclaw diffs risk
 go run ./cmd/gitclaw profile catalog
 go run ./cmd/gitclaw profile provenance
 go run ./cmd/gitclaw profile search repo-reader
+go run ./cmd/gitclaw profile diff HEAD~1
 go run ./cmd/gitclaw profile snapshot
 go run ./cmd/gitclaw profile manifest
 go run ./cmd/gitclaw profile risk
@@ -559,6 +560,7 @@ gitclaw profile catalog
 gitclaw profile show
 gitclaw profile provenance
 gitclaw profile search <query>
+gitclaw profile diff [base-ref]
 gitclaw profile snapshot
 gitclaw profile manifest
 gitclaw profile export-plan
@@ -593,6 +595,13 @@ envelope with a deterministic lexical matcher. It reports only paths,
 categories, line numbers, scores, query hashes, and line hashes, so operators
 can find profile facts without posting raw profile files, skill bodies, issue
 text, comments, prompts, tool outputs, or raw search queries.
+
+`gitclaw profile diff [base-ref]` compares repo-local `.gitclaw/` profile
+files against a git base ref using status and numstat metadata only. It
+reports changed profile paths, statuses, counts, and hashes while excluding raw
+patches, profile bodies, skill bodies, issue/comment text, prompts, requested
+ref text, git subjects, author identities, sessions, backups, credentials, and
+secret values.
 
 `gitclaw profile snapshot` is the composite body-free fingerprint for the
 profile envelope. It ties the profile manifest, soul snapshot, memory
@@ -793,6 +802,7 @@ scripts/e2e/github-plugins-mcp-report.sh
 scripts/e2e/github-profile-catalog-report.sh
 scripts/e2e/github-profile-provenance-report.sh
 scripts/e2e/github-profile-search-report.sh
+scripts/e2e/github-profile-diff-report.sh
 scripts/e2e/github-profile-snapshot-report.sh
 scripts/e2e/github-profile-risk-report.sh
 scripts/e2e/github-channel-message.sh

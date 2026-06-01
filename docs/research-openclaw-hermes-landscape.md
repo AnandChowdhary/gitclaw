@@ -3627,3 +3627,14 @@ only reviewed repo-local `.gitclaw/` profile files and emits no raw bodies or
 raw query text. The report posts hashes, line numbers, matched-term counts,
 scores, and manifest metadata, then requires a separate live GitHub Models
 follow-up to prove ordinary conversational search and tool usage still work.
+
+## 2026-06-01 Profile Diff Follow-Up
+
+Hermes' checkpoints, rollback-diff, and git-worktree docs make reviewable
+change boundaries a first-class part of agent operation. OpenClaw's migration
+and backup docs also emphasize previewing and verifying before applying
+changes. GitClaw adopts that lesson as a GitHub-native profile review surface:
+`@gitclaw /profile diff [base-ref]` compares only repo-reviewed `.gitclaw/`
+profile files with metadata-only git diff commands. It emits status, numstat,
+path hashes, requested-ref hashes, and commit hashes while excluding raw
+patches, profile bodies, commit subjects, author identities, and secrets.

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "profile-catalog-e2e: $*" >&2
+  echo "profile-diff-report-e2e: $*" >&2
 }
 
 die() {
@@ -33,17 +33,77 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="NOECHO_PROFILE_CATALOG_${timestamp}"
-followup_hidden_token="NOECHO_PROFILE_CATALOG_FOLLOWUP_${timestamp}"
-expected_token="GITCLAW_PROFILE_CATALOG_CONTEXT_V1"
-search_phrase="profile catalog unique search fixture phrase"
-title="GitClaw profile-catalog e2e ${timestamp}"
-body="@gitclaw /profile catalog
+hidden_token="NOECHO_PROFILE_DIFF_${timestamp}"
+followup_hidden_token="NOECHO_PROFILE_DIFF_FOLLOWUP_${timestamp}"
+expected_token="GITCLAW_PROFILE_DIFF_CONTEXT_V1"
+search_phrase="profile diff unique search fixture phrase"
+title="GitClaw profile diff e2e ${timestamp}"
+body="@gitclaw /profile diff HEAD~1 PROFILE_DIFF_ISSUE_QUERY_SECRET_${timestamp}
 
-Live profile-catalog E2E.
+Live profile-diff E2E. Mention repo-reader so the diff report proves profile git metadata without exposing raw profile bodies or patches.
+Do not include this hidden profile diff token: ${hidden_token}"
 
-Hidden profile catalog body token: ${token}
-This should produce a deterministic profile catalog without leaking raw issue text."
+local_report="$(go run ./cmd/gitclaw profile diff HEAD~1)"
+for expected in \
+  "GitClaw Profile Diff Report" \
+  "Generated without a model call" \
+  'scope: `local-cli`' \
+  'profile_diff_status: `no_changes`' \
+  'diff_scope: `repo-local-profile-files`' \
+  'base_ref_sha256_12:' \
+  'base_ref_resolved: `true`' \
+  'base_commit_sha256_12:' \
+  'head_commit_sha256_12:' \
+  'profile_diff_sha256_12:' \
+  'current_manifest_entries:' \
+  'current_profile_surfaces:' \
+  'changed_profile_files: `0`' \
+  'added_profile_files: `0`' \
+  'modified_profile_files: `0`' \
+  'deleted_profile_files: `0`' \
+  'renamed_profile_files: `0`' \
+  'binary_profile_files: `0`' \
+  'profile_file_limit: `50`' \
+  'profile_files_returned: `0`' \
+  'git_available: `true`' \
+  'git_repository: `true`' \
+  'raw_diffs_included: `false`' \
+  'raw_profile_bodies_included: `false`' \
+  'raw_skill_bodies_included: `false`' \
+  'raw_issue_bodies_included: `false`' \
+  'raw_comment_bodies_included: `false`' \
+  'raw_prompt_bodies_included: `false`' \
+  'raw_git_subjects_included: `false`' \
+  'author_identities_included: `false`' \
+  'raw_requested_refs_included: `false`' \
+  'external_profile_home_accessed: `false`' \
+  'profile_mutation_allowed: `false`' \
+  'profile_export_supported: `false`' \
+  'profile_import_supported: `false`' \
+  'profile_switching_supported: `false`' \
+  'llm_e2e_required_after_profile_diff_change: `true`' \
+  '### Profile Diff Cards' \
+  '- none' \
+  '### Diff Gates' \
+  'base_ref_gate=`pass`' \
+  'raw_diff_gate=`numstat-and-status-only`' \
+  'raw_body_gate=`hashes-only`' \
+  'requested_ref_gate=`sha256_12_only`' \
+  'git_subject_gate=`excluded`' \
+  'mutation_gate=`disabled`' \
+  'external_profile_home_gate=`not_accessed`' \
+  'session_payload_gate=`excluded`' \
+  'backup_payload_gate=`excluded`' \
+  'llm_e2e_gate=`required`' \
+  '### Findings'; do
+  grep -Fq -- "$expected" <<<"$local_report" || die "local profile diff report missing ${expected}"
+done
+
+for leaked in "$expected_token" "$search_phrase" "HEAD~1" "PROFILE_DIFF_ISSUE_QUERY_SECRET_${timestamp}" "GitClaw is a repo-native GitHub issue assistant" "Use GitClaw's read-only repository context" "Prefer repository context and deterministic tool outputs"; do
+  if grep -Fq "$leaked" <<<"$local_report"; then
+    die "local profile diff report leaked ${leaked}"
+  fi
+done
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -57,7 +117,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "profile-catalog e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "profile-diff-report e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -94,11 +154,11 @@ wait_for_run() {
   return 1
 }
 
-assistant_comments() {
+assistant_count() {
   gh issue view "$issue_number" \
     --repo "$repo" \
     --json comments \
-    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | join("\n---GITCLAW-COMMENT---\n")'
+    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length'
 }
 
 latest_assistant_comment() {
@@ -106,13 +166,6 @@ latest_assistant_comment() {
     --repo "$repo" \
     --json comments \
     --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | .[-1] // ""'
-}
-
-assistant_count() {
-  gh issue view "$issue_number" \
-    --repo "$repo" \
-    --json comments \
-    --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn"))] | length'
 }
 
 error_count() {
@@ -161,88 +214,59 @@ wait_for_done_status() {
   return 1
 }
 
-run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one profile catalog comment"
-comments="$(assistant_comments)"
+search_run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
+wait_for_assistant_count 1 || die "expected one profile diff report comment"
+search_comment="$(latest_assistant_comment)"
 
 for expected in \
   'model="gitclaw/profile"' \
-  "GitClaw Profile Catalog Report" \
+  "GitClaw Profile Diff Report" \
   "Generated without a model call" \
-  'requested_profile_command: `catalog`' \
-  'profile_command_status: `ok`' \
-  'profile_catalog_status: `ok`' \
-  'catalog_strategy: `compact-repo-local-profile-discovery`' \
-  'profile_strategy: `repo-local-git-profile`' \
-  'profile_store: `.gitclaw/`' \
-  'profile_scope: `repository`' \
-  'profile_surface: `identity, user, soul, memory, skills, bundles, tools, models, proactive, hooks, channels, backups, sessions`' \
-  'catalog_entries: `10`' \
-  'profile_layers: `13`' \
-  'raw_bodies_included: `false`' \
-  'raw_profile_payloads_included: `false`' \
-  'raw_config_bodies_included: `false`' \
-  'raw_memory_bodies_included: `false`' \
+  'repository:' \
+  'issue:' \
+  'profile_diff_status: `no_changes`' \
+  'diff_scope: `repo-local-profile-files`' \
+  'base_ref_sha256_12:' \
+  'base_ref_resolved: `true`' \
+  'base_commit_sha256_12:' \
+  'head_commit_sha256_12:' \
+  'profile_diff_sha256_12:' \
+  'current_manifest_entries:' \
+  'current_profile_surfaces:' \
+  'changed_profile_files: `0`' \
+  'profile_files_returned: `0`' \
+  'git_available: `true`' \
+  'git_repository: `true`' \
+  'raw_diffs_included: `false`' \
+  'raw_profile_bodies_included: `false`' \
   'raw_skill_bodies_included: `false`' \
-  'raw_tool_outputs_included: `false`' \
-  'credential_values_included: `false`' \
-  'profile_mutation_allowed: `false`' \
-  'profile_switching_supported: `false`' \
-  'profile_import_supported: `false`' \
-  'profile_export_supported: `false`' \
-  'llm_e2e_required_after_profile_catalog_change: `true`' \
-  'command=`catalog` issue_intent=`@gitclaw /profile catalog` local_command=`gitclaw profile catalog` execution=`metadata-only` gate=`body-free-output` raw_bodies_included=`false` mutation_allowed=`false`' \
-  'command=`provenance` issue_intent=`@gitclaw /profile provenance` local_command=`gitclaw profile provenance`' \
-  'command=`search` issue_intent=`@gitclaw /profile search <query>` local_command=`gitclaw profile search <query>`' \
-  'command=`diff` issue_intent=`@gitclaw /profile diff [base-ref]` local_command=`gitclaw profile diff [base-ref]`' \
-  'command=`snapshot` issue_intent=`@gitclaw /profile snapshot` local_command=`gitclaw profile snapshot`' \
-  'command=`manifest` issue_intent=`@gitclaw /profile manifest` local_command=`gitclaw profile manifest`' \
-  'command=`risk` issue_intent=`@gitclaw /profile risk` local_command=`gitclaw profile risk`' \
-  'layer=`identity` store=`.gitclaw/IDENTITY.md`' \
-  'layer=`skills` store=`.gitclaw/SKILLS`' \
-  'layer=`models` store=`.gitclaw/config.yml model`' \
-  'layer=`channels` store=`workflow_dispatch + GitHub issues`' \
-  'layer=`sessions` store=`GitHub issue thread + backup JSON`' \
-  'profile_store_gate=`repo-local-reviewed-files`' \
-  'switching_gate=`unsupported-single-repository-profile`' \
-  'raw_body_gate=`hashes-counts-and-metadata-only`' \
-  'session_gate=`github-issue-thread-plus-backup-json`'; do
-  grep -Fq "$expected" <<<"$comments" || die "profile catalog report missing ${expected}"
+  'raw_issue_bodies_included: `false`' \
+  'raw_comment_bodies_included: `false`' \
+  'raw_prompt_bodies_included: `false`' \
+  'raw_git_subjects_included: `false`' \
+  'author_identities_included: `false`' \
+  'raw_requested_refs_included: `false`' \
+  'llm_e2e_required_after_profile_diff_change: `true`' \
+  'issue_title_sha256_12:' \
+  '### Profile Diff Cards' \
+  '- none' \
+  'base_ref_gate=`pass`' \
+  'raw_diff_gate=`numstat-and-status-only`' \
+  'raw_body_gate=`hashes-only`' \
+  'requested_ref_gate=`sha256_12_only`' \
+  'git_subject_gate=`excluded`' \
+  'mutation_gate=`disabled`' \
+  'session_payload_gate=`excluded`' \
+  'backup_payload_gate=`excluded`' \
+  'llm_e2e_gate=`required`'; do
+  grep -Fq -- "$expected" <<<"$search_comment" || die "profile diff report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "profile catalog report leaked issue body token"
-fi
-if grep -Fq "$expected_token" <<<"$comments" || grep -Fq "$search_phrase" <<<"$comments"; then
-  die "profile catalog report leaked follow-up fixture context"
-fi
-
-cli_catalog="$(go run ./cmd/gitclaw profile catalog)"
-for expected in \
-  "GitClaw Profile Catalog Report" \
-  'scope: `local-cli`' \
-  'profile_catalog_status: `ok`' \
-  'catalog_strategy: `compact-repo-local-profile-discovery`' \
-  'catalog_entries: `10`' \
-  'profile_layers: `13`' \
-  'raw_bodies_included: `false`' \
-  'command=`catalog` issue_intent=`@gitclaw /profile catalog` local_command=`gitclaw profile catalog`' \
-  'command=`provenance` issue_intent=`@gitclaw /profile provenance` local_command=`gitclaw profile provenance`' \
-  'command=`search` issue_intent=`@gitclaw /profile search <query>` local_command=`gitclaw profile search <query>`' \
-  'command=`diff` issue_intent=`@gitclaw /profile diff [base-ref]` local_command=`gitclaw profile diff [base-ref]`' \
-  'command=`snapshot` issue_intent=`@gitclaw /profile snapshot` local_command=`gitclaw profile snapshot`' \
-  'command=`export-plan` issue_intent=`@gitclaw /profile export-plan` local_command=`gitclaw profile export-plan`' \
-  'layer=`memory` store=`.gitclaw/MEMORY.md + .gitclaw/memory/*.md`' \
-  'layer=`backups`' \
-  'profile_store_gate=`repo-local-reviewed-files`'; do
-  grep -Fq "$expected" <<<"$cli_catalog" || die "local profile catalog missing ${expected}"
+for leaked in "$hidden_token" "HEAD~1" "PROFILE_DIFF_ISSUE_QUERY_SECRET_${timestamp}" "Live profile-diff E2E" "$expected_token" "$search_phrase" "GitClaw is a repo-native GitHub issue assistant" "Use GitClaw's read-only repository context" "Prefer repository context and deterministic tool outputs"; do
+  if grep -Fq "$leaked" <<<"$search_comment"; then
+    die "profile diff report leaked ${leaked}"
+  fi
 done
-if grep -Fq "$token" <<<"$cli_catalog"; then
-  die "local profile catalog leaked issue token"
-fi
-
-wait_for_done_status || die "expected gitclaw:done without running/error"
-url="$(jq -r '.url' <<<"$run_json")"
 
 comment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \
@@ -269,11 +293,13 @@ grep -Fq 'tools="' <<<"$model_comment" || die "assistant marker missing prompt-v
 grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant marker did not prove search_files was prompt-visible"
 grep -Fq 'usage_total_tokens="' <<<"$model_comment" || die "assistant marker missing usage token telemetry"
 
-for leaked in "$token" "$followup_hidden_token"; do
+for leaked in "$hidden_token" "$followup_hidden_token"; do
   if grep -Fq "$leaked" <<<"$model_comment"; then
     die "model follow-up leaked ${leaked}"
   fi
 done
 
+wait_for_done_status || die "expected gitclaw:done without running/error"
+search_url="$(jq -r '.url' <<<"$search_run_json")"
 model_url="$(jq -r '.url' <<<"$model_run_json")"
-log "passed for issue #${issue_number}: ${url} (model follow-up: ${model_url})"
+log "passed for issue #${issue_number}: ${search_url} (model follow-up: ${model_url})"
