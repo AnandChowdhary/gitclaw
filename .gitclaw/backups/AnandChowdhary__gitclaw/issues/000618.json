@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T22:48:09Z",
+  "generated_at": "2026-06-01T22:49:35Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 618,
     "title": "GitClaw telegram thread channel-decision-e2e-20260601t224624z",
@@ -42,6 +42,24 @@
       "CommentID": 4597110206,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels decision --decision-id channel-decision-20260601t224624z --message-id decision-ingest-20260601t224624z --notify-message-id decision-notify-20260601t224624z\nDecision: Record GitHub-native channel decision 20260601t224624z\nRationale:\nVisible decision rationale token: VISIBLE_CHANNEL_DECISION_RATIONALE_20260601t224624z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4597113140,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Decision Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#618`\n- requested_channel_command: `/channels decision`\n- channel_decision_status: `recorded`\n- decision_issue: `#619`\n- decision_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/619`\n- decision_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#618`\n- notification_comment_id: `4597117195`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `1f8189ee579b`\n- source_message_id_sha256_12: `b541aba7dbfa`\n- notify_message_id_sha256_12: `485cd6697501`\n- notify_message_id_auto: `false`\n- decision_id_sha256_12: `f74495fa0370`\n- decision_id_auto: `false`\n- decision_text_sha256_12: `1758a0553e12`\n- decision_text_bytes: `54`\n- decision_text_lines: `1`\n- rationale_sha256_12: `c3a48b28c807`\n- rationale_bytes: `85`\n- rationale_lines: `1`\n- notification_body_sha256_12: `cfd97119b4a2`\n- target_from_current_channel_issue: `true`\n- raw_decision_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_decision_text_included: `false`\n- raw_rationale_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_decision_action_change: `true`\n- issue_title_sha256_12: `6520832a3651`\n\nGitClaw recorded a mirrored channel decision as a durable GitHub decision issue, then queued a provider-facing link back to the original thread. The decision issue contains the human-readable decision and rationale; this source receipt keeps provider IDs, decision IDs, decision text, rationale, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the decision-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent decision links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate decision issues are suppressed by `decision_id`; duplicate decision-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the decision issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4597117261,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -60,6 +78,30 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T22:47:44Z",
       "updated_at": "2026-06-01T22:47:44Z"
+    },
+    {
+      "id": 4597113140,
+      "body": "@gitclaw /channels decision --decision-id channel-decision-20260601t224624z --message-id decision-ingest-20260601t224624z --notify-message-id decision-notify-20260601t224624z\nDecision: Record GitHub-native channel decision 20260601t224624z\nRationale:\nVisible decision rationale token: VISIBLE_CHANNEL_DECISION_RATIONALE_20260601t224624z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T22:48:20Z",
+      "updated_at": "2026-06-01T22:48:20Z"
+    },
+    {
+      "id": 4597117195,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-decision-e2e-20260601t224624z\" message_id=\"decision-notify-20260601t224624z\" author=\"gitclaw\" --\u003e\nGitClaw channel decision recorded.\n\nDecision: #619\nURL: https://github.com/AnandChowdhary/gitclaw/issues/619\nSummary: Record GitHub-native channel decision 20260601t224624z\n\nRecorded in the linked GitHub issue.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T22:49:11Z",
+      "updated_at": "2026-06-01T22:49:11Z"
+    },
+    {
+      "id": 4597117261,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26786734244\" event_id=\"comment-4597113140\" model=\"gitclaw/channels\" idempotency_key=\"d46f947480f41b125cf965adb6953594\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26786734244\" --\u003e\n## GitClaw Channel Decision Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#618`\n- requested_channel_command: `/channels decision`\n- channel_decision_status: `recorded`\n- decision_issue: `#619`\n- decision_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/619`\n- decision_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#618`\n- notification_comment_id: `4597117195`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `1f8189ee579b`\n- source_message_id_sha256_12: `b541aba7dbfa`\n- notify_message_id_sha256_12: `485cd6697501`\n- notify_message_id_auto: `false`\n- decision_id_sha256_12: `f74495fa0370`\n- decision_id_auto: `false`\n- decision_text_sha256_12: `1758a0553e12`\n- decision_text_bytes: `54`\n- decision_text_lines: `1`\n- rationale_sha256_12: `c3a48b28c807`\n- rationale_bytes: `85`\n- rationale_lines: `1`\n- notification_body_sha256_12: `cfd97119b4a2`\n- target_from_current_channel_issue: `true`\n- raw_decision_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_decision_text_included: `false`\n- raw_rationale_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_decision_action_change: `true`\n- issue_title_sha256_12: `6520832a3651`\n\nGitClaw recorded a mirrored channel decision as a durable GitHub decision issue, then queued a provider-facing link back to the original thread. The decision issue contains the human-readable decision and rationale; this source receipt keeps provider IDs, decision IDs, decision text, rationale, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the decision-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent decision links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate decision issues are suppressed by `decision_id`; duplicate decision-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the decision issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T22:49:12Z",
+      "updated_at": "2026-06-01T22:49:12Z"
     }
   ]
 }
