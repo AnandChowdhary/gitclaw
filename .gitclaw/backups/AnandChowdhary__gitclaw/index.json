@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T04:30:33Z",
+  "generated_at": "2026-06-01T04:42:33Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 443,
+  "count": 444,
   "issues": [
     {
       "number": 3,
@@ -5565,6 +5565,18 @@
       ],
       "comment_count": 3,
       "transcript_messages": 4
+    },
+    {
+      "number": 484,
+      "title": "@gitclaw /skills sources update-plan e2e 20260601T044119Z",
+      "path": "issues/000484.json",
+      "backup_generated_at": "2026-06-01T04:42:32Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }

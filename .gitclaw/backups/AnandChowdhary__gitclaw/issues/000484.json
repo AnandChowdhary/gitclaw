@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T04:42:32Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 484,
+    "title": "@gitclaw /skills sources update-plan e2e 20260601T044119Z",
+    "body": "@gitclaw /skills sources update-plan\n\nLive skill source update-plan E2E. Keep the source-pin update plan body-free.\nDo not include this hidden skill source update-plan token: NOECHO_SKILL_SOURCE_UPDATE_PLAN_20260601T044119Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /skills sources update-plan e2e 20260601T044119Z\n\n@gitclaw /skills sources update-plan\n\nLive skill source update-plan E2E. Keep the source-pin update plan body-free.\nDo not include this hidden skill source update-plan token: NOECHO_SKILL_SOURCE_UPDATE_PLAN_20260601T044119Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Skill Source Update Plan Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#484`\n- skill_source_update_plan_status: `ok`\n- update_scope: `repo-local-source-pin-manual-review`\n- skill_source_status: `ok`\n- skill_source_specs_dir: `.gitclaw/skill-sources`\n- skill_source_specs: `1`\n- parsed_skill_source_specs: `1`\n- matched_skill_sources: `1`\n- missing_skill_source_matches: `0`\n- hash_pinned_skill_sources: `1`\n- hash_matched_skill_sources: `1`\n- hash_mismatched_skill_sources: `0`\n- repo_local_source_refs: `1`\n- remote_source_refs: `0`\n- sources_requiring_approval: `1`\n- remote_fetch_allowed_specs: `0`\n- sources_with_risk_findings: `0`\n- skill_source_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- registry_contact_allowed: `false`\n- installer_scripts_run: `false`\n- dependency_install_allowed: `false`\n- repository_mutation_allowed: `false`\n- raw_source_bodies_included: `false`\n- raw_source_refs_included: `false`\n- raw_skill_bodies_included: `false`\n- llm_e2e_required_after_skill_source_change: `true`\n- plan_entries: `1`\n- update_candidates: `0`\n- pinned_and_current_pins: `1`\n- stale_source_pins: `0`\n- unpinned_source_pins: `0`\n- missing_skill_pins: `0`\n- remote_source_pins: `0`\n- remote_fetch_allowed_pins: `0`\n- risk_finding_pins: `0`\n- external_clawhub_lock_path: `.clawhub/lock.json`\n- external_clawhub_lock_present: `false`\n- external_clawhub_lock_sha256_12: `none`\n- registry_contact_allowed: `false`\n- remote_fetch_allowed: `false`\n- installer_scripts_run: `false`\n- dependency_install_allowed: `false`\n- repository_mutation_allowed: `false`\n- raw_source_bodies_included: `false`\n- raw_source_refs_included: `false`\n- raw_skill_bodies_included: `false`\n- raw_remote_responses_included: `false`\n- llm_e2e_required_after_skill_source_update_plan_change: `true`\n- issue_title_sha256_12: `e1db220f3a44`\n\nThis is a dry-run update planner for reviewed skill source pins. It mirrors OpenClaw/ClawHub update pressure while keeping GitClaw v1 no-fetch and manual-review only: remote availability is unknown unless a reviewer updates the repo-local source pin and skill file.\n\n### Update Plan Entries\n- source_name=`repo-reader` path=`.gitclaw/skill-sources/repo-reader.yaml` skill_path=`.gitclaw/SKILLS/repo-reader/SKILL.md` update_action=`none` update_reasons=`none` skill_matched=`true` source_kind=`repo-local` source_ref_present=`true` source_ref_sha256_12=`42df45103ee5` trust_level=`repo-local` install_mode=`manual-review` requires_approval=`true` remote_fetch_allowed=`false` hash_pinned=`true` expected_sha256_12=`2f9e68a57bd6` current_skill_sha256_12=`2f9e68a57bd6` hash_matched=`true` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Update Gates\n- update_execution_gate=`disabled`\n- registry_gate=`disabled`\n- remote_fetch_gate=`disabled`\n- installer_gate=`disabled`\n- dependency_install_gate=`disabled`\n- mutation_gate=`disabled`\n- raw_body_gate=`hash_only`\n- model_e2e_gate=`required`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4589611581,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4589611581,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26735546272\" event_id=\"issue-484\" model=\"gitclaw/skills\" idempotency_key=\"9af5241a324520ab2ca41493fde99dfc\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26735546272\" --\u003e\n## GitClaw Skill Source Update Plan Report\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- issue: `#484`\n- skill_source_update_plan_status: `ok`\n- update_scope: `repo-local-source-pin-manual-review`\n- skill_source_status: `ok`\n- skill_source_specs_dir: `.gitclaw/skill-sources`\n- skill_source_specs: `1`\n- parsed_skill_source_specs: `1`\n- matched_skill_sources: `1`\n- missing_skill_source_matches: `0`\n- hash_pinned_skill_sources: `1`\n- hash_matched_skill_sources: `1`\n- hash_mismatched_skill_sources: `0`\n- repo_local_source_refs: `1`\n- remote_source_refs: `0`\n- sources_requiring_approval: `1`\n- remote_fetch_allowed_specs: `0`\n- sources_with_risk_findings: `0`\n- skill_source_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- registry_contact_allowed: `false`\n- installer_scripts_run: `false`\n- dependency_install_allowed: `false`\n- repository_mutation_allowed: `false`\n- raw_source_bodies_included: `false`\n- raw_source_refs_included: `false`\n- raw_skill_bodies_included: `false`\n- llm_e2e_required_after_skill_source_change: `true`\n- plan_entries: `1`\n- update_candidates: `0`\n- pinned_and_current_pins: `1`\n- stale_source_pins: `0`\n- unpinned_source_pins: `0`\n- missing_skill_pins: `0`\n- remote_source_pins: `0`\n- remote_fetch_allowed_pins: `0`\n- risk_finding_pins: `0`\n- external_clawhub_lock_path: `.clawhub/lock.json`\n- external_clawhub_lock_present: `false`\n- external_clawhub_lock_sha256_12: `none`\n- registry_contact_allowed: `false`\n- remote_fetch_allowed: `false`\n- installer_scripts_run: `false`\n- dependency_install_allowed: `false`\n- repository_mutation_allowed: `false`\n- raw_source_bodies_included: `false`\n- raw_source_refs_included: `false`\n- raw_skill_bodies_included: `false`\n- raw_remote_responses_included: `false`\n- llm_e2e_required_after_skill_source_update_plan_change: `true`\n- issue_title_sha256_12: `e1db220f3a44`\n\nThis is a dry-run update planner for reviewed skill source pins. It mirrors OpenClaw/ClawHub update pressure while keeping GitClaw v1 no-fetch and manual-review only: remote availability is unknown unless a reviewer updates the repo-local source pin and skill file.\n\n### Update Plan Entries\n- source_name=`repo-reader` path=`.gitclaw/skill-sources/repo-reader.yaml` skill_path=`.gitclaw/SKILLS/repo-reader/SKILL.md` update_action=`none` update_reasons=`none` skill_matched=`true` source_kind=`repo-local` source_ref_present=`true` source_ref_sha256_12=`42df45103ee5` trust_level=`repo-local` install_mode=`manual-review` requires_approval=`true` remote_fetch_allowed=`false` hash_pinned=`true` expected_sha256_12=`2f9e68a57bd6` current_skill_sha256_12=`2f9e68a57bd6` hash_matched=`true` risk_findings=`0` risk_max_severity=`none` risk_codes=`none`\n\n### Update Gates\n- update_execution_gate=`disabled`\n- registry_gate=`disabled`\n- remote_fetch_gate=`disabled`\n- installer_gate=`disabled`\n- dependency_install_gate=`disabled`\n- mutation_gate=`disabled`\n- raw_body_gate=`hash_only`\n- model_e2e_gate=`required`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T04:42:10Z",
+      "updated_at": "2026-06-01T04:42:10Z"
+    }
+  ]
+}
