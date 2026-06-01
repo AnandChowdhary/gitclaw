@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T20:28:00Z",
+  "generated_at": "2026-06-01T20:29:30Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 591,
     "title": "GitClaw telegram thread channel-reminder-e2e-20260601t202610z",
@@ -42,6 +42,24 @@
       "CommentID": 4596241960,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels remind --reminder-id channel-reminder-20260601t202610z --message-id reminder-ingest-20260601t202610z --notify-message-id reminder-notify-20260601t202610z --at 2099-01-02T03:04:05Z\nTitle: Follow up channel reminder 20260601t202610z\nNotes:\nVisible reminder note token: VISIBLE_CHANNEL_REMINDER_NOTES_20260601t202610z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4596248008,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Reminder Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#591`\n- requested_channel_command: `/channels remind`\n- channel_reminder_status: `created`\n- reminder_issue: `#592`\n- reminder_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/592`\n- reminder_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#591`\n- notification_comment_id: `4596254563`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `ced4ca3f0955`\n- source_message_id_sha256_12: `b164e0496210`\n- notify_message_id_sha256_12: `18860df7d2d6`\n- notify_message_id_auto: `false`\n- reminder_id_sha256_12: `df66c4d6c778`\n- reminder_id_auto: `false`\n- reminder_due_at_sha256_12: `873d278c678b`\n- reminder_title_sha256_12: `49766676558e`\n- reminder_title_bytes: `43`\n- reminder_title_lines: `1`\n- reminder_notes_sha256_12: `f9c50510d8b9`\n- reminder_notes_bytes: `76`\n- reminder_notes_lines: `1`\n- notification_body_sha256_12: `bc6ace0e5c43`\n- target_from_current_channel_issue: `true`\n- raw_reminder_id_included: `false`\n- raw_reminder_due_at_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_reminder_title_included: `false`\n- raw_reminder_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_reminder_action_change: `true`\n- issue_title_sha256_12: `c69fda137715`\n\nGitClaw created or reused a GitHub reminder issue from a mirrored channel thread, then queued a provider-facing reminder link back to that thread. The reminder issue contains the due time and human-readable reminder; this source receipt keeps provider IDs, reminder IDs, due times, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the reminder-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent reminder links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate reminder issues are suppressed by `reminder_id`; duplicate reminder-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the reminder issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4596254686,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -60,6 +78,30 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T20:27:35Z",
       "updated_at": "2026-06-01T20:27:35Z"
+    },
+    {
+      "id": 4596248008,
+      "body": "@gitclaw /channels remind --reminder-id channel-reminder-20260601t202610z --message-id reminder-ingest-20260601t202610z --notify-message-id reminder-notify-20260601t202610z --at 2099-01-02T03:04:05Z\nTitle: Follow up channel reminder 20260601t202610z\nNotes:\nVisible reminder note token: VISIBLE_CHANNEL_REMINDER_NOTES_20260601t202610z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T20:28:13Z",
+      "updated_at": "2026-06-01T20:28:13Z"
+    },
+    {
+      "id": 4596254563,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-reminder-e2e-20260601t202610z\" message_id=\"reminder-notify-20260601t202610z\" author=\"gitclaw\" --\u003e\nGitClaw channel reminder created.\n\nReminder: #592\nURL: https://github.com/AnandChowdhary/gitclaw/issues/592\nDue: 2099-01-02T03:04:05Z\nTitle: Follow up channel reminder 20260601t202610z\n\nThe reminder is tracked in the linked GitHub issue.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T20:29:03Z",
+      "updated_at": "2026-06-01T20:29:03Z"
+    },
+    {
+      "id": 4596254686,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26780061113\" event_id=\"comment-4596248008\" model=\"gitclaw/channels\" idempotency_key=\"37cc97f5b5243e2d0d0db25ecd085bc2\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26780061113\" --\u003e\n## GitClaw Channel Reminder Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#591`\n- requested_channel_command: `/channels remind`\n- channel_reminder_status: `created`\n- reminder_issue: `#592`\n- reminder_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/592`\n- reminder_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#591`\n- notification_comment_id: `4596254563`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `ced4ca3f0955`\n- source_message_id_sha256_12: `b164e0496210`\n- notify_message_id_sha256_12: `18860df7d2d6`\n- notify_message_id_auto: `false`\n- reminder_id_sha256_12: `df66c4d6c778`\n- reminder_id_auto: `false`\n- reminder_due_at_sha256_12: `873d278c678b`\n- reminder_title_sha256_12: `49766676558e`\n- reminder_title_bytes: `43`\n- reminder_title_lines: `1`\n- reminder_notes_sha256_12: `f9c50510d8b9`\n- reminder_notes_bytes: `76`\n- reminder_notes_lines: `1`\n- notification_body_sha256_12: `bc6ace0e5c43`\n- target_from_current_channel_issue: `true`\n- raw_reminder_id_included: `false`\n- raw_reminder_due_at_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_reminder_title_included: `false`\n- raw_reminder_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_reminder_action_change: `true`\n- issue_title_sha256_12: `c69fda137715`\n\nGitClaw created or reused a GitHub reminder issue from a mirrored channel thread, then queued a provider-facing reminder link back to that thread. The reminder issue contains the due time and human-readable reminder; this source receipt keeps provider IDs, reminder IDs, due times, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the reminder-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent reminder links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate reminder issues are suppressed by `reminder_id`; duplicate reminder-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the reminder issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T20:29:04Z",
+      "updated_at": "2026-06-01T20:29:04Z"
     }
   ]
 }
