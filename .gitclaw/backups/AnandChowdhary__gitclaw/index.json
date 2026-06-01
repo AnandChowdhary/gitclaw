@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T20:46:14Z",
+  "generated_at": "2026-06-01T20:48:05Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 519,
   "issues": [
@@ -6527,13 +6527,14 @@
       "number": 593,
       "title": "GitClaw soul proposal channel notify E2E 20260601t204448z",
       "path": "issues/000593.json",
-      "backup_generated_at": "2026-06-01T20:46:13Z",
-      "event_name": "issues",
+      "backup_generated_at": "2026-06-01T20:48:03Z",
+      "event_name": "issue_comment",
       "labels": [
-        "gitclaw"
+        "gitclaw",
+        "gitclaw:done"
       ],
-      "comment_count": 1,
-      "transcript_messages": 2
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
