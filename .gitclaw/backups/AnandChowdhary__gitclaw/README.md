@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-01T14:47:14Z`
-- issue_count: `486`
+- generated_at: `2026-06-01T15:00:26Z`
+- issue_count: `487`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -491,3 +491,4 @@
 | #546 | GitClaw soul rehearsal: .gitclaw/SOUL.md (soul-rehearsal-20260601t142050z) | `2026-06-01T14:25:54Z` | 2 | 3 | `issues/000546.json` |
 | #547 | GitClaw channel poll E2E 20260601T144151Z | `2026-06-01T14:45:28Z` | 3 | 4 | `issues/000547.json` |
 | #548 | GitClaw channel poll: Which tiny channel feature should GitClaw ship for NOECHO_CHANNEL_POLL_QUESTION_ | `2026-06-01T14:47:13Z` | 2 | 3 | `issues/000548.json` |
+| #551 | @gitclaw /memory rehearse --target long-term --id memory-rehearsal-20260601t145851z | `2026-06-01T15:00:24Z` | 1 | 2 | `issues/000551.json` |
