@@ -245,7 +245,13 @@ gh workflow run "$ingest_workflow" \
   -f author="telegram:e2e" \
   -f body="$body"
 
-wait_for_workflow_run "$ingest_workflow" "$ingest_started_at" >/dev/null || die "timed out waiting for channel ingest workflow"
+ingest_run_json="$(wait_for_workflow_run "$ingest_workflow" "$ingest_started_at")" || die "timed out waiting for channel ingest workflow"
+ingest_log="$(run_log "$ingest_run_json")"
+for leaked in "$thread_id" "$message_id" "$hidden_token" "$expected_token"; do
+  if grep -Fq "$leaked" <<<"$ingest_log"; then
+    die "channel ingest log leaked ${leaked}"
+  fi
+done
 issue_number="$(wait_for_issue_number)" || die "timed out finding channel issue for ${thread_id}"
 issue_title="GitClaw ${channel} thread ${thread_id}"
 log "channel ingest created issue #${issue_number}"
@@ -305,7 +311,21 @@ gh workflow run "$delivery_workflow" \
   -f external_message_id="$external_message_id" \
   -f gateway_run_id="$gateway_run_id"
 
-wait_for_workflow_run "$delivery_workflow" "$delivery_started_at" >/dev/null || die "timed out waiting for channel-delivery workflow"
+delivery_run_json="$(wait_for_workflow_run "$delivery_workflow" "$delivery_started_at")" || die "timed out waiting for channel-delivery workflow"
+delivery_log="$(run_log "$delivery_run_json")"
+for expected in \
+  "channel_delivery state_issue=" \
+  "issue=${issue_number}" \
+  "source_comment=${source_comment_id}" \
+  "account_sha256_12=${account_hash}" \
+  "external_message_sha256_12=${external_hash}"; do
+  grep -Fq "$expected" <<<"$delivery_log" || die "channel delivery log missing ${expected}"
+done
+for leaked in "$account_id" "$external_message_id" "$hidden_token" "$expected_token"; do
+  if grep -Fq "$leaked" <<<"$delivery_log"; then
+    die "channel delivery log leaked ${leaked}"
+  fi
+done
 state_issue="$(find_state_issue_numbers | head -n 1)"
 [[ -n "$state_issue" ]] || die "timed out finding channel state issue"
 state_json="$(gh issue view "$state_issue" --repo "$repo" --json body,comments)"
@@ -333,6 +353,11 @@ for expected in \
   "body_included=false" \
   "account_sha256_12=${account_hash}"; do
   grep -Fq "$expected" <<<"$second_outbox_log" || die "second channel outbox log missing ${expected}"
+done
+for leaked in "$account_id" "$external_message_id" "$hidden_token" "$expected_token"; do
+  if grep -Fq "$leaked" <<<"$second_outbox_log"; then
+    die "second channel outbox log leaked ${leaked}"
+  fi
 done
 
 comment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"

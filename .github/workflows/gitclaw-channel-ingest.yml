@@ -20,7 +20,7 @@ on:
         required: true
 
 concurrency:
-  group: gitclaw-channel-ingest-${{ inputs.channel }}-${{ inputs.thread_id }}
+  group: gitclaw-channel-ingest-${{ inputs.channel }}
   cancel-in-progress: false
 
 jobs:
@@ -41,30 +41,40 @@ jobs:
           go-version: stable
 
       - id: ingest
-        run: go run ./cmd/gitclaw channel-ingest
+        run: |
+          set -euo pipefail
+          channel="$(jq -r '.inputs.channel // ""' "$GITHUB_EVENT_PATH")"
+          thread_id="$(jq -r '.inputs.thread_id // ""' "$GITHUB_EVENT_PATH")"
+          message_id="$(jq -r '.inputs.message_id // ""' "$GITHUB_EVENT_PATH")"
+          author="$(jq -r '.inputs.author // ""' "$GITHUB_EVENT_PATH")"
+          body="$(jq -r '.inputs.body // ""' "$GITHUB_EVENT_PATH")"
+          printf "::add-mask::%s\n" "$thread_id"
+          printf "::add-mask::%s\n" "$message_id"
+          GITCLAW_CHANNEL="$channel" \
+            GITCLAW_CHANNEL_THREAD_ID="$thread_id" \
+            GITCLAW_CHANNEL_MESSAGE_ID="$message_id" \
+            GITCLAW_CHANNEL_AUTHOR="$author" \
+            GITCLAW_CHANNEL_BODY="$body" \
+            go run ./cmd/gitclaw channel-ingest
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
-          GITCLAW_CHANNEL: ${{ inputs.channel }}
-          GITCLAW_CHANNEL_THREAD_ID: ${{ inputs.thread_id }}
-          GITCLAW_CHANNEL_MESSAGE_ID: ${{ inputs.message_id }}
-          GITCLAW_CHANNEL_AUTHOR: ${{ inputs.author }}
-          GITCLAW_CHANNEL_BODY: ${{ inputs.body }}
 
       - run: |
           set -euo pipefail
-          dispatch_id="${GITCLAW_CHANNEL}-${GITCLAW_CHANNEL_MESSAGE_ID}"
+          channel="$(jq -r '.inputs.channel // ""' "$GITHUB_EVENT_PATH")"
+          message_id="$(jq -r '.inputs.message_id // ""' "$GITHUB_EVENT_PATH")"
+          printf "::add-mask::%s\n" "$message_id"
+          dispatch_id="${channel}-${message_id}"
           gh workflow run .github/workflows/gitclaw.yml \
             --repo "$GITHUB_REPOSITORY" \
             -f issue_number="${GITCLAW_ISSUE_NUMBER}" \
             -f dispatch_id="$dispatch_id" \
-            -f reason="channel-ingest:${GITCLAW_CHANNEL}"
+            -f reason="channel-ingest:${channel}"
         if: steps.ingest.outputs.duplicate != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
-          GITCLAW_CHANNEL: ${{ inputs.channel }}
-          GITCLAW_CHANNEL_MESSAGE_ID: ${{ inputs.message_id }}
           GITCLAW_ISSUE_NUMBER: ${{ steps.ingest.outputs.issue_number }}
 
       - run: echo "Duplicate channel message; GitClaw issue workflow dispatch skipped."

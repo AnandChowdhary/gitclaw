@@ -23,7 +23,7 @@ on:
         required: false
 
 concurrency:
-  group: gitclaw-channel-delivery-${{ inputs.channel }}-${{ inputs.account_id }}-${{ inputs.issue_number }}-${{ inputs.comment_id }}
+  group: gitclaw-channel-delivery-${{ inputs.channel }}-${{ inputs.issue_number }}-${{ inputs.comment_id }}
   cancel-in-progress: false
 
 jobs:
@@ -43,13 +43,23 @@ jobs:
           go-version: stable
 
       - id: delivery
-        run: go run ./cmd/gitclaw channel-delivery
+        run: |
+          set -euo pipefail
+          channel="$(jq -r '.inputs.channel // ""' "$GITHUB_EVENT_PATH")"
+          account_id="$(jq -r '.inputs.account_id // ""' "$GITHUB_EVENT_PATH")"
+          issue_number="$(jq -r '.inputs.issue_number // ""' "$GITHUB_EVENT_PATH")"
+          comment_id="$(jq -r '.inputs.comment_id // ""' "$GITHUB_EVENT_PATH")"
+          external_message_id="$(jq -r '.inputs.external_message_id // ""' "$GITHUB_EVENT_PATH")"
+          gateway_run_id="$(jq -r '.inputs.gateway_run_id // ""' "$GITHUB_EVENT_PATH")"
+          printf "::add-mask::%s\n" "$account_id"
+          printf "::add-mask::%s\n" "$external_message_id"
+          GITCLAW_CHANNEL="$channel" \
+            GITCLAW_CHANNEL_ACCOUNT_ID="$account_id" \
+            GITCLAW_CHANNEL_ISSUE_NUMBER="$issue_number" \
+            GITCLAW_CHANNEL_COMMENT_ID="$comment_id" \
+            GITCLAW_CHANNEL_EXTERNAL_MESSAGE_ID="$external_message_id" \
+            GITCLAW_CHANNEL_GATEWAY_RUN_ID="$gateway_run_id" \
+            go run ./cmd/gitclaw channel-delivery
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
-          GITCLAW_CHANNEL: ${{ inputs.channel }}
-          GITCLAW_CHANNEL_ACCOUNT_ID: ${{ inputs.account_id }}
-          GITCLAW_CHANNEL_ISSUE_NUMBER: ${{ inputs.issue_number }}
-          GITCLAW_CHANNEL_COMMENT_ID: ${{ inputs.comment_id }}
-          GITCLAW_CHANNEL_EXTERNAL_MESSAGE_ID: ${{ inputs.external_message_id }}
-          GITCLAW_CHANNEL_GATEWAY_RUN_ID: ${{ inputs.gateway_run_id }}

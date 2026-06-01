@@ -17,7 +17,7 @@ on:
         required: false
 
 concurrency:
-  group: gitclaw-channel-state-${{ inputs.channel }}-${{ inputs.account_id }}
+  group: gitclaw-channel-state-${{ inputs.channel }}
   cancel-in-progress: false
 
 jobs:
@@ -39,12 +39,20 @@ jobs:
       - id: state
         run: |
           set -euo pipefail
-          lease_run_id="${GITCLAW_CHANNEL_LEASE_RUN_ID:-$GITHUB_RUN_ID}"
-          go run ./cmd/gitclaw channel-state --lease-run-id "$lease_run_id"
+          channel="$(jq -r '.inputs.channel // ""' "$GITHUB_EVENT_PATH")"
+          account_id="$(jq -r '.inputs.account_id // ""' "$GITHUB_EVENT_PATH")"
+          offset="$(jq -r '.inputs.offset // ""' "$GITHUB_EVENT_PATH")"
+          lease_run_id="$(jq -r '.inputs.lease_run_id // ""' "$GITHUB_EVENT_PATH")"
+          if [[ -z "$lease_run_id" || "$lease_run_id" == "null" ]]; then
+            lease_run_id="$GITHUB_RUN_ID"
+          fi
+          printf "::add-mask::%s\n" "$account_id"
+          printf "::add-mask::%s\n" "$offset"
+          GITCLAW_CHANNEL="$channel" \
+            GITCLAW_CHANNEL_ACCOUNT_ID="$account_id" \
+            GITCLAW_CHANNEL_OFFSET="$offset" \
+            GITCLAW_CHANNEL_LEASE_RUN_ID="$lease_run_id" \
+            go run ./cmd/gitclaw channel-state --lease-run-id "$lease_run_id"
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
-          GITCLAW_CHANNEL: ${{ inputs.channel }}
-          GITCLAW_CHANNEL_ACCOUNT_ID: ${{ inputs.account_id }}
-          GITCLAW_CHANNEL_OFFSET: ${{ inputs.offset }}
-          GITCLAW_CHANNEL_LEASE_RUN_ID: ${{ inputs.lease_run_id }}

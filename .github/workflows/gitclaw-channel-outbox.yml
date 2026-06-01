@@ -22,7 +22,7 @@ on:
         default: "50"
 
 concurrency:
-  group: gitclaw-channel-outbox-${{ inputs.channel }}-${{ inputs.account_id }}-${{ inputs.issue_number }}
+  group: gitclaw-channel-outbox-${{ inputs.channel }}-${{ inputs.issue_number }}
   cancel-in-progress: false
 
 jobs:
@@ -44,23 +44,27 @@ jobs:
       - id: outbox
         run: |
           set -euo pipefail
-          include_body="${GITCLAW_CHANNEL_OUTBOX_INCLUDE_BODY:-false}"
+          channel="$(jq -r '.inputs.channel // ""' "$GITHUB_EVENT_PATH")"
+          account_id="$(jq -r '.inputs.account_id // ""' "$GITHUB_EVENT_PATH")"
+          issue_number="$(jq -r '.inputs.issue_number // ""' "$GITHUB_EVENT_PATH")"
+          include_body="$(jq -r '.inputs.include_body // "false"' "$GITHUB_EVENT_PATH")"
+          limit="$(jq -r '.inputs.limit // "50"' "$GITHUB_EVENT_PATH")"
+          printf "::add-mask::%s\n" "$account_id"
           if [[ "$include_body" != "true" && "$include_body" != "false" ]]; then
             echo "include_body must be true or false" >&2
             exit 1
           fi
-          limit="${GITCLAW_CHANNEL_OUTBOX_LIMIT:-50}"
           if ! [[ "$limit" =~ ^[0-9]+$ ]] || [[ "$limit" -lt 1 ]] || [[ "$limit" -gt 100 ]]; then
             echo "limit must be an integer from 1 to 100" >&2
             exit 1
           fi
-          go run ./cmd/gitclaw channel-outbox \
+          GITCLAW_CHANNEL="$channel" \
+            GITCLAW_CHANNEL_ACCOUNT_ID="$account_id" \
+            GITCLAW_CHANNEL_ISSUE_NUMBER="$issue_number" \
+            GITCLAW_CHANNEL_OUTBOX_INCLUDE_BODY="$include_body" \
+            GITCLAW_CHANNEL_OUTBOX_LIMIT="$limit" \
+            go run ./cmd/gitclaw channel-outbox \
             --out "${RUNNER_TEMP}/gitclaw-channel-outbox.json"
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
-          GITCLAW_CHANNEL: ${{ inputs.channel }}
-          GITCLAW_CHANNEL_ACCOUNT_ID: ${{ inputs.account_id }}
-          GITCLAW_CHANNEL_ISSUE_NUMBER: ${{ inputs.issue_number }}
-          GITCLAW_CHANNEL_OUTBOX_INCLUDE_BODY: ${{ inputs.include_body }}
-          GITCLAW_CHANNEL_OUTBOX_LIMIT: ${{ inputs.limit }}

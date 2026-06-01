@@ -25,7 +25,7 @@ on:
         default: "0"
 
 concurrency:
-  group: gitclaw-channel-gateway-${{ inputs.channel }}-${{ inputs.account_id }}
+  group: gitclaw-channel-gateway-${{ inputs.channel }}
   cancel-in-progress: false
 
 jobs:
@@ -48,20 +48,31 @@ jobs:
       - id: gateway
         run: |
           set -euo pipefail
-          lease_run_id="${GITCLAW_CHANNEL_GATEWAY_LEASE_RUN_ID:-$GITHUB_RUN_ID}"
-          go run ./cmd/gitclaw channel-gateway --lease-run-id "$lease_run_id"
+          channel="$(jq -r '.inputs.channel // ""' "$GITHUB_EVENT_PATH")"
+          account_id="$(jq -r '.inputs.account_id // ""' "$GITHUB_EVENT_PATH")"
+          gateway_slot="$(jq -r '.inputs.gateway_slot // ""' "$GITHUB_EVENT_PATH")"
+          lease_run_id="$(jq -r '.inputs.lease_run_id // ""' "$GITHUB_EVENT_PATH")"
+          renew="$(jq -r '.inputs.renew // "false"' "$GITHUB_EVENT_PATH")"
+          if [[ -z "$lease_run_id" || "$lease_run_id" == "null" ]]; then
+            lease_run_id="$GITHUB_RUN_ID"
+          fi
+          printf "::add-mask::%s\n" "$account_id"
+          GITCLAW_CHANNEL="$channel" \
+            GITCLAW_CHANNEL_ACCOUNT_ID="$account_id" \
+            GITCLAW_CHANNEL_GATEWAY_SLOT="$gateway_slot" \
+            GITCLAW_CHANNEL_GATEWAY_LEASE_RUN_ID="$lease_run_id" \
+            GITCLAW_CHANNEL_GATEWAY_RENEW="$renew" \
+            go run ./cmd/gitclaw channel-gateway --lease-run-id "$lease_run_id"
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
-          GITCLAW_CHANNEL: ${{ inputs.channel }}
-          GITCLAW_CHANNEL_ACCOUNT_ID: ${{ inputs.account_id }}
-          GITCLAW_CHANNEL_GATEWAY_SLOT: ${{ inputs.gateway_slot }}
-          GITCLAW_CHANNEL_GATEWAY_LEASE_RUN_ID: ${{ inputs.lease_run_id }}
-          GITCLAW_CHANNEL_GATEWAY_RENEW: ${{ inputs.renew }}
 
       - run: |
           set -euo pipefail
-          delay="${GITCLAW_RENEW_DELAY_SECONDS:-0}"
+          channel="$(jq -r '.inputs.channel // ""' "$GITHUB_EVENT_PATH")"
+          account_id="$(jq -r '.inputs.account_id // ""' "$GITHUB_EVENT_PATH")"
+          delay="$(jq -r '.inputs.renew_delay_seconds // "0"' "$GITHUB_EVENT_PATH")"
+          printf "::add-mask::%s\n" "$account_id"
           if ! [[ "$delay" =~ ^[0-9]+$ ]]; then
             echo "renew_delay_seconds must be a non-negative integer" >&2
             exit 1
@@ -73,17 +84,14 @@ jobs:
           sleep "$delay"
           gh workflow run .github/workflows/gitclaw-channel-gateway.yml \
             --repo "$GITHUB_REPOSITORY" \
-            -f channel="$GITCLAW_CHANNEL" \
-            -f account_id="$GITCLAW_CHANNEL_ACCOUNT_ID" \
+            -f channel="$channel" \
+            -f account_id="$account_id" \
             -f gateway_slot="$GITCLAW_CHANNEL_GATEWAY_SLOT" \
             -f renew="$GITCLAW_CHANNEL_GATEWAY_RENEW" \
-            -f renew_delay_seconds="$GITCLAW_RENEW_DELAY_SECONDS"
+            -f renew_delay_seconds="$delay"
         if: steps.gateway.outputs.renew == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
-          GITCLAW_CHANNEL: ${{ inputs.channel }}
-          GITCLAW_CHANNEL_ACCOUNT_ID: ${{ inputs.account_id }}
           GITCLAW_CHANNEL_GATEWAY_SLOT: ${{ steps.gateway.outputs.gateway_slot }}
           GITCLAW_CHANNEL_GATEWAY_RENEW: ${{ steps.gateway.outputs.renew }}
-          GITCLAW_RENEW_DELAY_SECONDS: ${{ inputs.renew_delay_seconds }}
