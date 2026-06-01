@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T19:57:00Z",
+  "generated_at": "2026-06-01T20:14:05Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 514,
+  "count": 515,
   "issues": [
     {
       "number": 3,
@@ -6471,6 +6471,18 @@
       ],
       "comment_count": 2,
       "transcript_messages": 3
+    },
+    {
+      "number": 589,
+      "title": "GitClaw backup restore request E2E 20260601t201244z",
+      "path": "issues/000589.json",
+      "backup_generated_at": "2026-06-01T20:14:04Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }
