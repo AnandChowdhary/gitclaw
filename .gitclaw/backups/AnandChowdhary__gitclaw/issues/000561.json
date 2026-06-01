@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-01T16:01:47Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issues",
+  "issue": {
+    "number": 561,
+    "title": "@gitclaw /tools rehearse search_files --id tools-rehearsal-20260601t160013z",
+    "body": "GitClaw live tools rehearsal issue E2E.\n\nCreate a search_files tool conversation lane without copying this raw source request.\nDo not include this hidden source token: NOECHO_TOOLS_REHEARSAL_SOURCE_20260601t160013z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": null
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "@gitclaw /tools rehearse search_files --id tools-rehearsal-20260601t160013z\n\nGitClaw live tools rehearsal issue E2E.\n\nCreate a search_files tool conversation lane without copying this raw source request.\nDo not include this hidden source token: NOECHO_TOOLS_REHEARSAL_SOURCE_20260601t160013z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Tool Rehearsal Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#561`\n- source_comment_id: `0`\n- requested_tool_command: `/tools rehearse`\n- tool_rehearsal_status: `created`\n- rehearsal_issue: `#562`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/562`\n- rehearsal_issue_created: `true`\n- duplicate_suppressed: `false`\n- tool_rehearsal_id_sha256_12: `1f54f970bb9d`\n- requested_tool_sha256_12: `25014698ad95`\n- requested_tool_terms: `1`\n- normalized_tool: `gitclaw.search_files`\n- matched_tool: `gitclaw.search_files`\n- matched_tools: `1`\n- available_tools: `5`\n- active_outputs_for_tool: `1`\n- tool_enabled: `true`\n- disabled_by_config: `false`\n- blocked_by_allowlist: `false`\n- tool_mode: `read-only`\n- tool_trigger_sha256_12: `2eaf037f964c`\n- mutating_contract: `false`\n- tool_validation_status: `ok`\n- tool_validation_errors: `0`\n- tool_validation_warnings: `0`\n- rehearsal_mode: `github-issue-conversation`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- tool_execution_performed: `false`\n- tool_inputs_generated: `false`\n- tool_run_request_created: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `2aa778df06e3`\n- source_bytes: `290`\n- source_lines: `5`\n- raw_source_body_included: `false`\n- raw_tool_name_included: `false`\n- raw_tool_inputs_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_tool_rehearsal_issue_change: `true`\n- issue_title_sha256_12: `a2177f3a2004`\n\nGitClaw opened or reused a GitHub issue for trying a reviewed tool contract in a normal conversation. The action does not execute tools, generate tool inputs, create a run request, call a model, or mutate the repository; continue on the rehearsal issue to exercise prompt-visible tool behavior with GitHub Models.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#562`\n- ask a normal `@gitclaw` follow-up that mentions the tool contract or asks for a bounded repository search\n- verify the follow-up assistant marker includes prompt context, selected skill, prompt-visible tools, and usage telemetry",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4594305113,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4594305113,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26766362282\" event_id=\"issue-561\" model=\"gitclaw/tools\" idempotency_key=\"f5d389efa1fe28b426a502186128a071\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26766362282\" --\u003e\n## GitClaw Tool Rehearsal Issue Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#561`\n- source_comment_id: `0`\n- requested_tool_command: `/tools rehearse`\n- tool_rehearsal_status: `created`\n- rehearsal_issue: `#562`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/562`\n- rehearsal_issue_created: `true`\n- duplicate_suppressed: `false`\n- tool_rehearsal_id_sha256_12: `1f54f970bb9d`\n- requested_tool_sha256_12: `25014698ad95`\n- requested_tool_terms: `1`\n- normalized_tool: `gitclaw.search_files`\n- matched_tool: `gitclaw.search_files`\n- matched_tools: `1`\n- available_tools: `5`\n- active_outputs_for_tool: `1`\n- tool_enabled: `true`\n- disabled_by_config: `false`\n- blocked_by_allowlist: `false`\n- tool_mode: `read-only`\n- tool_trigger_sha256_12: `2eaf037f964c`\n- mutating_contract: `false`\n- tool_validation_status: `ok`\n- tool_validation_errors: `0`\n- tool_validation_warnings: `0`\n- rehearsal_mode: `github-issue-conversation`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- tool_execution_performed: `false`\n- tool_inputs_generated: `false`\n- tool_run_request_created: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `2aa778df06e3`\n- source_bytes: `290`\n- source_lines: `5`\n- raw_source_body_included: `false`\n- raw_tool_name_included: `false`\n- raw_tool_inputs_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_tool_rehearsal_issue_change: `true`\n- issue_title_sha256_12: `a2177f3a2004`\n\nGitClaw opened or reused a GitHub issue for trying a reviewed tool contract in a normal conversation. The action does not execute tools, generate tool inputs, create a run request, call a model, or mutate the repository; continue on the rehearsal issue to exercise prompt-visible tool behavior with GitHub Models.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#562`\n- ask a normal `@gitclaw` follow-up that mentions the tool contract or asks for a bounded repository search\n- verify the follow-up assistant marker includes prompt context, selected skill, prompt-visible tools, and usage telemetry",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T16:01:16Z",
+      "updated_at": "2026-06-01T16:01:16Z"
+    }
+  ]
+}

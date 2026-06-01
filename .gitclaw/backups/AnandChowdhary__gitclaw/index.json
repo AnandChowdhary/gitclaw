@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T15:49:56Z",
+  "generated_at": "2026-06-01T16:01:49Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 493,
+  "count": 494,
   "issues": [
     {
       "number": 3,
@@ -6202,6 +6202,15 @@
       ],
       "comment_count": 2,
       "transcript_messages": 3
+    },
+    {
+      "number": 561,
+      "title": "@gitclaw /tools rehearse search_files --id tools-rehearsal-20260601t160013z",
+      "path": "issues/000561.json",
+      "backup_generated_at": "2026-06-01T16:01:47Z",
+      "event_name": "issues",
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }
