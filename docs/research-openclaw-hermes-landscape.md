@@ -3115,6 +3115,26 @@ requires a live GitHub Models repo-reader/search turn first, followed by the
 deterministic session-skills report proving the model-backed skill ledger from
 marker evidence.
 
+### 2026-06-01 Session Usage Follow-Up
+
+OpenClaw's token-use reference makes `/status`, `/usage`, and `session_status`
+first-class ways to inspect token/cache counters, and Hermes sessions store
+token counts alongside model configuration and message history. GitClaw should
+preserve that operator affordance without adding a server-side session store or
+printing provider payloads into issue comments.
+
+Add `@gitclaw /session usage` and
+`gitclaw session usage --backup <issue.json>`. The report should aggregate
+assistant-turn marker attributes across the GitHub issue thread or backup JSON:
+prompt tokens, completion tokens, total tokens, cache-read tokens, cache-write
+tokens, usage-bearing assistant turns, model-backed usage turns, deterministic
+usage turns, latest usage telemetry, and per-model ledger cards. It must not
+print issue bodies, comments, assistant replies, prompts, raw provider usage
+payloads, provider responses, search queries, or tool outputs. Acceptance
+requires a live GitHub Models repo-reader/search turn first, followed by the
+deterministic session-usage report proving model-backed token telemetry from
+marker evidence.
+
 ## Open Questions For Speccing
 
 1. Is `gitclaw` primarily for one user's repos, or for teams/organizations?

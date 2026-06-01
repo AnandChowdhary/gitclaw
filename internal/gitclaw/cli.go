@@ -1681,7 +1681,7 @@ func isPromptCLISubcommand(arg string) bool {
 
 func runSessionCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw session catalog | gitclaw session list --backup <issue.json> | gitclaw session provenance --backup <issue.json> | gitclaw session tools --backup <issue.json> | gitclaw session skills --backup <issue.json> | gitclaw session status --backup <issue.json> | gitclaw session stats --backup <issue.json> | gitclaw session coverage --backup <issue.json> | gitclaw session risk --backup <issue.json> | gitclaw session search <query> --backup <issue.json>")
+		return fmt.Errorf("usage: gitclaw session catalog | gitclaw session list --backup <issue.json> | gitclaw session provenance --backup <issue.json> | gitclaw session tools --backup <issue.json> | gitclaw session skills --backup <issue.json> | gitclaw session usage --backup <issue.json> | gitclaw session status --backup <issue.json> | gitclaw session stats --backup <issue.json> | gitclaw session coverage --backup <issue.json> | gitclaw session risk --backup <issue.json> | gitclaw session search <query> --backup <issue.json>")
 	}
 	switch args[0] {
 	case "catalog", "commands", "capabilities":
@@ -1694,6 +1694,8 @@ func runSessionCommand(args []string) error {
 		return runSessionToolsCommand(args[1:])
 	case "skills", "skill", "skill-ledger", "skill-use", "skill-usage":
 		return runSessionSkillsCommand(args[1:])
+	case "usage", "tokens", "token-use", "token-usage":
+		return runSessionUsageCommand(args[1:])
 	case "status", "readback":
 		return runSessionStatusCommand(args[1:])
 	case "stats", "summary":
@@ -1814,6 +1816,31 @@ func runSessionSkillsCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderSessionSkillsCLIReport(backupPath, backup))
+	return nil
+}
+
+func runSessionUsageCommand(args []string) error {
+	backupPath := ""
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--backup":
+			if i+1 >= len(args) {
+				return fmt.Errorf("--backup requires a value")
+			}
+			backupPath = args[i+1]
+			i++
+		default:
+			return fmt.Errorf("unknown session usage argument %q", args[i])
+		}
+	}
+	if backupPath == "" {
+		return fmt.Errorf("usage: gitclaw session usage --backup <issue.json>")
+	}
+	backup, err := ReadIssueBackupFile(backupPath)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderSessionUsageCLIReport(backupPath, backup))
 	return nil
 }
 
