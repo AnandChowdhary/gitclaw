@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T10:11:10Z",
+  "generated_at": "2026-06-01T10:11:34Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 463,
+  "count": 464,
   "issues": [
     {
       "number": 3,
@@ -5811,6 +5811,20 @@
       ],
       "comment_count": 3,
       "transcript_messages": 3
+    },
+    {
+      "number": 506,
+      "title": "GitClaw proactive repo-hygiene 2026-06-01",
+      "path": "issues/000506.json",
+      "backup_generated_at": "2026-06-01T10:11:33Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:done",
+        "gitclaw:proactive"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
     },
     {
       "number": 507,
