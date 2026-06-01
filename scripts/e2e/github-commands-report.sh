@@ -149,7 +149,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `34`' \
   'aliases: `32`' \
-  'local_cli_helpers: `210`' \
+  'local_cli_helpers: `211`' \
   'run_mode: `read-only`' \
   'llm_e2e_required_after_commands_report_change: `true`' \
   "### Slash Commands" \
@@ -383,6 +383,7 @@ for expected in \
   'gitclaw skills refresh-plan' \
   'gitclaw skills sources' \
   'gitclaw skills sources verify' \
+  'gitclaw skills sources lock' \
   'gitclaw skills sources provenance' \
   'gitclaw skills sources risk' \
   'gitclaw skills sources info <name>' \

@@ -1633,6 +1633,7 @@ gitclaw skills select-plan <name>
 gitclaw skills refresh-plan
 gitclaw skills sources
 gitclaw skills sources verify
+gitclaw skills sources lock
 gitclaw skills sources provenance
 gitclaw skills sources risk
 gitclaw skills sources info <name>
@@ -1680,6 +1681,7 @@ OpenClaw's `openclaw skills` commands and Hermes' `skills_list` /
 @gitclaw /skills refresh-plan
 @gitclaw /skills sources
 @gitclaw /skills sources verify
+@gitclaw /skills sources lock
 @gitclaw /skills sources provenance
 @gitclaw /skills sources risk
 @gitclaw /skills sources info repo-reader
@@ -1914,7 +1916,12 @@ gates. `@gitclaw /skills sources verify` and
 source-pin hashes, source-ref hashes, current skill hashes, risk rollups,
 registry-not-configured status, static-only remote-fetch verification,
 disabled install verification, and no-registry/no-fetch/no-install/no-mutation
-gates. `@gitclaw /skills sources provenance` and
+gates. `@gitclaw /skills sources lock` and
+`gitclaw skills sources lock` project a reproducibility lock from reviewed
+source pins: lock state, stale/unpinned/missing counts, expected/current skill
+hashes, aggregate lock hash, `.clawhub/lock.json` presence/hash when present,
+and disabled registry/fetch/install/mutation gates without loading registry
+state or printing raw lockfiles. `@gitclaw /skills sources provenance` and
 `gitclaw skills sources provenance` map reviewed source pins to body-free git
 history: source-pin paths, source kind, trust level, install mode, match/hash
 state, risk codes, tracked/dirty state, last commit IDs/dates, and
@@ -1940,11 +1947,12 @@ credentials.
 Skill source reports never contact ClawHub, Hermes Hub, skills.sh, GitHub, or
 well-known endpoints; never fetch remote sources; never run installers; never
 install dependencies; never write `.gitclaw/SKILLS`; and never print raw
-source refs, raw source-pin bodies, raw skill bodies, issue bodies, comments,
-prompts, git subjects, author identities, provider payloads, credentials, or
-secret values. The reports include
+source refs, raw lockfiles, raw source-pin bodies, raw skill bodies, issue
+bodies, comments, prompts, git subjects, author identities, provider payloads,
+credentials, or secret values. The reports include
 `llm_e2e_required_after_skill_source_change=true` or
 `llm_e2e_required_after_skill_source_verify_change=true` or
+`llm_e2e_required_after_skill_source_lock_change=true` or
 `llm_e2e_required_after_skill_source_info_change=true` or
 `llm_e2e_required_after_skill_source_search_change=true` or
 `llm_e2e_required_after_skill_source_provenance_change=true`; every source-pin
@@ -7429,6 +7437,14 @@ examples/workflows/gitclaw.yml
   remote-fetch verification, disabled install verification, and no source or
   skill body leakage. It then runs a real GitHub Models repo-reader/search
   follow-up with prompt, skill, tool, and usage telemetry.
+- A `gh`-driven skills-sources-lock E2E harness verifies
+  `@gitclaw /skills sources lock` and local
+  `gitclaw skills sources lock` expose a body-free reproducibility lock
+  derived from reviewed source pins: lock state, stale/unpinned/missing
+  counts, expected/current hashes, aggregate lock hash, `.clawhub/lock.json`
+  presence/hash, and disabled registry/fetch/install/mutation gates. It then
+  runs a real GitHub Models repo-reader/search follow-up with prompt, skill,
+  `gitclaw.search_files`, and usage telemetry.
 - A `gh`-driven skills-sources-provenance E2E harness verifies
   `@gitclaw /skills sources provenance` and local
   `gitclaw skills sources provenance` expose body-free source-pin git history,

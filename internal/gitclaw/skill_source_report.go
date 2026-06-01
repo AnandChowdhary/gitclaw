@@ -12,6 +12,7 @@ import (
 )
 
 const skillSourcesDir = ".gitclaw/skill-sources"
+const externalClawHubLockPath = ".clawhub/lock.json"
 const defaultSkillSourceSearchMaxResults = 10
 
 type skillSourceDocument struct {
@@ -85,6 +86,31 @@ type SkillSourceSearchReport struct {
 	Results                 []SkillSourceSearchResult
 }
 
+type SkillSourceLockReport struct {
+	Status                    string
+	Source                    SkillSourceReport
+	LockEntries               int
+	LockedSourcePins          int
+	ReproducibleSourcePins    int
+	StaleSourcePins           int
+	UnpinnedSourcePins        int
+	MissingSkillPins          int
+	RemoteFetchAllowedPins    int
+	RiskFindingPins           int
+	ClawHubLockPresent        bool
+	ClawHubLockHash           string
+	LockManifestHash          string
+	RegistryContactAllowed    bool
+	RemoteFetchAllowed        bool
+	InstallerScriptsRun       bool
+	DependencyInstallAllowed  bool
+	RepositoryMutationAllowed bool
+	RawLockfileIncluded       bool
+	RawSourceBodiesIncluded   bool
+	RawSourceRefsIncluded     bool
+	RawSkillBodiesIncluded    bool
+}
+
 type SkillSourceReport struct {
 	Status                          string
 	Specs                           int
@@ -147,6 +173,10 @@ func RenderSkillSourcesVerifyCLIReport(cfg Config, repoContext RepoContext) stri
 
 func RenderSkillSourcesSearchCLIReport(cfg Config, repoContext RepoContext, query string) string {
 	return renderSkillSourcesSearchReport(Event{}, cfg, repoContext, query, defaultSkillSourceSearchMaxResults, false)
+}
+
+func RenderSkillSourcesLockCLIReport(cfg Config, repoContext RepoContext) string {
+	return renderSkillSourcesLockReport(Event{}, cfg, repoContext, false)
 }
 
 func RenderSkillSourceInfoCLIReport(cfg Config, repoContext RepoContext, name string) string {
@@ -275,6 +305,108 @@ func renderSkillSourcesSearchReport(ev Event, cfg Config, repoContext RepoContex
 		b.WriteString("\n### Available Skill Sources\n")
 		writeSkillSourceCards(&b, source.Cards)
 	}
+	return strings.TrimSpace(b.String())
+}
+
+func BuildSkillSourceLockReport(cfg Config, repoContext RepoContext) SkillSourceLockReport {
+	source := BuildSkillSourceReport(cfg, repoContext)
+	clawHubLockPresent, clawHubLockHash := inspectExternalClawHubLock(cfg.Workdir)
+	report := SkillSourceLockReport{
+		Status:                    source.Status,
+		Source:                    source,
+		LockEntries:               len(source.Cards),
+		ClawHubLockPresent:        clawHubLockPresent,
+		ClawHubLockHash:           clawHubLockHash,
+		LockManifestHash:          skillSourceLockManifestHash(source.Cards),
+		RegistryContactAllowed:    false,
+		RemoteFetchAllowed:        false,
+		InstallerScriptsRun:       false,
+		DependencyInstallAllowed:  false,
+		RepositoryMutationAllowed: false,
+		RawLockfileIncluded:       false,
+		RawSourceBodiesIncluded:   false,
+		RawSourceRefsIncluded:     false,
+		RawSkillBodiesIncluded:    false,
+	}
+	for _, card := range source.Cards {
+		if card.SkillMatched && card.HashPinned && card.HashMatched {
+			report.ReproducibleSourcePins++
+		}
+		if skillSourceLockState(card) == "locked" {
+			report.LockedSourcePins++
+		}
+		if card.HashMismatched {
+			report.StaleSourcePins++
+		}
+		if !card.HashPinned {
+			report.UnpinnedSourcePins++
+		}
+		if !card.SkillMatched {
+			report.MissingSkillPins++
+		}
+		if card.RemoteFetchAllowed {
+			report.RemoteFetchAllowedPins++
+		}
+		if len(card.RiskFindings) > 0 {
+			report.RiskFindingPins++
+		}
+	}
+	if report.Status == "ok" && report.LockEntries > 0 && report.LockedSourcePins != report.LockEntries {
+		report.Status = "warn"
+	}
+	return report
+}
+
+func renderSkillSourcesLockReport(ev Event, cfg Config, repoContext RepoContext, includeIssue bool) string {
+	report := BuildSkillSourceLockReport(cfg, repoContext)
+	var b strings.Builder
+	b.WriteString("## GitClaw Skill Source Lock Report\n\n")
+	b.WriteString("Generated without a model call.\n\n")
+	writeSkillSourceHeader(&b, ev, includeIssue)
+	fmt.Fprintf(&b, "- skill_source_lock_status: `%s`\n", report.Status)
+	fmt.Fprintf(&b, "- lock_scope: `%s`\n", "repo-local-source-pin-reproducibility")
+	writeSkillSourceSummary(&b, report.Source)
+	fmt.Fprintf(&b, "- lock_entries: `%d`\n", report.LockEntries)
+	fmt.Fprintf(&b, "- locked_source_pins: `%d`\n", report.LockedSourcePins)
+	fmt.Fprintf(&b, "- reproducible_source_pins: `%d`\n", report.ReproducibleSourcePins)
+	fmt.Fprintf(&b, "- stale_source_pins: `%d`\n", report.StaleSourcePins)
+	fmt.Fprintf(&b, "- unpinned_source_pins: `%d`\n", report.UnpinnedSourcePins)
+	fmt.Fprintf(&b, "- missing_skill_pins: `%d`\n", report.MissingSkillPins)
+	fmt.Fprintf(&b, "- remote_fetch_allowed_pins: `%d`\n", report.RemoteFetchAllowedPins)
+	fmt.Fprintf(&b, "- risk_finding_pins: `%d`\n", report.RiskFindingPins)
+	fmt.Fprintf(&b, "- external_clawhub_lock_path: `%s`\n", externalClawHubLockPath)
+	fmt.Fprintf(&b, "- external_clawhub_lock_present: `%t`\n", report.ClawHubLockPresent)
+	fmt.Fprintf(&b, "- external_clawhub_lock_sha256_12: `%s`\n", noneIfEmpty(report.ClawHubLockHash))
+	fmt.Fprintf(&b, "- lock_manifest_sha256_12: `%s`\n", report.LockManifestHash)
+	fmt.Fprintf(&b, "- registry_contact_allowed: `%t`\n", report.RegistryContactAllowed)
+	fmt.Fprintf(&b, "- remote_fetch_allowed: `%t`\n", report.RemoteFetchAllowed)
+	fmt.Fprintf(&b, "- installer_scripts_run: `%t`\n", report.InstallerScriptsRun)
+	fmt.Fprintf(&b, "- dependency_install_allowed: `%t`\n", report.DependencyInstallAllowed)
+	fmt.Fprintf(&b, "- repository_mutation_allowed: `%t`\n", report.RepositoryMutationAllowed)
+	fmt.Fprintf(&b, "- raw_lockfile_included: `%t`\n", report.RawLockfileIncluded)
+	fmt.Fprintf(&b, "- raw_source_bodies_included: `%t`\n", report.RawSourceBodiesIncluded)
+	fmt.Fprintf(&b, "- raw_source_refs_included: `%t`\n", report.RawSourceRefsIncluded)
+	fmt.Fprintf(&b, "- raw_skill_bodies_included: `%t`\n", report.RawSkillBodiesIncluded)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_skill_source_lock_change: `%t`\n", true)
+	if includeIssue {
+		fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
+	}
+	b.WriteByte('\n')
+	b.WriteString("This report projects a reproducibility lock from reviewed repo-local source pins. It mirrors OpenClaw/ClawHub tracked-install pressure without loading registry state: source pins, source refs, and local skills are represented by hashes and gates only.\n\n")
+
+	b.WriteString("### Lock Entries\n")
+	writeSkillSourceLockCards(&b, report.Source.Cards)
+
+	b.WriteString("\n### Lock Gates\n")
+	fmt.Fprintf(&b, "- lockfile_gate=`%s`\n", "derived-from-reviewed-source-pins")
+	b.WriteString("- external_clawhub_lock_gate=`presence-and-hash-only`\n")
+	b.WriteString("- registry_gate=`disabled`\n")
+	b.WriteString("- remote_fetch_gate=`disabled`\n")
+	b.WriteString("- installer_gate=`disabled`\n")
+	b.WriteString("- dependency_install_gate=`disabled`\n")
+	b.WriteString("- mutation_gate=`disabled`\n")
+	b.WriteString("- raw_body_gate=`hash_only`\n")
+	b.WriteString("- model_e2e_gate=`required`\n")
 	return strings.TrimSpace(b.String())
 }
 
@@ -859,6 +991,48 @@ func writeSkillSourceSearchResults(b *strings.Builder, results []SkillSourceSear
 	}
 }
 
+func writeSkillSourceLockCards(b *strings.Builder, cards []SkillSourceCard) {
+	if len(cards) == 0 {
+		b.WriteString("- none\n")
+		return
+	}
+	for _, card := range cards {
+		sourceRefSHA := "none"
+		if card.SourceRefPresent {
+			sourceRefSHA = card.SourceRefSHA
+		}
+		currentSHA := "none"
+		if card.SkillSHA != "" {
+			currentSHA = card.SkillSHA
+		}
+		expectedSHA := "none"
+		if card.ExpectedSHA != "" {
+			expectedSHA = card.ExpectedSHA
+		}
+		fmt.Fprintf(b, "- source_name=`%s` path=`%s` skill_path=`%s` lock_state=`%s` skill_matched=`%t` source_kind=`%s` source_ref_present=`%t` source_ref_sha256_12=`%s` trust_level=`%s` install_mode=`%s` requires_approval=`%t` remote_fetch_allowed=`%t` hash_pinned=`%t` expected_sha256_12=`%s` current_skill_sha256_12=`%s` hash_matched=`%t` risk_findings=`%d` risk_max_severity=`%s` risk_codes=`%s`\n",
+			inlineCode(card.Name),
+			card.Path,
+			card.SkillPath,
+			skillSourceLockState(card),
+			card.SkillMatched,
+			inlineCode(card.SourceKind),
+			card.SourceRefPresent,
+			sourceRefSHA,
+			inlineCode(card.TrustLevel),
+			inlineCode(card.InstallMode),
+			card.RequiresApproval,
+			card.RemoteFetchAllowed,
+			card.HashPinned,
+			expectedSHA,
+			currentSHA,
+			card.HashMatched,
+			len(card.RiskFindings),
+			skillSourceRiskMaxSeverity(card.RiskFindings),
+			inlineListOrNone(skillSourceRiskCodes(card.RiskFindings)),
+		)
+	}
+}
+
 func writeSkillSourceVerifyFindings(b *strings.Builder, report SkillSourceVerifyReport) {
 	b.WriteString("- severity=`info` code=`skill_source_registry_verification_not_configured` detail=`GitClaw v1 verifies reviewed repo-local source pins and hashes without contacting external skill registries`\n")
 	b.WriteString("- severity=`info` code=`skill_source_remote_fetch_verification_static_only` detail=`remote source refs are not fetched; verification is limited to reviewed source-pin metadata and local skill hashes`\n")
@@ -951,6 +1125,80 @@ func skillSourceSearchScore(card SkillSourceCard, query string, terms []string) 
 	return scoreSearchFields(fields, weights, strings.ToLower(cleanSkillSearchQuery(query)), terms)
 }
 
+func skillSourceLockState(card SkillSourceCard) string {
+	switch {
+	case !card.SkillMatched:
+		return "missing-skill"
+	case !card.HashPinned:
+		return "unpinned"
+	case card.HashMismatched:
+		return "stale"
+	case card.RemoteFetchAllowed:
+		return "remote-fetch-allowed"
+	case len(card.RiskFindings) > 0:
+		return "review-required"
+	default:
+		return "locked"
+	}
+}
+
+func skillSourceLockManifestHash(cards []SkillSourceCard) string {
+	if len(cards) == 0 {
+		return shortDocumentHash("gitclaw-skill-source-lock-empty")
+	}
+	var lines []string
+	for _, card := range cards {
+		lines = append(lines, strings.Join([]string{
+			card.Name,
+			card.Path,
+			card.SkillPath,
+			card.SourceKind,
+			card.TrustLevel,
+			card.InstallMode,
+			boolString(card.SkillMatched),
+			boolString(card.SourceRefPresent),
+			card.SourceRefSHA,
+			boolString(card.RequiresApproval),
+			boolString(card.RemoteFetchAllowed),
+			boolString(card.HashPinned),
+			card.ExpectedSHA,
+			card.SkillSHA,
+			boolString(card.HashMatched),
+			boolString(card.HashMismatched),
+			skillSourceLockState(card),
+			strings.Join(skillSourceRiskCodes(card.RiskFindings), ","),
+		}, "\t"))
+	}
+	sort.Strings(lines)
+	return shortDocumentHash(strings.Join(lines, "\n"))
+}
+
+func inspectExternalClawHubLock(root string) (bool, string) {
+	if root == "" {
+		root = "."
+	}
+	path := filepath.Join(root, filepath.FromSlash(externalClawHubLockPath))
+	body, err := os.ReadFile(path)
+	if err != nil {
+		return false, ""
+	}
+	return true, shortDocumentHash(string(body))
+}
+
+func noneIfEmpty(value string) string {
+	if strings.TrimSpace(value) == "" {
+		return "none"
+	}
+	return value
+}
+
+func boolString(value bool) string {
+	if value {
+		return "true"
+	}
+	return "false"
+}
+
 func skillSourceSeverityRank(severity string) int {
 	switch severity {
 	case "high":
@@ -984,6 +1232,14 @@ func isSkillSourcesVerifyRequest(ev Event, cfg Config) bool {
 		fields[0] == "/skills" &&
 		(strings.EqualFold(fields[1], "sources") || strings.EqualFold(fields[1], "source")) &&
 		(strings.EqualFold(fields[2], "verify") || strings.EqualFold(fields[2], "check"))
+}
+
+func isSkillSourcesLockRequest(ev Event, cfg Config) bool {
+	fields := activeSlashCommandFields(ev, cfg)
+	return len(fields) >= 3 &&
+		fields[0] == "/skills" &&
+		(strings.EqualFold(fields[1], "sources") || strings.EqualFold(fields[1], "source")) &&
+		(strings.EqualFold(fields[2], "lock") || strings.EqualFold(fields[2], "lockfile"))
 }
 
 func requestedSkillSourceSearchQuery(ev Event, cfg Config) string {

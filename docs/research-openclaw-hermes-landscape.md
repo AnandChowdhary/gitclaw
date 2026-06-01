@@ -191,6 +191,21 @@ repo-reader/search follow-up after behavior changes. It should not print raw
 query text, raw source refs, source YAML, skill bodies, issue/comment bodies,
 prompts, credentials, provider payloads, or secret values.
 
+2026-06-01 skill-source-lock follow-up: OpenClaw/ClawHub now treats source
+metadata and `.clawhub/lock.json` as the durable basis for updates, while
+Hermes keeps skills discoverable through compact metadata before loading full
+instructions. GitClaw should not add registry update semantics, but it should
+make reproducibility auditable: add `@gitclaw /skills sources lock` and
+`gitclaw skills sources lock` to project a body-free lock from reviewed source
+pins. The report should show lock state, stale/unpinned/missing counts,
+expected/current skill hashes, an aggregate lock hash, `.clawhub/lock.json`
+presence/hash if present, disabled registry/fetch/install/mutation gates, and
+a required real GitHub Models follow-up. It should not contact registries,
+fetch remote refs, update skills, run installers, install dependencies, mutate
+the repository, or print raw lockfiles, source refs, source YAML, skill
+bodies, issue/comment bodies, prompts, credentials, provider payloads, or
+secret values.
+
 2026-05-31 skill-runtime follow-up: OpenClaw's `SKILL.md` frontmatter and
 ClawHub format expose runtime metadata such as required env vars, binaries,
 `primaryEnv`, and install specs, while Hermes skills/tool docs frame these

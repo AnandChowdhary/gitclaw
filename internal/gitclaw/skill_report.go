@@ -101,6 +101,9 @@ func RenderSkillsReport(ev Event, cfg Config, repoContext RepoContext) string {
 	if isSkillSourcesVerifyRequest(ev, cfg) {
 		return renderSkillSourcesVerifyReport(ev, cfg, repoContext, true)
 	}
+	if isSkillSourcesLockRequest(ev, cfg) {
+		return renderSkillSourcesLockReport(ev, cfg, repoContext, true)
+	}
 	if query := requestedSkillSourceSearchQuery(ev, cfg); query != "" {
 		return renderSkillSourcesSearchReport(ev, cfg, repoContext, query, defaultSkillSourceSearchMaxResults, true)
 	}

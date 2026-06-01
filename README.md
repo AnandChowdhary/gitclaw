@@ -137,6 +137,7 @@ gitclaw skills select-plan <name>
 gitclaw skills refresh-plan
 gitclaw skills sources
 gitclaw skills sources verify
+gitclaw skills sources lock
 gitclaw skills sources provenance
 gitclaw skills sources risk
 gitclaw skills sources info <name>
@@ -178,6 +179,12 @@ credentials.
 envelope. It reports source-pin hashes, source-ref hashes, current skill
 hashes, registry/fetch/install gates, and risk rollups without contacting a
 registry, fetching remote sources, running installers, or printing source or
+skill bodies.
+
+`gitclaw skills sources lock` projects a reproducibility lock from reviewed
+source pins. It reports lock state, aggregate lock hash, expected/current skill
+hashes, stale/unpinned/missing counts, and `.clawhub/lock.json` presence/hash
+if present, without loading registry state or printing lockfile, source, or
 skill bodies.
 
 `gitclaw skills sources search <query>` searches reviewed source-pin metadata
@@ -689,6 +696,7 @@ scripts/e2e/github-skills-refresh-plan-report.sh
 scripts/e2e/github-skills-sources-report.sh
 scripts/e2e/github-skills-sources-info-report.sh
 scripts/e2e/github-skills-sources-search-report.sh
+scripts/e2e/github-skills-sources-lock-report.sh
 scripts/e2e/github-skills-sources-verify-report.sh
 scripts/e2e/github-skills-sources-provenance-report.sh
 scripts/e2e/github-skills-runtime-report.sh
@@ -814,6 +822,9 @@ The skill-source-search harness checks body-free progressive-disclosure search
 over reviewed source-pin metadata, then requires the same real GitHub Models
 repo-reader/search follow-up so deterministic search cannot mask broken LLM
 tool grounding.
+The skill-source-lock harness checks the derived reproducibility lock for
+reviewed source pins, including stale/unpinned/missing counts and aggregate
+hashes, then requires a real GitHub Models repo-reader/search follow-up.
 The channel-ingest harness proves the generic no-server bridge end to end:
 workflow-dispatch mirroring, duplicate provider-message suppression, and a
 normal model/tool follow-up on the canonical channel issue.

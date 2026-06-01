@@ -166,11 +166,11 @@ for expected in \
   'context_files_present: `6`' \
   'memory_notes: `1`' \
   'skill_files: `1`' \
-  'e2e_scripts: `209`' \
-  'e2e_live_issue_scripts: `202`' \
-  'e2e_cleanup_scripts: `209`' \
-  'e2e_model_coverage_scripts: `152`' \
-  'e2e_model_followup_scripts: `152`' \
+  'e2e_scripts: `210`' \
+  'e2e_live_issue_scripts: `203`' \
+  'e2e_cleanup_scripts: `210`' \
+  'e2e_model_coverage_scripts: `153`' \
+  'e2e_model_followup_scripts: `153`' \
   'e2e_session_coverage_scripts: `2`' \
   'e2e_backup_gate_scripts: `27`' \
   'e2e_workflow_dispatch_scripts: `21`' \
@@ -216,6 +216,7 @@ for expected in \
   'path=`scripts/e2e/github-memory-provenance-report.sh`' \
   'path=`scripts/e2e/github-skills-sources-info-report.sh`' \
   'path=`scripts/e2e/github-skills-sources-search-report.sh`' \
+  'path=`scripts/e2e/github-skills-sources-lock-report.sh`' \
   'path=`scripts/e2e/github-skills-sources-verify-report.sh`' \
   'path=`scripts/e2e/github-skills-sources-provenance-report.sh`' \
   'path=`scripts/e2e/github-profile-catalog-report.sh`' \
