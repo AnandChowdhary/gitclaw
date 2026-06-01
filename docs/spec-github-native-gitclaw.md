@@ -5371,6 +5371,7 @@ accepts a structured reaction form:
 @gitclaw /channels clip --clip-id <stable-clip-id> --message-id <provider-message-id>
 @gitclaw /channels decision --decision-id <stable-decision-id> --message-id <provider-message-id>
 @gitclaw /channels digest --digest-id <stable-digest-id> --message-id <provider-message-id>
+@gitclaw /channels request-run <tool-name> --id <stable-request-id> --message-id <provider-message-id>
 @gitclaw /channels remind --reminder-id <stable-reminder-id> --message-id <provider-message-id> --at <RFC3339-or-date>
 @gitclaw /channels done --message-id <stable-outbound-id>
 ```
@@ -5557,6 +5558,34 @@ digest-link outbox, checks duplicate suppression, and then continues on the
 digest issue with a normal GitHub Models repo-reader/search follow-up.
 
 The same channel-thread issue can also turn a mirrored provider message into a
+reviewed tool-run request:
+
+```text
+@gitclaw /channels request-run <tool-name> --id <stable-request-id> --message-id <provider-message-id>
+```
+
+`/channels request-run`, `/channels run-request`, `/channels tool-run`,
+`/channels request-tool`, and `/channels tool-request` infer the current
+channel and thread id from the issue marker when no explicit channel/thread
+target is provided. They create or reuse one open GitHub issue carrying the
+existing `gitclaw:tool-run-request-issue` marker, then queue a provider-facing
+review link back to the mirrored channel thread. This is not execution: the
+action does not call a model, execute the requested tool, run shell commands,
+call provider APIs, or mutate the repository. The tool-run request issue stores
+the normalized tool, request id, review decision, and body-free source hashes
+needed for human review; the channel source receipt remains body-free,
+reporting only request/thread/message/tool hashes, validation and review
+metadata, duplicate status, notification queue metadata, and delivery gates. It
+does not print raw request ids, raw provider thread/message ids, raw requested
+tool arguments, raw channel message bodies, raw tool inputs, or raw tool
+outputs in the source receipt. Duplicates are suppressed first by request id
+for the GitHub review issue and then by `channel + notify_message_id` for the
+provider-facing review link. Changes to this surface require a live E2E that
+records the request, validates the metadata-only review-link outbox, checks
+duplicate suppression, and then continues on the review issue with a normal
+GitHub Models repo-reader/search follow-up.
+
+The same channel-thread issue can also turn a mirrored provider message into a
 GitHub-native reminder:
 
 ```text
@@ -5638,6 +5667,9 @@ Behavior:
 - create or reuse one `gitclaw:channel-digest` issue per digest id and queue
   one provider-facing digest-link outbound comment per
   `channel + notify_message_id`,
+- create or reuse one `gitclaw:tool-run-request-issue` issue per channel
+  request id and queue one provider-facing review-link outbound comment per
+  `channel + notify_message_id` without executing a model or tool,
 - create or reuse one `gitclaw:channel-reminder` issue per reminder id and
   queue one provider-facing reminder-link outbound comment per
   `channel + notify_message_id`,
@@ -5821,6 +5853,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels clip --clip-id channel-clip-1 --message-id provider-msg-1
 @gitclaw /channels decision --decision-id channel-decision-1 --message-id provider-msg-1
 @gitclaw /channels digest --digest-id channel-digest-1 --message-id provider-msg-1
+@gitclaw /channels request-run search_files --id channel-tool-request-1 --message-id provider-msg-1
 @gitclaw /channels room team-alerts,ops-alerts --room-id design-room --message-id design-room-1
 @gitclaw /channels huddle team-alerts,ops-alerts --huddle-id design-room --message-id design-room-1
 @gitclaw /channels rollcall team-alerts,ops-alerts --rollcall-id standup --message-id standup-1
@@ -8354,6 +8387,17 @@ examples/workflows/gitclaw.yml
   select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-digest fixture token, and avoid hidden channel, account, provider,
   message, and digest sentinels.
+- A `gh`-driven channel-tool-run-request-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels request-run search_files --id ... --message-id ...` on
+  that mirrored thread, verifies GitHub reviewed tool-run request issue
+  creation, body-free source receipt metadata, provider-facing review-link
+  queueing, duplicate request and notification suppression, and metadata-only
+  outbox discovery. The review issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-tool-request fixture token, and
+  avoid hidden channel, account, provider, message, request, and tool
+  sentinels.
 - A `gh`-driven channel-reminder-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels remind --reminder-id ... --message-id ... --at ...` on

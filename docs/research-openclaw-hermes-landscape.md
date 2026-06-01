@@ -152,6 +152,25 @@ Sources: OpenClaw docs (`https://docs.openclaw.ai/`), OpenClaw channel CLI docs
 Hermes cron docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/cron/`).
 
+2026-06-02 channel-tool-request follow-up: OpenClaw's tool and skill docs keep
+capabilities explicit while channels provide the live chat surface, and Hermes'
+toolsets/MCP model narrows tool exposure per task instead of giving every
+session every tool. GitClaw's GitHub-native channel bridge should let a
+Slack/Telegram thread request a reviewed tool run without executing it from the
+chat message: create a normal `gitclaw:tool-run-request-issue`, queue a
+provider-facing review link back to the source thread, and require any actual
+model/tool follow-up to happen in GitHub with normal prompt/tool telemetry. The
+source channel receipt stays body-free and reports hashes, validation status,
+review decision, duplicate suppression, and outbox metadata. Sources: OpenClaw
+docs (`https://docs.openclaw.ai/`), OpenClaw skills docs
+(`https://docs.openclaw.ai/tools/skills`), OpenClaw channel docs
+(`https://docs.openclaw.ai/cli/channels`), Hermes toolsets docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/toolsets/`),
+Hermes MCP docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp/`), and
+Hermes messaging docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/messaging/`).
+
 2026-05-30 skill-risk follow-up: current OpenClaw plugin-hook docs make prompt,
 model, tool-call, and heartbeat extension points explicit, while Hermes'
 toolsets and MCP docs emphasize filtering exposed capabilities per task. Recent

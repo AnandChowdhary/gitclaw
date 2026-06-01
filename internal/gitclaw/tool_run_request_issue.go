@@ -414,6 +414,7 @@ func toolRunRequestChannelNotificationMessageID(req ToolRunRequestIssueRequest) 
 func cleanToolRunRequestID(id string) string {
 	id = strings.ToLower(strings.Trim(strings.TrimSpace(id), " \t\r\n.,:;!?`\"'"))
 	id = strings.ReplaceAll(id, "_", "-")
+	id = strings.ReplaceAll(id, ".", "-")
 	return id
 }
 
