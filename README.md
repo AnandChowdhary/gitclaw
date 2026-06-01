@@ -567,6 +567,9 @@ branch paths, approval gates, and dry-run commands, but the action does not
 read backup payloads, mutate the repository, replay GitHub API calls, or call a
 model. Continue on the generated restore-request issue to discuss the recovery
 with GitHub Models after local backup verification.
+Add `--notify-route <route>` or `--notify-routes <a,b>` to also queue a
+body-safe Slack/Telegram channel notification for that restore request through
+the reviewed routebook, channel issue, outbox, and delivery receipt path.
 
 `gitclaw backup retention-plan` is a dry-run cleanup plan for fetched backups.
 Its live harness now also proves a real GitHub Models repo-reader follow-up
@@ -982,6 +985,7 @@ scripts/e2e/github-backup-export-jsonl.sh
 scripts/e2e/github-memory-rehearse-issue.sh
 scripts/e2e/github-backup-rehearse-issue.sh
 scripts/e2e/github-backup-restore-request-issue.sh
+scripts/e2e/github-backup-restore-request-channel-notify.sh
 scripts/e2e/github-agents-catalog-report.sh
 scripts/e2e/github-agents-provenance-report.sh
 scripts/e2e/github-agents-risk-report.sh
@@ -1318,6 +1322,11 @@ labeled review issue, verifies the real `gitclaw-backups` branch with
 verify/coverage/drill/restore-plan/manifest, suppresses duplicate restore
 requests, and then runs a real GitHub Models repo-reader/search follow-up on
 the restore-request issue.
+The backup-restore-request channel-notify harness proves the same recovery
+approval lane can notify a reviewed Telegram/Slack route, queue exactly one
+metadata-safe outbound channel message, expose pending provider work through
+`channel-outbox`, suppress duplicate notifications, and then run a real GitHub
+Models repo-reader/search follow-up on the restore-request issue.
 The channel-broadcast slash harness fans one source issue out to multiple
 reviewed routes, verifies one outbound queue item per route, checks duplicate
 broadcast suppression, keeps route names and outbound bodies out of the source

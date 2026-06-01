@@ -6207,6 +6207,18 @@ expected backup paths, and dry-run commands because it is the operator-facing
 review lane, but it must not copy raw source text. Duplicate suppression is
 keyed by the hidden restore-request marker and sanitized id.
 
+When the same command includes `--notify-route <route>` or
+`--notify-routes <route-a,route-b>`, GitClaw also queues one reviewed outbound
+channel notification per route. The source receipt records only route/message
+body hashes, destination issue numbers, queue counts, duplicate counts, channel
+names, and provider-delivery gates; it never prints raw route names, raw
+provider thread ids, raw outbound body text, source text, or raw backup bodies.
+The outbound channel comment may include the restore request issue, source
+issue, request id, backup issue, target repo, backup branch, and restore gate
+status so the external channel receives useful recovery context, while actual
+provider delivery stays delegated to `gitclaw channel-outbox` and
+`gitclaw channel-delivery`.
+
 Every change to this surface must run a live E2E that creates a real source
 issue, verifies the restore-request issue was opened and labeled, fetches the
 real `gitclaw-backups` branch, runs `gitclaw backup verify`, `gitclaw backup
@@ -7638,7 +7650,31 @@ assert the expected comments/labels, and close the issue in cleanup.
      with prompt provenance, selected skills, prompt-visible tool names, and
      usage markers.
 
-49. **Backup retention plan**
+49. **Backup restore request channel notification**
+
+   - create a real issue with
+     `@gitclaw /backup restore-request --id <id> --notify-route <route>`,
+   - assert the source receipt is generated without a model call, opens or
+     reuses the labeled restore-request issue, queues exactly one channel
+     notification, exposes only hashes/counts for route, message, body, backup
+     paths, and suppresses raw source text,
+   - inspect the restore-request issue body and assert it contains the stable
+     marker, backup branch/root, expected issue backup path, approval gates, and
+     no raw source or route body,
+   - inspect the channel issue and assert it carries `gitclaw:channel`, not the
+     normal model trigger label, and contains one
+     `gitclaw:channel-outbound` comment for the reviewed route,
+   - run metadata-only `gitclaw channel-outbox` and assert the pending provider
+     work is visible without leaking the outbound body,
+   - post a duplicate restore-request notification command and assert it reuses
+     the same restore-request issue and suppresses duplicate channel message
+     ids,
+   - post a normal follow-up comment on the restore-request issue that requires
+     repo-reader search and assert the next assistant turn used GitHub Models
+     with prompt provenance, selected skills, prompt-visible tool names, and
+     usage markers.
+
+50. **Backup retention plan**
 
    - create a real issue with `@gitclaw /backup retention-plan`,
    - assert the issue-side report lists `requested_backup_command:
@@ -7793,6 +7829,11 @@ MVP is not complete until:
   labeled GitHub issue, validates the real backup branch with local dry-run
   commands, suppresses duplicate restore requests, and then proves a normal
   model-backed repo-reader/search follow-up on that generated issue,
+- the backup restore-request channel-notify harness verifies the same approval
+  lane can queue a reviewed channel notification, expose it through
+  metadata-only outbox, suppress duplicate notification message IDs, and then
+  prove a normal model-backed repo-reader/search follow-up on that generated
+  issue,
 - the backup retention-plan harness verifies a fetched backup branch can
   produce a dry-run keep-latest plan with kept/prune-candidate paths and hashes
   but no raw title/body leakage,

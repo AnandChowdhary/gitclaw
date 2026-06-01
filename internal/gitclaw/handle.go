@@ -809,6 +809,17 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		if err != nil {
 			return failStartedTurn(ctx, cfg, github, ev, status, "backup", fmt.Errorf("run backup restore request issue: %w", err))
 		}
+		if len(req.NotifyRoutes) > 0 {
+			channelClient, ok := github.(ChannelSendGitHubClient)
+			if !ok {
+				return failStartedTurn(ctx, cfg, github, ev, status, "backup", fmt.Errorf("github client cannot notify channel routes for backup restore requests"))
+			}
+			notification, err := RunBackupRestoreRequestChannelNotification(ctx, cfg, channelClient, req, result)
+			if err != nil {
+				return failStartedTurn(ctx, cfg, github, ev, status, "backup", fmt.Errorf("notify channel routes for backup restore request: %w", err))
+			}
+			result.ChannelNotification = notification
+		}
 		body := RenderAssistantComment(Marker{
 			RunID:          envFirst("GITHUB_RUN_ID", "local"),
 			EventID:        eventID(ev),

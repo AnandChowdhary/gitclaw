@@ -19,6 +19,8 @@ type BackupRestoreRequestIssueRequest struct {
 	Command           string
 	Subcommand        string
 	RequestID         string
+	NotifyRoutes      []string
+	NotifyRoutesSHA   string
 	BackupIssueNumber int
 	TargetRepo        string
 	BackupBranch      string
@@ -40,10 +42,24 @@ type BackupRestoreRequestIssueRequest struct {
 }
 
 type BackupRestoreRequestIssueResult struct {
-	IssueNumber int
-	IssueURL    string
-	Created     bool
-	Duplicate   bool
+	IssueNumber         int
+	IssueURL            string
+	Created             bool
+	Duplicate           bool
+	ChannelNotification BackupRestoreRequestChannelNotification
+}
+
+type BackupRestoreRequestChannelNotification struct {
+	Requested           bool
+	Routes              int
+	Queued              int
+	Duplicates          int
+	TargetIssuesCreated int
+	MessageSHA          string
+	BodySHA             string
+	BodyBytes           int
+	BodyLines           int
+	Destinations        []ChannelBroadcastDestinationResult
 }
 
 func IsBackupRestoreRequestIssueRequest(ev Event, cfg Config) bool {
@@ -68,7 +84,7 @@ func BuildBackupRestoreRequestIssueRequest(ev Event, cfg Config) (BackupRestoreR
 		return BackupRestoreRequestIssueRequest{}, fmt.Errorf("missing backup restore request issue command")
 	}
 	sourceText := activeRequestText(ev)
-	backupIssueNumber, requestID, err := parseBackupRestoreRequestIssueArgs(fields[2:], ev.Issue.Number, sourceText)
+	backupIssueNumber, requestID, notifyRoutes, err := parseBackupRestoreRequestIssueArgs(fields[2:], ev.Issue.Number, sourceText)
 	if err != nil {
 		return BackupRestoreRequestIssueRequest{}, err
 	}
@@ -89,6 +105,8 @@ func BuildBackupRestoreRequestIssueRequest(ev Event, cfg Config) (BackupRestoreR
 		Command:           fields[0],
 		Subcommand:        cleanBackupCommandName(fields[1]),
 		RequestID:         requestID,
+		NotifyRoutes:      normalizeChannelBroadcastRoutes(notifyRoutes),
+		NotifyRoutesSHA:   channelBroadcastRoutesHash(notifyRoutes),
 		BackupIssueNumber: backupIssueNumber,
 		TargetRepo:        repo,
 		BackupBranch:      defaultBackupBranch,
@@ -146,6 +164,39 @@ func RunBackupRestoreRequestIssue(ctx context.Context, cfg Config, github Backup
 		IssueURL:    issueURL(req.Repo, issue.Number),
 		Created:     true,
 	}, nil
+}
+
+func RunBackupRestoreRequestChannelNotification(ctx context.Context, cfg Config, github ChannelSendGitHubClient, req BackupRestoreRequestIssueRequest, result BackupRestoreRequestIssueResult) (BackupRestoreRequestChannelNotification, error) {
+	notification := BackupRestoreRequestChannelNotification{
+		Requested: len(req.NotifyRoutes) > 0,
+		Routes:    len(req.NotifyRoutes),
+	}
+	if len(req.NotifyRoutes) == 0 {
+		return notification, nil
+	}
+	if result.IssueNumber <= 0 {
+		return notification, fmt.Errorf("missing backup restore request issue for channel notification")
+	}
+	body := RenderBackupRestoreRequestChannelNotificationBody(req, result)
+	messageID := backupRestoreRequestChannelNotificationMessageID(req)
+	broadcast, err := RunChannelBroadcast(ctx, cfg, github, ChannelBroadcastOptions{
+		Repo:      req.Repo,
+		Routes:    req.NotifyRoutes,
+		MessageID: messageID,
+		Body:      body,
+	})
+	if err != nil {
+		return notification, err
+	}
+	notification.Queued = broadcast.Queued
+	notification.Duplicates = broadcast.Duplicates
+	notification.TargetIssuesCreated = broadcast.Created
+	notification.MessageSHA = shortDocumentHash(messageID)
+	notification.BodySHA = shortDocumentHash(body)
+	notification.BodyBytes = len(body)
+	notification.BodyLines = lineCount(body)
+	notification.Destinations = broadcast.Destinations
+	return notification, nil
 }
 
 func RenderBackupRestoreRequestIssueBody(req BackupRestoreRequestIssueRequest) string {
@@ -206,6 +257,16 @@ func RenderBackupRestoreRequestIssueActionReport(ev Event, req BackupRestoreRequ
 	fmt.Fprintf(&b, "- restore_request_issue_created: `%t`\n", result.Created)
 	fmt.Fprintf(&b, "- duplicate_suppressed: `%t`\n", result.Duplicate)
 	fmt.Fprintf(&b, "- request_id_sha256_12: `%s`\n", shortDocumentHash(req.RequestID))
+	fmt.Fprintf(&b, "- channel_notification_requested: `%t`\n", result.ChannelNotification.Requested)
+	fmt.Fprintf(&b, "- channel_notification_routes: `%d`\n", result.ChannelNotification.Routes)
+	fmt.Fprintf(&b, "- channel_notification_queued: `%d`\n", result.ChannelNotification.Queued)
+	fmt.Fprintf(&b, "- channel_notification_duplicates: `%d`\n", result.ChannelNotification.Duplicates)
+	fmt.Fprintf(&b, "- channel_notification_target_issues_created: `%d`\n", result.ChannelNotification.TargetIssuesCreated)
+	fmt.Fprintf(&b, "- channel_notification_routes_sha256_12: `%s`\n", noneIfEmpty(req.NotifyRoutesSHA))
+	fmt.Fprintf(&b, "- channel_notification_message_id_sha256_12: `%s`\n", noneIfEmpty(result.ChannelNotification.MessageSHA))
+	fmt.Fprintf(&b, "- channel_notification_body_sha256_12: `%s`\n", noneIfEmpty(result.ChannelNotification.BodySHA))
+	fmt.Fprintf(&b, "- channel_notification_body_bytes: `%d`\n", result.ChannelNotification.BodyBytes)
+	fmt.Fprintf(&b, "- channel_notification_body_lines: `%d`\n", result.ChannelNotification.BodyLines)
 	fmt.Fprintf(&b, "- backup_issue: `#%d`\n", req.BackupIssueNumber)
 	fmt.Fprintf(&b, "- target_repository: `%s`\n", req.TargetRepo)
 	fmt.Fprintf(&b, "- backup_branch: `%s`\n", req.BackupBranch)
@@ -223,6 +284,9 @@ func RenderBackupRestoreRequestIssueActionReport(ev Event, req BackupRestoreRequ
 	fmt.Fprintf(&b, "- github_api_replay_allowed: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_source_body_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_backup_bodies_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_channel_routes_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_channel_notification_body_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- provider_delivery_performed: `%t`\n", false)
 	fmt.Fprintf(&b, "- source_sha256_12: `%s`\n", req.SourceSHA)
 	fmt.Fprintf(&b, "- source_bytes: `%d`\n", req.SourceBytes)
 	fmt.Fprintf(&b, "- source_lines: `%d`\n", req.SourceLines)
@@ -234,12 +298,37 @@ func RenderBackupRestoreRequestIssueActionReport(ev Event, req BackupRestoreRequ
 	fmt.Fprintf(&b, "- continue on restore request issue: `#%d`\n", result.IssueNumber)
 	b.WriteString("- fetch `gitclaw-backups`, run verify/coverage/drill/restore-plan/manifest, and keep any real restore behind explicit human approval\n")
 	b.WriteString("- verify the follow-up assistant marker includes prompt context, selected skill, prompt-visible tools, and usage telemetry\n")
+	if result.ChannelNotification.Requested {
+		b.WriteString("\n### Channel Notifications\n")
+		if len(result.ChannelNotification.Destinations) == 0 {
+			b.WriteString("- none\n")
+		} else {
+			for _, destination := range result.ChannelNotification.Destinations {
+				fmt.Fprintf(
+					&b,
+					"- destination=`%02d` target_issue=`#%d` outbound_comment_id=`%d` target_issue_created=`%t` duplicate_suppressed=`%t` route_sha256_12=`%s` channel=`%s` thread_id_sha256_12=`%s` message_id_sha256_12=`%s` body_sha256_12=`%s`\n",
+					destination.Index,
+					destination.IssueNumber,
+					destination.CommentID,
+					destination.Created,
+					destination.Duplicate,
+					noneIfEmpty(destination.RouteHash),
+					destination.Channel,
+					noneIfEmpty(destination.ThreadHash),
+					noneIfEmpty(destination.MessageHash),
+					noneIfEmpty(destination.BodyHash),
+				)
+			}
+		}
+		b.WriteString("- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`\n")
+	}
 	return strings.TrimSpace(b.String())
 }
 
-func parseBackupRestoreRequestIssueArgs(args []string, defaultIssue int, sourceText string) (int, string, error) {
+func parseBackupRestoreRequestIssueArgs(args []string, defaultIssue int, sourceText string) (int, string, []string, error) {
 	issueNumber := defaultIssue
 	requestID := ""
+	var notifyRoutes []string
 	for i := 0; i < len(args); i++ {
 		field := strings.TrimSpace(args[i])
 		if field == "" {
@@ -249,22 +338,28 @@ func parseBackupRestoreRequestIssueArgs(args []string, defaultIssue int, sourceT
 		case "--id", "--request-id":
 			i++
 			if i >= len(args) {
-				return 0, "", fmt.Errorf("%s requires a value", field)
+				return 0, "", nil, fmt.Errorf("%s requires a value", field)
 			}
 			requestID = cleanBackupRestoreRequestID(args[i])
 		case "--issue", "--source-issue", "-i":
 			i++
 			if i >= len(args) {
-				return 0, "", fmt.Errorf("--issue requires a value")
+				return 0, "", nil, fmt.Errorf("--issue requires a value")
 			}
 			parsed, ok := parseBackupIssueNumber(args[i])
 			if !ok {
-				return 0, "", fmt.Errorf("invalid backup issue %q", args[i])
+				return 0, "", nil, fmt.Errorf("invalid backup issue %q", args[i])
 			}
 			issueNumber = parsed
+		case "--notify-route", "--notify-routes", "--channel-route", "--channel-routes":
+			i++
+			if i >= len(args) {
+				return 0, "", nil, fmt.Errorf("%s requires a value", field)
+			}
+			notifyRoutes = append(notifyRoutes, splitChannelBroadcastRoutes(args[i])...)
 		default:
 			if strings.HasPrefix(field, "--") {
-				return 0, "", fmt.Errorf("unknown backup restore request argument %q", field)
+				return 0, "", nil, fmt.Errorf("unknown backup restore request argument %q", field)
 			}
 			if parsed, ok := parseBackupIssueNumber(field); ok {
 				issueNumber = parsed
@@ -274,7 +369,26 @@ func parseBackupRestoreRequestIssueArgs(args []string, defaultIssue int, sourceT
 	if requestID == "" {
 		requestID = cleanBackupRestoreRequestID(fmt.Sprintf("backup-restore-%d-%s", issueNumber, shortDocumentHash(sourceText)))
 	}
-	return issueNumber, requestID, nil
+	return issueNumber, requestID, normalizeChannelBroadcastRoutes(notifyRoutes), nil
+}
+
+func RenderBackupRestoreRequestChannelNotificationBody(req BackupRestoreRequestIssueRequest, result BackupRestoreRequestIssueResult) string {
+	var b strings.Builder
+	b.WriteString("GitClaw backup restore request\n\n")
+	fmt.Fprintf(&b, "Review issue: #%d %s\n", result.IssueNumber, result.IssueURL)
+	fmt.Fprintf(&b, "Source issue: #%d %s\n", req.SourceIssueNumber, issueURL(req.Repo, req.SourceIssueNumber))
+	fmt.Fprintf(&b, "Request id: %s\n", req.RequestID)
+	fmt.Fprintf(&b, "Backup issue: #%d\n", req.BackupIssueNumber)
+	fmt.Fprintf(&b, "Target repository: %s\n", req.TargetRepo)
+	fmt.Fprintf(&b, "Backup branch: %s\n", req.BackupBranch)
+	fmt.Fprintf(&b, "Restore PR required: %t\n", true)
+	fmt.Fprintf(&b, "Restore mode: %s\n", "dry-run-first")
+	b.WriteString("\nReview the GitHub restore request issue, fetch the backup branch, and run the dry-run restore checks before any human-approved recovery. This notification did not call a model, read raw backup bodies, restore files, replay GitHub API calls, or mutate the repository.")
+	return strings.TrimSpace(b.String())
+}
+
+func backupRestoreRequestChannelNotificationMessageID(req BackupRestoreRequestIssueRequest) string {
+	return fmt.Sprintf("gitclaw-backup-restore-request-%s", req.RequestID)
 }
 
 func cleanBackupRestoreRequestID(value string) string {
