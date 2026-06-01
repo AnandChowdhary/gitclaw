@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T20:59:56Z",
+  "generated_at": "2026-06-01T21:01:28Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 520,
   "issues": [
@@ -6540,13 +6540,14 @@
       "number": 596,
       "title": "GitClaw backup restore request channel notify E2E 20260601t205822z",
       "path": "issues/000596.json",
-      "backup_generated_at": "2026-06-01T20:59:54Z",
-      "event_name": "issues",
+      "backup_generated_at": "2026-06-01T21:01:27Z",
+      "event_name": "issue_comment",
       "labels": [
-        "gitclaw"
+        "gitclaw",
+        "gitclaw:done"
       ],
-      "comment_count": 1,
-      "transcript_messages": 2
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
