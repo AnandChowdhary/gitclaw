@@ -52,8 +52,8 @@ account_id="slack-tool-notify-account-NOECHO_TOOL_NOTIFY_ACCOUNT_${timestamp}"
 hidden_token="NOECHO_TOOL_NOTIFY_BODY_${timestamp}"
 duplicate_hidden_token="NOECHO_TOOL_NOTIFY_DUPLICATE_${timestamp}"
 followup_hidden_token="NOECHO_TOOL_NOTIFY_FOLLOWUP_${timestamp}"
-expected_token="GITCLAW_TOOL_RUN_REQUEST_NOTIFY_CONTEXT_V1"
-search_phrase="tool run request channel notify unique search fixture phrase"
+expected_token="GITCLAW_TOOL_NOTIFY_CONTEXT_V1"
+search_phrase="tool request notification unique search fixture phrase"
 source_issue_number=""
 request_issue_number=""
 channel_issue_number=""
@@ -305,8 +305,9 @@ gh issue comment "$source_issue_number" \
 
 Search the repository for \`${search_phrase}\`.
 The matching repository search result line ends with an all-caps token after the arrow.
-That token starts with \`GITCLAW_TOOL_RUN_REQUEST_NOTIFY_\`.
+That token starts with \`GITCLAW_TOOL_NOTIFY_\`.
 Reply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.
+The exact token includes \`TOOL_NOTIFY\`; do not insert or remove words.
 Do not reply with a placeholder like \`<token>\` or the word \`token\`.
 Do not include the request issue number, channel issue number, route name, account hash, tool run request id, source body, requested tool text, or hidden sentinels.
 Do not include this hidden follow-up token: ${followup_hidden_token}
