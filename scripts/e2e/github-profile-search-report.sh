@@ -37,7 +37,7 @@ hidden_token="NOECHO_PROFILE_SEARCH_${timestamp}"
 followup_hidden_token="NOECHO_PROFILE_SEARCH_FOLLOWUP_${timestamp}"
 expected_token="GITCLAW_PROFILE_SEARCH_CONTEXT_V1"
 search_phrase="profile search unique search fixture phrase"
-title="@gitclaw /profile search skill_path e2e ${timestamp}"
+title="GitClaw profile search e2e ${timestamp}"
 body="@gitclaw /profile search skill_path PROFILE_SEARCH_ISSUE_QUERY_SECRET_${timestamp}
 
 Live profile-search E2E. Mention repo-reader so the search report proves selected profile surfaces without exposing raw profile bodies.
