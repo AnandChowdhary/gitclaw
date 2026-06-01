@@ -2916,6 +2916,22 @@ diffs, file bodies, commit subjects, issue/comment/prompt/tool bodies, shadow
 store paths, credentials, or secrets. Acceptance requires a live deterministic
 catalog issue plus a real GitHub Models follow-up using repo-reader search.
 
+2026-06-01 rollback-preview follow-up: re-checking the current Hermes
+checkpoint/rollback docs confirms `/rollback diff <N>` is the required preview
+step before restore, while the same page documents a shared shadow git store
+that keeps the user's real `.git` untouched and takes snapshots before
+destructive file/tool operations. GitClaw should adapt the preview, not the
+restore: `@gitclaw /rollback diff HEAD~1`, `@gitclaw /checkpoints preview
+HEAD~1`, `gitclaw rollback diff HEAD~1`, and `gitclaw checkpoints preview
+HEAD~1` compare a visible git ref to `HEAD` with numstat/name-status metadata,
+path hashes, and count rollups only. Because GitHub Actions is the runtime,
+the handle checkout should fetch enough history for `HEAD~1`; because GitClaw
+is still read-only, the preview must keep restore/reset/clean/checkout
+disabled and avoid raw diffs, file bodies, file paths, commit subjects,
+issue/comment bodies, prompts, tool outputs, credentials, and secrets.
+Acceptance requires deterministic unit coverage, a live rollback-preview issue,
+and a real GitHub Models repo-reader/search follow-up.
+
 2026-05-30 approval-readiness follow-up: OpenClaw's exec approvals treat command
 execution as a policy decision layered with user approval, while Hermes frames
 dangerous commands as an explicit authorization boundary. GitClaw should expose

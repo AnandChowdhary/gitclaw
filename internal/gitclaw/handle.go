@@ -309,22 +309,17 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 	}
 	if IsCheckpointReportRequest(ev, cfg) {
 		report := BuildCheckpointReport(cfg.Workdir)
+		reportBody := RenderCheckpointReportWithConfig(ev, cfg, report)
+		if isCheckpointRiskRequest(ev, cfg) {
+			reportBody = RenderCheckpointRiskReport(ev, report)
+		}
 		body := RenderAssistantComment(Marker{
 			RunID:          envFirst("GITHUB_RUN_ID", "local"),
 			EventID:        eventID(ev),
 			Model:          "gitclaw/checkpoints",
 			IdempotencyKey: key,
 			RunURL:         actionRunURL(ev),
-		}, RenderCheckpointReportWithConfig(ev, cfg, report))
-		if isCheckpointRiskRequest(ev, cfg) {
-			body = RenderAssistantComment(Marker{
-				RunID:          envFirst("GITHUB_RUN_ID", "local"),
-				EventID:        eventID(ev),
-				Model:          "gitclaw/checkpoints",
-				IdempotencyKey: key,
-				RunURL:         actionRunURL(ev),
-			}, RenderCheckpointRiskReport(ev, report))
-		}
+		}, reportBody)
 		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
 			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post checkpoints report comment: %w", err))
 		}

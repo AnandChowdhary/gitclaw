@@ -136,9 +136,11 @@ func checkpointCatalogEntries() []checkpointCatalogEntry {
 		{Name: "status", IssueIntent: "@gitclaw /checkpoints", LocalCommand: "gitclaw checkpoints status", Execution: "metadata-only", Gate: "rollback-readiness-inventory"},
 		{Name: "list", IssueIntent: "@gitclaw /checkpoints list", LocalCommand: "gitclaw checkpoints list", Execution: "metadata-only", Gate: "rollback-readiness-inventory"},
 		{Name: "verify", IssueIntent: "@gitclaw /checkpoints verify", LocalCommand: "gitclaw checkpoints verify", Execution: "metadata-only", Gate: "rollback-readiness-inventory"},
+		{Name: "preview", IssueIntent: "@gitclaw /checkpoints preview HEAD~1", LocalCommand: "gitclaw checkpoints preview HEAD~1", Execution: "diff-stat-preview", Gate: "rollback-diff-preview-before-restore"},
 		{Name: "risk", IssueIntent: "@gitclaw /checkpoints risk", LocalCommand: "gitclaw checkpoints risk", Execution: "risk-audit", Gate: "rollback-safety-risk-audit"},
 		{Name: "rollback-catalog", IssueIntent: "@gitclaw /rollback catalog", LocalCommand: "gitclaw rollback catalog", Execution: "metadata-only", Gate: "body-free-rollback-command-map"},
 		{Name: "rollback-list", IssueIntent: "@gitclaw /rollback", LocalCommand: "gitclaw rollback list", Execution: "metadata-only", Gate: "rollback-readiness-inventory"},
+		{Name: "rollback-diff", IssueIntent: "@gitclaw /rollback diff HEAD~1", LocalCommand: "gitclaw rollback diff HEAD~1", Execution: "diff-stat-preview", Gate: "rollback-diff-preview-before-restore"},
 		{Name: "rollback-risk", IssueIntent: "@gitclaw /rollback risk", LocalCommand: "gitclaw rollback risk", Execution: "risk-audit", Gate: "rollback-safety-risk-audit"},
 	}
 }
@@ -149,7 +151,7 @@ func checkpointCatalogLayers(checkpoint CheckpointReport) []checkpointCatalogLay
 		{Name: "worktree", Store: "git status --porcelain", Source: "checked-out-worktree", Gate: "dirty-state-counts-only", Count: checkpoint.StagedChanges + checkpoint.UnstagedChanges + checkpoint.UntrackedFiles},
 		{Name: "backup-branch", Store: checkpoint.BackupBranch, Source: "git references", Gate: "backup-manifest-before-restore", Count: checkpointBoolCount(checkpoint.BackupBranchLocalRef)},
 		{Name: "recent-commits", Store: "git log metadata", Source: "recent-commit-window", Gate: "commit-subject-hashes-only", Count: checkpoint.RecentCommitsReturned},
-		{Name: "restore-preview", Store: "future rollback diff preview", Source: "explicit-negative-capability", Gate: "preview-required-before-restore", Count: 0},
+		{Name: "restore-preview", Store: "rollback diff stat and path hashes", Source: "git diff --numstat --name-status", Gate: "preview-required-before-restore", Count: 1},
 		{Name: "operation-boundary", Store: "unsupported restore/reset/clean/checkout", Source: "explicit-negative-capability", Gate: "inspect-only-v1", Count: 0},
 		{Name: "payloads", Store: "unsupported in reports", Source: "explicit-negative-capability", Gate: "body-free-reporting", Count: 0},
 	}

@@ -387,10 +387,12 @@ func runCheckpointsCommand(args []string) error {
 		return runCheckpointsCatalogCommand(args[1:])
 	case "status", "list", "verify":
 		return runCheckpointsStatusCommand(args[1:])
+	case "preview", "diff", "plan":
+		return runCheckpointsPreviewCommand(args[1:])
 	case "risk", "risk-audit":
 		return runCheckpointsRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("usage: gitclaw checkpoints [catalog|status|list|risk|verify]")
+		return fmt.Errorf("usage: gitclaw checkpoints [catalog|status|list|preview|risk|verify]")
 	}
 }
 
@@ -891,12 +893,14 @@ func runRollbackCommand(args []string) error {
 	switch args[0] {
 	case "catalog", "commands", "index", "map":
 		return runCheckpointsCatalogCommand(args[1:])
+	case "diff", "preview", "plan":
+		return runCheckpointsPreviewCommand(args[1:])
 	case "list", "status":
 		return runCheckpointsStatusCommand(args[1:])
 	case "risk", "risk-audit":
 		return runCheckpointsRiskCommand(args[1:])
 	default:
-		return fmt.Errorf("gitclaw rollback is inspect-only; use: gitclaw rollback [catalog|list|risk]")
+		return fmt.Errorf("gitclaw rollback is inspect-only; use: gitclaw rollback [catalog|diff|list|risk]")
 	}
 }
 
@@ -926,6 +930,19 @@ func runCheckpointsStatusCommand(args []string) error {
 	return nil
 }
 
+func runCheckpointsPreviewCommand(args []string) error {
+	target, err := parseCheckpointPreviewArgs(args)
+	if err != nil {
+		return err
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderCheckpointPreviewCLIReport(cfg.Workdir, target))
+	return nil
+}
+
 func runCheckpointsRiskCommand(args []string) error {
 	if len(args) > 0 {
 		return fmt.Errorf("unknown checkpoints risk argument %q", args[0])
@@ -937,6 +954,19 @@ func runCheckpointsRiskCommand(args []string) error {
 	report := BuildCheckpointReport(cfg.Workdir)
 	fmt.Println(RenderCheckpointRiskCLIReport(report))
 	return nil
+}
+
+func parseCheckpointPreviewArgs(args []string) (string, error) {
+	if len(args) == 0 {
+		return "", nil
+	}
+	if len(args) == 1 {
+		return args[0], nil
+	}
+	if len(args) == 2 && (args[0] == "--to" || args[0] == "--ref" || args[0] == "target") {
+		return args[1], nil
+	}
+	return "", fmt.Errorf("usage: gitclaw rollback diff [--to <ref>|<ref>]")
 }
 
 func runMemoryVerifyCommand(args []string) error {

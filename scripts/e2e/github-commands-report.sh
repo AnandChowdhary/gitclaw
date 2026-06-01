@@ -149,7 +149,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `34`' \
   'aliases: `32`' \
-  'local_cli_helpers: `205`' \
+  'local_cli_helpers: `207`' \
   'run_mode: `read-only`' \
   'llm_e2e_required_after_commands_report_change: `true`' \
   "### Slash Commands" \
@@ -238,9 +238,11 @@ for expected in \
   'gitclaw checkpoints catalog' \
   'gitclaw checkpoints status' \
   'gitclaw checkpoints list' \
+  'gitclaw checkpoints preview <ref>' \
   'gitclaw checkpoints risk' \
   'gitclaw checkpoints verify' \
   'gitclaw rollback catalog' \
+  'gitclaw rollback diff <ref>' \
   'gitclaw rollback list' \
   'gitclaw rollback risk' \
   'gitclaw config list' \

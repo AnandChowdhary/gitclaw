@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  echo "checkpoints-catalog-e2e: $*" >&2
+  echo "rollback-preview-e2e: $*" >&2
 }
 
 die() {
@@ -33,15 +33,36 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 ensure_label "$retention_label" c2e0c6 "GitClaw E2E retention"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-token="NOECHO_CHECKPOINTS_CATALOG_${timestamp}"
-followup_hidden_token="NOECHO_CHECKPOINTS_CATALOG_FOLLOWUP_${timestamp}"
-expected_token="GITCLAW_CHECKPOINTS_CATALOG_CONTEXT_V1"
-search_phrase="checkpoints catalog unique search fixture phrase"
-title="@gitclaw /checkpoints catalog e2e ${timestamp}"
-body="Live checkpoints-catalog E2E.
+token="NOECHO_ROLLBACK_PREVIEW_${timestamp}"
+followup_hidden_token="NOECHO_ROLLBACK_PREVIEW_FOLLOWUP_${timestamp}"
+expected_token="GITCLAW_ROLLBACK_PREVIEW_CONTEXT_V1"
+search_phrase="rollback preview unique search fixture phrase"
+title="@gitclaw /rollback diff HEAD~1 e2e ${timestamp}"
+body="Live rollback-preview E2E.
 
-Hidden checkpoints catalog body token: ${token}
-This should produce a deterministic checkpoint catalog without leaking raw issue text, diffs, or file bodies."
+Hidden rollback preview body token: ${token}
+This should produce a deterministic rollback diff-stat preview without raw patch hunks, file bodies, restore, reset, or checkout."
+
+local_preview="$(go run ./cmd/gitclaw rollback diff HEAD~1)"
+for expected in \
+  "GitClaw Rollback Preview Report" \
+  'scope: `local-cli`' \
+  'rollback_preview_status: `' \
+  'preview_strategy: `git-diff-stat-inspect-only`' \
+  'rollback_mode: `preview-only`' \
+  'target_ref: `HEAD~1`' \
+  'changed_files: `' \
+  'preview_files_returned: `' \
+  'raw_diffs_included: `false`' \
+  'raw_file_bodies_included: `false`' \
+  'path_names_included: `false`' \
+  'path_hashes_included: `true`' \
+  'restore_operations_enabled: `false`' \
+  'llm_e2e_required_after_rollback_preview_change: `true`' \
+  'kind=`rollback-preview`' \
+  'raw_diff_gate=`numstat-name-status-and-path-hashes-only`'; do
+  grep -Fq "$expected" <<<"$local_preview" || die "local rollback preview missing ${expected}"
+done
 
 issue_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 issue_url="$(gh issue create \
@@ -55,7 +76,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:disabled --add-label "$retention_label" >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "checkpoints-catalog e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "rollback-preview e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
 }
@@ -160,40 +181,28 @@ wait_for_done_status() {
 }
 
 run_json="$(wait_for_run issues "$issue_started_at")" || die "timed out waiting for issues workflow run"
-wait_for_assistant_count 1 || die "expected one checkpoints catalog comment"
+wait_for_assistant_count 1 || die "expected one rollback preview comment"
 comments="$(assistant_comments)"
 
 for expected in \
   'model="gitclaw/checkpoints"' \
-  "GitClaw Checkpoints Catalog Report" \
+  "GitClaw Rollback Preview Report" \
   "Generated without a model call" \
-  'requested_checkpoints_command: `catalog`' \
+  'requested_checkpoints_command: `preview`' \
   'checkpoints_command_status: `ok`' \
-  'checkpoint_catalog_status: `ok`' \
-  'catalog_strategy: `compact-git-history-rollback-discovery`' \
-  'checkpoint_strategy: `git-history-plus-backup-branch`' \
-  'rollback_model: `github-actions-git-metadata-inspect-only`' \
-  'rollback_mode: `inspect-only`' \
+  'rollback_preview_status: `ok`' \
+  'preview_strategy: `git-diff-stat-inspect-only`' \
+  'rollback_mode: `preview-only`' \
+  'target_ref: `HEAD~1`' \
+  'target_commit: `' \
+  'head_commit: `' \
+  'comparison_range_sha256_12: `' \
   'git_available: `true`' \
   'git_repository: `true`' \
-  'head_commit: `' \
-  'commits_available: `' \
-  'recent_commits_returned: `' \
-  'recent_commit_limit: `5`' \
   'worktree_clean: `true`' \
-  'staged_changes: `0`' \
-  'unstaged_changes: `0`' \
-  'untracked_files: `0`' \
-  'backup_branch: `' \
-  'catalog_entries: `10`' \
-  'checkpoint_layers: `7`' \
-  'restore_operations_enabled: `false`' \
-  'git_reset_allowed: `false`' \
-  'git_clean_allowed: `false`' \
-  'checkout_mutation_allowed: `false`' \
-  'pre_restore_snapshot_required: `true`' \
-  'rollback_diff_preview_required: `true`' \
-  'backup_manifest_required_for_restore: `true`' \
+  'changed_files: `' \
+  'preview_files_returned: `' \
+  'preview_file_limit: `20`' \
   'raw_diffs_included: `false`' \
   'raw_file_bodies_included: `false`' \
   'raw_issue_bodies_included: `false`' \
@@ -201,66 +210,35 @@ for expected in \
   'raw_prompt_bodies_included: `false`' \
   'raw_tool_outputs_included: `false`' \
   'credential_values_included: `false`' \
-  'llm_e2e_required_after_checkpoint_catalog_change: `true`' \
-  'command=`catalog` issue_intent=`@gitclaw /checkpoints catalog` local_command=`gitclaw checkpoints catalog` execution=`metadata-only` gate=`body-free-checkpoint-command-map` raw_bodies_included=`false` mutation_allowed=`false`' \
-  'command=`status` issue_intent=`@gitclaw /checkpoints` local_command=`gitclaw checkpoints status`' \
-  'command=`list` issue_intent=`@gitclaw /checkpoints list` local_command=`gitclaw checkpoints list`' \
-  'command=`verify` issue_intent=`@gitclaw /checkpoints verify` local_command=`gitclaw checkpoints verify`' \
-  'command=`preview` issue_intent=`@gitclaw /checkpoints preview HEAD~1` local_command=`gitclaw checkpoints preview HEAD~1`' \
-  'command=`risk` issue_intent=`@gitclaw /checkpoints risk` local_command=`gitclaw checkpoints risk`' \
-  'command=`rollback-catalog` issue_intent=`@gitclaw /rollback catalog` local_command=`gitclaw rollback catalog`' \
-  'command=`rollback-list` issue_intent=`@gitclaw /rollback` local_command=`gitclaw rollback list`' \
-  'command=`rollback-diff` issue_intent=`@gitclaw /rollback diff HEAD~1` local_command=`gitclaw rollback diff HEAD~1`' \
-  'command=`rollback-risk` issue_intent=`@gitclaw /rollback risk` local_command=`gitclaw rollback risk`' \
-  'layer=`git-history` store=`repository .git metadata`' \
-  'layer=`worktree` store=`git status --porcelain`' \
-  'layer=`backup-branch` store=`' \
-  'layer=`recent-commits` store=`git log metadata`' \
-  'layer=`restore-preview` store=`rollback diff stat and path hashes`' \
-  'layer=`operation-boundary` store=`unsupported restore/reset/clean/checkout`' \
-  'layer=`payloads` store=`unsupported in reports`' \
-  'checkpoint_catalog_gate=`ok`' \
-  'git_metadata_gate=`available-before-report`' \
-  'worktree_gate=`clean-preferred-dirty-is-warning`' \
-  'backup_branch_gate=`manifest-required-before-restore`' \
-  'rollback_preview_gate=`diff-preview-required-before-restore`' \
-  'restore_gate=`disabled-inspect-only-v1`' \
+  'path_names_included: `false`' \
+  'path_hashes_included: `true`' \
+  'restore_operations_enabled: `false`' \
+  'git_reset_allowed: `false`' \
+  'git_clean_allowed: `false`' \
+  'checkout_mutation_allowed: `false`' \
+  'pre_restore_snapshot_required: `true`' \
+  'backup_manifest_required_for_restore: `true`' \
+  'llm_e2e_required_after_rollback_preview_change: `true`' \
+  'kind=`rollback-preview`' \
+  'path_sha256_12=`' \
+  'raw_path_included=`false`' \
+  'rollback_preview_gate=`ok`' \
+  'target_ref_gate=`resolved-before-preview`' \
+  'worktree_gate=`clean-required-before-future-restore`' \
+  'restore_gate=`disabled-preview-only`' \
   'destructive_git_gate=`reset-clean-checkout-disabled`' \
-  'raw_body_gate=`hashes-counts-and-metadata-only`' \
+  'raw_diff_gate=`numstat-name-status-and-path-hashes-only`' \
   'model_e2e_gate=`required`'; do
-  grep -Fq "$expected" <<<"$comments" || die "checkpoints catalog report missing ${expected}"
+  grep -Fq "$expected" <<<"$comments" || die "rollback preview report missing ${expected}"
 done
 
-if grep -Fq "$token" <<<"$comments"; then
-  die "checkpoints catalog report leaked issue body token"
-fi
-if grep -Fq "$expected_token" <<<"$comments" || grep -Fq "$search_phrase" <<<"$comments"; then
-  die "checkpoints catalog report leaked follow-up fixture context"
-fi
-
-cli_catalog="$(go run ./cmd/gitclaw checkpoints catalog)"
-rollback_catalog="$(go run ./cmd/gitclaw rollback catalog)"
-for output_name in cli_catalog rollback_catalog; do
-  output="${!output_name}"
-  for expected in \
-    "GitClaw Checkpoints Catalog Report" \
-    'scope: `local-cli`' \
-    'catalog_strategy: `compact-git-history-rollback-discovery`' \
-    'catalog_entries: `10`' \
-    'checkpoint_layers: `7`' \
-    'raw_diffs_included: `false`' \
-    'raw_file_bodies_included: `false`' \
-    'command=`catalog` issue_intent=`@gitclaw /checkpoints catalog` local_command=`gitclaw checkpoints catalog`' \
-    'command=`preview` issue_intent=`@gitclaw /checkpoints preview HEAD~1` local_command=`gitclaw checkpoints preview HEAD~1`' \
-    'command=`rollback-catalog` issue_intent=`@gitclaw /rollback catalog` local_command=`gitclaw rollback catalog`' \
-    'command=`rollback-diff` issue_intent=`@gitclaw /rollback diff HEAD~1` local_command=`gitclaw rollback diff HEAD~1`' \
-    'layer=`git-history` store=`repository .git metadata`' \
-    'layer=`operation-boundary` store=`unsupported restore/reset/clean/checkout`' \
-    'restore_gate=`disabled-inspect-only-v1`'; do
-    grep -Fq "$expected" <<<"$output" || die "local ${output_name} missing ${expected}"
-  done
-  if grep -Fq "$token" <<<"$output"; then
-    die "local ${output_name} leaked issue token"
+for leaked in \
+  "$token" \
+  "$search_phrase" \
+  "Hidden rollback preview body token" \
+  "This should produce a deterministic rollback diff-stat preview"; do
+  if grep -Fq "$leaked" <<<"$comments"; then
+    die "rollback preview report leaked ${leaked}"
   fi
 done
 

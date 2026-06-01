@@ -888,8 +888,8 @@ GitHub issue/comment event
   `channel-ingest`, `channel-state`, `channel-gateway`, `channel-delivery`,
   `channels list`, `channels verify`, `channels risk`, `channels info`,
   `checkpoints catalog`, `checkpoints status`, `checkpoints list`,
-  `checkpoints risk`, `checkpoints verify`, `rollback catalog`,
-  `rollback list`, `rollback risk`,
+  `checkpoints preview`, `checkpoints risk`, `checkpoints verify`,
+  `rollback catalog`, `rollback diff`, `rollback list`, `rollback risk`,
   `proactive enqueue`, `proactive init`, `proactive info`, `proactive risk`,
   `approvals list`, `approvals verify`, `approvals provenance`,
   `approvals risk`,
@@ -3329,6 +3329,8 @@ approval, sandboxing, and mutation:
 @gitclaw /rollback
 @gitclaw /checkpoints catalog
 @gitclaw /rollback catalog
+@gitclaw /checkpoints preview HEAD~1
+@gitclaw /rollback diff HEAD~1
 @gitclaw /checkpoints risk
 @gitclaw /rollback risk
 ```
@@ -3357,16 +3359,19 @@ Local operators can inspect the same checkpoint state without opening an issue:
 gitclaw checkpoints catalog
 gitclaw checkpoints status
 gitclaw checkpoints list
+gitclaw checkpoints preview HEAD~1
 gitclaw checkpoints risk
 gitclaw checkpoints verify
 gitclaw rollback catalog
+gitclaw rollback diff HEAD~1
 gitclaw rollback list
 gitclaw rollback risk
 ```
 
-The aliases intentionally return the same body-free report in v1. Reviewed
-recovery still happens through ordinary git history, pull requests, and fetched
-backup manifests.
+Readiness aliases intentionally return the same body-free report in v1.
+Preview aliases return the rollback diff-stat preview; reviewed recovery still
+happens through ordinary git history, pull requests, and fetched backup
+manifests.
 The report includes
 `llm_e2e_required_after_checkpoint_report_change=true`; changes to this surface
 must be paired with a live GitHub Models follow-up that selects `repo-reader`,
@@ -3376,10 +3381,11 @@ fixture token without echoing issue-body sentinels.
 `@gitclaw /checkpoints catalog`, `@gitclaw /rollback catalog`, and local
 `gitclaw checkpoints catalog`/`gitclaw rollback catalog` switch from readiness
 state to a compact rollback command and layer map. The catalog exposes
-checkpoint/status/list/verify/risk commands, rollback catalog/list/risk aliases,
-git history metadata, worktree status counts, backup-branch evidence, recent
-commit metadata, future restore-preview gates, inspect-only operation
-boundaries, and the disabled reset/clean/checkout gate. It follows Hermes'
+checkpoint/status/list/verify/preview/risk commands,
+rollback catalog/diff/list/risk aliases, git history metadata, worktree status
+counts, backup-branch evidence, recent commit metadata, implemented
+restore-preview gates, inspect-only operation boundaries, and the disabled
+reset/clean/checkout gate. It follows Hermes'
 checkpoint manager posture: shadow-store rollback is useful only when preview,
 scope, and restore boundaries are explicit. It also follows OpenClaw backup
 verification: restore-like operations should require manifest evidence before
@@ -3389,6 +3395,24 @@ comment, prompt, tool-output, credential, or secret bodies. It includes
 `llm_e2e_required_after_checkpoint_catalog_change=true`; changes to this surface
 must pass a deterministic live checkpoints-catalog issue plus a real GitHub
 Models follow-up proving prompt context hashing, selected skills,
+prompt-visible repository search tools, and usage telemetry.
+
+`@gitclaw /rollback diff HEAD~1`, `@gitclaw /checkpoints preview HEAD~1`,
+local `gitclaw rollback diff HEAD~1`, and local
+`gitclaw checkpoints preview HEAD~1` are GitClaw's inspect-only adaptation of
+Hermes `/rollback diff <N>`. Because GitClaw has no always-on shadow store in
+v1, the target is a git ref visible in the Actions checkout instead of a
+Hermes checkpoint number. The handle job checks out fetch depth `2` so
+`HEAD~1` is available for the common previous-commit preview. The report
+compares the target ref to `HEAD` with git numstat/name-status metadata, then
+prints changed-file counts, insertion/deletion totals, binary-file counts,
+status codes, extensions, and path hashes only. It does not print file paths,
+raw patch hunks, file bodies, commit subjects, issue/comment bodies, prompts,
+tool outputs, credentials, or secrets. It also never restores, resets, cleans,
+checks out, or mutates files. The report includes
+`llm_e2e_required_after_rollback_preview_change=true`; changes to this surface
+must pass a deterministic live rollback-preview issue plus a real GitHub
+Models follow-up proving prompt context hashing, selected repo-reader skill,
 prompt-visible repository search tools, and usage telemetry.
 
 When called as `@gitclaw /checkpoints risk` or `@gitclaw /rollback risk`, the
@@ -7644,6 +7668,13 @@ examples/workflows/gitclaw.yml
   `gitclaw rollback catalog` expose body-free checkpoint and rollback commands,
   git/worktree/backup/recent-commit/operation-boundary layers, disabled restore
   gates, and no raw diffs or file bodies. The same issue must then run a real
+  GitHub Models follow-up proving model inference, prompt provenance, selected
+  skills, prompt-visible repository search tool usage, and usage markers.
+- A `gh`-driven rollback-preview E2E harness verifies
+  `@gitclaw /rollback diff HEAD~1` and local `gitclaw rollback diff HEAD~1`
+  expose body-free numstat/name-status rollback preview metadata, path hashes,
+  disabled restore/reset/clean/checkout gates, and no raw diffs, file bodies,
+  file paths, or issue-body leakage. The same issue must then run a real
   GitHub Models follow-up proving model inference, prompt provenance, selected
   skills, prompt-visible repository search tool usage, and usage markers.
 - A `gh`-driven checkpoints-risk E2E harness verifies

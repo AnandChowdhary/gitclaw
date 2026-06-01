@@ -440,8 +440,10 @@ gitclaw artifacts list
 gitclaw artifacts risk
 gitclaw artifacts verify
 gitclaw checkpoints catalog
+gitclaw checkpoints preview HEAD~1
 gitclaw checkpoints risk
 gitclaw rollback catalog
+gitclaw rollback diff HEAD~1
 gitclaw rollback risk
 gitclaw context risk
 gitclaw prompt list
@@ -541,10 +543,15 @@ sessions, or credentials.
 
 `gitclaw checkpoints catalog` is the compact discovery view for rollback
 readiness. It maps checkpoint and rollback commands, git history, worktree
-state, backup-branch evidence, recent-commit metadata, restore-preview
-requirements, and disabled destructive-git gates without printing diffs, file
-bodies, commit subjects, issue/comment bodies, prompts, tool outputs, or
-credentials.
+state, backup-branch evidence, recent-commit metadata, rollback diff-stat
+preview requirements, and disabled destructive-git gates without printing
+diffs, file bodies, commit subjects, issue/comment bodies, prompts, tool
+outputs, or credentials.
+
+`gitclaw rollback diff HEAD~1` is the inspect-only version of Hermes
+`/rollback diff`: it compares a target git ref to `HEAD`, reports numstat
+counts and path hashes, and refuses restore/reset/clean/checkout behavior.
+The matching issue command is `@gitclaw /rollback diff HEAD~1`.
 
 The live channels-report harness verifies the GitHub-native Slack/Telegram
 bridge contract, workflow-dispatch wake strategy, and mirrored message counts
@@ -635,6 +642,7 @@ scripts/e2e/github-nodes-risk-report.sh
 scripts/e2e/github-artifacts-catalog-report.sh
 scripts/e2e/github-artifacts-risk-report.sh
 scripts/e2e/github-checkpoints-catalog-report.sh
+scripts/e2e/github-rollback-preview-report.sh
 scripts/e2e/github-checkpoints-risk-report.sh
 scripts/e2e/github-context-risk-report.sh
 scripts/e2e/github-prompt-pack-report.sh
@@ -760,6 +768,10 @@ The checkpoints-report harness now applies the same rule to rollback readiness:
 the issue-visible report stays body-free and inspect-only, then a normal
 GitHub Models repo-reader/search follow-up proves ordinary tool-grounded
 conversation still works after checkpoint metadata changes.
+The rollback-preview harness exercises `@gitclaw /rollback diff HEAD~1` against
+the real checked-out repository, checks the body-free numstat/path-hash preview
+and disabled restore gates, then requires a real GitHub Models repo-reader
+follow-up with prompt, skill, tool, and usage telemetry.
 The commands-report harness does the same for `/help`: the catalog stays a
 body-free deterministic capability index, then a model-backed repo-reader/search
 follow-up proves the help surface has not replaced ordinary inference and tool
