@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-01T02:58:52Z",
+  "generated_at": "2026-06-01T03:00:12Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 477,
     "title": "@gitclaw /rollback diff HEAD~1 e2e 20260601T025736Z",
@@ -10,7 +10,8 @@
     "author": "AnandChowdhary",
     "author_association": "OWNER",
     "labels": [
-      "gitclaw"
+      "gitclaw",
+      "gitclaw:done"
     ]
   },
   "transcript": [
@@ -31,6 +32,24 @@
       "CommentID": 4589202390,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "Use the repo-reader skill and search the repository for `rollback preview unique search fixture phrase`.\n\nThe matching repository search result line has the form `rollback preview unique search fixture phrase =\u003e \u003ctoken\u003e`.\nReply with only the token after the arrow from the matching gitclaw.search_files tool output line.\nDo not answer with any token from this issue or its comments.\nDo not include this hidden follow-up token: NOECHO_ROLLBACK_PREVIEW_FOLLOWUP_20260601T025736Z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4589204487,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_ROLLBACK_PREVIEW_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4589206741,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -41,6 +60,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-01T02:58:26Z",
       "updated_at": "2026-06-01T02:58:26Z"
+    },
+    {
+      "id": 4589204487,
+      "body": "Use the repo-reader skill and search the repository for `rollback preview unique search fixture phrase`.\n\nThe matching repository search result line has the form `rollback preview unique search fixture phrase =\u003e \u003ctoken\u003e`.\nReply with only the token after the arrow from the matching gitclaw.search_files tool output line.\nDo not answer with any token from this issue or its comments.\nDo not include this hidden follow-up token: NOECHO_ROLLBACK_PREVIEW_FOLLOWUP_20260601T025736Z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-01T02:59:08Z",
+      "updated_at": "2026-06-01T02:59:08Z"
+    },
+    {
+      "id": 4589206741,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26732771800\" event_id=\"comment-4589204487\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"6c69bf17e8f2e69fa1988dd6fc82d29c\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26732771800\" prompt_context_sha256_12=\"73ece208158f\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"12399\" usage_completion_tokens=\"13\" usage_total_tokens=\"12412\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_ROLLBACK_PREVIEW_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-01T02:59:51Z",
+      "updated_at": "2026-06-01T02:59:51Z"
     }
   ]
 }
