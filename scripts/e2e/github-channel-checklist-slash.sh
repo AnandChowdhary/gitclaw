@@ -240,10 +240,10 @@ for _ in {1..90}; do
     die "issue #${issue_number} posted ${errors} error marker comment(s)"
   fi
   candidate_report="$(latest_assistant_comment_for_issue "$issue_number")"
-  if grep -Fq "$ingest_hidden_token" <<<"$candidate_report"; then
+  if grep -Fq -- "$ingest_hidden_token" <<<"$candidate_report"; then
     die "initial channel report leaked ingest hidden token"
   fi
-  if grep -Fq "GitClaw Channel Report" <<<"$candidate_report" && grep -Fq 'channel_thread_issue: `true`' <<<"$candidate_report"; then
+  if grep -Fq -- "GitClaw Channel Report" <<<"$candidate_report" && grep -Fq -- 'channel_thread_issue: `true`' <<<"$candidate_report"; then
     initial_report="$candidate_report"
     break
   fi
@@ -290,10 +290,10 @@ for expected in \
   "raw_channel_message_body_included: \`false\`" \
   "provider_delivery_performed: \`false\`" \
   "llm_e2e_required_after_channel_checklist_action_change: \`true\`"; do
-  grep -Fq "$expected" <<<"$checklist_receipt" || die "channel checklist receipt missing ${expected}"
+  grep -Fq -- "$expected" <<<"$checklist_receipt" || die "channel checklist receipt missing ${expected}"
 done
 for leaked in "$ingest_hidden_token" "$checklist_notes_token" "$checklist_title" "$checklist_id" "$thread_id" "$ingest_message_id" "$notify_message_id" "$checklist_item_token" "$checklist_second_item_token"; do
-  if grep -Fq "$leaked" <<<"$checklist_receipt"; then
+  if grep -Fq -- "$leaked" <<<"$checklist_receipt"; then
     die "channel checklist receipt leaked ${leaked}"
   fi
 done
@@ -326,22 +326,22 @@ for expected in \
   "${checklist_title}" \
   "## Notes" \
   "${checklist_notes_token}"; do
-  grep -Fq "$expected" <<<"$checklist_body" || die "checklist issue body missing ${expected}"
+  grep -Fq -- "$expected" <<<"$checklist_body" || die "checklist issue body missing ${expected}"
 done
 for leaked in "$thread_id" "$ingest_message_id" "$ingest_hidden_token"; do
-  if grep -Fq "$leaked" <<<"$checklist_body"; then
+  if grep -Fq -- "$leaked" <<<"$checklist_body"; then
     die "checklist issue body leaked ${leaked}"
   fi
 done
 
 issue_json="$(gh issue view "$issue_number" --repo "$repo" --json body,comments,labels)"
-grep -Fq "gitclaw:channel-thread" <<<"$(jq -r '.body' <<<"$issue_json")" || die "channel issue lost channel-thread marker"
+grep -Fq -- "gitclaw:channel-thread" <<<"$(jq -r '.body' <<<"$issue_json")" || die "channel issue lost channel-thread marker"
 outbound_bodies="$(jq -r '[.comments[].body | select(contains("<!-- gitclaw:channel-outbound"))] | join("\n")' <<<"$issue_json")"
-grep -Fq "gitclaw:channel-outbound" <<<"$outbound_bodies" || die "channel issue missing checklist-link outbound marker"
-grep -Fq "Title: ${checklist_title}" <<<"$outbound_bodies" || die "channel issue missing visible checklist title notification"
-grep -Fq "Items: 2" <<<"$outbound_bodies" || die "channel issue missing visible checklist item count notification"
+grep -Fq -- "gitclaw:channel-outbound" <<<"$outbound_bodies" || die "channel issue missing checklist-link outbound marker"
+grep -Fq -- "Title: ${checklist_title}" <<<"$outbound_bodies" || die "channel issue missing visible checklist title notification"
+grep -Fq -- "Items: 2" <<<"$outbound_bodies" || die "channel issue missing visible checklist item count notification"
 for leaked in "$checklist_item_token" "$checklist_second_item_token" "$checklist_notes_token"; do
-  if grep -Fq "$leaked" <<<"$outbound_bodies"; then
+  if grep -Fq -- "$leaked" <<<"$outbound_bodies"; then
     die "channel checklist notification leaked ${leaked}"
   fi
 done
@@ -351,11 +351,11 @@ outbox_output="$(GITCLAW_CHANNEL="$channel" \
   GITCLAW_CHANNEL_ACCOUNT_ID="$account_id" \
   GITCLAW_CHANNEL_ISSUE_NUMBER="$issue_number" \
   go run ./cmd/gitclaw channel-outbox --repo "$repo" --out "$outbox_file")"
-grep -Fq "channel_outbox issue=${issue_number}" <<<"$outbox_output" || die "channel outbox output missing issue number: ${outbox_output}"
-grep -Fq "body_included=false" <<<"$outbox_output" || die "channel outbox should be metadata-only: ${outbox_output}"
+grep -Fq -- "channel_outbox issue=${issue_number}" <<<"$outbox_output" || die "channel outbox output missing issue number: ${outbox_output}"
+grep -Fq -- "body_included=false" <<<"$outbox_output" || die "channel outbox should be metadata-only: ${outbox_output}"
 jq -e --arg hash "$notify_message_hash" '.messages[] | select(.kind == "channel-outbound" and .outbound_message_sha256_12 == $hash)' "$outbox_file" >/dev/null || die "outbox file missing checklist-link outbound hash ${notify_message_hash}"
 for leaked in "$checklist_title" "$checklist_item_token" "$checklist_second_item_token" "$checklist_notes_token" "$account_id" "$ingest_hidden_token"; do
-  if grep -Fq "$leaked" <<<"$outbox_output" || grep -Fq "$leaked" "$outbox_file"; then
+  if grep -Fq -- "$leaked" <<<"$outbox_output" || grep -Fq -- "$leaked" "$outbox_file"; then
     die "metadata-only outbox leaked ${leaked}"
   fi
 done
@@ -383,11 +383,11 @@ for expected in \
   "notification_queued: \`false\`" \
   "notification_duplicate_suppressed: \`true\`" \
   "raw_checklist_notes_included: \`false\`"; do
-  grep -Fq "$expected" <<<"$duplicate_receipt" || die "duplicate channel checklist receipt missing ${expected}"
+  grep -Fq -- "$expected" <<<"$duplicate_receipt" || die "duplicate channel checklist receipt missing ${expected}"
 done
 [[ "$(checklist_notification_count)" == "1" ]] || die "duplicate channel checklist queued another checklist-link notification"
 for leaked in "$duplicate_hidden_token" "$checklist_id" "$thread_id" "$ingest_message_id" "$notify_message_id" "$checklist_item_token" "$checklist_second_item_token"; do
-  if grep -Fq "$leaked" <<<"$duplicate_receipt"; then
+  if grep -Fq -- "$leaked" <<<"$duplicate_receipt"; then
     die "duplicate channel checklist receipt leaked ${leaked}"
   fi
 done
@@ -410,17 +410,17 @@ model_run_json="$(wait_for_issue_comment_run_for_title "$model_started_at" "$che
 wait_for_assistant_count_for_issue "$checklist_issue_number" 1 || die "expected model-backed channel checklist follow-up"
 model_comment="$(latest_assistant_comment_for_issue "$checklist_issue_number")"
 
-grep -Fq "$expected_token" <<<"$model_comment" || die "assistant did not include channel checklist search_files token ${expected_token}"
-if ! grep -Fq 'model="openai/gpt-5-nano"' <<<"$model_comment" && ! grep -Fq 'model="openai/gpt-4.1-nano"' <<<"$model_comment"; then
+grep -Fq -- "$expected_token" <<<"$model_comment" || die "assistant did not include channel checklist search_files token ${expected_token}"
+if ! grep -Fq -- 'model="openai/gpt-5-nano"' <<<"$model_comment" && ! grep -Fq -- 'model="openai/gpt-4.1-nano"' <<<"$model_comment"; then
   die "assistant channel checklist follow-up marker did not use configured GitHub Models primary or fallback"
 fi
-grep -Fq 'prompt_context_sha256_12="' <<<"$model_comment" || die "assistant channel checklist follow-up marker missing prompt context hash"
-grep -Fq 'skills="repo-reader"' <<<"$model_comment" || die "assistant channel checklist follow-up marker missing selected repo-reader skill"
-grep -Fq 'tools="' <<<"$model_comment" || die "assistant channel checklist follow-up marker missing prompt-visible tools"
-grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant channel checklist follow-up marker did not prove search_files was prompt-visible"
-grep -Fq 'usage_total_tokens="' <<<"$model_comment" || die "assistant channel checklist follow-up marker missing usage token telemetry"
+grep -Fq -- 'prompt_context_sha256_12="' <<<"$model_comment" || die "assistant channel checklist follow-up marker missing prompt context hash"
+grep -Fq -- 'skills="repo-reader"' <<<"$model_comment" || die "assistant channel checklist follow-up marker missing selected repo-reader skill"
+grep -Fq -- 'tools="' <<<"$model_comment" || die "assistant channel checklist follow-up marker missing prompt-visible tools"
+grep -Fq -- 'gitclaw.search_files' <<<"$model_comment" || die "assistant channel checklist follow-up marker did not prove search_files was prompt-visible"
+grep -Fq -- 'usage_total_tokens="' <<<"$model_comment" || die "assistant channel checklist follow-up marker missing usage token telemetry"
 for leaked in "$ingest_hidden_token" "$duplicate_hidden_token" "$followup_hidden_token" "$account_id" "$checklist_id" "$notify_message_id" "$checklist_title" "$checklist_item_token" "$checklist_second_item_token" "$checklist_notes_token"; do
-  if grep -Fq "$leaked" <<<"$model_comment"; then
+  if grep -Fq -- "$leaked" <<<"$model_comment"; then
     die "model channel checklist follow-up leaked ${leaked}"
   fi
 done
