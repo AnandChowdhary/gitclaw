@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T03:46:08Z",
+  "generated_at": "2026-06-02T04:01:14Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 561,
+  "count": 562,
   "issues": [
     {
       "number": 3,
@@ -7076,6 +7076,20 @@
       "path": "issues/000650.json",
       "backup_generated_at": "2026-06-02T03:46:07Z",
       "event_name": "issue_comment",
+      "comment_count": 2,
+      "transcript_messages": 3
+    },
+    {
+      "number": 651,
+      "title": "GitClaw telegram thread channel-memory-proposal-e2e-20260602t035923z",
+      "path": "issues/000651.json",
+      "backup_generated_at": "2026-06-02T04:01:13Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:done",
+        "gitclaw:channel"
+      ],
       "comment_count": 2,
       "transcript_messages": 3
     }
