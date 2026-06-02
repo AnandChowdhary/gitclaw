@@ -5385,6 +5385,33 @@ the rollcall, validates queued route invites and body-free receipts, and then
 continues on the rollcall issue with a normal GitHub Models repo-reader/search
 follow-up.
 
+For small channel-native interactions that should answer immediately without a
+full model turn, GitClaw also supports deterministic rolls from a mirrored
+channel thread:
+
+```text
+@gitclaw /channels roll --dice 2d6+1 --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
+```
+
+`/channels roll`, `/channels dice`, `/channels random`, `/channels rng`,
+`/channels coin`, and `/channels flip` queue one provider-facing dice or coin
+result back onto the current `gitclaw:channel-thread` issue or an explicit
+reviewed route. Dice expressions are normalized (`d20`, `2d6+1`, and `coin`
+are enough for the first version) and the result is derived from a deterministic
+seed containing the repository, channel, thread, source message id,
+notification message id, roll id, and normalized expression. This intentionally
+does not provide cryptographic randomness; it provides reproducible channel
+interaction with no model call, no external randomness source, no provider API
+call, and no repository mutation. The provider-facing outbound comment may show
+the human-readable roll expression and result; the source receipt remains
+body-free and reports only hashes, counts, dice metadata, duplicate status,
+outbox delivery instructions, and safety gates. Duplicates are suppressed by
+`channel + notify_message_id`. Changes to this surface require a live E2E that
+ingests a real channel issue, queues the deterministic roll, validates
+metadata-only outbox discovery, verifies duplicate suppression, and then
+continues on the same GitHub issue with a real GitHub Models
+repo-reader/search follow-up.
+
 For event invites that should collect yes/no/maybe responses where
 participants already are, GitClaw also supports:
 
@@ -7525,6 +7552,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels room team-alerts,ops-alerts --room-id design-room --message-id design-room-1
 @gitclaw /channels huddle team-alerts,ops-alerts --huddle-id design-room --message-id design-room-1
 @gitclaw /channels rollcall team-alerts,ops-alerts --rollcall-id standup --message-id standup-1
+@gitclaw /channels roll --dice 2d6+1 --message-id provider-msg-1 --notify-message-id provider-roll-ack-1
 ```
 
 The command runs after normal preflight and context loading, but before model
@@ -9972,6 +10000,15 @@ examples/workflows/gitclaw.yml
   Models issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-rollcall fixture token, and avoid
   hidden route/account/channel sentinels.
+- A `gh`-driven channel-roll-slash E2E harness ingests a real mirrored channel
+  issue, replies with `@gitclaw /channels roll ...`, verifies the
+  provider-facing deterministic dice/coin result, body-free source receipt
+  metadata, duplicate roll notification suppression from a later issue comment
+  with the same acknowledgement id, and metadata-only outbox discovery for the
+  acknowledgement. The same channel issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-roll fixture token, and avoid
+  hidden channel/message/roll sentinels.
 - A `gh`-driven channel-rsvp-slash E2E harness creates an ordinary GitHub issue
   with `@gitclaw /channels rsvp ...`, verifies a labeled GitHub RSVP issue,
   routebook-backed RSVP cards on each target channel issue, body-free source

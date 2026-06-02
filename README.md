@@ -671,6 +671,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels poll e2e-slack-route,e2e-telegram-route --poll-id <id> --message-id <id>
 @gitclaw /channels poll-vote --poll-id <id> --message-id <id> --notify-message-id <id> --choice 1
 @gitclaw /channels rollcall e2e-slack-route,e2e-telegram-route --rollcall-id <id> --message-id <id>
+@gitclaw /channels roll --dice 2d6+1 --message-id <id> --notify-message-id <id>
 @gitclaw /channels rsvp e2e-slack-route,e2e-telegram-route --rsvp-id <id> --message-id <id>
 @gitclaw /channels rsvp-response --rsvp-id <id> --message-id <id> --notify-message-id <id> --response yes
 @gitclaw /channels status --message-id <id> --status-id <id> --state working
@@ -928,6 +929,12 @@ the prompt and instructions there, labels it for normal GitClaw conversation,
 and queues provider-facing rollcall invites through the same routebook/outbox
 path. It is meant for lightweight standups, attendance, status checks, and
 "everyone please respond here" moments without adding a server.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels roll
+--dice 2d6+1 --message-id <id> --notify-message-id <id>` queues a
+provider-facing dice/coin result back to Slack/Telegram. The result is
+deterministic from GitHub/channel metadata, so it needs no model call, no
+external randomness, no provider API call, and no repo mutation; the source
+receipt only exposes hashes, counts, duplicate status, and delivery metadata.
 `@gitclaw /channels rsvp <route-a>,<route-b> --rsvp-id <id> --message-id <id>`
 creates or reuses a dedicated GitHub RSVP issue, writes the event title,
 when/where/host metadata, and details there, labels it for normal GitClaw
@@ -1584,6 +1591,7 @@ scripts/e2e/github-channel-room-slash.sh
 scripts/e2e/github-channel-huddle-slash.sh
 scripts/e2e/github-channel-poll-slash.sh
 scripts/e2e/github-channel-rollcall-slash.sh
+scripts/e2e/github-channel-roll-slash.sh
 scripts/e2e/github-channel-status-slash.sh
 scripts/e2e/github-channel-edit-slash.sh
 scripts/e2e/github-channel-reaction-slash.sh
@@ -1862,6 +1870,11 @@ reviewed routes through the provider queue, checks duplicate check-in prompt
 suppression, keeps prompt/instruction text out of the source receipt, and then
 continues on the rollcall issue with a real GitHub Models repo-reader/search
 follow-up.
+The channel-roll slash harness proves mirrored channel issues can do tiny
+interactive work without a resident socket: a channel-ingested issue receives
+`@gitclaw /channels roll`, queues one provider-visible deterministic dice/coin
+result, exposes it through metadata-only outbox, suppresses duplicate roll
+notifications, and then runs a real GitHub Models repo-reader/search follow-up.
 The channel-RSVP slash harness creates or reuses a dedicated GitHub RSVP issue,
 labels it for normal GitClaw conversation, invites multiple reviewed routes
 through the provider queue, checks duplicate RSVP suppression, keeps event

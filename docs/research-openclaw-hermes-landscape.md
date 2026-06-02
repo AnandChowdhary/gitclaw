@@ -4254,6 +4254,21 @@ rollcall creation, route invite queues, duplicate suppression, metadata-only
 outbox discovery, and a real GitHub Models repo-reader/search follow-up on the
 rollcall issue itself.
 
+## 2026-06-02 Channel Roll Follow-Up
+
+OpenClaw's channel surface and Hermes' messaging gateway both point toward
+small interaction primitives living beside normal conversation, not only
+diagnostic reports. GitClaw adopts that as
+`@gitclaw /channels roll --dice <expr> --message-id <id>`: a mirrored
+Slack/Telegram thread can ask for a dice or coin result, GitHub Actions queues a
+provider-visible response through the channel outbox, and the source receipt
+stays metadata-only. The result is deterministic from GitHub/channel metadata,
+which keeps tests replayable and avoids adding a randomness service, a socket
+daemon, a provider API call, or an LLM call for the action itself. Acceptance
+must include live E2E that proves the channel roll, duplicate suppression,
+metadata-only outbox discovery, and then a normal GitHub Models
+repo-reader/search follow-up on the same channel issue.
+
 ## 2026-06-01 Tools Rehearsal Follow-Up
 
 OpenClaw and Hermes both treat tools as scoped capabilities rather than free
