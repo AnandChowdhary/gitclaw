@@ -98,6 +98,7 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"queue mirrored channel profile-status replies without exporting, importing, switching, or mutating profiles",
 		"queue mirrored channel soul-status replies without registry contact, profile export, soul writes, or raw bodies",
 		"queue mirrored channel soul-info replies without registry contact, profile export, soul writes, memory writes, raw file bodies, or source-receipt paths",
+		"queue mirrored channel soul-risk replies without registry contact, profile export, soul writes, memory writes, raw bodies, or source-receipt paths",
 		"queue mirrored channel soul-search replies without registry contact, profile export, soul writes, raw queries, or raw bodies",
 		"queue mirrored channel memory-status replies without memory writes, external provider access, embedding vectors, or raw memory bodies",
 		"queue deterministic channel dice/coin rolls without external randomness",

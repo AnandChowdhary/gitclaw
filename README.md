@@ -679,6 +679,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels backup-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels backup-info <issue> --message-id <id> --notify-message-id <id>
 @gitclaw /channels soul-info <path> --message-id <id> --notify-message-id <id>
+@gitclaw /channels soul-risk --message-id <id> --notify-message-id <id>
 @gitclaw /channels soul-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels rsvp e2e-slack-route,e2e-telegram-route --rsvp-id <id> --message-id <id>
 @gitclaw /channels rsvp-response --rsvp-id <id> --message-id <id> --notify-message-id <id> --response yes
@@ -1380,6 +1381,14 @@ flags, byte/line counts, and file hash. The GitHub source receipt stays
 stricter: only requested/normalized path hashes, counts, delivery metadata,
 and disabled side-effect gates are printed, with raw context paths and raw
 soul/identity/user/memory/tool/heartbeat bodies kept out of the receipt.
+`@gitclaw /channels soul-risk --message-id <id> --notify-message-id <id>`
+queues a provider-facing high-authority persistent-state risk card back to
+Slack/Telegram. The provider card includes repo-local risk and validation
+counts, per-context metadata, file hashes, risk codes, severities, and line
+hashes; the GitHub receipt keeps raw context paths, raw ids, raw channel
+bodies, raw file bodies, prompts, and tool outputs out of band, and records
+that no model, registry, profile export, soul write, memory write, provider
+delivery, or repository mutation happened.
 `@gitclaw /channels soul-search <query> --message-id <id>
 --notify-message-id <id>` searches the repo-local high-authority context
 surface and queues provider-facing recall metadata back to Slack/Telegram. It
@@ -1531,6 +1540,7 @@ scripts/e2e/github-channel-backup-info-slash.sh
 scripts/e2e/github-channel-profile-status-slash.sh
 scripts/e2e/github-channel-soul-status-slash.sh
 scripts/e2e/github-channel-soul-info-slash.sh
+scripts/e2e/github-channel-soul-risk-slash.sh
 scripts/e2e/github-channel-soul-search-slash.sh
 scripts/e2e/github-channel-memory-status-slash.sh
 scripts/e2e/github-channel-memory-search-slash.sh
@@ -2380,6 +2390,12 @@ queues one provider-facing `.gitclaw/` context metadata card back to the
 mirrored thread, checks duplicate notification suppression, exposes the
 soul-info notification through metadata-only outbox, and then continues on the
 same channel issue with a real GitHub Models repo-reader/search follow-up.
+The channel-soul-risk slash harness adds high-authority state risk cards: a
+channel-ingested issue receives `@gitclaw /channels soul-risk`, queues one
+provider-facing repo-local soul risk card back to the mirrored thread, checks
+duplicate notification suppression, exposes the soul-risk notification through
+metadata-only outbox, and then continues on the same channel issue with a real
+GitHub Models repo-reader/search follow-up.
 The channel-soul-search slash harness adds body-free high-authority context
 recall: a channel-ingested issue receives `@gitclaw /channels soul-search`,
 queues provider-facing soul/context matches back to the mirrored thread,

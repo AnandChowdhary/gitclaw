@@ -189,6 +189,25 @@ heartbeat, prompt, or tool-output bodies. Sources: OpenClaw docs
 and Hermes features/memory docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/overview`).
 
+2026-06-03 channel-soul-risk follow-up: OpenClaw's sessions/channels model
+keeps chat transport useful without making it the authority store, and Hermes'
+checkpoint/recovery guidance reinforces inspection before mutation. GitClaw's
+serverless cut should therefore make `@gitclaw /channels soul-risk
+--message-id <id> --notify-message-id <id>` a channel-native high-authority
+persistent-state risk card. It can reuse the repo-local `gitclaw soul risk`
+scan and validation metadata, queue one provider-facing risk card through
+`channel-outbox`, and leave a stricter source receipt with only hashes,
+counts, index hashes, delivery gates, and no raw context paths. It should not
+call a model, execute tools, write soul or memory, contact registries, export
+profiles, call provider APIs, mutate repository files, or expose raw channel,
+soul, identity, user, memory, tool, heartbeat, prompt, or tool-output bodies.
+Sources: OpenClaw docs (`https://docs.openclaw.ai/`), OpenClaw sessions docs
+(`https://docs.openclaw.ai/cli/sessions`), OpenClaw channel docs
+(`https://docs.openclaw.ai/cli/channels`), Hermes checkpoint docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback`),
+and Hermes features/memory docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/overview`).
+
 2026-06-02 channel-backup-info follow-up: OpenClaw's backup surface treats
 archives as manifest-backed recovery artifacts, while its channels/sessions
 surface keeps conversational delivery separate from restore operations. Hermes'
