@@ -4476,3 +4476,33 @@ Sources: OpenClaw standing orders docs
 (`https://docs.openclaw.ai/automation/standing-orders`), OpenClaw automation
 docs (`https://docs.openclaw.ai/automation`), Hermes scheduled tasks docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/cron/`).
+
+## 2026-06-02 Channel Backup Restore Request Follow-Up
+
+OpenClaw's backup and migration material treats restore-adjacent work as a
+reviewable operation: verify the backup, inspect scope, and do the dangerous
+part only after the operator has enough evidence. Hermes exposes a parallel
+shape through explicit backup, export, import, and profile commands instead of
+letting a chat message silently rewrite durable state. The useful pattern for
+GitClaw is therefore not "restore from Telegram"; it is "open a GitHub recovery
+review lane from Telegram."
+
+GitClaw's serverless version is `@gitclaw /channels restore-request --id <id>
+--message-id <id>`. It opens or reuses a normal
+`gitclaw:backup-restore-request-issue`, queues a provider-facing restore-review
+link back to the mirrored Slack or Telegram thread, and records dry-run
+verify/coverage/drill/restore-plan/manifest commands for the reviewer. The
+channel receipt remains body-free and hash-only. The action does not call a
+model, read raw backup payloads, restore files, replay GitHub API calls, call
+provider APIs, or mutate the repository. Acceptance requires live E2E for
+restore-request issue creation, metadata-only restore-review outbox discovery,
+duplicate suppression, backup-branch capture of the source issue, dry-run
+backup commands, and a real GitHub Models repo-reader/search follow-up on the
+restore request issue.
+
+Sources: OpenClaw backup docs (`https://docs.openclaw.ai/cli/backup`),
+OpenClaw migration safety docs (`https://docs.openclaw.ai/cli/migrate`),
+Hermes CLI command reference
+(`https://hermes-agent.nousresearch.com/docs/reference/cli-commands/`), and
+Hermes profile docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/profiles/`).

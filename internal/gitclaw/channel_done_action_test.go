@@ -246,6 +246,35 @@ func TestChannelDoneArtifactRefSupportsStandingOrderProposalIssues(t *testing.T)
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsBackupRestoreRequestIssues(t *testing.T) {
+	body := RenderBackupRestoreRequestIssueBody(BackupRestoreRequestIssueRequest{
+		Repo:              "owner/repo",
+		RequestID:         "restore-done-1",
+		BackupIssueNumber: 42,
+		TargetRepo:        "owner/repo",
+		BackupBranch:      "gitclaw-backups",
+		BackupRoot:        ".gitclaw/backups",
+		RepoBackupDir:     ".gitclaw/backups/owner__repo",
+		IssueBackupPath:   ".gitclaw/backups/owner__repo/issues/000042.json",
+		IndexPath:         ".gitclaw/backups/owner__repo/index.json",
+		VerifyCmd:         "gitclaw backup verify --root .gitclaw/backups --repo owner/repo",
+		CoverageCmd:       "gitclaw backup coverage --root .gitclaw/backups --repo owner/repo --issue 42",
+		DrillCmd:          "gitclaw backup drill --root .gitclaw/backups --repo owner/repo --issue 42",
+		RestorePlanCmd:    "gitclaw backup restore-plan --root .gitclaw/backups --repo owner/repo --target-repo owner/repo --issue 42",
+		ManifestCmd:       "gitclaw backup manifest --root .gitclaw/backups --repo owner/repo --issue 42",
+		SourceIssueNumber: 43,
+		SourceCommentID:   4301,
+		SourceKind:        "channel_comment",
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "backup-restore-request" || ref.ID != "restore-done-1" || ref.SourceIssueNumber != 43 || ref.SourceCommentID != 4301 {
+		t.Fatalf("unexpected backup restore request ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsDigestIssues(t *testing.T) {
 	body := RenderChannelDigestIssueBody(ChannelDigestOptions{
 		Repo:              "owner/repo",

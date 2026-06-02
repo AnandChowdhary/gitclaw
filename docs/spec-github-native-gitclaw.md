@@ -5386,6 +5386,7 @@ accepts a structured reaction form:
 @gitclaw /channels propose-memory --target <memory-target> --id <stable-proposal-id> --message-id <provider-message-id>
 @gitclaw /channels rehearse-memory --target <memory-target> --id <stable-rehearsal-id> --message-id <provider-message-id>
 @gitclaw /channels rehearse-backup --id <stable-rehearsal-id> --message-id <provider-message-id>
+@gitclaw /channels restore-request --id <stable-request-id> --message-id <provider-message-id>
 @gitclaw /channels remind --reminder-id <stable-reminder-id> --message-id <provider-message-id> --at <RFC3339-or-date>
 @gitclaw /channels done --message-id <stable-outbound-id>
 ```
@@ -6051,6 +6052,39 @@ checks duplicate suppression, verifies the source issue backup appears on the
 normal GitHub Models repo-reader/search follow-up.
 
 The same channel-thread issue can also turn a mirrored provider message into a
+backup restore-review lane:
+
+```text
+@gitclaw /channels restore-request --id <stable-request-id> --message-id <provider-message-id>
+```
+
+`/channels restore-request`, `/channels request-restore`,
+`/channels backup-restore-request`, `/channels restore-backup`,
+`/channels backup-restore`, `/channels recovery-request`, and
+`/channels request-recovery` infer the current channel and thread id from the
+issue marker when no explicit channel/thread target is provided. They create
+or reuse one open GitHub issue carrying the existing
+`gitclaw:backup-restore-request-issue` marker, label that issue for normal
+GitClaw conversation, and queue a provider-facing restore-review link back to
+the mirrored channel thread. This is not a restore: the channel action does not
+call a model, read raw backup payloads, restore files, replay GitHub API calls,
+call provider APIs, or mutate the repository. The restore request issue stores
+the backup issue number, expected backup branch/root/path metadata, dry-run
+verify/coverage/drill/restore-plan/manifest commands, request id, and
+body-free source hashes needed for review; the channel source receipt remains
+body-free, reporting only request/thread/message hashes, backup path hashes,
+duplicate status, notification queue metadata, and delivery gates. It does not
+print raw request ids, raw provider thread/message ids, raw channel message
+bodies, raw backup paths, source bodies, or backup payload bodies in the source
+receipt. Duplicates are suppressed first by request id for the GitHub restore
+request issue and then by `channel + notify_message_id` for the provider-facing
+restore-review link. Changes to this surface require a live E2E that records
+the restore request, validates the metadata-only restore-review outbox, checks
+duplicate suppression, verifies the source issue backup appears on the
+`gitclaw-backups` branch, and then continues on the restore request issue with
+a normal GitHub Models repo-reader/search follow-up.
+
+The same channel-thread issue can also turn a mirrored provider message into a
 GitHub-native reminder:
 
 ```text
@@ -6084,8 +6118,9 @@ validates the metadata-only reminder-link outbox, checks duplicate suppression,
 and then continues on the reminder issue with a normal GitHub Models
 repo-reader/search follow-up.
 
-The channel-created task, watch, clip, attachment, decision, digest, and reminder
-issues also accept a completion form:
+The channel-created task, watch, standing-order proposal, backup restore
+request, clip, attachment, decision, digest, and reminder issues also accept a
+completion form:
 
 ```text
 @gitclaw /channels done --message-id <stable-outbound-id>
@@ -6157,8 +6192,14 @@ Behavior:
 - create or reuse one `gitclaw:channel-reminder` issue per reminder id and
   queue one provider-facing reminder-link outbound comment per
   `channel + notify_message_id`,
+- create or reuse one `gitclaw:backup-restore-request-issue` issue per channel
+  restore request id and queue one provider-facing restore-review outbound
+  comment per `channel + notify_message_id` without executing a model, reading
+  backup payloads, restoring files, replaying GitHub API calls, or mutating the
+  repository,
 - close one `gitclaw:channel-task`, `gitclaw:channel-watch`,
-  `gitclaw:channel-standing-order-proposal`, `gitclaw:channel-clip`,
+  `gitclaw:channel-standing-order-proposal`,
+  `gitclaw:backup-restore-request-issue`, `gitclaw:channel-clip`,
   `gitclaw:channel-attachment`, `gitclaw:channel-decision`,
   `gitclaw:channel-digest`, or `gitclaw:channel-reminder` issue and queue one
   provider-facing done acknowledgement per `channel + notify_message_id`,
@@ -6356,6 +6397,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels propose-memory --target long-term --id channel-memory-proposal-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-memory --target long-term --id channel-memory-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-backup --id channel-backup-rehearsal-1 --message-id provider-msg-1
+@gitclaw /channels restore-request --id channel-backup-restore-1 --message-id provider-msg-1
 @gitclaw /channels room team-alerts,ops-alerts --room-id design-room --message-id design-room-1
 @gitclaw /channels huddle team-alerts,ops-alerts --huddle-id design-room --message-id design-room-1
 @gitclaw /channels rollcall team-alerts,ops-alerts --rollcall-id standup --message-id standup-1
@@ -9042,6 +9084,18 @@ examples/workflows/gitclaw.yml
   recover the channel-backup-rehearsal fixture token, and avoid hidden channel,
   account, provider, message, rehearsal, backup-path, source-body, and backup
   sentinels.
+- A `gh`-driven channel-backup-restore-request-slash E2E harness creates a
+  real channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels restore-request --id ... --message-id ...` on that
+  mirrored thread, verifies GitHub backup restore request issue creation,
+  body-free source receipt metadata, provider-facing restore-review queueing,
+  duplicate request and notification suppression, backup-branch capture of the
+  source issue, dry-run coverage/drill/restore-plan/manifest reports, and
+  metadata-only outbox discovery. The restore request issue then gets a normal
+  GitHub Models issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-backup-restore-request fixture
+  token, and avoid hidden channel, account, provider, message, request,
+  backup-path, source-body, and backup sentinels.
 - A `gh`-driven channel-reminder-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels remind --reminder-id ... --message-id ... --at ...` on
