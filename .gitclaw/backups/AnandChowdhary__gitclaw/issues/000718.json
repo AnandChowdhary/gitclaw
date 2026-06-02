@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T12:33:00Z",
+  "generated_at": "2026-06-02T12:34:27Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 718,
     "title": "GitClaw telegram thread channel-board-card-e2e-20260602t123051z",
@@ -51,6 +51,15 @@
       "CommentID": 4602401198,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Board Card Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#718`\n- requested_channel_command: `/channels board-card`\n- channel_board_card_status: `captured`\n- board_card_issue: `#719`\n- board_card_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/719`\n- board_card_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#718`\n- notification_comment_id: `4602412443`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `d288da6f9504`\n- source_message_id_sha256_12: `c683a878e651`\n- notify_message_id_sha256_12: `91ede423e107`\n- notify_message_id_auto: `false`\n- board_card_id_sha256_12: `12b27e0b39cc`\n- board_card_id_auto: `false`\n- board_card_lane_sha256_12: `fabb651e9fc6`\n- board_card_lane_bytes: `22`\n- board_card_lane_lines: `1`\n- board_card_owner_sha256_12: `4bcfd504d188`\n- board_card_owner_bytes: `22`\n- board_card_owner_lines: `1`\n- board_card_title_sha256_12: `45455aff43cd`\n- board_card_title_bytes: `55`\n- board_card_title_lines: `1`\n- board_card_notes_sha256_12: `e2a3b1408216`\n- board_card_notes_bytes: `81`\n- board_card_notes_lines: `1`\n- notification_body_sha256_12: `374fa9c5b65e`\n- target_from_current_channel_issue: `true`\n- board_card_mode: `github-issue-board-card`\n- repository_mutation_performed: `false`\n- raw_board_card_id_included: `false`\n- raw_board_card_lane_included: `false`\n- raw_board_card_owner_included: `false`\n- raw_board_card_title_included: `false`\n- raw_board_card_notes_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_board_card_action_change: `true`\n- issue_title_sha256_12: `4b4452686097`\n\nGitClaw captured a channel-origin board card as a durable GitHub issue, then queued a provider-facing board-card link back to the mirrored thread. The board-card issue contains the human-readable lane, owner, title, and notes; this source receipt keeps provider IDs, board-card IDs, lane, owner, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the board-card link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent board-card links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate board-card issues are suppressed by `board_card_id`; duplicate board-card link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the board-card issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4602412601,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-02T12:32:35Z",
       "updated_at": "2026-06-02T12:32:35Z"
+    },
+    {
+      "id": 4602412443,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-board-card-e2e-20260602t123051z\" message_id=\"board-card-notify-20260602t123051z\" author=\"gitclaw\" --\u003e\nGitClaw channel board card captured.\n\nBoard card: #719\nURL: https://github.com/AnandChowdhary/gitclaw/issues/719\nTitle: Track GitHub-native channel board card 20260602t123051z\nLane: doing-20260602t123051z\nOwner: owner-20260602t123051z\n\nContinue tracking it in the linked GitHub issue.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T12:33:58Z",
+      "updated_at": "2026-06-02T12:33:58Z"
+    },
+    {
+      "id": 4602412601,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26819906500\" event_id=\"comment-4602401198\" model=\"gitclaw/channels\" idempotency_key=\"aa389870d99254bc63d4006f5bb7c1ec\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26819906500\" --\u003e\n## GitClaw Channel Board Card Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#718`\n- requested_channel_command: `/channels board-card`\n- channel_board_card_status: `captured`\n- board_card_issue: `#719`\n- board_card_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/719`\n- board_card_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#718`\n- notification_comment_id: `4602412443`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `d288da6f9504`\n- source_message_id_sha256_12: `c683a878e651`\n- notify_message_id_sha256_12: `91ede423e107`\n- notify_message_id_auto: `false`\n- board_card_id_sha256_12: `12b27e0b39cc`\n- board_card_id_auto: `false`\n- board_card_lane_sha256_12: `fabb651e9fc6`\n- board_card_lane_bytes: `22`\n- board_card_lane_lines: `1`\n- board_card_owner_sha256_12: `4bcfd504d188`\n- board_card_owner_bytes: `22`\n- board_card_owner_lines: `1`\n- board_card_title_sha256_12: `45455aff43cd`\n- board_card_title_bytes: `55`\n- board_card_title_lines: `1`\n- board_card_notes_sha256_12: `e2a3b1408216`\n- board_card_notes_bytes: `81`\n- board_card_notes_lines: `1`\n- notification_body_sha256_12: `374fa9c5b65e`\n- target_from_current_channel_issue: `true`\n- board_card_mode: `github-issue-board-card`\n- repository_mutation_performed: `false`\n- raw_board_card_id_included: `false`\n- raw_board_card_lane_included: `false`\n- raw_board_card_owner_included: `false`\n- raw_board_card_title_included: `false`\n- raw_board_card_notes_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_board_card_action_change: `true`\n- issue_title_sha256_12: `4b4452686097`\n\nGitClaw captured a channel-origin board card as a durable GitHub issue, then queued a provider-facing board-card link back to the mirrored thread. The board-card issue contains the human-readable lane, owner, title, and notes; this source receipt keeps provider IDs, board-card IDs, lane, owner, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the board-card link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent board-card links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate board-card issues are suppressed by `board_card_id`; duplicate board-card link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the board-card issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T12:34:00Z",
+      "updated_at": "2026-06-02T12:34:00Z"
     }
   ]
 }
