@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T13:02:49Z",
+  "generated_at": "2026-06-02T13:04:37Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4602640620,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels checklist --checklist-id channel-checklist-20260602t125919z --message-id checklist-ingest-20260602t125919z --notify-message-id checklist-notify-20260602t125919z\nTitle: Track GitHub-native channel checklist 20260602t125919z\nItems:\n- Do not leak duplicate hidden token: NOECHO_CHANNEL_CHECKLIST_DUPLICATE_20260602t125919z\nNotes:\nDuplicate replay note.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4602647063,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Checklist Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#722`\n- requested_channel_command: `/channels checklist`\n- channel_checklist_status: `duplicate`\n- checklist_issue: `#723`\n- checklist_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/723`\n- checklist_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#722`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `e0b793b08a3a`\n- source_message_id_sha256_12: `49cbfda2f9dd`\n- notify_message_id_sha256_12: `ac6b170b3edb`\n- notify_message_id_auto: `false`\n- checklist_id_sha256_12: `1dd435035ec3`\n- checklist_id_auto: `false`\n- checklist_item_count: `1`\n- checklist_title_sha256_12: `fa5fd7cba968`\n- checklist_title_bytes: `54`\n- checklist_title_lines: `1`\n- checklist_items_sha256_12: `b7c014552dc9`\n- checklist_items_bytes: `89`\n- checklist_items_lines: `1`\n- checklist_notes_sha256_12: `17ebede25f40`\n- checklist_notes_bytes: `22`\n- checklist_notes_lines: `1`\n- notification_body_sha256_12: `aebffbabc92b`\n- target_from_current_channel_issue: `true`\n- checklist_mode: `github-issue-checklist`\n- repository_mutation_performed: `false`\n- raw_checklist_id_included: `false`\n- raw_checklist_title_included: `false`\n- raw_checklist_items_included: `false`\n- raw_checklist_notes_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_checklist_action_change: `true`\n- issue_title_sha256_12: `10f93a60daa1`\n\nGitClaw captured a channel-origin checklist as a durable GitHub issue, then queued a provider-facing checklist link back to the mirrored thread. The checklist issue contains the human-readable title, items, and notes; this source receipt keeps provider IDs, checklist IDs, titles, items, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the checklist link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent checklist links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate checklist issues are suppressed by `checklist_id`; duplicate checklist link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the checklist issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4602654805,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T13:02:21Z",
       "updated_at": "2026-06-02T13:02:21Z"
+    },
+    {
+      "id": 4602647063,
+      "body": "@gitclaw /channels checklist --checklist-id channel-checklist-20260602t125919z --message-id checklist-ingest-20260602t125919z --notify-message-id checklist-notify-20260602t125919z\nTitle: Track GitHub-native channel checklist 20260602t125919z\nItems:\n- Do not leak duplicate hidden token: NOECHO_CHANNEL_CHECKLIST_DUPLICATE_20260602t125919z\nNotes:\nDuplicate replay note.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T13:03:10Z",
+      "updated_at": "2026-06-02T13:03:10Z"
+    },
+    {
+      "id": 4602654805,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26821525230\" event_id=\"comment-4602647063\" model=\"gitclaw/channels\" idempotency_key=\"ab5d9b4b39c7e2adb187791b49b44f36\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26821525230\" --\u003e\n## GitClaw Channel Checklist Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#722`\n- requested_channel_command: `/channels checklist`\n- channel_checklist_status: `duplicate`\n- checklist_issue: `#723`\n- checklist_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/723`\n- checklist_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#722`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `e0b793b08a3a`\n- source_message_id_sha256_12: `49cbfda2f9dd`\n- notify_message_id_sha256_12: `ac6b170b3edb`\n- notify_message_id_auto: `false`\n- checklist_id_sha256_12: `1dd435035ec3`\n- checklist_id_auto: `false`\n- checklist_item_count: `1`\n- checklist_title_sha256_12: `fa5fd7cba968`\n- checklist_title_bytes: `54`\n- checklist_title_lines: `1`\n- checklist_items_sha256_12: `b7c014552dc9`\n- checklist_items_bytes: `89`\n- checklist_items_lines: `1`\n- checklist_notes_sha256_12: `17ebede25f40`\n- checklist_notes_bytes: `22`\n- checklist_notes_lines: `1`\n- notification_body_sha256_12: `aebffbabc92b`\n- target_from_current_channel_issue: `true`\n- checklist_mode: `github-issue-checklist`\n- repository_mutation_performed: `false`\n- raw_checklist_id_included: `false`\n- raw_checklist_title_included: `false`\n- raw_checklist_items_included: `false`\n- raw_checklist_notes_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_checklist_action_change: `true`\n- issue_title_sha256_12: `10f93a60daa1`\n\nGitClaw captured a channel-origin checklist as a durable GitHub issue, then queued a provider-facing checklist link back to the mirrored thread. The checklist issue contains the human-readable title, items, and notes; this source receipt keeps provider IDs, checklist IDs, titles, items, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the checklist link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent checklist links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate checklist issues are suppressed by `checklist_id`; duplicate checklist link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the checklist issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T13:04:10Z",
+      "updated_at": "2026-06-02T13:04:10Z"
     }
   ]
 }
