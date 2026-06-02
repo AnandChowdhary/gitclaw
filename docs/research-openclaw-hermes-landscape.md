@@ -4602,6 +4602,32 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-02 Channel Access Review Follow-Up
+
+Hermes' messaging gateway model separates provider transport from agent
+authority with allowlists, pairing flows, per-chat session routing, and scoped
+admin/user permissions. OpenClaw's channel model similarly points toward
+provider accounts, route resolution, and channel capability controls rather
+than treating chat identity as inherently trusted. The GitHub-native
+translation should make channel access or pairing requests reviewable without
+allowing the channel handler itself to become an authorization side door.
+
+GitClaw's serverless version is `@gitclaw /channels access-request --access-id
+<id> --scope <scope> --message-id <id>`. It opens or reuses a normal
+`gitclaw:channel-access-request` issue with the readable requester, scope,
+requested role, and reason, while provider user IDs and provider handles stay
+hashed. It queues one provider-facing review link back to the source
+Slack/Telegram thread and keeps the source receipt body-free. The action does
+not call a model, grant access, mutate allowlists, issue pairing codes, call
+provider APIs, print raw provider identifiers, or mutate the repository.
+Acceptance requires live E2E for access-review issue creation, metadata-only
+review-link outbox discovery, duplicate suppression, explicit no-grant/no-
+allowlist/no-pairing-code flags, and a real GitHub Models repo-reader/search
+follow-up on the review issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-02 Channel Link Card Follow-Up
 
 OpenClaw's gateway framing treats user conversations as the primary control

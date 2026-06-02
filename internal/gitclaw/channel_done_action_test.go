@@ -443,6 +443,31 @@ func TestChannelDoneArtifactRefSupportsLinkIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsAccessRequestIssues(t *testing.T) {
+	body := RenderChannelAccessRequestIssueBody(ChannelAccessRequestOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		AccessID:          "access-done-1",
+		Requester:         "Visible requester",
+		ProviderUserID:    "provider-secret-user",
+		ProviderHandle:    "@provider-secret",
+		Scope:             "team-demo",
+		RequestedRole:     "user",
+		Reason:            "Review complete.",
+		SourceIssueNumber: 50,
+		SourceCommentID:   5000,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "access-request" || ref.ID != "access-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 50 || ref.SourceCommentID != 5000 {
+		t.Fatalf("unexpected access request artifact ref: %#v", ref)
+	}
+}
+
 func channelDoneQuoteJSON(t *testing.T, value string) string {
 	t.Helper()
 	quoted, err := json.Marshal(value)
