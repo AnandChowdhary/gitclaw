@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T10:20:20Z",
+  "generated_at": "2026-06-02T10:21:59Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 601,
+  "count": 602,
   "issues": [
     {
       "number": 3,
@@ -7573,6 +7573,18 @@
       "event_name": "issues",
       "comment_count": 1,
       "transcript_messages": 2
+    },
+    {
+      "number": 706,
+      "title": "GitClaw slack thread gitclaw-e2e-route-poll-vote-invite-20260602T101858Z",
+      "path": "issues/000706.json",
+      "backup_generated_at": "2026-06-02T10:21:58Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw:channel"
+      ],
+      "comment_count": 4,
+      "transcript_messages": 3
     }
   ]
 }

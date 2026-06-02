@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-02T10:21:58Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 706,
+    "title": "GitClaw slack thread gitclaw-e2e-route-poll-vote-invite-20260602T101858Z",
+    "body": "\u003c!-- gitclaw:channel-thread channel=\"slack\" thread_id=\"gitclaw-e2e-route-poll-vote-invite-20260602T101858Z\" --\u003e\nGitClaw channel bridge thread.\n\n- channel: slack\n- thread_id: gitclaw-e2e-route-poll-vote-invite-20260602T101858Z\n\nMessages from this external channel are mirrored into this issue as comments\nwith gitclaw:channel-message provenance markers.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw:channel"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw slack thread gitclaw-e2e-route-poll-vote-invite-20260602T101858Z\n\n\u003c!-- gitclaw:channel-thread channel=\"slack\" thread_id=\"gitclaw-e2e-route-poll-vote-invite-20260602T101858Z\" --\u003e\nGitClaw channel bridge thread.\n\n- channel: slack\n- thread_id: gitclaw-e2e-route-poll-vote-invite-20260602T101858Z\n\nMessages from this external channel are mirrored into this issue as comments\nwith gitclaw:channel-message provenance markers.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels poll-vote --poll-id poll-vote-20260602T101858Z --message-id poll-vote-msg-20260602T101858Z --notify-message-id poll-vote-ack-20260602T101858Z --choice 1\nVoter: Poll Vote Tester 20260602T101858Z\nNote:\nPlease record this channel-origin vote note: NOECHO_CHANNEL_POLL_VOTE_NOTE_20260602T101858Z.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4601420722,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Poll Vote Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#706`\n- requested_channel_command: `/channels poll-vote`\n- channel_poll_vote_status: `recorded`\n- poll_issue: `#705`\n- poll_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/705`\n- vote_comment_id: `4601427753`\n- vote_recorded: `true`\n- vote_duplicate_suppressed: `false`\n- notification_target_issue: `#706`\n- notification_comment_id: `4601427916`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `slack`\n- thread_id_sha256_12: `bd4310812397`\n- poll_id_sha256_12: `288e60e0f537`\n- vote_id_sha256_12: `18a1883103a5`\n- vote_id_auto: `false`\n- choice_sha256_12: `b24d283df5cf`\n- choice_bytes: `1`\n- choice_lines: `1`\n- choice_resolved_from_poll_options: `true`\n- choice_index: `1`\n- voter_sha256_12: `8c03b846b360`\n- voter_bytes: `33`\n- voter_lines: `1`\n- note_sha256_12: `80388324dca3`\n- note_bytes: `92`\n- note_lines: `1`\n- source_message_id_sha256_12: `db2795ce016d`\n- notify_message_id_sha256_12: `b7ee7d03db4d`\n- notify_message_id_auto: `false`\n- poll_vote_body_sha256_12: `2be1cf1c3c0e`\n- poll_vote_body_bytes: `862`\n- poll_vote_body_lines: `21`\n- notification_body_sha256_12: `93bb4ef7c59a`\n- target_from_current_channel_issue: `true`\n- raw_poll_id_included: `false`\n- raw_vote_id_included: `false`\n- raw_choice_included: `false`\n- raw_voter_included: `false`\n- raw_note_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_poll_vote_action_change: `true`\n- issue_title_sha256_12: `a4980f64fe8c`\n\nGitClaw recorded a channel-origin poll vote on the GitHub poll issue, then queued a provider-facing acknowledgement back to the mirrored channel thread. The poll issue contains the human-readable vote; this source receipt keeps poll IDs, vote IDs, choice text, participant text, notes, thread IDs, message IDs, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the poll vote acknowledgement with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent acknowledgements with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate poll vote records are suppressed by `poll_id + vote_id`; duplicate acknowledgements are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the poll issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4601428113,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4601415046,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"slack\" thread_id=\"gitclaw-e2e-route-poll-vote-invite-20260602T101858Z\" message_id=\"poll-vote-invite-20260602T101858Z\" author=\"gitclaw:e2e\" --\u003e\nGitClaw channel poll\n\nPoll: #705\nURL: https://github.com/AnandChowdhary/gitclaw/issues/705\nSource: #704\n\nQuestion:\nWhich channel poll vote path should ship for NOECHO_CHANNEL_POLL_VOTE_QUESTION_20260602T101858Z?\n\nOptions:\n1. Ship the poll vote path\n2. Keep the poll invite only\n\nVote in the linked GitHub poll or continue through the mirrored channel thread.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T10:19:51Z",
+      "updated_at": "2026-06-02T10:19:51Z"
+    },
+    {
+      "id": 4601420722,
+      "body": "@gitclaw /channels poll-vote --poll-id poll-vote-20260602T101858Z --message-id poll-vote-msg-20260602T101858Z --notify-message-id poll-vote-ack-20260602T101858Z --choice 1\nVoter: Poll Vote Tester 20260602T101858Z\nNote:\nPlease record this channel-origin vote note: NOECHO_CHANNEL_POLL_VOTE_NOTE_20260602T101858Z.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T10:20:32Z",
+      "updated_at": "2026-06-02T10:20:32Z"
+    },
+    {
+      "id": 4601427916,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"slack\" thread_id=\"gitclaw-e2e-route-poll-vote-invite-20260602T101858Z\" message_id=\"poll-vote-ack-20260602T101858Z\" author=\"gitclaw\" --\u003e\nGitClaw poll vote recorded.\n\nPoll: #705\nURL: https://github.com/AnandChowdhary/gitclaw/issues/705\nChoice: Ship the poll vote path\nChoice index: 1\nParticipant: Poll Vote Tester 20260602T101858Z\n\nRecorded in the linked GitHub poll issue.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T10:21:30Z",
+      "updated_at": "2026-06-02T10:21:30Z"
+    },
+    {
+      "id": 4601428113,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26813540441\" event_id=\"comment-4601420722\" model=\"gitclaw/channels\" idempotency_key=\"90f6dbf71257a346afc9860dcc2b685b\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26813540441\" --\u003e\n## GitClaw Channel Poll Vote Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#706`\n- requested_channel_command: `/channels poll-vote`\n- channel_poll_vote_status: `recorded`\n- poll_issue: `#705`\n- poll_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/705`\n- vote_comment_id: `4601427753`\n- vote_recorded: `true`\n- vote_duplicate_suppressed: `false`\n- notification_target_issue: `#706`\n- notification_comment_id: `4601427916`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `slack`\n- thread_id_sha256_12: `bd4310812397`\n- poll_id_sha256_12: `288e60e0f537`\n- vote_id_sha256_12: `18a1883103a5`\n- vote_id_auto: `false`\n- choice_sha256_12: `b24d283df5cf`\n- choice_bytes: `1`\n- choice_lines: `1`\n- choice_resolved_from_poll_options: `true`\n- choice_index: `1`\n- voter_sha256_12: `8c03b846b360`\n- voter_bytes: `33`\n- voter_lines: `1`\n- note_sha256_12: `80388324dca3`\n- note_bytes: `92`\n- note_lines: `1`\n- source_message_id_sha256_12: `db2795ce016d`\n- notify_message_id_sha256_12: `b7ee7d03db4d`\n- notify_message_id_auto: `false`\n- poll_vote_body_sha256_12: `2be1cf1c3c0e`\n- poll_vote_body_bytes: `862`\n- poll_vote_body_lines: `21`\n- notification_body_sha256_12: `93bb4ef7c59a`\n- target_from_current_channel_issue: `true`\n- raw_poll_id_included: `false`\n- raw_vote_id_included: `false`\n- raw_choice_included: `false`\n- raw_voter_included: `false`\n- raw_note_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_poll_vote_action_change: `true`\n- issue_title_sha256_12: `a4980f64fe8c`\n\nGitClaw recorded a channel-origin poll vote on the GitHub poll issue, then queued a provider-facing acknowledgement back to the mirrored channel thread. The poll issue contains the human-readable vote; this source receipt keeps poll IDs, vote IDs, choice text, participant text, notes, thread IDs, message IDs, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the poll vote acknowledgement with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent acknowledgements with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate poll vote records are suppressed by `poll_id + vote_id`; duplicate acknowledgements are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the poll issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T10:21:31Z",
+      "updated_at": "2026-06-02T10:21:31Z"
+    }
+  ]
+}
