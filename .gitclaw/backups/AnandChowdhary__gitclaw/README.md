@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-02T22:29:56Z`
-- issue_count: `649`
+- generated_at: `2026-06-02T22:47:22Z`
+- issue_count: `650`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -654,3 +654,4 @@
 | #752 | GitClaw telegram thread channel-soul-info-e2e-20260602t215636z | `2026-06-02T22:03:41Z` | 9 | 9 | `issues/000752.json` |
 | #753 | GitClaw telegram thread channel-soul-risk-e2e-20260602t221826z | `2026-06-02T22:21:57Z` | 5 | 5 | `issues/000753.json` |
 | #754 | GitClaw telegram thread channel-soul-risk-e2e-20260602t222255z | `2026-06-02T22:29:54Z` | 9 | 9 | `issues/000754.json` |
+| #755 | GitClaw telegram thread channel-checkpoint-status-e2e-20260602t224526z | `2026-06-02T22:47:21Z` | 3 | 4 | `issues/000755.json` |
