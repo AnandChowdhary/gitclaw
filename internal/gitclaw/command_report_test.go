@@ -96,6 +96,7 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"queue mirrored channel tool-status replies without executing tools or exposing raw schemas",
 		"queue mirrored channel backup-status replies without reading backup payloads or restoring files",
 		"queue mirrored channel profile-status replies without exporting, importing, switching, or mutating profiles",
+		"queue mirrored channel soul-status replies without registry contact, profile export, soul writes, or raw bodies",
 		"`gitclaw bundles catalog` command=`/bundles`",
 		"`gitclaw bundles list` command=`/bundles`",
 		"`gitclaw bundles risk` command=`/bundles`",

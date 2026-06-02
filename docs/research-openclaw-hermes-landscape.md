@@ -4754,6 +4754,35 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-02 Channel Soul Status Follow-Up
+
+OpenClaw's SOUL.md guidance makes the key tension clear: SOUL.md is the
+high-authority Markdown file that shapes the agent's personality, values,
+communication style, and boundaries, and it is loaded into context for every
+session. That also makes it a security-sensitive target: a compromised soul
+file can persist across restarts and conversations. Hermes' feature surface
+arrives at the same design pressure from another angle: memory, skills,
+gateways, MCP servers, and schedules are powerful runtime surfaces, so the
+operator needs compact status without exposing raw private context to every
+chat transport.
+
+GitClaw's serverless version is `@gitclaw /channels soul-status --message-id
+<id>`. It queues one provider-facing soul-status message back to the mirrored
+Slack/Telegram thread with the repo-local soul snapshot status, snapshot
+version/hash, loaded and required entry counts, prompt-visible entry count,
+memory-note count, validation state, required-file coverage, and risk state.
+The source receipt stays body-free and hash-heavy. The action does not call a
+model, contact registries, export profiles, write soul files, call provider
+APIs, print raw soul/identity/user/memory/tool/heartbeat bodies, print prompts,
+print sessions, print backup payloads, or mutate the repository. Acceptance
+requires live E2E for soul-status queueing, metadata-only outbox discovery,
+duplicate notification suppression, explicit no-registry/no-profile-export/
+no-soul-write/no-provider-API flags, and a real GitHub Models repo-reader/
+search follow-up on the channel issue.
+
+Sources: OpenClaw SOUL.md guide (`https://clawdocs.org/guides/soul-md/`),
+Hermes features docs (`https://www.hermes-ai.net/docs/features/`).
+
 ## 2026-06-02 Channel Skill Bundle Proposal Follow-Up
 
 OpenClaw's current docs frame channels as gateway-routed conversations across

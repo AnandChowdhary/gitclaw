@@ -29,6 +29,7 @@ func TestRenderChannelListReportCarriesDedicatedE2EMarker(t *testing.T) {
 		"`/channels tools --message-id <message>`",
 		"`/channels backup --message-id <message>`",
 		"`/channels profile-status --message-id <message>`",
+		"`/channels soul-status --message-id <message>`",
 		"issue_title_sha256_12:",
 	} {
 		if !strings.Contains(report, want) {

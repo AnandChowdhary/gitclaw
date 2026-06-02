@@ -1287,6 +1287,13 @@ homes, expose raw profile/skill/memory/tool bodies, or mutate the repository;
 it reports the repo-local `.gitclaw/` profile envelope as component statuses,
 counts, and hashes.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+soul-status --message-id <id>` queues a provider-facing high-authority soul
+snapshot back to the Slack/Telegram thread. The channel action does not call a
+model, contact registries, export profiles, write soul files, expose raw
+soul/identity/user/memory/tool/heartbeat bodies, or mutate the repository; it
+reports the repo-local authority surface as validation state, risk state,
+counts, and hashes.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 rehearse-backup --id <id> --message-id <id>` opens or reuses a normal GitHub
 backup recovery rehearsal issue and queues a provider-facing rehearsal link
 back to the Slack/Telegram thread. The channel action does not call a model,
@@ -1418,6 +1425,7 @@ scripts/e2e/github-backup-restore-request-issue.sh
 scripts/e2e/github-backup-restore-request-channel-notify.sh
 scripts/e2e/github-channel-backup-status-slash.sh
 scripts/e2e/github-channel-profile-status-slash.sh
+scripts/e2e/github-channel-soul-status-slash.sh
 scripts/e2e/github-channel-backup-rehearsal-slash.sh
 scripts/e2e/github-channel-backup-restore-request-slash.sh
 scripts/e2e/github-channel-checkpoint-rehearsal-slash.sh
@@ -2179,6 +2187,12 @@ mirrored thread, checks duplicate notification suppression, exposes the
 profile-status notification through metadata-only outbox, and then continues
 on the same channel issue with a real GitHub Models repo-reader/search
 follow-up.
+The channel-soul-status slash harness turns the operator console into an
+agent-authority cockpit: a channel-ingested issue receives `@gitclaw /channels
+soul-status`, queues a provider-facing high-authority soul snapshot back to
+the mirrored thread, checks duplicate notification suppression, exposes the
+soul-status notification through metadata-only outbox, and then continues on
+the same channel issue with a real GitHub Models repo-reader/search follow-up.
 The channel-backup-rehearsal slash harness turns the operator console into a
 recovery practice surface: a channel-ingested issue receives `@gitclaw
 /channels rehearse-backup`, creates or reuses a GitHub backup rehearsal issue,
