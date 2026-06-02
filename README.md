@@ -707,6 +707,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels approval-plan search_files --id <id> --message-id <id>
 @gitclaw /channels rehearse-tool search_files --id <id> --message-id <id>
 @gitclaw /channels propose-toolset --toolset-id <id> --message-id <id>
+@gitclaw /channels propose-prompt --prompt-id <id> --message-id <id>
 @gitclaw /channels propose-skill weekly-review --message-id <id>
 @gitclaw /channels rehearse-skill repo-reader --id <id> --message-id <id>
 @gitclaw /channels propose-soul --target soul --id <id> --message-id <id>
@@ -1173,6 +1174,13 @@ name, purpose, proposed tool list, policy, and notes; the source receipt keeps
 only hashes/counts and explicitly does not call a model, enable toolsets,
 execute tools, write tool configuration, or mutate the repository.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+propose-prompt --prompt-id <id> --message-id <id>` opens or reuses a normal
+GitHub prompt-pack proposal issue and queues a provider-facing proposal link
+back to the Slack/Telegram thread. The proposal issue stores the readable
+prompt name, purpose, draft, inputs, policy, and notes; the source receipt
+keeps only hashes/counts and explicitly does not call a model, run prompt
+tests, enable prompts, write prompt configuration, or mutate the repository.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 propose-skill <name> --message-id <id>` opens or reuses a normal GitHub skill
 proposal issue and queues a provider-facing proposal link back to the
 Slack/Telegram thread. The channel action does not call a model, generate a
@@ -1536,6 +1544,7 @@ scripts/e2e/github-channel-tool-run-request-slash.sh
 scripts/e2e/github-channel-tool-approval-plan-slash.sh
 scripts/e2e/github-channel-tool-rehearsal-slash.sh
 scripts/e2e/github-channel-toolset-proposal-slash.sh
+scripts/e2e/github-channel-prompt-proposal-slash.sh
 scripts/e2e/github-channel-skill-proposal-slash.sh
 scripts/e2e/github-channel-soul-proposal-slash.sh
 scripts/e2e/github-channel-skill-rehearsal-slash.sh
@@ -2022,6 +2031,13 @@ provider-facing proposal link back to the mirrored thread, checks duplicate
 proposal and notification suppression, exposes the proposal-link notification
 through metadata-only outbox, and then continues on the proposal issue with a
 real GitHub Models repo-reader/search follow-up.
+The channel-prompt-proposal slash harness turns the operator console into a
+prompt-pack intake surface: a channel-ingested issue receives `@gitclaw
+/channels propose-prompt`, creates or reuses a GitHub prompt proposal issue,
+queues a provider-facing proposal link back to the mirrored thread, checks
+duplicate proposal and notification suppression, exposes the proposal-link
+notification through metadata-only outbox, and then continues on the proposal
+issue with a real GitHub Models repo-reader/search follow-up.
 The channel-skill-proposal slash harness turns the operator console into a
 skill intake surface: a channel-ingested issue receives `@gitclaw /channels
 propose-skill`, creates or reuses a GitHub skill proposal issue, queues a

@@ -4697,6 +4697,38 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-02 Channel Prompt Proposal Follow-Up
+
+OpenClaw's context docs treat the system prompt, conversation history, tool
+calls/results, attachments, compaction summaries, provider wrappers, skills
+metadata, tool descriptions, workspace location, runtime metadata, and
+bootstrap files as first-class prompt material rather than invisible
+implementation detail. Hermes similarly separates persistent context files,
+prompt caching/compression, and skills' progressive disclosure from tool
+execution. GitClaw's channel-native translation should make prompt ideas
+reviewable without silently turning a chat message into active behavior.
+
+GitClaw's version is `@gitclaw /channels propose-prompt --prompt-id <id>
+--message-id <id>`. It opens or reuses a normal
+`gitclaw:channel-prompt-proposal` issue with a readable prompt name, purpose,
+draft, inputs, policy, and notes, queues one provider-facing proposal link to
+the source Slack/Telegram thread, and keeps the source receipt body-free with
+only prompt/thread/message/section hashes, prompt line counts, duplicate
+status, and delivery gates. The action does not call a model, run prompt
+tests, enable prompts, write prompt configuration, call provider APIs, or
+mutate the repository. Acceptance requires live E2E for prompt proposal issue
+creation, metadata-only prompt proposal outbox discovery, duplicate
+suppression, explicit no-activation gates, and a real GitHub Models
+repo-reader/search follow-up on the prompt proposal issue.
+
+Sources: OpenClaw context docs (`https://docs.openclaw.ai/concepts/context`),
+Hermes context files feature docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files`),
+Hermes context compression/caching docs
+(`https://hermes-agent.nousresearch.com/docs/developer-guide/context-compression-and-caching`),
+and Hermes skills guide
+(`https://hermes-agent.nousresearch.com/docs/guides/work-with-skills/`).
+
 ## 2026-06-02 Channel Toolset Proposal Follow-Up
 
 Hermes' toolsets reference frames toolsets as named bundles that control tool

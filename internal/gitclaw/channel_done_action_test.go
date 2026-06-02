@@ -653,6 +653,28 @@ func TestChannelDoneArtifactRefSupportsContactIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsPromptProposalIssues(t *testing.T) {
+	body := RenderChannelPromptProposalIssueBody(ChannelPromptProposalOptions{
+		Repo:              "owner/repo",
+		Channel:           "telegram",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		PromptID:          "prompt-done-1",
+		Name:              "Visible prompt proposal",
+		Purpose:           "Review a prompt proposal.",
+		Prompt:            "Summarize repo context.",
+		SourceIssueNumber: 52,
+		SourceCommentID:   5200,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "prompt-proposal" || ref.ID != "prompt-done-1" || ref.Channel != "telegram" || ref.SourceIssueNumber != 52 || ref.SourceCommentID != 5200 {
+		t.Fatalf("unexpected prompt proposal artifact ref: %#v", ref)
+	}
+}
+
 func channelDoneQuoteJSON(t *testing.T, value string) string {
 	t.Helper()
 	quoted, err := json.Marshal(value)

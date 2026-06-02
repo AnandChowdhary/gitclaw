@@ -6515,6 +6515,52 @@ mutation happened, and then continues on the proposal issue with a normal
 GitHub Models repo-reader/search follow-up.
 
 The same channel-thread issue can also turn a mirrored provider message into a
+GitHub prompt-pack proposal intake lane:
+
+```text
+@gitclaw /channels propose-prompt --prompt-id <stable-prompt-proposal-id> --message-id <provider-message-id>
+Name: short prompt name
+Purpose:
+why this reusable prompt should exist
+Prompt:
+the reviewed draft prompt text
+Inputs:
+expected variables, context, or slots
+Policy:
+review gates, allowed modes, and risk boundaries
+Notes:
+human-readable context
+```
+
+`/channels propose-prompt`, `/channels prompt-proposal`,
+`/channels propose-prompt-pack`, `/channels prompt-pack-proposal`,
+`/channels prompt-pack`, and `/channels prompt` infer the current channel and
+thread id from the issue marker when no explicit channel/thread target is
+provided. They create or reuse one open GitHub issue carrying the
+`gitclaw:channel-prompt-proposal` marker, label it with `gitclaw` so normal
+conversation can continue there, and queue a provider-facing proposal link
+back to the mirrored channel thread. The proposal issue contains the readable
+prompt name, purpose, prompt draft, inputs, policy, and notes because it is the
+reviewable place to decide whether the prompt should become documentation, a
+skill, repo-local prompt guidance, a proactive workflow, or a test fixture.
+The source receipt remains body-free, reporting only
+prompt/thread/message/name/purpose/draft/input/policy/note hashes, prompt line
+counts, duplicate status, notification queue metadata, and delivery gates. The
+provider-facing acknowledgement can show the name, prompt line count, and
+GitHub issue link but not the prompt draft, inputs, policy, notes, provider
+IDs, or source message body. It does not call a model, run prompt tests,
+enable prompts, write prompt configuration, call provider APIs, mutate the
+repository, print raw prompt proposal ids, print raw thread ids, print raw
+source or notification message ids, print channel message bodies, or print raw
+section text in the source receipt. Duplicates are suppressed first by
+`prompt_id` for the GitHub proposal issue and then by
+`channel + notify_message_id` for the provider-facing proposal link. Changes
+to this surface require a live E2E that records the proposal, validates the
+metadata-only proposal-link outbox, checks duplicate suppression, asserts that
+no prompt activation or repository mutation happened, and then continues on
+the proposal issue with a normal GitHub Models repo-reader/search follow-up.
+
+The same channel-thread issue can also turn a mirrored provider message into a
 GitHub skill proposal intake lane:
 
 ```text
@@ -6929,6 +6975,11 @@ Behavior:
   `channel + notify_message_id` without enabling toolsets, executing tools,
   writing tool configuration, mutating the repository, calling provider APIs,
   or calling a model,
+- create or reuse one `gitclaw:channel-prompt-proposal` issue per prompt id
+  and queue one provider-facing proposal-link outbound comment per
+  `channel + notify_message_id` without enabling prompts, running prompt
+  tests, writing prompt configuration, mutating the repository, calling
+  provider APIs, or calling a model,
 - create or reuse one `gitclaw:channel-workspace-proposal` issue per proposal
   id and queue one provider-facing proposal-link outbound comment per
   `channel + notify_message_id` without writing workspace files, mutating the
@@ -6984,6 +7035,7 @@ Behavior:
   `gitclaw:channel-playbook`, `gitclaw:channel-insight`,
   `gitclaw:channel-board-card`, `gitclaw:channel-checklist`,
   `gitclaw:channel-toolset-proposal`,
+  `gitclaw:channel-prompt-proposal`,
   `gitclaw:channel-workspace-proposal`, `gitclaw:channel-incident`,
   `gitclaw:channel-voice`, `gitclaw:channel-image`, `gitclaw:channel-link`,
   `gitclaw:channel-access-request`, `gitclaw:channel-contact`, or
@@ -10016,6 +10068,18 @@ examples/workflows/gitclaw.yml
   that must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-toolset-proposal fixture token, and avoid hidden channel, account,
   provider, message, toolset, purpose, policy, notes, and proposed-tool
+  sentinels.
+- A `gh`-driven channel-prompt-proposal-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels propose-prompt --prompt-id ... --message-id ...` on
+  that mirrored thread, verifies GitHub prompt-pack proposal issue creation,
+  body-free source receipt metadata, provider-facing proposal-link queueing,
+  duplicate proposal and notification suppression, explicit no-prompt-
+  activation/no-repository-mutation gates, and metadata-only outbox discovery.
+  The proposal issue then gets a normal GitHub Models issue-comment follow-up
+  that must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-prompt-proposal fixture token, and avoid hidden channel, account,
+  provider, message, prompt id, prompt draft, inputs, policy, and notes
   sentinels.
 - A `gh`-driven channel-skill-proposal-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
