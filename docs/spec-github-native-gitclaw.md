@@ -5462,6 +5462,7 @@ accepts a structured reaction form:
 @gitclaw /channels playbook --playbook-id <stable-playbook-id> --message-id <provider-message-id>
 @gitclaw /channels insight --insight-id <stable-insight-id> --message-id <provider-message-id>
 @gitclaw /channels board-card --card-id <stable-card-id> --lane <lane> --message-id <provider-message-id>
+@gitclaw /channels checklist --checklist-id <stable-checklist-id> --message-id <provider-message-id>
 @gitclaw /channels propose-workspace --workspace-id <stable-workspace-proposal-id> --target .gitclaw/workspaces/<name>.md --message-id <provider-message-id>
 @gitclaw /channels incident --incident-id <stable-incident-id> --severity <severity> --message-id <provider-message-id>
 @gitclaw /channels voice --voice-id <stable-voice-id> --duration <seconds> --message-id <provider-message-id>
@@ -6003,6 +6004,44 @@ Changes to this surface require a live E2E that records the board card,
 validates the metadata-only board-card outbox, checks duplicate suppression,
 asserts that no repository mutation happened, and then continues on the
 board-card issue with a normal GitHub Models repo-reader/search follow-up.
+
+The same channel-thread issue can also record a checklist:
+
+```text
+@gitclaw /channels checklist --checklist-id <stable-checklist-id> --message-id <provider-message-id>
+Title: short checklist title
+Items:
+- first item
+- second item
+Notes:
+human-readable checklist context or caveats
+```
+
+`/channels checklist`, `/channels check-list`, `/channels todo-list`,
+`/channels todos`, `/channels todo`, `/channels punch-list`, and
+`/channels action-list` infer the current channel and thread id from the issue
+marker when no explicit route/channel/thread target is provided. They create
+or reuse one open GitHub issue carrying a hidden
+`gitclaw:channel-checklist` marker for the stable checklist id, label it with
+`gitclaw` so normal conversation can continue there, and queue a
+provider-facing checklist link back to the mirrored channel thread. The
+checklist issue contains the human-readable title, checkbox items, and notes
+because it is the reviewable place to decide whether the checklist should
+become a task, reminder, playbook, run request, or proactive job; the source
+receipt remains body-free, reporting only checklist/thread/message/title/item
+hashes, item count, duplicate status, notification queue metadata, and delivery
+gates. The provider-facing acknowledgement can show the title, item count, and
+GitHub issue link but not the items or notes. It does not call a model, call
+provider APIs, mutate the repository, write project-board state, mark checklist
+items done, print raw checklist ids, print raw thread ids, print raw source or
+notification message ids, print channel message bodies, or print raw section
+text in the source receipt. Duplicates are suppressed first by `checklist_id`
+for the GitHub checklist issue and then by `channel + notify_message_id` for
+the provider-facing checklist link. Changes to this surface require a live E2E
+that records the checklist, validates the metadata-only checklist outbox,
+checks duplicate suppression, asserts that no repository mutation happened,
+and then continues on the checklist issue with a normal GitHub Models
+repo-reader/search follow-up.
 
 The same channel-thread issue can also record a workspace/context proposal:
 
@@ -6835,6 +6874,10 @@ Behavior:
   queue one provider-facing board-card outbound comment per
   `channel + notify_message_id` without writing project-board state, mutating
   the repository, calling provider APIs, or calling a model,
+- create or reuse one `gitclaw:channel-checklist` issue per checklist id and
+  queue one provider-facing checklist outbound comment per
+  `channel + notify_message_id` without marking checklist items done, mutating
+  the repository, calling provider APIs, or calling a model,
 - create or reuse one `gitclaw:channel-workspace-proposal` issue per proposal
   id and queue one provider-facing proposal-link outbound comment per
   `channel + notify_message_id` without writing workspace files, mutating the
@@ -6888,9 +6931,9 @@ Behavior:
   `gitclaw:channel-digest`, `gitclaw:channel-idea`,
   `gitclaw:channel-kudos`, `gitclaw:channel-retro`,
   `gitclaw:channel-playbook`, `gitclaw:channel-insight`,
-  `gitclaw:channel-board-card`, `gitclaw:channel-workspace-proposal`,
-  `gitclaw:channel-incident`, `gitclaw:channel-voice`,
-  `gitclaw:channel-image`, `gitclaw:channel-link`,
+  `gitclaw:channel-board-card`, `gitclaw:channel-checklist`,
+  `gitclaw:channel-workspace-proposal`, `gitclaw:channel-incident`,
+  `gitclaw:channel-voice`, `gitclaw:channel-image`, `gitclaw:channel-link`,
   `gitclaw:channel-access-request`, `gitclaw:channel-contact`, or
   `gitclaw:channel-reminder` issue and queue one
   provider-facing done acknowledgement per `channel + notify_message_id`,
@@ -7084,6 +7127,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels playbook --playbook-id channel-playbook-1 --message-id provider-msg-1
 @gitclaw /channels insight --insight-id channel-insight-1 --message-id provider-msg-1
 @gitclaw /channels board-card --card-id channel-board-card-1 --lane doing --message-id provider-msg-1
+@gitclaw /channels checklist --checklist-id channel-checklist-1 --message-id provider-msg-1
 @gitclaw /channels propose-workspace --workspace-id channel-workspace-proposal-1 --target .gitclaw/workspaces/channel-review.md --message-id provider-msg-1
 @gitclaw /channels incident --incident-id channel-incident-1 --severity sev2 --message-id provider-msg-1
 @gitclaw /channels voice --voice-id channel-voice-1 --duration 47 --message-id provider-msg-1
@@ -9768,6 +9812,17 @@ examples/workflows/gitclaw.yml
   `gitclaw.search_files`, recover the channel-board-card fixture token, and
   avoid hidden channel, account, provider, message, card, lane, owner, and
   notes sentinels.
+- A `gh`-driven channel-checklist-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels checklist --checklist-id ... --message-id ...` on that
+  mirrored thread, verifies GitHub checklist issue creation, body-free source
+  receipt metadata, provider-facing checklist link queueing, duplicate
+  checklist and notification suppression, explicit no-repository-mutation
+  gates, and metadata-only outbox discovery. The checklist issue then gets a
+  normal GitHub Models issue-comment follow-up that must select `repo-reader`,
+  expose `gitclaw.search_files`, recover the channel-checklist fixture token,
+  and avoid hidden channel, account, provider, message, checklist, item, and
+  note sentinels.
 - A `gh`-driven channel-workspace-proposal-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels propose-workspace --workspace-id ... --target ... --message-id

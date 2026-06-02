@@ -4724,6 +4724,33 @@ OpenClaw sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes Kanban
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban`),
 Hermes toolsets reference (`https://hermes-agent.nousresearch.com/docs/reference/toolsets-reference`).
 
+## 2026-06-02 Channel Checklist Follow-Up
+
+OpenClaw's channel model makes chat a normal assistant ingress path, while
+Hermes Kanban shows why durable, inspectable work surfaces are safer than
+fragile in-turn delegation for multi-step work. The GitHub-native checklist
+translation keeps that idea small: a channel message can become a normal
+GitHub issue with checkbox items, but completion and follow-up stay inside
+GitHub review rather than becoming hidden provider or project-board state.
+
+GitClaw's serverless version is `@gitclaw /channels checklist --checklist-id
+<id> --message-id <id>`. It opens or reuses a normal
+`gitclaw:channel-checklist` issue with a readable title, checklist items, and
+notes, queues one provider-facing checklist link back to the source
+Slack/Telegram thread, and keeps the source receipt body-free with only hashes,
+item counts, duplicate state, delivery metadata, and explicit
+no-repository-mutation gates. The action does not call a model, mark checklist
+items done, mutate project boards, call provider APIs, print raw provider
+identifiers, or move work outside normal GitHub review. Acceptance requires
+live E2E for checklist issue creation, metadata-only checklist outbox
+discovery, duplicate suppression, no-repository-mutation flags, and a real
+GitHub Models repo-reader/search follow-up on the checklist issue.
+
+Sources: OpenClaw chat channels (`https://docs.openclaw.ai/channels/index`),
+OpenClaw sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes Kanban
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban`),
+Hermes toolsets reference (`https://hermes-agent.nousresearch.com/docs/reference/toolsets-reference`).
+
 ## 2026-06-02 Channel Workspace Proposal Follow-Up
 
 OpenClaw's channels and CLI session model point toward chat as an intake

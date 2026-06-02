@@ -465,6 +465,28 @@ func TestChannelDoneArtifactRefSupportsBoardCardIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsChecklistIssues(t *testing.T) {
+	body := RenderChannelChecklistIssueBody(ChannelChecklistOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		ChecklistID:       "checklist-done-1",
+		Title:             "Review release checklist",
+		Items:             "- Confirm release notes\n- Notify support",
+		Notes:             "Keep the checklist reviewable.",
+		SourceIssueNumber: 51,
+		SourceCommentID:   5100,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "checklist" || ref.ID != "checklist-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 51 || ref.SourceCommentID != 5100 {
+		t.Fatalf("unexpected checklist artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsIncidentIssues(t *testing.T) {
 	body := RenderChannelIncidentIssueBody(ChannelIncidentOptions{
 		Repo:              "owner/repo",
