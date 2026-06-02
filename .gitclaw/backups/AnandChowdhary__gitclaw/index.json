@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T04:43:03Z",
+  "generated_at": "2026-06-02T04:44:33Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 566,
   "issues": [
@@ -7132,15 +7132,15 @@
       "number": 655,
       "title": "GitClaw telegram thread channel-standing-order-proposal-e2e-20260602t044115z",
       "path": "issues/000655.json",
-      "backup_generated_at": "2026-06-02T04:43:02Z",
-      "event_name": "workflow_dispatch",
+      "backup_generated_at": "2026-06-02T04:44:31Z",
+      "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 2,
-      "transcript_messages": 3
+      "comment_count": 5,
+      "transcript_messages": 5
     }
   ]
 }

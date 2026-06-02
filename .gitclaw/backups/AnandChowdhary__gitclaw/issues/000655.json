@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T04:43:02Z",
+  "generated_at": "2026-06-02T04:44:31Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 655,
     "title": "GitClaw telegram thread channel-standing-order-proposal-e2e-20260602t044115z",
@@ -42,6 +42,24 @@
       "CommentID": 4598778953,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels propose-order --id standing-order-20260602t044115z --cadence weekly --message-id standing-order-proposal-ingest-20260602t044115z --notify-message-id standing-order-proposal-notify-20260602t044115z\nTitle: Weekly channel authority 20260602t044115z\n## Program: Weekly channel authority 20260602t044115z\n**Authority:** Draft a private weekly channel summary and open a GitHub issue when useful.\n**Trigger:** Weekly on Monday morning.\n**Approval gate:** Human approval before provider-visible delivery.\n**Escalation:** Stop and ask if source context is missing or ambiguous.\n\nVisible proposal body sentinel: NOECHO_CHANNEL_STANDING_ORDER_PROPOSAL_BODY_20260602t044115z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4598781263,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Standing Order Proposal Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#655`\n- source_comment_id: `4598781263`\n- requested_channel_command: `/channels propose-order`\n- channel_standing_order_proposal_status: `created`\n- standing_order_proposal_issue: `#656`\n- standing_order_proposal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/656`\n- standing_order_proposal_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#655`\n- notification_comment_id: `4598784839`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `94098e6091b4`\n- source_message_id_sha256_12: `0f445ca5a07a`\n- notify_message_id_sha256_12: `695fb1960c9f`\n- notify_message_id_auto: `false`\n- proposal_id_sha256_12: `49b8b5d01a8e`\n- proposal_id_auto: `false`\n- proposal_cadence_sha256_12: `8850eced986e`\n- proposal_cadence_bytes: `6`\n- proposal_cadence_lines: `1`\n- proposal_title_sha256_12: `12b5ca53354e`\n- proposal_title_bytes: `41`\n- proposal_title_lines: `1`\n- proposal_body_sha256_12: `af50ce363939`\n- proposal_body_bytes: `417`\n- proposal_body_lines: `7`\n- notification_body_sha256_12: `79e8f6a8640b`\n- notification_body_bytes: `448`\n- notification_body_lines: `12`\n- target_from_current_channel_issue: `true`\n- target_path_sha256_12: `bbb2b5baf9e7`\n- proposal_store: `github-issue-to-git-reviewed-standing-orders-file`\n- review_pr_required: `true`\n- model_call_performed: `false`\n- standing_order_file_written: `false`\n- schedule_created: `false`\n- repository_mutation_performed: `false`\n- raw_proposal_id_included: `false`\n- raw_proposal_cadence_included: `false`\n- raw_proposal_title_included: `false`\n- raw_proposal_body_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_standing_order_proposal_change: `true`\n- issue_title_sha256_12: `827745d855a2`\n\nGitClaw created or reused a GitHub issue for a standing-order proposal from a mirrored channel thread, then queued a provider-facing proposal link back to that thread. The proposal issue is only a review surface; this action does not call a model, edit standing orders, create schedules, or mutate the repository.\n\n### Proposal Review Path\n- continue on proposal issue: `#656`\n- ask a normal `@gitclaw` follow-up on the proposal issue to discuss scope, triggers, approval gates, escalation, and cron enforcement\n- apply accepted proposals through a normal branch and PR that edits `.gitclaw/STANDING_ORDERS.md` and any scheduled workflow prompts\n- duplicate proposal issues are suppressed by `proposal_id`; duplicate notifications are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4598784909,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -60,6 +78,30 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T04:42:38Z",
       "updated_at": "2026-06-02T04:42:38Z"
+    },
+    {
+      "id": 4598781263,
+      "body": "@gitclaw /channels propose-order --id standing-order-20260602t044115z --cadence weekly --message-id standing-order-proposal-ingest-20260602t044115z --notify-message-id standing-order-proposal-notify-20260602t044115z\nTitle: Weekly channel authority 20260602t044115z\n## Program: Weekly channel authority 20260602t044115z\n**Authority:** Draft a private weekly channel summary and open a GitHub issue when useful.\n**Trigger:** Weekly on Monday morning.\n**Approval gate:** Human approval before provider-visible delivery.\n**Escalation:** Stop and ask if source context is missing or ambiguous.\n\nVisible proposal body sentinel: NOECHO_CHANNEL_STANDING_ORDER_PROPOSAL_BODY_20260602t044115z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T04:43:12Z",
+      "updated_at": "2026-06-02T04:43:12Z"
+    },
+    {
+      "id": 4598784839,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-standing-order-proposal-e2e-20260602t044115z\" message_id=\"standing-order-proposal-notify-20260602t044115z\" author=\"gitclaw\" --\u003e\nGitClaw channel standing-order proposal created.\n\nProposal issue: #656\nURL: https://github.com/AnandChowdhary/gitclaw/issues/656\nProposal ID: standing-order-20260602t044115z\nTitle: Weekly channel authority 20260602t044115z\nCadence: weekly\nReview PR required: true\nStanding orders changed: false\nSchedule created: false\n\nContinue in the linked GitHub issue to review scope, trigger, approval gate, escalation, and any scheduled workflow enforcement.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T04:44:01Z",
+      "updated_at": "2026-06-02T04:44:01Z"
+    },
+    {
+      "id": 4598784909,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26798890608\" event_id=\"comment-4598781263\" model=\"gitclaw/channels\" idempotency_key=\"e843baedf37f3c243f1420712a0a2936\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26798890608\" --\u003e\n## GitClaw Channel Standing Order Proposal Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#655`\n- source_comment_id: `4598781263`\n- requested_channel_command: `/channels propose-order`\n- channel_standing_order_proposal_status: `created`\n- standing_order_proposal_issue: `#656`\n- standing_order_proposal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/656`\n- standing_order_proposal_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#655`\n- notification_comment_id: `4598784839`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `94098e6091b4`\n- source_message_id_sha256_12: `0f445ca5a07a`\n- notify_message_id_sha256_12: `695fb1960c9f`\n- notify_message_id_auto: `false`\n- proposal_id_sha256_12: `49b8b5d01a8e`\n- proposal_id_auto: `false`\n- proposal_cadence_sha256_12: `8850eced986e`\n- proposal_cadence_bytes: `6`\n- proposal_cadence_lines: `1`\n- proposal_title_sha256_12: `12b5ca53354e`\n- proposal_title_bytes: `41`\n- proposal_title_lines: `1`\n- proposal_body_sha256_12: `af50ce363939`\n- proposal_body_bytes: `417`\n- proposal_body_lines: `7`\n- notification_body_sha256_12: `79e8f6a8640b`\n- notification_body_bytes: `448`\n- notification_body_lines: `12`\n- target_from_current_channel_issue: `true`\n- target_path_sha256_12: `bbb2b5baf9e7`\n- proposal_store: `github-issue-to-git-reviewed-standing-orders-file`\n- review_pr_required: `true`\n- model_call_performed: `false`\n- standing_order_file_written: `false`\n- schedule_created: `false`\n- repository_mutation_performed: `false`\n- raw_proposal_id_included: `false`\n- raw_proposal_cadence_included: `false`\n- raw_proposal_title_included: `false`\n- raw_proposal_body_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_standing_order_proposal_change: `true`\n- issue_title_sha256_12: `827745d855a2`\n\nGitClaw created or reused a GitHub issue for a standing-order proposal from a mirrored channel thread, then queued a provider-facing proposal link back to that thread. The proposal issue is only a review surface; this action does not call a model, edit standing orders, create schedules, or mutate the repository.\n\n### Proposal Review Path\n- continue on proposal issue: `#656`\n- ask a normal `@gitclaw` follow-up on the proposal issue to discuss scope, triggers, approval gates, escalation, and cron enforcement\n- apply accepted proposals through a normal branch and PR that edits `.gitclaw/STANDING_ORDERS.md` and any scheduled workflow prompts\n- duplicate proposal issues are suppressed by `proposal_id`; duplicate notifications are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T04:44:02Z",
+      "updated_at": "2026-06-02T04:44:02Z"
     }
   ]
 }
