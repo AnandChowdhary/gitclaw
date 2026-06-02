@@ -1,15 +1,17 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T09:24:03Z",
+  "generated_at": "2026-06-02T09:25:55Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "issues",
+  "event_name": "issue_comment",
   "issue": {
     "number": 684,
     "title": "GitClaw channel RSVP E2E 20260602T092238Z",
     "body": "@gitclaw /channels rsvp e2e-slack-route,e2e-telegram-route --rsvp-id rsvp-20260602T092238Z --message-id rsvp-msg-20260602T092238Z\n\nTitle: Tiny channel RSVP for NOECHO_CHANNEL_RSVP_TITLE_20260602T092238Z\nWhen: 2026-06-04T15:00:00Z\nWhere: E2E room 20260602T092238Z\nHost: GitClaw E2E\nDetails:\nBring one useful question and NOECHO_CHANNEL_RSVP_DETAILS_20260602T092238Z.",
     "author": "AnandChowdhary",
     "author_association": "OWNER",
-    "labels": null
+    "labels": [
+      "gitclaw:done"
+    ]
   },
   "transcript": [
     {
@@ -29,6 +31,24 @@
       "CommentID": 4600975308,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels rsvp e2e-slack-route,e2e-telegram-route --rsvp-id rsvp-20260602T092238Z --message-id rsvp-msg-20260602T092238Z\nTitle: Do not include this duplicate token anywhere: NOECHO_CHANNEL_RSVP_DUPLICATE_20260602T092238Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4600981015,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel RSVP Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#684`\n- requested_channel_command: `/channels rsvp`\n- channel_rsvp_status: `duplicate`\n- rsvp_issue: `#685`\n- rsvp_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/685`\n- rsvp_issue_created: `false`\n- rsvp_id_sha256_12: `b9e03d06031b`\n- rsvp_id_auto: `false`\n- rsvp_title_sha256_12: `95e88c47ea52`\n- rsvp_title_bytes: `92`\n- rsvp_title_lines: `1`\n- rsvp_when_sha256_12: `e3b0c44298fc`\n- rsvp_where_sha256_12: `e3b0c44298fc`\n- rsvp_host_sha256_12: `e3b0c44298fc`\n- rsvp_details_sha256_12: `e3b0c44298fc`\n- rsvp_details_bytes: `0`\n- rsvp_details_lines: `0`\n- rsvp_source: `trailing-lines`\n- rsvp_routes: `2`\n- rsvp_invites_queued: `0`\n- rsvp_invite_duplicates: `2`\n- target_issues_created: `0`\n- routes_sha256_12: `9892046e64ef`\n- message_id_sha256_12: `f6bbb02bc82a`\n- message_id_auto: `false`\n- outbound_body_sha256_12: `2c0e76945423`\n- outbound_body_bytes: `306`\n- outbound_body_lines: `10`\n- raw_route_names_included: `false`\n- raw_rsvp_id_included: `false`\n- raw_title_included: `false`\n- raw_when_included: `false`\n- raw_where_included: `false`\n- raw_host_included: `false`\n- raw_details_included: `false`\n- raw_outbound_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_rsvp_action_change: `true`\n- issue_title_sha256_12: `ce339127a673`\n\nGitClaw created or reused a GitHub RSVP issue, then queued one provider-facing RSVP card per reviewed route. The RSVP issue contains the human-readable event details; this source receipt keeps route names, RSVP IDs, event text, thread IDs, message IDs, and outbound bodies out of band.\n\n### Destinations\n- destination=`01` target_issue=`#686` outbound_comment_id=`0` target_issue_created=`false` duplicate_suppressed=`true` route_sha256_12=`ff6bd0e4b42c` channel=`slack` thread_id_sha256_12=`6e56e4a1f4bc` message_id_sha256_12=`f6bbb02bc82a` body_sha256_12=`2c0e76945423`\n- destination=`02` target_issue=`#687` outbound_comment_id=`0` target_issue_created=`false` duplicate_suppressed=`true` route_sha256_12=`325d7a85c564` channel=`telegram` thread_id_sha256_12=`4af9257ac7de` message_id_sha256_12=`f6bbb02bc82a` body_sha256_12=`2c0e76945423`\n\n### Follow-Up Delivery\n- provider gateways read pending RSVP cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent RSVP cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate RSVP cards are suppressed independently for each route by `channel + message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4600989600,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -39,6 +59,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T09:23:37Z",
       "updated_at": "2026-06-02T09:23:37Z"
+    },
+    {
+      "id": 4600981015,
+      "body": "@gitclaw /channels rsvp e2e-slack-route,e2e-telegram-route --rsvp-id rsvp-20260602T092238Z --message-id rsvp-msg-20260602T092238Z\nTitle: Do not include this duplicate token anywhere: NOECHO_CHANNEL_RSVP_DUPLICATE_20260602T092238Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T09:24:21Z",
+      "updated_at": "2026-06-02T09:24:21Z"
+    },
+    {
+      "id": 4600989600,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26810774375\" event_id=\"comment-4600981015\" model=\"gitclaw/channels\" idempotency_key=\"ffebffa84edda565c431894e85310d62\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26810774375\" --\u003e\n## GitClaw Channel RSVP Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#684`\n- requested_channel_command: `/channels rsvp`\n- channel_rsvp_status: `duplicate`\n- rsvp_issue: `#685`\n- rsvp_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/685`\n- rsvp_issue_created: `false`\n- rsvp_id_sha256_12: `b9e03d06031b`\n- rsvp_id_auto: `false`\n- rsvp_title_sha256_12: `95e88c47ea52`\n- rsvp_title_bytes: `92`\n- rsvp_title_lines: `1`\n- rsvp_when_sha256_12: `e3b0c44298fc`\n- rsvp_where_sha256_12: `e3b0c44298fc`\n- rsvp_host_sha256_12: `e3b0c44298fc`\n- rsvp_details_sha256_12: `e3b0c44298fc`\n- rsvp_details_bytes: `0`\n- rsvp_details_lines: `0`\n- rsvp_source: `trailing-lines`\n- rsvp_routes: `2`\n- rsvp_invites_queued: `0`\n- rsvp_invite_duplicates: `2`\n- target_issues_created: `0`\n- routes_sha256_12: `9892046e64ef`\n- message_id_sha256_12: `f6bbb02bc82a`\n- message_id_auto: `false`\n- outbound_body_sha256_12: `2c0e76945423`\n- outbound_body_bytes: `306`\n- outbound_body_lines: `10`\n- raw_route_names_included: `false`\n- raw_rsvp_id_included: `false`\n- raw_title_included: `false`\n- raw_when_included: `false`\n- raw_where_included: `false`\n- raw_host_included: `false`\n- raw_details_included: `false`\n- raw_outbound_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_rsvp_action_change: `true`\n- issue_title_sha256_12: `ce339127a673`\n\nGitClaw created or reused a GitHub RSVP issue, then queued one provider-facing RSVP card per reviewed route. The RSVP issue contains the human-readable event details; this source receipt keeps route names, RSVP IDs, event text, thread IDs, message IDs, and outbound bodies out of band.\n\n### Destinations\n- destination=`01` target_issue=`#686` outbound_comment_id=`0` target_issue_created=`false` duplicate_suppressed=`true` route_sha256_12=`ff6bd0e4b42c` channel=`slack` thread_id_sha256_12=`6e56e4a1f4bc` message_id_sha256_12=`f6bbb02bc82a` body_sha256_12=`2c0e76945423`\n- destination=`02` target_issue=`#687` outbound_comment_id=`0` target_issue_created=`false` duplicate_suppressed=`true` route_sha256_12=`325d7a85c564` channel=`telegram` thread_id_sha256_12=`4af9257ac7de` message_id_sha256_12=`f6bbb02bc82a` body_sha256_12=`2c0e76945423`\n\n### Follow-Up Delivery\n- provider gateways read pending RSVP cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent RSVP cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate RSVP cards are suppressed independently for each route by `channel + message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T09:25:27Z",
+      "updated_at": "2026-06-02T09:25:27Z"
     }
   ]
 }
