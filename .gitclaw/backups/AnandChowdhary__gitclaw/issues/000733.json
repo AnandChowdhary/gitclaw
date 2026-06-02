@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T15:26:20Z",
+  "generated_at": "2026-06-02T15:28:17Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4603952669,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels tool-status --message-id tool-status-ingest-20260602t152224z --notify-message-id tool-status-notify-20260602t152224z --status-id tool-status-20260602t152224z\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_TOOL_STATUS_DUPLICATE_20260602t152224z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4603959034,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Tool Status Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#733`\n- requested_channel_command: `/channels tool-status`\n- channel_tool_status_status: `duplicate`\n- tool_snapshot_mode: `provider-facing-tool-status`\n- notification_target_issue: `#733`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `713260f4b481`\n- source_message_id_sha256_12: `56da1b2b9b3d`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `a436e2a20c2c`\n- notify_message_id_auto: `false`\n- tool_status_id_sha256_12: `0ec941bb1ff8`\n- tool_status_id_auto: `false`\n- available_tools: `5`\n- enabled_tools: `5`\n- disabled_tools: `0`\n- allowlist_blocked_tools: `0`\n- read_only_contracts: `3`\n- metadata_only_contracts: `2`\n- mutating_contracts: `0`\n- active_tool_outputs: `3`\n- known_tool_outputs: `3`\n- unknown_tool_outputs: `0`\n- toolsets_scanned: `1`\n- mcp_specs_scanned: `1`\n- snapshot_entries: `13`\n- catalog_entries: `9`\n- prompt_visible_entries: `9`\n- tool_guidance_files: `1`\n- enabled_tool_names_sha256_12: `8a71f6b5d621`\n- prompt_visible_tool_names_sha256_12: `b48fd0862220`\n- tool_output_manifest_sha256_12: `36a1b354b239`\n- tool_snapshot_sha256_12: `6eba18981696`\n- tool_validation_status: `ok`\n- tool_validation_errors: `0`\n- tool_validation_warnings: `0`\n- tool_risk_status: `ok`\n- tool_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- dynamic_mcp_discovery_allowed: `false`\n- mcp_server_launch_allowed: `false`\n- toolset_activation_supported: `false`\n- model_callable_structured_tools: `false`\n- notification_body_sha256_12: `df74a27b0607`\n- target_from_current_channel_issue: `true`\n- progressive_disclosure_enabled: `true`\n- tool_execution_performed: `false`\n- shell_execution_performed: `false`\n- mcp_server_launch_performed: `false`\n- toolset_activation_performed: `false`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_tool_status_id_included: `false`\n- raw_tool_schemas_included: `false`\n- raw_tool_inputs_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_toolset_instructions_included: `false`\n- raw_mcp_command_args_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_tool_status_action_change: `true`\n- issue_title_sha256_12: `2174f55dd202`\n\nGitClaw queued a provider-facing tool status snapshot on the canonical channel issue. This is the GitHub-native channel version of a tools-list command: it reports compact deterministic tool availability, prompt-visible counts, validation and risk totals from the current Actions checkout, but it does not execute tools, launch MCP servers, activate toolsets, call a model, mutate the repository, or call provider APIs. The source receipt keeps thread ids, message ids, status ids, raw schemas, raw tool inputs, raw tool outputs, toolset instructions, MCP command args, and channel bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the tool-status notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent tool-status notifications with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate tool-status notifications are suppressed by `channel + notify_message_id`\n- use `/channels request-tool`, `/channels approval-plan`, or `/channels rehearse-tool` when a channel message should become a reviewed tool workflow",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4603968582,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T15:25:52Z",
       "updated_at": "2026-06-02T15:25:52Z"
+    },
+    {
+      "id": 4603959034,
+      "body": "@gitclaw /channels tool-status --message-id tool-status-ingest-20260602t152224z --notify-message-id tool-status-notify-20260602t152224z --status-id tool-status-20260602t152224z\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_TOOL_STATUS_DUPLICATE_20260602t152224z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T15:26:37Z",
+      "updated_at": "2026-06-02T15:26:37Z"
+    },
+    {
+      "id": 4603968582,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26829982837\" event_id=\"comment-4603959034\" model=\"gitclaw/channels\" idempotency_key=\"0137f086fd7bde05b0b84b3cefe9a9e7\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26829982837\" --\u003e\n## GitClaw Channel Tool Status Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#733`\n- requested_channel_command: `/channels tool-status`\n- channel_tool_status_status: `duplicate`\n- tool_snapshot_mode: `provider-facing-tool-status`\n- notification_target_issue: `#733`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `713260f4b481`\n- source_message_id_sha256_12: `56da1b2b9b3d`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `a436e2a20c2c`\n- notify_message_id_auto: `false`\n- tool_status_id_sha256_12: `0ec941bb1ff8`\n- tool_status_id_auto: `false`\n- available_tools: `5`\n- enabled_tools: `5`\n- disabled_tools: `0`\n- allowlist_blocked_tools: `0`\n- read_only_contracts: `3`\n- metadata_only_contracts: `2`\n- mutating_contracts: `0`\n- active_tool_outputs: `3`\n- known_tool_outputs: `3`\n- unknown_tool_outputs: `0`\n- toolsets_scanned: `1`\n- mcp_specs_scanned: `1`\n- snapshot_entries: `13`\n- catalog_entries: `9`\n- prompt_visible_entries: `9`\n- tool_guidance_files: `1`\n- enabled_tool_names_sha256_12: `8a71f6b5d621`\n- prompt_visible_tool_names_sha256_12: `b48fd0862220`\n- tool_output_manifest_sha256_12: `36a1b354b239`\n- tool_snapshot_sha256_12: `6eba18981696`\n- tool_validation_status: `ok`\n- tool_validation_errors: `0`\n- tool_validation_warnings: `0`\n- tool_risk_status: `ok`\n- tool_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- dynamic_mcp_discovery_allowed: `false`\n- mcp_server_launch_allowed: `false`\n- toolset_activation_supported: `false`\n- model_callable_structured_tools: `false`\n- notification_body_sha256_12: `df74a27b0607`\n- target_from_current_channel_issue: `true`\n- progressive_disclosure_enabled: `true`\n- tool_execution_performed: `false`\n- shell_execution_performed: `false`\n- mcp_server_launch_performed: `false`\n- toolset_activation_performed: `false`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_tool_status_id_included: `false`\n- raw_tool_schemas_included: `false`\n- raw_tool_inputs_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_toolset_instructions_included: `false`\n- raw_mcp_command_args_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_tool_status_action_change: `true`\n- issue_title_sha256_12: `2174f55dd202`\n\nGitClaw queued a provider-facing tool status snapshot on the canonical channel issue. This is the GitHub-native channel version of a tools-list command: it reports compact deterministic tool availability, prompt-visible counts, validation and risk totals from the current Actions checkout, but it does not execute tools, launch MCP servers, activate toolsets, call a model, mutate the repository, or call provider APIs. The source receipt keeps thread ids, message ids, status ids, raw schemas, raw tool inputs, raw tool outputs, toolset instructions, MCP command args, and channel bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the tool-status notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent tool-status notifications with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate tool-status notifications are suppressed by `channel + notify_message_id`\n- use `/channels request-tool`, `/channels approval-plan`, or `/channels rehearse-tool` when a channel message should become a reviewed tool workflow",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T15:27:46Z",
+      "updated_at": "2026-06-02T15:27:46Z"
     }
   ]
 }
