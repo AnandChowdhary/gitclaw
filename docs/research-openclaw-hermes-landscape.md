@@ -237,6 +237,33 @@ Hermes MCP docs
 Hermes tool-search docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-search`).
 
+2026-06-02 channel-memory-rehearsal follow-up: OpenClaw's channel docs frame
+Slack, Telegram, and other chat providers as Gateway-backed message surfaces,
+while its context docs draw a hard boundary between current prompt context and
+stored memory. Its memory docs keep durable facts in Markdown files such as
+`MEMORY.md` and dated notes, and Hermes' persistent-memory docs make the same
+bounded-memory tradeoff explicit with curated files injected into the prompt.
+Hermes MCP and tool-search docs also reinforce the progressive-disclosure
+pressure: expose only the relevant tools and make the real tool call visible
+when it happens. GitClaw should mirror that with a channel-origin memory
+rehearsal lane: a Slack/Telegram thread can request `@gitclaw /channels
+rehearse-memory --target long-term --id <id> --message-id <id>`, GitHub opens
+or reuses a normal `gitclaw:memory-rehearsal-issue`, the channel receives a
+rehearsal link, and any real memory exercise happens only on that GitHub issue
+with normal GitHub Models prompt/tool/usage telemetry. The source channel
+receipt remains deterministic and body-free: no model call, no candidate memory,
+no `.gitclaw/` write, no raw channel body, no raw target memory body, and no
+provider delivery. Sources: OpenClaw context docs
+(`https://docs.openclaw.ai/concepts/context`), OpenClaw memory docs
+(`https://docs.openclaw.ai/concepts/memory`), OpenClaw channel docs
+(`https://docs.openclaw.ai/channels`), OpenClaw tools/plugins docs
+(`https://docs.openclaw.ai/tools/index`), Hermes persistent-memory docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/memory/`),
+Hermes MCP docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp/`), and
+Hermes tool-search docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-search`).
+
 2026-05-30 skill-risk follow-up: current OpenClaw plugin-hook docs make prompt,
 model, tool-call, and heartbeat extension points explicit, while Hermes'
 toolsets and MCP docs emphasize filtering exposed capabilities per task. Recent

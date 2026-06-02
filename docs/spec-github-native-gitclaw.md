@@ -5374,6 +5374,7 @@ accepts a structured reaction form:
 @gitclaw /channels request-run <tool-name> --id <stable-request-id> --message-id <provider-message-id>
 @gitclaw /channels rehearse-skill <skill-name> --id <stable-rehearsal-id> --message-id <provider-message-id>
 @gitclaw /channels rehearse-soul --target <soul-path> --id <stable-rehearsal-id> --message-id <provider-message-id>
+@gitclaw /channels rehearse-memory --target <memory-target> --id <stable-rehearsal-id> --message-id <provider-message-id>
 @gitclaw /channels rehearse-backup --id <stable-rehearsal-id> --message-id <provider-message-id>
 @gitclaw /channels remind --reminder-id <stable-reminder-id> --message-id <provider-message-id> --at <RFC3339-or-date>
 @gitclaw /channels done --message-id <stable-outbound-id>
@@ -5647,6 +5648,37 @@ to this surface require a live E2E that records the rehearsal, validates the
 metadata-only rehearsal-link outbox, checks duplicate suppression, and then
 continues on the rehearsal issue with a normal GitHub Models repo-reader/search
 follow-up.
+
+The same channel-thread issue can also turn a mirrored provider message into a
+current-memory rehearsal lane:
+
+```text
+@gitclaw /channels rehearse-memory --target <memory-target> --id <stable-rehearsal-id> --message-id <provider-message-id>
+```
+
+`/channels rehearse-memory`, `/channels memory-rehearse`,
+`/channels memory-rehearsal`, `/channels try-memory`,
+`/channels memory-trial`, `/channels practice-memory`,
+`/channels recall-test`, and `/channels memory-test` infer the current channel
+and thread id from the issue marker when no explicit channel/thread target is
+provided. They create or reuse one open GitHub issue carrying the existing
+`gitclaw:memory-rehearsal-issue` marker, label that issue for normal GitClaw
+conversation, and queue a provider-facing rehearsal link back to the mirrored
+channel thread. This is not a memory edit: the channel action does not call a
+model, generate candidate memory, edit `.gitclaw/` files, call provider APIs,
+or mutate the repository. The rehearsal issue stores the normalized memory
+target path, validation summary, rehearsal id, and body-free source hashes
+needed for review; the channel source receipt remains body-free, reporting only
+rehearsal/thread/message/target hashes, validation metadata, duplicate status,
+notification queue metadata, and delivery gates. It does not print raw
+rehearsal ids, raw provider thread/message ids, raw channel message bodies, raw
+target memory bodies, or candidate memory text in the source receipt.
+Duplicates are suppressed first by rehearsal id for the GitHub rehearsal issue
+and then by `channel + notify_message_id` for the provider-facing rehearsal
+link. Changes to this surface require a live E2E that records the rehearsal,
+validates the metadata-only rehearsal-link outbox, checks duplicate
+suppression, and then continues on the rehearsal issue with a normal GitHub
+Models repo-reader/search follow-up.
 
 The same channel-thread issue can also turn a mirrored provider message into a
 backup recovery rehearsal lane:
@@ -5960,6 +5992,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels request-run search_files --id channel-tool-request-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-skill repo-reader --id channel-skill-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-soul --target soul --id channel-soul-rehearsal-1 --message-id provider-msg-1
+@gitclaw /channels rehearse-memory --target long-term --id channel-memory-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-backup --id channel-backup-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels room team-alerts,ops-alerts --room-id design-room --message-id design-room-1
 @gitclaw /channels huddle team-alerts,ops-alerts --huddle-id design-room --message-id design-room-1
@@ -8526,6 +8559,17 @@ examples/workflows/gitclaw.yml
   recover the channel-soul-rehearsal fixture token, and avoid hidden channel,
   account, provider, message, rehearsal, target-body, and candidate-soul
   sentinels.
+- A `gh`-driven channel-memory-rehearsal-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels rehearse-memory --target long-term --id ... --message-id
+  ...` on that mirrored thread, verifies GitHub memory rehearsal issue
+  creation, body-free source receipt metadata, provider-facing rehearsal-link
+  queueing, duplicate rehearsal and notification suppression, and
+  metadata-only outbox discovery. The rehearsal issue then gets a normal
+  GitHub Models issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-memory-rehearsal fixture token,
+  and avoid hidden channel, account, provider, message, rehearsal,
+  target-memory-body, and candidate-memory sentinels.
 - A `gh`-driven channel-backup-rehearsal-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels rehearse-backup --id ... --message-id ...` on that

@@ -682,6 +682,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels request-run search_files --id <id> --message-id <id>
 @gitclaw /channels rehearse-skill repo-reader --id <id> --message-id <id>
 @gitclaw /channels rehearse-soul --target soul --id <id> --message-id <id>
+@gitclaw /channels rehearse-memory --target long-term --id <id> --message-id <id>
 @gitclaw /channels rehearse-backup --id <id> --message-id <id>
 @gitclaw /channels remind --reminder-id <id> --message-id <id> --at <time>
 @gitclaw /channels done --message-id <id>
@@ -953,6 +954,14 @@ generate candidate soul text, edit `.gitclaw/` files, or mutate the repository;
 the linked rehearsal issue is where a normal GitHub Models conversation can
 exercise the current high-authority context with prompt/tool/usage telemetry.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+rehearse-memory --target <target> --id <id> --message-id <id>` opens or reuses
+a normal GitHub memory rehearsal issue and queues a provider-facing rehearsal
+link back to the Slack/Telegram thread. The channel action does not call a
+model, generate candidate memory, edit `.gitclaw/` files, or mutate the
+repository; the linked rehearsal issue is where a normal GitHub Models
+conversation can exercise current prompt-visible memory with prompt/tool/usage
+telemetry.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 rehearse-backup --id <id> --message-id <id>` opens or reuses a normal GitHub
 backup recovery rehearsal issue and queues a provider-facing rehearsal link
 back to the Slack/Telegram thread. The channel action does not call a model,
@@ -1219,6 +1228,7 @@ scripts/e2e/github-channel-digest-slash.sh
 scripts/e2e/github-channel-tool-run-request-slash.sh
 scripts/e2e/github-channel-skill-rehearsal-slash.sh
 scripts/e2e/github-channel-soul-rehearsal-slash.sh
+scripts/e2e/github-channel-memory-rehearsal-slash.sh
 scripts/e2e/github-channel-reminder-slash.sh
 scripts/e2e/github-channel-done-slash.sh
 scripts/e2e/github-channel-delivery-workflow.sh
@@ -1526,6 +1536,13 @@ issue, queues a provider-facing rehearsal link back to the mirrored thread,
 checks duplicate rehearsal and notification suppression, exposes the
 rehearsal-link notification through metadata-only outbox, and then continues on
 the rehearsal issue with a real GitHub Models repo-reader/search follow-up.
+The channel-memory-rehearsal slash harness turns the operator console into a
+memory practice surface: a channel-ingested issue receives `@gitclaw /channels
+rehearse-memory`, creates or reuses a GitHub memory rehearsal issue, queues a
+provider-facing rehearsal link back to the mirrored thread, checks duplicate
+rehearsal and notification suppression, exposes the rehearsal-link notification
+through metadata-only outbox, and then continues on the rehearsal issue with a
+real GitHub Models repo-reader/search follow-up.
 The channel-backup-rehearsal slash harness turns the operator console into a
 recovery practice surface: a channel-ingested issue receives `@gitclaw
 /channels rehearse-backup`, creates or reuses a GitHub backup rehearsal issue,
