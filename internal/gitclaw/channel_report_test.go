@@ -22,6 +22,7 @@ func TestRenderChannelListReportCarriesDedicatedE2EMarker(t *testing.T) {
 		"GitClaw Channel Report",
 		"llm_e2e_required_after_channel_report_change: `true`",
 		"llm_e2e_required_after_channel_list_change: `true`",
+		"`/channels propose-prompt --prompt-id <id> --message-id <message>`",
 		"issue_title_sha256_12:",
 	} {
 		if !strings.Contains(report, want) {
