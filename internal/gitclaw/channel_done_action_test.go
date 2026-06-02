@@ -350,6 +350,28 @@ func TestChannelDoneArtifactRefSupportsIdeaIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsIncidentIssues(t *testing.T) {
+	body := RenderChannelIncidentIssueBody(ChannelIncidentOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		IncidentID:        "incident-done-1",
+		Severity:          "sev1",
+		Title:             "Production bot channel is not receiving messages",
+		Notes:             "Keep triage and resolution notes in GitHub.",
+		SourceIssueNumber: 46,
+		SourceCommentID:   4600,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "incident" || ref.ID != "incident-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 46 || ref.SourceCommentID != 4600 {
+		t.Fatalf("unexpected incident artifact ref: %#v", ref)
+	}
+}
+
 func channelDoneQuoteJSON(t *testing.T, value string) string {
 	t.Helper()
 	quoted, err := json.Marshal(value)

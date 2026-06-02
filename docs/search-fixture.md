@@ -113,6 +113,7 @@ channel attachment unique search fixture phrase => GITCLAW_CHANNEL_ATTACHMENT_CO
 channel decision unique search fixture phrase => GITCLAW_CHANNEL_DECISION_CONTEXT_V1
 channel digest unique search fixture phrase => GITCLAW_CHANNEL_DIGEST_CONTEXT_V1
 channel idea unique search fixture phrase => GITCLAW_CHANNEL_IDEA_CONTEXT_V1
+channel incident unique search fixture phrase => GITCLAW_CHANNEL_INCIDENT_CONTEXT_V1
 channel tool request unique search fixture phrase => GITCLAW_CHANNEL_TOOL_REQUEST_CONTEXT_V1
 channel tool rehearsal unique search fixture phrase => GITCLAW_CHANNEL_TOOL_REHEARSAL_CONTEXT_V1
 channel skill rehearsal unique search fixture phrase => GITCLAW_CHANNEL_SKILL_REHEARSAL_CONTEXT_V1

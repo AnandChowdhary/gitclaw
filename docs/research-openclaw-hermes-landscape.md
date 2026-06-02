@@ -173,6 +173,25 @@ OpenClaw skills docs
 Hermes checkpoint/rollback docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback`).
 
+2026-06-02 channel-incident follow-up: OpenClaw's channel/session docs treat
+chat surfaces as live entry points while keeping session stores bounded, and
+its cron/task docs make recurring or high-priority work explicit control-plane
+state rather than invisible chat side effects. Hermes' messaging and
+checkpoint/rollback docs reinforce the same split: route messages through a
+gateway, but keep risky operational changes previewable and auditable before
+mutation. GitClaw's serverless translation is `@gitclaw /channels incident
+--incident-id <id> --severity <severity> --message-id <id>`: open or reuse a
+normal GitHub incident issue with readable severity/title/notes, queue one
+provider-facing incident link to the source Slack/Telegram thread, and require
+triage or resolution to continue through normal GitHub Models/tool turns. The
+source receipt remains body-free with only hashes, duplicate state, and outbox
+metadata. Sources: OpenClaw sessions docs (`https://docs.openclaw.ai/cli/sessions`),
+OpenClaw channel docs (`https://docs.openclaw.ai/cli/channels`), OpenClaw cron
+docs (`https://openclawlab.com/en/docs/automation/cron-jobs/`), Hermes
+messaging docs (`https://hermes-agent.nousresearch.com/docs/user-guide/messaging/`),
+and Hermes checkpoint/rollback docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback`).
+
 2026-06-02 channel-tool-request follow-up: OpenClaw's tool and skill docs keep
 capabilities explicit while channels provide the live chat surface, and Hermes'
 toolsets/MCP model narrows tool exposure per task instead of giving every

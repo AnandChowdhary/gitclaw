@@ -5376,6 +5376,7 @@ accepts a structured reaction form:
 @gitclaw /channels decision --decision-id <stable-decision-id> --message-id <provider-message-id>
 @gitclaw /channels digest --digest-id <stable-digest-id> --message-id <provider-message-id>
 @gitclaw /channels idea --idea-id <stable-idea-id> --message-id <provider-message-id>
+@gitclaw /channels incident --incident-id <stable-incident-id> --severity <severity> --message-id <provider-message-id>
 @gitclaw /channels handoff --id <stable-handoff-id> --message-id <provider-message-id>
 @gitclaw /channels request-run <tool-name> --id <stable-request-id> --message-id <provider-message-id>
 @gitclaw /channels approval-plan <tool-name> --id <stable-approval-plan-id> --message-id <provider-message-id>
@@ -5732,6 +5733,37 @@ idea link. Changes to this surface require a live E2E that captures the idea,
 validates the metadata-only idea-link outbox, checks duplicate suppression, and
 then continues on the idea issue with a normal GitHub Models repo-reader/search
 follow-up.
+
+The same channel-thread issue can also capture an incident or escalation:
+
+```text
+@gitclaw /channels incident --incident-id <stable-incident-id> --severity <severity> --message-id <provider-message-id>
+Incident: short incident title
+Notes:
+optional human-readable triage notes
+```
+
+`/channels incident`, `/channels escalate`, `/channels escalation`,
+`/channels outage`, `/channels page`, `/channels alert`, `/channels sev`, and
+`/channels triage-incident` infer the current channel and thread id from the
+issue marker when no explicit route/channel/thread target is provided. They
+create or reuse one open GitHub issue carrying a hidden
+`gitclaw:channel-incident` marker for the stable incident id, label it with
+`gitclaw` so normal conversation can continue there, and queue a
+provider-facing incident link back to the mirrored channel thread. The incident
+issue contains the human-readable severity, title, and notes because it is the
+reviewable triage and resolution surface; the source receipt remains body-free,
+reporting only incident/thread/message/severity/title/note hashes, duplicate
+status, notification queue metadata, and delivery gates. It does not call a
+model, call provider APIs, print raw incident ids, print raw severity values,
+print raw thread ids, print raw source or notification message ids, print
+channel message bodies, or print raw titles/notes in the source receipt.
+Duplicates are suppressed first by `incident_id` for the GitHub incident issue
+and then by `channel + notify_message_id` for the provider-facing incident
+link. Changes to this surface require a live E2E that captures the incident,
+validates the metadata-only incident-link outbox, checks duplicate suppression,
+and then continues on the incident issue with a normal GitHub Models
+repo-reader/search follow-up.
 
 The same channel-thread issue can also fork the mirrored conversation into a
 normal GitHub session lane:
@@ -6184,7 +6216,8 @@ and then continues on the reminder issue with a normal GitHub Models
 repo-reader/search follow-up.
 
 The channel-created task, watch, standing-order proposal, backup restore
-request, checkpoint rehearsal, clip, attachment, decision, digest, idea, and reminder
+request, checkpoint rehearsal, clip, attachment, decision, digest, idea,
+incident, and reminder
 issues also accept a completion form:
 
 ```text
@@ -6245,6 +6278,9 @@ Behavior:
   `channel + notify_message_id`,
 - create or reuse one `gitclaw:channel-idea` issue per idea id and queue one
   provider-facing idea-link outbound comment per `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-incident` issue per incident id and
+  queue one provider-facing incident-link outbound comment per
+  `channel + notify_message_id`,
 - create or reuse one `gitclaw:tool-run-request-issue` issue per channel
   request id and queue one provider-facing review-link outbound comment per
   `channel + notify_message_id` without executing a model or tool,
@@ -6461,6 +6497,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels decision --decision-id channel-decision-1 --message-id provider-msg-1
 @gitclaw /channels digest --digest-id channel-digest-1 --message-id provider-msg-1
 @gitclaw /channels idea --idea-id channel-idea-1 --message-id provider-msg-1
+@gitclaw /channels incident --incident-id channel-incident-1 --severity sev2 --message-id provider-msg-1
 @gitclaw /channels request-run search_files --id channel-tool-request-1 --message-id provider-msg-1
 @gitclaw /channels approval-plan search_files --id channel-tool-approval-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-tool search_files --id channel-tool-rehearsal-1 --message-id provider-msg-1
@@ -9059,6 +9096,16 @@ examples/workflows/gitclaw.yml
   normal GitHub Models issue-comment follow-up that must select `repo-reader`,
   expose `gitclaw.search_files`, recover the channel-idea fixture token, and
   avoid hidden channel, account, provider, message, and idea sentinels.
+- A `gh`-driven channel-incident-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels incident --incident-id ... --severity ... --message-id
+  ...` on that mirrored thread, verifies GitHub incident issue creation,
+  body-free source receipt metadata, provider-facing incident-link queueing,
+  duplicate incident and notification suppression, and metadata-only outbox
+  discovery. The incident issue then gets a normal GitHub Models issue-comment
+  follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
+  recover the channel-incident fixture token, and avoid hidden channel,
+  account, provider, message, severity, and incident sentinels.
 - A `gh`-driven channel-tool-run-request-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels request-run search_files --id ... --message-id ...` on
