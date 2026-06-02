@@ -669,6 +669,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels room e2e-slack-route,e2e-telegram-route --room-id <id> --message-id <id>
 @gitclaw /channels huddle e2e-slack-route,e2e-telegram-route --huddle-id <id> --message-id <id>
 @gitclaw /channels poll e2e-slack-route,e2e-telegram-route --poll-id <id> --message-id <id>
+@gitclaw /channels poll-vote --poll-id <id> --message-id <id> --notify-message-id <id> --choice 1
 @gitclaw /channels rollcall e2e-slack-route,e2e-telegram-route --rollcall-id <id> --message-id <id>
 @gitclaw /channels rsvp e2e-slack-route,e2e-telegram-route --rsvp-id <id> --message-id <id>
 @gitclaw /channels rsvp-response --rsvp-id <id> --message-id <id> --notify-message-id <id> --response yes
@@ -902,6 +903,13 @@ issue, writes the question and options there, labels it for normal GitClaw
 conversation, and queues provider-facing poll invites through reviewed routes.
 The source receipt stays body-free and reports only hashes, counts, issue
 numbers, and duplicate status.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+poll-vote --poll-id <id> --message-id <id> --notify-message-id <id> --choice
+1` records a channel-origin vote on the GitHub poll issue, resolves option
+numbers to poll option text, and queues a provider-facing acknowledgement back
+to the same channel thread. Duplicate votes are suppressed by
+`poll_id + vote_id`; duplicate acknowledgements are suppressed by
+`channel + notify_message_id`.
 `@gitclaw /channels rollcall <route-a>,<route-b> --rollcall-id <id>
 --message-id <id>` creates or reuses a dedicated GitHub check-in issue, writes
 the prompt and instructions there, labels it for normal GitClaw conversation,
@@ -1674,6 +1682,11 @@ labels it for normal GitClaw conversation, invites multiple reviewed routes
 through the provider queue, checks duplicate poll suppression, keeps question
 and option text out of the source receipt, and then continues on the poll issue
 with a real GitHub Models repo-reader/search follow-up.
+The channel-poll-vote slash harness creates a real GitHub poll, replies from a
+routed mirrored channel issue with a channel-origin vote, checks duplicate vote
+suppression, keeps choice/voter/note text out of the source receipt, verifies
+metadata-only outbox discovery, and then continues on the poll issue with a
+real GitHub Models repo-reader/search follow-up.
 The channel-rollcall slash harness creates or reuses a dedicated GitHub
 rollcall issue, labels it for normal GitClaw conversation, invites multiple
 reviewed routes through the provider queue, checks duplicate check-in prompt

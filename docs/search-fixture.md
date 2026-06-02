@@ -102,6 +102,7 @@ channel invite unique search fixture phrase => GITCLAW_CHANNEL_INVITE_CONTEXT_V1
 channel room unique search fixture phrase => GITCLAW_CHANNEL_ROOM_CONTEXT_V1
 channel huddle unique search fixture phrase => GITCLAW_CHANNEL_HUDDLE_CONTEXT_V1
 channel poll unique search fixture phrase => GITCLAW_CHANNEL_POLL_CONTEXT_V1
+channel poll vote unique search fixture phrase => GITCLAW_CHANNEL_POLL_VOTE_CONTEXT_V1
 channel rollcall unique search fixture phrase => GITCLAW_CHANNEL_ROLLCALL_CONTEXT_V1
 channel rsvp unique search fixture phrase => GITCLAW_CHANNEL_RSVP_CONTEXT_V1
 channel rsvp response unique search fixture phrase => GITCLAW_CHANNEL_RSVP_RESPONSE_CONTEXT_V1

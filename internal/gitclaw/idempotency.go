@@ -23,6 +23,7 @@ var channelThreadMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-thre
 var channelRoomMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-room\s+([^>]*)-->`)
 var channelHuddleMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-huddle\s+([^>]*)-->`)
 var channelPollMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-poll\s+([^>]*)-->`)
+var channelPollVoteMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-poll-vote\s+([^>]*)-->`)
 var channelRollcallMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-rollcall\s+([^>]*)-->`)
 var channelRsvpMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-rsvp\s+([^>]*)-->`)
 var channelRsvpResponseMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-rsvp-response\s+([^>]*)-->`)
@@ -211,6 +212,10 @@ func HasChannelHuddleMarker(body string) bool {
 
 func HasChannelPollMarker(body string) bool {
 	return channelPollMarkerPattern.MatchString(body)
+}
+
+func HasChannelPollVoteMarker(body string) bool {
+	return channelPollVoteMarkerPattern.MatchString(body)
 }
 
 func HasChannelRollcallMarker(body string) bool {

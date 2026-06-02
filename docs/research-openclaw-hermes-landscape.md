@@ -3722,6 +3722,15 @@ must include a live E2E that verifies poll creation, route invite queues,
 duplicate suppression, metadata-only outbox discovery, and a real GitHub Models
 repo-reader/search follow-up on the poll issue itself.
 
+The inbound counterpart is `@gitclaw /channels poll-vote --poll-id <id>
+--message-id <provider-vote-id> --notify-message-id <ack-id> --choice 1` from a
+mirrored `gitclaw:channel-thread` issue. It resolves numbered choices against
+the GitHub poll issue, records a `gitclaw:channel-poll-vote` comment with the
+human-readable vote, and queues a provider-facing acknowledgement through the
+same outbox/delivery path. This preserves the OpenClaw/Hermes feel of letting
+people answer in Slack or Telegram while GitHub remains the canonical decision
+room and duplicate-safe audit trail.
+
 2026-06-01 channel reaction follow-up: channels should also support tiny
 acknowledgements, not only full replies, huddles, polls, and reports. OpenClaw's
 channel model keeps provider-specific send semantics in gateways, while Hermes'

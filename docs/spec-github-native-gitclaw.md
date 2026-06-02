@@ -5328,6 +5328,32 @@ invitation. Changes to this surface require a live E2E that creates the poll,
 validates queued route invites and body-free receipts, and then continues on
 the poll issue with a normal GitHub Models repo-reader/search follow-up.
 
+To let channel participants vote without switching surfaces, a mirrored
+`gitclaw:channel-thread` can also post:
+
+```text
+@gitclaw /channels poll-vote --poll-id <stable-poll-id> --message-id <stable-inbound-id> --notify-message-id <stable-ack-id> --choice 1
+Voter: Optional participant name
+Note:
+Optional private vote note
+```
+
+`/channels poll-vote`, `/channels vote-response`, `/channels cast-vote`,
+`/channels poll-answer`, and `/channels poll-response` find the open
+`gitclaw:channel-poll` issue by stable poll id, resolve numeric choices against
+the poll's numbered options, record one human-readable
+`gitclaw:channel-poll-vote` comment on that issue, and queue a short
+provider-facing acknowledgement back to the mirrored channel thread. The source
+receipt remains body-free: it reports only the poll issue number/URL, vote
+comment id, choice/voter/note hashes and byte counts, notification target and
+comment ids, duplicate status, and delivery instructions. The poll vote record
+is deduped by `poll_id + vote_id`; the provider acknowledgement is deduped by
+`channel + notify_message_id`. Changes to this surface require a live E2E that
+creates a poll, votes from a real routed channel issue, verifies the vote
+comment and queued acknowledgement, verifies duplicate suppression, and then
+continues on the poll issue with a real GitHub Models repo-reader/search
+follow-up.
+
 For lightweight status checks that should collect responses where participants
 already are, GitClaw also supports:
 
@@ -9255,6 +9281,16 @@ examples/workflows/gitclaw.yml
   follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
   recover the channel-poll fixture token, and avoid hidden route/account/channel
   sentinels.
+- A `gh`-driven channel-poll-vote-slash E2E harness creates a real GitHub poll
+  with routebook-backed channel targets, replies from one target issue with
+  `@gitclaw /channels poll-vote ...`, verifies the poll vote comment,
+  provider-facing acknowledgement outbox item, body-free source receipt
+  metadata, duplicate vote suppression from a later issue comment with the same
+  vote and acknowledgement ids, and metadata-only outbox discovery for the
+  acknowledgement. The poll issue then gets a normal GitHub Models issue-comment
+  follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
+  recover the channel-poll-vote fixture token, and avoid hidden
+  route/account/channel sentinels.
 - A `gh`-driven channel-rollcall-slash E2E harness creates an ordinary GitHub
   issue with `@gitclaw /channels rollcall ...`, verifies a labeled GitHub
   rollcall issue, routebook-backed check-in invitations on each target channel
