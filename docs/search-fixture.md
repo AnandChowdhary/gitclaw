@@ -92,6 +92,7 @@ channels info unique search fixture phrase => GITCLAW_CHANNELS_INFO_CONTEXT_V1
 channels report unique search fixture phrase => GITCLAW_CHANNELS_REPORT_CONTEXT_V1
 channels list unique search fixture phrase => GITCLAW_CHANNELS_LIST_CONTEXT_V1
 channels verify unique search fixture phrase => GITCLAW_CHANNELS_VERIFY_CONTEXT_V1
+channel backup info unique search fixture phrase => GITCLAW_CHANNEL_BACKUP_INFO_CONTEXT_V1
 security audit unique search fixture phrase => GITCLAW_SECURITY_AUDIT_CONTEXT_V1
 channel send unique search fixture phrase => GITCLAW_CHANNEL_SEND_CONTEXT_V1
 channel send route unique search fixture phrase => GITCLAW_CHANNEL_SEND_ROUTE_CONTEXT_V1

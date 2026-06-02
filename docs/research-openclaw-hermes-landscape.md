@@ -142,6 +142,28 @@ OpenClaw docs (`https://docs.openclaw.ai/`), OpenClaw sessions docs
 and Hermes features/memory docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/overview`).
 
+2026-06-02 channel-backup-info follow-up: OpenClaw's backup surface treats
+archives as manifest-backed recovery artifacts, while its channels/sessions
+surface keeps conversational delivery separate from restore operations. Hermes'
+feature docs reinforce that pattern through progressive disclosure: search or
+inspect stored state first, then make explicit recovery/checkpoint actions
+separate. GitClaw's serverless cut should therefore make `@gitclaw /channels
+backup-info <issue> --message-id <id> --notify-message-id <id>` a focused
+archive metadata card, not a restore. In Actions, the handler can fetch
+`gitclaw-backups` read-only into a temporary worktree when `.gitclaw/backups`
+is absent, run the existing body-free single-issue backup inspector, queue one
+provider-facing card through `channel-outbox`, and leave a source receipt with
+only hashes, counts, backup-relative metadata, and delivery gates. It should
+not call a model, execute tools, write the backup branch, restore files,
+replay GitHub APIs, or expose raw channel, issue, label, comment, transcript,
+prompt, or tool-output bodies. Sources: OpenClaw docs
+(`https://docs.openclaw.ai/`), OpenClaw backup docs
+(`https://openclawlab.com/en/docs/cli/backup/`), OpenClaw channel docs
+(`https://docs.openclaw.ai/cli/channels`), Hermes checkpoint docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback`),
+and Hermes features/memory docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/overview`).
+
 2026-06-02 channel-memory-search follow-up: OpenClaw's memory and session
 surfaces suggest a useful middle layer between live session recall and archive
 restore: search durable memory directly when the user asks from the chat

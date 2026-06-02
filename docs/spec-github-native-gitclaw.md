@@ -5570,6 +5570,48 @@ a backup-search notification, validates metadata-only outbox discovery,
 verifies duplicate suppression, and then continues on the same GitHub issue
 with a real GitHub Models repo-reader/search follow-up.
 
+For channel-native recovery inspection that should describe one archived issue
+without restoring it, GitClaw also supports:
+
+```text
+@gitclaw /channels backup-info #123 --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
+```
+
+`/channels backup-info`, `/channels backups-info`,
+`/channels backup-describe`, `/channels describe-backup`,
+`/channels backup-card`, `/channels recovery-info`, and
+`/channels archive-info` infer the current channel and thread id from the issue
+marker when no explicit route/channel thread target is provided. They inspect
+one issue payload from the repo's `gitclaw-backups` archive with the same
+body-free single-issue metadata path as `gitclaw backup info`. In a GitHub
+Actions handler job, the local checkout normally does not contain
+`.gitclaw/backups`; the action must therefore fetch `gitclaw-backups`
+read-only into a temporary git worktree, inspect that fetched backup root, and
+clean it up before exit. If local backups are present, the action may use them
+without fetching. It must never write the backup branch, restore files, replay
+GitHub API calls, call provider APIs, mutate repository files, execute tools,
+or call a model.
+
+The provider-facing outbound comment reports only backup/info status, backup
+verify status, backup fetch status, backup branch, issue number,
+backup-relative issue path, generated timestamp, event name, schema version,
+verification failures, payload size/hash, label count/hash, comment count,
+transcript/user/assistant/error counts, body hash counts, info id hash, and
+duplicate status. The source receipt stays stricter: it records target
+issue/comment ids, route/thread/message hashes, info id hash, backup issue
+number hash, backup root/path hashes, count/hash metadata, outbox delivery
+instructions, and safety gates. It does not print raw backup issue numbers,
+raw provider thread/message ids, raw info ids, raw backup roots, raw backup
+paths, raw label names, raw backup payloads, raw channel message bodies, raw
+issue titles, raw issue bodies, raw comment bodies, raw transcript bodies,
+prompts, or tool outputs. Duplicates are suppressed by
+`channel + notify_message_id`. Changes to this surface require a live E2E that
+ingests a real channel issue, waits until that issue is present on the real
+`gitclaw-backups` branch, queues a backup-info notification, validates
+metadata-only outbox discovery, verifies duplicate suppression, and then
+continues on the same GitHub issue with a real GitHub Models repo-reader/search
+follow-up.
+
 For event invites that should collect yes/no/maybe responses where
 participants already are, GitClaw also supports:
 
@@ -7834,6 +7876,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels rehearse-memory --target long-term --id channel-memory-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels backup --message-id provider-msg-1
 @gitclaw /channels backup-search deployment --message-id provider-msg-1 --notify-message-id provider-backup-search-ack-1
+@gitclaw /channels backup-info #123 --message-id provider-msg-1 --notify-message-id provider-backup-info-ack-1
 @gitclaw /channels profile-status --message-id provider-msg-1
 @gitclaw /channels soul-status --message-id provider-msg-1
 @gitclaw /channels memory-status --message-id provider-msg-1
@@ -10042,6 +10085,12 @@ MVP is not complete until:
   `/channels backup-search` turn queues only body-free archive recall metadata
   through channel outbox, suppresses duplicate notifications, and proves a
   normal model-backed repo-reader/search follow-up on the same channel issue,
+- the channel backup-info harness verifies a real channel-ingested issue is
+  first present on the fetched `gitclaw-backups` branch, then a
+  `/channels backup-info` turn queues one focused archive metadata card through
+  channel outbox, keeps the source receipt free of raw backup issue numbers and
+  paths, suppresses duplicate notifications, and proves a normal model-backed
+  repo-reader/search follow-up on the same channel issue,
 - the channel memory-search harness verifies a real channel-ingested issue can
   run `/channels memory-search`, queue only body-free durable-memory recall
   metadata through channel outbox, keep the source receipt free of raw memory
@@ -10939,6 +10988,20 @@ examples/workflows/gitclaw.yml
   `gitclaw.search_files`, recover the channel-backup-status fixture token, and
   avoid hidden channel, account, provider, message, status, backup-doc, path,
   source-body, and backup sentinels.
+- A `gh`-driven channel-backup-info-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, waits until that
+  issue exists on the real `gitclaw-backups` branch, posts
+  `@gitclaw /channels backup-info --issue ... --message-id ...
+  --notify-message-id ...` on that mirrored thread, verifies one
+  provider-facing focused backup metadata card, source receipt metadata without
+  raw backup issue numbers, backup paths, raw ids, titles, labels, bodies, or
+  transcript text, duplicate notification suppression, metadata-only outbox
+  discovery, and explicit no-model-call/no-backup-branch-write/no-restore/
+  no-GitHub-API-replay/no-repository-mutation/no-provider-API flags. The
+  channel-thread issue then gets a normal GitHub Models issue-comment follow-up
+  that must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-backup-info fixture token, and avoid hidden channel, account,
+  message, info, backup path, source-body, and archive sentinels.
 - A `gh`-driven channel-backup-rehearsal-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels rehearse-backup --id ... --message-id ...` on that
