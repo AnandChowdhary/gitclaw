@@ -421,6 +421,28 @@ func TestChannelDoneArtifactRefSupportsImageIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsLinkIssues(t *testing.T) {
+	body := RenderChannelLinkIssueBody(ChannelLinkOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		LinkID:            "link-done-1",
+		LinkURL:           "https://example.invalid/link-done-secret",
+		Title:             "Visible link card",
+		Notes:             "Durable link context.",
+		SourceIssueNumber: 49,
+		SourceCommentID:   4900,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "link" || ref.ID != "link-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 49 || ref.SourceCommentID != 4900 {
+		t.Fatalf("unexpected link artifact ref: %#v", ref)
+	}
+}
+
 func channelDoneQuoteJSON(t *testing.T, value string) string {
 	t.Helper()
 	quoted, err := json.Marshal(value)

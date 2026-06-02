@@ -5379,6 +5379,7 @@ accepts a structured reaction form:
 @gitclaw /channels incident --incident-id <stable-incident-id> --severity <severity> --message-id <provider-message-id>
 @gitclaw /channels voice --voice-id <stable-voice-id> --duration <seconds> --message-id <provider-message-id>
 @gitclaw /channels image --image-id <stable-image-id> --width <px> --height <px> --message-id <provider-message-id>
+@gitclaw /channels link --link-id <stable-link-id> --url <url> --message-id <provider-message-id>
 @gitclaw /channels handoff --id <stable-handoff-id> --message-id <provider-message-id>
 @gitclaw /channels request-run <tool-name> --id <stable-request-id> --message-id <provider-message-id>
 @gitclaw /channels approval-plan <tool-name> --id <stable-approval-plan-id> --message-id <provider-message-id>
@@ -5831,6 +5832,37 @@ Changes to this surface require a live E2E that captures the image note,
 validates the metadata-only image-link outbox, checks duplicate suppression,
 verifies image URL/material does not leak into receipts, and then continues on
 the image issue with a normal GitHub Models repo-reader/search follow-up.
+
+The same channel-thread issue can also capture a link card:
+
+```text
+@gitclaw /channels link --link-id <stable-link-id> --url <url> --message-id <provider-message-id>
+Link: short link-card title
+Notes:
+optional human-readable follow-up context
+```
+
+`/channels link`, `/channels url`, `/channels link-card`,
+`/channels reference`, and `/channels ref` infer the current channel and
+thread id from the issue marker when no explicit route/channel/thread target
+is provided. They create or reuse one open GitHub issue carrying a hidden
+`gitclaw:channel-link` marker for the stable link id, label it with `gitclaw`
+so normal conversation can continue there, and queue a provider-facing
+link-card issue link back to the mirrored channel thread. The link-card issue
+contains the human-readable title and notes plus the URL hash because it is the
+reviewable, searchable follow-up surface; the source receipt remains
+body-free, reporting only link/thread/message/title/note/URL hashes, duplicate
+status, notification queue metadata, and delivery gates. It does not call a
+model, call provider APIs, fetch URLs, expand redirects, scrape pages, print
+raw link ids, print raw thread ids, print raw source or notification message
+ids, print raw URLs, print channel message bodies, or print raw titles/notes
+in the source receipt. Duplicates are suppressed first by `link_id` for the
+GitHub link-card issue and then by `channel + notify_message_id` for the
+provider-facing link-card notification. Changes to this surface require a live
+E2E that captures the link card, validates the metadata-only link-card outbox,
+checks duplicate suppression, verifies raw URLs do not leak into receipts, and
+then continues on the link-card issue with a normal GitHub Models
+repo-reader/search follow-up.
 
 The same channel-thread issue can also fork the mirrored conversation into a
 normal GitHub session lane:
@@ -6352,6 +6384,8 @@ Behavior:
   provider-facing voice-note outbound comment per `channel + notify_message_id`,
 - create or reuse one `gitclaw:channel-image` issue per image id and queue one
   provider-facing image-note outbound comment per `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-link` issue per link id and queue one
+  provider-facing link-card outbound comment per `channel + notify_message_id`,
 - create or reuse one `gitclaw:tool-run-request-issue` issue per channel
   request id and queue one provider-facing review-link outbound comment per
   `channel + notify_message_id` without executing a model or tool,
@@ -6383,7 +6417,8 @@ Behavior:
   `gitclaw:channel-attachment`, `gitclaw:channel-decision`,
   `gitclaw:channel-digest`, `gitclaw:channel-idea`,
   `gitclaw:channel-incident`, `gitclaw:channel-voice`,
-  `gitclaw:channel-image`, or `gitclaw:channel-reminder` issue and queue one
+  `gitclaw:channel-image`, `gitclaw:channel-link`, or
+  `gitclaw:channel-reminder` issue and queue one
   provider-facing done acknowledgement per `channel + notify_message_id`,
 - suppress duplicate outbound message IDs,
 - for issue-native `/channels send`, post a `model="gitclaw/channels"`
@@ -6573,6 +6608,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels incident --incident-id channel-incident-1 --severity sev2 --message-id provider-msg-1
 @gitclaw /channels voice --voice-id channel-voice-1 --duration 47 --message-id provider-msg-1
 @gitclaw /channels image --image-id channel-image-1 --width 1280 --height 720 --message-id provider-msg-1
+@gitclaw /channels link --link-id channel-link-1 --url https://example.invalid/link --message-id provider-msg-1
 @gitclaw /channels request-run search_files --id channel-tool-request-1 --message-id provider-msg-1
 @gitclaw /channels approval-plan search_files --id channel-tool-approval-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-tool search_files --id channel-tool-rehearsal-1 --message-id provider-msg-1
@@ -9201,6 +9237,16 @@ examples/workflows/gitclaw.yml
   `repo-reader`, expose `gitclaw.search_files`, recover the channel-image
   fixture token, and avoid hidden channel, account, provider, message, media,
   description, and image sentinels.
+- A `gh`-driven channel-link-slash E2E harness creates a real channel-thread
+  issue through `gitclaw-channel-ingest.yml`, posts `@gitclaw /channels link
+  --link-id ... --url ... --message-id ...` on that mirrored thread, verifies
+  GitHub link-card issue creation, body-free source receipt metadata,
+  provider-facing link-card queueing, duplicate link and notification
+  suppression, and metadata-only outbox discovery. The link-card issue then
+  gets a normal GitHub Models issue-comment follow-up that must select
+  `repo-reader`, expose `gitclaw.search_files`, recover the channel-link
+  fixture token, and avoid hidden channel, account, provider, message, URL,
+  notes, and link sentinels.
 - A `gh`-driven channel-tool-run-request-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels request-run search_files --id ... --message-id ...` on

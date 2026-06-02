@@ -4602,6 +4602,31 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-02 Channel Link Card Follow-Up
+
+OpenClaw's gateway framing treats user conversations as the primary control
+surface and keeps provider transport details behind one assistant interface.
+Hermes' messaging guide reinforces that split with normalized chat sessions,
+platform adapters, media/reaction support, and chat-to-agent session routing.
+The useful GitClaw translation is to treat a link shared in Slack or Telegram
+as channel-native context that deserves its own GitHub issue, while keeping URL
+fetching, unfurling, and provider-specific delivery out of the core handler.
+
+GitClaw's serverless version is `@gitclaw /channels link --link-id <id> --url
+<url> --message-id <id>`. It opens or reuses a normal
+`gitclaw:channel-link` issue with a readable title and notes plus URL hashes,
+queues one provider-facing link-card issue link to the source Slack/Telegram
+thread, and keeps the source receipt body-free with only title/note/URL
+hashes, duplicate status, and delivery gates. The action does not call a model,
+fetch or scrape URLs, expand redirects, call provider APIs, print raw URLs in
+receipts, or mutate the repository. Acceptance requires live E2E for link-card
+issue creation, metadata-only link-card outbox discovery, duplicate
+suppression, and a real GitHub Models repo-reader/search follow-up on the link
+issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-02 Channel Image Note Follow-Up
 
 OpenClaw's gateway overview treats images, audio, and documents as normal
