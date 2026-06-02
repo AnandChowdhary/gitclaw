@@ -709,6 +709,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels model --message-id <id>
 @gitclaw /channels skills --message-id <id>
 @gitclaw /channels skill-search <query> --message-id <id> --notify-message-id <id>
+@gitclaw /channels skill-info <skill> --message-id <id> --notify-message-id <id>
 @gitclaw /channels tool-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels tool-info <tool> --message-id <id> --notify-message-id <id>
 @gitclaw /channels whoami --identity-id <id> --message-id <id>
@@ -1199,6 +1200,16 @@ hashes, and requirement counts; it does not print raw skill descriptions,
 tool outputs. The action does not call a model, contact registries, install
 skills, update skills, run installers, mutate the repository, or call provider
 APIs.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+skill-info <skill> --message-id <id> --notify-message-id <id>` queues one
+provider-facing focused skill card back to the current channel thread. It
+looks up repo-local skill metadata by name or folder and reports the skill
+name, path, folder, enablement state, selected-for-turn flag, frontmatter and
+description presence, size, hash, and requirement counts without printing the
+description or `SKILL.md` body. The source receipt stays stricter with only
+route/thread/message/info/skill/result hashes and counts. The action does not
+call a model, contact registries, install or update skills, run installers,
+mutate the repository, or call provider APIs.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels tools
 --message-id <id>` queues a provider-facing tool-status snapshot back to the
 current channel thread. It reports compact deterministic tool availability,
@@ -1493,6 +1504,7 @@ scripts/e2e/github-channel-soul-status-slash.sh
 scripts/e2e/github-channel-memory-status-slash.sh
 scripts/e2e/github-channel-memory-search-slash.sh
 scripts/e2e/github-channel-skill-search-slash.sh
+scripts/e2e/github-channel-skill-info-slash.sh
 scripts/e2e/github-channel-tool-search-slash.sh
 scripts/e2e/github-channel-tool-info-slash.sh
 scripts/e2e/github-channel-backup-rehearsal-slash.sh
@@ -2179,6 +2191,13 @@ contact, installer run, provider API call, or repository mutation happened,
 checks duplicate notification suppression, exposes the skill-search
 notification through metadata-only outbox, and then continues on the channel
 thread itself with a real GitHub Models repo-reader/search follow-up.
+The channel-skill-info slash harness adds the focused skill-card step: a
+channel-ingested issue receives `@gitclaw /channels skill-info`, queues one
+provider-facing skill metadata card back to the mirrored thread without
+printing skill descriptions or `SKILL.md` bodies, checks duplicate notification
+suppression, exposes the skill-info notification through metadata-only outbox,
+and then continues on the channel thread itself with a real GitHub Models
+repo-reader/search follow-up.
 The channel-tool-search slash harness turns tool discovery into provider-visible
 capability recall: a channel-ingested issue receives `@gitclaw /channels
 tool-search`, queues tool contract matches back to the mirrored thread without

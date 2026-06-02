@@ -739,6 +739,18 @@ the assistant marker, keep `openai/gpt-5-nano` as the configured primary, and
 allow a repo-reviewed fallback to preserve end-to-end conversation behavior
 when the hosted preview service rate-limits one model.
 
+2026-06-02 catalog refresh: official GitHub Copilot model docs now list
+GPT-5.4 mini and GPT-5.4 nano as Copilot-hosted OpenAI models, but GitClaw's
+default must follow the GitHub Models catalog that Actions can call with the
+repository token. A live authenticated catalog query from this repo still
+returns `openai/gpt-4.1`, `openai/gpt-4.1-mini`, `openai/gpt-4.1-nano`,
+`openai/gpt-5`, `openai/gpt-5-chat`, `openai/gpt-5-mini`, and
+`openai/gpt-5-nano`, but not `openai/gpt-5.4-mini` or
+`openai/gpt-5.4-nano`. Keep `openai/gpt-5-nano` as the configured primary for
+GitHub Models until the authenticated catalog exposes a newer nano/mini model
+to this repository; keep `openai/gpt-4.1-nano` as the practical fallback for
+live E2E resilience.
+
 Fallback provider rule:
 
 - GitHub Models is the hosted default.
@@ -6538,6 +6550,39 @@ notification, validates metadata-only outbox discovery, verifies duplicate
 suppression, and then continues on the same GitHub issue with a real GitHub
 Models repo-reader/search follow-up.
 
+The same channel-thread issue can inspect one focused skill/capability card
+without loading full skill bodies or contacting registries:
+
+```text
+@gitclaw /channels skill-info repo-reader --message-id <provider-message-id> --notify-message-id <stable-outbound-id>
+```
+
+`/channels skill-info`, `/channels skills-info`,
+`/channels skill-describe`, `/channels describe-skill`,
+`/channels skill-card`, `/channels skill-capability-info`, and
+`/channels skill-capability-describe` infer the current channel and thread id
+from the issue marker when no explicit route/channel/thread target is
+provided. They look up one repo-local skill by name or folder, queue one
+provider-facing focused skill card, and do not create any durable artifact
+issue. The provider-facing outbound comment reports skill-info status,
+requested/normalized skill hashes, skill counts, matched skill name, path,
+folder, enablement flags, config/allowlist state, selected-for-turn flag,
+frontmatter/description presence, size, line count, file hash, requirement
+counts, and validation summary. The source receipt stays stricter: it records
+target issue/comment ids, route/thread/message hashes, skill-info id hash,
+requested/normalized skill hashes, match counts, matched-name/path/index
+hashes, outbox delivery instructions, and safety gates. It does not call a
+model, execute tools, contact registries, install or update skills, run
+installers, call provider APIs, mutate repository files, print raw requested
+skill names, print raw skill names, print raw skill paths, print raw skill
+descriptions, print `SKILL.md` bodies, print channel bodies, print
+issue/comment bodies, print prompts, or print tool outputs. Duplicates are
+suppressed by `channel + notify_message_id`. Changes to this surface require a
+live E2E that ingests a real channel issue, queues a skill-info notification,
+validates metadata-only outbox discovery, verifies duplicate suppression, and
+then continues on the same GitHub issue with a real GitHub Models
+repo-reader/search follow-up.
+
 The same channel-thread issue can answer a tools/capabilities status request
 without executing tools or exposing raw schemas:
 
@@ -7780,6 +7825,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels propose-skill weekly-review --message-id provider-msg-1
 @gitclaw /channels rehearse-skill repo-reader --id channel-skill-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels skill-search repo-reader --message-id provider-msg-1 --notify-message-id provider-skill-search-ack-1
+@gitclaw /channels skill-info repo-reader --message-id provider-msg-1 --notify-message-id provider-skill-info-ack-1
 @gitclaw /channels tool-search read_file --message-id provider-msg-1 --notify-message-id provider-tool-search-ack-1
 @gitclaw /channels tool-info read_file --message-id provider-msg-1 --notify-message-id provider-tool-info-ack-1
 @gitclaw /channels propose-soul --target soul --id channel-soul-proposal-1 --message-id provider-msg-1
@@ -10640,6 +10686,18 @@ examples/workflows/gitclaw.yml
   that must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-skill-search fixture token, and avoid hidden channel, account,
   message, search, skill-body, and notification sentinels.
+- A `gh`-driven channel-skill-info-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels skill-info ...` on that mirrored thread, verifies one
+  provider-facing focused skill metadata card, source receipt metadata without
+  raw skill names, paths, descriptions, bodies, or raw requested skill text,
+  duplicate notification suppression, metadata-only outbox discovery, and
+  explicit no-model-call/no-skill-install/no-skill-update/no-registry-contact/
+  no-installer-run/no-repository-mutation/no-provider-API flags. The
+  channel-thread issue then gets a normal GitHub Models issue-comment follow-up
+  that must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-skill-info fixture token, and avoid hidden channel, account, message,
+  info, skill-body, and notification sentinels.
 - A `gh`-driven channel-tool-search-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels tool-search ...` on that mirrored thread, verifies

@@ -190,6 +190,49 @@ Sources: OpenClaw docs (`https://docs.openclaw.ai/`), OpenClaw skills docs
 and Hermes messaging docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/messaging/`).
 
+2026-06-02 channel-skill-info follow-up: OpenClaw's current skills docs
+describe skills as `SKILL.md` files with frontmatter metadata, a markdown
+body, source precedence, allowlists, and requirement gates; Hermes' skills and
+tool-search docs use the same progressive-disclosure idea for on-demand
+knowledge/tool loading. GitClaw's channel bridge should therefore add the
+post-search focused card: `@gitclaw /channels skill-info <skill>
+--message-id <id> --notify-message-id <id>` can queue one provider-facing
+repo-local skill metadata card through `channel-outbox`. The provider reply
+may include the matched skill name, path, folder, enablement/config/allowlist
+state, selected-for-turn flag, frontmatter and description presence, file
+hash, size, and requirement counts because those fields let a Slack/Telegram
+user choose whether to ask for or use the skill. It must not print the
+description body or `SKILL.md` body. The source receipt should be stricter
+with only route/thread/message/info/skill/result hashes and counts plus
+explicit no-model-call/no-registry-contact/no-install/no-update/no-installer/
+no-repository-mutation/no-provider-API flags. Sources: OpenClaw skills docs
+(`https://github.com/openclaw/openclaw/blob/main/docs/tools/skills.md`),
+Hermes features overview
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/overview/`),
+Hermes skills guide
+(`https://hermes-agent.nousresearch.com/docs/guides/work-with-skills/`),
+and Hermes tool-search docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-search`).
+
+2026-06-02 GitHub Models catalog refresh: GitHub Models remains the right
+serverless inference path for live channel follow-ups because GitHub's docs
+describe a Models API usable from Actions with GitHub credentials and a
+chat-completions endpoint. Official Copilot model docs list GPT-5.4 mini and
+GPT-5.4 nano for Copilot, but a live authenticated GitHub Models catalog query
+from this repository still exposes `openai/gpt-5-nano` and
+`openai/gpt-5-mini` but not `openai/gpt-5.4-mini` or
+`openai/gpt-5.4-nano`. GitClaw should keep `openai/gpt-5-nano` as the
+Actions-callable primary and `openai/gpt-4.1-nano` as fallback until the
+GitHub Models catalog exposes a newer nano/mini model to this repo. Sources:
+GitHub Models overview
+(`https://docs.github.com/en/github-models/about-github-models`), GitHub
+Models inference REST docs
+(`https://docs.github.com/en/rest/models/inference`), GitHub Models
+quickstart
+(`https://docs.github.com/en/enterprise-cloud@latest/github-models/quickstart`),
+and GitHub Copilot supported models
+(`https://docs.github.com/en/copilot/reference/ai-models/supported-models`).
+
 2026-06-02 channel-tool-search follow-up: Hermes' tool-search feature treats
 capability discovery as a searchable metadata index, which is a better fit for
 channel users than dumping every tool schema into every Slack or Telegram
