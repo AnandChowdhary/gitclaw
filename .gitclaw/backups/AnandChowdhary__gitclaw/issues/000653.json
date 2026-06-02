@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T04:18:48Z",
+  "generated_at": "2026-06-02T04:20:28Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 653,
     "title": "GitClaw telegram thread channel-watch-e2e-20260602t041700z",
@@ -42,6 +42,24 @@
       "CommentID": 4598675082,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels watch --watch-id channel-watch-20260602t041700z --cadence hourly --message-id watch-ingest-20260602t041700z --notify-message-id watch-notify-20260602t041700z\nSubject: Follow up channel watch 20260602t041700z\nNotes:\nVisible watch note token: VISIBLE_CHANNEL_WATCH_NOTES_20260602t041700z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4598677746,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Watch Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#653`\n- requested_channel_command: `/channels watch`\n- channel_watch_status: `created`\n- watch_issue: `#654`\n- watch_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/654`\n- watch_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#653`\n- notification_comment_id: `4598681240`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `e03109270cc2`\n- source_message_id_sha256_12: `b04f2e9b16f3`\n- notify_message_id_sha256_12: `5e97e6a1afec`\n- notify_message_id_auto: `false`\n- watch_id_sha256_12: `438368f2a5bd`\n- watch_id_auto: `false`\n- watch_cadence_sha256_12: `2b2a51df70a1`\n- watch_cadence_bytes: `6`\n- watch_cadence_lines: `1`\n- watch_title_sha256_12: `ffb7daafedc7`\n- watch_title_bytes: `40`\n- watch_title_lines: `1`\n- watch_notes_sha256_12: `9957c376cc1b`\n- watch_notes_bytes: `70`\n- watch_notes_lines: `1`\n- notification_body_sha256_12: `435157059a0e`\n- target_from_current_channel_issue: `true`\n- proactive_watch_issue: `true`\n- watch_scheduler: `github-actions-scheduled-workflow`\n- raw_watch_id_included: `false`\n- raw_watch_cadence_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_watch_title_included: `false`\n- raw_watch_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_watch_action_change: `true`\n- issue_title_sha256_12: `199dc22c5498`\n\nGitClaw created or reused a GitHub watch issue from a mirrored channel thread, then queued a provider-facing watch link back to that thread. The watch issue is a durable control record for proactive follow-up; scheduled GitHub Actions workflows or normal issue comments can continue the watch without a socket server. This source receipt keeps provider IDs, watch IDs, cadence, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the watch-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent watch links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate watch issues are suppressed by `watch_id`; duplicate watch-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the watch issue with the `gitclaw` label\n- future scheduled workflows can search `gitclaw:channel-watch` issues and post model-backed check-ins when cadence is due",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4598681279,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -60,6 +78,30 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T04:18:22Z",
       "updated_at": "2026-06-02T04:18:22Z"
+    },
+    {
+      "id": 4598677746,
+      "body": "@gitclaw /channels watch --watch-id channel-watch-20260602t041700z --cadence hourly --message-id watch-ingest-20260602t041700z --notify-message-id watch-notify-20260602t041700z\nSubject: Follow up channel watch 20260602t041700z\nNotes:\nVisible watch note token: VISIBLE_CHANNEL_WATCH_NOTES_20260602t041700z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T04:19:05Z",
+      "updated_at": "2026-06-02T04:19:05Z"
+    },
+    {
+      "id": 4598681240,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-watch-e2e-20260602t041700z\" message_id=\"watch-notify-20260602t041700z\" author=\"gitclaw\" --\u003e\nGitClaw channel watch created.\n\nWatch: #654\nURL: https://github.com/AnandChowdhary/gitclaw/issues/654\nTitle: Follow up channel watch 20260602t041700z\nCadence: hourly\n\nContinue the watch in the linked GitHub issue. Scheduled GitHub Actions workflows can use that issue as the durable control record.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T04:19:59Z",
+      "updated_at": "2026-06-02T04:19:59Z"
+    },
+    {
+      "id": 4598681279,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26798121498\" event_id=\"comment-4598677746\" model=\"gitclaw/channels\" idempotency_key=\"75ad96211e687a1df532885a5948c8b3\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26798121498\" --\u003e\n## GitClaw Channel Watch Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#653`\n- requested_channel_command: `/channels watch`\n- channel_watch_status: `created`\n- watch_issue: `#654`\n- watch_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/654`\n- watch_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#653`\n- notification_comment_id: `4598681240`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `e03109270cc2`\n- source_message_id_sha256_12: `b04f2e9b16f3`\n- notify_message_id_sha256_12: `5e97e6a1afec`\n- notify_message_id_auto: `false`\n- watch_id_sha256_12: `438368f2a5bd`\n- watch_id_auto: `false`\n- watch_cadence_sha256_12: `2b2a51df70a1`\n- watch_cadence_bytes: `6`\n- watch_cadence_lines: `1`\n- watch_title_sha256_12: `ffb7daafedc7`\n- watch_title_bytes: `40`\n- watch_title_lines: `1`\n- watch_notes_sha256_12: `9957c376cc1b`\n- watch_notes_bytes: `70`\n- watch_notes_lines: `1`\n- notification_body_sha256_12: `435157059a0e`\n- target_from_current_channel_issue: `true`\n- proactive_watch_issue: `true`\n- watch_scheduler: `github-actions-scheduled-workflow`\n- raw_watch_id_included: `false`\n- raw_watch_cadence_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_watch_title_included: `false`\n- raw_watch_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_watch_action_change: `true`\n- issue_title_sha256_12: `199dc22c5498`\n\nGitClaw created or reused a GitHub watch issue from a mirrored channel thread, then queued a provider-facing watch link back to that thread. The watch issue is a durable control record for proactive follow-up; scheduled GitHub Actions workflows or normal issue comments can continue the watch without a socket server. This source receipt keeps provider IDs, watch IDs, cadence, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the watch-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent watch links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate watch issues are suppressed by `watch_id`; duplicate watch-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the watch issue with the `gitclaw` label\n- future scheduled workflows can search `gitclaw:channel-watch` issues and post model-backed check-ins when cadence is due",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T04:20:00Z",
+      "updated_at": "2026-06-02T04:20:00Z"
     }
   ]
 }
