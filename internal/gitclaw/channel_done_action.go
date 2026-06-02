@@ -253,6 +253,9 @@ func channelDoneArtifactRefFromBody(body string) (channelDoneArtifactRef, error)
 	if ref, ok := channelDoneArtifactRefFromMarker(body, "task", channelTaskMarkerPattern, "task_id"); ok {
 		return ref, nil
 	}
+	if ref, ok := channelDoneArtifactRefFromMarker(body, "watch", channelWatchMarkerPattern, "watch_id"); ok {
+		return ref, nil
+	}
 	if ref, ok := channelDoneArtifactRefFromMarker(body, "clip", channelClipMarkerPattern, "clip_id"); ok {
 		return ref, nil
 	}
@@ -268,7 +271,7 @@ func channelDoneArtifactRefFromBody(body string) (channelDoneArtifactRef, error)
 	if ref, ok := channelDoneArtifactRefFromMarker(body, "reminder", channelReminderMarkerPattern, "reminder_id"); ok {
 		return ref, nil
 	}
-	return channelDoneArtifactRef{}, fmt.Errorf("channel done requires a gitclaw:channel-task, gitclaw:channel-clip, gitclaw:channel-attachment, gitclaw:channel-decision, gitclaw:channel-digest, or gitclaw:channel-reminder issue")
+	return channelDoneArtifactRef{}, fmt.Errorf("channel done requires a gitclaw:channel-task, gitclaw:channel-watch, gitclaw:channel-clip, gitclaw:channel-attachment, gitclaw:channel-decision, gitclaw:channel-digest, or gitclaw:channel-reminder issue")
 }
 
 func channelDoneArtifactRefFromMarker(body, kind string, pattern interface{ FindStringSubmatch(string) []string }, idKey string) (channelDoneArtifactRef, bool) {

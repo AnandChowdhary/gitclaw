@@ -677,6 +677,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels reply --message-id <id>
 @gitclaw /channels deliverable --deliverable-id <id> --message-id <id> --filename <name>
 @gitclaw /channels task --task-id <id> --message-id <id>
+@gitclaw /channels watch --watch-id <id> --cadence <cadence> --message-id <id>
 @gitclaw /channels clip --clip-id <id> --message-id <id>
 @gitclaw /channels attachment --attachment-id <id> --message-id <id> --filename <name>
 @gitclaw /channels decision --decision-id <id> --message-id <id>
@@ -929,6 +930,15 @@ The source receipt stays body-free: it reports task/thread/message/title/notes
 hashes, duplicate status, notification queue metadata, and delivery gates
 without printing raw provider IDs, channel message bodies, task titles, or
 task notes.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels watch
+--watch-id <id> --cadence <cadence> --message-id <id>` creates or reuses a
+GitHub watch issue for proactive follow-up. The watch issue stores the
+human-readable subject, notes, and cadence so scheduled GitHub Actions
+workflows or normal issue comments can continue the watch later; the channel
+action itself does not open a socket, call a model, or call provider APIs. It
+queues a provider-facing watch link back to Slack/Telegram and keeps the source
+receipt body-free with only hashes, duplicate state, notification metadata, and
+delivery gates.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels clip
 --clip-id <id> --message-id <id>` saves a channel moment as a durable GitHub
 clip issue without treating it as work. The clip issue holds the readable title
@@ -1041,7 +1051,7 @@ a normal GitHub reminder issue with a `not_before` due gate, queues a
 provider-facing reminder link back to the mirrored thread, and keeps the source
 receipt body-free. Scheduled GitHub Actions can later use the reminder issue as
 the canonical wake-up lane without a socket or webhook.
-Inside a channel-created task, clip, decision, digest, or reminder issue,
+Inside a channel-created task, watch, clip, decision, digest, or reminder issue,
 `@gitclaw /channels done --message-id <id>` closes the GitHub artifact issue and queues a
 provider-facing acknowledgement back to the original mirrored Slack/Telegram
 thread. The artifact receipt reports hashes, close status, notification queue
@@ -1290,6 +1300,7 @@ scripts/e2e/github-channel-pin-slash.sh
 scripts/e2e/github-channel-reply-slash.sh
 scripts/e2e/github-channel-deliverable-slash.sh
 scripts/e2e/github-channel-task-slash.sh
+scripts/e2e/github-channel-watch-slash.sh
 scripts/e2e/github-channel-clip-slash.sh
 scripts/e2e/github-channel-attachment-slash.sh
 scripts/e2e/github-channel-decision-slash.sh
@@ -1575,6 +1586,13 @@ to the mirrored thread, checks duplicate task and notification suppression,
 exposes the task-link notification through metadata-only outbox, and then
 continues on the task issue with a real GitHub Models repo-reader/search
 follow-up.
+The channel-watch slash harness turns the operator console into a proactive
+watch intake surface: a channel-ingested issue receives `@gitclaw /channels
+watch`, creates or reuses a GitHub watch issue with cadence metadata, queues a
+provider-facing watch link back to the mirrored thread, checks duplicate watch
+and notification suppression, exposes the watch-link notification through
+metadata-only outbox, and then continues on the watch issue with a real GitHub
+Models repo-reader/search follow-up.
 The channel-clip slash harness turns the operator console into a save-for-later
 surface: a channel-ingested issue receives `@gitclaw /channels clip`, creates
 or reuses a durable GitHub clip issue, queues a provider-facing clip link back

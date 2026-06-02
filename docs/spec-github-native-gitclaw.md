@@ -5369,6 +5369,7 @@ accepts a structured reaction form:
 @gitclaw /channels pin --message-id <provider-message-id>
 @gitclaw /channels deliverable --deliverable-id <stable-deliverable-id> --message-id <provider-message-id> --filename <name> --media-type <mime> --url <download-url>
 @gitclaw /channels task --task-id <stable-task-id> --message-id <provider-message-id>
+@gitclaw /channels watch --watch-id <stable-watch-id> --cadence <cadence> --message-id <provider-message-id>
 @gitclaw /channels clip --clip-id <stable-clip-id> --message-id <provider-message-id>
 @gitclaw /channels attachment --attachment-id <stable-attachment-id> --message-id <provider-message-id> --filename <name> --media-type <mime> --bytes <n>
 @gitclaw /channels decision --decision-id <stable-decision-id> --message-id <provider-message-id>
@@ -5507,6 +5508,37 @@ suppressed first by `task_id` for the GitHub task issue and then by
 this surface require a live E2E that creates the task, validates the
 metadata-only task-link outbox, checks duplicate suppression, and then
 continues on the task issue with a normal GitHub Models repo-reader/search
+follow-up.
+
+The same channel-thread issue can also create a proactive watch control record:
+
+```text
+@gitclaw /channels watch --watch-id <stable-watch-id> --cadence <cadence> --message-id <provider-message-id>
+Subject: short watch subject
+Notes:
+optional human-readable watch instructions
+```
+
+`/channels watch`, `/channels monitor`, `/channels track`,
+`/channels observe`, `/channels watch-topic`, `/channels keep-watch`, and
+`/channels keepalive` infer the current channel and thread id from the issue
+marker when no explicit route/channel/thread target is provided. They create or
+reuse one open GitHub issue carrying a hidden `gitclaw:channel-watch` marker
+for the stable watch id, label it with `gitclaw` so normal conversation and
+scheduled workflows can continue there, and queue a provider-facing watch link
+back to the mirrored channel thread. The watch issue contains the
+human-readable subject, notes, and cadence because it is the durable control
+record for future proactive work. The source receipt remains body-free,
+reporting only watch/thread/message/cadence/subject/note hashes, duplicate
+status, notification queue metadata, and delivery gates. It does not call a
+model, call provider APIs, open a socket, print raw watch ids, print raw thread
+ids, print raw source or notification message ids, print channel message
+bodies, or print raw watch cadence/subject/notes in the source receipt.
+Duplicates are suppressed first by `watch_id` for the GitHub watch issue and
+then by `channel + notify_message_id` for the provider-facing watch link.
+Changes to this surface require a live E2E that creates the watch, validates
+the metadata-only watch-link outbox, checks duplicate suppression, and then
+continues on the watch issue with a normal GitHub Models repo-reader/search
 follow-up.
 
 The same channel-thread issue can also save a mirrored provider message without
@@ -6013,7 +6045,7 @@ validates the metadata-only reminder-link outbox, checks duplicate suppression,
 and then continues on the reminder issue with a normal GitHub Models
 repo-reader/search follow-up.
 
-The channel-created task, clip, attachment, decision, digest, and reminder
+The channel-created task, watch, clip, attachment, decision, digest, and reminder
 issues also accept a completion form:
 
 ```text
@@ -6055,6 +6087,8 @@ Behavior:
 - post one `gitclaw:channel-edit` comment per `channel + edit_id`,
 - create or reuse one `gitclaw:channel-task` issue per task id and queue one
   provider-facing task-link outbound comment per `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-watch` issue per watch id and queue one
+  provider-facing watch-link outbound comment per `channel + notify_message_id`,
 - create or reuse one `gitclaw:channel-clip` issue per clip id and queue one
   provider-facing clip-link outbound comment per `channel + notify_message_id`,
 - create or reuse one `gitclaw:channel-attachment` issue per attachment id and
@@ -6080,7 +6114,8 @@ Behavior:
 - create or reuse one `gitclaw:channel-reminder` issue per reminder id and
   queue one provider-facing reminder-link outbound comment per
   `channel + notify_message_id`,
-- close one `gitclaw:channel-task`, `gitclaw:channel-clip`,
+- close one `gitclaw:channel-task`, `gitclaw:channel-watch`,
+  `gitclaw:channel-clip`,
   `gitclaw:channel-attachment`, `gitclaw:channel-decision`,
   `gitclaw:channel-digest`, or `gitclaw:channel-reminder` issue and queue one
   provider-facing done acknowledgement per `channel + notify_message_id`,
@@ -6262,6 +6297,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels edit --message-id provider-msg-1 --edit-id edit-1
 @gitclaw /channels deliverable --deliverable-id channel-file-1 --message-id provider-msg-1 --filename launch-report.pdf --media-type application/pdf --url https://example.invalid/launch-report.pdf
 @gitclaw /channels task --task-id channel-task-1 --message-id provider-msg-1
+@gitclaw /channels watch --watch-id channel-watch-1 --cadence hourly --message-id provider-msg-1
 @gitclaw /channels clip --clip-id channel-clip-1 --message-id provider-msg-1
 @gitclaw /channels attachment --attachment-id channel-attachment-1 --message-id provider-msg-1 --filename launch-brief.pdf --media-type application/pdf --bytes 4242
 @gitclaw /channels decision --decision-id channel-decision-1 --message-id provider-msg-1
@@ -8792,6 +8828,16 @@ examples/workflows/gitclaw.yml
   normal GitHub Models issue-comment follow-up that must select `repo-reader`,
   expose `gitclaw.search_files`, recover the channel-task fixture token, and
   avoid hidden channel, account, provider, message, and task sentinels.
+- A `gh`-driven channel-watch-slash E2E harness creates a real channel-thread
+  issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels watch --watch-id ... --cadence ... --message-id ...` on
+  that mirrored thread, verifies GitHub watch issue creation, cadence metadata,
+  body-free source receipt metadata, provider-facing watch-link queueing,
+  duplicate watch and notification suppression, and metadata-only outbox
+  discovery. The watch issue then gets a normal GitHub Models issue-comment
+  follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
+  recover the channel-watch fixture token, and avoid hidden channel, account,
+  provider, message, and watch sentinels.
 - A `gh`-driven channel-clip-slash E2E harness creates a real channel-thread
   issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels clip --clip-id ... --message-id ...` on that mirrored

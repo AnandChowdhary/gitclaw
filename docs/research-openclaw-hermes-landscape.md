@@ -4420,3 +4420,31 @@ Hermes persistent memory docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/memory/`),
 Hermes memory providers docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers/`).
+
+## 2026-06-02 Channel Watch Follow-Up
+
+OpenClaw's automation guide separates exact scheduled tasks, heartbeat-style
+periodic awareness, background task records, inferred commitments, and standing
+orders. It explicitly points to cron for precise reminders and reports,
+heartbeat for inbox/calendar/notification monitoring, and task records for
+auditable detached work. Hermes exposes a similar shape through its built-in
+`cronjob`, `todo`, `send_message`, and tool/search surfaces: proactive work is
+most useful when there is a durable record and an explicit channel for
+delivery.
+
+GitClaw's serverless version is `@gitclaw /channels watch --watch-id <id>
+--cadence <cadence> --message-id <id>`. It opens or reuses a
+`gitclaw:channel-watch` issue that stores the subject, notes, and cadence as a
+GitHub-native control record, queues a provider-facing watch link back to the
+mirrored Telegram or Slack thread, and leaves actual check-ins to scheduled
+GitHub Actions workflows or normal issue comments. The channel receipt remains
+body-free and hash-only. The action does not call a model, call provider APIs,
+open a socket, or mutate the repository. Acceptance requires live E2E for watch
+issue creation, metadata-only watch-link outbox discovery, duplicate
+suppression, and a real GitHub Models repo-reader/search follow-up on the watch
+issue.
+
+Sources: OpenClaw automation docs (`https://docs.openclaw.ai/automation`),
+OpenClaw tools overview (`https://docs.openclaw.ai/tools`), Hermes built-in
+tools reference
+(`https://hermes-agent.nousresearch.com/docs/reference/tools-reference/`).

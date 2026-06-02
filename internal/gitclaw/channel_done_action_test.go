@@ -202,6 +202,28 @@ func TestChannelDoneArtifactRefSupportsDecisionIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsWatchIssues(t *testing.T) {
+	body := RenderChannelWatchIssueBody(ChannelWatchOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		WatchID:           "watch-done-1",
+		Cadence:           "daily",
+		Title:             "Watch the customer escalation queue",
+		Notes:             "Escalate if there is no owner.",
+		SourceIssueNumber: 44,
+		SourceCommentID:   4400,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "watch" || ref.ID != "watch-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 44 || ref.SourceCommentID != 4400 {
+		t.Fatalf("unexpected watch artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsDigestIssues(t *testing.T) {
 	body := RenderChannelDigestIssueBody(ChannelDigestOptions{
 		Repo:              "owner/repo",
