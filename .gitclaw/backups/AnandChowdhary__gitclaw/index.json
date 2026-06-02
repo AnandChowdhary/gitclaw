@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T10:02:13Z",
+  "generated_at": "2026-06-02T10:03:58Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 599,
   "issues": [
@@ -7544,13 +7544,14 @@
       "number": 702,
       "title": "GitClaw slack thread gitclaw-e2e-route-rsvp-response-invite-20260602T095841Z",
       "path": "issues/000702.json",
-      "backup_generated_at": "2026-06-02T10:02:11Z",
+      "backup_generated_at": "2026-06-02T10:03:56Z",
       "event_name": "issue_comment",
       "labels": [
+        "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 4,
-      "transcript_messages": 3
+      "comment_count": 6,
+      "transcript_messages": 5
     }
   ]
 }
