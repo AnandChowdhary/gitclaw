@@ -4697,6 +4697,35 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-02 Channel Skill Bundle Proposal Follow-Up
+
+OpenClaw's current docs frame channels as gateway-routed conversations across
+Slack, Telegram, WhatsApp, Discord, iMessage, and other transports, with the
+agent-facing runtime seeing assembled context rather than provider-specific
+delivery details. Its context docs also emphasize that the prompt contains a
+compact skills list while full skill instructions are loaded only when needed.
+Hermes makes the same token-economy explicit: skills are progressive-
+disclosure documents, and skill bundles are small YAML task profiles that load
+multiple existing skills plus optional bundle-level instruction when invoked.
+
+GitClaw's GitHub-native version is `@gitclaw /channels propose-bundle
+--bundle-id <id> --message-id <id>`. It converts a Slack/Telegram-origin idea
+for a task profile into a reviewable GitHub issue carrying
+`gitclaw:channel-bundle-proposal`, with the readable bundle name, purpose,
+skill list, instruction, policy, and notes in the proposal issue. The source
+receipt and metadata-only outbox keep only hashes/counts, duplicate state, and
+delivery gates. The action does not call a model, install skills, enable a
+bundle, write `.gitclaw/skill-bundles/*.yaml`, call provider APIs, or mutate
+the repository. Acceptance requires live E2E for proposal issue creation,
+duplicate proposal/notification suppression, metadata-only proposal-link
+outbox discovery, explicit no-install/no-enable/no-write/no-mutation flags, and
+a real GitHub Models repo-reader/search follow-up on the proposal issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), OpenClaw context
+docs (`https://docs.openclaw.ai/concepts/context`), OpenClaw channels docs
+(`https://docs.openclaw.ai/channels`), Hermes skills system docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/skills`).
+
 ## 2026-06-02 Channel Prompt Proposal Follow-Up
 
 OpenClaw's context docs treat the system prompt, conversation history, tool

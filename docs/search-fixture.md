@@ -208,3 +208,4 @@ nodes catalog unique search fixture phrase => GITCLAW_NODES_CATALOG_CONTEXT_V1
 artifacts catalog unique search fixture phrase => GITCLAW_ARTIFACTS_CATALOG_CONTEXT_V1
 channel toolset proposal unique search fixture phrase => GITCLAW_CHANNEL_TOOLSET_PROPOSAL_CONTEXT_V1
 channel prompt proposal unique search fixture phrase => GITCLAW_CHANNEL_PROMPT_PROPOSAL_CONTEXT_V1
+channel bundle proposal unique search fixture phrase => GITCLAW_CHANNEL_BUNDLE_PROPOSAL_CONTEXT_V1

@@ -511,6 +511,31 @@ func TestChannelDoneArtifactRefSupportsToolsetProposalIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsBundleProposalIssues(t *testing.T) {
+	body := RenderChannelBundleProposalIssueBody(ChannelBundleProposalOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		BundleID:          "bundle-done-1",
+		Name:              "Research Bundle",
+		Purpose:           "Review a research skill bundle.",
+		Skills:            "- repo-reader\n- self-grill",
+		Instruction:       "Use the bundle as a task profile.",
+		Policy:            "Read-only review only.",
+		Notes:             "Keep the proposal reviewable.",
+		SourceIssueNumber: 53,
+		SourceCommentID:   5300,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "bundle-proposal" || ref.ID != "bundle-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 53 || ref.SourceCommentID != 5300 {
+		t.Fatalf("unexpected bundle proposal artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsIncidentIssues(t *testing.T) {
 	body := RenderChannelIncidentIssueBody(ChannelIncidentOptions{
 		Repo:              "owner/repo",

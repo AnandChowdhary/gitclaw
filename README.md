@@ -708,6 +708,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels rehearse-tool search_files --id <id> --message-id <id>
 @gitclaw /channels propose-toolset --toolset-id <id> --message-id <id>
 @gitclaw /channels propose-prompt --prompt-id <id> --message-id <id>
+@gitclaw /channels propose-bundle --bundle-id <id> --message-id <id>
 @gitclaw /channels propose-skill weekly-review --message-id <id>
 @gitclaw /channels rehearse-skill repo-reader --id <id> --message-id <id>
 @gitclaw /channels propose-soul --target soul --id <id> --message-id <id>
@@ -1181,6 +1182,13 @@ prompt name, purpose, draft, inputs, policy, and notes; the source receipt
 keeps only hashes/counts and explicitly does not call a model, run prompt
 tests, enable prompts, write prompt configuration, or mutate the repository.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+propose-bundle --bundle-id <id> --message-id <id>` opens or reuses a normal
+GitHub skill-bundle proposal issue and queues a provider-facing proposal link
+back to the Slack/Telegram thread. The proposal issue stores the readable
+bundle name, purpose, skill list, bundle instruction, policy, and notes; the
+source receipt keeps only hashes/counts and explicitly does not call a model,
+install skills, enable bundles, write bundle YAML, or mutate the repository.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 propose-skill <name> --message-id <id>` opens or reuses a normal GitHub skill
 proposal issue and queues a provider-facing proposal link back to the
 Slack/Telegram thread. The channel action does not call a model, generate a
@@ -1430,6 +1438,7 @@ scripts/e2e/github-bundles-search-report.sh
 scripts/e2e/github-bundles-provenance-report.sh
 scripts/e2e/github-bundles-risk-report.sh
 scripts/e2e/github-bundles-rehearse-issue.sh
+scripts/e2e/github-channel-bundle-proposal-slash.sh
 scripts/e2e/github-orders-risk-report.sh
 scripts/e2e/github-policy-risk-report.sh
 scripts/e2e/github-approvals-catalog-report.sh
@@ -2034,6 +2043,13 @@ real GitHub Models repo-reader/search follow-up.
 The channel-prompt-proposal slash harness turns the operator console into a
 prompt-pack intake surface: a channel-ingested issue receives `@gitclaw
 /channels propose-prompt`, creates or reuses a GitHub prompt proposal issue,
+queues a provider-facing proposal link back to the mirrored thread, checks
+duplicate proposal and notification suppression, exposes the proposal-link
+notification through metadata-only outbox, and then continues on the proposal
+issue with a real GitHub Models repo-reader/search follow-up.
+The channel-bundle-proposal slash harness turns the operator console into a
+skill-bundle intake surface: a channel-ingested issue receives `@gitclaw
+/channels propose-bundle`, creates or reuses a GitHub bundle proposal issue,
 queues a provider-facing proposal link back to the mirrored thread, checks
 duplicate proposal and notification suppression, exposes the proposal-link
 notification through metadata-only outbox, and then continues on the proposal

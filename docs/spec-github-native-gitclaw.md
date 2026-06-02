@@ -5477,6 +5477,8 @@ accepts a structured reaction form:
 @gitclaw /channels approval-plan <tool-name> --id <stable-approval-plan-id> --message-id <provider-message-id>
 @gitclaw /channels rehearse-tool <tool-name> --id <stable-rehearsal-id> --message-id <provider-message-id>
 @gitclaw /channels propose-toolset --toolset-id <stable-toolset-proposal-id> --message-id <provider-message-id>
+@gitclaw /channels propose-prompt --prompt-id <stable-prompt-proposal-id> --message-id <provider-message-id>
+@gitclaw /channels propose-bundle --bundle-id <stable-bundle-proposal-id> --message-id <provider-message-id>
 @gitclaw /channels propose-skill <skill-name> --message-id <provider-message-id>
 @gitclaw /channels rehearse-skill <skill-name> --id <stable-rehearsal-id> --message-id <provider-message-id>
 @gitclaw /channels propose-soul --target <soul-path> --id <stable-proposal-id> --message-id <provider-message-id>
@@ -6561,6 +6563,54 @@ no prompt activation or repository mutation happened, and then continues on
 the proposal issue with a normal GitHub Models repo-reader/search follow-up.
 
 The same channel-thread issue can also turn a mirrored provider message into a
+GitHub skill-bundle proposal intake lane:
+
+```text
+@gitclaw /channels propose-bundle --bundle-id <stable-bundle-proposal-id> --message-id <provider-message-id>
+Name: short bundle name
+Purpose:
+why these skills should be used together
+Skills:
+- repo-reader
+- self-grill
+Instruction:
+the reviewed bundle-level task-profile guidance
+Policy:
+review gates, allowed modes, and risk boundaries
+Notes:
+human-readable context
+```
+
+`/channels propose-bundle`, `/channels bundle-proposal`,
+`/channels skill-bundle-proposal`, `/channels propose-skill-bundle`,
+`/channels skill-bundle`, and `/channels bundle` infer the current channel and
+thread id from the issue marker when no explicit channel/thread target is
+provided. They create or reuse one open GitHub issue carrying the
+`gitclaw:channel-bundle-proposal` marker, label it with `gitclaw` so normal
+conversation can continue there, and queue a provider-facing proposal link
+back to the mirrored channel thread. The proposal issue contains the readable
+bundle name, purpose, proposed skill list, bundle instruction, policy, and
+notes because it is the reviewable place to decide whether the bundle should
+become `.gitclaw/skill-bundles/<name>.yaml`, documentation, a prompt pack, a
+proactive workflow, or a test fixture. The source receipt remains body-free,
+reporting only bundle/thread/message/name/purpose/skill/instruction/policy/note
+hashes, skill count, duplicate status, notification queue metadata, and
+delivery gates. The provider-facing acknowledgement can show the name, skill
+count, and GitHub issue link but not the proposed skills, instruction, policy,
+notes, provider IDs, or source message body. It does not call a model, install
+skills, enable bundles, write bundle YAML, call provider APIs, mutate the
+repository, print raw bundle proposal ids, print raw thread ids, print raw
+source or notification message ids, print channel message bodies, or print raw
+section text in the source receipt. Duplicates are suppressed first by
+`bundle_id` for the GitHub proposal issue and then by
+`channel + notify_message_id` for the provider-facing proposal link. Changes
+to this surface require a live E2E that records the proposal, validates the
+metadata-only proposal-link outbox, checks duplicate suppression, asserts that
+no skill installation, bundle activation, bundle YAML write, or repository
+mutation happened, and then continues on the proposal issue with a normal
+GitHub Models repo-reader/search follow-up.
+
+The same channel-thread issue can also turn a mirrored provider message into a
 GitHub skill proposal intake lane:
 
 ```text
@@ -7243,6 +7293,8 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels approval-plan search_files --id channel-tool-approval-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-tool search_files --id channel-tool-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels propose-toolset --toolset-id channel-toolset-proposal-1 --message-id provider-msg-1
+@gitclaw /channels propose-prompt --prompt-id channel-prompt-proposal-1 --message-id provider-msg-1
+@gitclaw /channels propose-bundle --bundle-id channel-bundle-proposal-1 --message-id provider-msg-1
 @gitclaw /channels propose-skill weekly-review --message-id provider-msg-1
 @gitclaw /channels rehearse-skill repo-reader --id channel-skill-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels propose-soul --target soul --id channel-soul-proposal-1 --message-id provider-msg-1
@@ -10081,6 +10133,18 @@ examples/workflows/gitclaw.yml
   channel-prompt-proposal fixture token, and avoid hidden channel, account,
   provider, message, prompt id, prompt draft, inputs, policy, and notes
   sentinels.
+- A `gh`-driven channel-bundle-proposal-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels propose-bundle --bundle-id ... --message-id ...` on
+  that mirrored thread, verifies GitHub skill-bundle proposal issue creation,
+  body-free source receipt metadata, provider-facing proposal-link queueing,
+  duplicate proposal and notification suppression, explicit no-skill-
+  installation/no-bundle-activation/no-bundle-yaml-write/no-repository-
+  mutation gates, and metadata-only outbox discovery. The proposal issue then
+  gets a normal GitHub Models issue-comment follow-up that must select
+  `repo-reader`, expose `gitclaw.search_files`, recover the channel-bundle-
+  proposal fixture token, and avoid hidden channel, account, provider, message,
+  bundle id, skill, instruction, policy, and notes sentinels.
 - A `gh`-driven channel-skill-proposal-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels propose-skill weekly-review --message-id ...` on that

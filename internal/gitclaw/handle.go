@@ -1122,6 +1122,32 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		status.SetDone()
 		return nil
 	}
+	if IsChannelBundleProposalActionRequest(ev, cfg) {
+		channelClient, ok := github.(ChannelSendGitHubClient)
+		if !ok {
+			return failStartedTurn(ctx, cfg, github, ev, status, "channel", fmt.Errorf("github client cannot create channel bundle proposals"))
+		}
+		req, err := BuildChannelBundleProposalActionRequest(ev, cfg)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "channel", fmt.Errorf("build channel bundle proposal action: %w", err))
+		}
+		result, err := RunChannelBundleProposal(ctx, cfg, channelClient, req.Options)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "channel", fmt.Errorf("run channel bundle proposal action: %w", err))
+		}
+		body := RenderAssistantComment(Marker{
+			RunID:          envFirst("GITHUB_RUN_ID", "local"),
+			EventID:        eventID(ev),
+			Model:          "gitclaw/channels",
+			IdempotencyKey: key,
+			RunURL:         actionRunURL(ev),
+		}, RenderChannelBundleProposalActionReport(ev, req, result))
+		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post channel bundle proposal action comment: %w", err))
+		}
+		status.SetDone()
+		return nil
+	}
 	if IsChannelSkillProposalActionRequest(ev, cfg) {
 		channelSkillClient, ok := github.(interface {
 			SkillProposalIssueGitHubClient
