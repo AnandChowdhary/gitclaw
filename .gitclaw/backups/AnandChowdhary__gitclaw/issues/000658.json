@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-02T05:12:28Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 658,
+    "title": "GitClaw backup restore request: #657",
+    "body": "\u003c!-- gitclaw:backup-restore-request-issue id=\"channel-backup-restore-request-20260602t050537z\" backup_issue=\"657\" source_issue=\"657\" source_comment_id=\"4598887402\" source_sha256_12=\"4fb62401dc8d\" --\u003e\nGitClaw backup restore request issue.\n\n- request_id: channel-backup-restore-request-20260602t050537z\n- restore_scope: issue-thread\n- backup_issue: #657\n- target_repository: AnandChowdhary/gitclaw\n- backup_branch: gitclaw-backups\n- backup_root: .gitclaw/backups\n- repo_backup_dir: .gitclaw/backups/AnandChowdhary__gitclaw\n- issue_backup_path: .gitclaw/backups/AnandChowdhary__gitclaw/issues/000657.json\n- index_path: .gitclaw/backups/AnandChowdhary__gitclaw/index.json\n- source_issue: #657\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/657\n- source_comment_id: 4598887402\n- source_kind: channel_comment\n- source_sha256_12: 4fb62401dc8d\n- approval_required: true\n- restore_pr_required: true\n- restore_mode: dry-run-first\n- repository_mutation_allowed: false\n- backup_branch_write_allowed: false\n- github_api_replay_allowed: false\n- raw_source_body_included: false\n- raw_backup_bodies_included: false\n\nUse this issue to review whether a backed-up conversation should be restored. Fetch `gitclaw-backups`, run the dry-run commands below, and keep any real restore behind an explicit human-approved pull request or separate recovery procedure.\n\n### Required Dry-Run Commands\n- `gitclaw backup verify --root .gitclaw/backups --repo AnandChowdhary/gitclaw`\n- `gitclaw backup coverage --root .gitclaw/backups --repo AnandChowdhary/gitclaw --issue 657`\n- `gitclaw backup drill --root .gitclaw/backups --repo AnandChowdhary/gitclaw --issue 657`\n- `gitclaw backup restore-plan --root .gitclaw/backups --repo AnandChowdhary/gitclaw --target-repo AnandChowdhary/gitclaw --issue 657`\n- `gitclaw backup manifest --root .gitclaw/backups --repo AnandChowdhary/gitclaw --issue 657`\n\n### Approval Gates\n- confirm the backup branch is fetched from the expected repository\n- compare restore-plan output against operator intent without printing raw backup bodies here\n- require a reviewed branch or separately approved recovery run before any restore or replay",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw backup restore request: #657\n\n\u003c!-- gitclaw:backup-restore-request-issue id=\"channel-backup-restore-request-20260602t050537z\" backup_issue=\"657\" source_issue=\"657\" source_comment_id=\"4598887402\" source_sha256_12=\"4fb62401dc8d\" --\u003e\nGitClaw backup restore request issue.\n\n- request_id: channel-backup-restore-request-20260602t050537z\n- restore_scope: issue-thread\n- backup_issue: #657\n- target_repository: AnandChowdhary/gitclaw\n- backup_branch: gitclaw-backups\n- backup_root: .gitclaw/backups\n- repo_backup_dir: .gitclaw/backups/AnandChowdhary__gitclaw\n- issue_backup_path: .gitclaw/backups/AnandChowdhary__gitclaw/issues/000657.json\n- index_path: .gitclaw/backups/AnandChowdhary__gitclaw/index.json\n- source_issue: #657\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/657\n- source_comment_id: 4598887402\n- source_kind: channel_comment\n- source_sha256_12: 4fb62401dc8d\n- approval_required: true\n- restore_pr_required: true\n- restore_mode: dry-run-first\n- repository_mutation_allowed: false\n- backup_branch_write_allowed: false\n- github_api_replay_allowed: false\n- raw_source_body_included: false\n- raw_backup_bodies_included: false\n\nUse this issue to review whether a backed-up conversation should be restored. Fetch `gitclaw-backups`, run the dry-run commands below, and keep any real restore behind an explicit human-approved pull request or separate recovery procedure.\n\n### Required Dry-Run Commands\n- `gitclaw backup verify --root .gitclaw/backups --repo AnandChowdhary/gitclaw`\n- `gitclaw backup coverage --root .gitclaw/backups --repo AnandChowdhary/gitclaw --issue 657`\n- `gitclaw backup drill --root .gitclaw/backups --repo AnandChowdhary/gitclaw --issue 657`\n- `gitclaw backup restore-plan --root .gitclaw/backups --repo AnandChowdhary/gitclaw --target-repo AnandChowdhary/gitclaw --issue 657`\n- `gitclaw backup manifest --root .gitclaw/backups --repo AnandChowdhary/gitclaw --issue 657`\n\n### Approval Gates\n- confirm the backup branch is fetched from the expected repository\n- compare restore-plan output against operator intent without printing raw backup bodies here\n- require a reviewed branch or separately approved recovery run before any restore or replay",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created backup restore request and use the repo-reader skill.\n\nSearch the repository for `channel backup restore request unique search fixture phrase`.\nThe matching repository search result line has the form `channel backup restore request unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_BACKUP_RESTORE_REQUEST_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include request ids, message ids, thread ids, account hashes, issue numbers, backup paths, backup branches, source bodies, backup bodies, or restore commands.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_BACKUP_RESTORE_REQUEST_FOLLOWUP_20260602t050537z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4598901453,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_BACKUP_RESTORE_REQUEST_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4598905217,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4598901453,
+      "body": "@gitclaw Continue this channel-created backup restore request and use the repo-reader skill.\n\nSearch the repository for `channel backup restore request unique search fixture phrase`.\nThe matching repository search result line has the form `channel backup restore request unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_BACKUP_RESTORE_REQUEST_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include request ids, message ids, thread ids, account hashes, issue numbers, backup paths, backup branches, source bodies, backup bodies, or restore commands.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_BACKUP_RESTORE_REQUEST_FOLLOWUP_20260602t050537z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T05:11:09Z",
+      "updated_at": "2026-06-02T05:11:09Z"
+    },
+    {
+      "id": 4598905217,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26799816760\" event_id=\"comment-4598901453\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"bfeca42c09da946b0a81d1c3c151ec5a\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26799816760\" prompt_context_sha256_12=\"6ce5d1223a61\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"11075\" usage_completion_tokens=\"14\" usage_total_tokens=\"11089\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_BACKUP_RESTORE_REQUEST_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T05:12:01Z",
+      "updated_at": "2026-06-02T05:12:01Z"
+    }
+  ]
+}
