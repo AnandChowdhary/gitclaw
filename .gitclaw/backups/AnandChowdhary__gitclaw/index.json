@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T04:46:18Z",
+  "generated_at": "2026-06-02T04:47:57Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 566,
+  "count": 567,
   "issues": [
     {
       "number": 3,
@@ -7141,6 +7141,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 656,
+      "title": "GitClaw standing order proposal: standing-order-20260602t044115z",
+      "path": "issues/000656.json",
+      "backup_generated_at": "2026-06-02T04:47:56Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
