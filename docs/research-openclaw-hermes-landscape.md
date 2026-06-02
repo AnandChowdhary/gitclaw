@@ -4612,6 +4612,33 @@ Sources: OpenClaw standing orders docs
 docs (`https://docs.openclaw.ai/automation`), Hermes scheduled tasks docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/cron/`).
 
+## 2026-06-02 Channel Backup Status Follow-Up
+
+OpenClaw's backup and channel material points to a useful split: chat surfaces
+should make operational state easy to ask for, while recovery actions remain
+reviewed, auditable, and gated. Hermes' backup/export/profile commands echo
+the same boundary by exposing state-management commands without treating a
+message as permission to rewrite durable data. The GitClaw version is a
+provider-facing backup cockpit rather than a provider-triggered restore.
+
+GitClaw's serverless version is `@gitclaw /channels backup --message-id <id>`.
+It queues one backup status notification back to the mirrored Slack or
+Telegram thread with backup branch, root, schema, catalog counts, and local
+backup-doc presence. The source receipt stays hash-only for thread, message,
+status, catalog, and repo-backup-path metadata. The action does not call a
+model, fetch the backup branch, read raw backup payloads, restore files, write
+backup state, replay GitHub API calls, call provider APIs, or mutate repository
+files. Acceptance requires live E2E for metadata-only backup-status outbox
+discovery, duplicate suppression, no raw backup reads, and a real GitHub
+Models repo-reader/search follow-up on the same channel issue.
+
+Sources: OpenClaw backup docs (`https://docs.openclaw.ai/cli/backup`),
+OpenClaw channel docs (`https://docs.openclaw.ai/channels`), Hermes CLI
+command reference
+(`https://hermes-agent.nousresearch.com/docs/reference/cli-commands/`), and
+Hermes profile docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/profiles/`).
+
 ## 2026-06-02 Channel Backup Restore Request Follow-Up
 
 OpenClaw's backup and migration material treats restore-adjacent work as a

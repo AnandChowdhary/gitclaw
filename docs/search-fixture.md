@@ -212,3 +212,4 @@ channel toolset proposal unique search fixture phrase => GITCLAW_CHANNEL_TOOLSET
 channel prompt proposal unique search fixture phrase => GITCLAW_CHANNEL_PROMPT_PROPOSAL_CONTEXT_V1
 channel bundle proposal unique search fixture phrase => GITCLAW_CHANNEL_BUNDLE_PROPOSAL_CONTEXT_V1
 channel tool status unique search fixture phrase => GITCLAW_CHANNEL_TOOL_STATUS_CONTEXT_V1
+channel backup status unique search fixture phrase => GITCLAW_CHANNEL_BACKUP_STATUS_CONTEXT_V1
