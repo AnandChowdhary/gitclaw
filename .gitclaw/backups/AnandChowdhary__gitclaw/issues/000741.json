@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T18:31:44Z",
+  "generated_at": "2026-06-02T18:33:53Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4605863207,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels recall-session channel-session-search-anchor-20260602t182805z --message-id session-search-ingest-20260602t182805z --notify-message-id session-search-notify-20260602t182805z --search-id session-search-20260602t182805z --max-results 5\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_SESSION_SEARCH_DUPLICATE_20260602t182805z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4605869929,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Session Search Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#741`\n- requested_channel_command: `/channels recall-session`\n- channel_session_search_status: `duplicate`\n- session_search_status: `ok`\n- search_mode: `github-issue-transcript-local-lexical`\n- notification_target_issue: `#741`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `51b7e59779c3`\n- source_message_id_sha256_12: `eb4292e1e749`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `abf46ffdad33`\n- notify_message_id_auto: `false`\n- search_id_sha256_12: `95750936936e`\n- search_id_auto: `false`\n- query_sha256_12: `461a7041b15a`\n- query_terms: `1`\n- query_bytes: `46`\n- query_source: `positional`\n- max_results: `5`\n- transcript_messages: `6`\n- matched_messages: `3`\n- matched_lines: `3`\n- results_returned: `3`\n- notification_body_sha256_12: `925addec4ba5`\n- notification_body_bytes: `1108`\n- notification_body_lines: `18`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_query_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_search_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_replies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_channel_session_search_change: `true`\n- issue_title_sha256_12: `feacfe9cd369`\n\nGitClaw searched the current GitHub-backed channel transcript and queued a provider-facing recall result with only hashes, indexes, counts, and delivery metadata. The action does not call a model, execute tools, mutate repository files, call provider APIs, or print raw channel bodies.\n\n### Follow-Up Delivery\n- provider gateways read session-search recall results with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent recall results with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate recall notifications are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4605880112,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T18:31:15Z",
       "updated_at": "2026-06-02T18:31:15Z"
+    },
+    {
+      "id": 4605869929,
+      "body": "@gitclaw /channels recall-session channel-session-search-anchor-20260602t182805z --message-id session-search-ingest-20260602t182805z --notify-message-id session-search-notify-20260602t182805z --search-id session-search-20260602t182805z --max-results 5\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_SESSION_SEARCH_DUPLICATE_20260602t182805z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T18:32:06Z",
+      "updated_at": "2026-06-02T18:32:06Z"
+    },
+    {
+      "id": 4605880112,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26840084045\" event_id=\"comment-4605869929\" model=\"gitclaw/channels\" idempotency_key=\"cab2e1173cf1544534f949a9b604bc67\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26840084045\" --\u003e\n## GitClaw Channel Session Search Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#741`\n- requested_channel_command: `/channels recall-session`\n- channel_session_search_status: `duplicate`\n- session_search_status: `ok`\n- search_mode: `github-issue-transcript-local-lexical`\n- notification_target_issue: `#741`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `51b7e59779c3`\n- source_message_id_sha256_12: `eb4292e1e749`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `abf46ffdad33`\n- notify_message_id_auto: `false`\n- search_id_sha256_12: `95750936936e`\n- search_id_auto: `false`\n- query_sha256_12: `461a7041b15a`\n- query_terms: `1`\n- query_bytes: `46`\n- query_source: `positional`\n- max_results: `5`\n- transcript_messages: `6`\n- matched_messages: `3`\n- matched_lines: `3`\n- results_returned: `3`\n- notification_body_sha256_12: `925addec4ba5`\n- notification_body_bytes: `1108`\n- notification_body_lines: `18`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_query_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_search_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_replies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_channel_session_search_change: `true`\n- issue_title_sha256_12: `feacfe9cd369`\n\nGitClaw searched the current GitHub-backed channel transcript and queued a provider-facing recall result with only hashes, indexes, counts, and delivery metadata. The action does not call a model, execute tools, mutate repository files, call provider APIs, or print raw channel bodies.\n\n### Follow-Up Delivery\n- provider gateways read session-search recall results with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent recall results with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate recall notifications are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T18:33:19Z",
+      "updated_at": "2026-06-02T18:33:19Z"
     }
   ]
 }
