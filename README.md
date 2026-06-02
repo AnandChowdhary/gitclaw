@@ -670,6 +670,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels huddle e2e-slack-route,e2e-telegram-route --huddle-id <id> --message-id <id>
 @gitclaw /channels poll e2e-slack-route,e2e-telegram-route --poll-id <id> --message-id <id>
 @gitclaw /channels rollcall e2e-slack-route,e2e-telegram-route --rollcall-id <id> --message-id <id>
+@gitclaw /channels rsvp e2e-slack-route,e2e-telegram-route --rsvp-id <id> --message-id <id>
 @gitclaw /channels status --message-id <id> --status-id <id> --state working
 @gitclaw /channels edit --message-id <id> --edit-id <id>
 @gitclaw /channels react --message-id <id> --reaction eyes
@@ -906,6 +907,12 @@ the prompt and instructions there, labels it for normal GitClaw conversation,
 and queues provider-facing rollcall invites through the same routebook/outbox
 path. It is meant for lightweight standups, attendance, status checks, and
 "everyone please respond here" moments without adding a server.
+`@gitclaw /channels rsvp <route-a>,<route-b> --rsvp-id <id> --message-id <id>`
+creates or reuses a dedicated GitHub RSVP issue, writes the event title,
+when/where/host metadata, and details there, labels it for normal GitClaw
+conversation, and queues provider-facing RSVP cards through reviewed routes.
+The source receipt stays body-free and reports only hashes, counts, issue
+numbers, and duplicate status.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels status
 --message-id <id> --status-id <id> --state working` queues a structured
 `gitclaw:channel-status` progress update for provider gateways. The status body
@@ -1665,6 +1672,11 @@ reviewed routes through the provider queue, checks duplicate check-in prompt
 suppression, keeps prompt/instruction text out of the source receipt, and then
 continues on the rollcall issue with a real GitHub Models repo-reader/search
 follow-up.
+The channel-RSVP slash harness creates or reuses a dedicated GitHub RSVP issue,
+labels it for normal GitClaw conversation, invites multiple reviewed routes
+through the provider queue, checks duplicate RSVP suppression, keeps event
+metadata and details out of the source receipt, and then continues on the RSVP
+issue with a real GitHub Models repo-reader/search follow-up.
 The channel-reaction slash harness proves mirrored channel issues can do tiny
 social acknowledgements without composing a full reply: a channel-ingested issue
 receives `@gitclaw /channels react`, queues one structured provider reaction,

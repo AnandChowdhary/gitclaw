@@ -4602,6 +4602,30 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-02 Channel RSVP Follow-Up
+
+OpenClaw's channel framing and Hermes' messaging gateway both make a useful
+distinction between where humans coordinate and where durable agent state
+lives. Slack and Telegram are good RSVP surfaces because people can answer
+quickly in the place they already are; GitHub issues are better as the
+reviewable room that stores the event, responses, duplicates, and follow-up
+conversation.
+
+GitClaw's serverless translation is `@gitclaw /channels rsvp <routes>
+--rsvp-id <id> --message-id <id>`. It opens or reuses a normal
+`gitclaw:channel-rsvp` issue with a readable event title, optional
+when/where/host metadata, and details, then queues one provider-facing RSVP
+card per reviewed route through the existing routebook/outbox path. The source
+receipt remains body-free with hashes, counts, issue numbers, duplicate
+status, and delivery gates. The action does not call a model, call provider
+APIs, print raw route names, print raw event details in receipts, or require a
+socket. Acceptance requires live E2E for RSVP issue creation, route-backed
+RSVP cards, metadata-only outbox discovery, duplicate suppression, and a real
+GitHub Models repo-reader/search follow-up on the RSVP issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-02 Channel Contact Card Follow-Up
 
 OpenClaw's gateway documentation frames channels, route/session ownership, and

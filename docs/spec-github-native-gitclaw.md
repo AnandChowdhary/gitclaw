@@ -5359,6 +5359,37 @@ the rollcall, validates queued route invites and body-free receipts, and then
 continues on the rollcall issue with a normal GitHub Models repo-reader/search
 follow-up.
 
+For event invites that should collect yes/no/maybe responses where
+participants already are, GitClaw also supports:
+
+```text
+@gitclaw /channels rsvp team-alerts,ops-alerts --rsvp-id <stable-rsvp-id> --message-id <stable-outbound-id>
+Title: Demo rehearsal
+When: 2026-06-04T15:00:00Z
+Where: Huddle room
+Host: GitClaw
+Details:
+- bring one question
+```
+
+`/channels rsvp`, `/channels invite-rsvp`, `/channels event`, and
+`/channels meetup` create or reuse one open issue carrying a hidden
+`gitclaw:channel-rsvp` marker for the stable RSVP id, label that issue with
+`gitclaw` so the conversation can continue normally, and queue one
+provider-facing RSVP card per reviewed route. The RSVP issue is the
+human-readable event room: it contains the title, optional when/where/host
+metadata, details, source issue number, source issue URL, route count, and route
+hash. The source receipt remains body-free, reporting only the RSVP issue
+number/URL, RSVP id/event-field hashes, route counts, duplicate status, target
+issue/comment IDs, and delivery instructions. It does not call a model, call
+provider APIs, print raw route names, print raw RSVP ids, print raw event
+metadata/details, print raw thread/message IDs, or print the outbound card
+body. Duplicates are suppressed first by `rsvp_id` for the GitHub RSVP issue
+and then by `channel + message_id` for each routed outbound card. Changes to
+this surface require a live E2E that creates the RSVP, validates queued route
+invites and body-free receipts, and then continues on the RSVP issue with a
+normal GitHub Models repo-reader/search follow-up.
+
 When the source issue is itself a `gitclaw:channel-thread`, GitClaw also
 accepts a structured reaction form:
 
@@ -9208,6 +9239,14 @@ examples/workflows/gitclaw.yml
   Models issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-rollcall fixture token, and avoid
   hidden route/account/channel sentinels.
+- A `gh`-driven channel-rsvp-slash E2E harness creates an ordinary GitHub issue
+  with `@gitclaw /channels rsvp ...`, verifies a labeled GitHub RSVP issue,
+  routebook-backed RSVP cards on each target channel issue, body-free source
+  receipt metadata, duplicate RSVP suppression from a later issue comment with
+  the same message id, and metadata-only outbox discovery for each target issue.
+  The RSVP issue then gets a normal GitHub Models issue-comment follow-up that
+  must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-RSVP fixture token, and avoid hidden route/account/channel sentinels.
 - A `gh`-driven channel-done-slash E2E harness creates a real channel task from
   a mirrored channel issue, comments `@gitclaw /channels done ...` on the task
   issue, verifies the task issue closes, queues a metadata-safe done

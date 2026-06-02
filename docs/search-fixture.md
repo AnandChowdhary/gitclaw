@@ -103,6 +103,7 @@ channel room unique search fixture phrase => GITCLAW_CHANNEL_ROOM_CONTEXT_V1
 channel huddle unique search fixture phrase => GITCLAW_CHANNEL_HUDDLE_CONTEXT_V1
 channel poll unique search fixture phrase => GITCLAW_CHANNEL_POLL_CONTEXT_V1
 channel rollcall unique search fixture phrase => GITCLAW_CHANNEL_ROLLCALL_CONTEXT_V1
+channel rsvp unique search fixture phrase => GITCLAW_CHANNEL_RSVP_CONTEXT_V1
 channel reaction unique search fixture phrase => GITCLAW_CHANNEL_REACTION_CONTEXT_V1
 channel pin unique search fixture phrase => GITCLAW_CHANNEL_PIN_CONTEXT_V1
 channel reply slash unique search fixture phrase => GITCLAW_CHANNEL_REPLY_SLASH_CONTEXT_V1
