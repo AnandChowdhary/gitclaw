@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T05:54:47Z",
+  "generated_at": "2026-06-02T05:56:04Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 664,
     "title": "GitClaw telegram thread channel-idea-e2e-20260602t055259z",
@@ -51,6 +51,24 @@
       "CommentID": 4599106681,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "channel-idea slash e2e cleanup",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4599111038,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Idea Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#664`\n- requested_channel_command: `/channels idea`\n- channel_idea_status: `captured`\n- idea_issue: `#665`\n- idea_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/665`\n- idea_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#666`\n- notification_comment_id: `4599113124`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `af9403814862`\n- source_message_id_sha256_12: `542b0c954ac3`\n- notify_message_id_sha256_12: `6b52e9485bf3`\n- notify_message_id_auto: `false`\n- idea_id_sha256_12: `bc5754659da4`\n- idea_id_auto: `false`\n- idea_title_sha256_12: `de02f6e5ea0f`\n- idea_title_bytes: `49`\n- idea_title_lines: `1`\n- idea_notes_sha256_12: `9c875c0e83fd`\n- idea_notes_bytes: `69`\n- idea_notes_lines: `1`\n- notification_body_sha256_12: `36d39887971a`\n- target_from_current_channel_issue: `true`\n- raw_idea_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_idea_title_included: `false`\n- raw_idea_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_idea_action_change: `true`\n- issue_title_sha256_12: `dc34344787fa`\n\nGitClaw captured a channel-origin idea as a durable GitHub issue, then queued a provider-facing idea link back to the mirrored thread. The idea issue contains the human-readable title and notes; this source receipt keeps provider IDs, idea IDs, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the idea-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent idea links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate idea issues are suppressed by `idea_id`; duplicate idea-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the idea issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4599113207,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +95,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-02T05:54:26Z",
       "updated_at": "2026-06-02T05:54:26Z"
+    },
+    {
+      "id": 4599111038,
+      "body": "channel-idea slash e2e cleanup",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T05:55:18Z",
+      "updated_at": "2026-06-02T05:55:18Z"
+    },
+    {
+      "id": 4599113207,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26801323766\" event_id=\"comment-4599106681\" model=\"gitclaw/channels\" idempotency_key=\"b949b4fc4bb2bbf69f790ca39f6b37df\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26801323766\" --\u003e\n## GitClaw Channel Idea Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#664`\n- requested_channel_command: `/channels idea`\n- channel_idea_status: `captured`\n- idea_issue: `#665`\n- idea_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/665`\n- idea_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#666`\n- notification_comment_id: `4599113124`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `af9403814862`\n- source_message_id_sha256_12: `542b0c954ac3`\n- notify_message_id_sha256_12: `6b52e9485bf3`\n- notify_message_id_auto: `false`\n- idea_id_sha256_12: `bc5754659da4`\n- idea_id_auto: `false`\n- idea_title_sha256_12: `de02f6e5ea0f`\n- idea_title_bytes: `49`\n- idea_title_lines: `1`\n- idea_notes_sha256_12: `9c875c0e83fd`\n- idea_notes_bytes: `69`\n- idea_notes_lines: `1`\n- notification_body_sha256_12: `36d39887971a`\n- target_from_current_channel_issue: `true`\n- raw_idea_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_idea_title_included: `false`\n- raw_idea_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_idea_action_change: `true`\n- issue_title_sha256_12: `dc34344787fa`\n\nGitClaw captured a channel-origin idea as a durable GitHub issue, then queued a provider-facing idea link back to the mirrored thread. The idea issue contains the human-readable title and notes; this source receipt keeps provider IDs, idea IDs, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the idea-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent idea links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate idea issues are suppressed by `idea_id`; duplicate idea-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the idea issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T05:55:40Z",
+      "updated_at": "2026-06-02T05:55:40Z"
     }
   ]
 }
