@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T05:29:45Z",
+  "generated_at": "2026-06-02T05:31:24Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4598983904,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels rehearse-checkpoint --target HEAD~1 --id channel-checkpoint-rehearsal-20260602t052623z --message-id checkpoint-rehearsal-ingest-20260602t052623z --notify-message-id checkpoint-rehearsal-notify-20260602t052623z\n\nDo not leak duplicate hidden token: NOECHO_CHANNEL_CHECKPOINT_REHEARSAL_DUPLICATE_20260602t052623z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4598987572,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Checkpoint Rehearsal Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#659`\n- source_comment_id: `4598987572`\n- source_kind: `channel_comment`\n- requested_channel_command: `/channels rehearse-checkpoint`\n- channel_checkpoint_rehearsal_status: `duplicate`\n- rehearsal_issue: `#660`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/660`\n- rehearsal_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#659`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- channel: `telegram`\n- thread_id_sha256_12: `3074a6d24e13`\n- source_message_id_sha256_12: `bd0859aed087`\n- notify_message_id_sha256_12: `2dd8625351fc`\n- notify_message_id_auto: `false`\n- rehearsal_id_sha256_12: `21c57a256f53`\n- rehearsal_id_auto: `false`\n- target_ref_sha256_12: `af9b7019dd7f`\n- target_allowed: `true`\n- checkpoint_status: `clean`\n- rollback_preview_status: `ok`\n- git_available: `true`\n- git_repository: `true`\n- branch_sha256_12: `0d6e4079e367`\n- head_commit: `0edacbff93e1`\n- target_commit: `34cac9f7c0d8`\n- comparison_range_sha256_12: `e4c7b0756d8a`\n- commits_available: `2`\n- changed_files: `12`\n- preview_files_returned: `12`\n- worktree_clean: `true`\n- staged_changes: `0`\n- unstaged_changes: `0`\n- untracked_files: `0`\n- backup_branch: `gitclaw-backups`\n- backup_branch_local_ref: `false`\n- notification_body_sha256_12: `7ccc23409873`\n- notification_body_bytes: `482`\n- notification_body_lines: `10`\n- target_from_current_channel_issue: `true`\n- rehearsal_mode: `rollback-conversation`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- restore_mode: `rehearsal-only`\n- rollback_mode: `inspect-only`\n- repository_mutation_allowed: `false`\n- git_reset_allowed: `false`\n- git_clean_allowed: `false`\n- checkout_mutation_allowed: `false`\n- raw_rehearsal_id_included: `false`\n- raw_target_ref_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_source_body_included: `false`\n- raw_diffs_included: `false`\n- raw_file_bodies_included: `false`\n- provider_delivery_performed: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `e90ce272b0b9`\n- source_bytes: `328`\n- source_lines: `3`\n- llm_e2e_required_after_channel_checkpoint_rehearsal_change: `true`\n- issue_title_sha256_12: `b11902156739`\n\nGitClaw opened or reused a GitHub issue for rehearsing a checkpoint rollback from a mirrored channel thread, then queued a provider-facing rehearsal link back to that thread. This action does not call a model, print raw diffs, print file bodies, reset/clean/checkout files, copy raw channel bodies, or mutate the repository.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#660`\n- run checkpoint status, rollback preview, checkpoint risk, and rollback risk before any reviewed recovery branch\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4598991746,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T05:29:21Z",
       "updated_at": "2026-06-02T05:29:21Z"
+    },
+    {
+      "id": 4598987572,
+      "body": "@gitclaw /channels rehearse-checkpoint --target HEAD~1 --id channel-checkpoint-rehearsal-20260602t052623z --message-id checkpoint-rehearsal-ingest-20260602t052623z --notify-message-id checkpoint-rehearsal-notify-20260602t052623z\n\nDo not leak duplicate hidden token: NOECHO_CHANNEL_CHECKPOINT_REHEARSAL_DUPLICATE_20260602t052623z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T05:30:06Z",
+      "updated_at": "2026-06-02T05:30:06Z"
+    },
+    {
+      "id": 4598991746,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26800447938\" event_id=\"comment-4598987572\" model=\"gitclaw/channels\" idempotency_key=\"8b40622e018651a48df98c3902121633\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26800447938\" --\u003e\n## GitClaw Channel Checkpoint Rehearsal Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#659`\n- source_comment_id: `4598987572`\n- source_kind: `channel_comment`\n- requested_channel_command: `/channels rehearse-checkpoint`\n- channel_checkpoint_rehearsal_status: `duplicate`\n- rehearsal_issue: `#660`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/660`\n- rehearsal_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#659`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- channel: `telegram`\n- thread_id_sha256_12: `3074a6d24e13`\n- source_message_id_sha256_12: `bd0859aed087`\n- notify_message_id_sha256_12: `2dd8625351fc`\n- notify_message_id_auto: `false`\n- rehearsal_id_sha256_12: `21c57a256f53`\n- rehearsal_id_auto: `false`\n- target_ref_sha256_12: `af9b7019dd7f`\n- target_allowed: `true`\n- checkpoint_status: `clean`\n- rollback_preview_status: `ok`\n- git_available: `true`\n- git_repository: `true`\n- branch_sha256_12: `0d6e4079e367`\n- head_commit: `0edacbff93e1`\n- target_commit: `34cac9f7c0d8`\n- comparison_range_sha256_12: `e4c7b0756d8a`\n- commits_available: `2`\n- changed_files: `12`\n- preview_files_returned: `12`\n- worktree_clean: `true`\n- staged_changes: `0`\n- unstaged_changes: `0`\n- untracked_files: `0`\n- backup_branch: `gitclaw-backups`\n- backup_branch_local_ref: `false`\n- notification_body_sha256_12: `7ccc23409873`\n- notification_body_bytes: `482`\n- notification_body_lines: `10`\n- target_from_current_channel_issue: `true`\n- rehearsal_mode: `rollback-conversation`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- restore_mode: `rehearsal-only`\n- rollback_mode: `inspect-only`\n- repository_mutation_allowed: `false`\n- git_reset_allowed: `false`\n- git_clean_allowed: `false`\n- checkout_mutation_allowed: `false`\n- raw_rehearsal_id_included: `false`\n- raw_target_ref_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_source_body_included: `false`\n- raw_diffs_included: `false`\n- raw_file_bodies_included: `false`\n- provider_delivery_performed: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `e90ce272b0b9`\n- source_bytes: `328`\n- source_lines: `3`\n- llm_e2e_required_after_channel_checkpoint_rehearsal_change: `true`\n- issue_title_sha256_12: `b11902156739`\n\nGitClaw opened or reused a GitHub issue for rehearsing a checkpoint rollback from a mirrored channel thread, then queued a provider-facing rehearsal link back to that thread. This action does not call a model, print raw diffs, print file bodies, reset/clean/checkout files, copy raw channel bodies, or mutate the repository.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#660`\n- run checkpoint status, rollback preview, checkpoint risk, and rollback risk before any reviewed recovery branch\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T05:30:55Z",
+      "updated_at": "2026-06-02T05:30:55Z"
     }
   ]
 }
