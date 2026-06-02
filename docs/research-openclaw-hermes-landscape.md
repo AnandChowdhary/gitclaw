@@ -191,6 +191,27 @@ OpenClaw hooks/message context docs
 (`https://docs.openclaw.ai/automation/hooks`), and Hermes MCP docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp/`).
 
+2026-06-02 channel-soul-rehearsal follow-up: OpenClaw's context docs make
+`SOUL.md`, `IDENTITY.md`, `USER.md`, `TOOLS.md`, `MEMORY.md`, and
+`HEARTBEAT.md` explicit bootstrap files with prompt budget limits rather than
+hidden state, while OpenClaw memory docs and Hermes persistent-memory docs both
+frame durable identity/preferences as curated files injected into sessions.
+Hermes' messaging MCP docs add a contrasting near-real-time channel event
+bridge, but GitClaw can keep the same idea GitHub-native: a Slack/Telegram
+thread can request `@gitclaw /channels rehearse-soul --target soul`, GitHub
+opens or reuses a normal `gitclaw:soul-rehearsal-issue`, the channel receives a
+rehearsal link, and any model-backed voice/tone exercise happens only on that
+GitHub issue with prompt/tool/usage telemetry. The channel receipt stays
+body-free and reports hashes, validation/risk counts, duplicate suppression,
+and outbox metadata without copying target bodies or candidate soul text.
+Sources: OpenClaw context docs (`https://docs.openclaw.ai/concepts/context`),
+OpenClaw memory docs (`https://docs.openclaw.ai/concepts/memory`), OpenClaw
+agent-loop docs (`https://docs.openclaw.ai/concepts/agent-loop`), Hermes
+persistent-memory docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/memory/`),
+and Hermes messaging MCP docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp/`).
+
 2026-05-30 skill-risk follow-up: current OpenClaw plugin-hook docs make prompt,
 model, tool-call, and heartbeat extension points explicit, while Hermes'
 toolsets and MCP docs emphasize filtering exposed capabilities per task. Recent
