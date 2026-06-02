@@ -142,6 +142,29 @@ OpenClaw docs (`https://docs.openclaw.ai/`), OpenClaw sessions docs
 and Hermes features/memory docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/overview`).
 
+2026-06-02 channel-soul-search follow-up: OpenClaw's channels and sessions
+docs treat chat delivery as the user-facing transport, while its identity,
+memory, and backup surfaces stay inspectable but separate from raw transcript
+delivery. Hermes' memory/checkpoint model points the same direction:
+high-authority state should be searchable and progressively disclosed before
+any mutation, rollback, or profile export. GitClaw's serverless cut should
+therefore make `@gitclaw /channels soul-search <query> --message-id <id>
+--notify-message-id <id>` a channel-native high-authority context recall
+action. The action can reuse the existing body-free `gitclaw soul search`
+matcher over repo-local `.gitclaw/SOUL.md`, identity/user/tool/heartbeat
+files, and memory notes, queue one provider-facing result summary through
+`channel-outbox`, and leave a stricter source receipt with only hashes,
+counts, delivery gates, and no raw context paths. It should not call a model,
+execute tools, write soul or memory, contact registries, export profiles, call
+provider APIs, or expose raw channel, soul, identity, user, memory, tool,
+heartbeat, prompt, or tool-output bodies. Sources: OpenClaw docs
+(`https://docs.openclaw.ai/`), OpenClaw sessions docs
+(`https://docs.openclaw.ai/cli/sessions`), OpenClaw channel docs
+(`https://docs.openclaw.ai/cli/channels`), Hermes checkpoint docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback`),
+and Hermes features/memory docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/overview`).
+
 2026-06-02 channel-backup-info follow-up: OpenClaw's backup surface treats
 archives as manifest-backed recovery artifacts, while its channels/sessions
 surface keeps conversational delivery separate from restore operations. Hermes'

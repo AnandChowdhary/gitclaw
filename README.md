@@ -678,6 +678,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels memory-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels backup-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels backup-info <issue> --message-id <id> --notify-message-id <id>
+@gitclaw /channels soul-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels rsvp e2e-slack-route,e2e-telegram-route --rsvp-id <id> --message-id <id>
 @gitclaw /channels rsvp-response --rsvp-id <id> --message-id <id> --notify-message-id <id> --response yes
 @gitclaw /channels status --message-id <id> --status-id <id> --state working
@@ -1370,6 +1371,13 @@ model, contact registries, export profiles, write soul files, expose raw
 soul/identity/user/memory/tool/heartbeat bodies, or mutate the repository; it
 reports the repo-local authority surface as validation state, risk state,
 counts, and hashes.
+`@gitclaw /channels soul-search <query> --message-id <id>
+--notify-message-id <id>` searches the repo-local high-authority context
+surface and queues provider-facing recall metadata back to Slack/Telegram. It
+reports query hashes, context paths, categories, line numbers, scores, file
+hashes, line hashes, and duplicate status without printing raw search queries,
+soul/identity/user/memory/tool/heartbeat bodies, channel bodies, issue bodies,
+comment bodies, prompts, or tool outputs.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 memory-status --message-id <id>` queues a provider-facing durable-memory
 snapshot back to the Slack/Telegram thread. The channel action does not call a
@@ -1513,6 +1521,7 @@ scripts/e2e/github-channel-backup-search-slash.sh
 scripts/e2e/github-channel-backup-info-slash.sh
 scripts/e2e/github-channel-profile-status-slash.sh
 scripts/e2e/github-channel-soul-status-slash.sh
+scripts/e2e/github-channel-soul-search-slash.sh
 scripts/e2e/github-channel-memory-status-slash.sh
 scripts/e2e/github-channel-memory-search-slash.sh
 scripts/e2e/github-channel-skill-search-slash.sh
@@ -2355,6 +2364,12 @@ soul-status`, queues a provider-facing high-authority soul snapshot back to
 the mirrored thread, checks duplicate notification suppression, exposes the
 soul-status notification through metadata-only outbox, and then continues on
 the same channel issue with a real GitHub Models repo-reader/search follow-up.
+The channel-soul-search slash harness adds body-free high-authority context
+recall: a channel-ingested issue receives `@gitclaw /channels soul-search`,
+queues provider-facing soul/context matches back to the mirrored thread,
+checks duplicate notification suppression, exposes the soul-search
+notification through metadata-only outbox, and then continues on the same
+channel issue with a real GitHub Models repo-reader/search follow-up.
 The channel-memory-status slash harness turns the operator console into a
 durable-memory cockpit: a channel-ingested issue receives `@gitclaw /channels
 memory-status`, queues a provider-facing memory snapshot back to the mirrored
