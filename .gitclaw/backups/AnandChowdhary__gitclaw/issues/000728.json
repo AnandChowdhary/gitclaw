@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T14:11:47Z",
+  "generated_at": "2026-06-02T14:13:44Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 728,
     "title": "GitClaw telegram thread channel-bundle-proposal-e2e-20260602t140927z",
@@ -51,6 +51,15 @@
       "CommentID": 4603250844,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Bundle Proposal Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#728`\n- requested_channel_command: `/channels propose-bundle`\n- channel_bundle_proposal_status: `created`\n- bundle_proposal_issue: `#729`\n- bundle_proposal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/729`\n- bundle_proposal_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#728`\n- notification_comment_id: `4603269068`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- channel: `telegram`\n- thread_id_sha256_12: `f1870a2834bf`\n- source_message_id_sha256_12: `7d5a54e0bb45`\n- notify_message_id_sha256_12: `cf685dd96829`\n- notify_message_id_auto: `false`\n- bundle_id_sha256_12: `a381f8ecf355`\n- bundle_id_auto: `false`\n- skill_count: `3`\n- bundle_name_sha256_12: `c96ec1eb74f8`\n- bundle_name_bytes: `43`\n- bundle_name_lines: `1`\n- bundle_purpose_sha256_12: `87b74742f7fb`\n- bundle_purpose_bytes: `186`\n- bundle_purpose_lines: `2`\n- bundle_skills_sha256_12: `21629fba6bb4`\n- bundle_skills_bytes: `91`\n- bundle_skills_lines: `3`\n- bundle_instruction_sha256_12: `1b4aef27c673`\n- bundle_instruction_bytes: `145`\n- bundle_instruction_lines: `1`\n- bundle_policy_sha256_12: `0b40e411d79e`\n- bundle_policy_bytes: `67`\n- bundle_policy_lines: `1`\n- bundle_notes_sha256_12: `6b4150055e9c`\n- bundle_notes_bytes: `75`\n- bundle_notes_lines: `1`\n- notification_body_sha256_12: `396d6162f47b`\n- target_from_current_channel_issue: `true`\n- proposal_store: `github-issue-to-git-reviewed-skill-bundle`\n- review_pr_required: `true`\n- model_call_performed: `false`\n- bundle_enabled: `false`\n- skill_install_performed: `false`\n- bundle_yaml_write_performed: `false`\n- repository_mutation_performed: `false`\n- raw_bundle_id_included: `false`\n- raw_bundle_name_included: `false`\n- raw_bundle_purpose_included: `false`\n- raw_bundle_skills_included: `false`\n- raw_bundle_instruction_included: `false`\n- raw_bundle_policy_included: `false`\n- raw_bundle_notes_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- llm_e2e_required_after_channel_bundle_proposal_change: `true`\n- issue_title_sha256_12: `5192fd51a0b1`\n\nGitClaw opened or reused a GitHub issue for reviewing a channel-origin skill-bundle proposal, then queued a provider-facing proposal link back to the mirrored thread. This action does not call a model, install skills, enable bundles, write bundle YAML, copy raw channel bodies, or mutate the repository.\n\n### Proposal Review Path\n- continue on bundle proposal issue: `#729`\n- ask a normal `@gitclaw` follow-up on the proposal issue to refine or test the reviewed skill bundle\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4603269307,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-02T14:11:15Z",
       "updated_at": "2026-06-02T14:11:15Z"
+    },
+    {
+      "id": 4603269068,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-bundle-proposal-e2e-20260602t140927z\" message_id=\"bundle-proposal-notify-20260602t140927z\" author=\"gitclaw\" --\u003e\nGitClaw channel skill bundle proposal captured.\n\nBundle proposal issue: #729\nURL: https://github.com/AnandChowdhary/gitclaw/issues/729\nName: GitHub-native skill bundle 20260602t140927z\nSkills: 3\nReview PR required: true\nBundle enabled: false\n\nContinue tracking it in the linked GitHub issue. This notification did not install skills, call a model, enable a bundle, write bundle YAML, or mutate the repository.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T14:13:09Z",
+      "updated_at": "2026-06-02T14:13:09Z"
+    },
+    {
+      "id": 4603269307,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26825424082\" event_id=\"comment-4603250844\" model=\"gitclaw/channels\" idempotency_key=\"eb85843362c4e820a9e4247be8b9a193\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26825424082\" --\u003e\n## GitClaw Channel Bundle Proposal Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#728`\n- requested_channel_command: `/channels propose-bundle`\n- channel_bundle_proposal_status: `created`\n- bundle_proposal_issue: `#729`\n- bundle_proposal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/729`\n- bundle_proposal_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#728`\n- notification_comment_id: `4603269068`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- channel: `telegram`\n- thread_id_sha256_12: `f1870a2834bf`\n- source_message_id_sha256_12: `7d5a54e0bb45`\n- notify_message_id_sha256_12: `cf685dd96829`\n- notify_message_id_auto: `false`\n- bundle_id_sha256_12: `a381f8ecf355`\n- bundle_id_auto: `false`\n- skill_count: `3`\n- bundle_name_sha256_12: `c96ec1eb74f8`\n- bundle_name_bytes: `43`\n- bundle_name_lines: `1`\n- bundle_purpose_sha256_12: `87b74742f7fb`\n- bundle_purpose_bytes: `186`\n- bundle_purpose_lines: `2`\n- bundle_skills_sha256_12: `21629fba6bb4`\n- bundle_skills_bytes: `91`\n- bundle_skills_lines: `3`\n- bundle_instruction_sha256_12: `1b4aef27c673`\n- bundle_instruction_bytes: `145`\n- bundle_instruction_lines: `1`\n- bundle_policy_sha256_12: `0b40e411d79e`\n- bundle_policy_bytes: `67`\n- bundle_policy_lines: `1`\n- bundle_notes_sha256_12: `6b4150055e9c`\n- bundle_notes_bytes: `75`\n- bundle_notes_lines: `1`\n- notification_body_sha256_12: `396d6162f47b`\n- target_from_current_channel_issue: `true`\n- proposal_store: `github-issue-to-git-reviewed-skill-bundle`\n- review_pr_required: `true`\n- model_call_performed: `false`\n- bundle_enabled: `false`\n- skill_install_performed: `false`\n- bundle_yaml_write_performed: `false`\n- repository_mutation_performed: `false`\n- raw_bundle_id_included: `false`\n- raw_bundle_name_included: `false`\n- raw_bundle_purpose_included: `false`\n- raw_bundle_skills_included: `false`\n- raw_bundle_instruction_included: `false`\n- raw_bundle_policy_included: `false`\n- raw_bundle_notes_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- llm_e2e_required_after_channel_bundle_proposal_change: `true`\n- issue_title_sha256_12: `5192fd51a0b1`\n\nGitClaw opened or reused a GitHub issue for reviewing a channel-origin skill-bundle proposal, then queued a provider-facing proposal link back to the mirrored thread. This action does not call a model, install skills, enable bundles, write bundle YAML, copy raw channel bodies, or mutate the repository.\n\n### Proposal Review Path\n- continue on bundle proposal issue: `#729`\n- ask a normal `@gitclaw` follow-up on the proposal issue to refine or test the reviewed skill bundle\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T14:13:11Z",
+      "updated_at": "2026-06-02T14:13:11Z"
     }
   ]
 }
