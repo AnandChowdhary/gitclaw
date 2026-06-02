@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T02:56:34Z",
+  "generated_at": "2026-06-02T02:58:21Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 556,
   "issues": [
@@ -7011,15 +7011,15 @@
       "number": 645,
       "title": "GitClaw telegram thread channel-tool-approval-plan-e2e-20260602t025456z",
       "path": "issues/000645.json",
-      "backup_generated_at": "2026-06-02T02:56:33Z",
-      "event_name": "workflow_dispatch",
+      "backup_generated_at": "2026-06-02T02:58:20Z",
+      "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 2,
-      "transcript_messages": 3
+      "comment_count": 5,
+      "transcript_messages": 5
     }
   ]
 }
