@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T03:19:23Z",
+  "generated_at": "2026-06-02T03:20:51Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 647,
     "title": "GitClaw telegram thread channel-skill-proposal-e2e-20260602t031735z",
@@ -42,6 +42,24 @@
       "CommentID": 4598411749,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels propose-skill weekly-review-20260602t031735z --message-id skill-proposal-ingest-20260602t031735z --notify-message-id skill-proposal-notify-20260602t031735z\n\nPlease record a channel-origin skill proposal.\nDo not include this hidden source token: NOECHO_CHANNEL_SKILL_PROPOSAL_SOURCE_20260602t031735z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4598414382,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Skill Proposal Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#647`\n- source_comment_id: `4598414382`\n- source_kind: `channel_comment`\n- requested_channel_command: `/channels propose-skill`\n- channel_skill_proposal_status: `created`\n- proposal_issue: `#648`\n- proposal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/648`\n- proposal_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#647`\n- notification_comment_id: `4598418450`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- channel: `telegram`\n- thread_id_sha256_12: `ccf2ec8a866d`\n- source_message_id_sha256_12: `0f5bab43ce14`\n- notify_message_id_sha256_12: `98b0aa13d37c`\n- notify_message_id_auto: `false`\n- proposal_name_sha256_12: `744acac4a4af`\n- proposal_name_terms: `1`\n- requested_action: `auto`\n- planned_proposal_action: `propose-create`\n- target_type: `registry-name`\n- target_sha256_12: `744acac4a4af`\n- proposal_path_sha256_12: `614b4dc0f9d4`\n- destination_path_sha256_12: `ec9a8800bce3`\n- existing_skill_matches: `0`\n- available_skills: `1`\n- notification_body_sha256_12: `4a00f695a06d`\n- notification_body_bytes: `615`\n- notification_body_lines: `11`\n- target_from_current_channel_issue: `true`\n- proposal_store: `github-issue-to-git-reviewed-proposal-file`\n- review_pr_required: `true`\n- model_call_performed: `false`\n- skill_body_generated: `false`\n- proposal_file_written: `false`\n- active_skill_write_performed: `false`\n- raw_proposal_name_included: `false`\n- raw_proposal_path_included: `false`\n- raw_destination_path_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_skill_body_included: `false`\n- provider_delivery_performed: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `49b3179f9772`\n- source_bytes: `317`\n- source_lines: `4`\n- llm_e2e_required_after_channel_skill_proposal_change: `true`\n- issue_title_sha256_12: `1f2c0de4649b`\n\nGitClaw opened or reused a GitHub issue for a skill proposal from a mirrored channel thread, then queued a provider-facing proposal link back to that thread. This action does not call a model, generate a skill body, write proposal files, edit active skills, copy raw channel bodies, or mutate the repository.\n\n### Proposal Review Path\n- continue on proposal issue: `#648`\n- ask a normal `@gitclaw` follow-up on the proposal issue to discuss the reviewed skill proposal\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4598418518,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -60,6 +78,30 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T03:18:58Z",
       "updated_at": "2026-06-02T03:18:58Z"
+    },
+    {
+      "id": 4598414382,
+      "body": "@gitclaw /channels propose-skill weekly-review-20260602t031735z --message-id skill-proposal-ingest-20260602t031735z --notify-message-id skill-proposal-notify-20260602t031735z\n\nPlease record a channel-origin skill proposal.\nDo not include this hidden source token: NOECHO_CHANNEL_SKILL_PROPOSAL_SOURCE_20260602t031735z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T03:19:35Z",
+      "updated_at": "2026-06-02T03:19:35Z"
+    },
+    {
+      "id": 4598418450,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-skill-proposal-e2e-20260602t031735z\" message_id=\"skill-proposal-notify-20260602t031735z\" author=\"gitclaw\" --\u003e\nGitClaw channel skill proposal\n\nProposal issue: #648\nURL: https://github.com/AnandChowdhary/gitclaw/issues/648\nProposal name: weekly-review-20260602t031735z\nPlanned action: propose-create\nProposal path: .gitclaw/skill-proposals/weekly-review-20260602t031735z/PROPOSAL.md\nDestination path: .gitclaw/SKILLS/weekly-review-20260602t031735z/SKILL.md\nReview PR required: true\nActive skill written: false\n\nContinue in the linked GitHub issue to review the skill proposal with a normal model-backed conversation. This notification did not execute a model, generate a skill body, write proposal files, edit active skills, or mutate the repository.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T03:20:26Z",
+      "updated_at": "2026-06-02T03:20:26Z"
+    },
+    {
+      "id": 4598418518,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26796215166\" event_id=\"comment-4598414382\" model=\"gitclaw/channels\" idempotency_key=\"5a448f642137bfbf5112a7ea9e2645d6\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26796215166\" --\u003e\n## GitClaw Channel Skill Proposal Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#647`\n- source_comment_id: `4598414382`\n- source_kind: `channel_comment`\n- requested_channel_command: `/channels propose-skill`\n- channel_skill_proposal_status: `created`\n- proposal_issue: `#648`\n- proposal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/648`\n- proposal_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#647`\n- notification_comment_id: `4598418450`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- channel: `telegram`\n- thread_id_sha256_12: `ccf2ec8a866d`\n- source_message_id_sha256_12: `0f5bab43ce14`\n- notify_message_id_sha256_12: `98b0aa13d37c`\n- notify_message_id_auto: `false`\n- proposal_name_sha256_12: `744acac4a4af`\n- proposal_name_terms: `1`\n- requested_action: `auto`\n- planned_proposal_action: `propose-create`\n- target_type: `registry-name`\n- target_sha256_12: `744acac4a4af`\n- proposal_path_sha256_12: `614b4dc0f9d4`\n- destination_path_sha256_12: `ec9a8800bce3`\n- existing_skill_matches: `0`\n- available_skills: `1`\n- notification_body_sha256_12: `4a00f695a06d`\n- notification_body_bytes: `615`\n- notification_body_lines: `11`\n- target_from_current_channel_issue: `true`\n- proposal_store: `github-issue-to-git-reviewed-proposal-file`\n- review_pr_required: `true`\n- model_call_performed: `false`\n- skill_body_generated: `false`\n- proposal_file_written: `false`\n- active_skill_write_performed: `false`\n- raw_proposal_name_included: `false`\n- raw_proposal_path_included: `false`\n- raw_destination_path_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_skill_body_included: `false`\n- provider_delivery_performed: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `49b3179f9772`\n- source_bytes: `317`\n- source_lines: `4`\n- llm_e2e_required_after_channel_skill_proposal_change: `true`\n- issue_title_sha256_12: `1f2c0de4649b`\n\nGitClaw opened or reused a GitHub issue for a skill proposal from a mirrored channel thread, then queued a provider-facing proposal link back to that thread. This action does not call a model, generate a skill body, write proposal files, edit active skills, copy raw channel bodies, or mutate the repository.\n\n### Proposal Review Path\n- continue on proposal issue: `#648`\n- ask a normal `@gitclaw` follow-up on the proposal issue to discuss the reviewed skill proposal\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T03:20:27Z",
+      "updated_at": "2026-06-02T03:20:27Z"
     }
   ]
 }
