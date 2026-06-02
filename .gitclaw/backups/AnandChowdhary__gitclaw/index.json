@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T12:10:04Z",
+  "generated_at": "2026-06-02T12:11:55Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 612,
+  "count": 613,
   "issues": [
     {
       "number": 3,
@@ -7716,6 +7716,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 717,
+      "title": "GitClaw channel workspace proposal: Channel workspace proposal 20260602t120435z",
+      "path": "issues/000717.json",
+      "backup_generated_at": "2026-06-02T12:11:54Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
