@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T22:57:28Z",
+  "generated_at": "2026-06-02T22:59:08Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 651,
   "issues": [
@@ -8239,15 +8239,15 @@
       "number": 756,
       "title": "GitClaw telegram thread channel-checkpoint-status-e2e-20260602t225356z",
       "path": "issues/000756.json",
-      "backup_generated_at": "2026-06-02T22:57:26Z",
+      "backup_generated_at": "2026-06-02T22:59:07Z",
       "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 5,
-      "transcript_messages": 5
+      "comment_count": 7,
+      "transcript_messages": 7
     }
   ]
 }
