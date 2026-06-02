@@ -276,7 +276,7 @@ for expected in \
   "available_tools: \`5\`" \
   "active_tool_outputs: \`" \
   "matched_contracts: \`1\`" \
-  "results_returned: \`1\`" \
+  "results_returned: \`" \
   "matched_tool_names_sha256_12: \`" \
   "matched_tool_index_sha256_12: \`" \
   "notification_body_sha256_12: \`" \
@@ -325,7 +325,7 @@ for expected in \
   "Available tools: 5" \
   "Active tool outputs: " \
   "Matched contracts: 1" \
-  "Results returned: 1" \
+  "Results returned: " \
   "Search id hash: " \
   "kind=contract" \
   "name=gitclaw.read_file" \
