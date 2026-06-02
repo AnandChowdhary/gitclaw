@@ -6506,6 +6506,38 @@ validates the metadata-only skill-status outbox, checks duplicate suppression,
 verifies no skill/model/config side effects occurred, and then continues on the
 channel issue with a normal GitHub Models repo-reader/search follow-up.
 
+The same channel-thread issue can answer a focused skill search request without
+loading full skill bodies or contacting registries:
+
+```text
+@gitclaw /channels skill-search repo-reader --message-id <provider-message-id> --notify-message-id <stable-outbound-id> --max-results 5
+```
+
+`/channels skill-search`, `/channels skills-search`,
+`/channels search-skill`, `/channels search-skills`,
+`/channels skill-recall`, `/channels capability-search`, and
+`/channels capabilities-search` infer the current channel and thread id from
+the issue marker when no explicit route/channel/thread target is provided.
+They search only repo-local skill metadata: name, folder, path, and
+frontmatter description as a matched/not-matched field. The provider-facing
+outbound comment reports search status, query hash, query term count, max
+results, skill counts, skill names, paths, folders, match fields, scores,
+enablement flags, selection flags, frontmatter/description presence,
+requirement counts, and skill file hashes. The source receipt stays stricter:
+it records target issue/comment ids, route/thread/message hashes, skill-search
+id hash, query hash, result counts, matched-name/path/index hashes, outbox
+delivery instructions, and safety gates. It does not call a model, execute
+tools, contact registries, install or update skills, run installers, call
+provider APIs, mutate repository files, print raw search queries, print raw
+provider thread/message ids, print raw skill names, print raw skill paths,
+print raw skill descriptions, print `SKILL.md` bodies, print channel bodies,
+print issue/comment bodies, print prompts, or print tool outputs. Duplicates
+are suppressed by `channel + notify_message_id`. Changes to this surface
+require a live E2E that ingests a real channel issue, queues a skill-search
+notification, validates metadata-only outbox discovery, verifies duplicate
+suppression, and then continues on the same GitHub issue with a real GitHub
+Models repo-reader/search follow-up.
+
 The same channel-thread issue can answer a tools/capabilities status request
 without executing tools or exposing raw schemas:
 
@@ -7684,6 +7716,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels propose-bundle --bundle-id channel-bundle-proposal-1 --message-id provider-msg-1
 @gitclaw /channels propose-skill weekly-review --message-id provider-msg-1
 @gitclaw /channels rehearse-skill repo-reader --id channel-skill-rehearsal-1 --message-id provider-msg-1
+@gitclaw /channels skill-search repo-reader --message-id provider-msg-1 --notify-message-id provider-skill-search-ack-1
 @gitclaw /channels propose-soul --target soul --id channel-soul-proposal-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-soul --target soul --id channel-soul-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels propose-memory --target long-term --id channel-memory-proposal-1 --message-id provider-msg-1
@@ -10530,6 +10563,18 @@ examples/workflows/gitclaw.yml
   `gitclaw.search_files`, recover the channel-skill status fixture token, and
   avoid hidden channel, account, message, status, skill-body, and notification
   sentinels.
+- A `gh`-driven channel-skill-search-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels skill-search ...` on that mirrored thread, verifies
+  provider-facing body-free skill metadata matches, source receipt metadata
+  without raw skill names, paths, descriptions, or bodies, duplicate
+  notification suppression, metadata-only outbox discovery, and explicit
+  no-model-call/no-skill-install/no-skill-update/no-registry-contact/
+  no-installer-run/no-repository-mutation/no-provider-API flags. The
+  channel-thread issue then gets a normal GitHub Models issue-comment follow-up
+  that must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-skill-search fixture token, and avoid hidden channel, account,
+  message, search, skill-body, and notification sentinels.
 - A `gh`-driven channel-tool-status-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels tools --message-id ...` on that mirrored thread,

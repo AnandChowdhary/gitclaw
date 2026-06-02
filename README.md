@@ -708,6 +708,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels platform telegram --state running --message-id <id>
 @gitclaw /channels model --message-id <id>
 @gitclaw /channels skills --message-id <id>
+@gitclaw /channels skill-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels whoami --identity-id <id> --message-id <id>
 @gitclaw /channels contact --contact-id <id> --role <role> --message-id <id>
 @gitclaw /channels handoff --id <id> --message-id <id>
@@ -1187,6 +1188,15 @@ does not call a model, install or update skills, contact registries, run
 installer scripts, mutate the repository, or call provider APIs; source
 receipts hash thread IDs, source/notification message IDs, status IDs, skill
 names/paths, and channel bodies.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+skill-search <query> --message-id <id> --notify-message-id <id>` queues
+provider-facing skill matches back to the current channel thread. It searches
+only repo-local skill metadata and reports skill names, paths, match fields,
+hashes, and requirement counts; it does not print raw skill descriptions,
+`SKILL.md` bodies, search queries, channel bodies, issue bodies, prompts, or
+tool outputs. The action does not call a model, contact registries, install
+skills, update skills, run installers, mutate the repository, or call provider
+APIs.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels tools
 --message-id <id>` queues a provider-facing tool-status snapshot back to the
 current channel thread. It reports compact deterministic tool availability,
@@ -1480,6 +1490,7 @@ scripts/e2e/github-channel-profile-status-slash.sh
 scripts/e2e/github-channel-soul-status-slash.sh
 scripts/e2e/github-channel-memory-status-slash.sh
 scripts/e2e/github-channel-memory-search-slash.sh
+scripts/e2e/github-channel-skill-search-slash.sh
 scripts/e2e/github-channel-backup-rehearsal-slash.sh
 scripts/e2e/github-channel-backup-restore-request-slash.sh
 scripts/e2e/github-channel-checkpoint-rehearsal-slash.sh
@@ -2154,6 +2165,14 @@ provider-visible skill discovery surface: a channel-ingested issue receives
 to the mirrored thread, checks that no model call, skill install/update,
 registry contact, installer run, provider API call, or repository mutation
 happened, checks duplicate notification suppression, exposes the skill-status
+notification through metadata-only outbox, and then continues on the channel
+thread itself with a real GitHub Models repo-reader/search follow-up.
+The channel-skill-search slash harness turns that discovery surface into
+provider-visible skill recall: a channel-ingested issue receives `@gitclaw
+/channels skill-search`, queues body-free skill metadata matches back to the
+mirrored thread, checks that no model call, skill install/update, registry
+contact, installer run, provider API call, or repository mutation happened,
+checks duplicate notification suppression, exposes the skill-search
 notification through metadata-only outbox, and then continues on the channel
 thread itself with a real GitHub Models repo-reader/search follow-up.
 The channel-tool-status slash harness turns the operator console into a

@@ -167,6 +167,29 @@ Hermes tool-search docs
 and Hermes messaging docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/messaging/`).
 
+2026-06-02 channel-skill-search follow-up: OpenClaw's skill commands make
+skills discoverable by metadata before a user installs, edits, or invokes
+them, while Hermes' tool-search docs frame large capability catalogs as
+progressively disclosed search results instead of always-on prompt payload.
+GitClaw's serverless channel cut should mirror that from a Slack/Telegram
+thread: `@gitclaw /channels skill-search <query> --message-id <id>
+--notify-message-id <id>` can search repo-local skill metadata, queue one
+provider-facing skill match summary through `channel-outbox`, and keep the
+GitHub source receipt stricter with only query/result hashes and counts. The
+provider reply may include skill names, repo-local paths, match fields,
+requirement counts, and file hashes because those are the useful discovery
+answer, but it must not print skill descriptions or `SKILL.md` bodies. The
+source receipt should not print raw skill names or paths either. It should not
+call a model, execute tools, contact registries, install or update skills, run
+installers, mutate repository files, call provider APIs, or expose raw search
+queries, channel bodies, issue/comment bodies, prompts, or tool outputs.
+Sources: OpenClaw docs (`https://docs.openclaw.ai/`), OpenClaw skills docs
+(`https://docs.openclaw.ai/cli/skills`), OpenClaw channel docs
+(`https://docs.openclaw.ai/cli/channels`), Hermes tool-search docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-search`),
+and Hermes messaging docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/messaging/`).
+
 2026-06-02 channel-decision follow-up: current OpenClaw channel docs emphasize
 that chat surfaces are runtime accounts behind one Gateway, and the channel CLI
 separates socket/provider health from stored sessions. Hermes' cron docs point

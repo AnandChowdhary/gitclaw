@@ -296,6 +296,7 @@ func renderChannelReport(ev Event, cfg Config, comments []Comment, includeIssue 
 	b.WriteString("- `/channels platform <provider> --state <state> --message-id <message>` queues a provider-facing platform-status message without controlling adapters\n")
 	b.WriteString("- `/channels model --message-id <message>` queues a provider-facing model-status message without calling or switching models\n")
 	b.WriteString("- `/channels skills --message-id <message>` queues a provider-facing skill-status message without calling a model or installing skills\n")
+	b.WriteString("- `/channels skill-search <query> --message-id <message>` queues provider-facing body-free skill metadata matches without registry contact or skill installation\n")
 	b.WriteString("- `/channels tools --message-id <message>` queues a provider-facing tool-status message without executing tools or exposing raw schemas\n")
 	b.WriteString("- `/channels backup --message-id <message>` queues a provider-facing backup-status message without reading backup payloads or restoring files\n")
 	b.WriteString("- `/channels backup-search <query> --message-id <message>` queues provider-facing body-free recall results from the fetched gitclaw-backups archive\n")
