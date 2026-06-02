@@ -217,6 +217,29 @@ docs (`https://docs.openclaw.ai/cli/skills`), ClawHub docs
 and Hermes cron docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/cron/`).
 
+2026-06-02 channel-insight follow-up: OpenClaw's channel/session docs keep
+conversation surfaces distinct from durable workspace state, while its skills
+and ClawHub docs make promotion into reusable procedures or higher-authority
+context explicit and reviewable. Hermes' toolsets and cron docs draw the same
+line for capability and schedule authority: useful observations can inform
+work, but they should not silently become tools, schedules, memory, or policy.
+GitClaw's serverless analogue should let a Slack/Telegram thread preserve a
+learned observation as a normal GitHub issue without immediately mutating
+memory, soul, skills, tools, or proactive jobs. `@gitclaw /channels insight
+--insight-id <id> --message-id <id>` opens or reuses a normal GitHub insight
+issue with readable title, observation, evidence, and recommendation, queues
+one provider-facing insight link, and then requires any promotion into task,
+memory, skill, soul, tool approval, or schedule to happen through normal
+GitHub issue review and GitHub Models/tool turns. The source receipt stays
+body-free with only hashes, duplicate state, and outbox metadata. Sources:
+OpenClaw channel docs (`https://docs.openclaw.ai/channels`), OpenClaw
+sessions docs (`https://docs.openclaw.ai/cli/sessions`), OpenClaw skills CLI
+docs (`https://docs.openclaw.ai/cli/skills`), ClawHub docs
+(`https://docs.openclaw.ai/clawhub`), Hermes toolsets docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/toolsets/`),
+and Hermes cron docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/cron/`).
+
 2026-06-02 channel-kudos follow-up: the current OpenClaw skills CLI docs make
 skills inspectable, installable, updatable, and workshop-reviewable artifacts
 rather than invisible runtime magic. ClawHub now exposes both text skills and

@@ -396,6 +396,29 @@ func TestChannelDoneArtifactRefSupportsPlaybookIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsInsightIssues(t *testing.T) {
+	body := RenderChannelInsightIssueBody(ChannelInsightOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		InsightID:         "insight-done-1",
+		Title:             "Release readiness signal",
+		Observation:       "The channel had enough context to decide next steps.",
+		Evidence:          "The linked checklist was updated after the discussion.",
+		Recommendation:    "Keep the follow-up in GitHub.",
+		SourceIssueNumber: 48,
+		SourceCommentID:   4800,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "insight" || ref.ID != "insight-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 48 || ref.SourceCommentID != 4800 {
+		t.Fatalf("unexpected insight artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsIncidentIssues(t *testing.T) {
 	body := RenderChannelIncidentIssueBody(ChannelIncidentOptions{
 		Repo:              "owner/repo",

@@ -690,6 +690,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels kudos --kudos-id <id> --message-id <id>
 @gitclaw /channels retro --retro-id <id> --message-id <id>
 @gitclaw /channels playbook --playbook-id <id> --message-id <id>
+@gitclaw /channels insight --insight-id <id> --message-id <id>
 @gitclaw /channels incident --incident-id <id> --severity <severity> --message-id <id>
 @gitclaw /channels voice --voice-id <id> --duration <seconds> --message-id <id>
 @gitclaw /channels image --image-id <id> --width <px> --height <px> --message-id <id>
@@ -1041,6 +1042,14 @@ text, and keeps the source receipt body-free with hashes, duplicate state,
 notification metadata, and delivery gates. Promotion into a skill, memory,
 soul rule, tool approval, or scheduled workflow remains an explicit follow-up
 inside GitHub.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels insight
+--insight-id <id> --message-id <id>` records a learned observation as a durable
+GitHub insight issue. The insight issue holds readable title, observation,
+evidence, and recommendation; the channel action queues a provider-facing
+insight link that shows the title without leaking section text, and keeps the
+source receipt body-free with hashes, duplicate state, notification metadata,
+and delivery gates. Promotion into memory, soul, skills, tools, or schedules
+remains an explicit GitHub follow-up.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels incident
 --incident-id <id> --severity <severity> --message-id <id>` captures a
 channel-origin incident/escalation as a durable GitHub issue. The incident
@@ -1466,6 +1475,7 @@ scripts/e2e/github-channel-idea-slash.sh
 scripts/e2e/github-channel-kudos-slash.sh
 scripts/e2e/github-channel-retro-slash.sh
 scripts/e2e/github-channel-playbook-slash.sh
+scripts/e2e/github-channel-insight-slash.sh
 scripts/e2e/github-channel-incident-slash.sh
 scripts/e2e/github-channel-voice-slash.sh
 scripts/e2e/github-channel-image-slash.sh
@@ -1834,6 +1844,13 @@ title, steps, checks, and rollback guidance, queues a provider-facing playbook
 link back to the mirrored thread, checks duplicate playbook and notification
 suppression, exposes the link through metadata-only outbox, and then continues
 on the playbook issue with a real GitHub Models repo-reader/search follow-up.
+The channel-insight slash harness turns the operator console into an
+observation lane: a channel-ingested issue receives `@gitclaw /channels
+insight`, creates or reuses a durable GitHub insight issue with readable title,
+observation, evidence, and recommendation, queues a provider-facing insight
+link back to the mirrored thread, checks duplicate insight and notification
+suppression, exposes the link through metadata-only outbox, and then continues
+on the insight issue with a real GitHub Models repo-reader/search follow-up.
 The channel-incident slash harness turns the operator console into an
 escalation intake surface: a channel-ingested issue receives `@gitclaw
 /channels incident`, creates or reuses a durable GitHub incident issue with a

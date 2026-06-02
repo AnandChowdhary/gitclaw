@@ -5460,6 +5460,7 @@ accepts a structured reaction form:
 @gitclaw /channels idea --idea-id <stable-idea-id> --message-id <provider-message-id>
 @gitclaw /channels retro --retro-id <stable-retro-id> --message-id <provider-message-id>
 @gitclaw /channels playbook --playbook-id <stable-playbook-id> --message-id <provider-message-id>
+@gitclaw /channels insight --insight-id <stable-insight-id> --message-id <provider-message-id>
 @gitclaw /channels incident --incident-id <stable-incident-id> --severity <severity> --message-id <provider-message-id>
 @gitclaw /channels voice --voice-id <stable-voice-id> --duration <seconds> --message-id <provider-message-id>
 @gitclaw /channels image --image-id <stable-image-id> --width <px> --height <px> --message-id <provider-message-id>
@@ -5927,6 +5928,45 @@ the provider-facing playbook link. Changes to this surface require a live E2E
 that records the playbook, validates the metadata-only playbook-link outbox,
 checks duplicate suppression, and then continues on the playbook issue with a
 normal GitHub Models repo-reader/search follow-up.
+
+The same channel-thread issue can also record a learned observation:
+
+```text
+@gitclaw /channels insight --insight-id <stable-insight-id> --message-id <provider-message-id>
+Insight: short insight title
+Observation:
+human-readable observation or pattern
+Evidence:
+human-readable supporting evidence
+Recommendation:
+human-readable recommended follow-up
+```
+
+`/channels insight`, `/channels observation`, `/channels finding`,
+`/channels learning`, `/channels takeaway`, `/channels signal`, and
+`/channels lesson-learned` infer the current channel and thread id from the
+issue marker when no explicit route/channel/thread target is provided. They
+create or reuse one open GitHub issue carrying a hidden
+`gitclaw:channel-insight` marker for the stable insight id, label it with
+`gitclaw` so normal conversation can continue there, and queue a
+provider-facing insight link back to the mirrored channel thread. The insight
+issue contains the human-readable title, observation, evidence, and
+recommendation because it is the reviewable place to decide whether the signal
+should become a task, memory, skill, soul rule, tool workflow, or scheduled
+job; the source receipt remains body-free, reporting only
+insight/thread/message/title/observation/evidence/recommendation hashes,
+duplicate status, notification queue metadata, and delivery gates. The
+provider-facing acknowledgement can show the title and GitHub issue link but
+not the section text. It does not call a model, call provider APIs, mutate
+memory, mutate soul, install or update a skill, approve a tool, create a
+schedule, print raw insight ids, print raw thread ids, print raw source or
+notification message ids, print channel message bodies, or print raw section
+text in the source receipt. Duplicates are suppressed first by `insight_id`
+for the GitHub insight issue and then by `channel + notify_message_id` for the
+provider-facing insight link. Changes to this surface require a live E2E that
+records the insight, validates the metadata-only insight-link outbox, checks
+duplicate suppression, and then continues on the insight issue with a normal
+GitHub Models repo-reader/search follow-up.
 
 The same channel-thread issue can also capture an incident or escalation:
 
@@ -6639,8 +6679,8 @@ repo-reader/search follow-up.
 
 The channel-created task, watch, standing-order proposal, backup restore
 request, checkpoint rehearsal, clip, attachment, decision, digest, idea,
-incident, voice, image, and reminder
-issues also accept a completion form:
+incident, insight, voice, image, and reminder issues also accept a completion
+form:
 
 ```text
 @gitclaw /channels done --message-id <stable-outbound-id>
@@ -6711,6 +6751,11 @@ Behavior:
   `channel + notify_message_id` without installing skills, mutating memory,
   mutating soul, approving tools, creating schedules, calling provider APIs, or
   calling a model,
+- create or reuse one `gitclaw:channel-insight` issue per insight id and
+  queue one provider-facing insight-link outbound comment per
+  `channel + notify_message_id` without mutating memory, mutating soul,
+  installing skills, approving tools, creating schedules, calling provider
+  APIs, or calling a model,
 - create or reuse one `gitclaw:channel-incident` issue per incident id and
   queue one provider-facing incident-link outbound comment per
   `channel + notify_message_id`,
@@ -6759,7 +6804,7 @@ Behavior:
   `gitclaw:channel-attachment`, `gitclaw:channel-decision`,
   `gitclaw:channel-digest`, `gitclaw:channel-idea`,
   `gitclaw:channel-kudos`, `gitclaw:channel-retro`,
-  `gitclaw:channel-playbook`,
+  `gitclaw:channel-playbook`, `gitclaw:channel-insight`,
   `gitclaw:channel-incident`, `gitclaw:channel-voice`,
   `gitclaw:channel-image`, `gitclaw:channel-link`,
   `gitclaw:channel-access-request`, `gitclaw:channel-contact`, or
@@ -6953,6 +6998,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels kudos --kudos-id channel-kudos-1 --message-id provider-msg-1
 @gitclaw /channels retro --retro-id channel-retro-1 --message-id provider-msg-1
 @gitclaw /channels playbook --playbook-id channel-playbook-1 --message-id provider-msg-1
+@gitclaw /channels insight --insight-id channel-insight-1 --message-id provider-msg-1
 @gitclaw /channels incident --incident-id channel-incident-1 --severity sev2 --message-id provider-msg-1
 @gitclaw /channels voice --voice-id channel-voice-1 --duration 47 --message-id provider-msg-1
 @gitclaw /channels image --image-id channel-image-1 --width 1280 --height 720 --message-id provider-msg-1
@@ -9615,6 +9661,16 @@ examples/workflows/gitclaw.yml
   must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-playbook fixture token, and avoid hidden channel, account, provider,
   message, playbook, and procedure-section sentinels.
+- A `gh`-driven channel-insight-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels insight --insight-id ... --message-id ...` on that
+  mirrored thread, verifies GitHub insight issue creation, body-free source
+  receipt metadata, provider-facing insight-link queueing, duplicate insight
+  and notification suppression, and metadata-only outbox discovery. The
+  insight issue then gets a normal GitHub Models issue-comment follow-up that
+  must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-insight fixture token, and avoid hidden channel, account, provider,
+  message, insight, and observation/evidence/recommendation sentinels.
 - A `gh`-driven channel-incident-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels incident --incident-id ... --severity ... --message-id
