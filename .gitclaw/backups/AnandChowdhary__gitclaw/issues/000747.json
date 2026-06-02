@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T20:26:28Z",
+  "generated_at": "2026-06-02T20:27:54Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 747,
     "title": "GitClaw telegram thread channel-tool-info-e2e-20260602t202427z",
@@ -51,6 +51,15 @@
       "CommentID": 4606728084,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Tool Info Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#747`\n- requested_channel_command: `/channels tool-info`\n- channel_tool_info_status: `queued`\n- tool_info_status: `ok`\n- info_mode: `deterministic-tool-contract-card`\n- notification_target_issue: `#747`\n- notification_comment_id: `4606739174`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `5b4fb3415203`\n- source_message_id_sha256_12: `8eca952c28cf`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `bef2dec86c4c`\n- notify_message_id_auto: `false`\n- tool_info_id_sha256_12: `1f733a3488da`\n- tool_info_id_auto: `false`\n- requested_tool_sha256_12: `c9f8123bd272`\n- normalized_tool_sha256_12: `b198784f0e7f`\n- requested_tool_bytes: `9`\n- tool_source: `positional`\n- available_tools: `5`\n- matched_tools: `1`\n- active_outputs_for_tool: `0`\n- validation_status: `ok`\n- validation_errors: `0`\n- validation_warnings: `0`\n- matched_tool_names_sha256_12: `b198784f0e7f`\n- tool_info_index_sha256_12: `dc1115bd1ffc`\n- notification_body_sha256_12: `5f7d4daa72ca`\n- notification_body_bytes: `1014`\n- notification_body_lines: `20`\n- target_from_current_channel_issue: `true`\n- tool_execution_allowed: `false`\n- tool_execution_performed: `false`\n- shell_execution_allowed: `false`\n- mcp_server_launch_allowed: `false`\n- toolset_activation_allowed: `false`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_tool_name_included: `false`\n- raw_tool_trigger_included: `false`\n- raw_tool_inputs_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_tool_schemas_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_tool_info_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompts_included: `false`\n- llm_e2e_required_after_channel_tool_info_change: `true`\n- issue_title_sha256_12: `b42e687bb567`\n\nGitClaw queued a provider-facing focused tool card from deterministic tool contract metadata. The source receipt keeps the raw tool name, trigger, schemas, inputs, outputs, ids, and channel bodies out of band. The action does not call a model, execute tools, run shell commands, launch MCP servers, activate toolsets, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read tool-info cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent tool-info cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate tool-info notifications are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4606739278,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-02T20:26:02Z",
       "updated_at": "2026-06-02T20:26:02Z"
+    },
+    {
+      "id": 4606739174,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-tool-info-e2e-20260602t202427z\" message_id=\"tool-info-notify-20260602t202427z\" author=\"gitclaw\" --\u003e\nGitClaw channel tool info\n\nTool info status: ok\nRequested tool hash: c9f8123bd272\nNormalized tool hash: b198784f0e7f\nAvailable tools: 5\nMatched tools: 1\nActive outputs for tool: 0\nValidation status: ok\nValidation errors: 0\nValidation warnings: 0\nTool info id hash: 1f733a3488da\n\nContracts:\n- name=gitclaw.read_file source=builtin-gitclaw enabled=true disabled_by_config=false blocked_by_allowlist=false mode=read-only mutating=false trigger_sha256_12=ca3dffec4f72 active_outputs=0\n\nActive outputs:\n- none\n\nRaw tool triggers, tool inputs, tool output bodies, tool schemas, channel bodies, issue bodies, comment bodies, prompts, and raw requested tool text are not included. Tool execution: not performed by this action. Shell execution: not performed by this action. MCP server launch: not performed by this action. Toolset activation: not performed by this action. Model call: not performed by this action. Repository mutation: not performed by this action. Provider delivery: queued through GitHub channel outbox.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T20:27:25Z",
+      "updated_at": "2026-06-02T20:27:25Z"
+    },
+    {
+      "id": 4606739278,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26845978619\" event_id=\"comment-4606728084\" model=\"gitclaw/channels\" idempotency_key=\"e235cac6c03258a41162af748a1c2098\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26845978619\" --\u003e\n## GitClaw Channel Tool Info Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#747`\n- requested_channel_command: `/channels tool-info`\n- channel_tool_info_status: `queued`\n- tool_info_status: `ok`\n- info_mode: `deterministic-tool-contract-card`\n- notification_target_issue: `#747`\n- notification_comment_id: `4606739174`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `5b4fb3415203`\n- source_message_id_sha256_12: `8eca952c28cf`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `bef2dec86c4c`\n- notify_message_id_auto: `false`\n- tool_info_id_sha256_12: `1f733a3488da`\n- tool_info_id_auto: `false`\n- requested_tool_sha256_12: `c9f8123bd272`\n- normalized_tool_sha256_12: `b198784f0e7f`\n- requested_tool_bytes: `9`\n- tool_source: `positional`\n- available_tools: `5`\n- matched_tools: `1`\n- active_outputs_for_tool: `0`\n- validation_status: `ok`\n- validation_errors: `0`\n- validation_warnings: `0`\n- matched_tool_names_sha256_12: `b198784f0e7f`\n- tool_info_index_sha256_12: `dc1115bd1ffc`\n- notification_body_sha256_12: `5f7d4daa72ca`\n- notification_body_bytes: `1014`\n- notification_body_lines: `20`\n- target_from_current_channel_issue: `true`\n- tool_execution_allowed: `false`\n- tool_execution_performed: `false`\n- shell_execution_allowed: `false`\n- mcp_server_launch_allowed: `false`\n- toolset_activation_allowed: `false`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_tool_name_included: `false`\n- raw_tool_trigger_included: `false`\n- raw_tool_inputs_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_tool_schemas_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_tool_info_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompts_included: `false`\n- llm_e2e_required_after_channel_tool_info_change: `true`\n- issue_title_sha256_12: `b42e687bb567`\n\nGitClaw queued a provider-facing focused tool card from deterministic tool contract metadata. The source receipt keeps the raw tool name, trigger, schemas, inputs, outputs, ids, and channel bodies out of band. The action does not call a model, execute tools, run shell commands, launch MCP servers, activate toolsets, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read tool-info cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent tool-info cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate tool-info notifications are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T20:27:26Z",
+      "updated_at": "2026-06-02T20:27:26Z"
     }
   ]
 }
