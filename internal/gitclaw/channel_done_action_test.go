@@ -419,6 +419,29 @@ func TestChannelDoneArtifactRefSupportsInsightIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsWorkspaceProposalIssues(t *testing.T) {
+	body := RenderChannelWorkspaceProposalIssueBody(ChannelWorkspaceProposalOptions{
+		Repo:                "owner/repo",
+		Channel:             "slack",
+		ThreadID:            "team-thread-1",
+		SourceMessageID:     "source-message-1",
+		WorkspaceProposalID: "workspace-proposal-done-1",
+		TargetPath:          ".gitclaw/workspaces/channel-review.md",
+		Title:               "Channel review workspace",
+		Proposal:            "Load repo docs for this channel.",
+		Rationale:           "Keep review context explicit.",
+		SourceIssueNumber:   49,
+		SourceCommentID:     4900,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "workspace-proposal" || ref.ID != "workspace-proposal-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 49 || ref.SourceCommentID != 4900 {
+		t.Fatalf("unexpected workspace proposal artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsIncidentIssues(t *testing.T) {
 	body := RenderChannelIncidentIssueBody(ChannelIncidentOptions{
 		Repo:              "owner/repo",

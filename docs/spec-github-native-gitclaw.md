@@ -5461,6 +5461,7 @@ accepts a structured reaction form:
 @gitclaw /channels retro --retro-id <stable-retro-id> --message-id <provider-message-id>
 @gitclaw /channels playbook --playbook-id <stable-playbook-id> --message-id <provider-message-id>
 @gitclaw /channels insight --insight-id <stable-insight-id> --message-id <provider-message-id>
+@gitclaw /channels propose-workspace --workspace-id <stable-workspace-proposal-id> --target .gitclaw/workspaces/<name>.md --message-id <provider-message-id>
 @gitclaw /channels incident --incident-id <stable-incident-id> --severity <severity> --message-id <provider-message-id>
 @gitclaw /channels voice --voice-id <stable-voice-id> --duration <seconds> --message-id <provider-message-id>
 @gitclaw /channels image --image-id <stable-image-id> --width <px> --height <px> --message-id <provider-message-id>
@@ -5967,6 +5968,45 @@ provider-facing insight link. Changes to this surface require a live E2E that
 records the insight, validates the metadata-only insight-link outbox, checks
 duplicate suppression, and then continues on the insight issue with a normal
 GitHub Models repo-reader/search follow-up.
+
+The same channel-thread issue can also record a workspace/context proposal:
+
+```text
+@gitclaw /channels propose-workspace --workspace-id <stable-workspace-proposal-id> --target .gitclaw/workspaces/<name>.md --message-id <provider-message-id>
+Title: short workspace title
+Proposal:
+human-readable workspace context proposal
+Rationale:
+why the workspace context should exist
+```
+
+`/channels propose-workspace`, `/channels workspace-proposal`,
+`/channels workspace-context`, `/channels context-proposal`,
+`/channels propose-context`, `/channels workspace-note`, and
+`/channels workspace` infer the current channel and thread id from the issue
+marker when no explicit route/channel/thread target is provided. They create
+or reuse one open GitHub issue carrying a hidden
+`gitclaw:channel-workspace-proposal` marker for the stable proposal id, label
+it with `gitclaw` so normal conversation can continue there, and queue a
+provider-facing proposal link back to the mirrored channel thread. The
+proposal issue contains the human-readable title, target path, proposal, and
+rationale because it is the reviewable place to decide whether a
+`.gitclaw/workspaces/*.md` file should be created or changed; the source
+receipt remains body-free, reporting only proposal/thread/message/title/target
+path/body/rationale hashes, duplicate status, notification queue metadata, and
+delivery gates. The provider-facing acknowledgement can show the title, target
+path, and GitHub issue link but not the proposal or rationale text. It does
+not call a model, call provider APIs, mutate the repository, write workspace
+files, print raw proposal ids, print raw thread ids, print raw source or
+notification message ids, print channel message bodies, or print raw section
+text in the source receipt. Target paths are normalized under
+`.gitclaw/workspaces/` and must be markdown files. Duplicates are suppressed
+first by `workspace_proposal_id` for the GitHub proposal issue and then by
+`channel + notify_message_id` for the provider-facing proposal link. Changes
+to this surface require a live E2E that records the proposal, validates the
+metadata-only proposal-link outbox, checks duplicate suppression, asserts that
+no workspace file or repository mutation happened, and then continues on the
+proposal issue with a normal GitHub Models repo-reader/search follow-up.
 
 The same channel-thread issue can also capture an incident or escalation:
 
@@ -6756,6 +6796,10 @@ Behavior:
   `channel + notify_message_id` without mutating memory, mutating soul,
   installing skills, approving tools, creating schedules, calling provider
   APIs, or calling a model,
+- create or reuse one `gitclaw:channel-workspace-proposal` issue per proposal
+  id and queue one provider-facing proposal-link outbound comment per
+  `channel + notify_message_id` without writing workspace files, mutating the
+  repository, calling provider APIs, or calling a model,
 - create or reuse one `gitclaw:channel-incident` issue per incident id and
   queue one provider-facing incident-link outbound comment per
   `channel + notify_message_id`,
@@ -6805,8 +6849,8 @@ Behavior:
   `gitclaw:channel-digest`, `gitclaw:channel-idea`,
   `gitclaw:channel-kudos`, `gitclaw:channel-retro`,
   `gitclaw:channel-playbook`, `gitclaw:channel-insight`,
-  `gitclaw:channel-incident`, `gitclaw:channel-voice`,
-  `gitclaw:channel-image`, `gitclaw:channel-link`,
+  `gitclaw:channel-workspace-proposal`, `gitclaw:channel-incident`,
+  `gitclaw:channel-voice`, `gitclaw:channel-image`, `gitclaw:channel-link`,
   `gitclaw:channel-access-request`, `gitclaw:channel-contact`, or
   `gitclaw:channel-reminder` issue and queue one
   provider-facing done acknowledgement per `channel + notify_message_id`,
@@ -6999,6 +7043,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels retro --retro-id channel-retro-1 --message-id provider-msg-1
 @gitclaw /channels playbook --playbook-id channel-playbook-1 --message-id provider-msg-1
 @gitclaw /channels insight --insight-id channel-insight-1 --message-id provider-msg-1
+@gitclaw /channels propose-workspace --workspace-id channel-workspace-proposal-1 --target .gitclaw/workspaces/channel-review.md --message-id provider-msg-1
 @gitclaw /channels incident --incident-id channel-incident-1 --severity sev2 --message-id provider-msg-1
 @gitclaw /channels voice --voice-id channel-voice-1 --duration 47 --message-id provider-msg-1
 @gitclaw /channels image --image-id channel-image-1 --width 1280 --height 720 --message-id provider-msg-1
@@ -9671,6 +9716,18 @@ examples/workflows/gitclaw.yml
   must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-insight fixture token, and avoid hidden channel, account, provider,
   message, insight, and observation/evidence/recommendation sentinels.
+- A `gh`-driven channel-workspace-proposal-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels propose-workspace --workspace-id ... --target ... --message-id
+  ...` on that mirrored thread, verifies GitHub workspace proposal issue
+  creation, body-free source receipt metadata, provider-facing proposal-link
+  queueing, duplicate proposal and notification suppression, explicit
+  no-workspace-file/no-repository-mutation gates, and metadata-only outbox
+  discovery. The proposal issue then gets a normal GitHub Models issue-comment
+  follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
+  recover the channel-workspace-proposal fixture token, and avoid hidden
+  channel, account, provider, message, proposal, target-path, proposal-body,
+  and rationale sentinels.
 - A `gh`-driven channel-incident-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels incident --incident-id ... --severity ... --message-id

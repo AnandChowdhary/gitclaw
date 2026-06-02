@@ -120,6 +120,7 @@ channel kudos unique search fixture phrase => GITCLAW_CHANNEL_KUDOS_CONTEXT_V1
 channel retro unique search fixture phrase => GITCLAW_CHANNEL_RETRO_CONTEXT_V1
 channel playbook unique search fixture phrase => GITCLAW_CHANNEL_PLAYBOOK_CONTEXT_V1
 channel insight unique search fixture phrase => GITCLAW_CHANNEL_INSIGHT_CONTEXT_V1
+channel workspace proposal unique search fixture phrase => GITCLAW_CHANNEL_WORKSPACE_PROPOSAL_CONTEXT_V1
 channel incident unique search fixture phrase => GITCLAW_CHANNEL_INCIDENT_CONTEXT_V1
 channel voice unique search fixture phrase => GITCLAW_CHANNEL_VOICE_CONTEXT_V1
 channel image unique search fixture phrase => GITCLAW_CHANNEL_IMAGE_CONTEXT_V1

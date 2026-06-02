@@ -691,6 +691,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels retro --retro-id <id> --message-id <id>
 @gitclaw /channels playbook --playbook-id <id> --message-id <id>
 @gitclaw /channels insight --insight-id <id> --message-id <id>
+@gitclaw /channels propose-workspace --workspace-id <id> --target .gitclaw/workspaces/<name>.md --message-id <id>
 @gitclaw /channels incident --incident-id <id> --severity <severity> --message-id <id>
 @gitclaw /channels voice --voice-id <id> --duration <seconds> --message-id <id>
 @gitclaw /channels image --image-id <id> --width <px> --height <px> --message-id <id>
@@ -1050,6 +1051,15 @@ insight link that shows the title without leaking section text, and keeps the
 source receipt body-free with hashes, duplicate state, notification metadata,
 and delivery gates. Promotion into memory, soul, skills, tools, or schedules
 remains an explicit GitHub follow-up.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+propose-workspace --workspace-id <id> --target .gitclaw/workspaces/<name>.md
+--message-id <id>` records a channel-origin workspace/context proposal as a
+durable GitHub issue. The proposal issue holds readable title, target path,
+proposal, and rationale; the channel action queues a provider-facing proposal
+link that shows only the title and target path, keeps the source receipt
+body-free with hashes, and explicitly does not call a model, mutate the
+repository, or write workspace files. Any actual `.gitclaw/workspaces/*.md`
+change remains a normal reviewed GitHub follow-up.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels incident
 --incident-id <id> --severity <severity> --message-id <id>` captures a
 channel-origin incident/escalation as a durable GitHub issue. The incident
@@ -1174,6 +1184,14 @@ model, generate candidate memory, edit `.gitclaw/` memory files, or mutate the
 repository; the linked proposal issue is where a normal GitHub Models
 conversation can review the durable memory change before a code-review branch
 applies it.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+propose-workspace --workspace-id <id> --target .gitclaw/workspaces/<name>.md
+--message-id <id>` opens or reuses a normal GitHub workspace proposal issue
+and queues a provider-facing proposal link back to the Slack/Telegram thread.
+The channel action does not call a model, generate workspace text, edit
+`.gitclaw/workspaces/*.md`, or mutate the repository; the linked proposal issue
+is where a normal GitHub Models conversation can review the desired workspace
+context before a code-review branch applies it.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 rehearse-memory --target <target> --id <id> --message-id <id>` opens or reuses
 a normal GitHub memory rehearsal issue and queues a provider-facing rehearsal
@@ -1476,6 +1494,7 @@ scripts/e2e/github-channel-kudos-slash.sh
 scripts/e2e/github-channel-retro-slash.sh
 scripts/e2e/github-channel-playbook-slash.sh
 scripts/e2e/github-channel-insight-slash.sh
+scripts/e2e/github-channel-workspace-proposal-slash.sh
 scripts/e2e/github-channel-incident-slash.sh
 scripts/e2e/github-channel-voice-slash.sh
 scripts/e2e/github-channel-image-slash.sh
@@ -1851,6 +1870,15 @@ observation, evidence, and recommendation, queues a provider-facing insight
 link back to the mirrored thread, checks duplicate insight and notification
 suppression, exposes the link through metadata-only outbox, and then continues
 on the insight issue with a real GitHub Models repo-reader/search follow-up.
+The channel-workspace-proposal slash harness turns the operator console into a
+workspace-context intake lane: a channel-ingested issue receives `@gitclaw
+/channels propose-workspace`, creates or reuses a durable GitHub workspace
+proposal issue with readable title, target path, proposal, and rationale,
+queues a provider-facing proposal link back to the mirrored thread, checks
+that no workspace file or repository mutation happened, checks duplicate
+proposal and notification suppression, exposes the link through metadata-only
+outbox, and then continues on the proposal issue with a real GitHub Models
+repo-reader/search follow-up.
 The channel-incident slash harness turns the operator console into an
 escalation intake surface: a channel-ingested issue receives `@gitclaw
 /channels incident`, creates or reuses a durable GitHub incident issue with a

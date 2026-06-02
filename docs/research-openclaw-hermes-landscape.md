@@ -4697,6 +4697,35 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-02 Channel Workspace Proposal Follow-Up
+
+OpenClaw's channels and CLI session model point toward chat as an intake
+surface, with durable work moving into a reviewed agent workspace. Hermes'
+toolset and checkpoint guidance reinforces the same separation: chat transport
+should not silently grant write authority, and proposed context changes should
+remain reviewable before they alter the workspace. The useful GitHub-native
+translation is a channel command that opens a conversation artifact first, not
+a file mutation.
+
+GitClaw's version is `@gitclaw /channels propose-workspace --workspace-id
+<id> --target .gitclaw/workspaces/<name>.md --message-id <id>`. It opens or
+reuses a normal `gitclaw:channel-workspace-proposal` issue with readable title,
+target path, proposal, and rationale, queues one provider-facing proposal link
+to the source Slack/Telegram thread, and keeps the source receipt body-free
+with only hashes, duplicate status, delivery gates, and explicit no-write
+metadata. The action does not call a model, write `.gitclaw/workspaces/*.md`,
+mutate the repository, call provider APIs, or print raw provider identifiers in
+the source receipt. Acceptance requires live E2E for proposal issue creation,
+metadata-only proposal-link outbox discovery, duplicate suppression, no-file
+and no-repository-mutation assertions, and a real GitHub Models
+repo-reader/search follow-up on the proposal issue.
+
+Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw CLI
+sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes toolsets
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/toolsets/`),
+and Hermes checkpoints/rollback
+(`https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback`).
+
 ## 2026-06-02 Channel RSVP Follow-Up
 
 OpenClaw's channel framing and Hermes' messaging gateway both make a useful
