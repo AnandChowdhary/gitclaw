@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-02T03:24:02Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 648,
+    "title": "GitClaw skill proposal: weekly-review-20260602t031735z",
+    "body": "\u003c!-- gitclaw:skill-proposal-issue name=\"weekly-review-20260602t031735z\" planned_action=\"propose-create\" source_issue=\"647\" source_comment_id=\"4598414382\" source_sha256_12=\"49b3179f9772\" --\u003e\nGitClaw skill proposal issue.\n\n- proposal_name: weekly-review-20260602t031735z\n- planned_action: propose-create\n- requested_action: auto\n- proposal_path: .gitclaw/skill-proposals/weekly-review-20260602t031735z/PROPOSAL.md\n- destination_path: .gitclaw/SKILLS/weekly-review-20260602t031735z/SKILL.md\n- source_issue: #647\n- source_comment_id: 4598414382\n- source_kind: channel_comment\n- source_sha256_12: 49b3179f9772\n- source_bytes: 317\n- source_lines: 4\n- existing_skill_matches: 0\n- available_skills: 1\n- review_pr_required: true\n- raw_source_body_included: false\n- raw_proposal_body_included: false\n- active_skill_write_performed: false\n\nReview this issue, then draft `.gitclaw/skill-proposals/weekly-review-20260602t031735z/PROPOSAL.md` on a normal code-review branch if the proposal is worth keeping. GitClaw does not write or apply active skills from this issue.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": null
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw skill proposal: weekly-review-20260602t031735z\n\n\u003c!-- gitclaw:skill-proposal-issue name=\"weekly-review-20260602t031735z\" planned_action=\"propose-create\" source_issue=\"647\" source_comment_id=\"4598414382\" source_sha256_12=\"49b3179f9772\" --\u003e\nGitClaw skill proposal issue.\n\n- proposal_name: weekly-review-20260602t031735z\n- planned_action: propose-create\n- requested_action: auto\n- proposal_path: .gitclaw/skill-proposals/weekly-review-20260602t031735z/PROPOSAL.md\n- destination_path: .gitclaw/SKILLS/weekly-review-20260602t031735z/SKILL.md\n- source_issue: #647\n- source_comment_id: 4598414382\n- source_kind: channel_comment\n- source_sha256_12: 49b3179f9772\n- source_bytes: 317\n- source_lines: 4\n- existing_skill_matches: 0\n- available_skills: 1\n- review_pr_required: true\n- raw_source_body_included: false\n- raw_proposal_body_included: false\n- active_skill_write_performed: false\n\nReview this issue, then draft `.gitclaw/skill-proposals/weekly-review-20260602t031735z/PROPOSAL.md` on a normal code-review branch if the proposal is worth keeping. GitClaw does not write or apply active skills from this issue.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created skill proposal and use the repo-reader skill.\n\nSearch the repository for `channel skill proposal unique search fixture phrase`.\nThe matching repository search result line has the form `channel skill proposal unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_SKILL_PROPOSAL_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include proposal names, message ids, thread ids, account hashes, issue numbers, or source bodies.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_SKILL_PROPOSAL_FOLLOWUP_20260602t031735z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4598430153,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_SKILL_PROPOSAL_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4598433765,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4598430153,
+      "body": "@gitclaw Continue this channel-created skill proposal and use the repo-reader skill.\n\nSearch the repository for `channel skill proposal unique search fixture phrase`.\nThe matching repository search result line has the form `channel skill proposal unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_SKILL_PROPOSAL_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include proposal names, message ids, thread ids, account hashes, issue numbers, or source bodies.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_SKILL_PROPOSAL_FOLLOWUP_20260602t031735z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T03:22:41Z",
+      "updated_at": "2026-06-02T03:22:41Z"
+    },
+    {
+      "id": 4598433765,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26796316004\" event_id=\"comment-4598430153\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"67a7579e129e24b90de57317325af1a1\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26796316004\" prompt_context_sha256_12=\"c5ae4357ca44\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10752\" usage_completion_tokens=\"14\" usage_total_tokens=\"10766\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_SKILL_PROPOSAL_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T03:23:35Z",
+      "updated_at": "2026-06-02T03:23:35Z"
+    }
+  ]
+}

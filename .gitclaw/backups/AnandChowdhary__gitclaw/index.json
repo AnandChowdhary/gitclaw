@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T03:22:28Z",
+  "generated_at": "2026-06-02T03:24:03Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 558,
+  "count": 559,
   "issues": [
     {
       "number": 3,
@@ -7046,6 +7046,15 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 648,
+      "title": "GitClaw skill proposal: weekly-review-20260602t031735z",
+      "path": "issues/000648.json",
+      "backup_generated_at": "2026-06-02T03:24:02Z",
+      "event_name": "issue_comment",
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
