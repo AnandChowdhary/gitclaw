@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T06:15:18Z",
+  "generated_at": "2026-06-02T06:16:37Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 669,
     "title": "GitClaw telegram thread channel-incident-e2e-20260602t061333z",
@@ -51,6 +51,15 @@
       "CommentID": 4599249230,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Incident Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#669`\n- requested_channel_command: `/channels incident`\n- channel_incident_status: `captured`\n- incident_issue: `#670`\n- incident_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/670`\n- incident_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#669`\n- notification_comment_id: `4599260709`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `d55a425cc178`\n- source_message_id_sha256_12: `4c96494e3ca9`\n- notify_message_id_sha256_12: `abef954b1fcd`\n- notify_message_id_auto: `false`\n- incident_id_sha256_12: `508332ecba3b`\n- incident_id_auto: `false`\n- incident_severity_sha256_12: `7d16d7c992c0`\n- incident_severity_bytes: `4`\n- incident_severity_lines: `1`\n- incident_title_sha256_12: `72642dc26ac3`\n- incident_title_bytes: `53`\n- incident_title_lines: `1`\n- incident_notes_sha256_12: `5f68d6d164d9`\n- incident_notes_bytes: `77`\n- incident_notes_lines: `1`\n- notification_body_sha256_12: `b5bce3cf5a93`\n- target_from_current_channel_issue: `true`\n- raw_incident_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_incident_severity_included: `false`\n- raw_incident_title_included: `false`\n- raw_incident_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_incident_action_change: `true`\n- issue_title_sha256_12: `03f489dee3e0`\n\nGitClaw captured a channel-origin incident as a durable GitHub issue, then queued a provider-facing incident link back to the mirrored thread. The incident issue contains the human-readable severity, title, and notes; this source receipt keeps provider IDs, incident IDs, severity, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the incident-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent incident links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate incident issues are suppressed by `incident_id`; duplicate incident-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the incident issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4599260835,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-02T06:14:55Z",
       "updated_at": "2026-06-02T06:14:55Z"
+    },
+    {
+      "id": 4599260709,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-incident-e2e-20260602t061333z\" message_id=\"incident-notify-20260602t061333z\" author=\"gitclaw\" --\u003e\nGitClaw channel incident captured.\n\nIncident: #670\nURL: https://github.com/AnandChowdhary/gitclaw/issues/670\nSeverity: sev2\nTitle: Shape GitHub-native channel incident 20260602t061333z\n\nContinue triage in the linked GitHub issue.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T06:16:10Z",
+      "updated_at": "2026-06-02T06:16:10Z"
+    },
+    {
+      "id": 4599260835,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26802105775\" event_id=\"comment-4599249230\" model=\"gitclaw/channels\" idempotency_key=\"acdd5c94f4a298ea776e796eb9266fa0\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26802105775\" --\u003e\n## GitClaw Channel Incident Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#669`\n- requested_channel_command: `/channels incident`\n- channel_incident_status: `captured`\n- incident_issue: `#670`\n- incident_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/670`\n- incident_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#669`\n- notification_comment_id: `4599260709`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `d55a425cc178`\n- source_message_id_sha256_12: `4c96494e3ca9`\n- notify_message_id_sha256_12: `abef954b1fcd`\n- notify_message_id_auto: `false`\n- incident_id_sha256_12: `508332ecba3b`\n- incident_id_auto: `false`\n- incident_severity_sha256_12: `7d16d7c992c0`\n- incident_severity_bytes: `4`\n- incident_severity_lines: `1`\n- incident_title_sha256_12: `72642dc26ac3`\n- incident_title_bytes: `53`\n- incident_title_lines: `1`\n- incident_notes_sha256_12: `5f68d6d164d9`\n- incident_notes_bytes: `77`\n- incident_notes_lines: `1`\n- notification_body_sha256_12: `b5bce3cf5a93`\n- target_from_current_channel_issue: `true`\n- raw_incident_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_incident_severity_included: `false`\n- raw_incident_title_included: `false`\n- raw_incident_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_incident_action_change: `true`\n- issue_title_sha256_12: `03f489dee3e0`\n\nGitClaw captured a channel-origin incident as a durable GitHub issue, then queued a provider-facing incident link back to the mirrored thread. The incident issue contains the human-readable severity, title, and notes; this source receipt keeps provider IDs, incident IDs, severity, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the incident-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent incident links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate incident issues are suppressed by `incident_id`; duplicate incident-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the incident issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T06:16:11Z",
+      "updated_at": "2026-06-02T06:16:11Z"
     }
   ]
 }
