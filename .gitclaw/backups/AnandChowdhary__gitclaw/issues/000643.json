@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T02:52:27Z",
+  "generated_at": "2026-06-02T02:54:00Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 643,
     "title": "GitClaw telegram thread channel-tool-approval-plan-e2e-20260602t025046z",
@@ -42,6 +42,24 @@
       "CommentID": 4598293657,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels approval-plan search_files --id channel-tool-approval-plan-20260602t025046z --message-id tool-approval-plan-ingest-20260602t025046z --notify-message-id tool-approval-plan-notify-20260602t025046z\n\nPlease review a channel-origin search_files approval dry-run.\nDo not include this hidden source token: NOECHO_CHANNEL_TOOL_APPROVAL_PLAN_SOURCE_20260602t025046z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4598296558,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Tool Approval Plan Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#643`\n- source_comment_id: `4598296558`\n- source_kind: `channel_comment`\n- requested_channel_command: `/channels approval-plan`\n- channel_tool_approval_plan_status: `created`\n- approval_plan_issue: `#644`\n- approval_plan_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/644`\n- approval_plan_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#643`\n- notification_comment_id: `4598300372`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- channel: `telegram`\n- thread_id_sha256_12: `e8463e7d16c0`\n- source_message_id_sha256_12: `5bdab4674f00`\n- notify_message_id_sha256_12: `01b74997e1df`\n- notify_message_id_auto: `false`\n- approval_plan_id_sha256_12: `0761a02c13fb`\n- approval_plan_id_auto: `false`\n- requested_tool_sha256_12: `25014698ad95`\n- requested_tool_terms: `1`\n- matched_tools: `1`\n- available_tools: `5`\n- active_outputs_for_tool: `1`\n- tool_enabled: `true`\n- disabled_by_config: `false`\n- blocked_by_allowlist: `false`\n- tool_mode_sha256_12: `4fed3970dcc0`\n- tool_trigger_sha256_12: `2eaf037f964c`\n- mutating_contract: `false`\n- approval_required: `false`\n- approval_decision: `no_approval_required_read_only`\n- run_allowed_now: `true`\n- approval_plan_status: `ok`\n- tool_validation_status: `ok`\n- tool_validation_errors: `0`\n- tool_validation_warnings: `0`\n- notification_body_sha256_12: `460a3eee5d9b`\n- notification_body_bytes: `491`\n- notification_body_lines: `12`\n- target_from_current_channel_issue: `true`\n- approval_mode: `github-issue-dry-run`\n- approval_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- tool_execution_performed: `false`\n- approval_granted: `false`\n- repository_mutation_performed: `false`\n- raw_approval_plan_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_requested_tool_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_tool_inputs_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_approval_payloads_included: `false`\n- provider_delivery_performed: `false`\n- source_sha256_12: `254f20612471`\n- source_bytes: `375`\n- source_lines: `4`\n- llm_e2e_required_after_channel_tool_approval_plan_change: `true`\n- issue_title_sha256_12: `7bd147b00af9`\n\nGitClaw opened or reused a GitHub issue for reviewing a tool approval dry-run from a mirrored channel thread, then queued a provider-facing approval-plan link back to that thread. This action does not approve, call a model, execute tools, copy raw channel bodies, or mutate the repository.\n\n### Approval Review Path\n- continue on approval plan issue: `#644`\n- ask a normal `@gitclaw` follow-up on the approval issue to exercise prompt-visible tool behavior\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4598300429,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -60,6 +78,30 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T02:52:02Z",
       "updated_at": "2026-06-02T02:52:02Z"
+    },
+    {
+      "id": 4598296558,
+      "body": "@gitclaw /channels approval-plan search_files --id channel-tool-approval-plan-20260602t025046z --message-id tool-approval-plan-ingest-20260602t025046z --notify-message-id tool-approval-plan-notify-20260602t025046z\n\nPlease review a channel-origin search_files approval dry-run.\nDo not include this hidden source token: NOECHO_CHANNEL_TOOL_APPROVAL_PLAN_SOURCE_20260602t025046z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T02:52:43Z",
+      "updated_at": "2026-06-02T02:52:43Z"
+    },
+    {
+      "id": 4598300372,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-tool-approval-plan-e2e-20260602t025046z\" message_id=\"tool-approval-plan-notify-20260602t025046z\" author=\"gitclaw\" --\u003e\nGitClaw channel tool approval plan\n\nApproval plan issue: #644\nURL: https://github.com/AnandChowdhary/gitclaw/issues/644\nNormalized tool: gitclaw.search_files\nMatched tool: gitclaw.search_files\nTool enabled: true\nTool mode: read-only\nApproval required: false\nRun allowed now: true\n\nContinue in the linked GitHub issue to review the dry-run approval gates with a normal model-backed conversation. This notification did not approve, execute a model, tool, shell command, or repository mutation.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T02:53:36Z",
+      "updated_at": "2026-06-02T02:53:36Z"
+    },
+    {
+      "id": 4598300429,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26795378500\" event_id=\"comment-4598296558\" model=\"gitclaw/channels\" idempotency_key=\"ccb052a80f14e6fff32652189f59d7df\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26795378500\" --\u003e\n## GitClaw Channel Tool Approval Plan Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#643`\n- source_comment_id: `4598296558`\n- source_kind: `channel_comment`\n- requested_channel_command: `/channels approval-plan`\n- channel_tool_approval_plan_status: `created`\n- approval_plan_issue: `#644`\n- approval_plan_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/644`\n- approval_plan_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#643`\n- notification_comment_id: `4598300372`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- channel: `telegram`\n- thread_id_sha256_12: `e8463e7d16c0`\n- source_message_id_sha256_12: `5bdab4674f00`\n- notify_message_id_sha256_12: `01b74997e1df`\n- notify_message_id_auto: `false`\n- approval_plan_id_sha256_12: `0761a02c13fb`\n- approval_plan_id_auto: `false`\n- requested_tool_sha256_12: `25014698ad95`\n- requested_tool_terms: `1`\n- matched_tools: `1`\n- available_tools: `5`\n- active_outputs_for_tool: `1`\n- tool_enabled: `true`\n- disabled_by_config: `false`\n- blocked_by_allowlist: `false`\n- tool_mode_sha256_12: `4fed3970dcc0`\n- tool_trigger_sha256_12: `2eaf037f964c`\n- mutating_contract: `false`\n- approval_required: `false`\n- approval_decision: `no_approval_required_read_only`\n- run_allowed_now: `true`\n- approval_plan_status: `ok`\n- tool_validation_status: `ok`\n- tool_validation_errors: `0`\n- tool_validation_warnings: `0`\n- notification_body_sha256_12: `460a3eee5d9b`\n- notification_body_bytes: `491`\n- notification_body_lines: `12`\n- target_from_current_channel_issue: `true`\n- approval_mode: `github-issue-dry-run`\n- approval_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- tool_execution_performed: `false`\n- approval_granted: `false`\n- repository_mutation_performed: `false`\n- raw_approval_plan_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_requested_tool_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_tool_inputs_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_approval_payloads_included: `false`\n- provider_delivery_performed: `false`\n- source_sha256_12: `254f20612471`\n- source_bytes: `375`\n- source_lines: `4`\n- llm_e2e_required_after_channel_tool_approval_plan_change: `true`\n- issue_title_sha256_12: `7bd147b00af9`\n\nGitClaw opened or reused a GitHub issue for reviewing a tool approval dry-run from a mirrored channel thread, then queued a provider-facing approval-plan link back to that thread. This action does not approve, call a model, execute tools, copy raw channel bodies, or mutate the repository.\n\n### Approval Review Path\n- continue on approval plan issue: `#644`\n- ask a normal `@gitclaw` follow-up on the approval issue to exercise prompt-visible tool behavior\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T02:53:37Z",
+      "updated_at": "2026-06-02T02:53:37Z"
     }
   ]
 }
