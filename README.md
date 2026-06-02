@@ -688,6 +688,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels digest --digest-id <id> --message-id <id>
 @gitclaw /channels idea --idea-id <id> --message-id <id>
 @gitclaw /channels kudos --kudos-id <id> --message-id <id>
+@gitclaw /channels retro --retro-id <id> --message-id <id>
 @gitclaw /channels incident --incident-id <id> --severity <severity> --message-id <id>
 @gitclaw /channels voice --voice-id <id> --duration <seconds> --message-id <id>
 @gitclaw /channels image --image-id <id> --width <px> --height <px> --message-id <id>
@@ -1023,6 +1024,13 @@ GitHub issue. The kudos issue holds the readable recipient and reason; the
 channel action queues a provider-facing acknowledgement that can show the
 recipient without leaking the reason, and keeps the source receipt body-free
 with hashes, duplicate state, notification metadata, and delivery gates.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels retro
+--retro-id <id> --message-id <id>` records a channel retrospective as a
+durable GitHub issue. The retro issue holds readable title, went-well notes,
+rough edges, and next steps; the channel action queues a provider-facing retro
+link that shows the title without leaking the section text, and keeps the
+source receipt body-free with hashes, duplicate state, notification metadata,
+and delivery gates.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels incident
 --incident-id <id> --severity <severity> --message-id <id>` captures a
 channel-origin incident/escalation as a durable GitHub issue. The incident
@@ -1446,6 +1454,7 @@ scripts/e2e/github-channel-decision-slash.sh
 scripts/e2e/github-channel-digest-slash.sh
 scripts/e2e/github-channel-idea-slash.sh
 scripts/e2e/github-channel-kudos-slash.sh
+scripts/e2e/github-channel-retro-slash.sh
 scripts/e2e/github-channel-incident-slash.sh
 scripts/e2e/github-channel-voice-slash.sh
 scripts/e2e/github-channel-image-slash.sh
@@ -1800,6 +1809,13 @@ recipient and reason, queues a provider-facing acknowledgement back to the
 mirrored thread, checks duplicate kudos and notification suppression, exposes
 the acknowledgement through metadata-only outbox, and then continues on the
 kudos issue with a real GitHub Models repo-reader/search follow-up.
+The channel-retro slash harness turns the operator console into a retrospective
+lane: a channel-ingested issue receives `@gitclaw /channels retro`, creates or
+reuses a durable GitHub retro issue with readable title, went-well notes, rough
+edges, and next steps, queues a provider-facing retro link back to the mirrored
+thread, checks duplicate retro and notification suppression, exposes the link
+through metadata-only outbox, and then continues on the retro issue with a real
+GitHub Models repo-reader/search follow-up.
 The channel-incident slash harness turns the operator console into an
 escalation intake surface: a channel-ingested issue receives `@gitclaw
 /channels incident`, creates or reuses a durable GitHub incident issue with a

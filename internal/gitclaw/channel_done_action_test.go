@@ -350,6 +350,29 @@ func TestChannelDoneArtifactRefSupportsIdeaIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsRetroIssues(t *testing.T) {
+	body := RenderChannelRetroIssueBody(ChannelRetroOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		RetroID:           "retro-done-1",
+		Title:             "Launch readiness retro",
+		WentWell:          "People knew where the decision log lived.",
+		RoughEdges:        "Release checklist updates landed late.",
+		Next:              "Move follow-up experiments into GitHub.",
+		SourceIssueNumber: 46,
+		SourceCommentID:   4600,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "retro" || ref.ID != "retro-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 46 || ref.SourceCommentID != 4600 {
+		t.Fatalf("unexpected retro artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsIncidentIssues(t *testing.T) {
 	body := RenderChannelIncidentIssueBody(ChannelIncidentOptions{
 		Repo:              "owner/repo",

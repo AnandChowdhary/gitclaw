@@ -173,6 +173,28 @@ OpenClaw skills docs
 Hermes checkpoint/rollback docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback`).
 
+2026-06-02 channel-retro follow-up: OpenClaw's current channel and session
+docs keep chat surfaces and persisted conversation rows distinct, while the
+skills and ClawHub docs make reusable procedures inspectable before they are
+installed or promoted. Hermes' cron and toolset docs apply a similar boundary:
+scheduled runs and platform-specific capabilities are explicit tool surfaces,
+not hidden background authority. GitClaw's serverless analogue should let a
+Slack/Telegram thread record a retrospective without turning every lesson into
+memory or automation immediately. `@gitclaw /channels retro --retro-id <id>
+--message-id <id>` opens or reuses a normal GitHub retro issue with readable
+title, went-well notes, rough edges, and next steps, queues one provider-facing
+retro link, and then requires any follow-up task, skill, reminder, or memory
+promotion to happen through normal GitHub issue review and GitHub Models/tool
+turns. The source receipt stays body-free with only hashes, duplicate state,
+and outbox metadata. Sources: OpenClaw channel docs
+(`https://docs.openclaw.ai/channels`), OpenClaw sessions docs
+(`https://docs.openclaw.ai/cli/sessions`), OpenClaw skills CLI docs
+(`https://docs.openclaw.ai/cli/skills`), ClawHub docs
+(`https://docs.openclaw.ai/clawhub`), Hermes cron docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/cron/`), and
+Hermes toolsets docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/toolsets/`).
+
 2026-06-02 channel-kudos follow-up: the current OpenClaw skills CLI docs make
 skills inspectable, installable, updatable, and workshop-reviewable artifacts
 rather than invisible runtime magic. ClawHub now exposes both text skills and

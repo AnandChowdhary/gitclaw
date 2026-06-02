@@ -5458,6 +5458,7 @@ accepts a structured reaction form:
 @gitclaw /channels decision --decision-id <stable-decision-id> --message-id <provider-message-id>
 @gitclaw /channels digest --digest-id <stable-digest-id> --message-id <provider-message-id>
 @gitclaw /channels idea --idea-id <stable-idea-id> --message-id <provider-message-id>
+@gitclaw /channels retro --retro-id <stable-retro-id> --message-id <provider-message-id>
 @gitclaw /channels incident --incident-id <stable-incident-id> --severity <severity> --message-id <provider-message-id>
 @gitclaw /channels voice --voice-id <stable-voice-id> --duration <seconds> --message-id <provider-message-id>
 @gitclaw /channels image --image-id <stable-image-id> --width <px> --height <px> --message-id <provider-message-id>
@@ -5852,6 +5853,42 @@ notify_message_id` for the provider-facing acknowledgement. Changes to this
 surface require a live E2E that captures kudos, validates the metadata-only
 acknowledgement outbox, checks duplicate suppression, and then continues on
 the kudos issue with a normal GitHub Models repo-reader/search follow-up.
+
+The same channel-thread issue can also record a channel retrospective:
+
+```text
+@gitclaw /channels retro --retro-id <stable-retro-id> --message-id <provider-message-id>
+Title: short retrospective title
+Went well:
+optional human-readable wins
+Rough edges:
+optional human-readable friction
+Next:
+optional human-readable next experiment or action
+```
+
+`/channels retro`, `/channels retrospective`, `/channels review`,
+`/channels after-action`, `/channels after-action-review`, `/channels aar`,
+and `/channels lessons` infer the current channel and thread id from the issue
+marker when no explicit route/channel/thread target is provided. They create
+or reuse one open GitHub issue carrying a hidden `gitclaw:channel-retro`
+marker for the stable retro id, label it with `gitclaw` so normal conversation
+can continue there, and queue a provider-facing retro link back to the
+mirrored channel thread. The retro issue contains the human-readable title,
+went-well notes, rough edges, and next steps because it is the reviewable
+after-action record; the source receipt remains body-free, reporting only
+retro/thread/message/title/went-well/rough-edge/next hashes, duplicate status,
+notification queue metadata, and delivery gates. The provider-facing
+acknowledgement can show the title and GitHub issue link but not the section
+text. It does not call a model, call provider APIs, print raw retro ids, print
+raw thread ids, print raw source or notification message ids, print channel
+message bodies, or print raw section text in the source receipt. Duplicates
+are suppressed first by `retro_id` for the GitHub retro issue and then by
+`channel + notify_message_id` for the provider-facing retro link. Changes to
+this surface require a live E2E that records the retro, validates the
+metadata-only retro-link outbox, checks duplicate suppression, and then
+continues on the retro issue with a normal GitHub Models repo-reader/search
+follow-up.
 
 The same channel-thread issue can also capture an incident or escalation:
 
@@ -6625,6 +6662,12 @@ Behavior:
   `channel + notify_message_id`,
 - create or reuse one `gitclaw:channel-idea` issue per idea id and queue one
   provider-facing idea-link outbound comment per `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-kudos` issue per kudos id and queue
+  one provider-facing acknowledgement outbound comment per
+  `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-retro` issue per retro id and queue
+  one provider-facing retro-link outbound comment per
+  `channel + notify_message_id`,
 - create or reuse one `gitclaw:channel-incident` issue per incident id and
   queue one provider-facing incident-link outbound comment per
   `channel + notify_message_id`,
@@ -6672,7 +6715,7 @@ Behavior:
   `gitclaw:checkpoint-rehearsal-issue`, `gitclaw:channel-clip`,
   `gitclaw:channel-attachment`, `gitclaw:channel-decision`,
   `gitclaw:channel-digest`, `gitclaw:channel-idea`,
-  `gitclaw:channel-kudos`,
+  `gitclaw:channel-kudos`, `gitclaw:channel-retro`,
   `gitclaw:channel-incident`, `gitclaw:channel-voice`,
   `gitclaw:channel-image`, `gitclaw:channel-link`,
   `gitclaw:channel-access-request`, `gitclaw:channel-contact`, or
@@ -6864,6 +6907,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels digest --digest-id channel-digest-1 --message-id provider-msg-1
 @gitclaw /channels idea --idea-id channel-idea-1 --message-id provider-msg-1
 @gitclaw /channels kudos --kudos-id channel-kudos-1 --message-id provider-msg-1
+@gitclaw /channels retro --retro-id channel-retro-1 --message-id provider-msg-1
 @gitclaw /channels incident --incident-id channel-incident-1 --severity sev2 --message-id provider-msg-1
 @gitclaw /channels voice --voice-id channel-voice-1 --duration 47 --message-id provider-msg-1
 @gitclaw /channels image --image-id channel-image-1 --width 1280 --height 720 --message-id provider-msg-1
@@ -9506,6 +9550,16 @@ examples/workflows/gitclaw.yml
   select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-kudos fixture token, and avoid hidden channel, account, provider,
   message, kudos, recipient, and reason sentinels.
+- A `gh`-driven channel-retro-slash E2E harness creates a real channel-thread
+  issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels retro --retro-id ... --message-id ...` on that mirrored
+  thread, verifies GitHub retro issue creation, body-free source receipt
+  metadata, provider-facing retro-link queueing, duplicate retro and
+  notification suppression, and metadata-only outbox discovery. The retro
+  issue then gets a normal GitHub Models issue-comment follow-up that must
+  select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-retro fixture token, and avoid hidden channel, account, provider,
+  message, retro, and section sentinels.
 - A `gh`-driven channel-incident-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels incident --incident-id ... --severity ... --message-id
