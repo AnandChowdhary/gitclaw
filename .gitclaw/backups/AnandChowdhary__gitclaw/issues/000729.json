@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-02T14:17:47Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 729,
+    "title": "GitClaw channel bundle proposal: GitHub-native skill bundle 20260602t140927z",
+    "body": "\u003c!-- gitclaw:channel-bundle-proposal bundle_id=\"channel-bundle-proposal-20260602t140927z\" channel=\"telegram\" skills_sha256_12=\"21629fba6bb4\" instruction_sha256_12=\"1b4aef27c673\" thread_id_sha256_12=\"f1870a2834bf\" source_message_id_sha256_12=\"7d5a54e0bb45\" source_issue=\"728\" source_comment_id=\"4603250844\" --\u003e\nGitClaw channel skill bundle proposal.\n\n- bundle_id: channel-bundle-proposal-20260602t140927z\n- bundle_name: GitHub-native skill bundle 20260602t140927z\n- skill_count: 3\n- instruction_lines: 1\n- source_channel: telegram\n- source_issue: #728\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/728\n- source_comment_id: 4603250844\n- thread_id_sha256_12: f1870a2834bf\n- source_message_id_sha256_12: 7d5a54e0bb45\n- proposal_store: github-issue-to-git-reviewed-skill-bundle\n- review_pr_required: true\n- bundle_enabled: false\n- skill_install_performed: false\n- bundle_yaml_write_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Purpose\n\nReview whether this channel-origin skill bundle should become a GitClaw task profile.\nReview a GitHub-native channel bundle proposal with VISIBLE_CHANNEL_BUNDLE_PURPOSE_20260602t140927z.\n\n## Skills\n\n- repo-reader\n- self-grill\n- candidate-skill-VISIBLE_CHANNEL_BUNDLE_SKILLS_20260602t140927z\n\n## Bundle Instruction\n\nUse the selected skills together and mention VISIBLE_CHANNEL_BUNDLE_INSTRUCTION_20260602t140927z only inside this reviewed bundle proposal issue.\n\n## Policy\n\nRead-only only with VISIBLE_CHANNEL_BUNDLE_POLICY_20260602t140927z.\n\n## Notes\n\nVisible bundle proposal note: VISIBLE_CHANNEL_BUNDLE_NOTES_20260602t140927z\n\nUse this issue as the reviewable GitHub home for deciding whether this bundle should become `.gitclaw/skill-bundles/\u003cname\u003e.yaml`, documentation, a prompt pack, a proactive workflow, or a test fixture. Activation requires normal GitHub review.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel bundle proposal: GitHub-native skill bundle 20260602t140927z\n\n\u003c!-- gitclaw:channel-bundle-proposal bundle_id=\"channel-bundle-proposal-20260602t140927z\" channel=\"telegram\" skills_sha256_12=\"21629fba6bb4\" instruction_sha256_12=\"1b4aef27c673\" thread_id_sha256_12=\"f1870a2834bf\" source_message_id_sha256_12=\"7d5a54e0bb45\" source_issue=\"728\" source_comment_id=\"4603250844\" --\u003e\nGitClaw channel skill bundle proposal.\n\n- bundle_id: channel-bundle-proposal-20260602t140927z\n- bundle_name: GitHub-native skill bundle 20260602t140927z\n- skill_count: 3\n- instruction_lines: 1\n- source_channel: telegram\n- source_issue: #728\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/728\n- source_comment_id: 4603250844\n- thread_id_sha256_12: f1870a2834bf\n- source_message_id_sha256_12: 7d5a54e0bb45\n- proposal_store: github-issue-to-git-reviewed-skill-bundle\n- review_pr_required: true\n- bundle_enabled: false\n- skill_install_performed: false\n- bundle_yaml_write_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Purpose\n\nReview whether this channel-origin skill bundle should become a GitClaw task profile.\nReview a GitHub-native channel bundle proposal with VISIBLE_CHANNEL_BUNDLE_PURPOSE_20260602t140927z.\n\n## Skills\n\n- repo-reader\n- self-grill\n- candidate-skill-VISIBLE_CHANNEL_BUNDLE_SKILLS_20260602t140927z\n\n## Bundle Instruction\n\nUse the selected skills together and mention VISIBLE_CHANNEL_BUNDLE_INSTRUCTION_20260602t140927z only inside this reviewed bundle proposal issue.\n\n## Policy\n\nRead-only only with VISIBLE_CHANNEL_BUNDLE_POLICY_20260602t140927z.\n\n## Notes\n\nVisible bundle proposal note: VISIBLE_CHANNEL_BUNDLE_NOTES_20260602t140927z\n\nUse this issue as the reviewable GitHub home for deciding whether this bundle should become `.gitclaw/skill-bundles/\u003cname\u003e.yaml`, documentation, a prompt pack, a proactive workflow, or a test fixture. Activation requires normal GitHub review.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created bundle proposal and use the repo-reader skill.\n\nSearch the repository for `channel bundle proposal unique search fixture phrase`.\nThe matching repository search result line has the form `channel bundle proposal unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_BUNDLE_PROPOSAL_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include bundle ids, message ids, thread ids, account hashes, issue numbers, bundle names, skill names, bundle instructions, policy, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_BUNDLE_PROPOSAL_FOLLOWUP_20260602t140927z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4603296803,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_BUNDLE_PROPOSAL_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4603308887,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4603296803,
+      "body": "@gitclaw Continue this channel-created bundle proposal and use the repo-reader skill.\n\nSearch the repository for `channel bundle proposal unique search fixture phrase`.\nThe matching repository search result line has the form `channel bundle proposal unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_BUNDLE_PROPOSAL_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include bundle ids, message ids, thread ids, account hashes, issue numbers, bundle names, skill names, bundle instructions, policy, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_BUNDLE_PROPOSAL_FOLLOWUP_20260602t140927z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T14:16:00Z",
+      "updated_at": "2026-06-02T14:16:00Z"
+    },
+    {
+      "id": 4603308887,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26825705422\" event_id=\"comment-4603296803\" model=\"openai/gpt-5-nano\" idempotency_key=\"c2b9752e111ac7522ac62c6967ad3c79\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26825705422\" prompt_context_sha256_12=\"21d2d3e0c802\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"11073\" usage_completion_tokens=\"471\" usage_total_tokens=\"11544\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_BUNDLE_PROPOSAL_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T14:17:13Z",
+      "updated_at": "2026-06-02T14:17:13Z"
+    }
+  ]
+}
