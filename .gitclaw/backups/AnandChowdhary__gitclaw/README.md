@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-02T00:47:37Z`
-- issue_count: `544`
+- generated_at: `2026-06-02T00:49:25Z`
+- issue_count: `545`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -549,3 +549,4 @@
 | #628 | GitClaw telegram thread channel-backup-rehearsal-e2e-20260602t002233z | `2026-06-02T00:27:18Z` | 7 | 7 | `issues/000628.json` |
 | #629 | GitClaw backup rehearsal: issue #628 (channel-backup-rehearsal-20260602t002233z) | `2026-06-02T00:28:48Z` | 2 | 3 | `issues/000629.json` |
 | #630 | GitClaw telegram thread channel-memory-rehearsal-e2e-20260602t004240z | `2026-06-02T00:47:36Z` | 7 | 7 | `issues/000630.json` |
+| #631 | GitClaw memory rehearsal: .gitclaw/MEMORY.md (channel-memory-rehearsal-20260602t004240z) | `2026-06-02T00:49:24Z` | 2 | 3 | `issues/000631.json` |

@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T00:47:37Z",
+  "generated_at": "2026-06-02T00:49:25Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 544,
+  "count": 545,
   "issues": [
     {
       "number": 3,
@@ -6860,6 +6860,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 631,
+      "title": "GitClaw memory rehearsal: .gitclaw/MEMORY.md (channel-memory-rehearsal-20260602t004240z)",
+      "path": "issues/000631.json",
+      "backup_generated_at": "2026-06-02T00:49:24Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
