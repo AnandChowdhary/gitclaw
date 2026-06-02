@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T11:17:51Z",
+  "generated_at": "2026-06-02T11:19:21Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 712,
     "title": "GitClaw telegram thread channel-playbook-e2e-20260602t111552z",
@@ -51,6 +51,15 @@
       "CommentID": 4601840415,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Playbook Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#712`\n- requested_channel_command: `/channels playbook`\n- channel_playbook_status: `recorded`\n- playbook_issue: `#713`\n- playbook_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/713`\n- playbook_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#712`\n- notification_comment_id: `4601853405`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `a0cbc8c38c8c`\n- source_message_id_sha256_12: `8c75695b78c5`\n- notify_message_id_sha256_12: `0a5dd58b3fd0`\n- notify_message_id_auto: `false`\n- playbook_id_sha256_12: `a9d559df6e70`\n- playbook_id_auto: `false`\n- playbook_title_sha256_12: `e0b9d0168ada`\n- playbook_title_bytes: `32`\n- playbook_title_lines: `1`\n- playbook_steps_sha256_12: `f672fbb8b413`\n- playbook_steps_bytes: `68`\n- playbook_steps_lines: `1`\n- playbook_checks_sha256_12: `00064243cf7d`\n- playbook_checks_bytes: `70`\n- playbook_checks_lines: `1`\n- playbook_rollback_sha256_12: `3ccec34596e9`\n- playbook_rollback_bytes: `74`\n- playbook_rollback_lines: `1`\n- notification_body_sha256_12: `3dcf707ce72d`\n- target_from_current_channel_issue: `true`\n- raw_playbook_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_playbook_title_included: `false`\n- raw_playbook_steps_included: `false`\n- raw_playbook_checks_included: `false`\n- raw_playbook_rollback_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_playbook_action_change: `true`\n- issue_title_sha256_12: `536e7c6a2262`\n\nGitClaw recorded a mirrored channel playbook as a durable GitHub issue, then queued a provider-facing link back to the original thread. The playbook issue contains the human-readable title, steps, checks, and rollback guidance; this source receipt keeps provider IDs, playbook IDs, section text, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the playbook-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent playbook links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate playbook issues are suppressed by `playbook_id`; duplicate playbook-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the playbook issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4601853607,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-02T11:17:28Z",
       "updated_at": "2026-06-02T11:17:28Z"
+    },
+    {
+      "id": 4601853405,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-playbook-e2e-20260602t111552z\" message_id=\"playbook-notify-20260602t111552z\" author=\"gitclaw\" --\u003e\nGitClaw channel playbook recorded.\n\nPlaybook: #713\nURL: https://github.com/AnandChowdhary/gitclaw/issues/713\nTitle: Launch playbook 20260602t111552z\n\nRecorded in the linked GitHub issue.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T11:18:51Z",
+      "updated_at": "2026-06-02T11:18:51Z"
+    },
+    {
+      "id": 4601853607,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26816218404\" event_id=\"comment-4601840415\" model=\"gitclaw/channels\" idempotency_key=\"ddbcd16e088d6e996fa81e36b8b7d696\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26816218404\" --\u003e\n## GitClaw Channel Playbook Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#712`\n- requested_channel_command: `/channels playbook`\n- channel_playbook_status: `recorded`\n- playbook_issue: `#713`\n- playbook_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/713`\n- playbook_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#712`\n- notification_comment_id: `4601853405`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `a0cbc8c38c8c`\n- source_message_id_sha256_12: `8c75695b78c5`\n- notify_message_id_sha256_12: `0a5dd58b3fd0`\n- notify_message_id_auto: `false`\n- playbook_id_sha256_12: `a9d559df6e70`\n- playbook_id_auto: `false`\n- playbook_title_sha256_12: `e0b9d0168ada`\n- playbook_title_bytes: `32`\n- playbook_title_lines: `1`\n- playbook_steps_sha256_12: `f672fbb8b413`\n- playbook_steps_bytes: `68`\n- playbook_steps_lines: `1`\n- playbook_checks_sha256_12: `00064243cf7d`\n- playbook_checks_bytes: `70`\n- playbook_checks_lines: `1`\n- playbook_rollback_sha256_12: `3ccec34596e9`\n- playbook_rollback_bytes: `74`\n- playbook_rollback_lines: `1`\n- notification_body_sha256_12: `3dcf707ce72d`\n- target_from_current_channel_issue: `true`\n- raw_playbook_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_playbook_title_included: `false`\n- raw_playbook_steps_included: `false`\n- raw_playbook_checks_included: `false`\n- raw_playbook_rollback_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_playbook_action_change: `true`\n- issue_title_sha256_12: `536e7c6a2262`\n\nGitClaw recorded a mirrored channel playbook as a durable GitHub issue, then queued a provider-facing link back to the original thread. The playbook issue contains the human-readable title, steps, checks, and rollback guidance; this source receipt keeps provider IDs, playbook IDs, section text, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the playbook-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent playbook links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate playbook issues are suppressed by `playbook_id`; duplicate playbook-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the playbook issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T11:18:52Z",
+      "updated_at": "2026-06-02T11:18:52Z"
     }
   ]
 }
