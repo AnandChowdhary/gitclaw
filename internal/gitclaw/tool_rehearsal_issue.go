@@ -289,9 +289,7 @@ func parseToolRehearsalIssueArgs(args []string, sourceText string) (string, stri
 }
 
 func cleanToolRehearsalID(id string) string {
-	id = strings.ToLower(strings.Trim(strings.TrimSpace(id), " \t\r\n.,:;!?`\"'"))
-	id = strings.ReplaceAll(id, "_", "-")
-	return id
+	return cleanSkillRehearsalID(id)
 }
 
 func toolRehearsalIssueTitle(req ToolRehearsalIssueRequest) string {

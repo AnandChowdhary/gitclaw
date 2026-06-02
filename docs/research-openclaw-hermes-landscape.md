@@ -171,6 +171,28 @@ Hermes MCP docs
 Hermes messaging docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/messaging/`).
 
+2026-06-02 channel-tool-rehearsal follow-up: OpenClaw's capabilities overview
+keeps the taxonomy crisp: tools are callable actions, skills are prompt
+instructions, plugins add larger runtime surfaces, and channels are where chat
+messages enter and leave the agent. Hermes' MCP and Tool Search docs reinforce
+the same boundary from the runtime side: external tool catalogs should be
+filtered, progressively disclosed, and audited at the real tool name when a
+tool is actually called. GitClaw should therefore add a channel-origin tool
+rehearsal lane rather than making mirrored Slack/Telegram messages execute
+tools directly: `@gitclaw /channels rehearse-tool <tool> --id <id>
+--message-id <id>` opens or reuses a normal `gitclaw:tool-rehearsal-issue`,
+queues a provider-facing rehearsal link, and leaves actual model/tool exercise
+to the linked GitHub issue with prompt-context, selected-skill, tool, and usage
+telemetry. The source channel receipt remains deterministic and body-free: no
+model call, no tool execution, no generated inputs, no tool-run request, no raw
+channel body, and no repository mutation. Sources: OpenClaw capabilities docs
+(`https://docs.openclaw.ai/tools`), OpenClaw tool docs
+(`https://docs.openclaw.ai/tools/index`), OpenClaw channel docs
+(`https://docs.openclaw.ai/channels`), Hermes MCP docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp/`), and
+Hermes Tool Search docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-search`).
+
 2026-06-02 channel-skill-rehearsal follow-up: OpenClaw's capabilities overview
 draws a useful boundary: tools are callable actions, skills are prompt-visible
 workflow instructions, and plugins add larger runtime/channel surfaces. Its
