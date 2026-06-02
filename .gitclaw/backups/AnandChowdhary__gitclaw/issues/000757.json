@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T23:14:28Z",
+  "generated_at": "2026-06-02T23:16:00Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 757,
     "title": "GitClaw telegram thread channel-availability-e2e-20260602t231228z",
@@ -51,6 +51,15 @@
       "CommentID": 4607733877,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Availability Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#757`\n- requested_channel_command: `/channels availability`\n- channel_availability_status: `queued`\n- availability_snapshot_mode: `provider-facing-presence-card`\n- availability_state: `available`\n- availability_state_sha256_12: `ddd9818abacf`\n- notification_target_issue: `#757`\n- notification_comment_id: `4607741307`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `bb00f3237a29`\n- source_message_id_sha256_12: `be8169a98c1d`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `fc734b5c4216`\n- notify_message_id_auto: `false`\n- availability_id_sha256_12: `3821fac04bcf`\n- availability_id_auto: `false`\n- bridge_runtime: `github-actions-workflow-dispatch`\n- canonical_surface: `github-issue-thread`\n- inbound_strategy: `channel-ingest workflow_dispatch`\n- outbound_strategy: `channel-outbox + channel-delivery`\n- session_rows_used_as_liveness: `false`\n- provider_socket_probe_performed: `false`\n- provider_api_call_performed: `false`\n- notification_body_sha256_12: `c07ee0e082bc`\n- notification_body_bytes: `749`\n- notification_body_lines: `20`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- workflow_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_availability_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_channel_availability_action_change: `true`\n- issue_title_sha256_12: `134de4b9553a`\n\nGitClaw queued a provider-facing availability card on the canonical channel issue. The card is a GitHub-native presence signal: it proves the Actions-backed bridge can receive a channel command and place a reply in the outbox, while avoiding provider socket probes, provider API calls, session-store liveness guesses, model calls, repository mutations, workflow edits, raw channel bodies, prompts, tool outputs, and credentials.\n\n### Follow-Up Delivery\n- provider gateways read availability cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent availability cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate availability notifications are suppressed by `channel + notify_message_id`\n- use `/channels status`, `/channels model`, `/channels tools`, or `/channels session-search` when the channel needs deeper context",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4607741390,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-02T23:14:03Z",
       "updated_at": "2026-06-02T23:14:03Z"
+    },
+    {
+      "id": 4607741307,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-availability-e2e-20260602t231228z\" message_id=\"availability-notify-20260602t231228z\" author=\"gitclaw\" --\u003e\nGitClaw channel availability\n\nState: available\nBridge runtime: GitHub Actions workflow_dispatch\nCanonical surface: GitHub issue thread\nInbound path: channel-ingest workflow\nOutbound path: channel-outbox + channel-delivery\nProvider socket health: not probed by this action\nSession rows used as liveness: false\nProvider API call: not performed by this action\nModel call: not performed by this action\nRepository mutation: not performed by this action\nWorkflow mutation: not performed by this action\n\nSafe follow-up commands:\n- @gitclaw /channels status\n- @gitclaw /channels model --message-id \u003cid\u003e\n- @gitclaw /channels tools --message-id \u003cid\u003e\n- @gitclaw /channels session-search \u003cquery\u003e --message-id \u003cid\u003e\n- @gitclaw /channels reminder --message-id \u003cid\u003e",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T23:15:29Z",
+      "updated_at": "2026-06-02T23:15:29Z"
+    },
+    {
+      "id": 4607741390,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26853614514\" event_id=\"comment-4607733877\" model=\"gitclaw/channels\" idempotency_key=\"05f51ec4eb0d1ae6b8d789f095bb225a\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26853614514\" --\u003e\n## GitClaw Channel Availability Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#757`\n- requested_channel_command: `/channels availability`\n- channel_availability_status: `queued`\n- availability_snapshot_mode: `provider-facing-presence-card`\n- availability_state: `available`\n- availability_state_sha256_12: `ddd9818abacf`\n- notification_target_issue: `#757`\n- notification_comment_id: `4607741307`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `bb00f3237a29`\n- source_message_id_sha256_12: `be8169a98c1d`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `fc734b5c4216`\n- notify_message_id_auto: `false`\n- availability_id_sha256_12: `3821fac04bcf`\n- availability_id_auto: `false`\n- bridge_runtime: `github-actions-workflow-dispatch`\n- canonical_surface: `github-issue-thread`\n- inbound_strategy: `channel-ingest workflow_dispatch`\n- outbound_strategy: `channel-outbox + channel-delivery`\n- session_rows_used_as_liveness: `false`\n- provider_socket_probe_performed: `false`\n- provider_api_call_performed: `false`\n- notification_body_sha256_12: `c07ee0e082bc`\n- notification_body_bytes: `749`\n- notification_body_lines: `20`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- workflow_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_availability_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_channel_availability_action_change: `true`\n- issue_title_sha256_12: `134de4b9553a`\n\nGitClaw queued a provider-facing availability card on the canonical channel issue. The card is a GitHub-native presence signal: it proves the Actions-backed bridge can receive a channel command and place a reply in the outbox, while avoiding provider socket probes, provider API calls, session-store liveness guesses, model calls, repository mutations, workflow edits, raw channel bodies, prompts, tool outputs, and credentials.\n\n### Follow-Up Delivery\n- provider gateways read availability cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent availability cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate availability notifications are suppressed by `channel + notify_message_id`\n- use `/channels status`, `/channels model`, `/channels tools`, or `/channels session-search` when the channel needs deeper context",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T23:15:30Z",
+      "updated_at": "2026-06-02T23:15:30Z"
     }
   ]
 }
