@@ -678,6 +678,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels memory-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels backup-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels backup-info <issue> --message-id <id> --notify-message-id <id>
+@gitclaw /channels checkpoint-status --message-id <id> --notify-message-id <id>
 @gitclaw /channels soul-info <path> --message-id <id> --notify-message-id <id>
 @gitclaw /channels soul-risk --message-id <id> --notify-message-id <id>
 @gitclaw /channels soul-search <query> --message-id <id> --notify-message-id <id>
@@ -733,6 +734,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels rehearse-memory --target long-term --id <id> --message-id <id>
 @gitclaw /channels rehearse-backup --id <id> --message-id <id>
 @gitclaw /channels restore-request --id <id> --message-id <id>
+@gitclaw /channels checkpoint-status --message-id <id> --notify-message-id <id>
 @gitclaw /channels rehearse-checkpoint --target HEAD~1 --id <id> --message-id <id>
 @gitclaw /channels remind --reminder-id <id> --message-id <id> --at <time>
 @gitclaw /channels done --message-id <id>
@@ -989,6 +991,14 @@ the source receipt keeps target issue numbers, route/thread/message ids,
 backup info ids, backup roots, and backup paths hashed and confirms no restore,
 backup branch write, GitHub API replay, provider delivery, tool execution, or
 model call happened in the deterministic action.
+`@gitclaw /channels checkpoint-status --message-id <id>
+--notify-message-id <id>` queues a provider-facing checkpoint and rollback
+readiness card back to Slack/Telegram. The card reports git availability,
+branch/head metadata, worktree change counts, backup-branch presence, recent
+commit hashes, risk counts, and safe inspect-only follow-up commands. The
+source receipt confirms that the deterministic action did not generate raw
+diffs, print file bodies or commit subjects, restore, reset, clean, checkout,
+call a model, call provider APIs, or mutate repository files.
 `@gitclaw /channels rsvp <route-a>,<route-b> --rsvp-id <id> --message-id <id>`
 creates or reuses a dedicated GitHub RSVP issue, writes the event title,
 when/where/host metadata, and details there, labels it for normal GitClaw
@@ -1537,6 +1547,7 @@ scripts/e2e/github-backup-restore-request-channel-notify.sh
 scripts/e2e/github-channel-backup-status-slash.sh
 scripts/e2e/github-channel-backup-search-slash.sh
 scripts/e2e/github-channel-backup-info-slash.sh
+scripts/e2e/github-channel-checkpoint-status-slash.sh
 scripts/e2e/github-channel-profile-status-slash.sh
 scripts/e2e/github-channel-soul-status-slash.sh
 scripts/e2e/github-channel-soul-info-slash.sh
@@ -2425,6 +2436,13 @@ channel issue was captured on the `gitclaw-backups` branch, exposes the
 restore-review notification through metadata-only outbox, and then continues
 on the restore request issue with a real GitHub Models repo-reader/search
 follow-up.
+The channel-checkpoint-status slash harness turns the operator console into a
+rollback readiness cockpit: a channel-ingested issue receives `@gitclaw
+/channels checkpoint-status`, queues a provider-facing checkpoint/rollback
+metadata card back to the mirrored thread, checks duplicate notification
+suppression, exposes the checkpoint-status notification through metadata-only
+outbox, and then continues on the same channel issue with a real GitHub Models
+repo-reader/search follow-up.
 The channel-checkpoint-rehearsal slash harness turns the operator console into
 a rollback practice surface: a channel-ingested issue receives `@gitclaw
 /channels rehearse-checkpoint`, creates or reuses a GitHub checkpoint rollback

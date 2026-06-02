@@ -208,6 +208,25 @@ Sources: OpenClaw docs (`https://docs.openclaw.ai/`), OpenClaw sessions docs
 and Hermes features/memory docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/overview`).
 
+2026-06-03 channel-checkpoint-status follow-up: OpenClaw's channel CLI keeps
+live chat delivery separate from durable session/state inspection, while Hermes'
+checkpoint docs explicitly recommend rollback-specific inspection instead of
+raw destructive git operations. GitClaw's serverless cut should therefore make
+`@gitclaw /channels checkpoint-status --message-id <id>
+--notify-message-id <id>` a channel-native rollback readiness card. It can
+reuse the repo-local `gitclaw checkpoints status` and `gitclaw checkpoints
+risk` builders, queue one provider-facing card through `channel-outbox`, and
+leave a stricter source receipt with only hashes, counts, index hashes,
+delivery gates, and no raw diffs, file bodies, or commit subjects. It should
+not call a model, execute restore/reset/clean/checkout mutations, call provider
+APIs, mutate repository files, or expose raw channel, issue, comment, prompt,
+tool-output, diff, file-body, or credential values. Sources: OpenClaw channel
+docs (`https://docs.openclaw.ai/cli/channels`), OpenClaw sessions docs
+(`https://docs.openclaw.ai/cli/sessions`), Hermes checkpoint docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback`),
+and Hermes features docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/overview`).
+
 2026-06-02 channel-backup-info follow-up: OpenClaw's backup surface treats
 archives as manifest-backed recovery artifacts, while its channels/sessions
 surface keeps conversational delivery separate from restore operations. Hermes'
