@@ -5377,6 +5377,7 @@ accepts a structured reaction form:
 @gitclaw /channels digest --digest-id <stable-digest-id> --message-id <provider-message-id>
 @gitclaw /channels idea --idea-id <stable-idea-id> --message-id <provider-message-id>
 @gitclaw /channels incident --incident-id <stable-incident-id> --severity <severity> --message-id <provider-message-id>
+@gitclaw /channels voice --voice-id <stable-voice-id> --duration <seconds> --message-id <provider-message-id>
 @gitclaw /channels handoff --id <stable-handoff-id> --message-id <provider-message-id>
 @gitclaw /channels request-run <tool-name> --id <stable-request-id> --message-id <provider-message-id>
 @gitclaw /channels approval-plan <tool-name> --id <stable-approval-plan-id> --message-id <provider-message-id>
@@ -5764,6 +5765,38 @@ link. Changes to this surface require a live E2E that captures the incident,
 validates the metadata-only incident-link outbox, checks duplicate suppression,
 and then continues on the incident issue with a normal GitHub Models
 repo-reader/search follow-up.
+
+The same channel-thread issue can also capture a voice or audio note:
+
+```text
+@gitclaw /channels voice --voice-id <stable-voice-id> --duration <seconds> --message-id <provider-message-id>
+Voice: short voice-note title
+Transcript:
+human-readable transcript or summary
+```
+
+`/channels voice`, `/channels voice-note`, `/channels audio`,
+`/channels audio-note`, `/channels transcript`, `/channels transcribe`,
+`/channels voice-memo`, and `/channels memo` infer the current channel and
+thread id from the issue marker when no explicit route/channel/thread target
+is provided. They create or reuse one open GitHub issue carrying a hidden
+`gitclaw:channel-voice` marker for the stable voice id, label it with
+`gitclaw` so normal conversation can continue there, and queue a
+provider-facing voice-note link back to the mirrored channel thread. The voice
+issue contains the human-readable title and transcript because it is the
+reviewable, searchable transcript surface; the source receipt remains
+body-free, reporting only voice/thread/message/title/transcript/media URL/media
+type hashes, duration metadata, duplicate status, notification queue metadata,
+and delivery gates. It does not call a model, call provider APIs, fetch audio
+URLs, upload media, print raw voice ids, print raw thread ids, print raw source
+or notification message ids, print raw media types, print raw audio URLs, print
+channel message bodies, or print raw titles/transcripts in the source receipt.
+Duplicates are suppressed first by `voice_id` for the GitHub voice issue and
+then by `channel + notify_message_id` for the provider-facing voice-note link.
+Changes to this surface require a live E2E that captures the voice note,
+validates the metadata-only voice-link outbox, checks duplicate suppression,
+verifies media URL/material does not leak into receipts, and then continues on
+the voice issue with a normal GitHub Models repo-reader/search follow-up.
 
 The same channel-thread issue can also fork the mirrored conversation into a
 normal GitHub session lane:
@@ -6217,7 +6250,7 @@ repo-reader/search follow-up.
 
 The channel-created task, watch, standing-order proposal, backup restore
 request, checkpoint rehearsal, clip, attachment, decision, digest, idea,
-incident, and reminder
+incident, voice, and reminder
 issues also accept a completion form:
 
 ```text
@@ -6281,6 +6314,8 @@ Behavior:
 - create or reuse one `gitclaw:channel-incident` issue per incident id and
   queue one provider-facing incident-link outbound comment per
   `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-voice` issue per voice id and queue one
+  provider-facing voice-note outbound comment per `channel + notify_message_id`,
 - create or reuse one `gitclaw:tool-run-request-issue` issue per channel
   request id and queue one provider-facing review-link outbound comment per
   `channel + notify_message_id` without executing a model or tool,
@@ -6498,6 +6533,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels digest --digest-id channel-digest-1 --message-id provider-msg-1
 @gitclaw /channels idea --idea-id channel-idea-1 --message-id provider-msg-1
 @gitclaw /channels incident --incident-id channel-incident-1 --severity sev2 --message-id provider-msg-1
+@gitclaw /channels voice --voice-id channel-voice-1 --duration 47 --message-id provider-msg-1
 @gitclaw /channels request-run search_files --id channel-tool-request-1 --message-id provider-msg-1
 @gitclaw /channels approval-plan search_files --id channel-tool-approval-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-tool search_files --id channel-tool-rehearsal-1 --message-id provider-msg-1
@@ -9106,6 +9142,16 @@ examples/workflows/gitclaw.yml
   follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
   recover the channel-incident fixture token, and avoid hidden channel,
   account, provider, message, severity, and incident sentinels.
+- A `gh`-driven channel-voice-slash E2E harness creates a real channel-thread
+  issue through `gitclaw-channel-ingest.yml`, posts `@gitclaw /channels voice
+  --voice-id ... --duration ... --message-id ...` on that mirrored thread,
+  verifies GitHub voice transcript issue creation, body-free source receipt
+  metadata, provider-facing voice-link queueing, duplicate voice and
+  notification suppression, and metadata-only outbox discovery. The voice issue
+  then gets a normal GitHub Models issue-comment follow-up that must select
+  `repo-reader`, expose `gitclaw.search_files`, recover the channel-voice
+  fixture token, and avoid hidden channel, account, provider, message, media,
+  transcript, and voice sentinels.
 - A `gh`-driven channel-tool-run-request-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels request-run search_files --id ... --message-id ...` on

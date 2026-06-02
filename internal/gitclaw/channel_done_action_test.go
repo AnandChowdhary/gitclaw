@@ -372,6 +372,30 @@ func TestChannelDoneArtifactRefSupportsIncidentIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsVoiceIssues(t *testing.T) {
+	body := RenderChannelVoiceIssueBody(ChannelVoiceOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		VoiceID:           "voice-done-1",
+		Title:             "Visible voice note",
+		Transcript:        "Durable transcript.",
+		DurationSeconds:   42,
+		MediaType:         "audio/ogg",
+		AudioURL:          "https://media.example.invalid/voice.ogg",
+		SourceIssueNumber: 47,
+		SourceCommentID:   4700,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "voice" || ref.ID != "voice-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 47 || ref.SourceCommentID != 4700 {
+		t.Fatalf("unexpected voice artifact ref: %#v", ref)
+	}
+}
+
 func channelDoneQuoteJSON(t *testing.T, value string) string {
 	t.Helper()
 	quoted, err := json.Marshal(value)

@@ -4576,3 +4576,28 @@ Hermes slash commands reference
 (`https://hermes-agent.nousresearch.com/docs/reference/slash-commands/`),
 OpenClaw backup docs (`https://docs.openclaw.ai/cli/backup`), and OpenClaw
 migration safety docs (`https://docs.openclaw.ai/cli/migrate`).
+
+## 2026-06-02 Channel Voice Note Follow-Up
+
+OpenClaw's current overview frames the gateway as multi-channel and explicitly
+includes media support across chat surfaces. Hermes' messaging guide exposes a
+`/voice` command and recommends mobile-friendly defaults: terse progress,
+interim assistant messages, and long-running notification bubbles instead of
+noisy per-tool chatter. The useful GitClaw translation is not to fetch audio
+bytes from Slack or Telegram inside Actions, but to make voice notes durable
+and searchable without turning provider media URLs into logs.
+
+GitClaw's serverless version is `@gitclaw /channels voice --voice-id <id>
+--duration <seconds> --message-id <id>`. It opens or reuses a normal
+`gitclaw:channel-voice` issue with a readable title and transcript, queues one
+provider-facing voice-note link to the source Slack/Telegram thread, and keeps
+the source receipt body-free with only title/transcript/media URL/media type
+hashes, duration metadata, duplicate status, and delivery gates. The action
+does not call a model, fetch audio, upload media, call provider APIs, print raw
+audio URLs, print raw media metadata, or mutate the repository. Acceptance
+requires live E2E for voice issue creation, metadata-only voice-link outbox
+discovery, duplicate suppression, and a real GitHub Models repo-reader/search
+follow-up on the voice issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
