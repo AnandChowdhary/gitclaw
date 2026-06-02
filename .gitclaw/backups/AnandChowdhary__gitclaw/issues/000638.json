@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T01:57:50Z",
+  "generated_at": "2026-06-02T01:59:21Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 638,
     "title": "GitClaw telegram thread channel-attachment-e2e-20260602t015552z",
@@ -42,6 +42,24 @@
       "CommentID": 4598050990,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels attachment --attachment-id channel-attachment-20260602t015552z --message-id attachment-ingest-20260602t015552z --notify-message-id attachment-notify-20260602t015552z --filename launch-brief-20260602t015552z.pdf --media-type application/pdf --bytes 4242 --sha256 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef --source-url https://example.invalid/NOECHO_CHANNEL_ATTACHMENT_URL_20260602t015552z\nCaption:\nVisible attachment caption token: VISIBLE_CHANNEL_ATTACHMENT_CAPTION_20260602t015552z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4598055034,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Attachment Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#638`\n- requested_channel_command: `/channels attachment`\n- channel_attachment_status: `recorded`\n- attachment_issue: `#639`\n- attachment_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/639`\n- attachment_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#638`\n- notification_comment_id: `4598060077`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `55fd26be9b31`\n- source_message_id_sha256_12: `58aee6e5d3aa`\n- notify_message_id_sha256_12: `01e94fea92a7`\n- notify_message_id_auto: `false`\n- attachment_id_sha256_12: `418c84304b2e`\n- attachment_id_auto: `false`\n- attachment_filename_sha256_12: `43e321f55ef6`\n- attachment_filename_bytes: `33`\n- attachment_filename_lines: `1`\n- attachment_media_type_sha256_12: `91ed0f7cdaa1`\n- attachment_bytes: `4242`\n- file_checksum_sha256_12: `a8ae6e6ee929`\n- source_url_sha256_12: `debfe1d51c44`\n- attachment_caption_sha256_12: `96a702894298`\n- attachment_caption_bytes: `85`\n- attachment_caption_lines: `1`\n- notification_body_sha256_12: `b70db885c1f9`\n- target_from_current_channel_issue: `true`\n- attachment_mode: `github-issue-attachment-metadata`\n- attachment_issue_labeled_for_gitclaw: `true`\n- provider_fetch_performed: `false`\n- provider_delivery_performed: `false`\n- raw_attachment_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_attachment_filename_included: `false`\n- raw_attachment_caption_included: `false`\n- raw_source_url_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_attachment_bytes_included: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_attachment_action_change: `true`\n- issue_title_sha256_12: `0783e446e162`\n\nGitClaw recorded channel-origin attachment metadata as a durable GitHub issue, then queued a provider-facing link back to the original thread. The attachment issue contains readable metadata; this source receipt keeps provider IDs, attachment IDs, filenames, captions, source URLs, file bytes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the attachment-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent attachment links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate attachment issues are suppressed by `attachment_id`; duplicate attachment-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the attachment issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4598060119,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -60,6 +78,30 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T01:57:21Z",
       "updated_at": "2026-06-02T01:57:21Z"
+    },
+    {
+      "id": 4598055034,
+      "body": "@gitclaw /channels attachment --attachment-id channel-attachment-20260602t015552z --message-id attachment-ingest-20260602t015552z --notify-message-id attachment-notify-20260602t015552z --filename launch-brief-20260602t015552z.pdf --media-type application/pdf --bytes 4242 --sha256 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef --source-url https://example.invalid/NOECHO_CHANNEL_ATTACHMENT_URL_20260602t015552z\nCaption:\nVisible attachment caption token: VISIBLE_CHANNEL_ATTACHMENT_CAPTION_20260602t015552z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T01:58:06Z",
+      "updated_at": "2026-06-02T01:58:06Z"
+    },
+    {
+      "id": 4598060077,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-attachment-e2e-20260602t015552z\" message_id=\"attachment-notify-20260602t015552z\" author=\"gitclaw\" --\u003e\nGitClaw channel attachment recorded.\n\nAttachment: #639\nURL: https://github.com/AnandChowdhary/gitclaw/issues/639\nFilename: launch-brief-20260602t015552z.pdf\nMedia type: application/pdf\nSize: 4242 bytes\n\nRecorded in the linked GitHub issue without fetching or copying file bytes.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T01:58:57Z",
+      "updated_at": "2026-06-02T01:58:57Z"
+    },
+    {
+      "id": 4598060119,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26793650668\" event_id=\"comment-4598055034\" model=\"gitclaw/channels\" idempotency_key=\"15f44c88f5461652939e57885a448010\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26793650668\" --\u003e\n## GitClaw Channel Attachment Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#638`\n- requested_channel_command: `/channels attachment`\n- channel_attachment_status: `recorded`\n- attachment_issue: `#639`\n- attachment_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/639`\n- attachment_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#638`\n- notification_comment_id: `4598060077`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `55fd26be9b31`\n- source_message_id_sha256_12: `58aee6e5d3aa`\n- notify_message_id_sha256_12: `01e94fea92a7`\n- notify_message_id_auto: `false`\n- attachment_id_sha256_12: `418c84304b2e`\n- attachment_id_auto: `false`\n- attachment_filename_sha256_12: `43e321f55ef6`\n- attachment_filename_bytes: `33`\n- attachment_filename_lines: `1`\n- attachment_media_type_sha256_12: `91ed0f7cdaa1`\n- attachment_bytes: `4242`\n- file_checksum_sha256_12: `a8ae6e6ee929`\n- source_url_sha256_12: `debfe1d51c44`\n- attachment_caption_sha256_12: `96a702894298`\n- attachment_caption_bytes: `85`\n- attachment_caption_lines: `1`\n- notification_body_sha256_12: `b70db885c1f9`\n- target_from_current_channel_issue: `true`\n- attachment_mode: `github-issue-attachment-metadata`\n- attachment_issue_labeled_for_gitclaw: `true`\n- provider_fetch_performed: `false`\n- provider_delivery_performed: `false`\n- raw_attachment_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_attachment_filename_included: `false`\n- raw_attachment_caption_included: `false`\n- raw_source_url_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_attachment_bytes_included: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_attachment_action_change: `true`\n- issue_title_sha256_12: `0783e446e162`\n\nGitClaw recorded channel-origin attachment metadata as a durable GitHub issue, then queued a provider-facing link back to the original thread. The attachment issue contains readable metadata; this source receipt keeps provider IDs, attachment IDs, filenames, captions, source URLs, file bytes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the attachment-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent attachment links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate attachment issues are suppressed by `attachment_id`; duplicate attachment-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the attachment issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T01:58:57Z",
+      "updated_at": "2026-06-02T01:58:57Z"
     }
   ]
 }
