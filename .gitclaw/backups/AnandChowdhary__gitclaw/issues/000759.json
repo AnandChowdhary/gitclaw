@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T23:39:31Z",
+  "generated_at": "2026-06-02T23:41:15Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -11,6 +11,7 @@
     "author_association": "OWNER",
     "labels": [
       "gitclaw",
+      "gitclaw:done",
       "gitclaw:channel"
     ]
   },
@@ -50,6 +51,24 @@
       "CommentID": 4607847296,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels topic --topic-id topic-update-20260602t233649z\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_TOPIC_DUPLICATE_20260602T233649Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4607849915,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Topic Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#759`\n- requested_channel_command: `/channels topic`\n- channel_topic_status: `duplicate`\n- target_issue: `#759`\n- target_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/759`\n- topic_comment_id: `0`\n- target_issue_created: `false`\n- duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `dd0b8c7f7e2a`\n- topic_id_sha256_12: `0fdd91f66d03`\n- topic_id_auto: `false`\n- topic_sha256_12: `f04d066f07c8`\n- topic_bytes: `106`\n- topic_lines: `1`\n- topic_source: `trailing-lines`\n- target_from_current_channel_issue: `true`\n- target_issue_is_source: `true`\n- raw_route_name_included: `false`\n- raw_thread_id_included: `false`\n- raw_topic_id_included: `false`\n- raw_topic_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- github_issue_title_mutation_performed: `false`\n- provider_topic_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- model_call_performed: `false`\n- llm_e2e_required_after_channel_topic_action_change: `true`\n- issue_title_sha256_12: `4019dd8e0ed0`\n\nGitClaw queued a structured `gitclaw:channel-topic` comment on the canonical channel issue. Provider tokens, provider APIs, raw thread IDs, raw topic IDs, raw topic text, GitHub issue-title mutations, repository mutations, prompts, tool outputs, and credentials are not included in this receipt.\n\n### Follow-Up Delivery\n- provider gateways read pending topic updates with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent topic updates with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate topic updates are suppressed by `channel + topic_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4607853993,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -84,6 +103,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T23:39:04Z",
       "updated_at": "2026-06-02T23:39:04Z"
+    },
+    {
+      "id": 4607849915,
+      "body": "@gitclaw /channels topic --topic-id topic-update-20260602t233649z\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_TOPIC_DUPLICATE_20260602T233649Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T23:39:46Z",
+      "updated_at": "2026-06-02T23:39:46Z"
+    },
+    {
+      "id": 4607853993,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26854546279\" event_id=\"comment-4607849915\" model=\"gitclaw/channels\" idempotency_key=\"b1bcdbf64c7525765014c4e12f0bbaa9\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26854546279\" --\u003e\n## GitClaw Channel Topic Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#759`\n- requested_channel_command: `/channels topic`\n- channel_topic_status: `duplicate`\n- target_issue: `#759`\n- target_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/759`\n- topic_comment_id: `0`\n- target_issue_created: `false`\n- duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `dd0b8c7f7e2a`\n- topic_id_sha256_12: `0fdd91f66d03`\n- topic_id_auto: `false`\n- topic_sha256_12: `f04d066f07c8`\n- topic_bytes: `106`\n- topic_lines: `1`\n- topic_source: `trailing-lines`\n- target_from_current_channel_issue: `true`\n- target_issue_is_source: `true`\n- raw_route_name_included: `false`\n- raw_thread_id_included: `false`\n- raw_topic_id_included: `false`\n- raw_topic_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- github_issue_title_mutation_performed: `false`\n- provider_topic_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- model_call_performed: `false`\n- llm_e2e_required_after_channel_topic_action_change: `true`\n- issue_title_sha256_12: `4019dd8e0ed0`\n\nGitClaw queued a structured `gitclaw:channel-topic` comment on the canonical channel issue. Provider tokens, provider APIs, raw thread IDs, raw topic IDs, raw topic text, GitHub issue-title mutations, repository mutations, prompts, tool outputs, and credentials are not included in this receipt.\n\n### Follow-Up Delivery\n- provider gateways read pending topic updates with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent topic updates with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate topic updates are suppressed by `channel + topic_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T23:40:48Z",
+      "updated_at": "2026-06-02T23:40:48Z"
     }
   ]
 }
