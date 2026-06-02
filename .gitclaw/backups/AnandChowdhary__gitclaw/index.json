@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T04:47:57Z",
+  "generated_at": "2026-06-02T05:07:39Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 567,
+  "count": 568,
   "issues": [
     {
       "number": 3,
@@ -7150,6 +7150,20 @@
       "event_name": "issue_comment",
       "labels": [
         "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
+    },
+    {
+      "number": 657,
+      "title": "GitClaw telegram thread channel-backup-restore-request-e2e-20260602t050537z",
+      "path": "issues/000657.json",
+      "backup_generated_at": "2026-06-02T05:07:38Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:done",
+        "gitclaw:channel"
       ],
       "comment_count": 2,
       "transcript_messages": 3
