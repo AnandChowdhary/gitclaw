@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T07:36:54Z",
+  "generated_at": "2026-06-02T07:38:48Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 582,
+  "count": 583,
   "issues": [
     {
       "number": 3,
@@ -7351,6 +7351,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 676,
+      "title": "GitClaw channel link: Shape GitHub-native channel link 20260602t073205z",
+      "path": "issues/000676.json",
+      "backup_generated_at": "2026-06-02T07:38:47Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }

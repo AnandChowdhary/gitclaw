@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-02T07:36:54Z`
-- issue_count: `582`
+- generated_at: `2026-06-02T07:38:48Z`
+- issue_count: `583`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -587,3 +587,4 @@
 | #673 | GitClaw telegram thread channel-image-e2e-20260602t065418z | `2026-06-02T06:59:14Z` | 7 | 7 | `issues/000673.json` |
 | #674 | GitClaw channel image: Shape GitHub-native channel image 20260602t065418z | `2026-06-02T07:00:57Z` | 2 | 3 | `issues/000674.json` |
 | #675 | GitClaw telegram thread channel-link-e2e-20260602t073205z | `2026-06-02T07:36:52Z` | 7 | 7 | `issues/000675.json` |
+| #676 | GitClaw channel link: Shape GitHub-native channel link 20260602t073205z | `2026-06-02T07:38:47Z` | 2 | 3 | `issues/000676.json` |

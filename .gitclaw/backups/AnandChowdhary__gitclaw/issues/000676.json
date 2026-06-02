@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-02T07:38:47Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 676,
+    "title": "GitClaw channel link: Shape GitHub-native channel link 20260602t073205z",
+    "body": "\u003c!-- gitclaw:channel-link link_id=\"channel-link-20260602t073205z\" channel=\"telegram\" link_url_sha256_12=\"cb9e8156c02c\" thread_id_sha256_12=\"9bbb95efdaf6\" source_message_id_sha256_12=\"2758a74b2237\" source_issue=\"675\" source_comment_id=\"4599811649\" --\u003e\nGitClaw channel link card.\n\n- link_id: channel-link-20260602t073205z\n- source_channel: telegram\n- source_issue: #675\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/675\n- source_comment_id: 4599811649\n- thread_id_sha256_12: 9bbb95efdaf6\n- source_message_id_sha256_12: 2758a74b2237\n- link_url_sha256_12: cb9e8156c02c\n- link_mode: github-issue-link-card\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_link_url_included: false\n- raw_channel_message_body_included: false\n\n## Link Card\n\nShape GitHub-native channel link 20260602t073205z\n\n## Notes\n\nVisible link notes token: VISIBLE_CHANNEL_LINK_NOTES_20260602t073205z\n\nUse this issue as the durable GitHub home for the channel-origin link. The URL was not fetched, expanded, or copied by this action.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel link: Shape GitHub-native channel link 20260602t073205z\n\n\u003c!-- gitclaw:channel-link link_id=\"channel-link-20260602t073205z\" channel=\"telegram\" link_url_sha256_12=\"cb9e8156c02c\" thread_id_sha256_12=\"9bbb95efdaf6\" source_message_id_sha256_12=\"2758a74b2237\" source_issue=\"675\" source_comment_id=\"4599811649\" --\u003e\nGitClaw channel link card.\n\n- link_id: channel-link-20260602t073205z\n- source_channel: telegram\n- source_issue: #675\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/675\n- source_comment_id: 4599811649\n- thread_id_sha256_12: 9bbb95efdaf6\n- source_message_id_sha256_12: 2758a74b2237\n- link_url_sha256_12: cb9e8156c02c\n- link_mode: github-issue-link-card\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_link_url_included: false\n- raw_channel_message_body_included: false\n\n## Link Card\n\nShape GitHub-native channel link 20260602t073205z\n\n## Notes\n\nVisible link notes token: VISIBLE_CHANNEL_LINK_NOTES_20260602t073205z\n\nUse this issue as the durable GitHub home for the channel-origin link. The URL was not fetched, expanded, or copied by this action.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created link-card issue and use the repo-reader skill.\n\nSearch the repository for `channel link unique search fixture phrase`.\nThe matching repository search result line has the form `channel link unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_LINK_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include link ids, raw URLs, message ids, thread ids, account hashes, issue numbers, link titles, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_LINK_FOLLOWUP_20260602t073205z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4599843347,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_LINK_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4599852579,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4599843347,
+      "body": "@gitclaw Continue this channel-created link-card issue and use the repo-reader skill.\n\nSearch the repository for `channel link unique search fixture phrase`.\nThe matching repository search result line has the form `channel link unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_LINK_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include link ids, raw URLs, message ids, thread ids, account hashes, issue numbers, link titles, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_LINK_FOLLOWUP_20260602t073205z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T07:37:09Z",
+      "updated_at": "2026-06-02T07:37:09Z"
+    },
+    {
+      "id": 4599852579,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26805558144\" event_id=\"comment-4599843347\" model=\"openai/gpt-5-nano\" idempotency_key=\"3925021a57178f72f5fbce7e82e81c64\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26805558144\" prompt_context_sha256_12=\"cde1926b6efa\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10796\" usage_completion_tokens=\"595\" usage_total_tokens=\"11391\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_LINK_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T07:38:16Z",
+      "updated_at": "2026-06-02T07:38:16Z"
+    }
+  ]
+}
