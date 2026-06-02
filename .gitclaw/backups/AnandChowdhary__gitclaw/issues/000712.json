@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T11:19:21Z",
+  "generated_at": "2026-06-02T11:21:00Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4601853607,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels playbook --playbook-id channel-playbook-20260602t111552z --message-id playbook-ingest-20260602t111552z --notify-message-id playbook-notify-20260602t111552z\nTitle: Launch playbook 20260602t111552z\nSteps:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_PLAYBOOK_DUPLICATE_20260602t111552z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4601860246,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Playbook Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#712`\n- requested_channel_command: `/channels playbook`\n- channel_playbook_status: `duplicate`\n- playbook_issue: `#713`\n- playbook_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/713`\n- playbook_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#712`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `a0cbc8c38c8c`\n- source_message_id_sha256_12: `8c75695b78c5`\n- notify_message_id_sha256_12: `0a5dd58b3fd0`\n- notify_message_id_auto: `false`\n- playbook_id_sha256_12: `a9d559df6e70`\n- playbook_id_auto: `false`\n- playbook_title_sha256_12: `e0b9d0168ada`\n- playbook_title_bytes: `32`\n- playbook_title_lines: `1`\n- playbook_steps_sha256_12: `f2a0513df247`\n- playbook_steps_bytes: `86`\n- playbook_steps_lines: `1`\n- playbook_checks_sha256_12: `e3b0c44298fc`\n- playbook_checks_bytes: `0`\n- playbook_checks_lines: `0`\n- playbook_rollback_sha256_12: `e3b0c44298fc`\n- playbook_rollback_bytes: `0`\n- playbook_rollback_lines: `0`\n- notification_body_sha256_12: `3dcf707ce72d`\n- target_from_current_channel_issue: `true`\n- raw_playbook_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_playbook_title_included: `false`\n- raw_playbook_steps_included: `false`\n- raw_playbook_checks_included: `false`\n- raw_playbook_rollback_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_playbook_action_change: `true`\n- issue_title_sha256_12: `536e7c6a2262`\n\nGitClaw recorded a mirrored channel playbook as a durable GitHub issue, then queued a provider-facing link back to the original thread. The playbook issue contains the human-readable title, steps, checks, and rollback guidance; this source receipt keeps provider IDs, playbook IDs, section text, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the playbook-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent playbook links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate playbook issues are suppressed by `playbook_id`; duplicate playbook-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the playbook issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4601869052,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T11:18:52Z",
       "updated_at": "2026-06-02T11:18:52Z"
+    },
+    {
+      "id": 4601860246,
+      "body": "@gitclaw /channels playbook --playbook-id channel-playbook-20260602t111552z --message-id playbook-ingest-20260602t111552z --notify-message-id playbook-notify-20260602t111552z\nTitle: Launch playbook 20260602t111552z\nSteps:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_PLAYBOOK_DUPLICATE_20260602t111552z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T11:19:40Z",
+      "updated_at": "2026-06-02T11:19:40Z"
+    },
+    {
+      "id": 4601869052,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26816319567\" event_id=\"comment-4601860246\" model=\"gitclaw/channels\" idempotency_key=\"a269c5d55ed61072d373570ab94dbc4f\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26816319567\" --\u003e\n## GitClaw Channel Playbook Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#712`\n- requested_channel_command: `/channels playbook`\n- channel_playbook_status: `duplicate`\n- playbook_issue: `#713`\n- playbook_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/713`\n- playbook_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#712`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `a0cbc8c38c8c`\n- source_message_id_sha256_12: `8c75695b78c5`\n- notify_message_id_sha256_12: `0a5dd58b3fd0`\n- notify_message_id_auto: `false`\n- playbook_id_sha256_12: `a9d559df6e70`\n- playbook_id_auto: `false`\n- playbook_title_sha256_12: `e0b9d0168ada`\n- playbook_title_bytes: `32`\n- playbook_title_lines: `1`\n- playbook_steps_sha256_12: `f2a0513df247`\n- playbook_steps_bytes: `86`\n- playbook_steps_lines: `1`\n- playbook_checks_sha256_12: `e3b0c44298fc`\n- playbook_checks_bytes: `0`\n- playbook_checks_lines: `0`\n- playbook_rollback_sha256_12: `e3b0c44298fc`\n- playbook_rollback_bytes: `0`\n- playbook_rollback_lines: `0`\n- notification_body_sha256_12: `3dcf707ce72d`\n- target_from_current_channel_issue: `true`\n- raw_playbook_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_playbook_title_included: `false`\n- raw_playbook_steps_included: `false`\n- raw_playbook_checks_included: `false`\n- raw_playbook_rollback_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_playbook_action_change: `true`\n- issue_title_sha256_12: `536e7c6a2262`\n\nGitClaw recorded a mirrored channel playbook as a durable GitHub issue, then queued a provider-facing link back to the original thread. The playbook issue contains the human-readable title, steps, checks, and rollback guidance; this source receipt keeps provider IDs, playbook IDs, section text, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the playbook-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent playbook links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate playbook issues are suppressed by `playbook_id`; duplicate playbook-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the playbook issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T11:20:32Z",
+      "updated_at": "2026-06-02T11:20:32Z"
     }
   ]
 }
