@@ -686,6 +686,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels idea --idea-id <id> --message-id <id>
 @gitclaw /channels incident --incident-id <id> --severity <severity> --message-id <id>
 @gitclaw /channels voice --voice-id <id> --duration <seconds> --message-id <id>
+@gitclaw /channels image --image-id <id> --width <px> --height <px> --message-id <id>
 @gitclaw /channels handoff --id <id> --message-id <id>
 @gitclaw /channels request-run search_files --id <id> --message-id <id>
 @gitclaw /channels approval-plan search_files --id <id> --message-id <id>
@@ -1001,6 +1002,13 @@ voice issue holds the readable title and transcript for follow-up; the action
 queues a provider-facing voice-note link and keeps the source receipt body-free
 with hashes, duration metadata, duplicate state, notification metadata, and
 delivery gates. Audio URLs and provider media metadata stay hashed.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels image
+--image-id <id> --width <px> --height <px> --message-id <id>` captures a
+channel-origin image/photo/screenshot as a durable GitHub visual context issue.
+The image issue holds the readable title and description for follow-up; the
+action queues a provider-facing image-note link and keeps the source receipt
+body-free with hashes, dimensions, duplicate state, notification metadata, and
+delivery gates. Image URLs and provider media metadata stay hashed.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels handoff
 --id <id> --message-id <id>` opens or reuses a normal GitHub session handoff
 issue and queues a provider-facing handoff link back to the Slack/Telegram
@@ -1105,7 +1113,7 @@ receipt body-free. Scheduled GitHub Actions can later use the reminder issue as
 the canonical wake-up lane without a socket or webhook.
 Inside a channel-created task, watch, standing-order proposal, backup restore
 request, checkpoint rehearsal, clip, attachment, decision, digest, idea,
-incident, voice, or reminder issue, `@gitclaw /channels done --message-id <id>`
+incident, voice, image, or reminder issue, `@gitclaw /channels done --message-id <id>`
 closes the GitHub artifact issue and queues a provider-facing acknowledgement
 back to the original
 mirrored Slack/Telegram thread. The artifact receipt reports hashes, close
@@ -1366,6 +1374,7 @@ scripts/e2e/github-channel-digest-slash.sh
 scripts/e2e/github-channel-idea-slash.sh
 scripts/e2e/github-channel-incident-slash.sh
 scripts/e2e/github-channel-voice-slash.sh
+scripts/e2e/github-channel-image-slash.sh
 scripts/e2e/github-channel-session-handoff-slash.sh
 scripts/e2e/github-channel-tool-run-request-slash.sh
 scripts/e2e/github-channel-tool-approval-plan-slash.sh
@@ -1712,6 +1721,13 @@ provider-facing voice-note link back to the mirrored thread, checks duplicate
 voice-note and notification suppression, exposes the voice-link notification
 through metadata-only outbox, and then continues on the voice issue with a real
 GitHub Models repo-reader/search follow-up.
+The channel-image slash harness turns the operator console into a visual
+context surface: a channel-ingested issue receives `@gitclaw /channels image`,
+creates or reuses a durable GitHub image issue, queues a provider-facing
+image-note link back to the mirrored thread, checks duplicate image and
+notification suppression, exposes the image-link notification through
+metadata-only outbox, and then continues on the image issue with a real GitHub
+Models repo-reader/search follow-up.
 The channel-session-handoff slash harness turns the operator console into a
 conversation handoff surface: a channel-ingested issue receives `@gitclaw
 /channels handoff`, creates or reuses a GitHub session handoff issue, queues a

@@ -5378,6 +5378,7 @@ accepts a structured reaction form:
 @gitclaw /channels idea --idea-id <stable-idea-id> --message-id <provider-message-id>
 @gitclaw /channels incident --incident-id <stable-incident-id> --severity <severity> --message-id <provider-message-id>
 @gitclaw /channels voice --voice-id <stable-voice-id> --duration <seconds> --message-id <provider-message-id>
+@gitclaw /channels image --image-id <stable-image-id> --width <px> --height <px> --message-id <provider-message-id>
 @gitclaw /channels handoff --id <stable-handoff-id> --message-id <provider-message-id>
 @gitclaw /channels request-run <tool-name> --id <stable-request-id> --message-id <provider-message-id>
 @gitclaw /channels approval-plan <tool-name> --id <stable-approval-plan-id> --message-id <provider-message-id>
@@ -5797,6 +5798,39 @@ Changes to this surface require a live E2E that captures the voice note,
 validates the metadata-only voice-link outbox, checks duplicate suppression,
 verifies media URL/material does not leak into receipts, and then continues on
 the voice issue with a normal GitHub Models repo-reader/search follow-up.
+
+The same channel-thread issue can also capture an image, photo, or screenshot:
+
+```text
+@gitclaw /channels image --image-id <stable-image-id> --width <px> --height <px> --message-id <provider-message-id>
+Image: short visual-context title
+Description:
+human-readable caption, alt text, OCR, or inspection notes
+```
+
+`/channels image`, `/channels photo`, `/channels picture`,
+`/channels screenshot`, `/channels screen`, `/channels visual`,
+`/channels diagram`, `/channels scan`, `/channels ocr`, and
+`/channels image-note` infer the current channel and thread id from the issue
+marker when no explicit route/channel/thread target is provided. They create
+or reuse one open GitHub issue carrying a hidden `gitclaw:channel-image`
+marker for the stable image id, label it with `gitclaw` so normal conversation
+can continue there, and queue a provider-facing image-note link back to the
+mirrored channel thread. The image issue contains the human-readable title and
+description because it is the reviewable, searchable visual-context surface;
+the source receipt remains body-free, reporting only
+image/thread/message/title/description/source URL/media type hashes, dimension
+metadata, duplicate status, notification queue metadata, and delivery gates.
+It does not call a model, call provider APIs, fetch image URLs, upload media,
+print raw image ids, print raw thread ids, print raw source or notification
+message ids, print raw media types, print raw source URLs, print channel
+message bodies, or print raw titles/descriptions in the source receipt.
+Duplicates are suppressed first by `image_id` for the GitHub image issue and
+then by `channel + notify_message_id` for the provider-facing image-note link.
+Changes to this surface require a live E2E that captures the image note,
+validates the metadata-only image-link outbox, checks duplicate suppression,
+verifies image URL/material does not leak into receipts, and then continues on
+the image issue with a normal GitHub Models repo-reader/search follow-up.
 
 The same channel-thread issue can also fork the mirrored conversation into a
 normal GitHub session lane:
@@ -6250,7 +6284,7 @@ repo-reader/search follow-up.
 
 The channel-created task, watch, standing-order proposal, backup restore
 request, checkpoint rehearsal, clip, attachment, decision, digest, idea,
-incident, voice, and reminder
+incident, voice, image, and reminder
 issues also accept a completion form:
 
 ```text
@@ -6316,6 +6350,8 @@ Behavior:
   `channel + notify_message_id`,
 - create or reuse one `gitclaw:channel-voice` issue per voice id and queue one
   provider-facing voice-note outbound comment per `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-image` issue per image id and queue one
+  provider-facing image-note outbound comment per `channel + notify_message_id`,
 - create or reuse one `gitclaw:tool-run-request-issue` issue per channel
   request id and queue one provider-facing review-link outbound comment per
   `channel + notify_message_id` without executing a model or tool,
@@ -6345,7 +6381,9 @@ Behavior:
   `gitclaw:backup-restore-request-issue`,
   `gitclaw:checkpoint-rehearsal-issue`, `gitclaw:channel-clip`,
   `gitclaw:channel-attachment`, `gitclaw:channel-decision`,
-  `gitclaw:channel-digest`, or `gitclaw:channel-reminder` issue and queue one
+  `gitclaw:channel-digest`, `gitclaw:channel-idea`,
+  `gitclaw:channel-incident`, `gitclaw:channel-voice`,
+  `gitclaw:channel-image`, or `gitclaw:channel-reminder` issue and queue one
   provider-facing done acknowledgement per `channel + notify_message_id`,
 - suppress duplicate outbound message IDs,
 - for issue-native `/channels send`, post a `model="gitclaw/channels"`
@@ -6534,6 +6572,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels idea --idea-id channel-idea-1 --message-id provider-msg-1
 @gitclaw /channels incident --incident-id channel-incident-1 --severity sev2 --message-id provider-msg-1
 @gitclaw /channels voice --voice-id channel-voice-1 --duration 47 --message-id provider-msg-1
+@gitclaw /channels image --image-id channel-image-1 --width 1280 --height 720 --message-id provider-msg-1
 @gitclaw /channels request-run search_files --id channel-tool-request-1 --message-id provider-msg-1
 @gitclaw /channels approval-plan search_files --id channel-tool-approval-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-tool search_files --id channel-tool-rehearsal-1 --message-id provider-msg-1
@@ -9152,6 +9191,16 @@ examples/workflows/gitclaw.yml
   `repo-reader`, expose `gitclaw.search_files`, recover the channel-voice
   fixture token, and avoid hidden channel, account, provider, message, media,
   transcript, and voice sentinels.
+- A `gh`-driven channel-image-slash E2E harness creates a real channel-thread
+  issue through `gitclaw-channel-ingest.yml`, posts `@gitclaw /channels image
+  --image-id ... --width ... --height ... --message-id ...` on that mirrored
+  thread, verifies GitHub visual-context issue creation, body-free source
+  receipt metadata, provider-facing image-link queueing, duplicate image and
+  notification suppression, and metadata-only outbox discovery. The image issue
+  then gets a normal GitHub Models issue-comment follow-up that must select
+  `repo-reader`, expose `gitclaw.search_files`, recover the channel-image
+  fixture token, and avoid hidden channel, account, provider, message, media,
+  description, and image sentinels.
 - A `gh`-driven channel-tool-run-request-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels request-run search_files --id ... --message-id ...` on

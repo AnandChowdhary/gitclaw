@@ -4601,3 +4601,28 @@ follow-up on the voice issue.
 
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
+## 2026-06-02 Channel Image Note Follow-Up
+
+OpenClaw's gateway overview treats images, audio, and documents as normal
+channel media, not a side system. Hermes' messaging gateway matrix does the
+same: images are supported across many adapters, and the user-facing gateway
+keeps platform-specific transport separate from the agent session. GitClaw's
+serverless translation should preserve that split: receive image metadata and
+human-supplied visual context through GitHub issues, but do not fetch provider
+image bytes or expose media URLs in receipts.
+
+GitClaw's version is `@gitclaw /channels image --image-id <id> --width <px>
+--height <px> --message-id <id>`. It opens or reuses a normal
+`gitclaw:channel-image` issue with a readable title and description, queues
+one provider-facing image-note link to the source Slack/Telegram thread, and
+keeps the source receipt body-free with only title/description/source URL/media
+type hashes, dimensions, duplicate status, and delivery gates. The action does
+not call a model, fetch images, upload media, call provider APIs, print raw
+source URLs, print raw media metadata, or mutate the repository. Acceptance
+requires live E2E for image issue creation, metadata-only image-link outbox
+discovery, duplicate suppression, and a real GitHub Models repo-reader/search
+follow-up on the image issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
