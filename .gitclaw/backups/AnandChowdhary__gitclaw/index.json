@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T13:26:11Z",
+  "generated_at": "2026-06-02T13:27:56Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 619,
+  "count": 620,
   "issues": [
     {
       "number": 3,
@@ -7808,6 +7808,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 725,
+      "title": "GitClaw channel toolset proposal: GitHub-native research toolset 20260602t132044z",
+      "path": "issues/000725.json",
+      "backup_generated_at": "2026-06-02T13:27:55Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }

@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-02T13:27:55Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 725,
+    "title": "GitClaw channel toolset proposal: GitHub-native research toolset 20260602t132044z",
+    "body": "\u003c!-- gitclaw:channel-toolset-proposal toolset_id=\"channel-toolset-proposal-20260602t132044z\" channel=\"telegram\" tools_sha256_12=\"9cbb982f23f0\" thread_id_sha256_12=\"2315584bf46b\" source_message_id_sha256_12=\"7d20e88aee7e\" source_issue=\"724\" source_comment_id=\"4602805368\" --\u003e\nGitClaw channel toolset proposal.\n\n- toolset_id: channel-toolset-proposal-20260602t132044z\n- toolset_name: GitHub-native research toolset 20260602t132044z\n- tool_count: 2\n- source_channel: telegram\n- source_issue: #724\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/724\n- source_comment_id: 4602805368\n- thread_id_sha256_12: 2315584bf46b\n- source_message_id_sha256_12: 7d20e88aee7e\n- proposal_store: github-issue-to-git-reviewed-toolset\n- review_pr_required: true\n- toolset_enabled: false\n- active_tool_config_write_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Purpose\n\nReview whether this channel-origin toolset bundle should become a GitClaw tool configuration.\nReview a GitHub-native channel toolset proposal with VISIBLE_CHANNEL_TOOLSET_PURPOSE_20260602t132044z.\n\n## Proposed Tools\n\n- gitclaw.search_files VISIBLE_CHANNEL_TOOLSET_TOOL_20260602t132044z\n- gitclaw.list_files VISIBLE_CHANNEL_TOOLSET_SECOND_TOOL_20260602t132044z\n\n## Policy\n\nRead-only only with VISIBLE_CHANNEL_TOOLSET_POLICY_20260602t132044z.\n\n## Notes\n\nVisible toolset proposal note: VISIBLE_CHANNEL_TOOLSET_NOTES_20260602t132044z\n\nUse this issue as the reviewable GitHub home for deciding whether this toolset should become config, documentation, a skill, an approval plan, or a proactive workflow. Activation requires normal GitHub review.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel toolset proposal: GitHub-native research toolset 20260602t132044z\n\n\u003c!-- gitclaw:channel-toolset-proposal toolset_id=\"channel-toolset-proposal-20260602t132044z\" channel=\"telegram\" tools_sha256_12=\"9cbb982f23f0\" thread_id_sha256_12=\"2315584bf46b\" source_message_id_sha256_12=\"7d20e88aee7e\" source_issue=\"724\" source_comment_id=\"4602805368\" --\u003e\nGitClaw channel toolset proposal.\n\n- toolset_id: channel-toolset-proposal-20260602t132044z\n- toolset_name: GitHub-native research toolset 20260602t132044z\n- tool_count: 2\n- source_channel: telegram\n- source_issue: #724\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/724\n- source_comment_id: 4602805368\n- thread_id_sha256_12: 2315584bf46b\n- source_message_id_sha256_12: 7d20e88aee7e\n- proposal_store: github-issue-to-git-reviewed-toolset\n- review_pr_required: true\n- toolset_enabled: false\n- active_tool_config_write_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Purpose\n\nReview whether this channel-origin toolset bundle should become a GitClaw tool configuration.\nReview a GitHub-native channel toolset proposal with VISIBLE_CHANNEL_TOOLSET_PURPOSE_20260602t132044z.\n\n## Proposed Tools\n\n- gitclaw.search_files VISIBLE_CHANNEL_TOOLSET_TOOL_20260602t132044z\n- gitclaw.list_files VISIBLE_CHANNEL_TOOLSET_SECOND_TOOL_20260602t132044z\n\n## Policy\n\nRead-only only with VISIBLE_CHANNEL_TOOLSET_POLICY_20260602t132044z.\n\n## Notes\n\nVisible toolset proposal note: VISIBLE_CHANNEL_TOOLSET_NOTES_20260602t132044z\n\nUse this issue as the reviewable GitHub home for deciding whether this toolset should become config, documentation, a skill, an approval plan, or a proactive workflow. Activation requires normal GitHub review.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created toolset proposal and use the repo-reader skill.\n\nSearch the repository for `channel toolset proposal unique search fixture phrase`.\nThe matching repository search result line has the form `channel toolset proposal unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_TOOLSET_PROPOSAL_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include toolset ids, message ids, thread ids, account hashes, issue numbers, toolset names, proposed tools, purpose, policy, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_TOOLSET_PROPOSAL_FOLLOWUP_20260602t132044z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4602839258,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_TOOLSET_PROPOSAL_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4602846970,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4602839258,
+      "body": "@gitclaw Continue this channel-created toolset proposal and use the repo-reader skill.\n\nSearch the repository for `channel toolset proposal unique search fixture phrase`.\nThe matching repository search result line has the form `channel toolset proposal unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_TOOLSET_PROPOSAL_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include toolset ids, message ids, thread ids, account hashes, issue numbers, toolset names, proposed tools, purpose, policy, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_TOOLSET_PROPOSAL_FOLLOWUP_20260602t132044z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T13:26:27Z",
+      "updated_at": "2026-06-02T13:26:27Z"
+    },
+    {
+      "id": 4602846970,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26822807940\" event_id=\"comment-4602839258\" model=\"openai/gpt-5-nano\" idempotency_key=\"64f8ddc38b7dd23e9d300f97adcac70f\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26822807940\" prompt_context_sha256_12=\"fb8c59ddb9a3\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"11019\" usage_completion_tokens=\"215\" usage_total_tokens=\"11234\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_TOOLSET_PROPOSAL_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T13:27:26Z",
+      "updated_at": "2026-06-02T13:27:26Z"
+    }
+  ]
+}
