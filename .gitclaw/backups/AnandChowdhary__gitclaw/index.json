@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T09:25:56Z",
+  "generated_at": "2026-06-02T09:27:45Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 590,
+  "count": 591,
   "issues": [
     {
       "number": 3,
@@ -7455,6 +7455,18 @@
       ],
       "comment_count": 3,
       "transcript_messages": 4
+    },
+    {
+      "number": 685,
+      "title": "GitClaw channel RSVP: Tiny channel RSVP for NOECHO_CHANNEL_RSVP_TITLE_20260602T092238Z",
+      "path": "issues/000685.json",
+      "backup_generated_at": "2026-06-02T09:27:44Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
