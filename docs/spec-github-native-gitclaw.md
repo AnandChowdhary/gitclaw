@@ -5367,6 +5367,7 @@ accepts a structured reaction form:
 @gitclaw /channels edit --message-id <provider-message-id> --edit-id <stable-edit-id>
 @gitclaw /channels react --message-id <provider-message-id> --reaction eyes
 @gitclaw /channels pin --message-id <provider-message-id>
+@gitclaw /channels deliverable --deliverable-id <stable-deliverable-id> --message-id <provider-message-id> --filename <name> --media-type <mime> --url <download-url>
 @gitclaw /channels task --task-id <stable-task-id> --message-id <provider-message-id>
 @gitclaw /channels clip --clip-id <stable-clip-id> --message-id <provider-message-id>
 @gitclaw /channels attachment --attachment-id <stable-attachment-id> --message-id <provider-message-id> --filename <name> --media-type <mime> --bytes <n>
@@ -5446,6 +5447,34 @@ Slack/Telegram issue an operator console rather than a passive report surface.
 The receipt reports `target_from_current_channel_issue=true` and
 `target_issue_is_source=true` without printing the raw outbound body, thread id,
 message id, or provider payloads.
+
+The same channel-thread issue can queue provider-native file/link deliverables:
+
+```text
+@gitclaw /channels deliverable --deliverable-id <stable-deliverable-id> --message-id <provider-message-id> --filename <name> --media-type <mime> --url <download-url>
+Caption:
+optional provider-visible caption
+```
+
+`/channels deliverable`, `/channels deliver`, `/channels send-file`,
+`/channels share-file`, `/channels deliver-file`, `/channels media-deliver`,
+and `/channels artifact-deliver` infer the current channel and thread id from
+the issue marker when no explicit route/channel/thread target is provided.
+They post one `gitclaw:channel-deliverable` comment on the same canonical
+channel issue. This is the GitHub-native equivalent of Hermes deliverable mode:
+provider gateways can call `gitclaw channel-outbox --include-body --out <file>`
+to receive the visible filename, URL, media type, checksum, and caption, upload
+the file natively to Slack/Telegram/etc., and then record the provider receipt
+with `gitclaw channel-delivery`. GitClaw itself does not upload files, fetch
+the URL, call provider APIs, or call a model in the deterministic action. The
+source receipt remains body-free, reporting only deliverable/thread/message/
+filename/caption/URL/checksum hashes, byte-count metadata, duplicate status,
+and delivery/upload gates. Duplicates are suppressed by `channel +
+deliverable_id`. Changes to this surface require a live E2E that queues a
+deliverable, validates metadata-only outbox does not leak the URL/body,
+validates include-body outbox exposes the provider-visible payload, records a
+channel-delivery receipt, checks duplicate suppression, and then continues on
+the channel issue with a normal GitHub Models repo-reader/search follow-up.
 
 The same channel-thread issue can also turn a mirrored provider message into a
 normal GitHub task issue:
@@ -5882,6 +5911,8 @@ Behavior:
 - label it with `gitclaw:channel` but do not apply the normal `gitclaw`
   trigger label,
 - post one `gitclaw:channel-outbound` comment per `channel + message_id`,
+- post one `gitclaw:channel-deliverable` comment per `channel +
+  deliverable_id`,
 - post one `gitclaw:channel-reaction` comment per
   `channel + target_message_id + reaction`,
 - post one `gitclaw:channel-status` comment per `channel + status_id`,
@@ -6021,13 +6052,15 @@ gitclaw channel-outbox \
 Behavior:
 
 - verify the source issue carries a matching `gitclaw:channel-thread` marker,
-- list assistant comments carrying `gitclaw:assistant-turn` and outbound
-  channel comments carrying `gitclaw:channel-outbound`,
+- list assistant comments carrying `gitclaw:assistant-turn` plus channel
+  action comments carrying `gitclaw:channel-outbound`,
+  `gitclaw:channel-deliverable`, `gitclaw:channel-reaction`,
+  `gitclaw:channel-status`, or `gitclaw:channel-edit`,
 - find the matching `gitclaw:channel-state` issue and read
   `gitclaw:channel-delivery` receipts,
 - return only deliverable comments that have not yet been delivered for
   `channel + account_sha256_12 + source issue + source comment`,
-- write assistant/outbound bodies only to an explicit local `--out` JSON file
+- write provider-visible bodies only to an explicit local `--out` JSON file
   when `--include-body` is set,
 - keep stdout, `GITHUB_OUTPUT`, logs, state issues, and receipts metadata-only
   by default.
@@ -6059,8 +6092,10 @@ gitclaw channel-delivery \
 
 Behavior:
 
-- verify the source comment exists and carries either a
-  `gitclaw:assistant-turn` marker or a `gitclaw:channel-outbound` marker,
+- verify the source comment exists and carries a provider-deliverable marker
+  such as `gitclaw:assistant-turn`, `gitclaw:channel-outbound`,
+  `gitclaw:channel-deliverable`, `gitclaw:channel-reaction`,
+  `gitclaw:channel-status`, or `gitclaw:channel-edit`,
 - find or create the matching `gitclaw:channel-state` issue,
 - post one `gitclaw:channel-delivery` receipt for
   `channel + account_sha256_12 + source issue + source comment`,
@@ -6089,6 +6124,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels send --route team-alerts --message-id alert-123
 @gitclaw /channels status --message-id provider-msg-1 --status-id status-1 --state working
 @gitclaw /channels edit --message-id provider-msg-1 --edit-id edit-1
+@gitclaw /channels deliverable --deliverable-id channel-file-1 --message-id provider-msg-1 --filename launch-report.pdf --media-type application/pdf --url https://example.invalid/launch-report.pdf
 @gitclaw /channels task --task-id channel-task-1 --message-id provider-msg-1
 @gitclaw /channels clip --clip-id channel-clip-1 --message-id provider-msg-1
 @gitclaw /channels attachment --attachment-id channel-attachment-1 --message-id provider-msg-1 --filename launch-brief.pdf --media-type application/pdf --bytes 4242
@@ -8595,6 +8631,18 @@ examples/workflows/gitclaw.yml
   follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
   recover the channel-reply-slash fixture token, and avoid hidden channel,
   account, provider, and outbound-body sentinels.
+- A `gh`-driven channel-deliverable-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels deliverable --deliverable-id ... --message-id ...
+  --filename ... --url ...` on that mirrored thread, verifies
+  `gitclaw:channel-deliverable` queueing, body-free source receipt metadata,
+  metadata-only outbox leak boundaries, include-body outbox exposure for the
+  provider gateway payload, channel-delivery workflow receipts, and duplicate
+  deliverable suppression. The same issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-deliverable fixture token, and
+  avoid hidden channel, account, provider, URL, caption, filename, and
+  deliverable sentinels.
 - A `gh`-driven channel-task-slash E2E harness creates a real channel-thread
   issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels task --task-id ... --message-id ...` on that mirrored

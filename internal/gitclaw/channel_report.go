@@ -279,6 +279,7 @@ func renderChannelReport(ev Event, cfg Config, comments []Comment, includeIssue 
 
 	b.WriteString("\n### Ingest Contract\n")
 	b.WriteString("- `/channels send --route <name>` queues a reviewed outbound channel message from an issue or comment\n")
+	b.WriteString("- `/channels deliverable --deliverable-id <id> --message-id <message> --filename <name>` queues a provider-native file/link deliverable from a mirrored channel thread\n")
 	b.WriteString("- `/channels task --task-id <id> --message-id <message>` creates a GitHub task from a mirrored channel thread\n")
 	b.WriteString("- `/channels clip --clip-id <id> --message-id <message>` saves a durable GitHub clip from a mirrored channel thread\n")
 	b.WriteString("- `/channels attachment --attachment-id <id> --message-id <message> --filename <name>` records channel file/media metadata as a GitHub issue\n")
@@ -473,6 +474,7 @@ func renderChannelVerifyReport(ev Event, cfg Config, comments []Comment, include
 	b.WriteString("- workflow accepts `channel`, `thread_id`, `message_id`, `author`, and `body` inputs\n")
 	b.WriteString("- channel-send workflow can queue GitHub-originated outbound messages with `issues: write`\n")
 	b.WriteString("- `/channels send` can queue a reviewed outbound message from a trusted issue/comment without calling a model\n")
+	b.WriteString("- `/channels deliverable` can queue a provider-native file/link deliverable from a mirrored channel thread without calling a model or uploading files\n")
 	b.WriteString("- `/channels task` can create a GitHub task issue from a mirrored channel thread and queue a task-link notification without calling a model\n")
 	b.WriteString("- `/channels clip` can create a GitHub clip issue from a mirrored channel thread and queue a clip-link notification without calling a model\n")
 	b.WriteString("- `/channels attachment` can create a GitHub attachment metadata issue from a mirrored channel thread and queue an attachment-link notification without calling a model or fetching file bytes\n")

@@ -675,6 +675,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels react --message-id <id> --reaction eyes
 @gitclaw /channels pin --message-id <id>
 @gitclaw /channels reply --message-id <id>
+@gitclaw /channels deliverable --deliverable-id <id> --message-id <id> --filename <name>
 @gitclaw /channels task --task-id <id> --message-id <id>
 @gitclaw /channels clip --clip-id <id> --message-id <id>
 @gitclaw /channels attachment --attachment-id <id> --message-id <id> --filename <name>
@@ -909,6 +910,13 @@ the provider receipt.
 provider reaction path: it infers the current mirrored channel thread and
 queues a default `pushpin` reaction while keeping message IDs, thread IDs, and
 the reaction name out of the receipt.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+deliverable --deliverable-id <id> --message-id <id> --filename <name>` queues
+a provider-native file/link deliverable comment on the same channel issue.
+Gateways fetch the visible filename, URL, media type, checksum, and caption
+through `gitclaw channel-outbox --include-body`, then record the provider
+upload with `gitclaw channel-delivery`. The command receipt stays body-free
+with only hashes and delivery gates; it does not upload files or call a model.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels task
 --task-id <id> --message-id <id>` creates or reuses a normal GitHub task issue
 from the channel thread, writes the human-readable title and notes there, and
@@ -1245,6 +1253,7 @@ scripts/e2e/github-channel-edit-slash.sh
 scripts/e2e/github-channel-reaction-slash.sh
 scripts/e2e/github-channel-pin-slash.sh
 scripts/e2e/github-channel-reply-slash.sh
+scripts/e2e/github-channel-deliverable-slash.sh
 scripts/e2e/github-channel-task-slash.sh
 scripts/e2e/github-channel-clip-slash.sh
 scripts/e2e/github-channel-attachment-slash.sh
@@ -1514,6 +1523,12 @@ operator consoles: a channel-ingested issue receives `@gitclaw /channels reply`,
 queues an outbound message back onto the same thread, suppresses duplicate
 message IDs, records delivery through the channel-delivery workflow, and then
 runs a real GitHub Models repo-reader/search follow-up.
+The channel-deliverable slash harness turns the operator console into an
+outbound file/link surface: a channel-ingested issue receives `@gitclaw
+/channels deliverable`, queues one `gitclaw:channel-deliverable` comment,
+checks metadata-only and include-body outbox behavior, records delivery through
+the channel-delivery workflow, checks duplicate suppression, and then continues
+on the channel issue with a real GitHub Models repo-reader/search follow-up.
 The channel-task slash harness turns the operator console into a work intake
 surface: a channel-ingested issue receives `@gitclaw /channels task`, creates
 or reuses a normal GitHub task issue, queues a provider-facing task link back

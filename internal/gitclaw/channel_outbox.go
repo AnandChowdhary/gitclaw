@@ -173,6 +173,16 @@ func channelOutboxDeliverable(body, channel, threadID string) (string, string, s
 	if HasGitClawMarker(body) {
 		return "assistant", StripMarker(body), "", true
 	}
+	deliverableChannel, deliverableThread, deliverableMessageID, deliverableID := channelDeliverableMarkerFields(body)
+	if deliverableChannel != "" {
+		if deliverableChannel != channel {
+			return "", "", "", false
+		}
+		if deliverableThread != "" && threadID != "" && deliverableThread != threadID {
+			return "", "", "", false
+		}
+		return "channel-deliverable", StripChannelDeliverableMarker(body), channelStateHash(deliverableID + "|" + deliverableMessageID), true
+	}
 	outboundChannel, outboundThread, outboundMessageID := channelOutboundMarkerFields(body)
 	if outboundChannel == "" {
 		reactionChannel, reactionThread, reactionMessageID, reaction := channelReactionMarkerFields(body)

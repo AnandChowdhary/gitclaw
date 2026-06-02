@@ -4278,3 +4278,32 @@ Sources: OpenClaw media understanding docs
 (`https://docs.openclaw.ai/nodes/media-understanding`), Hermes deliverable
 mode docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/deliverable-mode`).
+
+## 2026-06-02 Channel Deliverable Follow-Up
+
+Hermes deliverable mode turns generated files into native chat attachments by
+letting the gateway extract provider-visible file paths from an agent response
+and upload them directly to Slack, Discord, Telegram, WhatsApp, Signal, and
+similar channels. OpenClaw's current channel and message docs describe the same
+general shape from the gateway side: channel capabilities vary by provider,
+media delivery is distinct from plain text, and pending tool media should be
+delivered without replaying hidden tool details into the chat transcript.
+
+GitClaw's serverless version should avoid path scraping and host-local file
+access. `@gitclaw /channels deliverable --deliverable-id <id> --message-id
+<id> --filename <name> --url <download-url>` queues a structured
+`gitclaw:channel-deliverable` comment on the canonical channel issue. Provider
+gateways call `gitclaw channel-outbox --include-body --out <file>` to fetch the
+visible filename, URL, media type, checksum, and caption, perform their native
+upload out of band, and record the receipt with `gitclaw channel-delivery`.
+The deterministic GitHub action does not upload files, fetch URLs, call
+provider APIs, or call a model; its source receipt remains hash-only. Acceptance
+requires live E2E for deliverable queueing, metadata-only and include-body
+outbox behavior, channel-delivery receipts, duplicate suppression, and a real
+GitHub Models repo-reader/search follow-up on the channel issue.
+
+Sources: Hermes deliverable mode docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/deliverable-mode`),
+OpenClaw media understanding docs
+(`https://docs.openclaw.ai/nodes/media-understanding`), OpenClaw message docs
+(`https://docs.openclaw.ai/concepts/messages`).

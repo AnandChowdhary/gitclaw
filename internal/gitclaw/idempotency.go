@@ -13,6 +13,7 @@ var heartbeatMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:heartbeat\s+([^>
 var errorMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:error\s+([^>]*)-->`)
 var channelMessageMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-message\s+([^>]*)-->`)
 var channelOutboundMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-outbound\s+([^>]*)-->`)
+var channelDeliverableMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-deliverable\s+([^>]*)-->`)
 var channelReactionMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-reaction\s+([^>]*)-->`)
 var channelStatusMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-status\s+([^>]*)-->`)
 var channelEditMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-edit\s+([^>]*)-->`)
@@ -159,6 +160,10 @@ func HasChannelOutboundMarker(body string) bool {
 	return channelOutboundMarkerPattern.MatchString(body)
 }
 
+func HasChannelDeliverableMarker(body string) bool {
+	return channelDeliverableMarkerPattern.MatchString(body)
+}
+
 func HasChannelReactionMarker(body string) bool {
 	return channelReactionMarkerPattern.MatchString(body)
 }
@@ -255,6 +260,10 @@ func StripChannelMessageMarker(body string) string {
 
 func StripChannelOutboundMarker(body string) string {
 	return strings.TrimSpace(channelOutboundMarkerPattern.ReplaceAllString(body, ""))
+}
+
+func StripChannelDeliverableMarker(body string) string {
+	return strings.TrimSpace(channelDeliverableMarkerPattern.ReplaceAllString(body, ""))
 }
 
 func StripChannelReactionMarker(body string) string {
