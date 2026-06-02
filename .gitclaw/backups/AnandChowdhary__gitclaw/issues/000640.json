@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T02:22:02Z",
+  "generated_at": "2026-06-02T02:23:47Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 640,
     "title": "GitClaw telegram thread channel-deliverable-e2e-20260602T022012Z",
@@ -42,6 +42,24 @@
       "CommentID": 4598162719,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels deliverable --deliverable-id channel-deliverable-20260602T022012Z --message-id deliverable-slash-20260602T022012Z --filename launch-deliverable-20260602T022012Z.pdf --media-type application/pdf --bytes 4242 --sha256 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef --url https://example.invalid/NOECHO_CHANNEL_DELIVERABLE_URL_20260602T022012Z.pdf\nCaption:\nVisible provider caption token: VISIBLE_CHANNEL_DELIVERABLE_CAPTION_20260602T022012Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4598165551,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Deliverable Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#640`\n- requested_channel_command: `/channels deliverable`\n- channel_deliverable_status: `queued`\n- deliverable_target_issue: `#640`\n- deliverable_target_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/640`\n- deliverable_comment_id: `4598169691`\n- deliverable_queued: `true`\n- duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `c7b1fc1361eb`\n- message_id_sha256_12: `30fcccc17bb2`\n- message_id_auto: `false`\n- deliverable_id_sha256_12: `2a189fc2506f`\n- deliverable_id_auto: `false`\n- deliverable_filename_sha256_12: `da9e0e508b87`\n- deliverable_filename_bytes: `39`\n- deliverable_filename_lines: `1`\n- deliverable_media_type_sha256_12: `91ed0f7cdaa1`\n- deliverable_bytes: `4242`\n- file_checksum_sha256_12: `a8ae6e6ee929`\n- deliverable_url_sha256_12: `41e2d07de2fe`\n- deliverable_caption_sha256_12: `5b01700c0c73`\n- deliverable_caption_bytes: `84`\n- deliverable_caption_lines: `1`\n- deliverable_body_sha256_12: `fcd31f997868`\n- target_from_current_channel_issue: `true`\n- deliverable_mode: `channel-outbox-native-deliverable`\n- provider_upload_performed: `false`\n- provider_delivery_performed: `false`\n- raw_deliverable_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_message_id_included: `false`\n- raw_deliverable_filename_included: `false`\n- raw_deliverable_caption_included: `false`\n- raw_deliverable_url_included: `false`\n- raw_file_checksum_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_strategy: `channel-outbox --include-body + channel-delivery`\n- llm_e2e_required_after_channel_deliverable_action_change: `true`\n- issue_title_sha256_12: `eea9f81f23bd`\n\nGitClaw queued a provider-native channel deliverable as a structured GitHub comment. A gateway can fetch it through `gitclaw channel-outbox --include-body` and record provider upload/delivery with `gitclaw channel-delivery`; this receipt keeps deliverable IDs, filenames, captions, URLs, checksums, thread IDs, message IDs, and channel bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read pending deliverables with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --include-body --out \u003cfile\u003e`\n- provider gateways record sent deliverables with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate deliverables are suppressed by `channel + deliverable_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4598169784,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -60,6 +78,30 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T02:21:35Z",
       "updated_at": "2026-06-02T02:21:35Z"
+    },
+    {
+      "id": 4598165551,
+      "body": "@gitclaw /channels deliverable --deliverable-id channel-deliverable-20260602T022012Z --message-id deliverable-slash-20260602T022012Z --filename launch-deliverable-20260602T022012Z.pdf --media-type application/pdf --bytes 4242 --sha256 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef --url https://example.invalid/NOECHO_CHANNEL_DELIVERABLE_URL_20260602T022012Z.pdf\nCaption:\nVisible provider caption token: VISIBLE_CHANNEL_DELIVERABLE_CAPTION_20260602T022012Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T02:22:14Z",
+      "updated_at": "2026-06-02T02:22:14Z"
+    },
+    {
+      "id": 4598169691,
+      "body": "\u003c!-- gitclaw:channel-deliverable channel=\"telegram\" thread_id=\"channel-deliverable-e2e-20260602T022012Z\" message_id=\"deliverable-slash-20260602T022012Z\" deliverable_id=\"channel-deliverable-20260602t022012z\" author=\"gitclaw\" filename_sha256_12=\"da9e0e508b87\" media_type_sha256_12=\"91ed0f7cdaa1\" url_sha256_12=\"41e2d07de2fe\" --\u003e\nGitClaw channel deliverable queued.\n\nFilename: launch-deliverable-20260602T022012Z.pdf\nMedia type: application/pdf\nSize: 4242 bytes\nSHA-256: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\nURL: https://example.invalid/NOECHO_CHANNEL_DELIVERABLE_URL_20260602T022012Z.pdf\n\nCaption:\nVisible provider caption token: VISIBLE_CHANNEL_DELIVERABLE_CAPTION_20260602T022012Z\n\nProvider upload performed: false\nProvider delivery performed: false",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T02:23:06Z",
+      "updated_at": "2026-06-02T02:23:06Z"
+    },
+    {
+      "id": 4598169784,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26794412964\" event_id=\"comment-4598165551\" model=\"gitclaw/channels\" idempotency_key=\"3b96a4b5457913f66e6a342c8d8bb2b0\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26794412964\" --\u003e\n## GitClaw Channel Deliverable Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#640`\n- requested_channel_command: `/channels deliverable`\n- channel_deliverable_status: `queued`\n- deliverable_target_issue: `#640`\n- deliverable_target_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/640`\n- deliverable_comment_id: `4598169691`\n- deliverable_queued: `true`\n- duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `c7b1fc1361eb`\n- message_id_sha256_12: `30fcccc17bb2`\n- message_id_auto: `false`\n- deliverable_id_sha256_12: `2a189fc2506f`\n- deliverable_id_auto: `false`\n- deliverable_filename_sha256_12: `da9e0e508b87`\n- deliverable_filename_bytes: `39`\n- deliverable_filename_lines: `1`\n- deliverable_media_type_sha256_12: `91ed0f7cdaa1`\n- deliverable_bytes: `4242`\n- file_checksum_sha256_12: `a8ae6e6ee929`\n- deliverable_url_sha256_12: `41e2d07de2fe`\n- deliverable_caption_sha256_12: `5b01700c0c73`\n- deliverable_caption_bytes: `84`\n- deliverable_caption_lines: `1`\n- deliverable_body_sha256_12: `fcd31f997868`\n- target_from_current_channel_issue: `true`\n- deliverable_mode: `channel-outbox-native-deliverable`\n- provider_upload_performed: `false`\n- provider_delivery_performed: `false`\n- raw_deliverable_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_message_id_included: `false`\n- raw_deliverable_filename_included: `false`\n- raw_deliverable_caption_included: `false`\n- raw_deliverable_url_included: `false`\n- raw_file_checksum_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_strategy: `channel-outbox --include-body + channel-delivery`\n- llm_e2e_required_after_channel_deliverable_action_change: `true`\n- issue_title_sha256_12: `eea9f81f23bd`\n\nGitClaw queued a provider-native channel deliverable as a structured GitHub comment. A gateway can fetch it through `gitclaw channel-outbox --include-body` and record provider upload/delivery with `gitclaw channel-delivery`; this receipt keeps deliverable IDs, filenames, captions, URLs, checksums, thread IDs, message IDs, and channel bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read pending deliverables with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --include-body --out \u003cfile\u003e`\n- provider gateways record sent deliverables with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate deliverables are suppressed by `channel + deliverable_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T02:23:07Z",
+      "updated_at": "2026-06-02T02:23:07Z"
     }
   ]
 }
