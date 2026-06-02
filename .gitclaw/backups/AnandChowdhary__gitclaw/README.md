@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-02T10:05:45Z`
-- issue_count: `600`
+- generated_at: `2026-06-02T10:20:20Z`
+- issue_count: `601`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -605,3 +605,4 @@
 | #700 | GitClaw channel RSVP response E2E 20260602T095841Z | `2026-06-02T10:00:18Z` | 1 | 2 | `issues/000700.json` |
 | #701 | GitClaw channel RSVP: Tiny channel RSVP response fixture 20260602T095841Z | `2026-06-02T10:05:43Z` | 3 | 3 | `issues/000701.json` |
 | #702 | GitClaw slack thread gitclaw-e2e-route-rsvp-response-invite-20260602T095841Z | `2026-06-02T10:03:56Z` | 6 | 5 | `issues/000702.json` |
+| #704 | GitClaw channel poll vote E2E 20260602T101858Z | `2026-06-02T10:20:19Z` | 1 | 2 | `issues/000704.json` |
