@@ -231,7 +231,6 @@ wait_for_workflow_run "$ingest_workflow" "workflow_dispatch" "$ingest_started_at
 issue_number="$(wait_for_issue_number)" || die "timed out finding channel issue for ${thread_id}"
 log "channel ingest created issue #${issue_number}"
 
-wait_for_workflow_run "$main_workflow" "workflow_dispatch" "$ingest_started_at" >/dev/null || die "timed out waiting for initial channel report workflow"
 wait_for_assistant_count_for_issue "$issue_number" 1 || die "expected initial channel report"
 initial_report="$(latest_assistant_comment_for_issue "$issue_number")"
 grep -Fq "GitClaw Channel Report" <<<"$initial_report" || die "initial assistant comment missing channel report"
