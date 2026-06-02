@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-02T13:52:24Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 727,
+    "title": "GitClaw channel prompt proposal: GitHub-native prompt brief 20260602t134435z",
+    "body": "\u003c!-- gitclaw:channel-prompt-proposal prompt_id=\"channel-prompt-proposal-20260602t134435z\" channel=\"telegram\" prompt_sha256_12=\"cfd532a955c5\" thread_id_sha256_12=\"a6d9f1f9ca99\" source_message_id_sha256_12=\"f6bde3144b61\" source_issue=\"726\" source_comment_id=\"4603014651\" --\u003e\nGitClaw channel prompt proposal.\n\n- prompt_id: channel-prompt-proposal-20260602t134435z\n- prompt_name: GitHub-native prompt brief 20260602t134435z\n- prompt_draft_bytes: 141\n- prompt_draft_lines: 1\n- source_channel: telegram\n- source_issue: #726\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/726\n- source_comment_id: 4603014651\n- thread_id_sha256_12: a6d9f1f9ca99\n- source_message_id_sha256_12: f6bde3144b61\n- proposal_store: github-issue-to-git-reviewed-prompt-pack\n- review_pr_required: true\n- prompt_enabled: false\n- prompt_pack_write_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Purpose\n\nReview whether this channel-origin prompt should become a GitClaw prompt pack.\nReview a GitHub-native channel prompt proposal with VISIBLE_CHANNEL_PROMPT_PURPOSE_20260602t134435z.\n\n## Prompt Draft\n\nSummarize the current repo context and mention VISIBLE_CHANNEL_PROMPT_DRAFT_20260602t134435z only inside this reviewed prompt proposal issue.\n\n## Inputs\n\n- repository status VISIBLE_CHANNEL_PROMPT_INPUT_20260602t134435z\n- operator question\n\n## Policy\n\nRead-only only with VISIBLE_CHANNEL_PROMPT_POLICY_20260602t134435z.\n\n## Notes\n\nVisible prompt proposal note: VISIBLE_CHANNEL_PROMPT_NOTES_20260602t134435z\n\nUse this issue as the reviewable GitHub home for deciding whether this prompt pack should become documentation, a skill, repo-local prompt guidance, a proactive workflow, or a test fixture. Activation requires normal GitHub review.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel prompt proposal: GitHub-native prompt brief 20260602t134435z\n\n\u003c!-- gitclaw:channel-prompt-proposal prompt_id=\"channel-prompt-proposal-20260602t134435z\" channel=\"telegram\" prompt_sha256_12=\"cfd532a955c5\" thread_id_sha256_12=\"a6d9f1f9ca99\" source_message_id_sha256_12=\"f6bde3144b61\" source_issue=\"726\" source_comment_id=\"4603014651\" --\u003e\nGitClaw channel prompt proposal.\n\n- prompt_id: channel-prompt-proposal-20260602t134435z\n- prompt_name: GitHub-native prompt brief 20260602t134435z\n- prompt_draft_bytes: 141\n- prompt_draft_lines: 1\n- source_channel: telegram\n- source_issue: #726\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/726\n- source_comment_id: 4603014651\n- thread_id_sha256_12: a6d9f1f9ca99\n- source_message_id_sha256_12: f6bde3144b61\n- proposal_store: github-issue-to-git-reviewed-prompt-pack\n- review_pr_required: true\n- prompt_enabled: false\n- prompt_pack_write_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Purpose\n\nReview whether this channel-origin prompt should become a GitClaw prompt pack.\nReview a GitHub-native channel prompt proposal with VISIBLE_CHANNEL_PROMPT_PURPOSE_20260602t134435z.\n\n## Prompt Draft\n\nSummarize the current repo context and mention VISIBLE_CHANNEL_PROMPT_DRAFT_20260602t134435z only inside this reviewed prompt proposal issue.\n\n## Inputs\n\n- repository status VISIBLE_CHANNEL_PROMPT_INPUT_20260602t134435z\n- operator question\n\n## Policy\n\nRead-only only with VISIBLE_CHANNEL_PROMPT_POLICY_20260602t134435z.\n\n## Notes\n\nVisible prompt proposal note: VISIBLE_CHANNEL_PROMPT_NOTES_20260602t134435z\n\nUse this issue as the reviewable GitHub home for deciding whether this prompt pack should become documentation, a skill, repo-local prompt guidance, a proactive workflow, or a test fixture. Activation requires normal GitHub review.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created prompt proposal and use the repo-reader skill.\n\nSearch the repository for `channel prompt proposal unique search fixture phrase`.\nThe matching repository search result line has the form `channel prompt proposal unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_PROMPT_PROPOSAL_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include prompt ids, message ids, thread ids, account hashes, issue numbers, prompt names, prompt drafts, inputs, policy, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_PROMPT_PROPOSAL_FOLLOWUP_20260602t134435z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4603056232,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_PROMPT_PROPOSAL_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4603067673,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4603056232,
+      "body": "@gitclaw Continue this channel-created prompt proposal and use the repo-reader skill.\n\nSearch the repository for `channel prompt proposal unique search fixture phrase`.\nThe matching repository search result line has the form `channel prompt proposal unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_PROMPT_PROPOSAL_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include prompt ids, message ids, thread ids, account hashes, issue numbers, prompt names, prompt drafts, inputs, policy, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_PROMPT_PROPOSAL_FOLLOWUP_20260602t134435z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T13:50:37Z",
+      "updated_at": "2026-06-02T13:50:37Z"
+    },
+    {
+      "id": 4603067673,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26824203364\" event_id=\"comment-4603056232\" model=\"openai/gpt-5-nano\" idempotency_key=\"8f024a0a152b825410404790255c7282\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26824203364\" prompt_context_sha256_12=\"4e8c899e6010\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"11032\" usage_completion_tokens=\"471\" usage_total_tokens=\"11503\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_PROMPT_PROPOSAL_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T13:51:52Z",
+      "updated_at": "2026-06-02T13:51:52Z"
+    }
+  ]
+}
