@@ -4623,6 +4623,16 @@ socket. Acceptance requires live E2E for RSVP issue creation, route-backed
 RSVP cards, metadata-only outbox discovery, duplicate suppression, and a real
 GitHub Models repo-reader/search follow-up on the RSVP issue.
 
+The matching inbound interaction is `@gitclaw /channels rsvp-response
+--rsvp-id <id> --message-id <provider-response-id> --notify-message-id
+<ack-id> --response yes` from a mirrored `gitclaw:channel-thread` issue. It
+finds the GitHub RSVP issue, writes a `gitclaw:channel-rsvp-response` comment
+with the human-readable yes/no/maybe response, and queues a provider-facing
+acknowledgement back through the same outbox/delivery path. This keeps the
+OpenClaw/Hermes-style "answer where you are" feeling, while GitHub remains the
+durable room of record and all provider delivery stays serverless and
+idempotent.
+
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 

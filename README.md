@@ -671,6 +671,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels poll e2e-slack-route,e2e-telegram-route --poll-id <id> --message-id <id>
 @gitclaw /channels rollcall e2e-slack-route,e2e-telegram-route --rollcall-id <id> --message-id <id>
 @gitclaw /channels rsvp e2e-slack-route,e2e-telegram-route --rsvp-id <id> --message-id <id>
+@gitclaw /channels rsvp-response --rsvp-id <id> --message-id <id> --notify-message-id <id> --response yes
 @gitclaw /channels status --message-id <id> --status-id <id> --state working
 @gitclaw /channels edit --message-id <id> --edit-id <id>
 @gitclaw /channels react --message-id <id> --reaction eyes
@@ -913,6 +914,13 @@ when/where/host metadata, and details there, labels it for normal GitClaw
 conversation, and queues provider-facing RSVP cards through reviewed routes.
 The source receipt stays body-free and reports only hashes, counts, issue
 numbers, and duplicate status.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+rsvp-response --rsvp-id <id> --message-id <id> --notify-message-id <id>
+--response yes` records a channel-origin yes/no/maybe response as a durable
+comment on the GitHub RSVP issue and queues a provider-facing acknowledgement
+back to the same channel thread. Duplicate responses are suppressed by
+`rsvp_id + response_id`; duplicate acknowledgements are suppressed by
+`channel + notify_message_id`.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels status
 --message-id <id> --status-id <id> --state working` queues a structured
 `gitclaw:channel-status` progress update for provider gateways. The status body

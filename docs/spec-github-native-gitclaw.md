@@ -5390,6 +5390,31 @@ this surface require a live E2E that creates the RSVP, validates queued route
 invites and body-free receipts, and then continues on the RSVP issue with a
 normal GitHub Models repo-reader/search follow-up.
 
+To let channel participants answer without switching surfaces, a mirrored
+`gitclaw:channel-thread` can also post:
+
+```text
+@gitclaw /channels rsvp-response --rsvp-id <stable-rsvp-id> --message-id <stable-inbound-id> --notify-message-id <stable-ack-id> --response yes
+Responder: Optional participant name
+Note:
+Optional private scheduling note
+```
+
+`/channels rsvp-response`, `/channels rsvp-reply`, `/channels respond`, and
+`/channels attendance-response` find the open `gitclaw:channel-rsvp` issue by
+stable RSVP id, record one human-readable `gitclaw:channel-rsvp-response`
+comment on that issue, and queue a short provider-facing acknowledgement back
+to the mirrored channel thread. The source receipt remains body-free: it reports
+only the RSVP issue number/URL, response comment id, response/responder/note
+hashes and byte counts, notification target/comment ids, duplicate status, and
+delivery instructions. The RSVP response record is deduped by
+`rsvp_id + response_id`; the provider acknowledgement is deduped by
+`channel + notify_message_id`. Changes to this surface require a live E2E that
+creates an RSVP, replies from a real routed channel issue, verifies the response
+comment and queued acknowledgement, verifies duplicate suppression, and then
+continues on the RSVP issue with a real GitHub Models repo-reader/search
+follow-up.
+
 When the source issue is itself a `gitclaw:channel-thread`, GitClaw also
 accepts a structured reaction form:
 
@@ -9247,6 +9272,16 @@ examples/workflows/gitclaw.yml
   The RSVP issue then gets a normal GitHub Models issue-comment follow-up that
   must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-RSVP fixture token, and avoid hidden route/account/channel sentinels.
+- A `gh`-driven channel-rsvp-response-slash E2E harness creates a real RSVP
+  with routebook-backed channel targets, replies from one target issue with
+  `@gitclaw /channels rsvp-response ...`, verifies the RSVP response comment,
+  provider-facing acknowledgement outbox item, body-free source receipt
+  metadata, duplicate response suppression from a later issue comment with the
+  same response and acknowledgement ids, and metadata-only outbox discovery for
+  the acknowledgement. The RSVP issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-RSVP-response fixture token, and
+  avoid hidden route/account/channel sentinels.
 - A `gh`-driven channel-done-slash E2E harness creates a real channel task from
   a mirrored channel issue, comments `@gitclaw /channels done ...` on the task
   issue, verifies the task issue closes, queues a metadata-safe done
