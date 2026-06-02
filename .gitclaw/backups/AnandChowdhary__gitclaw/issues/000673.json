@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T06:57:37Z",
+  "generated_at": "2026-06-02T06:59:14Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4599552707,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels image --image-id channel-image-20260602t065418z --width 1280 --height 720 --media-type image/png --url https://media.example.invalid/channel-image-20260602t065418z.png --message-id image-ingest-20260602t065418z --notify-message-id image-notify-20260602t065418z\nImage: Shape GitHub-native channel image 20260602t065418z\nDescription:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_IMAGE_DUPLICATE_20260602t065418z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4599557905,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Image Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#673`\n- requested_channel_command: `/channels image`\n- channel_image_status: `duplicate`\n- image_issue: `#674`\n- image_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/674`\n- image_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#673`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `64e800b44a49`\n- source_message_id_sha256_12: `581c911a96ed`\n- notify_message_id_sha256_12: `24fe97097ab7`\n- notify_message_id_auto: `false`\n- image_id_sha256_12: `1b44fe67df29`\n- image_id_auto: `false`\n- image_title_sha256_12: `1e768f30920d`\n- image_title_bytes: `50`\n- image_title_lines: `1`\n- image_description_sha256_12: `3ab53d33281c`\n- image_description_bytes: `83`\n- image_description_lines: `1`\n- image_width: `1280`\n- image_height: `720`\n- image_dimensions_known: `true`\n- media_type_sha256_12: `96485abcb672`\n- media_type_bytes: `9`\n- source_url_sha256_12: `d2629f1cb871`\n- source_url_bytes: `64`\n- notification_body_sha256_12: `34a50a083c5e`\n- target_from_current_channel_issue: `true`\n- raw_image_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_image_title_included: `false`\n- raw_image_description_included: `false`\n- raw_media_type_included: `false`\n- raw_source_url_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_image_action_change: `true`\n- issue_title_sha256_12: `c0f88f04ebaa`\n\nGitClaw captured a channel-origin image/photo as a durable GitHub visual context issue, then queued a provider-facing image link back to the mirrored thread. The image issue contains the human-readable title and description; this source receipt keeps provider IDs, source URLs, media metadata, descriptions, titles, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the image-note notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent image-note links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate image issues are suppressed by `image_id`; duplicate image-note notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the image issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4599563001,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T06:57:07Z",
       "updated_at": "2026-06-02T06:57:07Z"
+    },
+    {
+      "id": 4599557905,
+      "body": "@gitclaw /channels image --image-id channel-image-20260602t065418z --width 1280 --height 720 --media-type image/png --url https://media.example.invalid/channel-image-20260602t065418z.png --message-id image-ingest-20260602t065418z --notify-message-id image-notify-20260602t065418z\nImage: Shape GitHub-native channel image 20260602t065418z\nDescription:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_IMAGE_DUPLICATE_20260602t065418z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T06:57:58Z",
+      "updated_at": "2026-06-02T06:57:58Z"
+    },
+    {
+      "id": 4599563001,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26803834811\" event_id=\"comment-4599557905\" model=\"gitclaw/channels\" idempotency_key=\"546676ac1b6e8817665b2e842d55dbd4\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26803834811\" --\u003e\n## GitClaw Channel Image Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#673`\n- requested_channel_command: `/channels image`\n- channel_image_status: `duplicate`\n- image_issue: `#674`\n- image_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/674`\n- image_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#673`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `64e800b44a49`\n- source_message_id_sha256_12: `581c911a96ed`\n- notify_message_id_sha256_12: `24fe97097ab7`\n- notify_message_id_auto: `false`\n- image_id_sha256_12: `1b44fe67df29`\n- image_id_auto: `false`\n- image_title_sha256_12: `1e768f30920d`\n- image_title_bytes: `50`\n- image_title_lines: `1`\n- image_description_sha256_12: `3ab53d33281c`\n- image_description_bytes: `83`\n- image_description_lines: `1`\n- image_width: `1280`\n- image_height: `720`\n- image_dimensions_known: `true`\n- media_type_sha256_12: `96485abcb672`\n- media_type_bytes: `9`\n- source_url_sha256_12: `d2629f1cb871`\n- source_url_bytes: `64`\n- notification_body_sha256_12: `34a50a083c5e`\n- target_from_current_channel_issue: `true`\n- raw_image_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_image_title_included: `false`\n- raw_image_description_included: `false`\n- raw_media_type_included: `false`\n- raw_source_url_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_image_action_change: `true`\n- issue_title_sha256_12: `c0f88f04ebaa`\n\nGitClaw captured a channel-origin image/photo as a durable GitHub visual context issue, then queued a provider-facing image link back to the mirrored thread. The image issue contains the human-readable title and description; this source receipt keeps provider IDs, source URLs, media metadata, descriptions, titles, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the image-note notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent image-note links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate image issues are suppressed by `image_id`; duplicate image-note notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the image issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T06:58:48Z",
+      "updated_at": "2026-06-02T06:58:48Z"
     }
   ]
 }
