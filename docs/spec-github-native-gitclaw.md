@@ -5381,6 +5381,7 @@ accepts a structured reaction form:
 @gitclaw /channels image --image-id <stable-image-id> --width <px> --height <px> --message-id <provider-message-id>
 @gitclaw /channels link --link-id <stable-link-id> --url <url> --message-id <provider-message-id>
 @gitclaw /channels access-request --access-id <stable-access-id> --scope <scope> --message-id <provider-message-id>
+@gitclaw /channels platform <provider> --state <state> --message-id <provider-message-id>
 @gitclaw /channels whoami --identity-id <stable-identity-id> --message-id <provider-message-id>
 @gitclaw /channels contact --contact-id <stable-contact-id> --role <role> --message-id <provider-message-id>
 @gitclaw /channels handoff --id <stable-handoff-id> --message-id <provider-message-id>
@@ -5901,6 +5902,37 @@ opens the access-review issue, validates the metadata-only review-link outbox,
 checks duplicate suppression, verifies no access grant/allowlist
 mutation/pairing code/provider API occurred, and then continues on the review
 issue with a normal GitHub Models repo-reader/search follow-up.
+
+The same channel-thread issue can answer a platform/adapter status request
+without controlling the adapter:
+
+```text
+@gitclaw /channels platform telegram --state running --message-id <provider-message-id>
+Reason:
+operator-only platform note
+```
+
+`/channels platform`, `/channels platforms`, `/channels adapter`,
+`/channels adapter-status`, `/channels gateway-status`, and
+`/channels bridge-status` infer the current channel and thread id from the
+issue marker when no explicit route/channel/thread target is provided. They
+queue one provider-facing platform-status message back to the mirrored thread
+and do not create any durable artifact issue. The provider-visible message can
+include the provider name, adapter state claim, GitHub Actions
+`workflow_dispatch` runtime, channel-state storage, outbox/delivery path,
+provider ingress/outbound contract, and workflow-surface booleans. The source
+receipt remains body-free for operator-only fields, reporting only
+thread/message/provider/state/reason/home hashes, duplicate notification state,
+workflow booleans, and delivery gates. It does not call a model, call provider
+APIs, start a gateway, pause or resume adapters, mutate breaker state, change a
+home channel, print raw thread ids, print raw source or notification message
+ids, print raw reasons, print raw home selectors, or print channel message
+bodies in the source receipt. Duplicate notifications are suppressed by
+`channel + notify_message_id`. Changes to this surface require a live E2E that
+validates the metadata-only platform-status outbox, checks duplicate
+suppression, verifies no adapter/control side effects occurred, and then
+continues on the channel issue with a normal GitHub Models repo-reader/search
+follow-up.
 
 The same channel-thread issue can answer an identity-status request without
 turning that status into authorization state:
@@ -9373,6 +9405,17 @@ examples/workflows/gitclaw.yml
   that must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-access fixture token, and avoid hidden channel, account, provider,
   message, user, handle, reason, and access sentinels.
+- A `gh`-driven channel-platform-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels platform ... --state ... --message-id ...` on that
+  mirrored thread, verifies body-free source receipt metadata, provider-facing
+  platform-status queueing, duplicate notification suppression, metadata-only
+  outbox discovery, and explicit no-pause/no-resume/no-breaker-mutation/
+  no-home-mutation/no-gateway-start/no-provider-API flags. The channel-thread
+  issue then gets a normal GitHub Models issue-comment follow-up that must
+  select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-platform fixture token, and avoid hidden channel, account, provider,
+  message, reason, home, state, and notification sentinels.
 - A `gh`-driven channel-whoami-slash E2E harness creates a real channel-thread
   issue through `gitclaw-channel-ingest.yml`, posts `@gitclaw /channels
   whoami --identity-id ... --role ... --message-id ...` on that mirrored

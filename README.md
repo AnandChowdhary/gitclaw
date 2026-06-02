@@ -689,6 +689,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels image --image-id <id> --width <px> --height <px> --message-id <id>
 @gitclaw /channels link --link-id <id> --url <url> --message-id <id>
 @gitclaw /channels access-request --access-id <id> --scope <scope> --message-id <id>
+@gitclaw /channels platform telegram --state running --message-id <id>
 @gitclaw /channels whoami --identity-id <id> --message-id <id>
 @gitclaw /channels contact --contact-id <id> --role <role> --message-id <id>
 @gitclaw /channels handoff --id <id> --message-id <id>
@@ -1027,6 +1028,14 @@ request. The review issue holds the readable requester, scope, requested role,
 and reason, while provider user IDs and handles stay hashed. The action queues
 a provider-facing review link and explicitly does not grant access, mutate
 allowlists, issue pairing codes, call provider APIs, or call a model.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels platform
+telegram --state running --message-id <id>` queues a provider-facing bridge
+status snapshot back to the current channel thread. This is the serverless
+Hermes-style `/platform` primitive: it reports the reviewed provider contract,
+workflow-dispatch gateway shape, outbox/delivery path, and adapter state claim.
+It explicitly does not pause/resume adapters, mutate breaker state, change home
+channels, start gateways, call provider APIs, or call a model; source receipts
+hash reasons, home selectors, thread IDs, and message IDs.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels whoami
 --identity-id <id> --message-id <id>` queues a provider-facing identity-status
 message back to the current channel thread. This is the serverless Hermes-style
@@ -1788,6 +1797,14 @@ allowlist mutation, pairing code, or provider API call happened, checks
 duplicate contact and notification suppression, exposes the contact-card
 notification through metadata-only outbox, and then continues on the contact
 issue with a real GitHub Models repo-reader/search follow-up.
+The channel-platform slash harness turns the operator console into a
+provider-visible bridge status surface: a channel-ingested issue receives
+`@gitclaw /channels platform`, queues a provider-facing platform-status message
+back to the mirrored thread, checks that no pause/resume, breaker mutation,
+home-channel mutation, gateway start, provider API call, or model call happened,
+checks duplicate notification suppression, exposes the platform-status
+notification through metadata-only outbox, and then continues on the channel
+thread itself with a real GitHub Models repo-reader/search follow-up.
 The channel-whoami slash harness turns the operator console into a lightweight
 identity-status surface: a channel-ingested issue receives `@gitclaw /channels
 whoami`, queues a provider-facing identity-status message back to the mirrored

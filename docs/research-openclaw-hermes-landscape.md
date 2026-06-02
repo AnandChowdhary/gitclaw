@@ -4651,6 +4651,30 @@ Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 gateway (`https://hermes-agent.nousresearch.com/docs/user-guide/messaging/`),
 Hermes security guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/security.md`).
 
+## 2026-06-02 Channel Platform Status Follow-Up
+
+OpenClaw treats the gateway/channel layer as an explicit control surface rather
+than hidden transport glue, which is the right mental model for a GitHub-native
+assistant even without a resident server. Hermes' messaging guide adds the
+operational primitive: `/platform` can show adapter state and, in Hermes, steer
+pause/resume behavior. GitClaw should preserve the observability value while
+keeping actual adapter control inside reviewed GitHub workflows.
+
+GitClaw's serverless version is `@gitclaw /channels platform <provider>
+--state <state> --message-id <id>`. It queues one provider-facing
+platform-status message back to the mirrored Slack/Telegram thread with the
+provider contract, workflow-dispatch gateway shape, channel-state storage,
+outbox/delivery path, and adapter state claim. The source receipt stays
+body-free for reason/home/thread/message data. The action does not pause or
+resume adapters, mutate breaker state, change home channels, start a gateway,
+call provider APIs, call a model, or mutate the repository. Acceptance requires
+live E2E for platform-status queueing, metadata-only outbox discovery,
+duplicate notification suppression, explicit no-control/no-provider-API flags,
+and a real GitHub Models repo-reader/search follow-up on the channel issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-02 Channel Access Review Follow-Up
 
 Hermes' messaging gateway model separates provider transport from agent
