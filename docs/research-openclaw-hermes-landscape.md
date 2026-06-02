@@ -4754,6 +4754,33 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-02 Channel Memory Status Follow-Up
+
+OpenClaw's `SOUL.md` and related Markdown context model treats durable memory
+as visible, reviewable assistant state rather than hidden runtime state.
+Hermes' feature docs point in the same direction from the profile/session side:
+long-running assistants need a clear boundary between provider transport,
+session context, and durable state. The GitHub-native translation should let a
+Slack or Telegram operator ask "what memory does this repo think it has?"
+without dumping memory bodies or turning that question into a memory edit.
+
+GitClaw's serverless version is `@gitclaw /channels memory-status
+--message-id <id>`. It queues one provider-facing durable-memory snapshot back
+to the mirrored channel thread with snapshot status, hash, long-term and dated
+note counts, chronology, validation, and risk state. The source receipt remains
+body-free and hash-only: first/latest memory-note paths are hashed, raw memory
+file paths and bodies are not printed, and the action does not call a model,
+write memory, promote memory in the background, access external providers,
+include embedding vectors, call provider APIs, or mutate the repository.
+Acceptance requires live E2E for metadata-only memory-status outbox discovery,
+duplicate notification suppression by `channel + notify_message_id`, explicit
+no-write/no-background-promotion/no-provider/no-embedding/no-model/no-mutation
+flags, and a real GitHub Models repo-reader/search follow-up on the same
+channel issue.
+
+Sources: OpenClaw SOUL guide (`https://clawdocs.org/guides/soul-md/`), Hermes
+features docs (`https://www.hermes-ai.net/docs/features/`).
+
 ## 2026-06-02 Channel Soul Status Follow-Up
 
 OpenClaw's SOUL.md guidance makes the key tension clear: SOUL.md is the
