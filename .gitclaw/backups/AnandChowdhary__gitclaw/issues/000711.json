@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-02T11:07:26Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 711,
+    "title": "GitClaw channel retro: Launch retro 20260602t110008z",
+    "body": "\u003c!-- gitclaw:channel-retro retro_id=\"channel-retro-20260602t110008z\" channel=\"telegram\" thread_id_sha256_12=\"cbf283187782\" source_message_id_sha256_12=\"f0c9a7130425\" source_issue=\"710\" source_comment_id=\"4601724484\" --\u003e\nGitClaw channel retrospective.\n\n- retro_id: channel-retro-20260602t110008z\n- source_channel: telegram\n- source_issue: #710\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/710\n- source_comment_id: 4601724484\n- thread_id_sha256_12: cbf283187782\n- source_message_id_sha256_12: f0c9a7130425\n- retro_mode: github-issue-retro\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Title\n\nLaunch retro 20260602t110008z\n\n## Went Well\n\nVisible went-well token: VISIBLE_CHANNEL_RETRO_WENT_WELL_20260602t110008z\n\n## Rough Edges\n\nVisible rough token: VISIBLE_CHANNEL_RETRO_ROUGH_20260602t110008z\n\n## Next\n\nVisible next token: VISIBLE_CHANNEL_RETRO_NEXT_20260602t110008z\n\nUse this issue as the durable GitHub home for the channel retrospective.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel retro: Launch retro 20260602t110008z\n\n\u003c!-- gitclaw:channel-retro retro_id=\"channel-retro-20260602t110008z\" channel=\"telegram\" thread_id_sha256_12=\"cbf283187782\" source_message_id_sha256_12=\"f0c9a7130425\" source_issue=\"710\" source_comment_id=\"4601724484\" --\u003e\nGitClaw channel retrospective.\n\n- retro_id: channel-retro-20260602t110008z\n- source_channel: telegram\n- source_issue: #710\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/710\n- source_comment_id: 4601724484\n- thread_id_sha256_12: cbf283187782\n- source_message_id_sha256_12: f0c9a7130425\n- retro_mode: github-issue-retro\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Title\n\nLaunch retro 20260602t110008z\n\n## Went Well\n\nVisible went-well token: VISIBLE_CHANNEL_RETRO_WENT_WELL_20260602t110008z\n\n## Rough Edges\n\nVisible rough token: VISIBLE_CHANNEL_RETRO_ROUGH_20260602t110008z\n\n## Next\n\nVisible next token: VISIBLE_CHANNEL_RETRO_NEXT_20260602t110008z\n\nUse this issue as the durable GitHub home for the channel retrospective.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created retro and use the repo-reader skill.\n\nSearch the repository for `channel retro unique search fixture phrase`.\nThe matching repository search result line has the form `channel retro unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_RETRO_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include retro ids, message ids, thread ids, account hashes, issue numbers, retro titles, went-well notes, rough edges, or next steps.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_RETRO_FOLLOWUP_20260602t110008z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4601754517,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_RETRO_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4601761626,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4601754517,
+      "body": "@gitclaw Continue this channel-created retro and use the repo-reader skill.\n\nSearch the repository for `channel retro unique search fixture phrase`.\nThe matching repository search result line has the form `channel retro unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_RETRO_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include retro ids, message ids, thread ids, account hashes, issue numbers, retro titles, went-well notes, rough edges, or next steps.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_RETRO_FOLLOWUP_20260602t110008z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T11:05:56Z",
+      "updated_at": "2026-06-02T11:05:56Z"
+    },
+    {
+      "id": 4601761626,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26815683776\" event_id=\"comment-4601754517\" model=\"openai/gpt-5-nano\" idempotency_key=\"58db4d84aa2d2869164114fc5e3d1831\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26815683776\" prompt_context_sha256_12=\"8de84acfb670\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10786\" usage_completion_tokens=\"276\" usage_total_tokens=\"11062\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_RETRO_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T11:06:59Z",
+      "updated_at": "2026-06-02T11:06:59Z"
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T11:05:42Z",
+  "generated_at": "2026-06-02T11:07:27Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 606,
+  "count": 607,
   "issues": [
     {
       "number": 3,
@@ -7638,6 +7638,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 711,
+      "title": "GitClaw channel retro: Launch retro 20260602t110008z",
+      "path": "issues/000711.json",
+      "backup_generated_at": "2026-06-02T11:07:26Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
