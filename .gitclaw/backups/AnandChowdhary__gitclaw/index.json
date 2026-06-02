@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T14:41:48Z",
+  "generated_at": "2026-06-02T14:56:52Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 625,
+  "count": 626,
   "issues": [
     {
       "number": 3,
@@ -7886,6 +7886,20 @@
       ],
       "comment_count": 9,
       "transcript_messages": 9
+    },
+    {
+      "number": 731,
+      "title": "GitClaw telegram thread channel-skill-status-e2e-20260602t145432z",
+      "path": "issues/000731.json",
+      "backup_generated_at": "2026-06-02T14:56:50Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:done",
+        "gitclaw:channel"
+      ],
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
