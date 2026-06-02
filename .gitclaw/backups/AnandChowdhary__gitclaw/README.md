@@ -1,6 +1,6 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-02T04:44:33Z`
+- generated_at: `2026-06-02T04:46:18Z`
 - issue_count: `566`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
@@ -570,4 +570,4 @@
 | #652 | GitClaw memory proposal: weekly-ops-memory-20260602t035923z | `2026-06-02T04:06:05Z` | 2 | 3 | `issues/000652.json` |
 | #653 | GitClaw telegram thread channel-watch-e2e-20260602t041700z | `2026-06-02T04:22:05Z` | 7 | 7 | `issues/000653.json` |
 | #654 | GitClaw channel watch: Follow up channel watch 20260602t041700z | `2026-06-02T04:23:50Z` | 2 | 3 | `issues/000654.json` |
-| #655 | GitClaw telegram thread channel-standing-order-proposal-e2e-20260602t044115z | `2026-06-02T04:44:31Z` | 5 | 5 | `issues/000655.json` |
+| #655 | GitClaw telegram thread channel-standing-order-proposal-e2e-20260602t044115z | `2026-06-02T04:46:16Z` | 7 | 7 | `issues/000655.json` |
