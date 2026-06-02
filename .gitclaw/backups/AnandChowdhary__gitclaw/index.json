@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T21:42:29Z",
+  "generated_at": "2026-06-02T21:44:17Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 646,
   "issues": [
@@ -8169,15 +8169,15 @@
       "number": 751,
       "title": "GitClaw telegram thread channel-soul-search-e2e-20260602t213723z",
       "path": "issues/000751.json",
-      "backup_generated_at": "2026-06-02T21:42:27Z",
+      "backup_generated_at": "2026-06-02T21:44:15Z",
       "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 7,
-      "transcript_messages": 7
+      "comment_count": 9,
+      "transcript_messages": 9
     }
   ]
 }
