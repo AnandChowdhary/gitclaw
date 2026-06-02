@@ -269,7 +269,7 @@ for expected in \
   "enabled_skills: \`1\`" \
   "disabled_skills: \`0\`" \
   "allowlist_blocked_skills: \`0\`" \
-  "selected_skills: \`0\`" \
+  "selected_skills: \`1\`" \
   "skills_with_frontmatter: \`1\`" \
   "skills_with_descriptions: \`1\`" \
   "skills_missing_requirements: \`0\`" \
@@ -307,7 +307,7 @@ for expected in \
   "Enabled skills: 1" \
   "Disabled skills: 0" \
   "Allowlist blocked skills: 0" \
-  "Selected skills for this turn: 0" \
+  "Selected skills for this turn: 1" \
   "Enabled skill names: repo-reader" \
   "Skills with frontmatter: 1" \
   "Skills with descriptions: 1" \
