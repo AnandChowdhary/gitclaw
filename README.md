@@ -691,6 +691,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels retro --retro-id <id> --message-id <id>
 @gitclaw /channels playbook --playbook-id <id> --message-id <id>
 @gitclaw /channels insight --insight-id <id> --message-id <id>
+@gitclaw /channels board-card --card-id <id> --lane <lane> --message-id <id>
 @gitclaw /channels propose-workspace --workspace-id <id> --target .gitclaw/workspaces/<name>.md --message-id <id>
 @gitclaw /channels incident --incident-id <id> --severity <severity> --message-id <id>
 @gitclaw /channels voice --voice-id <id> --duration <seconds> --message-id <id>
@@ -1051,6 +1052,14 @@ insight link that shows the title without leaking section text, and keeps the
 source receipt body-free with hashes, duplicate state, notification metadata,
 and delivery gates. Promotion into memory, soul, skills, tools, or schedules
 remains an explicit GitHub follow-up.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+board-card --card-id <id> --lane <lane> --message-id <id>` records a
+channel-origin work card as a durable GitHub issue. The board-card issue holds
+readable title, lane, optional owner, and notes; the channel action queues a
+provider-facing board-card link that shows the title, lane, and owner, keeps
+the source receipt body-free with hashes, and explicitly does not call a
+model, mutate the repository, call provider APIs, or move cards outside
+GitHub review.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 propose-workspace --workspace-id <id> --target .gitclaw/workspaces/<name>.md
 --message-id <id>` records a channel-origin workspace/context proposal as a
@@ -1494,6 +1503,7 @@ scripts/e2e/github-channel-kudos-slash.sh
 scripts/e2e/github-channel-retro-slash.sh
 scripts/e2e/github-channel-playbook-slash.sh
 scripts/e2e/github-channel-insight-slash.sh
+scripts/e2e/github-channel-board-card-slash.sh
 scripts/e2e/github-channel-workspace-proposal-slash.sh
 scripts/e2e/github-channel-incident-slash.sh
 scripts/e2e/github-channel-voice-slash.sh
@@ -1870,6 +1880,14 @@ observation, evidence, and recommendation, queues a provider-facing insight
 link back to the mirrored thread, checks duplicate insight and notification
 suppression, exposes the link through metadata-only outbox, and then continues
 on the insight issue with a real GitHub Models repo-reader/search follow-up.
+The channel-board-card slash harness turns a mirrored Slack/Telegram thread
+into a lightweight GitHub-native work board: a channel-ingested issue receives
+`@gitclaw /channels board-card`, creates or reuses a durable GitHub board-card
+issue with readable title, lane, owner, and notes, queues a provider-facing
+board-card link back to the mirrored thread, checks that no repository
+mutation happened, checks duplicate card and notification suppression, exposes
+the link through metadata-only outbox, and then continues on the board-card
+issue with a real GitHub Models repo-reader/search follow-up.
 The channel-workspace-proposal slash harness turns the operator console into a
 workspace-context intake lane: a channel-ingested issue receives `@gitclaw
 /channels propose-workspace`, creates or reuses a durable GitHub workspace

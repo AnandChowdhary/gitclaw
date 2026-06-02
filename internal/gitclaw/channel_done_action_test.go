@@ -442,6 +442,29 @@ func TestChannelDoneArtifactRefSupportsWorkspaceProposalIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsBoardCardIssues(t *testing.T) {
+	body := RenderChannelBoardCardIssueBody(ChannelBoardCardOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		BoardCardID:       "board-card-done-1",
+		Lane:              "doing",
+		Owner:             "alice",
+		Title:             "Review channel board state",
+		Notes:             "Keep the board card reviewable.",
+		SourceIssueNumber: 50,
+		SourceCommentID:   5000,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "board-card" || ref.ID != "board-card-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 50 || ref.SourceCommentID != 5000 {
+		t.Fatalf("unexpected board card artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsIncidentIssues(t *testing.T) {
 	body := RenderChannelIncidentIssueBody(ChannelIncidentOptions{
 		Repo:              "owner/repo",

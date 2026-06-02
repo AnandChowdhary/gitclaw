@@ -5461,6 +5461,7 @@ accepts a structured reaction form:
 @gitclaw /channels retro --retro-id <stable-retro-id> --message-id <provider-message-id>
 @gitclaw /channels playbook --playbook-id <stable-playbook-id> --message-id <provider-message-id>
 @gitclaw /channels insight --insight-id <stable-insight-id> --message-id <provider-message-id>
+@gitclaw /channels board-card --card-id <stable-card-id> --lane <lane> --message-id <provider-message-id>
 @gitclaw /channels propose-workspace --workspace-id <stable-workspace-proposal-id> --target .gitclaw/workspaces/<name>.md --message-id <provider-message-id>
 @gitclaw /channels incident --incident-id <stable-incident-id> --severity <severity> --message-id <provider-message-id>
 @gitclaw /channels voice --voice-id <stable-voice-id> --duration <seconds> --message-id <provider-message-id>
@@ -5968,6 +5969,40 @@ provider-facing insight link. Changes to this surface require a live E2E that
 records the insight, validates the metadata-only insight-link outbox, checks
 duplicate suppression, and then continues on the insight issue with a normal
 GitHub Models repo-reader/search follow-up.
+
+The same channel-thread issue can also record a board/work card:
+
+```text
+@gitclaw /channels board-card --card-id <stable-card-id> --lane <lane> --owner <owner> --message-id <provider-message-id>
+Card: short work-card title
+Notes:
+human-readable work context, blockers, or next action
+```
+
+`/channels board-card`, `/channels card`, `/channels kanban`,
+`/channels kanban-card`, `/channels lane-card`, `/channels work-card`, and
+`/channels queue-card` infer the current channel and thread id from the issue
+marker when no explicit route/channel/thread target is provided. They create
+or reuse one open GitHub issue carrying a hidden
+`gitclaw:channel-board-card` marker for the stable card id, label it with
+`gitclaw` so normal conversation can continue there, and queue a
+provider-facing board-card link back to the mirrored channel thread. The board
+card issue contains the human-readable title, lane, optional owner, and notes
+because it is the reviewable place to decide whether the work should become a
+task, reminder, playbook, tool request, or proactive job; the source receipt
+remains body-free, reporting only card/thread/message/title/lane/owner/notes
+hashes, duplicate status, notification queue metadata, and delivery gates. The
+provider-facing acknowledgement can show the title, lane, owner, and GitHub
+issue link but not the notes. It does not call a model, call provider APIs,
+mutate the repository, write project-board state, print raw card ids, print
+raw thread ids, print raw source or notification message ids, print channel
+message bodies, or print raw section text in the source receipt. Duplicates
+are suppressed first by `board_card_id` for the GitHub board-card issue and
+then by `channel + notify_message_id` for the provider-facing board-card link.
+Changes to this surface require a live E2E that records the board card,
+validates the metadata-only board-card outbox, checks duplicate suppression,
+asserts that no repository mutation happened, and then continues on the
+board-card issue with a normal GitHub Models repo-reader/search follow-up.
 
 The same channel-thread issue can also record a workspace/context proposal:
 
@@ -6796,6 +6831,10 @@ Behavior:
   `channel + notify_message_id` without mutating memory, mutating soul,
   installing skills, approving tools, creating schedules, calling provider
   APIs, or calling a model,
+- create or reuse one `gitclaw:channel-board-card` issue per board card id and
+  queue one provider-facing board-card outbound comment per
+  `channel + notify_message_id` without writing project-board state, mutating
+  the repository, calling provider APIs, or calling a model,
 - create or reuse one `gitclaw:channel-workspace-proposal` issue per proposal
   id and queue one provider-facing proposal-link outbound comment per
   `channel + notify_message_id` without writing workspace files, mutating the
@@ -6849,8 +6888,9 @@ Behavior:
   `gitclaw:channel-digest`, `gitclaw:channel-idea`,
   `gitclaw:channel-kudos`, `gitclaw:channel-retro`,
   `gitclaw:channel-playbook`, `gitclaw:channel-insight`,
-  `gitclaw:channel-workspace-proposal`, `gitclaw:channel-incident`,
-  `gitclaw:channel-voice`, `gitclaw:channel-image`, `gitclaw:channel-link`,
+  `gitclaw:channel-board-card`, `gitclaw:channel-workspace-proposal`,
+  `gitclaw:channel-incident`, `gitclaw:channel-voice`,
+  `gitclaw:channel-image`, `gitclaw:channel-link`,
   `gitclaw:channel-access-request`, `gitclaw:channel-contact`, or
   `gitclaw:channel-reminder` issue and queue one
   provider-facing done acknowledgement per `channel + notify_message_id`,
@@ -7043,6 +7083,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels retro --retro-id channel-retro-1 --message-id provider-msg-1
 @gitclaw /channels playbook --playbook-id channel-playbook-1 --message-id provider-msg-1
 @gitclaw /channels insight --insight-id channel-insight-1 --message-id provider-msg-1
+@gitclaw /channels board-card --card-id channel-board-card-1 --lane doing --message-id provider-msg-1
 @gitclaw /channels propose-workspace --workspace-id channel-workspace-proposal-1 --target .gitclaw/workspaces/channel-review.md --message-id provider-msg-1
 @gitclaw /channels incident --incident-id channel-incident-1 --severity sev2 --message-id provider-msg-1
 @gitclaw /channels voice --voice-id channel-voice-1 --duration 47 --message-id provider-msg-1
@@ -9716,6 +9757,17 @@ examples/workflows/gitclaw.yml
   must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-insight fixture token, and avoid hidden channel, account, provider,
   message, insight, and observation/evidence/recommendation sentinels.
+- A `gh`-driven channel-board-card-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels board-card --card-id ... --lane ... --message-id ...` on
+  that mirrored thread, verifies GitHub board-card issue creation, body-free
+  source receipt metadata, provider-facing board-card link queueing, duplicate
+  card and notification suppression, explicit no-repository-mutation gates,
+  and metadata-only outbox discovery. The board-card issue then gets a normal
+  GitHub Models issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-board-card fixture token, and
+  avoid hidden channel, account, provider, message, card, lane, owner, and
+  notes sentinels.
 - A `gh`-driven channel-workspace-proposal-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels propose-workspace --workspace-id ... --target ... --message-id

@@ -40,6 +40,7 @@ var channelRetroMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-retro
 var channelPlaybookMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-playbook\s+([^>]*)-->`)
 var channelInsightMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-insight\s+([^>]*)-->`)
 var channelWorkspaceProposalMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-workspace-proposal\s+([^>]*)-->`)
+var channelBoardCardMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-board-card\s+([^>]*)-->`)
 var channelIncidentMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-incident\s+([^>]*)-->`)
 var channelVoiceMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-voice\s+([^>]*)-->`)
 var channelImageMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-image\s+([^>]*)-->`)
@@ -285,6 +286,10 @@ func HasChannelInsightMarker(body string) bool {
 
 func HasChannelWorkspaceProposalMarker(body string) bool {
 	return channelWorkspaceProposalMarkerPattern.MatchString(body)
+}
+
+func HasChannelBoardCardMarker(body string) bool {
+	return channelBoardCardMarkerPattern.MatchString(body)
 }
 
 func HasChannelIncidentMarker(body string) bool {

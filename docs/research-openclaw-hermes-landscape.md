@@ -4697,6 +4697,33 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-02 Channel Board Card Follow-Up
+
+OpenClaw treats external channels and assistant sessions as first-class
+conversation surfaces, while Hermes exposes Kanban as a durable work surface
+alongside toolsets and messaging. The GitHub-native translation is to let a
+Slack or Telegram message become a durable GitHub issue that behaves like a
+lightweight board card, without needing a separate project-board API write or
+an always-on server.
+
+GitClaw's serverless version is `@gitclaw /channels board-card --card-id <id>
+--lane <lane> --message-id <id>`. It opens or reuses a normal
+`gitclaw:channel-board-card` issue with the readable title, lane, optional
+owner, and notes, queues one provider-facing board-card link back to the source
+Slack/Telegram thread, and keeps the source receipt body-free with only hashes,
+duplicate state, delivery metadata, and explicit no-repository-mutation gates.
+The action does not call a model, mutate project boards, call provider APIs,
+print raw provider identifiers, or move work outside normal GitHub review.
+Acceptance requires live E2E for board-card issue creation, metadata-only
+board-card outbox discovery, duplicate suppression, no-repository-mutation
+flags, and a real GitHub Models repo-reader/search follow-up on the board-card
+issue.
+
+Sources: OpenClaw chat channels (`https://docs.openclaw.ai/channels/index`),
+OpenClaw sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes Kanban
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban`),
+Hermes toolsets reference (`https://hermes-agent.nousresearch.com/docs/reference/toolsets-reference`).
+
 ## 2026-06-02 Channel Workspace Proposal Follow-Up
 
 OpenClaw's channels and CLI session model point toward chat as an intake
