@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-02T04:04:25Z`
-- issue_count: `562`
+- generated_at: `2026-06-02T04:06:07Z`
+- issue_count: `563`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -567,3 +567,4 @@
 | #649 | GitClaw telegram thread channel-soul-proposal-e2e-20260602t033924z | `2026-06-02T03:44:20Z` | 7 | 7 | `issues/000649.json` |
 | #650 | GitClaw soul proposal: warm-tone-soul-20260602t033924z | `2026-06-02T03:46:07Z` | 2 | 3 | `issues/000650.json` |
 | #651 | GitClaw telegram thread channel-memory-proposal-e2e-20260602t035923z | `2026-06-02T04:04:23Z` | 7 | 7 | `issues/000651.json` |
+| #652 | GitClaw memory proposal: weekly-ops-memory-20260602t035923z | `2026-06-02T04:06:05Z` | 2 | 3 | `issues/000652.json` |

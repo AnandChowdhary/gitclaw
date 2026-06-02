@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T04:04:25Z",
+  "generated_at": "2026-06-02T04:06:07Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 562,
+  "count": 563,
   "issues": [
     {
       "number": 3,
@@ -7092,6 +7092,15 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 652,
+      "title": "GitClaw memory proposal: weekly-ops-memory-20260602t035923z",
+      "path": "issues/000652.json",
+      "backup_generated_at": "2026-06-02T04:06:05Z",
+      "event_name": "issue_comment",
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
