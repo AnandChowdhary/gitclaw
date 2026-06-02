@@ -5489,6 +5489,37 @@ queues a session-search notification, validates metadata-only outbox discovery,
 verifies duplicate suppression, and then continues on the same GitHub issue
 with a real GitHub Models repo-reader/search follow-up.
 
+For channel-native recall that should search repo-local durable memory instead
+of only the current live transcript, GitClaw also supports:
+
+```text
+@gitclaw /channels memory-search deployment outage --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id> --max-results 5
+```
+
+`/channels memory-search`, `/channels search-memory`, `/channels
+memory-recall`, `/channels recall-memory`, `/channels durable-recall`,
+`/channels recall-context`, and `/channels context-search` infer the current
+channel and thread id from the issue marker when no explicit route/channel
+thread target is provided. They search repo-local `.gitclaw/MEMORY.md` and
+canonical `.gitclaw/memory/YYYY-MM-DD.md` files with the same body-free lexical
+matcher as `/memory search`. The provider-facing outbound comment reports
+search status, query hash, query term count, max results, file/search counts,
+memory-relative paths, line numbers, scores, loaded-for-this-turn flags, file
+hashes, line hashes, search-id hash, and duplicate status only. The source
+receipt stays stricter: it records only target issue/comment ids,
+route/thread/message hashes, search id hash, query hash, counts, outbox
+delivery instructions, and safety gates. It does not call a model, execute
+tools, call provider APIs, call external memory providers, create embedding
+vectors, mutate repository files, write memory, print raw search queries, print
+raw provider thread/message ids, print raw search ids, print memory bodies,
+print memory paths in the source receipt, print channel bodies, print issue or
+comment bodies, print prompts, or print tool outputs. Duplicates are suppressed
+by `channel + notify_message_id`. Changes to this surface require a live E2E
+that ingests a real channel issue, queues a memory-search notification,
+validates metadata-only outbox discovery, verifies duplicate suppression, and
+then continues on the same GitHub issue with a real GitHub Models
+repo-reader/search follow-up.
+
 For channel-native recall that should search durable GitHub backups instead of
 only the current live transcript, GitClaw also supports:
 
@@ -7662,6 +7693,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels profile-status --message-id provider-msg-1
 @gitclaw /channels soul-status --message-id provider-msg-1
 @gitclaw /channels memory-status --message-id provider-msg-1
+@gitclaw /channels memory-search deployment --message-id provider-msg-1 --notify-message-id provider-memory-search-ack-1
 @gitclaw /channels rehearse-backup --id channel-backup-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels restore-request --id channel-backup-restore-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-checkpoint --target HEAD~1 --id channel-checkpoint-rehearsal-1 --message-id provider-msg-1
@@ -9866,6 +9898,11 @@ MVP is not complete until:
   `/channels backup-search` turn queues only body-free archive recall metadata
   through channel outbox, suppresses duplicate notifications, and proves a
   normal model-backed repo-reader/search follow-up on the same channel issue,
+- the channel memory-search harness verifies a real channel-ingested issue can
+  run `/channels memory-search`, queue only body-free durable-memory recall
+  metadata through channel outbox, keep the source receipt free of raw memory
+  paths and bodies, suppress duplicate notifications, and prove a normal
+  model-backed repo-reader/search follow-up on the same channel issue,
 - the live harness verifies status labels end at `gitclaw:done` without
   `gitclaw:running` or `gitclaw:error`,
 - the failure harness forces a real invalid-model run and verifies a bounded
@@ -10160,6 +10197,16 @@ examples/workflows/gitclaw.yml
   that must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-session-search fixture token, and avoid hidden channel/message/search
   sentinels.
+- A `gh`-driven channel-memory-search-slash E2E harness ingests a real mirrored
+  channel issue, replies with `@gitclaw /channels memory-search ...`, verifies
+  provider-facing body-free recall metadata from repo-local durable memory,
+  body-free source receipt metadata without raw memory paths or bodies,
+  duplicate recall notification suppression from a later issue comment with
+  the same acknowledgement id, and metadata-only outbox discovery for the
+  acknowledgement. The same channel issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-memory-search fixture token, and
+  avoid hidden channel/message/search sentinels.
 - A `gh`-driven channel-rsvp-slash E2E harness creates an ordinary GitHub issue
   with `@gitclaw /channels rsvp ...`, verifies a labeled GitHub RSVP issue,
   routebook-backed RSVP cards on each target channel issue, body-free source

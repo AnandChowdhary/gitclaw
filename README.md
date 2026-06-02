@@ -675,6 +675,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels choose --message-id <id> --notify-message-id <id>
 @gitclaw /channels mood focused --message-id <id> --notify-message-id <id> --intensity 4
 @gitclaw /channels session-search <query> --message-id <id> --notify-message-id <id>
+@gitclaw /channels memory-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels backup-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels rsvp e2e-slack-route,e2e-telegram-route --rsvp-id <id> --message-id <id>
 @gitclaw /channels rsvp-response --rsvp-id <id> --message-id <id> --notify-message-id <id> --response yes
@@ -955,6 +956,13 @@ and queues provider-facing recall metadata back to Slack/Telegram. It reports
 query hashes, message indexes, source ids, scores, line hashes, and duplicate
 status without printing raw search queries, channel bodies, issue bodies,
 assistant replies, prompts, or tool outputs.
+`@gitclaw /channels memory-search <query> --message-id <id>
+--notify-message-id <id>` searches repo-local durable memory and queues
+provider-facing recall metadata back to Slack/Telegram. It reports query
+hashes, memory paths, line numbers, scores, file hashes, line hashes, and
+duplicate status without printing raw search queries, memory bodies, channel
+bodies, issue bodies, comment bodies, prompts, tool outputs, or calling an
+external memory provider.
 `@gitclaw /channels backup-search <query> --message-id <id>
 --notify-message-id <id>` searches the durable `gitclaw-backups` archive and
 queues provider-facing recall metadata back to Slack/Telegram. In GitHub
@@ -1471,6 +1479,7 @@ scripts/e2e/github-channel-backup-search-slash.sh
 scripts/e2e/github-channel-profile-status-slash.sh
 scripts/e2e/github-channel-soul-status-slash.sh
 scripts/e2e/github-channel-memory-status-slash.sh
+scripts/e2e/github-channel-memory-search-slash.sh
 scripts/e2e/github-channel-backup-rehearsal-slash.sh
 scripts/e2e/github-channel-backup-restore-request-slash.sh
 scripts/e2e/github-channel-checkpoint-rehearsal-slash.sh
@@ -1920,6 +1929,11 @@ real GitHub Models repo-reader/search follow-up.
 The channel-session-search slash harness makes recall a channel-native action:
 a channel-ingested issue receives `@gitclaw /channels session-search`, queues
 provider-visible body-free search metadata from the GitHub-backed transcript,
+exposes it through metadata-only outbox, suppresses duplicate recall
+notifications, and then runs a real GitHub Models repo-reader/search follow-up.
+The channel-memory-search slash harness gives durable memory the same channel
+shape: a channel-ingested issue receives `@gitclaw /channels memory-search`,
+queues provider-visible body-free recall metadata from repo-local memory files,
 exposes it through metadata-only outbox, suppresses duplicate recall
 notifications, and then runs a real GitHub Models repo-reader/search follow-up.
 The channel-backup-search slash harness extends recall to durable archives: a

@@ -142,6 +142,31 @@ OpenClaw docs (`https://docs.openclaw.ai/`), OpenClaw sessions docs
 and Hermes features/memory docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/overview`).
 
+2026-06-02 channel-memory-search follow-up: OpenClaw's memory and session
+surfaces suggest a useful middle layer between live session recall and archive
+restore: search durable memory directly when the user asks from the chat
+channel, but keep it as a recall result instead of a memory mutation. Hermes'
+memory and tool-search docs point the same way: memory is durable agent state,
+while search/retrieval should be inspectable and bounded by the current turn.
+GitClaw's serverless cut should therefore make `@gitclaw /channels
+memory-search <query> --message-id <id> --notify-message-id <id>` a
+channel-native durable-memory recall action. The action can reuse the existing
+body-free repo-local memory searcher over `.gitclaw/MEMORY.md` and
+`.gitclaw/memory/*.md`, queue one provider-facing result summary through
+`channel-outbox`, and leave a stricter source receipt with only hashes, counts,
+delivery gates, and no raw memory paths. It should not call a model, execute
+tools, write memory, call provider APIs, call external memory providers, build
+embeddings, mutate repository files, or expose raw search queries, memory
+bodies, channel bodies, issue/comment bodies, prompts, or tool outputs.
+Sources: OpenClaw docs (`https://docs.openclaw.ai/`), OpenClaw memory docs
+(`https://docs.openclaw.ai/cli/memory`), OpenClaw channel docs
+(`https://docs.openclaw.ai/cli/channels`), Hermes memory docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/overview`),
+Hermes tool-search docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-search`),
+and Hermes messaging docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/messaging/`).
+
 2026-06-02 channel-decision follow-up: current OpenClaw channel docs emphasize
 that chat surfaces are runtime accounts behind one Gateway, and the channel CLI
 separates socket/provider health from stored sessions. Hermes' cron docs point

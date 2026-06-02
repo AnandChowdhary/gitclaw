@@ -302,6 +302,7 @@ func renderChannelReport(ev Event, cfg Config, comments []Comment, includeIssue 
 	b.WriteString("- `/channels profile-status --message-id <message>` queues a provider-facing repo-profile snapshot without exporting, importing, switching, or mutating profiles\n")
 	b.WriteString("- `/channels soul-status --message-id <message>` queues a provider-facing high-authority soul snapshot without registry contact, profile export, soul writes, or raw bodies\n")
 	b.WriteString("- `/channels memory-status --message-id <message>` queues a provider-facing durable-memory snapshot without memory writes, external provider access, embedding vectors, or raw memory bodies\n")
+	b.WriteString("- `/channels memory-search <query> --message-id <message>` queues provider-facing body-free durable-memory recall results from repo-local memory files\n")
 	b.WriteString("- `/channels whoami --identity-id <id> --message-id <message>` queues a provider-facing identity-status message without granting access\n")
 	b.WriteString("- `/channels contact --contact-id <id> --message-id <message>` saves a GitHub contact-card issue for a channel identity without granting access\n")
 	b.WriteString("- `/channels roll --dice <expr> --message-id <message>` queues a provider-facing deterministic dice/coin result without model calls or external randomness\n")

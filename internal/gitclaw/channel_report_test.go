@@ -32,6 +32,7 @@ func TestRenderChannelListReportCarriesDedicatedE2EMarker(t *testing.T) {
 		"`/channels profile-status --message-id <message>`",
 		"`/channels soul-status --message-id <message>`",
 		"`/channels memory-status --message-id <message>`",
+		"`/channels memory-search <query> --message-id <message>`",
 		"`/channels roll --dice <expr> --message-id <message>`",
 		"`/channels choose --message-id <message>`",
 		"`/channels mood <mood> --message-id <message>`",
