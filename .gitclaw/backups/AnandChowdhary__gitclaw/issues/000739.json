@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T17:44:37Z",
+  "generated_at": "2026-06-02T17:46:09Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 739,
     "title": "GitClaw telegram thread channel-choose-e2e-20260602t174239z",
@@ -51,6 +51,15 @@
       "CommentID": 4605373176,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Choose Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#739`\n- requested_channel_command: `/channels choose`\n- channel_choose_status: `queued`\n- choose_mode: `deterministic-channel-option-picker`\n- notification_target_issue: `#739`\n- notification_comment_id: `4605390095`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `d2433e2181c2`\n- source_message_id_sha256_12: `cb554e9846fa`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `1b624d05f29d`\n- notify_message_id_auto: `false`\n- choose_id_sha256_12: `1d3babf3dae3`\n- choose_id_auto: `false`\n- choices_count: `3`\n- choices_sha256_12: `a643ad6eba82`\n- choices_bytes: `31`\n- selected_choice_index: `3`\n- selected_choice_sha256_12: `e0132bfa7672`\n- selection_sha256_12: `717a3734123b`\n- choice_seed_sha256_12: `eae2d7ab8b33`\n- notification_body_sha256_12: `dd1d36aaf9fe`\n- target_from_current_channel_issue: `true`\n- deterministic_picker_used: `true`\n- external_randomness_used: `false`\n- cryptographic_randomness_used: `false`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_choose_id_included: `false`\n- raw_choices_included: `false`\n- raw_selected_choice_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_choose_action_change: `true`\n- issue_title_sha256_12: `701e9d66f3da`\n\nGitClaw queued a provider-facing deterministic option pick on the canonical channel issue. This is a small channel-native interaction: provider users get one selected choice, while the source receipt keeps thread ids, message ids, choose ids, option text, selected choice text, and channel bodies out of band. The action does not call a model, use external randomness, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read choice notifications with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent choice notifications with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate choice notifications are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4605390297,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-02T17:44:13Z",
       "updated_at": "2026-06-02T17:44:13Z"
+    },
+    {
+      "id": 4605390095,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-choose-e2e-20260602t174239z\" message_id=\"choose-notify-20260602t174239z\" author=\"gitclaw\" --\u003e\nGitClaw channel choice.\n\nChoices: 3\nPicked: #3\nChoice: Gamma Lane\nChoice hash: e0132bfa7672\nSeed hash: eae2d7ab8b33\n\nSelection source: deterministic GitHub channel action seed.\nModel call: not performed by this action.\nExternal randomness: not used.\nRepository mutation: not performed by this action.\nProvider delivery: queued through GitHub channel outbox.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T17:45:35Z",
+      "updated_at": "2026-06-02T17:45:35Z"
+    },
+    {
+      "id": 4605390297,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26837523865\" event_id=\"comment-4605373176\" model=\"gitclaw/channels\" idempotency_key=\"ede5ca2a12e7ebd6112c9c26a85565d6\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26837523865\" --\u003e\n## GitClaw Channel Choose Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#739`\n- requested_channel_command: `/channels choose`\n- channel_choose_status: `queued`\n- choose_mode: `deterministic-channel-option-picker`\n- notification_target_issue: `#739`\n- notification_comment_id: `4605390095`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `d2433e2181c2`\n- source_message_id_sha256_12: `cb554e9846fa`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `1b624d05f29d`\n- notify_message_id_auto: `false`\n- choose_id_sha256_12: `1d3babf3dae3`\n- choose_id_auto: `false`\n- choices_count: `3`\n- choices_sha256_12: `a643ad6eba82`\n- choices_bytes: `31`\n- selected_choice_index: `3`\n- selected_choice_sha256_12: `e0132bfa7672`\n- selection_sha256_12: `717a3734123b`\n- choice_seed_sha256_12: `eae2d7ab8b33`\n- notification_body_sha256_12: `dd1d36aaf9fe`\n- target_from_current_channel_issue: `true`\n- deterministic_picker_used: `true`\n- external_randomness_used: `false`\n- cryptographic_randomness_used: `false`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_choose_id_included: `false`\n- raw_choices_included: `false`\n- raw_selected_choice_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_choose_action_change: `true`\n- issue_title_sha256_12: `701e9d66f3da`\n\nGitClaw queued a provider-facing deterministic option pick on the canonical channel issue. This is a small channel-native interaction: provider users get one selected choice, while the source receipt keeps thread ids, message ids, choose ids, option text, selected choice text, and channel bodies out of band. The action does not call a model, use external randomness, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read choice notifications with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent choice notifications with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate choice notifications are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T17:45:36Z",
+      "updated_at": "2026-06-02T17:45:36Z"
     }
   ]
 }
