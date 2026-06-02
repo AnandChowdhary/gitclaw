@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T06:39:13Z",
+  "generated_at": "2026-06-02T06:40:53Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4599426550,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels voice --voice-id channel-voice-20260602t063547z --duration 47 --media-type audio/ogg --url https://media.example.invalid/channel-voice-20260602t063547z.ogg --message-id voice-ingest-20260602t063547z --notify-message-id voice-notify-20260602t063547z\nVoice: Shape GitHub-native channel voice 20260602t063547z\nTranscript:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_VOICE_DUPLICATE_20260602t063547z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4599433217,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Voice Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#671`\n- requested_channel_command: `/channels voice`\n- channel_voice_status: `duplicate`\n- voice_issue: `#672`\n- voice_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/672`\n- voice_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#671`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `2db01b6cfe51`\n- source_message_id_sha256_12: `a849abfcfdac`\n- notify_message_id_sha256_12: `dac7c786ccc6`\n- notify_message_id_auto: `false`\n- voice_id_sha256_12: `7ef5ba1db474`\n- voice_id_auto: `false`\n- voice_title_sha256_12: `60bfcaf43cf6`\n- voice_title_bytes: `50`\n- voice_title_lines: `1`\n- transcript_sha256_12: `1a6fdbf2822c`\n- transcript_bytes: `83`\n- transcript_lines: `1`\n- duration_seconds: `47`\n- duration_seconds_known: `true`\n- media_type_sha256_12: `0b4e1b774951`\n- media_type_bytes: `9`\n- audio_url_sha256_12: `a1fd2243c1f8`\n- audio_url_bytes: `64`\n- notification_body_sha256_12: `ed51c2a58ad3`\n- target_from_current_channel_issue: `true`\n- raw_voice_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_voice_title_included: `false`\n- raw_transcript_included: `false`\n- raw_media_type_included: `false`\n- raw_audio_url_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_voice_action_change: `true`\n- issue_title_sha256_12: `dce12ca0f2fa`\n\nGitClaw captured a channel-origin voice/audio note as a durable GitHub issue, then queued a provider-facing transcript link back to the mirrored thread. The voice issue contains the human-readable transcript; this source receipt keeps provider IDs, audio URLs, media metadata, transcripts, titles, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the voice-note notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent voice-note links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate voice issues are suppressed by `voice_id`; duplicate voice-note notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the voice issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4599439813,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T06:38:42Z",
       "updated_at": "2026-06-02T06:38:42Z"
+    },
+    {
+      "id": 4599433217,
+      "body": "@gitclaw /channels voice --voice-id channel-voice-20260602t063547z --duration 47 --media-type audio/ogg --url https://media.example.invalid/channel-voice-20260602t063547z.ogg --message-id voice-ingest-20260602t063547z --notify-message-id voice-notify-20260602t063547z\nVoice: Shape GitHub-native channel voice 20260602t063547z\nTranscript:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_VOICE_DUPLICATE_20260602t063547z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T06:39:34Z",
+      "updated_at": "2026-06-02T06:39:34Z"
+    },
+    {
+      "id": 4599439813,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26803077557\" event_id=\"comment-4599433217\" model=\"gitclaw/channels\" idempotency_key=\"766b719a28ce0e479eb46d03cda284fe\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26803077557\" --\u003e\n## GitClaw Channel Voice Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#671`\n- requested_channel_command: `/channels voice`\n- channel_voice_status: `duplicate`\n- voice_issue: `#672`\n- voice_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/672`\n- voice_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#671`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `2db01b6cfe51`\n- source_message_id_sha256_12: `a849abfcfdac`\n- notify_message_id_sha256_12: `dac7c786ccc6`\n- notify_message_id_auto: `false`\n- voice_id_sha256_12: `7ef5ba1db474`\n- voice_id_auto: `false`\n- voice_title_sha256_12: `60bfcaf43cf6`\n- voice_title_bytes: `50`\n- voice_title_lines: `1`\n- transcript_sha256_12: `1a6fdbf2822c`\n- transcript_bytes: `83`\n- transcript_lines: `1`\n- duration_seconds: `47`\n- duration_seconds_known: `true`\n- media_type_sha256_12: `0b4e1b774951`\n- media_type_bytes: `9`\n- audio_url_sha256_12: `a1fd2243c1f8`\n- audio_url_bytes: `64`\n- notification_body_sha256_12: `ed51c2a58ad3`\n- target_from_current_channel_issue: `true`\n- raw_voice_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_voice_title_included: `false`\n- raw_transcript_included: `false`\n- raw_media_type_included: `false`\n- raw_audio_url_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_voice_action_change: `true`\n- issue_title_sha256_12: `dce12ca0f2fa`\n\nGitClaw captured a channel-origin voice/audio note as a durable GitHub issue, then queued a provider-facing transcript link back to the mirrored thread. The voice issue contains the human-readable transcript; this source receipt keeps provider IDs, audio URLs, media metadata, transcripts, titles, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the voice-note notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent voice-note links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate voice issues are suppressed by `voice_id`; duplicate voice-note notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the voice issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T06:40:28Z",
+      "updated_at": "2026-06-02T06:40:28Z"
     }
   ]
 }
