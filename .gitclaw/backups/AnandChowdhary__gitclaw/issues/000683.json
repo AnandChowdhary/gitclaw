@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T09:05:19Z",
+  "generated_at": "2026-06-02T09:06:45Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 683,
     "title": "GitClaw telegram thread channel-platform-e2e-20260602t090317z",
@@ -51,6 +51,15 @@
       "CommentID": 4600755591,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Platform Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#683`\n- requested_channel_command: `/channels platform`\n- channel_platform_status: `queued`\n- platform_snapshot_mode: `provider-facing-status`\n- notification_target_issue: `#683`\n- notification_comment_id: `4600775631`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `7095db953638`\n- source_message_id_sha256_12: `0b7cfcc3d5fe`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `81aaa0bd66e7`\n- notify_message_id_auto: `false`\n- provider_sha256_12: `3f40462915a3`\n- adapter_state_sha256_12: `c071cf5f5ed6`\n- reason_sha256_12: `b309bb28788c`\n- reason_bytes: `233`\n- reason_lines: `2`\n- home_sha256_12: `a543be44078e`\n- notification_body_sha256_12: `a4a778bd93a7`\n- target_from_current_channel_issue: `true`\n- ingest_workflow_present: `true`\n- gateway_workflow_present: `true`\n- outbox_workflow_present: `true`\n- workflow_dispatch_runtime: `true`\n- platform_pause_performed: `false`\n- platform_resume_performed: `false`\n- adapter_state_mutation_performed: `false`\n- breaker_mutation_performed: `false`\n- home_channel_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_reason_included: `false`\n- raw_home_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_platform_action_change: `true`\n- issue_title_sha256_12: `dd0c3276b8ec`\n\nGitClaw queued a provider-facing platform status snapshot on the canonical channel issue. This is the GitHub-native version of a messaging-platform status command: it reports the reviewed bridge shape and adapter state claim, but it does not pause or resume adapters, mutate breaker state, change a home channel, call provider APIs, start a gateway, or call a model. The source receipt keeps reasons, home selectors, thread ids, message ids, and channel bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the platform-status notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent platform-status notifications with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate platform-status notifications are suppressed by `channel + notify_message_id`\n- use `gitclaw channel-gateway --channel \u003cprovider\u003e --account-id \u003caccount\u003e --renew` for the reviewed workflow-dispatch gateway lease path",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4600775879,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-02T09:04:54Z",
       "updated_at": "2026-06-02T09:04:54Z"
+    },
+    {
+      "id": 4600775631,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-platform-e2e-20260602t090317z\" message_id=\"platform-notify-20260602t090317z\" author=\"gitclaw\" --\u003e\nGitClaw channel platform status.\n\nProvider: telegram\nAdapter state: running\nGateway runtime: GitHub Actions workflow_dispatch\nState storage: gitclaw:channel-state issue\nOutbox: gitclaw channel-outbox + channel-delivery\nIngress: getUpdates polling or long-running gateway lease\nOutbound: sendMessage then channel-delivery receipt\nWorkflow surface: ingest=true gateway=true outbox=true\n\nLive adapter inspection: not performed by this action.\nPause/resume: not performed by this action.\nHome channel: not changed by this action.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T09:06:16Z",
+      "updated_at": "2026-06-02T09:06:16Z"
+    },
+    {
+      "id": 4600775879,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26809816584\" event_id=\"comment-4600755591\" model=\"gitclaw/channels\" idempotency_key=\"3d244af98610a8adb5ce2c2113757da1\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26809816584\" --\u003e\n## GitClaw Channel Platform Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#683`\n- requested_channel_command: `/channels platform`\n- channel_platform_status: `queued`\n- platform_snapshot_mode: `provider-facing-status`\n- notification_target_issue: `#683`\n- notification_comment_id: `4600775631`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `7095db953638`\n- source_message_id_sha256_12: `0b7cfcc3d5fe`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `81aaa0bd66e7`\n- notify_message_id_auto: `false`\n- provider_sha256_12: `3f40462915a3`\n- adapter_state_sha256_12: `c071cf5f5ed6`\n- reason_sha256_12: `b309bb28788c`\n- reason_bytes: `233`\n- reason_lines: `2`\n- home_sha256_12: `a543be44078e`\n- notification_body_sha256_12: `a4a778bd93a7`\n- target_from_current_channel_issue: `true`\n- ingest_workflow_present: `true`\n- gateway_workflow_present: `true`\n- outbox_workflow_present: `true`\n- workflow_dispatch_runtime: `true`\n- platform_pause_performed: `false`\n- platform_resume_performed: `false`\n- adapter_state_mutation_performed: `false`\n- breaker_mutation_performed: `false`\n- home_channel_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_reason_included: `false`\n- raw_home_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_platform_action_change: `true`\n- issue_title_sha256_12: `dd0c3276b8ec`\n\nGitClaw queued a provider-facing platform status snapshot on the canonical channel issue. This is the GitHub-native version of a messaging-platform status command: it reports the reviewed bridge shape and adapter state claim, but it does not pause or resume adapters, mutate breaker state, change a home channel, call provider APIs, start a gateway, or call a model. The source receipt keeps reasons, home selectors, thread ids, message ids, and channel bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the platform-status notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent platform-status notifications with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate platform-status notifications are suppressed by `channel + notify_message_id`\n- use `gitclaw channel-gateway --channel \u003cprovider\u003e --account-id \u003caccount\u003e --renew` for the reviewed workflow-dispatch gateway lease path",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T09:06:17Z",
+      "updated_at": "2026-06-02T09:06:17Z"
     }
   ]
 }
