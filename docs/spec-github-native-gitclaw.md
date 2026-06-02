@@ -5375,6 +5375,7 @@ accepts a structured reaction form:
 @gitclaw /channels attachment --attachment-id <stable-attachment-id> --message-id <provider-message-id> --filename <name> --media-type <mime> --bytes <n>
 @gitclaw /channels decision --decision-id <stable-decision-id> --message-id <provider-message-id>
 @gitclaw /channels digest --digest-id <stable-digest-id> --message-id <provider-message-id>
+@gitclaw /channels idea --idea-id <stable-idea-id> --message-id <provider-message-id>
 @gitclaw /channels handoff --id <stable-handoff-id> --message-id <provider-message-id>
 @gitclaw /channels request-run <tool-name> --id <stable-request-id> --message-id <provider-message-id>
 @gitclaw /channels approval-plan <tool-name> --id <stable-approval-plan-id> --message-id <provider-message-id>
@@ -5702,6 +5703,35 @@ notify_message_id` for the provider-facing digest link. Changes to this
 surface require a live E2E that records the digest, validates the metadata-only
 digest-link outbox, checks duplicate suppression, and then continues on the
 digest issue with a normal GitHub Models repo-reader/search follow-up.
+
+The same channel-thread issue can also capture a channel-origin idea:
+
+```text
+@gitclaw /channels idea --idea-id <stable-idea-id> --message-id <provider-message-id>
+Idea: short idea title
+Notes:
+optional human-readable shaping notes
+```
+
+`/channels idea`, `/channels ideate`, `/channels brainstorm`,
+`/channels concept`, `/channels pitch`, and `/channels spark` infer the current
+channel and thread id from the issue marker when no explicit route/channel/
+thread target is provided. They create or reuse one open GitHub issue carrying
+a hidden `gitclaw:channel-idea` marker for the stable idea id, label it with
+`gitclaw` so normal conversation can continue there, and queue a
+provider-facing idea link back to the mirrored channel thread. The idea issue
+contains the human-readable title and notes because it is the reviewable
+brainstorm surface; the source receipt remains body-free, reporting only
+idea/thread/message/title/note hashes, duplicate status, notification queue
+metadata, and delivery gates. It does not call a model, call provider APIs,
+print raw idea ids, print raw thread ids, print raw source or notification
+message ids, print channel message bodies, or print raw titles/notes in the
+source receipt. Duplicates are suppressed first by `idea_id` for the GitHub
+idea issue and then by `channel + notify_message_id` for the provider-facing
+idea link. Changes to this surface require a live E2E that captures the idea,
+validates the metadata-only idea-link outbox, checks duplicate suppression, and
+then continues on the idea issue with a normal GitHub Models repo-reader/search
+follow-up.
 
 The same channel-thread issue can also fork the mirrored conversation into a
 normal GitHub session lane:
@@ -6154,7 +6184,7 @@ and then continues on the reminder issue with a normal GitHub Models
 repo-reader/search follow-up.
 
 The channel-created task, watch, standing-order proposal, backup restore
-request, checkpoint rehearsal, clip, attachment, decision, digest, and reminder
+request, checkpoint rehearsal, clip, attachment, decision, digest, idea, and reminder
 issues also accept a completion form:
 
 ```text
@@ -6213,6 +6243,8 @@ Behavior:
 - create or reuse one `gitclaw:channel-digest` issue per digest id and queue
   one provider-facing digest-link outbound comment per
   `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-idea` issue per idea id and queue one
+  provider-facing idea-link outbound comment per `channel + notify_message_id`,
 - create or reuse one `gitclaw:tool-run-request-issue` issue per channel
   request id and queue one provider-facing review-link outbound comment per
   `channel + notify_message_id` without executing a model or tool,
@@ -6428,6 +6460,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels attachment --attachment-id channel-attachment-1 --message-id provider-msg-1 --filename launch-brief.pdf --media-type application/pdf --bytes 4242
 @gitclaw /channels decision --decision-id channel-decision-1 --message-id provider-msg-1
 @gitclaw /channels digest --digest-id channel-digest-1 --message-id provider-msg-1
+@gitclaw /channels idea --idea-id channel-idea-1 --message-id provider-msg-1
 @gitclaw /channels request-run search_files --id channel-tool-request-1 --message-id provider-msg-1
 @gitclaw /channels approval-plan search_files --id channel-tool-approval-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-tool search_files --id channel-tool-rehearsal-1 --message-id provider-msg-1
@@ -9017,6 +9050,15 @@ examples/workflows/gitclaw.yml
   select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-digest fixture token, and avoid hidden channel, account, provider,
   message, and digest sentinels.
+- A `gh`-driven channel-idea-slash E2E harness creates a real channel-thread
+  issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels idea --idea-id ... --message-id ...` on that mirrored
+  thread, verifies GitHub idea issue creation, body-free source receipt
+  metadata, provider-facing idea-link queueing, duplicate idea and notification
+  suppression, and metadata-only outbox discovery. The idea issue then gets a
+  normal GitHub Models issue-comment follow-up that must select `repo-reader`,
+  expose `gitclaw.search_files`, recover the channel-idea fixture token, and
+  avoid hidden channel, account, provider, message, and idea sentinels.
 - A `gh`-driven channel-tool-run-request-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels request-run search_files --id ... --message-id ...` on

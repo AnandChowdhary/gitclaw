@@ -329,6 +329,27 @@ func TestChannelDoneArtifactRefSupportsDigestIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsIdeaIssues(t *testing.T) {
+	body := RenderChannelIdeaIssueBody(ChannelIdeaOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		IdeaID:            "idea-done-1",
+		Title:             "Let channel brainstorms become GitHub idea labs",
+		Notes:             "Shape the idea before converting it into a task or skill.",
+		SourceIssueNumber: 45,
+		SourceCommentID:   4500,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "idea" || ref.ID != "idea-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 45 || ref.SourceCommentID != 4500 {
+		t.Fatalf("unexpected idea artifact ref: %#v", ref)
+	}
+}
+
 func channelDoneQuoteJSON(t *testing.T, value string) string {
 	t.Helper()
 	quoted, err := json.Marshal(value)

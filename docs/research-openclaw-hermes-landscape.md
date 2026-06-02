@@ -152,6 +152,27 @@ Sources: OpenClaw docs (`https://docs.openclaw.ai/`), OpenClaw channel CLI docs
 Hermes cron docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/cron/`).
 
+2026-06-02 channel-idea follow-up: OpenClaw's memory docs draw a useful
+boundary between durable memory, short-lived commitments, scheduled tasks, and
+background consolidation. Its workspace docs also recommend treating agent
+workspace state as private git-backed memory, while the skills docs keep
+proposal/review lanes separate from active skill execution. GitClaw's
+serverless channel analogue should make casual Slack/Telegram "what if..."
+messages cheap to capture without pretending they are already tasks, skills,
+or memories: `@gitclaw /channels idea --idea-id <id> --message-id <id>` opens
+or reuses a normal GitHub issue with the readable idea title and notes, queues
+one provider-facing idea link, and then requires any shaping to happen in the
+issue via normal GitHub Models/tool turns. The source receipt stays body-free
+with only hashes, duplicate state, and outbox metadata. Sources: OpenClaw
+memory docs
+(`https://github.com/openclaw/openclaw/blob/main/docs/concepts/memory.md`),
+OpenClaw agent workspace docs
+(`https://github.com/openclaw/openclaw/blob/main/docs/concepts/agent-workspace.md`),
+OpenClaw skills docs
+(`https://github.com/openclaw/openclaw/blob/main/docs/tools/skills.md`), and
+Hermes checkpoint/rollback docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback`).
+
 2026-06-02 channel-tool-request follow-up: OpenClaw's tool and skill docs keep
 capabilities explicit while channels provide the live chat surface, and Hermes'
 toolsets/MCP model narrows tool exposure per task instead of giving every
