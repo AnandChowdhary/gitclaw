@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T20:46:58Z",
+  "generated_at": "2026-06-02T20:48:28Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 748,
     "title": "GitClaw telegram thread channel-skill-info-e2e-20260602t204454z",
@@ -51,6 +51,15 @@
       "CommentID": 4606877630,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Skill Info Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#748`\n- requested_channel_command: `/channels skill-info`\n- channel_skill_info_status: `queued`\n- skill_info_status: `ok`\n- info_mode: `repo-local-skill-metadata-card`\n- notification_target_issue: `#748`\n- notification_comment_id: `4606887950`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `7209b00d6dff`\n- source_message_id_sha256_12: `347c76ba30dc`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `ee1c986e4027`\n- notify_message_id_auto: `false`\n- skill_info_id_sha256_12: `c39a4829a0ed`\n- skill_info_id_auto: `false`\n- requested_skill_sha256_12: `ba915a2978d8`\n- normalized_skill_sha256_12: `ba915a2978d8`\n- requested_skill_bytes: `11`\n- skill_source: `positional`\n- available_skills: `1`\n- enabled_skills: `1`\n- matched_skills: `1`\n- validation_status: `ok`\n- validation_errors: `0`\n- validation_warnings: `0`\n- matched_skill_names_sha256_12: `ba915a2978d8`\n- matched_skill_paths_sha256_12: `42df45103ee5`\n- skill_info_index_sha256_12: `eee0043fcd08`\n- notification_body_sha256_12: `9c9b9f0ff7c5`\n- notification_body_bytes: `1105`\n- notification_body_lines: `17`\n- target_from_current_channel_issue: `true`\n- progressive_disclosure_enabled: `true`\n- skill_install_allowed: `false`\n- skill_update_allowed: `false`\n- registry_contact_allowed: `false`\n- installer_scripts_run: `false`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_requested_skill_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_skill_info_id_included: `false`\n- raw_skill_names_included: `false`\n- raw_skill_paths_included: `false`\n- raw_skill_descriptions_included: `false`\n- raw_skill_bodies_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_channel_skill_info_change: `true`\n- issue_title_sha256_12: `59f8f2d782dd`\n\nGitClaw queued a provider-facing focused skill card from repo-local skill metadata. The source receipt keeps raw skill names, paths, descriptions, bodies, ids, and channel bodies out of band. The action does not call a model, install or update skills, contact registries, run installers, mutate repository files, execute tools, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read skill-info cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent skill-info cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate skill-info notifications are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4606888096,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-02T20:46:29Z",
       "updated_at": "2026-06-02T20:46:29Z"
+    },
+    {
+      "id": 4606887950,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-skill-info-e2e-20260602t204454z\" message_id=\"skill-info-notify-20260602t204454z\" author=\"gitclaw\" --\u003e\nGitClaw channel skill info\n\nSkill info status: ok\nRequested skill hash: ba915a2978d8\nNormalized skill hash: ba915a2978d8\nAvailable skills: 1\nEnabled skills: 1\nMatched skills: 1\nValidation status: ok\nValidation errors: 0\nValidation warnings: 0\nSkill info id hash: c39a4829a0ed\n\nSkills:\n- skill_name=repo-reader path=.gitclaw/SKILLS/repo-reader/SKILL.md folder=repo-reader enabled=true disabled_by_config=false blocked_by_allowlist=false selected_for_this_turn=true always=false frontmatter=true description_present=true bytes=699 lines=18 sha256_12=2f9e68a57bd6 requires_env=0 requires_bins=0 missing_env=0 missing_bins=0\n\nRaw skill bodies, skill descriptions, channel bodies, issue bodies, comment bodies, prompts, tool outputs, and raw requested skill text are not included. Skill install: not performed by this action. Skill update: not performed by this action. Registry contact: not performed by this action. Installer scripts: not run by this action. Model call: not performed by this action. Repository mutation: not performed by this action. Provider delivery: queued through GitHub channel outbox.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T20:47:59Z",
+      "updated_at": "2026-06-02T20:47:59Z"
+    },
+    {
+      "id": 4606888096,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26847034485\" event_id=\"comment-4606877630\" model=\"gitclaw/channels\" idempotency_key=\"cc44e3df681b76bd86c4786badbf03b8\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26847034485\" --\u003e\n## GitClaw Channel Skill Info Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#748`\n- requested_channel_command: `/channels skill-info`\n- channel_skill_info_status: `queued`\n- skill_info_status: `ok`\n- info_mode: `repo-local-skill-metadata-card`\n- notification_target_issue: `#748`\n- notification_comment_id: `4606887950`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `7209b00d6dff`\n- source_message_id_sha256_12: `347c76ba30dc`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `ee1c986e4027`\n- notify_message_id_auto: `false`\n- skill_info_id_sha256_12: `c39a4829a0ed`\n- skill_info_id_auto: `false`\n- requested_skill_sha256_12: `ba915a2978d8`\n- normalized_skill_sha256_12: `ba915a2978d8`\n- requested_skill_bytes: `11`\n- skill_source: `positional`\n- available_skills: `1`\n- enabled_skills: `1`\n- matched_skills: `1`\n- validation_status: `ok`\n- validation_errors: `0`\n- validation_warnings: `0`\n- matched_skill_names_sha256_12: `ba915a2978d8`\n- matched_skill_paths_sha256_12: `42df45103ee5`\n- skill_info_index_sha256_12: `eee0043fcd08`\n- notification_body_sha256_12: `9c9b9f0ff7c5`\n- notification_body_bytes: `1105`\n- notification_body_lines: `17`\n- target_from_current_channel_issue: `true`\n- progressive_disclosure_enabled: `true`\n- skill_install_allowed: `false`\n- skill_update_allowed: `false`\n- registry_contact_allowed: `false`\n- installer_scripts_run: `false`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_requested_skill_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_skill_info_id_included: `false`\n- raw_skill_names_included: `false`\n- raw_skill_paths_included: `false`\n- raw_skill_descriptions_included: `false`\n- raw_skill_bodies_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_channel_skill_info_change: `true`\n- issue_title_sha256_12: `59f8f2d782dd`\n\nGitClaw queued a provider-facing focused skill card from repo-local skill metadata. The source receipt keeps raw skill names, paths, descriptions, bodies, ids, and channel bodies out of band. The action does not call a model, install or update skills, contact registries, run installers, mutate repository files, execute tools, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read skill-info cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent skill-info cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate skill-info notifications are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T20:47:59Z",
+      "updated_at": "2026-06-02T20:47:59Z"
     }
   ]
 }
