@@ -316,8 +316,8 @@ for expected in \
   "Provider socket health: not probed by this action" \
   "Session rows used as liveness: false" \
   "Provider API call: not performed by this action" \
-  "Model call: not performed by this action." \
-  "Repository mutation: not performed by this action." \
+  "Model call: not performed by this action" \
+  "Repository mutation: not performed by this action" \
   "Workflow mutation: not performed by this action" \
   "Safe follow-up commands:" \
   "@gitclaw /channels status" \
