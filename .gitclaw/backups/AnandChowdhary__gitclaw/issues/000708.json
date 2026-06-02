@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T10:37:43Z",
+  "generated_at": "2026-06-02T10:39:08Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 708,
     "title": "GitClaw telegram thread channel-kudos-e2e-20260602t103544z",
@@ -51,6 +51,15 @@
       "CommentID": 4601550867,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Kudos Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#708`\n- requested_channel_command: `/channels kudos`\n- channel_kudos_status: `captured`\n- kudos_issue: `#709`\n- kudos_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/709`\n- kudos_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#708`\n- notification_comment_id: `4601560174`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `2d0c532bf85b`\n- source_message_id_sha256_12: `b417a7a2c171`\n- notify_message_id_sha256_12: `f3ee30054ccf`\n- notify_message_id_auto: `false`\n- kudos_id_sha256_12: `eabc30796a81`\n- kudos_id_auto: `false`\n- kudos_recipient_sha256_12: `839fce266247`\n- kudos_recipient_bytes: `30`\n- kudos_recipient_lines: `1`\n- kudos_reason_sha256_12: `3f3aa2a4247a`\n- kudos_reason_bytes: `73`\n- kudos_reason_lines: `1`\n- notification_body_sha256_12: `a57768eacbbe`\n- target_from_current_channel_issue: `true`\n- raw_kudos_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_kudos_recipient_included: `false`\n- raw_kudos_reason_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_kudos_action_change: `true`\n- issue_title_sha256_12: `7ea9d645d12b`\n\nGitClaw captured channel-origin kudos as a durable GitHub issue, then queued a provider-facing acknowledgement back to the mirrored thread. The kudos issue contains the human-readable recipient and reason; this source receipt keeps provider IDs, kudos IDs, recipients, reasons, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the kudos-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent kudos links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate kudos issues are suppressed by `kudos_id`; duplicate kudos-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the kudos issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4601560279,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-02T10:37:17Z",
       "updated_at": "2026-06-02T10:37:17Z"
+    },
+    {
+      "id": 4601560174,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-kudos-e2e-20260602t103544z\" message_id=\"kudos-notify-20260602t103544z\" author=\"gitclaw\" --\u003e\nGitClaw channel kudos captured.\n\nKudos: #709\nURL: https://github.com/AnandChowdhary/gitclaw/issues/709\nRecipient: Platform Team 20260602t103544z\n\nContinue shaping it in the linked GitHub issue.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T10:38:39Z",
+      "updated_at": "2026-06-02T10:38:39Z"
+    },
+    {
+      "id": 4601560279,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26814327823\" event_id=\"comment-4601550867\" model=\"gitclaw/channels\" idempotency_key=\"d2e258931bc31a93518d99c814b524cf\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26814327823\" --\u003e\n## GitClaw Channel Kudos Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#708`\n- requested_channel_command: `/channels kudos`\n- channel_kudos_status: `captured`\n- kudos_issue: `#709`\n- kudos_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/709`\n- kudos_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#708`\n- notification_comment_id: `4601560174`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `2d0c532bf85b`\n- source_message_id_sha256_12: `b417a7a2c171`\n- notify_message_id_sha256_12: `f3ee30054ccf`\n- notify_message_id_auto: `false`\n- kudos_id_sha256_12: `eabc30796a81`\n- kudos_id_auto: `false`\n- kudos_recipient_sha256_12: `839fce266247`\n- kudos_recipient_bytes: `30`\n- kudos_recipient_lines: `1`\n- kudos_reason_sha256_12: `3f3aa2a4247a`\n- kudos_reason_bytes: `73`\n- kudos_reason_lines: `1`\n- notification_body_sha256_12: `a57768eacbbe`\n- target_from_current_channel_issue: `true`\n- raw_kudos_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_kudos_recipient_included: `false`\n- raw_kudos_reason_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_kudos_action_change: `true`\n- issue_title_sha256_12: `7ea9d645d12b`\n\nGitClaw captured channel-origin kudos as a durable GitHub issue, then queued a provider-facing acknowledgement back to the mirrored thread. The kudos issue contains the human-readable recipient and reason; this source receipt keeps provider IDs, kudos IDs, recipients, reasons, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the kudos-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent kudos links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate kudos issues are suppressed by `kudos_id`; duplicate kudos-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the kudos issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T10:38:40Z",
+      "updated_at": "2026-06-02T10:38:40Z"
     }
   ]
 }
