@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T06:37:37Z",
+  "generated_at": "2026-06-02T06:39:13Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 671,
     "title": "GitClaw telegram thread channel-voice-e2e-20260602t063547z",
@@ -51,6 +51,15 @@
       "CommentID": 4599415927,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Voice Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#671`\n- requested_channel_command: `/channels voice`\n- channel_voice_status: `captured`\n- voice_issue: `#672`\n- voice_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/672`\n- voice_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#671`\n- notification_comment_id: `4599426411`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `2db01b6cfe51`\n- source_message_id_sha256_12: `a849abfcfdac`\n- notify_message_id_sha256_12: `dac7c786ccc6`\n- notify_message_id_auto: `false`\n- voice_id_sha256_12: `7ef5ba1db474`\n- voice_id_auto: `false`\n- voice_title_sha256_12: `60bfcaf43cf6`\n- voice_title_bytes: `50`\n- voice_title_lines: `1`\n- transcript_sha256_12: `d3d613a591c1`\n- transcript_bytes: `81`\n- transcript_lines: `1`\n- duration_seconds: `47`\n- duration_seconds_known: `true`\n- media_type_sha256_12: `0b4e1b774951`\n- media_type_bytes: `9`\n- audio_url_sha256_12: `a1fd2243c1f8`\n- audio_url_bytes: `64`\n- notification_body_sha256_12: `ed51c2a58ad3`\n- target_from_current_channel_issue: `true`\n- raw_voice_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_voice_title_included: `false`\n- raw_transcript_included: `false`\n- raw_media_type_included: `false`\n- raw_audio_url_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_voice_action_change: `true`\n- issue_title_sha256_12: `dce12ca0f2fa`\n\nGitClaw captured a channel-origin voice/audio note as a durable GitHub issue, then queued a provider-facing transcript link back to the mirrored thread. The voice issue contains the human-readable transcript; this source receipt keeps provider IDs, audio URLs, media metadata, transcripts, titles, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the voice-note notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent voice-note links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate voice issues are suppressed by `voice_id`; duplicate voice-note notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the voice issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4599426550,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-02T06:37:19Z",
       "updated_at": "2026-06-02T06:37:19Z"
+    },
+    {
+      "id": 4599426411,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-voice-e2e-20260602t063547z\" message_id=\"voice-notify-20260602t063547z\" author=\"gitclaw\" --\u003e\nGitClaw channel voice note captured.\n\nVoice note: #672\nURL: https://github.com/AnandChowdhary/gitclaw/issues/672\nDuration: 47s\nTitle: Shape GitHub-native channel voice 20260602t063547z\n\nContinue with the transcript in the linked GitHub issue.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T06:38:41Z",
+      "updated_at": "2026-06-02T06:38:41Z"
+    },
+    {
+      "id": 4599426550,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26802989911\" event_id=\"comment-4599415927\" model=\"gitclaw/channels\" idempotency_key=\"ce9f93b81e464f5d2adf72bc0dcb04f3\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26802989911\" --\u003e\n## GitClaw Channel Voice Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#671`\n- requested_channel_command: `/channels voice`\n- channel_voice_status: `captured`\n- voice_issue: `#672`\n- voice_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/672`\n- voice_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#671`\n- notification_comment_id: `4599426411`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `2db01b6cfe51`\n- source_message_id_sha256_12: `a849abfcfdac`\n- notify_message_id_sha256_12: `dac7c786ccc6`\n- notify_message_id_auto: `false`\n- voice_id_sha256_12: `7ef5ba1db474`\n- voice_id_auto: `false`\n- voice_title_sha256_12: `60bfcaf43cf6`\n- voice_title_bytes: `50`\n- voice_title_lines: `1`\n- transcript_sha256_12: `d3d613a591c1`\n- transcript_bytes: `81`\n- transcript_lines: `1`\n- duration_seconds: `47`\n- duration_seconds_known: `true`\n- media_type_sha256_12: `0b4e1b774951`\n- media_type_bytes: `9`\n- audio_url_sha256_12: `a1fd2243c1f8`\n- audio_url_bytes: `64`\n- notification_body_sha256_12: `ed51c2a58ad3`\n- target_from_current_channel_issue: `true`\n- raw_voice_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_voice_title_included: `false`\n- raw_transcript_included: `false`\n- raw_media_type_included: `false`\n- raw_audio_url_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_voice_action_change: `true`\n- issue_title_sha256_12: `dce12ca0f2fa`\n\nGitClaw captured a channel-origin voice/audio note as a durable GitHub issue, then queued a provider-facing transcript link back to the mirrored thread. The voice issue contains the human-readable transcript; this source receipt keeps provider IDs, audio URLs, media metadata, transcripts, titles, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the voice-note notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent voice-note links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate voice issues are suppressed by `voice_id`; duplicate voice-note notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the voice issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T06:38:42Z",
+      "updated_at": "2026-06-02T06:38:42Z"
     }
   ]
 }
