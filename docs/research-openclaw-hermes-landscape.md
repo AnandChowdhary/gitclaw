@@ -4392,3 +4392,31 @@ Hermes profiles docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/profiles/`), Hermes
 features overview
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/overview/`).
+
+## 2026-06-02 Channel Memory Proposal Follow-Up
+
+OpenClaw's memory model treats memory as workspace files and runs a silent
+pre-compaction turn to remind the agent to save important context before a
+summary replaces the live conversation. Hermes makes the same pressure more
+explicit: built-in `MEMORY.md` and `USER.md` are bounded, curated, injected as
+a frozen snapshot at session start, and protected by duplicate prevention and
+security scanning. That argues against letting a transient Telegram or Slack
+message directly rewrite memory, even when the message says "remember this."
+
+GitClaw's serverless version is `@gitclaw /channels propose-memory --target
+<target> --id <id> --message-id <id>`. It opens or reuses a
+`gitclaw:memory-proposal-issue`, queues a provider-facing proposal link back
+to the mirrored channel thread, and leaves all actual memory drafting for a
+later GitHub Models conversation and normal code-review branch. The channel
+receipt remains body-free and hash-only. The action does not call a model,
+generate candidate memory, edit `.gitclaw/MEMORY.md` or `.gitclaw/memory/*.md`,
+call provider APIs, or mutate the repository. Acceptance requires live E2E for
+proposal issue creation, metadata-only proposal-link outbox discovery,
+duplicate suppression, and a real GitHub Models repo-reader/search follow-up
+on the proposal issue.
+
+Sources: OpenClaw memory overview (`https://docs.openclaw.ai/concepts/memory`),
+Hermes persistent memory docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/memory/`),
+Hermes memory providers docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers/`).

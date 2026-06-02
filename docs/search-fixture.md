@@ -153,6 +153,7 @@ channel backup rehearsal unique search fixture phrase => GITCLAW_CHANNEL_BACKUP_
 channel tool approval plan unique search fixture phrase => GITCLAW_CHANNEL_TOOL_APPROVAL_PLAN_CONTEXT_V1
 channel skill proposal unique search fixture phrase => GITCLAW_CHANNEL_SKILL_PROPOSAL_CONTEXT_V1
 channel soul proposal unique search fixture phrase => GITCLAW_CHANNEL_SOUL_PROPOSAL_CONTEXT_V1
+channel memory proposal unique search fixture phrase => GITCLAW_CHANNEL_MEMORY_PROPOSAL_CONTEXT_V1
 backup search unique search fixture phrase => GITCLAW_BACKUP_SEARCH_CONTEXT_V1
 backup info unique search fixture phrase => GITCLAW_BACKUP_INFO_CONTEXT_V1
 backup stats unique search fixture phrase => GITCLAW_BACKUP_STATS_CONTEXT_V1
