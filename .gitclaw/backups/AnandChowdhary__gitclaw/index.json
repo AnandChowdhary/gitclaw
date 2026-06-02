@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T00:06:05Z",
+  "generated_at": "2026-06-02T00:07:36Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 540,
   "issues": [
@@ -6799,15 +6799,15 @@
       "number": 626,
       "title": "GitClaw telegram thread channel-soul-rehearsal-e2e-20260602t000248z",
       "path": "issues/000626.json",
-      "backup_generated_at": "2026-06-02T00:06:03Z",
+      "backup_generated_at": "2026-06-02T00:07:35Z",
       "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 5,
-      "transcript_messages": 5
+      "comment_count": 7,
+      "transcript_messages": 7
     }
   ]
 }
