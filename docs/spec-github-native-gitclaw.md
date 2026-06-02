@@ -6365,6 +6365,38 @@ verifies no tool/model/MCP/toolset/repository side effects occurred, and then
 continues on the channel issue with a normal GitHub Models repo-reader/search
 follow-up.
 
+The same channel-thread issue can answer a repo-profile status request without
+exporting, importing, switching, or mutating profiles:
+
+```text
+@gitclaw /channels profile-status --message-id <provider-message-id>
+```
+
+`/channels profile-status`, `/channels profile-snapshot`,
+`/channels profile-health`, `/channels agent-profile`,
+`/channels repo-profile`, `/channels context-profile`, and
+`/channels context-status` infer the current channel and thread id from the
+issue marker when no explicit route/channel/thread target is provided. They
+queue one provider-facing profile-status message back to the mirrored thread
+and do not create any durable artifact issue. The provider-visible message can
+include the repo-local `.gitclaw/` profile status, snapshot version/hash,
+profile document counts, required-document coverage, skill/tool counts, active
+tool-output count, and manifest/soul/memory/skill/tool component statuses. The
+source receipt remains body-free and hash-heavy: it reports only
+thread/message/status hashes, profile snapshot hashes, component hashes,
+counts, delivery metadata, and hard disabled gates. It does not call a model,
+export profiles, import profiles, switch profiles, read external Hermes or
+OpenClaw homes, call provider APIs, mutate repository files, print raw profile
+file paths, print raw profile bodies, print raw skill bodies, print raw memory
+bodies, print raw tool outputs, print sessions, print backup payloads, print
+raw thread ids, print raw source or notification message ids, print raw status
+ids, or print channel message bodies in the source receipt. Duplicate
+notifications are suppressed by `channel + notify_message_id`. Changes to this
+surface require a live E2E that validates the metadata-only profile-status
+outbox, checks duplicate suppression, verifies no profile/model/repository
+side effects occurred, and then continues on the channel issue with a normal
+GitHub Models repo-reader/search follow-up.
+
 The same channel-thread issue can answer an identity-status request without
 turning that status into authorization state:
 
@@ -7418,6 +7450,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels propose-memory --target long-term --id channel-memory-proposal-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-memory --target long-term --id channel-memory-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels backup --message-id provider-msg-1
+@gitclaw /channels profile-status --message-id provider-msg-1
 @gitclaw /channels rehearse-backup --id channel-backup-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels restore-request --id channel-backup-restore-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-checkpoint --target HEAD~1 --id channel-checkpoint-rehearsal-1 --message-id provider-msg-1
@@ -10206,6 +10239,19 @@ examples/workflows/gitclaw.yml
   `gitclaw.search_files`, recover the channel-tool status fixture token, and
   avoid hidden channel, account, message, status, tool-schema, tool-input,
   tool-output, and notification sentinels.
+- A `gh`-driven channel-profile-status-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels profile-status --message-id ...` on that mirrored
+  thread, verifies body-free source receipt metadata, provider-facing
+  profile-status queueing, duplicate notification suppression, metadata-only
+  outbox discovery, and explicit no-profile-export/no-profile-import/
+  no-profile-switch/no-profile-mutation/no-external-profile-home-access/
+  no-model-call/no-repository-mutation/no-provider-API flags. The
+  channel-thread issue then gets a normal GitHub Models issue-comment
+  follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
+  recover the channel-profile status fixture token, and avoid hidden channel,
+  account, message, status, profile-body, skill-body, memory-body,
+  tool-output, session, backup, and notification sentinels.
 - A `gh`-driven channel-whoami-slash E2E harness creates a real channel-thread
   issue through `gitclaw-channel-ingest.yml`, posts `@gitclaw /channels
   whoami --identity-id ... --role ... --message-id ...` on that mirrored

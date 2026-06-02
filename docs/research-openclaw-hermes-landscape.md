@@ -4612,6 +4612,36 @@ Sources: OpenClaw standing orders docs
 docs (`https://docs.openclaw.ai/automation`), Hermes scheduled tasks docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/cron/`).
 
+## 2026-06-02 Channel Profile Status Follow-Up
+
+OpenClaw's docs describe the agent as a set of workspace files for identity,
+soul, tools, skills, memory, and interaction style, exposed through channel
+surfaces such as Telegram and Slack. Hermes profiles make the same boundary
+more explicit: each profile is its own home directory with config, `.env`,
+`SOUL.md`, memories, sessions, skills, cron jobs, and gateway state, while
+profile import/export/switching remain explicit operator commands rather than
+ambient chat side effects. The GitClaw pattern should therefore make profile
+state visible from chat without making chat a profile mutation surface.
+
+GitClaw's serverless version is `@gitclaw /channels profile-status
+--message-id <id>`. It queues one profile-status notification back to the
+mirrored Slack or Telegram thread with repo-local `.gitclaw/` profile status,
+snapshot hash, required-document coverage, skill/tool counts, active tool
+outputs, and manifest/soul/memory/skill/tool component statuses. The source
+receipt stays hash-only. The action does not call a model, export profiles,
+import profiles, switch profiles, read external Hermes/OpenClaw homes, expose
+raw profile, skill, memory, tool, session, or backup bodies, call provider
+APIs, or mutate repository files. Acceptance requires live E2E for
+metadata-only profile-status outbox discovery, duplicate suppression, no
+profile side effects, and a real GitHub Models repo-reader/search follow-up on
+the same channel issue.
+
+Sources: OpenClaw documentation overview
+(`https://openclawlab.com/en/docs/`), Hermes profiles docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/profiles/`), and
+Hermes CLI profile command reference
+(`https://github.com/nousresearch/hermes-agent/blob/main/website/docs/reference/cli-commands.md`).
+
 ## 2026-06-02 Channel Backup Status Follow-Up
 
 OpenClaw's backup and channel material points to a useful split: chat surfaces
