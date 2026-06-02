@@ -5489,6 +5489,44 @@ queues a session-search notification, validates metadata-only outbox discovery,
 verifies duplicate suppression, and then continues on the same GitHub issue
 with a real GitHub Models repo-reader/search follow-up.
 
+For channel-native recall that should search durable GitHub backups instead of
+only the current live transcript, GitClaw also supports:
+
+```text
+@gitclaw /channels backup-search deployment outage --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id> --max-results 5
+```
+
+`/channels backup-search`, `/channels search-backup`,
+`/channels search-backups`, `/channels backup-recall`,
+`/channels recovery-search`, and `/channels archive-search` infer the current
+channel and thread id from the issue marker when no explicit route/channel
+thread target is provided. They search the repo's `gitclaw-backups` archive
+with the same body-free lexical matcher as `/backup search`. In a GitHub
+Actions handler job, the local checkout normally does not contain
+`.gitclaw/backups`; the action must therefore fetch `gitclaw-backups`
+read-only into a temporary git worktree, search that fetched backup root, and
+clean it up before exit. If local backups are present, the action may use them
+without fetching. It must never write the backup branch, restore files, replay
+GitHub API calls, call provider APIs, mutate repository files, execute tools,
+or call a model.
+
+The provider-facing outbound comment reports only backup/search status, backup
+verify status, backup fetch status, backup branch, query hash, query term
+count, max result count, issue/search counts, issue numbers, backup-relative
+paths, result sources, roles, trust metadata, scores, body hashes, line hashes,
+backup timestamps, and duplicate status. The source receipt also stays
+body-free and records target issue/comment ids, route/thread/message hashes,
+search id hash, backup root/path hashes, outbox delivery instructions, and
+safety gates. It does not print raw search queries, raw provider thread/message
+ids, raw search ids, raw backup roots, raw backup paths, raw channel message
+bodies, raw issue bodies, raw comment bodies, raw transcript bodies, prompts,
+or tool outputs. Duplicates are suppressed by `channel + notify_message_id`.
+Changes to this surface require a live E2E that ingests a real channel issue,
+waits until that issue is present on the real `gitclaw-backups` branch, queues
+a backup-search notification, validates metadata-only outbox discovery,
+verifies duplicate suppression, and then continues on the same GitHub issue
+with a real GitHub Models repo-reader/search follow-up.
+
 For event invites that should collect yes/no/maybe responses where
 participants already are, GitClaw also supports:
 
@@ -7620,6 +7658,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels propose-memory --target long-term --id channel-memory-proposal-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-memory --target long-term --id channel-memory-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels backup --message-id provider-msg-1
+@gitclaw /channels backup-search deployment --message-id provider-msg-1 --notify-message-id provider-backup-search-ack-1
 @gitclaw /channels profile-status --message-id provider-msg-1
 @gitclaw /channels soul-status --message-id provider-msg-1
 @gitclaw /channels memory-status --message-id provider-msg-1
@@ -9822,6 +9861,11 @@ MVP is not complete until:
   backed-up conversation content and return only paths, sources, trust
   metadata, scores, and hashes without leaking the searched token or bodies,
   then proves a normal model-backed repo-reader/search follow-up,
+- the channel backup-search harness verifies a real channel-ingested issue is
+  first present on the fetched `gitclaw-backups` branch, then a
+  `/channels backup-search` turn queues only body-free archive recall metadata
+  through channel outbox, suppresses duplicate notifications, and proves a
+  normal model-backed repo-reader/search follow-up on the same channel issue,
 - the live harness verifies status labels end at `gitclaw:done` without
   `gitclaw:running` or `gitclaw:error`,
 - the failure harness forces a real invalid-model run and verifies a bounded

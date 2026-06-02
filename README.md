@@ -675,6 +675,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels choose --message-id <id> --notify-message-id <id>
 @gitclaw /channels mood focused --message-id <id> --notify-message-id <id> --intensity 4
 @gitclaw /channels session-search <query> --message-id <id> --notify-message-id <id>
+@gitclaw /channels backup-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels rsvp e2e-slack-route,e2e-telegram-route --rsvp-id <id> --message-id <id>
 @gitclaw /channels rsvp-response --rsvp-id <id> --message-id <id> --notify-message-id <id> --response yes
 @gitclaw /channels status --message-id <id> --status-id <id> --state working
@@ -954,6 +955,14 @@ and queues provider-facing recall metadata back to Slack/Telegram. It reports
 query hashes, message indexes, source ids, scores, line hashes, and duplicate
 status without printing raw search queries, channel bodies, issue bodies,
 assistant replies, prompts, or tool outputs.
+`@gitclaw /channels backup-search <query> --message-id <id>
+--notify-message-id <id>` searches the durable `gitclaw-backups` archive and
+queues provider-facing recall metadata back to Slack/Telegram. In GitHub
+Actions it fetches the backup branch read-only when local backups are absent;
+it reports backup/search status, query hashes, issue paths, sources, trust
+metadata, scores, body hashes, and line hashes without printing raw search
+queries, channel bodies, backup payloads, issue bodies, comment bodies,
+transcripts, prompts, or tool outputs.
 `@gitclaw /channels rsvp <route-a>,<route-b> --rsvp-id <id> --message-id <id>`
 creates or reuses a dedicated GitHub RSVP issue, writes the event title,
 when/where/host metadata, and details there, labels it for normal GitClaw
@@ -1458,6 +1467,7 @@ scripts/e2e/github-backup-rehearse-issue.sh
 scripts/e2e/github-backup-restore-request-issue.sh
 scripts/e2e/github-backup-restore-request-channel-notify.sh
 scripts/e2e/github-channel-backup-status-slash.sh
+scripts/e2e/github-channel-backup-search-slash.sh
 scripts/e2e/github-channel-profile-status-slash.sh
 scripts/e2e/github-channel-soul-status-slash.sh
 scripts/e2e/github-channel-memory-status-slash.sh
@@ -1912,6 +1922,12 @@ a channel-ingested issue receives `@gitclaw /channels session-search`, queues
 provider-visible body-free search metadata from the GitHub-backed transcript,
 exposes it through metadata-only outbox, suppresses duplicate recall
 notifications, and then runs a real GitHub Models repo-reader/search follow-up.
+The channel-backup-search slash harness extends recall to durable archives: a
+channel-ingested issue is first observed on the real `gitclaw-backups` branch,
+then receives `@gitclaw /channels backup-search`, queues provider-visible
+body-free search metadata from the fetched backup archive, exposes it through
+metadata-only outbox, suppresses duplicate recall notifications, and then runs
+a real GitHub Models repo-reader/search follow-up.
 The channel-RSVP slash harness creates or reuses a dedicated GitHub RSVP issue,
 labels it for normal GitClaw conversation, invites multiple reviewed routes
 through the provider queue, checks duplicate RSVP suppression, keeps event

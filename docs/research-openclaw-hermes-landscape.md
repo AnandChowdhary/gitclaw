@@ -117,6 +117,31 @@ commit-subject hashes are useful operator signals, while raw profile bodies,
 commit subjects, author identities, session payloads, backup payloads, and
 credentials should stay out of issue-visible output.
 
+2026-06-02 channel-backup-search follow-up: OpenClaw's current docs keep
+channels, sessions, and backup/export surfaces as separate operational
+concerns: chat channels are how the user reaches the agent, sessions are the
+bounded conversational record, and backup/export commands are recovery
+surfaces. Hermes' checkpoint and memory docs point in the same direction from
+the other side: durable recall should be recoverable from stored state, but
+restore/checkpoint mechanics must stay distinct from ordinary chat delivery.
+GitClaw's serverless cut should therefore make `@gitclaw /channels
+backup-search <query> --message-id <id> --notify-message-id <id>` a
+channel-native archive recall action, not a restore. In Actions, the handler
+can fetch `gitclaw-backups` read-only into a temporary worktree when
+`.gitclaw/backups` is absent, run the existing body-free backup searcher, queue
+one provider-facing result summary through `channel-outbox`, and leave a
+source receipt with only hashes, counts, backup-relative paths, trust metadata,
+and delivery gates. It should not call a model, execute tools, write the
+backup branch, restore files, replay GitHub APIs, or expose raw channel,
+issue, comment, transcript, prompt, or tool-output bodies. Sources:
+OpenClaw docs (`https://docs.openclaw.ai/`), OpenClaw sessions docs
+(`https://docs.openclaw.ai/cli/sessions`), OpenClaw backup docs
+(`https://openclawlab.com/en/docs/cli/backup/`), OpenClaw channel docs
+(`https://docs.openclaw.ai/cli/channels`), Hermes checkpoint docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback`),
+and Hermes features/memory docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/overview`).
+
 2026-06-02 channel-decision follow-up: current OpenClaw channel docs emphasize
 that chat surfaces are runtime accounts behind one Gateway, and the channel CLI
 separates socket/provider health from stored sessions. Hermes' cron docs point
