@@ -5412,6 +5412,36 @@ metadata-only outbox discovery, verifies duplicate suppression, and then
 continues on the same GitHub issue with a real GitHub Models
 repo-reader/search follow-up.
 
+For tiny work-chat decisions that should pick one option without invoking the
+model, GitClaw also supports:
+
+```text
+@gitclaw /channels choose --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
+Options:
+- Fast path
+- Careful path
+- Ask again tomorrow
+```
+
+`/channels choose`, `/channels choice`, `/channels pick`, `/channels select`,
+and `/channels decide` queue one provider-facing selected option back onto the
+current `gitclaw:channel-thread` issue or an explicit reviewed route. Choices
+can come from repeated `--option <value>` flags, a compact `--options
+alpha|beta|gamma` field for simple one-word inputs, or bullet/numbered lines
+after an `Options:` or `Choices:` heading in the comment body. The selected
+choice is derived from a deterministic seed containing the repository, channel,
+thread, source message id, notification message id, choose id, and normalized
+choice-list hash. The provider-facing outbound comment may show the selected
+choice; the source receipt remains body-free and reports only hashes, counts,
+selected index, duplicate status, outbox delivery instructions, and safety
+gates. It does not call a model, use external randomness, call provider APIs,
+mutate the repository, print raw choices, or print the raw selected choice.
+Duplicates are suppressed by `channel + notify_message_id`. Changes to this
+surface require a live E2E that ingests a real channel issue, queues the
+deterministic choice, validates metadata-only outbox discovery, verifies
+duplicate suppression, and then continues on the same GitHub issue with a real
+GitHub Models repo-reader/search follow-up.
+
 For event invites that should collect yes/no/maybe responses where
 participants already are, GitClaw also supports:
 
@@ -7553,6 +7583,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels huddle team-alerts,ops-alerts --huddle-id design-room --message-id design-room-1
 @gitclaw /channels rollcall team-alerts,ops-alerts --rollcall-id standup --message-id standup-1
 @gitclaw /channels roll --dice 2d6+1 --message-id provider-msg-1 --notify-message-id provider-roll-ack-1
+@gitclaw /channels choose --message-id provider-msg-1 --notify-message-id provider-choice-ack-1
 ```
 
 The command runs after normal preflight and context loading, but before model
@@ -10009,6 +10040,15 @@ examples/workflows/gitclaw.yml
   issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-roll fixture token, and avoid
   hidden channel/message/roll sentinels.
+- A `gh`-driven channel-choose-slash E2E harness ingests a real mirrored
+  channel issue, replies with `@gitclaw /channels choose ...`, verifies the
+  provider-facing deterministic selected choice, body-free source receipt
+  metadata, duplicate choice notification suppression from a later issue comment
+  with the same acknowledgement id, and metadata-only outbox discovery for the
+  acknowledgement. The same channel issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-choose fixture token, and avoid
+  hidden channel/message/choice sentinels.
 - A `gh`-driven channel-rsvp-slash E2E harness creates an ordinary GitHub issue
   with `@gitclaw /channels rsvp ...`, verifies a labeled GitHub RSVP issue,
   routebook-backed RSVP cards on each target channel issue, body-free source

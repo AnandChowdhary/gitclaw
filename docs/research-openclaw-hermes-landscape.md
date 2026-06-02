@@ -4269,6 +4269,21 @@ must include live E2E that proves the channel roll, duplicate suppression,
 metadata-only outbox discovery, and then a normal GitHub Models
 repo-reader/search follow-up on the same channel issue.
 
+## 2026-06-02 Channel Choose Follow-Up
+
+OpenClaw's channel model and Hermes' chat-command gateway both imply that
+channel integrations should help humans coordinate small decisions, not only
+deliver agent status. GitClaw's no-server version is
+`@gitclaw /channels choose`: a mirrored Slack/Telegram issue supplies a short
+option list, GitHub Actions deterministically selects one option from
+GitHub/channel metadata, and the channel outbox queues the provider-visible
+answer. This deliberately keeps raw choices out of the source receipt and avoids
+model calls, external randomness, provider API calls, sockets, and repository
+mutation. Acceptance must include live E2E that proves option parsing,
+provider-facing selected-choice output, duplicate suppression, metadata-only
+outbox discovery, and a real GitHub Models repo-reader/search follow-up on the
+same channel issue.
+
 ## 2026-06-01 Tools Rehearsal Follow-Up
 
 OpenClaw and Hermes both treat tools as scoped capabilities rather than free
