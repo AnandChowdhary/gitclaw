@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-02T05:31:25Z`
-- issue_count: `570`
+- generated_at: `2026-06-02T05:33:05Z`
+- issue_count: `571`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -575,3 +575,4 @@
 | #657 | GitClaw telegram thread channel-backup-restore-request-e2e-20260602t050537z | `2026-06-02T05:10:55Z` | 7 | 7 | `issues/000657.json` |
 | #658 | GitClaw backup restore request: #657 | `2026-06-02T05:12:28Z` | 2 | 3 | `issues/000658.json` |
 | #659 | GitClaw telegram thread channel-checkpoint-rehearsal-e2e-20260602t052623z | `2026-06-02T05:31:24Z` | 7 | 7 | `issues/000659.json` |
+| #660 | GitClaw checkpoint rehearsal: channel-checkpoint-rehearsal-20260602t052623z | `2026-06-02T05:33:03Z` | 2 | 3 | `issues/000660.json` |
