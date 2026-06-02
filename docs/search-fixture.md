@@ -139,6 +139,7 @@ channel link unique search fixture phrase => GITCLAW_CHANNEL_LINK_CONTEXT_V1
 channel access request unique search fixture phrase => GITCLAW_CHANNEL_ACCESS_REQUEST_CONTEXT_V1
 channel contact unique search fixture phrase => GITCLAW_CHANNEL_CONTACT_CONTEXT_V1
 channel platform unique search fixture phrase => GITCLAW_CHANNEL_PLATFORM_CONTEXT_V1
+channel availability unique search fixture phrase => GITCLAW_CHANNEL_AVAILABILITY_CONTEXT_V1
 channel model status unique search fixture phrase => GITCLAW_CHANNEL_MODEL_STATUS_CONTEXT_V1
 channel skill status unique search fixture phrase => GITCLAW_CHANNEL_SKILL_STATUS_CONTEXT_V1
 channel memory status unique search fixture phrase => GITCLAW_CHANNEL_MEMORY_STATUS_CONTEXT_V1

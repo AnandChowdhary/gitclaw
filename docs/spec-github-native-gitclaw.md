@@ -5715,6 +5715,7 @@ accepts a structured reaction form:
 @gitclaw /channels rehearse-backup --id <stable-rehearsal-id> --message-id <provider-message-id>
 @gitclaw /channels restore-request --id <stable-request-id> --message-id <provider-message-id>
 @gitclaw /channels checkpoint-status --message-id <provider-message-id> --notify-message-id <stable-outbound-id>
+@gitclaw /channels availability --message-id <provider-message-id> --notify-message-id <stable-outbound-id>
 @gitclaw /channels rehearse-checkpoint --target HEAD~1 --id <stable-rehearsal-id> --message-id <provider-message-id>
 @gitclaw /channels remind --reminder-id <stable-reminder-id> --message-id <provider-message-id> --at <RFC3339-or-date>
 @gitclaw /channels done --message-id <stable-outbound-id>
@@ -6530,6 +6531,33 @@ ids, or print channel message bodies in the source receipt. Duplicate
 notifications are suppressed by `channel + notify_message_id`. Changes to this
 surface require a live E2E that validates the metadata-only model-status
 outbox, checks duplicate suppression, verifies no model/config side effects
+occurred, and then continues on the channel issue with a normal GitHub Models
+repo-reader/search follow-up.
+
+The same channel-thread issue can answer a presence/availability request
+without claiming provider socket health:
+
+```text
+@gitclaw /channels availability --message-id <provider-message-id> --notify-message-id <stable-outbound-id>
+```
+
+`/channels availability`, `/channels available`, `/channels online`,
+`/channels awake`, `/channels here`, `/channels beacon`,
+`/channels presence-status`, and `/channels channel-presence` infer the current
+channel and thread id from the issue marker when no explicit route/channel/
+thread target is provided. They queue one provider-facing availability card
+back to the mirrored thread and do not create any durable artifact issue. The
+provider-visible card can include the sanitized availability state, the
+GitHub Actions `workflow_dispatch` bridge runtime, canonical GitHub issue
+surface, channel-ingest input path, channel-outbox/channel-delivery reply path,
+safe follow-up commands, and explicit no-provider-socket-probe/no-session-row-
+liveness/no-provider-API/no-model/no-repo-mutation/no-workflow-mutation gates.
+The source receipt keeps thread ids, source message ids, notification message
+ids, availability ids, channel bodies, issue bodies, comments, prompts, tool
+outputs, and credential values out of band with hashes. Duplicate notifications
+are suppressed by `channel + notify_message_id`. Changes to this surface
+require a live E2E that validates the metadata-only availability outbox, checks
+duplicate suppression, verifies no provider/model/repo/workflow side effects
 occurred, and then continues on the channel issue with a normal GitHub Models
 repo-reader/search follow-up.
 
@@ -7990,6 +8018,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels link --link-id channel-link-1 --url https://example.invalid/link --message-id provider-msg-1
 @gitclaw /channels access-request --access-id channel-access-1 --scope team-demo --message-id provider-msg-1
 @gitclaw /channels contact --contact-id channel-contact-1 --role reviewer --message-id provider-msg-1
+@gitclaw /channels availability --message-id provider-msg-1 --notify-message-id provider-availability-ack-1
 @gitclaw /channels request-run search_files --id channel-tool-request-1 --message-id provider-msg-1
 @gitclaw /channels approval-plan search_files --id channel-tool-approval-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-tool search_files --id channel-tool-rehearsal-1 --message-id provider-msg-1
@@ -10847,6 +10876,18 @@ examples/workflows/gitclaw.yml
   `repo-reader`, expose `gitclaw.search_files`, recover the channel-model
   status fixture token, and avoid hidden channel, account, message, status,
   and notification sentinels.
+- A `gh`-driven channel-availability-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels availability --message-id ...` on that mirrored thread,
+  verifies body-free source receipt metadata, provider-facing availability
+  queueing, duplicate notification suppression, metadata-only outbox
+  discovery, and explicit no-provider-socket-probe/no-provider-API/
+  no-session-row-liveness/no-model-call/no-workflow-mutation/no-repository-
+  mutation flags. The channel-thread issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-availability fixture token, and
+  avoid hidden channel, account, message, availability, and notification
+  sentinels.
 - A `gh`-driven channel-skill-status-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels skills --message-id ...` on that mirrored thread,

@@ -5431,6 +5431,33 @@ docs (`https://docs.openclaw.ai/cli/models`), Hermes messaging guide
 (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`),
 GitHub Models inference REST docs (`https://docs.github.com/en/rest/models/inference`).
 
+2026-06-03 channel-availability follow-up: OpenClaw's sessions docs explicitly
+separate persisted session rows from live channel/provider connectivity; a quiet
+Slack, Telegram, or Discord account can be healthy without a new session row,
+and operators should use channel status/probe surfaces for liveness instead of
+session lists. The OpenClaw channel CLI carries the same boundary in account
+status, logs, login/logout, and provider configuration flows. Hermes's feature
+surface pairs scheduled tasks, heartbeat-like automation, messaging platforms,
+and context/session features, but its checkpoint docs also show the same pattern
+we want: inspect and disclose the exact safety boundary before performing a
+state-changing action.
+
+GitClaw's serverless version is `@gitclaw /channels availability --message-id
+<id>`. It queues one provider-facing availability/presence card back to the
+mirrored Slack/Telegram thread. The card proves that the GitHub Actions-backed
+bridge accepted a channel command and placed a reply in the outbox; it does not
+claim Telegram/Slack socket health, use session rows as provider liveness, call
+provider APIs, call a model, edit workflows, or mutate the repository. Acceptance
+requires live E2E for availability queueing, metadata-only outbox discovery,
+duplicate notification suppression, explicit no-provider/no-session-liveness/
+no-model/no-workflow/no-repo flags, and a real GitHub Models repo-reader/search
+follow-up on the same channel issue.
+
+Sources: OpenClaw sessions (`https://docs.openclaw.ai/cli/sessions`), OpenClaw
+channels (`https://github.com/openclaw/openclaw/blob/main/docs/cli/channels.md`),
+Hermes features overview (`https://hermes-agent.nousresearch.com/docs/user-guide/features/overview/`),
+Hermes checkpoints and rollback (`https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback`).
+
 ## 2026-06-02 Channel Skill Status Follow-Up
 
 OpenClaw's skills surface emphasizes compact discovery first: list what is

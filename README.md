@@ -679,6 +679,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels backup-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels backup-info <issue> --message-id <id> --notify-message-id <id>
 @gitclaw /channels checkpoint-status --message-id <id> --notify-message-id <id>
+@gitclaw /channels availability --message-id <id> --notify-message-id <id>
 @gitclaw /channels soul-info <path> --message-id <id> --notify-message-id <id>
 @gitclaw /channels soul-risk --message-id <id> --notify-message-id <id>
 @gitclaw /channels soul-search <query> --message-id <id> --notify-message-id <id>
@@ -735,6 +736,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels rehearse-backup --id <id> --message-id <id>
 @gitclaw /channels restore-request --id <id> --message-id <id>
 @gitclaw /channels checkpoint-status --message-id <id> --notify-message-id <id>
+@gitclaw /channels availability --message-id <id> --notify-message-id <id>
 @gitclaw /channels rehearse-checkpoint --target HEAD~1 --id <id> --message-id <id>
 @gitclaw /channels remind --reminder-id <id> --message-id <id> --at <time>
 @gitclaw /channels done --message-id <id>
@@ -1206,6 +1208,14 @@ conversation. The action does not call a model, switch models, write model
 configuration, mutate the repository, or call provider APIs; source receipts
 hash thread IDs, source/notification message IDs, status IDs, and channel
 bodies.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+availability --message-id <id>` queues a provider-facing presence/availability
+card back to the current channel thread. It proves the GitHub Actions bridge
+received the command and queued an outbox reply, while explicitly avoiding
+provider socket probes, provider API calls, session-store liveness guesses,
+model calls, workflow edits, or repository mutation; source receipts hash
+thread IDs, source/notification message IDs, availability IDs, and channel
+bodies.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels skills
 --message-id <id>` queues a provider-facing skill-status snapshot back to the
 current channel thread. It reports compact repo-local skill availability from
@@ -1548,6 +1558,7 @@ scripts/e2e/github-channel-backup-status-slash.sh
 scripts/e2e/github-channel-backup-search-slash.sh
 scripts/e2e/github-channel-backup-info-slash.sh
 scripts/e2e/github-channel-checkpoint-status-slash.sh
+scripts/e2e/github-channel-availability-slash.sh
 scripts/e2e/github-channel-profile-status-slash.sh
 scripts/e2e/github-channel-soul-status-slash.sh
 scripts/e2e/github-channel-soul-info-slash.sh
@@ -2233,6 +2244,15 @@ model-config write, provider API call, or repository mutation happened, checks
 duplicate notification suppression, exposes the model-status notification
 through metadata-only outbox, and then continues on the channel thread itself
 with a real GitHub Models repo-reader/search follow-up.
+The channel-availability slash harness turns the operator console into a
+provider-visible presence surface: a channel-ingested issue receives
+`@gitclaw /channels availability`, queues a provider-facing availability card
+back to the mirrored thread, checks that no provider socket probe, provider API
+call, model call, workflow mutation, session-store liveness guess, or
+repository mutation happened, checks duplicate notification suppression,
+exposes the availability notification through metadata-only outbox, and then
+continues on the channel thread itself with a real GitHub Models
+repo-reader/search follow-up.
 The channel-skill-status slash harness turns the operator console into a
 provider-visible skill discovery surface: a channel-ingested issue receives
 `@gitclaw /channels skills`, queues a provider-facing skill-status message back
