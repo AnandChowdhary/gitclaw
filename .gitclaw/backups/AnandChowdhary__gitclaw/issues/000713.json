@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-02T11:22:36Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 713,
+    "title": "GitClaw channel playbook: Launch playbook 20260602t111552z",
+    "body": "\u003c!-- gitclaw:channel-playbook playbook_id=\"channel-playbook-20260602t111552z\" channel=\"telegram\" thread_id_sha256_12=\"a0cbc8c38c8c\" source_message_id_sha256_12=\"8c75695b78c5\" source_issue=\"712\" source_comment_id=\"4601840415\" --\u003e\nGitClaw channel playbook.\n\n- playbook_id: channel-playbook-20260602t111552z\n- source_channel: telegram\n- source_issue: #712\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/712\n- source_comment_id: 4601840415\n- thread_id_sha256_12: a0cbc8c38c8c\n- source_message_id_sha256_12: 8c75695b78c5\n- playbook_mode: github-issue-playbook\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Title\n\nLaunch playbook 20260602t111552z\n\n## Steps\n\nVisible steps token: VISIBLE_CHANNEL_PLAYBOOK_STEPS_20260602t111552z\n\n## Checks\n\nVisible checks token: VISIBLE_CHANNEL_PLAYBOOK_CHECKS_20260602t111552z\n\n## Rollback\n\nVisible rollback token: VISIBLE_CHANNEL_PLAYBOOK_ROLLBACK_20260602t111552z\n\nUse this issue as the durable GitHub home for the channel playbook.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel playbook: Launch playbook 20260602t111552z\n\n\u003c!-- gitclaw:channel-playbook playbook_id=\"channel-playbook-20260602t111552z\" channel=\"telegram\" thread_id_sha256_12=\"a0cbc8c38c8c\" source_message_id_sha256_12=\"8c75695b78c5\" source_issue=\"712\" source_comment_id=\"4601840415\" --\u003e\nGitClaw channel playbook.\n\n- playbook_id: channel-playbook-20260602t111552z\n- source_channel: telegram\n- source_issue: #712\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/712\n- source_comment_id: 4601840415\n- thread_id_sha256_12: a0cbc8c38c8c\n- source_message_id_sha256_12: 8c75695b78c5\n- playbook_mode: github-issue-playbook\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Title\n\nLaunch playbook 20260602t111552z\n\n## Steps\n\nVisible steps token: VISIBLE_CHANNEL_PLAYBOOK_STEPS_20260602t111552z\n\n## Checks\n\nVisible checks token: VISIBLE_CHANNEL_PLAYBOOK_CHECKS_20260602t111552z\n\n## Rollback\n\nVisible rollback token: VISIBLE_CHANNEL_PLAYBOOK_ROLLBACK_20260602t111552z\n\nUse this issue as the durable GitHub home for the channel playbook.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created playbook and use the repo-reader skill.\n\nSearch the repository for `channel playbook unique search fixture phrase`.\nThe matching repository search result line has the form `channel playbook unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_PLAYBOOK_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include playbook ids, message ids, thread ids, account hashes, issue numbers, playbook titles, steps notes, checks, or rollback steps.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_PLAYBOOK_FOLLOWUP_20260602t111552z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4601874307,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_PLAYBOOK_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4601881124,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4601874307,
+      "body": "@gitclaw Continue this channel-created playbook and use the repo-reader skill.\n\nSearch the repository for `channel playbook unique search fixture phrase`.\nThe matching repository search result line has the form `channel playbook unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_PLAYBOOK_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include playbook ids, message ids, thread ids, account hashes, issue numbers, playbook titles, steps notes, checks, or rollback steps.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_PLAYBOOK_FOLLOWUP_20260602t111552z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T11:21:12Z",
+      "updated_at": "2026-06-02T11:21:12Z"
+    },
+    {
+      "id": 4601881124,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26816392263\" event_id=\"comment-4601874307\" model=\"openai/gpt-5-nano\" idempotency_key=\"61e06bf8e944ed557822ed298b48fc1c\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26816392263\" prompt_context_sha256_12=\"4746629504aa\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10809\" usage_completion_tokens=\"980\" usage_total_tokens=\"11789\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_PLAYBOOK_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T11:22:10Z",
+      "updated_at": "2026-06-02T11:22:10Z"
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T11:21:01Z",
+  "generated_at": "2026-06-02T11:22:37Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 608,
+  "count": 609,
   "issues": [
     {
       "number": 3,
@@ -7664,6 +7664,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 713,
+      "title": "GitClaw channel playbook: Launch playbook 20260602t111552z",
+      "path": "issues/000713.json",
+      "backup_generated_at": "2026-06-02T11:22:36Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
