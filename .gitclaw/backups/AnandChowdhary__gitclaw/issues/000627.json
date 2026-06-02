@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-02T00:09:07Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 627,
+    "title": "GitClaw soul rehearsal: .gitclaw/SOUL.md (channel-soul-rehearsal-20260602t000248z)",
+    "body": "\u003c!-- gitclaw:soul-rehearsal-issue id=\"channel-soul-rehearsal-20260602t000248z\" target_path=\".gitclaw/SOUL.md\" source_issue=\"626\" source_comment_id=\"4597478422\" source_sha256_12=\"70a6b35d17ad\" --\u003e\nGitClaw soul rehearsal issue.\n\n- rehearsal_id: channel-soul-rehearsal-20260602t000248z\n- requested_target: soul\n- target_path: .gitclaw/SOUL.md\n- target_category: soul\n- target_present: true\n- target_required: true\n- target_canonical: true\n- target_loaded_for_this_turn: true\n- target_sha256_12: 0460b93e1a5c\n- target_bytes: 576\n- target_lines: 14\n- soul_validation_status: ok\n- soul_risk_status: ok\n- source_issue: #626\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/626\n- source_comment_id: 4597478422\n- source_kind: channel_comment\n- source_sha256_12: 70a6b35d17ad\n- source_bytes: 353\n- source_lines: 4\n- rehearsal_mode: github-issue-conversation\n- context_target_write_allowed: false\n- candidate_soul_generation_allowed: false\n- repository_mutation_allowed: false\n- raw_source_body_included: false\n- raw_target_body_included: false\n- raw_candidate_soul_included: false\n\nUse this issue to rehearse the current `.gitclaw/SOUL.md` behavior in a normal GitClaw conversation. Proposed changes belong in a reviewed `/soul propose` issue or pull request; this issue is only for trying the current prompt-visible behavior.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw soul rehearsal: .gitclaw/SOUL.md (channel-soul-rehearsal-20260602t000248z)\n\n\u003c!-- gitclaw:soul-rehearsal-issue id=\"channel-soul-rehearsal-20260602t000248z\" target_path=\".gitclaw/SOUL.md\" source_issue=\"626\" source_comment_id=\"4597478422\" source_sha256_12=\"70a6b35d17ad\" --\u003e\nGitClaw soul rehearsal issue.\n\n- rehearsal_id: channel-soul-rehearsal-20260602t000248z\n- requested_target: soul\n- target_path: .gitclaw/SOUL.md\n- target_category: soul\n- target_present: true\n- target_required: true\n- target_canonical: true\n- target_loaded_for_this_turn: true\n- target_sha256_12: 0460b93e1a5c\n- target_bytes: 576\n- target_lines: 14\n- soul_validation_status: ok\n- soul_risk_status: ok\n- source_issue: #626\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/626\n- source_comment_id: 4597478422\n- source_kind: channel_comment\n- source_sha256_12: 70a6b35d17ad\n- source_bytes: 353\n- source_lines: 4\n- rehearsal_mode: github-issue-conversation\n- context_target_write_allowed: false\n- candidate_soul_generation_allowed: false\n- repository_mutation_allowed: false\n- raw_source_body_included: false\n- raw_target_body_included: false\n- raw_candidate_soul_included: false\n\nUse this issue to rehearse the current `.gitclaw/SOUL.md` behavior in a normal GitClaw conversation. Proposed changes belong in a reviewed `/soul propose` issue or pull request; this issue is only for trying the current prompt-visible behavior.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created current-soul rehearsal and use the repo-reader skill.\n\nSearch the repository for `channel soul rehearsal unique search fixture phrase`.\nThe matching repository search result line has the form `channel soul rehearsal unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_SOUL_REHEARSAL_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include rehearsal ids, message ids, thread ids, account hashes, issue numbers, source bodies, target bodies, or candidate soul text.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_SOUL_REHEARSAL_FOLLOWUP_20260602t000248z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4597494046,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_SOUL_REHEARSAL_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4597502767,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4597494046,
+      "body": "@gitclaw Continue this channel-created current-soul rehearsal and use the repo-reader skill.\n\nSearch the repository for `channel soul rehearsal unique search fixture phrase`.\nThe matching repository search result line has the form `channel soul rehearsal unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_SOUL_REHEARSAL_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include rehearsal ids, message ids, thread ids, account hashes, issue numbers, source bodies, target bodies, or candidate soul text.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_SOUL_REHEARSAL_FOLLOWUP_20260602t000248z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T00:07:47Z",
+      "updated_at": "2026-06-02T00:07:47Z"
+    },
+    {
+      "id": 4597502767,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26789909278\" event_id=\"comment-4597494046\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"4aeca8ac7896a10df0ff5aa6146ed1af\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26789909278\" prompt_context_sha256_12=\"ce6611b51f0f\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"4\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files,gitclaw.read_file\" usage_prompt_tokens=\"10976\" usage_completion_tokens=\"15\" usage_total_tokens=\"10991\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_SOUL_REHEARSAL_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T00:08:43Z",
+      "updated_at": "2026-06-02T00:08:43Z"
+    }
+  ]
+}
