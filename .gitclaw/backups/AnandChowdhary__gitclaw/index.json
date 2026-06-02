@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T22:21:58Z",
+  "generated_at": "2026-06-02T22:24:53Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 648,
+  "count": 649,
   "issues": [
     {
       "number": 3,
@@ -8206,6 +8206,20 @@
       ],
       "comment_count": 5,
       "transcript_messages": 5
+    },
+    {
+      "number": 754,
+      "title": "GitClaw telegram thread channel-soul-risk-e2e-20260602t222255z",
+      "path": "issues/000754.json",
+      "backup_generated_at": "2026-06-02T22:24:52Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:done",
+        "gitclaw:channel"
+      ],
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
