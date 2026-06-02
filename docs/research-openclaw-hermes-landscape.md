@@ -4602,6 +4602,33 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-02 Channel Contact Card Follow-Up
+
+OpenClaw's gateway documentation frames channels, route/session ownership, and
+per-sender sessions as the primary way a self-hosted assistant keeps messaging
+transport separate from agent authority. Hermes makes the identity boundary
+more explicit: every platform adapter routes through a per-chat session store,
+unknown users are denied unless allowlisted or paired, and `/whoami` plus
+admin/user tiers expose what a channel participant is allowed to do. The
+GitHub-native translation needs a durable identity surface that is useful for
+review and later routing without silently becoming authorization state.
+
+GitClaw's serverless version is `@gitclaw /channels contact --contact-id <id>
+--role <role> --message-id <id>`. It opens or reuses a normal
+`gitclaw:channel-contact` issue with the readable display name, contact role,
+and notes, while provider user IDs and provider handles stay hashed. It queues
+one provider-facing contact-card link back to the source Slack/Telegram thread
+and keeps the source receipt body-free. The action does not call a model, grant
+access, mutate allowlists, issue pairing codes, call provider APIs, print raw
+provider identifiers, or mutate the repository. Acceptance requires live E2E
+for contact-card issue creation, metadata-only contact-card outbox discovery,
+duplicate suppression, explicit no-grant/no-allowlist/no-pairing-code flags,
+and a real GitHub Models repo-reader/search follow-up on the contact issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+gateway (`https://hermes-agent.nousresearch.com/docs/user-guide/messaging/`),
+Hermes security guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/security.md`).
+
 ## 2026-06-02 Channel Access Review Follow-Up
 
 Hermes' messaging gateway model separates provider transport from agent

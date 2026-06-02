@@ -5381,6 +5381,7 @@ accepts a structured reaction form:
 @gitclaw /channels image --image-id <stable-image-id> --width <px> --height <px> --message-id <provider-message-id>
 @gitclaw /channels link --link-id <stable-link-id> --url <url> --message-id <provider-message-id>
 @gitclaw /channels access-request --access-id <stable-access-id> --scope <scope> --message-id <provider-message-id>
+@gitclaw /channels contact --contact-id <stable-contact-id> --role <role> --message-id <provider-message-id>
 @gitclaw /channels handoff --id <stable-handoff-id> --message-id <provider-message-id>
 @gitclaw /channels request-run <tool-name> --id <stable-request-id> --message-id <provider-message-id>
 @gitclaw /channels approval-plan <tool-name> --id <stable-approval-plan-id> --message-id <provider-message-id>
@@ -5899,6 +5900,40 @@ opens the access-review issue, validates the metadata-only review-link outbox,
 checks duplicate suppression, verifies no access grant/allowlist
 mutation/pairing code/provider API occurred, and then continues on the review
 issue with a normal GitHub Models repo-reader/search follow-up.
+
+The same channel-thread issue can also save an identity contact card:
+
+```text
+@gitclaw /channels contact --contact-id <stable-contact-id> --role <role> --message-id <provider-message-id>
+Display name: visible contact name
+Notes:
+human-readable contact notes
+```
+
+`/channels contact`, `/channels contact-card`, `/channels save-contact`,
+`/channels person`, `/channels profile`, `/channels identity`, and
+`/channels member` infer the current channel and thread id from the issue
+marker when no explicit route/channel/thread target is provided. They create
+or reuse one open GitHub issue carrying a hidden `gitclaw:channel-contact`
+marker for the stable contact id, label it with `gitclaw` so normal
+conversation can continue there, and queue a provider-facing contact-card link
+back to the mirrored channel thread. The contact-card issue contains the
+human-readable display name, contact role, and notes because it is the review
+surface; provider user IDs and provider handles remain hashed. The source
+receipt remains body-free, reporting only contact/thread/message/display-name/
+provider-user/contact-role/notes hashes, duplicate status, notification queue
+metadata, and delivery gates. It does not call a model, call provider APIs,
+grant access, mutate allowlists, issue pairing codes, print raw contact ids,
+print raw provider user identifiers, print raw thread ids, print raw source or
+notification message ids, print channel message bodies, or print raw display
+name/contact role/notes in the source receipt. Duplicates are suppressed first
+by `contact_id` for the GitHub contact-card issue and then by
+`channel + notify_message_id` for the provider-facing contact-card link.
+Changes to this surface require a live E2E that opens the contact-card issue,
+validates the metadata-only contact-card outbox, checks duplicate suppression,
+verifies no access grant/allowlist mutation/pairing code/provider API occurred,
+and then continues on the contact issue with a normal GitHub Models
+repo-reader/search follow-up.
 
 The same channel-thread issue can also fork the mirrored conversation into a
 normal GitHub session lane:
@@ -6426,6 +6461,10 @@ Behavior:
   queue one provider-facing access-review outbound comment per
   `channel + notify_message_id` without granting access, mutating allowlists,
   issuing pairing codes, calling provider APIs, or calling a model,
+- create or reuse one `gitclaw:channel-contact` issue per contact id and queue
+  one provider-facing contact-card outbound comment per
+  `channel + notify_message_id` without granting access, mutating allowlists,
+  issuing pairing codes, calling provider APIs, or calling a model,
 - create or reuse one `gitclaw:tool-run-request-issue` issue per channel
   request id and queue one provider-facing review-link outbound comment per
   `channel + notify_message_id` without executing a model or tool,
@@ -6457,8 +6496,9 @@ Behavior:
   `gitclaw:channel-attachment`, `gitclaw:channel-decision`,
   `gitclaw:channel-digest`, `gitclaw:channel-idea`,
   `gitclaw:channel-incident`, `gitclaw:channel-voice`,
-  `gitclaw:channel-image`, `gitclaw:channel-link`, or
-  `gitclaw:channel-access-request`, or `gitclaw:channel-reminder` issue and queue one
+  `gitclaw:channel-image`, `gitclaw:channel-link`,
+  `gitclaw:channel-access-request`, `gitclaw:channel-contact`, or
+  `gitclaw:channel-reminder` issue and queue one
   provider-facing done acknowledgement per `channel + notify_message_id`,
 - suppress duplicate outbound message IDs,
 - for issue-native `/channels send`, post a `model="gitclaw/channels"`
@@ -6650,6 +6690,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels image --image-id channel-image-1 --width 1280 --height 720 --message-id provider-msg-1
 @gitclaw /channels link --link-id channel-link-1 --url https://example.invalid/link --message-id provider-msg-1
 @gitclaw /channels access-request --access-id channel-access-1 --scope team-demo --message-id provider-msg-1
+@gitclaw /channels contact --contact-id channel-contact-1 --role reviewer --message-id provider-msg-1
 @gitclaw /channels request-run search_files --id channel-tool-request-1 --message-id provider-msg-1
 @gitclaw /channels approval-plan search_files --id channel-tool-approval-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-tool search_files --id channel-tool-rehearsal-1 --message-id provider-msg-1
@@ -9299,6 +9340,17 @@ examples/workflows/gitclaw.yml
   that must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-access fixture token, and avoid hidden channel, account, provider,
   message, user, handle, reason, and access sentinels.
+- A `gh`-driven channel-contact-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels contact --contact-id ... --role ... --message-id ...` on
+  that mirrored thread, verifies GitHub contact-card issue creation, body-free
+  source receipt metadata, provider-facing contact-card queueing, duplicate
+  contact and notification suppression, metadata-only outbox discovery, and
+  explicit no-grant/no-allowlist/no-pairing-code flags. The contact-card issue
+  then gets a normal GitHub Models issue-comment follow-up that must select
+  `repo-reader`, expose `gitclaw.search_files`, recover the channel-contact
+  fixture token, and avoid hidden channel, account, provider, message, user,
+  handle, notes, display-name, role, and contact sentinels.
 - A `gh`-driven channel-tool-run-request-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels request-run search_files --id ... --message-id ...` on

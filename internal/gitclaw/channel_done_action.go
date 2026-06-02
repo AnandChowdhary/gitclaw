@@ -295,10 +295,13 @@ func channelDoneArtifactRefFromBody(body string) (channelDoneArtifactRef, error)
 	if ref, ok := channelDoneArtifactRefFromMarker(body, "access-request", channelAccessRequestMarkerPattern, "access_id"); ok {
 		return ref, nil
 	}
+	if ref, ok := channelDoneArtifactRefFromMarker(body, "contact", channelContactMarkerPattern, "contact_id"); ok {
+		return ref, nil
+	}
 	if ref, ok := channelDoneArtifactRefFromMarker(body, "reminder", channelReminderMarkerPattern, "reminder_id"); ok {
 		return ref, nil
 	}
-	return channelDoneArtifactRef{}, fmt.Errorf("channel done requires a gitclaw:channel-task, gitclaw:channel-watch, gitclaw:channel-standing-order-proposal, gitclaw:backup-restore-request-issue, gitclaw:checkpoint-rehearsal-issue, gitclaw:channel-clip, gitclaw:channel-attachment, gitclaw:channel-decision, gitclaw:channel-digest, gitclaw:channel-idea, gitclaw:channel-incident, gitclaw:channel-voice, gitclaw:channel-image, gitclaw:channel-link, gitclaw:channel-access-request, or gitclaw:channel-reminder issue")
+	return channelDoneArtifactRef{}, fmt.Errorf("channel done requires a gitclaw:channel-task, gitclaw:channel-watch, gitclaw:channel-standing-order-proposal, gitclaw:backup-restore-request-issue, gitclaw:checkpoint-rehearsal-issue, gitclaw:channel-clip, gitclaw:channel-attachment, gitclaw:channel-decision, gitclaw:channel-digest, gitclaw:channel-idea, gitclaw:channel-incident, gitclaw:channel-voice, gitclaw:channel-image, gitclaw:channel-link, gitclaw:channel-access-request, gitclaw:channel-contact, or gitclaw:channel-reminder issue")
 }
 
 func channelDoneArtifactRefFromMarker(body, kind string, pattern interface{ FindStringSubmatch(string) []string }, idKey string) (channelDoneArtifactRef, bool) {

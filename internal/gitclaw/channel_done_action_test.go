@@ -468,6 +468,30 @@ func TestChannelDoneArtifactRefSupportsAccessRequestIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsContactIssues(t *testing.T) {
+	body := RenderChannelContactIssueBody(ChannelContactOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		ContactID:         "contact-done-1",
+		DisplayName:       "Visible contact",
+		ProviderUserID:    "provider-secret-user",
+		ProviderHandle:    "@provider-secret",
+		ContactRole:       "reviewer",
+		Notes:             "Contact reviewed.",
+		SourceIssueNumber: 51,
+		SourceCommentID:   5100,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "contact" || ref.ID != "contact-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 51 || ref.SourceCommentID != 5100 {
+		t.Fatalf("unexpected contact artifact ref: %#v", ref)
+	}
+}
+
 func channelDoneQuoteJSON(t *testing.T, value string) string {
 	t.Helper()
 	quoted, err := json.Marshal(value)

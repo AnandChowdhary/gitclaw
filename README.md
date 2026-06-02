@@ -689,6 +689,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels image --image-id <id> --width <px> --height <px> --message-id <id>
 @gitclaw /channels link --link-id <id> --url <url> --message-id <id>
 @gitclaw /channels access-request --access-id <id> --scope <scope> --message-id <id>
+@gitclaw /channels contact --contact-id <id> --role <role> --message-id <id>
 @gitclaw /channels handoff --id <id> --message-id <id>
 @gitclaw /channels request-run search_files --id <id> --message-id <id>
 @gitclaw /channels approval-plan search_files --id <id> --message-id <id>
@@ -1025,6 +1026,13 @@ request. The review issue holds the readable requester, scope, requested role,
 and reason, while provider user IDs and handles stay hashed. The action queues
 a provider-facing review link and explicitly does not grant access, mutate
 allowlists, issue pairing codes, call provider APIs, or call a model.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels contact
+--contact-id <id> --role <role> --message-id <id>` opens or reuses a GitHub
+contact-card issue for a channel-origin identity. The contact issue holds the
+readable display name, contact role, and notes, while provider user IDs and
+handles stay hashed. The action queues a provider-facing contact-card link and
+explicitly does not grant access, mutate allowlists, issue pairing codes, call
+provider APIs, or call a model.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels handoff
 --id <id> --message-id <id>` opens or reuses a normal GitHub session handoff
 issue and queues a provider-facing handoff link back to the Slack/Telegram
@@ -1129,7 +1137,7 @@ receipt body-free. Scheduled GitHub Actions can later use the reminder issue as
 the canonical wake-up lane without a socket or webhook.
 Inside a channel-created task, watch, standing-order proposal, backup restore
 request, checkpoint rehearsal, clip, attachment, decision, digest, idea,
-incident, voice, image, link, access request, or reminder issue, `@gitclaw /channels done --message-id <id>`
+incident, voice, image, link, access request, contact, or reminder issue, `@gitclaw /channels done --message-id <id>`
 closes the GitHub artifact issue and queues a provider-facing acknowledgement
 back to the original
 mirrored Slack/Telegram thread. The artifact receipt reports hashes, close
@@ -1393,6 +1401,7 @@ scripts/e2e/github-channel-voice-slash.sh
 scripts/e2e/github-channel-image-slash.sh
 scripts/e2e/github-channel-link-slash.sh
 scripts/e2e/github-channel-access-request-slash.sh
+scripts/e2e/github-channel-contact-slash.sh
 scripts/e2e/github-channel-session-handoff-slash.sh
 scripts/e2e/github-channel-tool-run-request-slash.sh
 scripts/e2e/github-channel-tool-approval-plan-slash.sh
@@ -1761,6 +1770,14 @@ grant, allowlist mutation, pairing code, or provider API call happened, checks
 duplicate access-request and notification suppression, exposes the review-link
 notification through metadata-only outbox, and then continues on the access
 review issue with a real GitHub Models repo-reader/search follow-up.
+The channel-contact slash harness turns the operator console into an identity
+surface: a channel-ingested issue receives `@gitclaw /channels contact`,
+creates or reuses a GitHub contact-card issue, queues a provider-facing
+contact-card link back to the mirrored thread, checks that no access grant,
+allowlist mutation, pairing code, or provider API call happened, checks
+duplicate contact and notification suppression, exposes the contact-card
+notification through metadata-only outbox, and then continues on the contact
+issue with a real GitHub Models repo-reader/search follow-up.
 The channel-session-handoff slash harness turns the operator console into a
 conversation handoff surface: a channel-ingested issue receives `@gitclaw
 /channels handoff`, creates or reuses a GitHub session handoff issue, queues a
