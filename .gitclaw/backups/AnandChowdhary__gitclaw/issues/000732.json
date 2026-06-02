@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T15:03:29Z",
+  "generated_at": "2026-06-02T15:05:17Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4603737371,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels skill-status --message-id skill-status-ingest-20260602t145941z --notify-message-id skill-status-notify-20260602t145941z --status-id skill-status-20260602t145941z\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_SKILL_STATUS_DUPLICATE_20260602t145941z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4603744529,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Skill Status Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#732`\n- requested_channel_command: `/channels skill-status`\n- channel_skill_status_status: `duplicate`\n- skill_snapshot_mode: `provider-facing-skill-status`\n- notification_target_issue: `#732`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `3281cc0937ec`\n- source_message_id_sha256_12: `587fed40def0`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `8c48432c70a1`\n- notify_message_id_auto: `false`\n- skill_status_id_sha256_12: `cbe4fa9bc803`\n- skill_status_id_auto: `false`\n- available_skills: `1`\n- enabled_skills: `1`\n- disabled_skills: `0`\n- allowlist_blocked_skills: `0`\n- selected_skills: `1`\n- skills_with_frontmatter: `1`\n- skills_with_descriptions: `1`\n- skills_missing_requirements: `0`\n- enabled_skill_names_sha256_12: `ba915a2978d8`\n- skill_paths_sha256_12: `42df45103ee5`\n- selected_skill_paths_sha256_12: `42df45103ee5`\n- skill_index_sha256_12: `d5aee597a5aa`\n- notification_body_sha256_12: `e3c97906b2bc`\n- target_from_current_channel_issue: `true`\n- progressive_disclosure_enabled: `true`\n- skill_install_allowed: `false`\n- skill_update_allowed: `false`\n- registry_contact_allowed: `false`\n- installer_scripts_run: `false`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_skill_status_id_included: `false`\n- raw_skill_bodies_included: `false`\n- raw_skill_descriptions_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_skill_status_action_change: `true`\n- issue_title_sha256_12: `81bdeaeaf357`\n\nGitClaw queued a provider-facing skill status snapshot on the canonical channel issue. This is the GitHub-native channel version of a skills-list command: it reports compact skill availability from the current Actions checkout, but it does not call a model, install skills, update skills, contact registries, run installers, mutate the repository, or call provider APIs. The source receipt keeps thread ids, message ids, status ids, raw skill bodies, descriptions, and channel bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the skill-status notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent skill-status notifications with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate skill-status notifications are suppressed by `channel + notify_message_id`\n- use `/channels propose-skill` or `/channels rehearse-skill` when a channel message should become a reviewed skill workflow",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4603754387,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T15:03:00Z",
       "updated_at": "2026-06-02T15:03:00Z"
+    },
+    {
+      "id": 4603744529,
+      "body": "@gitclaw /channels skill-status --message-id skill-status-ingest-20260602t145941z --notify-message-id skill-status-notify-20260602t145941z --status-id skill-status-20260602t145941z\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_SKILL_STATUS_DUPLICATE_20260602t145941z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T15:03:47Z",
+      "updated_at": "2026-06-02T15:03:47Z"
+    },
+    {
+      "id": 4603754387,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26828619294\" event_id=\"comment-4603744529\" model=\"gitclaw/channels\" idempotency_key=\"64db3d1ec4aa2e25c6afb88625a53995\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26828619294\" --\u003e\n## GitClaw Channel Skill Status Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#732`\n- requested_channel_command: `/channels skill-status`\n- channel_skill_status_status: `duplicate`\n- skill_snapshot_mode: `provider-facing-skill-status`\n- notification_target_issue: `#732`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `3281cc0937ec`\n- source_message_id_sha256_12: `587fed40def0`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `8c48432c70a1`\n- notify_message_id_auto: `false`\n- skill_status_id_sha256_12: `cbe4fa9bc803`\n- skill_status_id_auto: `false`\n- available_skills: `1`\n- enabled_skills: `1`\n- disabled_skills: `0`\n- allowlist_blocked_skills: `0`\n- selected_skills: `1`\n- skills_with_frontmatter: `1`\n- skills_with_descriptions: `1`\n- skills_missing_requirements: `0`\n- enabled_skill_names_sha256_12: `ba915a2978d8`\n- skill_paths_sha256_12: `42df45103ee5`\n- selected_skill_paths_sha256_12: `42df45103ee5`\n- skill_index_sha256_12: `d5aee597a5aa`\n- notification_body_sha256_12: `e3c97906b2bc`\n- target_from_current_channel_issue: `true`\n- progressive_disclosure_enabled: `true`\n- skill_install_allowed: `false`\n- skill_update_allowed: `false`\n- registry_contact_allowed: `false`\n- installer_scripts_run: `false`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_skill_status_id_included: `false`\n- raw_skill_bodies_included: `false`\n- raw_skill_descriptions_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_skill_status_action_change: `true`\n- issue_title_sha256_12: `81bdeaeaf357`\n\nGitClaw queued a provider-facing skill status snapshot on the canonical channel issue. This is the GitHub-native channel version of a skills-list command: it reports compact skill availability from the current Actions checkout, but it does not call a model, install skills, update skills, contact registries, run installers, mutate the repository, or call provider APIs. The source receipt keeps thread ids, message ids, status ids, raw skill bodies, descriptions, and channel bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the skill-status notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent skill-status notifications with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate skill-status notifications are suppressed by `channel + notify_message_id`\n- use `/channels propose-skill` or `/channels rehearse-skill` when a channel message should become a reviewed skill workflow",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T15:04:49Z",
+      "updated_at": "2026-06-02T15:04:49Z"
     }
   ]
 }
