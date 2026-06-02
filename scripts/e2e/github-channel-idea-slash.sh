@@ -231,13 +231,23 @@ wait_for_workflow_run "$ingest_workflow" "workflow_dispatch" "$ingest_started_at
 issue_number="$(wait_for_issue_number)" || die "timed out finding channel issue for ${thread_id}"
 log "channel ingest created issue #${issue_number}"
 
-wait_for_assistant_count_for_issue "$issue_number" 1 || die "expected initial channel report"
-initial_report="$(latest_assistant_comment_for_issue "$issue_number")"
-grep -Fq "GitClaw Channel Report" <<<"$initial_report" || die "initial assistant comment missing channel report"
-grep -Fq 'channel_thread_issue: `true`' <<<"$initial_report" || die "initial channel report missing channel thread status"
-if grep -Fq "$ingest_hidden_token" <<<"$initial_report"; then
-  die "initial channel report leaked ingest hidden token"
-fi
+initial_report=""
+for _ in {1..90}; do
+  errors="$(error_count_for_issue "$issue_number")"
+  if [[ "$errors" != "0" ]]; then
+    die "issue #${issue_number} posted ${errors} error marker comment(s)"
+  fi
+  candidate_report="$(latest_assistant_comment_for_issue "$issue_number")"
+  if grep -Fq "$ingest_hidden_token" <<<"$candidate_report"; then
+    die "initial channel report leaked ingest hidden token"
+  fi
+  if grep -Fq "GitClaw Channel Report" <<<"$candidate_report" && grep -Fq 'channel_thread_issue: `true`' <<<"$candidate_report"; then
+    initial_report="$candidate_report"
+    break
+  fi
+  sleep 5
+done
+[[ -n "$initial_report" ]] || die "expected initial channel report"
 
 idea_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \
