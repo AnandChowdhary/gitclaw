@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T04:22:06Z",
+  "generated_at": "2026-06-02T04:23:51Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 564,
+  "count": 565,
   "issues": [
     {
       "number": 3,
@@ -7115,6 +7115,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 654,
+      "title": "GitClaw channel watch: Follow up channel watch 20260602t041700z",
+      "path": "issues/000654.json",
+      "backup_generated_at": "2026-06-02T04:23:50Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
