@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T14:36:15Z",
+  "generated_at": "2026-06-02T14:37:44Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 730,
     "title": "GitClaw telegram thread channel-model-status-e2e-20260602t143411z",
@@ -51,6 +51,15 @@
       "CommentID": 4603483224,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Model Status Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#730`\n- requested_channel_command: `/channels model`\n- channel_model_status_status: `queued`\n- model_snapshot_mode: `provider-facing-runtime-status`\n- notification_target_issue: `#730`\n- notification_comment_id: `4603495527`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `a16200787fb6`\n- source_message_id_sha256_12: `bf9931c8cfd3`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `b98dcd8999b2`\n- notify_message_id_auto: `false`\n- model_status_id_sha256_12: `ef9b463e0960`\n- model_status_id_auto: `false`\n- model_provider: `github-models`\n- model_provider_sha256_12: `02c3ef1569b0`\n- model: `openai/gpt-5-nano`\n- model_sha256_12: `6c69beeb53eb`\n- fallback_models: `openai/gpt-4.1-nano`\n- fallback_model_count: `1`\n- endpoint_host: `models.github.ai`\n- endpoint_host_sha256_12: `bf4cc2944393`\n- run_mode: `read-only`\n- default_model_policy: `smallest-openai-github-models-catalog-model`\n- notification_body_sha256_12: `7b1ae6302292`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- model_switch_performed: `false`\n- model_config_write_performed: `false`\n- fallback_config_write_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_model_status_id_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_model_status_action_change: `true`\n- issue_title_sha256_12: `83ce65cb90e2`\n\nGitClaw queued a provider-facing model runtime snapshot on the canonical channel issue. This is the GitHub-native channel version of a runtime model-status command: it reports the reviewed provider, model, fallback count, endpoint host, and read-only action mode, but it does not call a model, switch models, edit configuration, mutate the repository, or call provider APIs. The source receipt keeps thread ids, message ids, status ids, and channel bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the model-status notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent model-status notifications with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate model-status notifications are suppressed by `channel + notify_message_id`\n- normal follow-up comments on the same GitHub issue still take the GitHub Models path and must expose model, tool, skill, prompt-context, and usage telemetry",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4603495729,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-02T14:35:54Z",
       "updated_at": "2026-06-02T14:35:54Z"
+    },
+    {
+      "id": 4603495527,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-model-status-e2e-20260602t143411z\" message_id=\"model-status-notify-20260602t143411z\" author=\"gitclaw\" --\u003e\nGitClaw channel model status.\n\nProvider: github-models\nModel: openai/gpt-5-nano\nFallback models: openai/gpt-4.1-nano\nFallbacks configured: 1\nEndpoint host: models.github.ai\nRun mode: read-only\nDefault model policy: smallest-openai-github-models-catalog-model\n\nModel call: not performed by this action.\nModel switch: not performed by this action.\nConfiguration write: not performed by this action.\nRepository mutation: not performed by this action.\nProvider delivery: queued through GitHub channel outbox.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T14:37:13Z",
+      "updated_at": "2026-06-02T14:37:13Z"
+    },
+    {
+      "id": 4603495729,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26826907353\" event_id=\"comment-4603483224\" model=\"gitclaw/channels\" idempotency_key=\"774c4342e762ca1f1ad277079de77184\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26826907353\" --\u003e\n## GitClaw Channel Model Status Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#730`\n- requested_channel_command: `/channels model`\n- channel_model_status_status: `queued`\n- model_snapshot_mode: `provider-facing-runtime-status`\n- notification_target_issue: `#730`\n- notification_comment_id: `4603495527`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `a16200787fb6`\n- source_message_id_sha256_12: `bf9931c8cfd3`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `b98dcd8999b2`\n- notify_message_id_auto: `false`\n- model_status_id_sha256_12: `ef9b463e0960`\n- model_status_id_auto: `false`\n- model_provider: `github-models`\n- model_provider_sha256_12: `02c3ef1569b0`\n- model: `openai/gpt-5-nano`\n- model_sha256_12: `6c69beeb53eb`\n- fallback_models: `openai/gpt-4.1-nano`\n- fallback_model_count: `1`\n- endpoint_host: `models.github.ai`\n- endpoint_host_sha256_12: `bf4cc2944393`\n- run_mode: `read-only`\n- default_model_policy: `smallest-openai-github-models-catalog-model`\n- notification_body_sha256_12: `7b1ae6302292`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- model_switch_performed: `false`\n- model_config_write_performed: `false`\n- fallback_config_write_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_model_status_id_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_model_status_action_change: `true`\n- issue_title_sha256_12: `83ce65cb90e2`\n\nGitClaw queued a provider-facing model runtime snapshot on the canonical channel issue. This is the GitHub-native channel version of a runtime model-status command: it reports the reviewed provider, model, fallback count, endpoint host, and read-only action mode, but it does not call a model, switch models, edit configuration, mutate the repository, or call provider APIs. The source receipt keeps thread ids, message ids, status ids, and channel bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the model-status notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent model-status notifications with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate model-status notifications are suppressed by `channel + notify_message_id`\n- normal follow-up comments on the same GitHub issue still take the GitHub Models path and must expose model, tool, skill, prompt-context, and usage telemetry",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T14:37:15Z",
+      "updated_at": "2026-06-02T14:37:15Z"
     }
   ]
 }
