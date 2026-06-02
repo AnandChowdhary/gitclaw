@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T08:21:50Z",
+  "generated_at": "2026-06-02T08:23:42Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4600176884,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels contact --contact-id channel-contact-20260602t081825z --provider-user-id provider-user-NOECHO_CHANNEL_CONTACT_USER_20260602t081825z --handle @provider-handle-NOECHO_CHANNEL_CONTACT_HANDLE_20260602t081825z --role reviewer-20260602t081825z --message-id contact-ingest-20260602t081825z --notify-message-id contact-notify-20260602t081825z\nDisplay name: Channel Contact 20260602t081825z\nNotes:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_CONTACT_DUPLICATE_20260602t081825z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4600186557,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Contact Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#680`\n- requested_channel_command: `/channels contact`\n- channel_contact_status: `duplicate`\n- contact_issue: `#681`\n- contact_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/681`\n- contact_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#680`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `66e2bbc98fce`\n- source_message_id_sha256_12: `eb66163dadb9`\n- notify_message_id_sha256_12: `8b168205008d`\n- notify_message_id_auto: `false`\n- contact_id_sha256_12: `423c84940fcf`\n- contact_id_auto: `false`\n- display_name_sha256_12: `599285af18cf`\n- display_name_bytes: `32`\n- display_name_lines: `1`\n- provider_user_id_sha256_12: `4f54fdaa2ce4`\n- provider_handle_sha256_12: `1198cf25898f`\n- contact_role_sha256_12: `d5dfda993db7`\n- notes_sha256_12: `b4cd46c5dbf0`\n- notes_bytes: `85`\n- notes_lines: `1`\n- notification_body_sha256_12: `61c9a851f152`\n- target_from_current_channel_issue: `true`\n- permission_grant_performed: `false`\n- allowlist_mutation_performed: `false`\n- pairing_code_issued: `false`\n- raw_contact_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_display_name_included: `false`\n- raw_provider_user_id_included: `false`\n- raw_provider_handle_included: `false`\n- raw_contact_role_included: `false`\n- raw_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_contact_action_change: `true`\n- issue_title_sha256_12: `9a8e82073b2c`\n\nGitClaw saved a GitHub-native contact card for a channel-origin identity, then queued a provider-facing contact-card link back to the mirrored thread. This action does not grant access, mutate allowlists, issue pairing codes, call provider APIs, or call a model. The source receipt keeps provider user identifiers, display names, roles, notes, IDs, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the contact-card notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent contact-card links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate contact card issues are suppressed by `contact_id`; duplicate contact-card notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the contact issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4600199293,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T08:21:20Z",
       "updated_at": "2026-06-02T08:21:20Z"
+    },
+    {
+      "id": 4600186557,
+      "body": "@gitclaw /channels contact --contact-id channel-contact-20260602t081825z --provider-user-id provider-user-NOECHO_CHANNEL_CONTACT_USER_20260602t081825z --handle @provider-handle-NOECHO_CHANNEL_CONTACT_HANDLE_20260602t081825z --role reviewer-20260602t081825z --message-id contact-ingest-20260602t081825z --notify-message-id contact-notify-20260602t081825z\nDisplay name: Channel Contact 20260602t081825z\nNotes:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_CONTACT_DUPLICATE_20260602t081825z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T08:22:08Z",
+      "updated_at": "2026-06-02T08:22:08Z"
+    },
+    {
+      "id": 4600199293,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26807669363\" event_id=\"comment-4600186557\" model=\"gitclaw/channels\" idempotency_key=\"b22989bedf47d3728c86652d27e8540f\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26807669363\" --\u003e\n## GitClaw Channel Contact Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#680`\n- requested_channel_command: `/channels contact`\n- channel_contact_status: `duplicate`\n- contact_issue: `#681`\n- contact_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/681`\n- contact_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#680`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `66e2bbc98fce`\n- source_message_id_sha256_12: `eb66163dadb9`\n- notify_message_id_sha256_12: `8b168205008d`\n- notify_message_id_auto: `false`\n- contact_id_sha256_12: `423c84940fcf`\n- contact_id_auto: `false`\n- display_name_sha256_12: `599285af18cf`\n- display_name_bytes: `32`\n- display_name_lines: `1`\n- provider_user_id_sha256_12: `4f54fdaa2ce4`\n- provider_handle_sha256_12: `1198cf25898f`\n- contact_role_sha256_12: `d5dfda993db7`\n- notes_sha256_12: `b4cd46c5dbf0`\n- notes_bytes: `85`\n- notes_lines: `1`\n- notification_body_sha256_12: `61c9a851f152`\n- target_from_current_channel_issue: `true`\n- permission_grant_performed: `false`\n- allowlist_mutation_performed: `false`\n- pairing_code_issued: `false`\n- raw_contact_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_display_name_included: `false`\n- raw_provider_user_id_included: `false`\n- raw_provider_handle_included: `false`\n- raw_contact_role_included: `false`\n- raw_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_contact_action_change: `true`\n- issue_title_sha256_12: `9a8e82073b2c`\n\nGitClaw saved a GitHub-native contact card for a channel-origin identity, then queued a provider-facing contact-card link back to the mirrored thread. This action does not grant access, mutate allowlists, issue pairing codes, call provider APIs, or call a model. The source receipt keeps provider user identifiers, display names, roles, notes, IDs, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the contact-card notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent contact-card links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate contact card issues are suppressed by `contact_id`; duplicate contact-card notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the contact issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T08:23:12Z",
+      "updated_at": "2026-06-02T08:23:12Z"
     }
   ]
 }
