@@ -687,6 +687,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels rehearse-tool search_files --id <id> --message-id <id>
 @gitclaw /channels propose-skill weekly-review --message-id <id>
 @gitclaw /channels rehearse-skill repo-reader --id <id> --message-id <id>
+@gitclaw /channels propose-soul --target soul --id <id> --message-id <id>
 @gitclaw /channels rehearse-soul --target soul --id <id> --message-id <id>
 @gitclaw /channels rehearse-memory --target long-term --id <id> --message-id <id>
 @gitclaw /channels rehearse-backup --id <id> --message-id <id>
@@ -989,6 +990,14 @@ repository; the linked proposal issue is where a normal GitHub Models
 conversation can refine the reviewed skill proposal before a code-review
 branch applies it.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+propose-soul --target <path> --id <id> --message-id <id>` opens or reuses a
+normal GitHub soul proposal issue and queues a provider-facing proposal link
+back to the Slack/Telegram thread. The channel action does not call a model,
+generate candidate soul text, edit `.gitclaw/` files, or mutate the
+repository; the linked proposal issue is where a normal GitHub Models
+conversation can review the high-authority context change before a code-review
+branch applies it.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 rehearse-skill <skill> --id <id> --message-id <id>` opens or reuses a normal
 GitHub skill rehearsal issue and queues a provider-facing rehearsal link back
 to the Slack/Telegram thread. The channel action does not call a model, install
@@ -1281,6 +1290,7 @@ scripts/e2e/github-channel-tool-run-request-slash.sh
 scripts/e2e/github-channel-tool-approval-plan-slash.sh
 scripts/e2e/github-channel-tool-rehearsal-slash.sh
 scripts/e2e/github-channel-skill-proposal-slash.sh
+scripts/e2e/github-channel-soul-proposal-slash.sh
 scripts/e2e/github-channel-skill-rehearsal-slash.sh
 scripts/e2e/github-channel-soul-rehearsal-slash.sh
 scripts/e2e/github-channel-memory-rehearsal-slash.sh
@@ -1618,6 +1628,13 @@ provider-facing proposal link back to the mirrored thread, checks duplicate
 proposal and notification suppression, exposes the proposal-link notification
 through metadata-only outbox, and then continues on the proposal issue with a
 real GitHub Models repo-reader/search follow-up.
+The channel-soul-proposal slash harness turns the operator console into a
+high-authority-context intake surface: a channel-ingested issue receives
+`@gitclaw /channels propose-soul`, creates or reuses a GitHub soul proposal
+issue, queues a provider-facing proposal link back to the mirrored thread,
+checks duplicate proposal and notification suppression, exposes the
+proposal-link notification through metadata-only outbox, and then continues on
+the proposal issue with a real GitHub Models repo-reader/search follow-up.
 The channel-skill-rehearsal slash harness turns the operator console into a
 skill practice surface: a channel-ingested issue receives `@gitclaw /channels
 rehearse-skill`, creates or reuses a GitHub skill rehearsal issue, queues a

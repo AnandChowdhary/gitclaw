@@ -5379,6 +5379,7 @@ accepts a structured reaction form:
 @gitclaw /channels rehearse-tool <tool-name> --id <stable-rehearsal-id> --message-id <provider-message-id>
 @gitclaw /channels propose-skill <skill-name> --message-id <provider-message-id>
 @gitclaw /channels rehearse-skill <skill-name> --id <stable-rehearsal-id> --message-id <provider-message-id>
+@gitclaw /channels propose-soul --target <soul-path> --id <stable-proposal-id> --message-id <provider-message-id>
 @gitclaw /channels rehearse-soul --target <soul-path> --id <stable-rehearsal-id> --message-id <provider-message-id>
 @gitclaw /channels rehearse-memory --target <memory-target> --id <stable-rehearsal-id> --message-id <provider-message-id>
 @gitclaw /channels rehearse-backup --id <stable-rehearsal-id> --message-id <provider-message-id>
@@ -5819,6 +5820,39 @@ continues on the rehearsal issue with a normal GitHub Models repo-reader/search
 follow-up.
 
 The same channel-thread issue can also turn a mirrored provider message into a
+high-authority-context proposal intake lane:
+
+```text
+@gitclaw /channels propose-soul --target <soul-path> --id <stable-proposal-id> --message-id <provider-message-id>
+```
+
+`/channels propose-soul`, `/channels soul-propose`,
+`/channels soul-proposal`, `/channels edit-soul`, `/channels change-soul`, and
+`/channels soul-change` infer the current channel and thread id from the issue
+marker when no explicit channel/thread target is provided. They create or reuse
+one open GitHub issue carrying the existing `gitclaw:soul-proposal-issue`
+marker, then queue a provider-facing proposal link back to the mirrored channel
+thread.
+
+This is proposal intake, not a high-authority context edit: the action does
+not call a model, generate candidate soul text, edit `.gitclaw/SOUL.md`,
+`.gitclaw/IDENTITY.md`, `.gitclaw/USER.md`, or related context files, call
+provider APIs, or mutate the repository. The proposal issue stores the proposal
+id, target path, target category, validation and risk summaries, and body-free
+source hashes needed for a normal follow-up conversation; the channel source
+receipt remains body-free, reporting only proposal/thread/message/target
+hashes, validation/risk metadata, duplicate status, notification queue
+metadata, and delivery gates. It does not print raw proposal ids, raw provider
+thread/message ids, raw target paths, raw channel message bodies, existing soul
+content, or candidate soul text in the source receipt. Duplicates are
+suppressed first by proposal id for the GitHub proposal issue and then by
+`channel + notify_message_id` for the provider-facing proposal link. Changes to
+this surface require a live E2E that records the proposal intake, validates the
+metadata-only proposal-link outbox, checks duplicate suppression, and then
+continues on the proposal issue with a normal GitHub Models repo-reader/search
+follow-up.
+
+The same channel-thread issue can also turn a mirrored provider message into a
 high-authority-context rehearsal lane:
 
 ```text
@@ -6204,6 +6238,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels rehearse-tool search_files --id channel-tool-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels propose-skill weekly-review --message-id provider-msg-1
 @gitclaw /channels rehearse-skill repo-reader --id channel-skill-rehearsal-1 --message-id provider-msg-1
+@gitclaw /channels propose-soul --target soul --id channel-soul-proposal-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-soul --target soul --id channel-soul-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-memory --target long-term --id channel-memory-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-backup --id channel-backup-rehearsal-1 --message-id provider-msg-1
@@ -8816,6 +8851,17 @@ examples/workflows/gitclaw.yml
   follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
   recover the channel-skill-rehearsal fixture token, and avoid hidden channel,
   account, provider, message, rehearsal, and skill sentinels.
+- A `gh`-driven channel-soul-proposal-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels propose-soul --target soul --id ... --message-id ...` on
+  that mirrored thread, verifies GitHub soul proposal issue creation,
+  body-free source receipt metadata, provider-facing proposal-link queueing,
+  duplicate proposal and notification suppression, and metadata-only outbox
+  discovery. The proposal issue then gets a normal GitHub Models issue-comment
+  follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
+  recover the channel-soul-proposal fixture token, and avoid hidden channel,
+  account, provider, message, proposal, target-body, and candidate-soul
+  sentinels.
 - A `gh`-driven channel-soul-rehearsal-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels rehearse-soul --target soul --id ... --message-id ...`

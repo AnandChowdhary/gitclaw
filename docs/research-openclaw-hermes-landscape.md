@@ -4363,3 +4363,32 @@ Sources: OpenClaw skill workshop docs
 (`https://docs.openclaw.ai/tools/skill-workshop`), OpenClaw tools overview
 (`https://docs.openclaw.ai/tools`), Hermes skills docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/skills`).
+
+## 2026-06-02 Channel Soul Proposal Follow-Up
+
+OpenClaw documents `SOUL.md` as the place where an agent's voice lives, which
+makes high-authority personality/context changes qualitatively different from
+ordinary chat replies. Hermes profiles make the same boundary concrete:
+profiles carry their own `SOUL.md`, memory, sessions, skills, cron jobs, and
+gateway state, and cloning/forking a profile can copy or isolate that state.
+The shared lesson for GitClaw is that Slack/Telegram should be allowed to start
+a soul/personality request, but not to silently rewrite high-authority context
+from a transient channel message.
+
+GitClaw's serverless version is `@gitclaw /channels propose-soul --target
+<path> --id <id> --message-id <id>`. It opens or reuses a
+`gitclaw:soul-proposal-issue`, queues a provider-facing proposal link back to
+the mirrored Telegram or Slack thread, and leaves all actual context drafting
+for a later GitHub Models conversation and normal code-review branch. The
+channel receipt remains body-free and hash-only. The action does not call a
+model, generate candidate soul text, edit `.gitclaw/SOUL.md` or related
+profile files, call provider APIs, or mutate the repository. Acceptance
+requires live E2E for proposal issue creation, metadata-only proposal-link
+outbox discovery, duplicate suppression, and a real GitHub Models
+repo-reader/search follow-up on the proposal issue.
+
+Sources: OpenClaw SOUL.md guide (`https://docs.openclaw.ai/concepts/soul`),
+Hermes profiles docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/profiles/`), Hermes
+features overview
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/overview/`).
