@@ -5459,6 +5459,7 @@ accepts a structured reaction form:
 @gitclaw /channels digest --digest-id <stable-digest-id> --message-id <provider-message-id>
 @gitclaw /channels idea --idea-id <stable-idea-id> --message-id <provider-message-id>
 @gitclaw /channels retro --retro-id <stable-retro-id> --message-id <provider-message-id>
+@gitclaw /channels playbook --playbook-id <stable-playbook-id> --message-id <provider-message-id>
 @gitclaw /channels incident --incident-id <stable-incident-id> --severity <severity> --message-id <provider-message-id>
 @gitclaw /channels voice --voice-id <stable-voice-id> --duration <seconds> --message-id <provider-message-id>
 @gitclaw /channels image --image-id <stable-image-id> --width <px> --height <px> --message-id <provider-message-id>
@@ -5889,6 +5890,43 @@ this surface require a live E2E that records the retro, validates the
 metadata-only retro-link outbox, checks duplicate suppression, and then
 continues on the retro issue with a normal GitHub Models repo-reader/search
 follow-up.
+
+The same channel-thread issue can also record a reusable playbook:
+
+```text
+@gitclaw /channels playbook --playbook-id <stable-playbook-id> --message-id <provider-message-id>
+Title: short playbook title
+Steps:
+human-readable procedure steps
+Checks:
+human-readable verification checks
+Rollback:
+human-readable rollback or backout guidance
+```
+
+`/channels playbook`, `/channels runbook`, `/channels procedure`,
+`/channels recipe`, `/channels sop`, `/channels checklist`, and
+`/channels standard-operating-procedure` infer the current channel and thread
+id from the issue marker when no explicit route/channel/thread target is
+provided. They create or reuse one open GitHub issue carrying a hidden
+`gitclaw:channel-playbook` marker for the stable playbook id, label it with
+`gitclaw` so normal conversation can continue there, and queue a
+provider-facing playbook link back to the mirrored channel thread. The
+playbook issue contains the human-readable title, steps, checks, and rollback
+guidance because it is the reviewable runbook surface; the source receipt
+remains body-free, reporting only playbook/thread/message/title/step/check/
+rollback hashes, duplicate status, notification queue metadata, and delivery
+gates. The provider-facing acknowledgement can show the title and GitHub issue
+link but not the procedure text. It does not call a model, call provider APIs,
+install or update a skill, mutate memory, mutate soul, approve a tool, create
+a schedule, print raw playbook ids, print raw thread ids, print raw source or
+notification message ids, print channel message bodies, or print raw section
+text in the source receipt. Duplicates are suppressed first by `playbook_id`
+for the GitHub playbook issue and then by `channel + notify_message_id` for
+the provider-facing playbook link. Changes to this surface require a live E2E
+that records the playbook, validates the metadata-only playbook-link outbox,
+checks duplicate suppression, and then continues on the playbook issue with a
+normal GitHub Models repo-reader/search follow-up.
 
 The same channel-thread issue can also capture an incident or escalation:
 
@@ -6668,6 +6706,11 @@ Behavior:
 - create or reuse one `gitclaw:channel-retro` issue per retro id and queue
   one provider-facing retro-link outbound comment per
   `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-playbook` issue per playbook id and
+  queue one provider-facing playbook-link outbound comment per
+  `channel + notify_message_id` without installing skills, mutating memory,
+  mutating soul, approving tools, creating schedules, calling provider APIs, or
+  calling a model,
 - create or reuse one `gitclaw:channel-incident` issue per incident id and
   queue one provider-facing incident-link outbound comment per
   `channel + notify_message_id`,
@@ -6716,6 +6759,7 @@ Behavior:
   `gitclaw:channel-attachment`, `gitclaw:channel-decision`,
   `gitclaw:channel-digest`, `gitclaw:channel-idea`,
   `gitclaw:channel-kudos`, `gitclaw:channel-retro`,
+  `gitclaw:channel-playbook`,
   `gitclaw:channel-incident`, `gitclaw:channel-voice`,
   `gitclaw:channel-image`, `gitclaw:channel-link`,
   `gitclaw:channel-access-request`, `gitclaw:channel-contact`, or
@@ -6908,6 +6952,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels idea --idea-id channel-idea-1 --message-id provider-msg-1
 @gitclaw /channels kudos --kudos-id channel-kudos-1 --message-id provider-msg-1
 @gitclaw /channels retro --retro-id channel-retro-1 --message-id provider-msg-1
+@gitclaw /channels playbook --playbook-id channel-playbook-1 --message-id provider-msg-1
 @gitclaw /channels incident --incident-id channel-incident-1 --severity sev2 --message-id provider-msg-1
 @gitclaw /channels voice --voice-id channel-voice-1 --duration 47 --message-id provider-msg-1
 @gitclaw /channels image --image-id channel-image-1 --width 1280 --height 720 --message-id provider-msg-1
@@ -9560,6 +9605,16 @@ examples/workflows/gitclaw.yml
   select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-retro fixture token, and avoid hidden channel, account, provider,
   message, retro, and section sentinels.
+- A `gh`-driven channel-playbook-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels playbook --playbook-id ... --message-id ...` on that
+  mirrored thread, verifies GitHub playbook issue creation, body-free source
+  receipt metadata, provider-facing playbook-link queueing, duplicate playbook
+  and notification suppression, and metadata-only outbox discovery. The
+  playbook issue then gets a normal GitHub Models issue-comment follow-up that
+  must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-playbook fixture token, and avoid hidden channel, account, provider,
+  message, playbook, and procedure-section sentinels.
 - A `gh`-driven channel-incident-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels incident --incident-id ... --severity ... --message-id

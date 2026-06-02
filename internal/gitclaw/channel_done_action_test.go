@@ -373,6 +373,29 @@ func TestChannelDoneArtifactRefSupportsRetroIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsPlaybookIssues(t *testing.T) {
+	body := RenderChannelPlaybookIssueBody(ChannelPlaybookOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		PlaybookID:        "playbook-done-1",
+		Title:             "Deploy the channel gateway",
+		Steps:             "Check the route, then dispatch the workflow.",
+		Checks:            "Confirm the outbox drains cleanly.",
+		Rollback:          "Pause the route and reopen the previous issue.",
+		SourceIssueNumber: 47,
+		SourceCommentID:   4700,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "playbook" || ref.ID != "playbook-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 47 || ref.SourceCommentID != 4700 {
+		t.Fatalf("unexpected playbook artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsIncidentIssues(t *testing.T) {
 	body := RenderChannelIncidentIssueBody(ChannelIncidentOptions{
 		Repo:              "owner/repo",

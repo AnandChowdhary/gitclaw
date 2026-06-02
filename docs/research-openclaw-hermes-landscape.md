@@ -195,6 +195,28 @@ and outbox metadata. Sources: OpenClaw channel docs
 Hermes toolsets docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/toolsets/`).
 
+2026-06-02 channel-playbook follow-up: OpenClaw's skills and ClawHub docs
+make reusable procedures discoverable and reviewable artifacts, while its
+channel/session docs keep casual chat and persisted work state separate.
+Hermes' toolsets docs similarly expose capabilities as named surfaces, and
+Hermes cron keeps scheduled behavior explicit instead of smuggling it through
+ambient chat state. GitClaw's serverless analogue should let a Slack/Telegram
+thread capture "here is how we do this next time" as a playbook issue without
+installing a skill, mutating memory, changing soul rules, approving tools, or
+creating a schedule. `@gitclaw /channels playbook --playbook-id <id>
+--message-id <id>` opens or reuses a normal GitHub issue with readable title,
+steps, checks, and rollback guidance, queues one provider-facing playbook
+link, and then requires any promotion into skill, tool approval, memory,
+soul, or proactive workflow to happen through normal GitHub issue review and
+GitHub Models/tool turns. The source receipt stays body-free with only
+hashes, duplicate state, and outbox metadata. Sources: OpenClaw skills CLI
+docs (`https://docs.openclaw.ai/cli/skills`), ClawHub docs
+(`https://docs.openclaw.ai/clawhub`), OpenClaw channel docs
+(`https://docs.openclaw.ai/channels`), Hermes toolsets docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/toolsets/`),
+and Hermes cron docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/cron/`).
+
 2026-06-02 channel-kudos follow-up: the current OpenClaw skills CLI docs make
 skills inspectable, installable, updatable, and workshop-reviewable artifacts
 rather than invisible runtime magic. ClawHub now exposes both text skills and

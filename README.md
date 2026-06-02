@@ -689,6 +689,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels idea --idea-id <id> --message-id <id>
 @gitclaw /channels kudos --kudos-id <id> --message-id <id>
 @gitclaw /channels retro --retro-id <id> --message-id <id>
+@gitclaw /channels playbook --playbook-id <id> --message-id <id>
 @gitclaw /channels incident --incident-id <id> --severity <severity> --message-id <id>
 @gitclaw /channels voice --voice-id <id> --duration <seconds> --message-id <id>
 @gitclaw /channels image --image-id <id> --width <px> --height <px> --message-id <id>
@@ -1031,6 +1032,15 @@ rough edges, and next steps; the channel action queues a provider-facing retro
 link that shows the title without leaking the section text, and keeps the
 source receipt body-free with hashes, duplicate state, notification metadata,
 and delivery gates.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+playbook --playbook-id <id> --message-id <id>` records a reusable procedure as
+a durable GitHub playbook issue. The playbook issue holds readable title,
+steps, checks, and rollback guidance; the channel action queues a
+provider-facing playbook link that shows the title without leaking procedure
+text, and keeps the source receipt body-free with hashes, duplicate state,
+notification metadata, and delivery gates. Promotion into a skill, memory,
+soul rule, tool approval, or scheduled workflow remains an explicit follow-up
+inside GitHub.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels incident
 --incident-id <id> --severity <severity> --message-id <id>` captures a
 channel-origin incident/escalation as a durable GitHub issue. The incident
@@ -1455,6 +1465,7 @@ scripts/e2e/github-channel-digest-slash.sh
 scripts/e2e/github-channel-idea-slash.sh
 scripts/e2e/github-channel-kudos-slash.sh
 scripts/e2e/github-channel-retro-slash.sh
+scripts/e2e/github-channel-playbook-slash.sh
 scripts/e2e/github-channel-incident-slash.sh
 scripts/e2e/github-channel-voice-slash.sh
 scripts/e2e/github-channel-image-slash.sh
@@ -1816,6 +1827,13 @@ edges, and next steps, queues a provider-facing retro link back to the mirrored
 thread, checks duplicate retro and notification suppression, exposes the link
 through metadata-only outbox, and then continues on the retro issue with a real
 GitHub Models repo-reader/search follow-up.
+The channel-playbook slash harness turns the operator console into a reusable
+procedure lane: a channel-ingested issue receives `@gitclaw /channels
+playbook`, creates or reuses a durable GitHub playbook issue with readable
+title, steps, checks, and rollback guidance, queues a provider-facing playbook
+link back to the mirrored thread, checks duplicate playbook and notification
+suppression, exposes the link through metadata-only outbox, and then continues
+on the playbook issue with a real GitHub Models repo-reader/search follow-up.
 The channel-incident slash harness turns the operator console into an
 escalation intake surface: a channel-ingested issue receives `@gitclaw
 /channels incident`, creates or reuses a durable GitHub incident issue with a
