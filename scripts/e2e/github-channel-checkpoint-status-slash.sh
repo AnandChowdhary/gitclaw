@@ -447,9 +447,9 @@ gh issue comment "$issue_number" \
   --body "@gitclaw Continue this channel checkpoint-status thread and use the repo-reader skill.
 
 Search the repository for \`${search_phrase}\`.
-The matching repository search result line has the form \`${search_phrase} => <token>\`.
-The exact answer starts with \`GITCLAW_CHANNEL_CHECKPOINT_STATUS_\`.
-Reply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.
+The matching repository search result line in \`docs/search-fixture.md\` has the form \`${search_phrase} => <token>\`.
+Reply with only the uppercase fixture token immediately after \`=>\`, including the \`_CONTEXT_V1\` suffix.
+Do not abbreviate the token to a prefix.
 Do not reply with a placeholder like \`<token>\` or the word \`token\`.
 Do not include provider ids, notification ids, thread ids, message ids, account hashes, status ids, issue numbers, raw diffs, commit subjects, or previous channel bodies.
 Do not include this hidden follow-up token: ${followup_hidden_token}
