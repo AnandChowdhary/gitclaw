@@ -6570,6 +6570,38 @@ verifies no tool/model/MCP/toolset/repository side effects occurred, and then
 continues on the channel issue with a normal GitHub Models repo-reader/search
 follow-up.
 
+The same channel-thread issue can answer a focused tool/capability search
+request without executing tools or exposing raw schemas:
+
+```text
+@gitclaw /channels tool-search read_file --message-id <provider-message-id> --notify-message-id <stable-outbound-id> --max-results 5
+```
+
+`/channels tool-search`, `/channels tools-search`, `/channels search-tool`,
+`/channels search-tools`, `/channels tool-recall`,
+`/channels tool-capability-search`, and
+`/channels tool-capabilities-search` infer the current channel and thread id
+from the issue marker when no explicit route/channel/thread target is provided.
+They search deterministic tool contracts and active tool-output metadata only:
+tool name, mode, trigger as a matched field, active-output tool name, input
+hash, output size, line count, and output hash. The provider-facing outbound
+comment reports search status, query hash, query term count, max results, tool
+counts, tool names, match fields, scores, enablement flags, read-only/metadata
+modes, trigger hashes, and active-output hashes. The source receipt stays
+stricter: it records target issue/comment ids, route/thread/message hashes,
+tool-search id hash, query hash, result counts, matched-name/index hashes,
+outbox delivery instructions, and safety gates. It does not call a model,
+execute tools, run shell commands, launch MCP servers, activate toolsets, call
+provider APIs, mutate repository files, print raw search queries, print raw
+provider thread/message ids, print raw tool names, print raw tool triggers,
+print raw tool inputs, print raw tool outputs, print raw tool schemas, print
+channel bodies, print issue/comment bodies, or print prompts. Duplicates are
+suppressed by `channel + notify_message_id`. Changes to this surface require a
+live E2E that ingests a real channel issue, queues a tool-search notification,
+validates metadata-only outbox discovery, verifies duplicate suppression, and
+then continues on the same GitHub issue with a real GitHub Models
+repo-reader/search follow-up.
+
 The same channel-thread issue can answer a repo-profile status request without
 exporting, importing, switching, or mutating profiles:
 
@@ -7717,6 +7749,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels propose-skill weekly-review --message-id provider-msg-1
 @gitclaw /channels rehearse-skill repo-reader --id channel-skill-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels skill-search repo-reader --message-id provider-msg-1 --notify-message-id provider-skill-search-ack-1
+@gitclaw /channels tool-search read_file --message-id provider-msg-1 --notify-message-id provider-tool-search-ack-1
 @gitclaw /channels propose-soul --target soul --id channel-soul-proposal-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-soul --target soul --id channel-soul-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels propose-memory --target long-term --id channel-memory-proposal-1 --message-id provider-msg-1
@@ -10575,6 +10608,18 @@ examples/workflows/gitclaw.yml
   that must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-skill-search fixture token, and avoid hidden channel, account,
   message, search, skill-body, and notification sentinels.
+- A `gh`-driven channel-tool-search-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels tool-search ...` on that mirrored thread, verifies
+  provider-facing tool capability matches, source receipt metadata without raw
+  tool names, triggers, inputs, outputs, schemas, or queries, duplicate
+  notification suppression, metadata-only outbox discovery, and explicit
+  no-tool-execution/no-shell-execution/no-MCP-launch/no-toolset-activation/
+  no-model-call/no-repository-mutation/no-provider-API flags. The
+  channel-thread issue then gets a normal GitHub Models issue-comment follow-up
+  that must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-tool-search fixture token, and avoid hidden channel, account,
+  message, search, tool-input/output, and notification sentinels.
 - A `gh`-driven channel-tool-status-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels tools --message-id ...` on that mirrored thread,

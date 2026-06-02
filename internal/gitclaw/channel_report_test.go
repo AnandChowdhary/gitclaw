@@ -28,6 +28,7 @@ func TestRenderChannelListReportCarriesDedicatedE2EMarker(t *testing.T) {
 		"`/channels skills --message-id <message>`",
 		"`/channels skill-search <query> --message-id <message>`",
 		"`/channels tools --message-id <message>`",
+		"`/channels tool-search <query> --message-id <message>`",
 		"`/channels backup --message-id <message>`",
 		"`/channels backup-search <query> --message-id <message>`",
 		"`/channels profile-status --message-id <message>`",

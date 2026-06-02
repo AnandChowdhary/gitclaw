@@ -709,6 +709,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels model --message-id <id>
 @gitclaw /channels skills --message-id <id>
 @gitclaw /channels skill-search <query> --message-id <id> --notify-message-id <id>
+@gitclaw /channels tool-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels whoami --identity-id <id> --message-id <id>
 @gitclaw /channels contact --contact-id <id> --role <role> --message-id <id>
 @gitclaw /channels handoff --id <id> --message-id <id>
@@ -1491,6 +1492,7 @@ scripts/e2e/github-channel-soul-status-slash.sh
 scripts/e2e/github-channel-memory-status-slash.sh
 scripts/e2e/github-channel-memory-search-slash.sh
 scripts/e2e/github-channel-skill-search-slash.sh
+scripts/e2e/github-channel-tool-search-slash.sh
 scripts/e2e/github-channel-backup-rehearsal-slash.sh
 scripts/e2e/github-channel-backup-restore-request-slash.sh
 scripts/e2e/github-channel-checkpoint-rehearsal-slash.sh
@@ -2175,6 +2177,13 @@ contact, installer run, provider API call, or repository mutation happened,
 checks duplicate notification suppression, exposes the skill-search
 notification through metadata-only outbox, and then continues on the channel
 thread itself with a real GitHub Models repo-reader/search follow-up.
+The channel-tool-search slash harness turns tool discovery into provider-visible
+capability recall: a channel-ingested issue receives `@gitclaw /channels
+tool-search`, queues tool contract matches back to the mirrored thread without
+executing tools or exposing raw schemas, checks duplicate notification
+suppression, exposes the tool-search notification through metadata-only outbox,
+and then continues on the channel thread itself with a real GitHub Models
+repo-reader/search follow-up.
 The channel-tool-status slash harness turns the operator console into a
 provider-visible tool discovery surface: a channel-ingested issue receives
 `@gitclaw /channels tools`, queues a provider-facing tool-status message back

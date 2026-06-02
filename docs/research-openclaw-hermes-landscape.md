@@ -190,6 +190,28 @@ Sources: OpenClaw docs (`https://docs.openclaw.ai/`), OpenClaw skills docs
 and Hermes messaging docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/messaging/`).
 
+2026-06-02 channel-tool-search follow-up: Hermes' tool-search feature treats
+capability discovery as a searchable metadata index, which is a better fit for
+channel users than dumping every tool schema into every Slack or Telegram
+reply. OpenClaw's channels model also pushes work through explicit channel
+commands rather than hidden socket state. GitClaw's serverless cut should
+therefore let a channel thread ask `@gitclaw /channels tool-search <query>
+--message-id <id> --notify-message-id <id>` and receive one provider-facing
+capability summary through `channel-outbox`. The provider reply may include
+matching tool names, modes, enablement flags, match fields, scores, trigger
+hashes, active-output sizes, and active-output hashes because those are the
+useful discovery answer, but it must not include raw trigger text, schemas,
+tool inputs, tool output bodies, prompts, issue/comment bodies, or channel
+message bodies. The source receipt should be stricter still: only route,
+thread, message, search, query, result, and notification hashes/counts, plus
+explicit no-tool-execution/no-shell-execution/no-MCP-launch/no-toolset-
+activation/no-model-call/no-repository-mutation/no-provider-API flags. Sources:
+OpenClaw docs (`https://docs.openclaw.ai/`), OpenClaw channel docs
+(`https://docs.openclaw.ai/cli/channels`), Hermes tool-search docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-search`),
+and Hermes messaging docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/messaging/`).
+
 2026-06-02 channel-decision follow-up: current OpenClaw channel docs emphasize
 that chat surfaces are runtime accounts behind one Gateway, and the channel CLI
 separates socket/provider health from stored sessions. Hermes' cron docs point
