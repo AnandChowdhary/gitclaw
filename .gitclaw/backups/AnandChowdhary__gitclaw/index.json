@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T20:52:19Z",
+  "generated_at": "2026-06-02T21:13:20Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 643,
+  "count": 644,
   "issues": [
     {
       "number": 3,
@@ -8138,6 +8138,18 @@
       ],
       "comment_count": 9,
       "transcript_messages": 9
+    },
+    {
+      "number": 749,
+      "title": "@gitclaw /backup info",
+      "path": "issues/000749.json",
+      "backup_generated_at": "2026-06-02T21:13:19Z",
+      "event_name": "issues",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }
