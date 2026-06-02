@@ -4300,6 +4300,29 @@ include live E2E that proves the mood notification, duplicate suppression,
 metadata-only outbox discovery, and a real GitHub Models repo-reader/search
 follow-up on the same channel issue.
 
+## 2026-06-02 Channel Session Search Follow-Up
+
+[OpenClaw sessions](https://docs.openclaw.ai/cli/sessions) separates persisted
+conversation rows from provider liveness and keeps large session listings
+bounded, which is the right pressure for a GitHub-native design: a channel
+thread should be searchable because it is a GitHub issue transcript, not because
+GitClaw owns a hidden always-on provider session store. [Hermes messaging](https://hermes-agent.nousresearch.com/docs/user-guide/messaging)
+routes each platform adapter through per-chat sessions, and [Hermes memory](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory)
+describes session search as on-demand recall distinct from compact persistent
+memory.
+
+GitClaw should add the smaller no-server primitive:
+`@gitclaw /channels session-search <query> --message-id <id>
+--notify-message-id <id>` searches the current channel issue transcript with the
+existing local lexical matcher and queues body-free recall metadata back through
+the channel outbox. The provider-facing result can show query hashes, message
+indexes, sources, scores, and line hashes, while both the provider result and
+source receipt avoid raw queries, channel text, issue/comment bodies, prompts,
+assistant replies, and tool outputs. Acceptance must include live E2E that
+proves recall notification queuing, duplicate suppression, metadata-only outbox
+discovery, and a real GitHub Models repo-reader/search follow-up on the same
+channel issue.
+
 ## 2026-06-01 Tools Rehearsal Follow-Up
 
 OpenClaw and Hermes both treat tools as scoped capabilities rather than free

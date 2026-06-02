@@ -674,6 +674,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels roll --dice 2d6+1 --message-id <id> --notify-message-id <id>
 @gitclaw /channels choose --message-id <id> --notify-message-id <id>
 @gitclaw /channels mood focused --message-id <id> --notify-message-id <id> --intensity 4
+@gitclaw /channels session-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels rsvp e2e-slack-route,e2e-telegram-route --rsvp-id <id> --message-id <id>
 @gitclaw /channels rsvp-response --rsvp-id <id> --message-id <id> --notify-message-id <id> --response yes
 @gitclaw /channels status --message-id <id> --status-id <id> --state working
@@ -947,6 +948,12 @@ choice out of band.
 Slack/Telegram thread. Optional `Note: ...` trailing text is visible in the
 provider update, while the source receipt keeps raw mood text, notes, thread
 ids, message ids, and mood ids out of band.
+`@gitclaw /channels session-search <query> --message-id <id>
+--notify-message-id <id>` searches the current GitHub-backed channel transcript
+and queues provider-facing recall metadata back to Slack/Telegram. It reports
+query hashes, message indexes, source ids, scores, line hashes, and duplicate
+status without printing raw search queries, channel bodies, issue bodies,
+assistant replies, prompts, or tool outputs.
 `@gitclaw /channels rsvp <route-a>,<route-b> --rsvp-id <id> --message-id <id>`
 creates or reuses a dedicated GitHub RSVP issue, writes the event title,
 when/where/host metadata, and details there, labels it for normal GitClaw
@@ -1606,6 +1613,7 @@ scripts/e2e/github-channel-rollcall-slash.sh
 scripts/e2e/github-channel-roll-slash.sh
 scripts/e2e/github-channel-choose-slash.sh
 scripts/e2e/github-channel-mood-slash.sh
+scripts/e2e/github-channel-session-search-slash.sh
 scripts/e2e/github-channel-status-slash.sh
 scripts/e2e/github-channel-edit-slash.sh
 scripts/e2e/github-channel-reaction-slash.sh
@@ -1899,6 +1907,11 @@ reports: a channel-ingested issue receives `@gitclaw /channels mood`, queues one
 provider-visible presence update with an optional note, exposes it through
 metadata-only outbox, suppresses duplicate mood notifications, and then runs a
 real GitHub Models repo-reader/search follow-up.
+The channel-session-search slash harness makes recall a channel-native action:
+a channel-ingested issue receives `@gitclaw /channels session-search`, queues
+provider-visible body-free search metadata from the GitHub-backed transcript,
+exposes it through metadata-only outbox, suppresses duplicate recall
+notifications, and then runs a real GitHub Models repo-reader/search follow-up.
 The channel-RSVP slash harness creates or reuses a dedicated GitHub RSVP issue,
 labels it for normal GitClaw conversation, invites multiple reviewed routes
 through the provider queue, checks duplicate RSVP suppression, keeps event

@@ -5464,6 +5464,31 @@ mood update, validates metadata-only outbox discovery, verifies duplicate
 suppression, and then continues on the same GitHub issue with a real GitHub
 Models repo-reader/search follow-up.
 
+For channel-native recall that should answer in the same Slack/Telegram thread
+without a full model turn, GitClaw also supports:
+
+```text
+@gitclaw /channels session-search deployment outage --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id> --max-results 5
+```
+
+`/channels session-search`, `/channels search-session`, `/channels
+thread-search`, `/channels search-thread`, `/channels recall-session`,
+`/channels conversation-search`, and `/channels recall` search the current
+GitHub-backed channel issue transcript using the same local lexical matcher as
+`/session search`. The provider-facing outbound comment reports search status,
+query hash, query term count, transcript counts, message indexes, source ids,
+line numbers, scores, body hashes, and line hashes only. The source receipt
+also stays body-free and records target issue/comment ids, route/thread/message
+hashes, search id hash, duplicate status, outbox delivery instructions, and
+safety gates. It does not call a model, execute tools, call provider APIs,
+mutate repository files, print raw search queries, print raw channel bodies,
+print raw issue/comment bodies, print assistant replies, print prompts, or
+print tool outputs. Duplicates are suppressed by `channel + notify_message_id`.
+Changes to this surface require a live E2E that ingests a real channel issue,
+queues a session-search notification, validates metadata-only outbox discovery,
+verifies duplicate suppression, and then continues on the same GitHub issue
+with a real GitHub Models repo-reader/search follow-up.
+
 For event invites that should collect yes/no/maybe responses where
 participants already are, GitClaw also supports:
 
@@ -7607,6 +7632,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels roll --dice 2d6+1 --message-id provider-msg-1 --notify-message-id provider-roll-ack-1
 @gitclaw /channels choose --message-id provider-msg-1 --notify-message-id provider-choice-ack-1
 @gitclaw /channels mood focused --message-id provider-msg-1 --notify-message-id provider-mood-ack-1 --intensity 4
+@gitclaw /channels session-search deployment --message-id provider-msg-1 --notify-message-id provider-search-ack-1
 ```
 
 The command runs after normal preflight and context loading, but before model
@@ -10080,6 +10106,16 @@ examples/workflows/gitclaw.yml
   The same channel issue then gets a normal GitHub Models issue-comment follow-up
   that must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-mood fixture token, and avoid hidden channel/message/mood sentinels.
+- A `gh`-driven channel-session-search-slash E2E harness ingests a real
+  mirrored channel issue, replies with `@gitclaw /channels session-search ...`,
+  verifies provider-facing body-free recall metadata from the current
+  GitHub-backed transcript, body-free source receipt metadata, duplicate recall
+  notification suppression from a later issue comment with the same
+  acknowledgement id, and metadata-only outbox discovery for the acknowledgement.
+  The same channel issue then gets a normal GitHub Models issue-comment follow-up
+  that must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-session-search fixture token, and avoid hidden channel/message/search
+  sentinels.
 - A `gh`-driven channel-rsvp-slash E2E harness creates an ordinary GitHub issue
   with `@gitclaw /channels rsvp ...`, verifies a labeled GitHub RSVP issue,
   routebook-backed RSVP cards on each target channel issue, body-free source
