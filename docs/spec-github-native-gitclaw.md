@@ -5442,6 +5442,28 @@ deterministic choice, validates metadata-only outbox discovery, verifies
 duplicate suppression, and then continues on the same GitHub issue with a real
 GitHub Models repo-reader/search follow-up.
 
+For channel-native presence signals that should feel more like chat than a
+report, GitClaw also supports:
+
+```text
+@gitclaw /channels mood focused --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id> --intensity 4
+Note: Release handoff steady.
+```
+
+`/channels mood`, `/channels vibe`, `/channels pulse`, `/channels energy`, and
+`/channels presence` queue one provider-facing mood update back onto the current
+`gitclaw:channel-thread` issue or an explicit reviewed route. The mood is
+normalized to a compact slug, intensity is bounded to `1..5`, and optional
+`Note: ...` trailing text is included in the provider-facing update. The source
+receipt remains body-free and reports only hashes, note size, duplicate status,
+outbox delivery instructions, and safety gates. It does not call a model, call
+provider APIs, mutate repository files, print raw mood text, or print raw note
+text. Duplicates are suppressed by `channel + notify_message_id`. Changes to
+this surface require a live E2E that ingests a real channel issue, queues the
+mood update, validates metadata-only outbox discovery, verifies duplicate
+suppression, and then continues on the same GitHub issue with a real GitHub
+Models repo-reader/search follow-up.
+
 For event invites that should collect yes/no/maybe responses where
 participants already are, GitClaw also supports:
 
@@ -7584,6 +7606,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels rollcall team-alerts,ops-alerts --rollcall-id standup --message-id standup-1
 @gitclaw /channels roll --dice 2d6+1 --message-id provider-msg-1 --notify-message-id provider-roll-ack-1
 @gitclaw /channels choose --message-id provider-msg-1 --notify-message-id provider-choice-ack-1
+@gitclaw /channels mood focused --message-id provider-msg-1 --notify-message-id provider-mood-ack-1 --intensity 4
 ```
 
 The command runs after normal preflight and context loading, but before model
@@ -10049,6 +10072,14 @@ examples/workflows/gitclaw.yml
   issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-choose fixture token, and avoid
   hidden channel/message/choice sentinels.
+- A `gh`-driven channel-mood-slash E2E harness ingests a real mirrored channel
+  issue, replies with `@gitclaw /channels mood ...`, verifies the
+  provider-facing presence update, body-free source receipt metadata, duplicate
+  mood notification suppression from a later issue comment with the same
+  acknowledgement id, and metadata-only outbox discovery for the acknowledgement.
+  The same channel issue then gets a normal GitHub Models issue-comment follow-up
+  that must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-mood fixture token, and avoid hidden channel/message/mood sentinels.
 - A `gh`-driven channel-rsvp-slash E2E harness creates an ordinary GitHub issue
   with `@gitclaw /channels rsvp ...`, verifies a labeled GitHub RSVP issue,
   routebook-backed RSVP cards on each target channel issue, body-free source

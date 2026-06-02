@@ -4284,6 +4284,22 @@ provider-facing selected-choice output, duplicate suppression, metadata-only
 outbox discovery, and a real GitHub Models repo-reader/search follow-up on the
 same channel issue.
 
+## 2026-06-02 Channel Mood Follow-Up
+
+[OpenClaw's channel guide](https://clawdocs.org/guides/channels/) frames
+provider channels as first-class conversation surfaces, while
+[Hermes messaging](https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md)
+keeps chat commands close to the user's existing thread. GitClaw adopts that
+for a smaller no-server primitive: `@gitclaw /channels mood` lets a mirrored
+Slack/Telegram issue publish a compact presence signal and optional note back
+through the existing channel outbox. The action intentionally avoids model
+calls, provider API calls, sockets, and repository mutation; the provider-facing
+comment can show the mood and note, while the GitHub source receipt keeps only
+hashes, sizes, duplicate status, and delivery instructions. Acceptance must
+include live E2E that proves the mood notification, duplicate suppression,
+metadata-only outbox discovery, and a real GitHub Models repo-reader/search
+follow-up on the same channel issue.
+
 ## 2026-06-01 Tools Rehearsal Follow-Up
 
 OpenClaw and Hermes both treat tools as scoped capabilities rather than free

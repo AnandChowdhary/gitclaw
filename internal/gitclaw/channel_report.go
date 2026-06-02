@@ -305,6 +305,7 @@ func renderChannelReport(ev Event, cfg Config, comments []Comment, includeIssue 
 	b.WriteString("- `/channels contact --contact-id <id> --message-id <message>` saves a GitHub contact-card issue for a channel identity without granting access\n")
 	b.WriteString("- `/channels roll --dice <expr> --message-id <message>` queues a provider-facing deterministic dice/coin result without model calls or external randomness\n")
 	b.WriteString("- `/channels choose --message-id <message>` queues a provider-facing deterministic option pick without model calls or external randomness\n")
+	b.WriteString("- `/channels mood <mood> --message-id <message>` queues a provider-facing presence update without model calls, provider API calls, or repo mutation\n")
 	b.WriteString("- `/channels approval-plan <tool> --id <id> --message-id <message>` creates a GitHub tool approval-plan issue from a mirrored channel thread\n")
 	b.WriteString("- `/channels propose-toolset --toolset-id <id> --message-id <message>` creates a GitHub toolset proposal issue from a mirrored channel thread\n")
 	b.WriteString("- `/channels propose-prompt --prompt-id <id> --message-id <message>` creates a GitHub prompt-pack proposal issue from a mirrored channel thread\n")

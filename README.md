@@ -673,6 +673,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels rollcall e2e-slack-route,e2e-telegram-route --rollcall-id <id> --message-id <id>
 @gitclaw /channels roll --dice 2d6+1 --message-id <id> --notify-message-id <id>
 @gitclaw /channels choose --message-id <id> --notify-message-id <id>
+@gitclaw /channels mood focused --message-id <id> --notify-message-id <id> --intensity 4
 @gitclaw /channels rsvp e2e-slack-route,e2e-telegram-route --rsvp-id <id> --message-id <id>
 @gitclaw /channels rsvp-response --rsvp-id <id> --message-id <id> --notify-message-id <id> --response yes
 @gitclaw /channels status --message-id <id> --status-id <id> --state working
@@ -941,6 +942,11 @@ the same for option picking. Put choices in the following body as bullets or
 pass simple `--option <value>` flags; GitClaw queues one provider-visible
 selected choice while the source receipt keeps raw option text and the selected
 choice out of band.
+`@gitclaw /channels mood <mood> --message-id <id> --notify-message-id <id>
+--intensity 1..5` queues a provider-facing presence update back to the current
+Slack/Telegram thread. Optional `Note: ...` trailing text is visible in the
+provider update, while the source receipt keeps raw mood text, notes, thread
+ids, message ids, and mood ids out of band.
 `@gitclaw /channels rsvp <route-a>,<route-b> --rsvp-id <id> --message-id <id>`
 creates or reuses a dedicated GitHub RSVP issue, writes the event title,
 when/where/host metadata, and details there, labels it for normal GitClaw
@@ -1599,6 +1605,7 @@ scripts/e2e/github-channel-poll-slash.sh
 scripts/e2e/github-channel-rollcall-slash.sh
 scripts/e2e/github-channel-roll-slash.sh
 scripts/e2e/github-channel-choose-slash.sh
+scripts/e2e/github-channel-mood-slash.sh
 scripts/e2e/github-channel-status-slash.sh
 scripts/e2e/github-channel-edit-slash.sh
 scripts/e2e/github-channel-reaction-slash.sh
@@ -1887,6 +1894,11 @@ picking: a channel-ingested issue receives `@gitclaw /channels choose`, queues
 one provider-visible deterministic selected choice, exposes it through
 metadata-only outbox, suppresses duplicate choice notifications, and then runs
 a real GitHub Models repo-reader/search follow-up.
+The channel-mood slash harness keeps mirrored channel threads more alive than
+reports: a channel-ingested issue receives `@gitclaw /channels mood`, queues one
+provider-visible presence update with an optional note, exposes it through
+metadata-only outbox, suppresses duplicate mood notifications, and then runs a
+real GitHub Models repo-reader/search follow-up.
 The channel-RSVP slash harness creates or reuses a dedicated GitHub RSVP issue,
 labels it for normal GitClaw conversation, invites multiple reviewed routes
 through the provider queue, checks duplicate RSVP suppression, keeps event
