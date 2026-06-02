@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-02T02:02:25Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 639,
+    "title": "GitClaw channel attachment: launch-brief-20260602t015552z.pdf",
+    "body": "\u003c!-- gitclaw:channel-attachment attachment_id=\"channel-attachment-20260602t015552z\" channel=\"telegram\" thread_id_sha256_12=\"55fd26be9b31\" source_message_id_sha256_12=\"58aee6e5d3aa\" filename_sha256_12=\"43e321f55ef6\" file_checksum_sha256_12=\"a8ae6e6ee929\" source_issue=\"638\" source_comment_id=\"4598055034\" --\u003e\nGitClaw channel attachment.\n\n- attachment_id: channel-attachment-20260602t015552z\n- source_channel: telegram\n- source_issue: #638\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/638\n- source_comment_id: 4598055034\n- thread_id_sha256_12: 55fd26be9b31\n- source_message_id_sha256_12: 58aee6e5d3aa\n- filename: launch-brief-20260602t015552z.pdf\n- filename_sha256_12: 43e321f55ef6\n- media_type: application/pdf\n- attachment_bytes: 4242\n- file_sha256: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\n- source_url_sha256_12: debfe1d51c44\n- attachment_mode: github-issue-attachment-metadata\n- attachment_bytes_included: false\n- provider_fetch_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_source_url_included: false\n- raw_channel_message_body_included: false\n- raw_attachment_bytes_included: false\n\n## Caption\n\nVisible attachment caption token: VISIBLE_CHANNEL_ATTACHMENT_CAPTION_20260602t015552z\n\nUse this issue as the durable GitHub home for the channel-origin attachment metadata. The file bytes were not fetched or copied by this action.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel attachment: launch-brief-20260602t015552z.pdf\n\n\u003c!-- gitclaw:channel-attachment attachment_id=\"channel-attachment-20260602t015552z\" channel=\"telegram\" thread_id_sha256_12=\"55fd26be9b31\" source_message_id_sha256_12=\"58aee6e5d3aa\" filename_sha256_12=\"43e321f55ef6\" file_checksum_sha256_12=\"a8ae6e6ee929\" source_issue=\"638\" source_comment_id=\"4598055034\" --\u003e\nGitClaw channel attachment.\n\n- attachment_id: channel-attachment-20260602t015552z\n- source_channel: telegram\n- source_issue: #638\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/638\n- source_comment_id: 4598055034\n- thread_id_sha256_12: 55fd26be9b31\n- source_message_id_sha256_12: 58aee6e5d3aa\n- filename: launch-brief-20260602t015552z.pdf\n- filename_sha256_12: 43e321f55ef6\n- media_type: application/pdf\n- attachment_bytes: 4242\n- file_sha256: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\n- source_url_sha256_12: debfe1d51c44\n- attachment_mode: github-issue-attachment-metadata\n- attachment_bytes_included: false\n- provider_fetch_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_source_url_included: false\n- raw_channel_message_body_included: false\n- raw_attachment_bytes_included: false\n\n## Caption\n\nVisible attachment caption token: VISIBLE_CHANNEL_ATTACHMENT_CAPTION_20260602t015552z\n\nUse this issue as the durable GitHub home for the channel-origin attachment metadata. The file bytes were not fetched or copied by this action.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created attachment and use the repo-reader skill.\n\nSearch the repository for `channel attachment unique search fixture phrase`.\nThe matching repository search result line has the form `channel attachment unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_ATTACHMENT_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include attachment ids, message ids, thread ids, account hashes, issue numbers, filenames, checksums, source URLs, or captions.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_ATTACHMENT_FOLLOWUP_20260602t015552z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4598073469,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_ATTACHMENT_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4598077315,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4598073469,
+      "body": "@gitclaw Continue this channel-created attachment and use the repo-reader skill.\n\nSearch the repository for `channel attachment unique search fixture phrase`.\nThe matching repository search result line has the form `channel attachment unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_ATTACHMENT_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include attachment ids, message ids, thread ids, account hashes, issue numbers, filenames, checksums, source URLs, or captions.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_ATTACHMENT_FOLLOWUP_20260602t015552z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T02:01:10Z",
+      "updated_at": "2026-06-02T02:01:10Z"
+    },
+    {
+      "id": 4598077315,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26793755465\" event_id=\"comment-4598073469\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"39eaf04c0649b8ea86999c7f413fddbd\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26793755465\" prompt_context_sha256_12=\"26fbad0a5ce1\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10836\" usage_completion_tokens=\"10\" usage_total_tokens=\"10846\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_ATTACHMENT_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T02:02:01Z",
+      "updated_at": "2026-06-02T02:02:01Z"
+    }
+  ]
+}
