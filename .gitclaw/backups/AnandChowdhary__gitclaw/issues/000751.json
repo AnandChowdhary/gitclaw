@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T21:40:42Z",
+  "generated_at": "2026-06-02T21:42:27Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4607232505,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels authority-search GitClaw soul --message-id soul-search-ingest-20260602t213723z --notify-message-id soul-search-notify-20260602t213723z --search-id soul-search-20260602t213723z --max-results 5\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_SOUL_SEARCH_DUPLICATE_20260602t213723z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4607236517,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Soul Search Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#751`\n- requested_channel_command: `/channels authority-search`\n- channel_soul_search_status: `duplicate`\n- soul_search_status: `ok`\n- search_mode: `repo-local-high-authority-lexical`\n- notification_target_issue: `#751`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `f1c4a11dcd41`\n- source_message_id_sha256_12: `0ff8bf79c3f2`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `9acb61d34a9b`\n- notify_message_id_auto: `false`\n- search_id_sha256_12: `c6635ae169c8`\n- search_id_auto: `false`\n- query_sha256_12: `3d844e0a2e7a`\n- query_terms: `2`\n- query_bytes: `12`\n- query_source: `positional`\n- max_results: `5`\n- files_scanned: `16`\n- matched_files: `16`\n- matched_lines: `591`\n- results_returned: `5`\n- notification_body_sha256_12: `89c0da949a5a`\n- notification_body_bytes: `1315`\n- notification_body_lines: `20`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- soul_writes_performed: `false`\n- profile_export_performed: `false`\n- registry_contact_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_query_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_search_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_soul_bodies_included: `false`\n- raw_identity_bodies_included: `false`\n- raw_user_bodies_included: `false`\n- raw_memory_bodies_included: `false`\n- raw_tool_guidance_bodies_included: `false`\n- raw_heartbeat_bodies_included: `false`\n- raw_soul_file_paths_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_channel_soul_search_change: `true`\n- issue_title_sha256_12: `ab4e26f34f14`\n\nGitClaw searched repo-local high-authority context files and queued a provider-facing soul recall result with only paths, categories, line numbers, scores, hashes, counts, and delivery metadata. The action does not call a model, execute tools, mutate repository files, write soul or memory, contact registries, export profiles, call provider APIs, or print raw soul/context bodies.\n\n### Follow-Up Delivery\n- provider gateways read soul-search recall results with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent recall results with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate soul-search notifications are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4607241679,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T21:40:15Z",
       "updated_at": "2026-06-02T21:40:15Z"
+    },
+    {
+      "id": 4607236517,
+      "body": "@gitclaw /channels authority-search GitClaw soul --message-id soul-search-ingest-20260602t213723z --notify-message-id soul-search-notify-20260602t213723z --search-id soul-search-20260602t213723z --max-results 5\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_SOUL_SEARCH_DUPLICATE_20260602t213723z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T21:40:59Z",
+      "updated_at": "2026-06-02T21:40:59Z"
+    },
+    {
+      "id": 4607241679,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26849704104\" event_id=\"comment-4607236517\" model=\"gitclaw/channels\" idempotency_key=\"90814842838d919814d42e6c4fce9a6f\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26849704104\" --\u003e\n## GitClaw Channel Soul Search Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#751`\n- requested_channel_command: `/channels authority-search`\n- channel_soul_search_status: `duplicate`\n- soul_search_status: `ok`\n- search_mode: `repo-local-high-authority-lexical`\n- notification_target_issue: `#751`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `f1c4a11dcd41`\n- source_message_id_sha256_12: `0ff8bf79c3f2`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `9acb61d34a9b`\n- notify_message_id_auto: `false`\n- search_id_sha256_12: `c6635ae169c8`\n- search_id_auto: `false`\n- query_sha256_12: `3d844e0a2e7a`\n- query_terms: `2`\n- query_bytes: `12`\n- query_source: `positional`\n- max_results: `5`\n- files_scanned: `16`\n- matched_files: `16`\n- matched_lines: `591`\n- results_returned: `5`\n- notification_body_sha256_12: `89c0da949a5a`\n- notification_body_bytes: `1315`\n- notification_body_lines: `20`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- soul_writes_performed: `false`\n- profile_export_performed: `false`\n- registry_contact_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_query_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_search_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_soul_bodies_included: `false`\n- raw_identity_bodies_included: `false`\n- raw_user_bodies_included: `false`\n- raw_memory_bodies_included: `false`\n- raw_tool_guidance_bodies_included: `false`\n- raw_heartbeat_bodies_included: `false`\n- raw_soul_file_paths_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_channel_soul_search_change: `true`\n- issue_title_sha256_12: `ab4e26f34f14`\n\nGitClaw searched repo-local high-authority context files and queued a provider-facing soul recall result with only paths, categories, line numbers, scores, hashes, counts, and delivery metadata. The action does not call a model, execute tools, mutate repository files, write soul or memory, contact registries, export profiles, call provider APIs, or print raw soul/context bodies.\n\n### Follow-Up Delivery\n- provider gateways read soul-search recall results with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent recall results with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate soul-search notifications are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T21:41:56Z",
+      "updated_at": "2026-06-02T21:41:56Z"
     }
   ]
 }
