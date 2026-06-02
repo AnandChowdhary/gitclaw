@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-02T06:19:53Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 670,
+    "title": "GitClaw channel incident: Shape GitHub-native channel incident 20260602t061333z",
+    "body": "\u003c!-- gitclaw:channel-incident incident_id=\"channel-incident-20260602t061333z\" channel=\"telegram\" severity_sha256_12=\"7d16d7c992c0\" thread_id_sha256_12=\"d55a425cc178\" source_message_id_sha256_12=\"4c96494e3ca9\" source_issue=\"669\" source_comment_id=\"4599249230\" --\u003e\nGitClaw channel incident.\n\n- incident_id: channel-incident-20260602t061333z\n- severity: sev2\n- source_channel: telegram\n- source_issue: #669\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/669\n- source_comment_id: 4599249230\n- thread_id_sha256_12: d55a425cc178\n- source_message_id_sha256_12: 4c96494e3ca9\n- incident_mode: github-issue-incident\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Incident\n\nShape GitHub-native channel incident 20260602t061333z\n\n## Notes\n\nVisible incident notes token: VISIBLE_CHANNEL_INCIDENT_NOTES_20260602t061333z\n\nUse this issue as the reviewable GitHub home for shaping the channel incident into a task, skill, memory, tool request, or proactive workflow.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel incident: Shape GitHub-native channel incident 20260602t061333z\n\n\u003c!-- gitclaw:channel-incident incident_id=\"channel-incident-20260602t061333z\" channel=\"telegram\" severity_sha256_12=\"7d16d7c992c0\" thread_id_sha256_12=\"d55a425cc178\" source_message_id_sha256_12=\"4c96494e3ca9\" source_issue=\"669\" source_comment_id=\"4599249230\" --\u003e\nGitClaw channel incident.\n\n- incident_id: channel-incident-20260602t061333z\n- severity: sev2\n- source_channel: telegram\n- source_issue: #669\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/669\n- source_comment_id: 4599249230\n- thread_id_sha256_12: d55a425cc178\n- source_message_id_sha256_12: 4c96494e3ca9\n- incident_mode: github-issue-incident\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Incident\n\nShape GitHub-native channel incident 20260602t061333z\n\n## Notes\n\nVisible incident notes token: VISIBLE_CHANNEL_INCIDENT_NOTES_20260602t061333z\n\nUse this issue as the reviewable GitHub home for shaping the channel incident into a task, skill, memory, tool request, or proactive workflow.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created incident and use the repo-reader skill.\n\nSearch the repository for `channel incident unique search fixture phrase`.\nThe matching repository search result line has the form `channel incident unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_INCIDENT_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include incident ids, severities, message ids, thread ids, account hashes, issue numbers, incident titles, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_INCIDENT_FOLLOWUP_20260602t061333z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4599276945,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_INCIDENT_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4599283627,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4599276945,
+      "body": "@gitclaw Continue this channel-created incident and use the repo-reader skill.\n\nSearch the repository for `channel incident unique search fixture phrase`.\nThe matching repository search result line has the form `channel incident unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_INCIDENT_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include incident ids, severities, message ids, thread ids, account hashes, issue numbers, incident titles, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_INCIDENT_FOLLOWUP_20260602t061333z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T06:18:27Z",
+      "updated_at": "2026-06-02T06:18:27Z"
+    },
+    {
+      "id": 4599283627,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26802242616\" event_id=\"comment-4599276945\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"7fb45ce21a5cda4ab239b6836ee6bdcd\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26802242616\" prompt_context_sha256_12=\"52cc15ebc964\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10787\" usage_completion_tokens=\"11\" usage_total_tokens=\"10798\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_INCIDENT_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T06:19:24Z",
+      "updated_at": "2026-06-02T06:19:24Z"
+    }
+  ]
+}
