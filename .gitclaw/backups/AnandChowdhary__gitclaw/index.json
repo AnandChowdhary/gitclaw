@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T17:00:44Z",
+  "generated_at": "2026-06-02T17:02:16Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 632,
   "issues": [
@@ -7975,15 +7975,15 @@
       "number": 737,
       "title": "GitClaw telegram thread channel-memory-status-e2e-20260602t165844z",
       "path": "issues/000737.json",
-      "backup_generated_at": "2026-06-02T17:00:43Z",
-      "event_name": "workflow_dispatch",
+      "backup_generated_at": "2026-06-02T17:02:15Z",
+      "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 3,
-      "transcript_messages": 4
+      "comment_count": 5,
+      "transcript_messages": 5
     }
   ]
 }
