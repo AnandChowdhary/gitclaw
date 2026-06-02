@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T09:57:09Z",
+  "generated_at": "2026-06-02T10:00:20Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 597,
+  "count": 598,
   "issues": [
     {
       "number": 3,
@@ -7530,6 +7530,15 @@
       ],
       "comment_count": 4,
       "transcript_messages": 3
+    },
+    {
+      "number": 700,
+      "title": "GitClaw channel RSVP response E2E 20260602T095841Z",
+      "path": "issues/000700.json",
+      "backup_generated_at": "2026-06-02T10:00:18Z",
+      "event_name": "issues",
+      "comment_count": 1,
+      "transcript_messages": 2
     }
   ]
 }
