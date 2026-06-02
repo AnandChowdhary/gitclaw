@@ -6278,6 +6278,33 @@ suppression, verifies no adapter/control side effects occurred, and then
 continues on the channel issue with a normal GitHub Models repo-reader/search
 follow-up.
 
+The same channel-thread issue can answer a model/runtime status request without
+calling or switching models:
+
+```text
+@gitclaw /channels model --message-id <provider-message-id>
+```
+
+`/channels model`, `/channels models`, `/channels model-status`,
+`/channels runtime-model`, `/channels which-model`, `/channels llm`, and
+`/channels llm-status` infer the current channel and thread id from the issue
+marker when no explicit route/channel/thread target is provided. They queue
+one provider-facing model-status message back to the mirrored thread and do
+not create any durable artifact issue. The provider-visible message can include
+the effective provider, model, fallback model list/count, endpoint host,
+read-only run mode, and default model policy. The source receipt can include
+the non-secret provider/model summary while keeping thread ids, source message
+ids, notification message ids, status ids, and channel bodies out of band with
+hashes. It does not call a model, switch models, write model configuration,
+write fallback configuration, mutate the repository, call provider APIs, print
+raw thread ids, print raw source or notification message ids, print raw status
+ids, or print channel message bodies in the source receipt. Duplicate
+notifications are suppressed by `channel + notify_message_id`. Changes to this
+surface require a live E2E that validates the metadata-only model-status
+outbox, checks duplicate suppression, verifies no model/config side effects
+occurred, and then continues on the channel issue with a normal GitHub Models
+repo-reader/search follow-up.
+
 The same channel-thread issue can answer an identity-status request without
 turning that status into authorization state:
 
@@ -10054,6 +10081,17 @@ examples/workflows/gitclaw.yml
   select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-platform fixture token, and avoid hidden channel, account, provider,
   message, reason, home, state, and notification sentinels.
+- A `gh`-driven channel-model-status-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels model --message-id ...` on that mirrored thread,
+  verifies body-free source receipt metadata, provider-facing model-status
+  queueing, duplicate notification suppression, metadata-only outbox
+  discovery, and explicit no-model-call/no-model-switch/no-model-config-write/
+  no-repository-mutation/no-provider-API flags. The channel-thread issue then
+  gets a normal GitHub Models issue-comment follow-up that must select
+  `repo-reader`, expose `gitclaw.search_files`, recover the channel-model
+  status fixture token, and avoid hidden channel, account, message, status,
+  and notification sentinels.
 - A `gh`-driven channel-whoami-slash E2E harness creates a real channel-thread
   issue through `gitclaw-channel-ingest.yml`, posts `@gitclaw /channels
   whoami --identity-id ... --role ... --message-id ...` on that mirrored

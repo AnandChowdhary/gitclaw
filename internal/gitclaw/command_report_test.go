@@ -91,6 +91,7 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"`gitclaw artifacts verify` command=`/artifacts`",
 		"`gitclaw channels verify` command=`/channels`",
 		"`gitclaw channels risk` command=`/channels`",
+		"queue mirrored channel model-status replies without switching models",
 		"`gitclaw bundles catalog` command=`/bundles`",
 		"`gitclaw bundles list` command=`/bundles`",
 		"`gitclaw bundles risk` command=`/bundles`",

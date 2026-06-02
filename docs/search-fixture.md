@@ -130,6 +130,7 @@ channel link unique search fixture phrase => GITCLAW_CHANNEL_LINK_CONTEXT_V1
 channel access request unique search fixture phrase => GITCLAW_CHANNEL_ACCESS_REQUEST_CONTEXT_V1
 channel contact unique search fixture phrase => GITCLAW_CHANNEL_CONTACT_CONTEXT_V1
 channel platform unique search fixture phrase => GITCLAW_CHANNEL_PLATFORM_CONTEXT_V1
+channel model status unique search fixture phrase => GITCLAW_CHANNEL_MODEL_STATUS_CONTEXT_V1
 channel whoami unique search fixture phrase => GITCLAW_CHANNEL_WHOAMI_CONTEXT_V1
 channel tool request unique search fixture phrase => GITCLAW_CHANNEL_TOOL_REQUEST_CONTEXT_V1
 channel tool rehearsal unique search fixture phrase => GITCLAW_CHANNEL_TOOL_REHEARSAL_CONTEXT_V1

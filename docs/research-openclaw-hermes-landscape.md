@@ -4956,6 +4956,33 @@ Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 gateway (`https://hermes-agent.nousresearch.com/docs/user-guide/messaging/`),
 Hermes security guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/security.md`).
 
+## 2026-06-02 Channel Model Status Follow-Up
+
+OpenClaw exposes model/runtime visibility as an operator surface, including a
+models CLI that can show provider and model status. Hermes carries the same
+shape into messaging with user-visible runtime commands such as `/model`.
+GitClaw should let a Slack/Telegram participant ask the same question from the
+mirrored channel issue, but the answer should still be GitHub-native: a queued
+channel reply, a body-free source receipt, and no socket or provider webhook
+server.
+
+GitClaw's serverless version is `@gitclaw /channels model --message-id <id>`.
+It queues one provider-facing model-status message back to the mirrored
+Slack/Telegram thread with the effective provider, model, fallback count,
+endpoint host, read-only run mode, and default model policy. The source receipt
+stays body-free for thread/message/status ids and channel bodies while still
+showing the non-secret provider/model summary. The action does not call a
+model, switch models, write model configuration, mutate the repository, call
+provider APIs, or create an artifact issue. Acceptance requires live E2E for
+model-status queueing, metadata-only outbox discovery, duplicate notification
+suppression, explicit no-model/no-config/no-provider-API flags, and a real
+GitHub Models repo-reader/search follow-up on the same channel issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), OpenClaw models CLI
+docs (`https://docs.openclaw.ai/cli/models`), Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`),
+GitHub Models inference REST docs (`https://docs.github.com/en/rest/models/inference`).
+
 ## 2026-06-02 Channel Platform Status Follow-Up
 
 OpenClaw treats the gateway/channel layer as an explicit control surface rather
