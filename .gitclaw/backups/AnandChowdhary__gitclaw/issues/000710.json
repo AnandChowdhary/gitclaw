@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T11:02:10Z",
+  "generated_at": "2026-06-02T11:03:46Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 710,
     "title": "GitClaw telegram thread channel-retro-e2e-20260602t110008z",
@@ -51,6 +51,15 @@
       "CommentID": 4601724484,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Retro Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#710`\n- requested_channel_command: `/channels retro`\n- channel_retro_status: `recorded`\n- retro_issue: `#711`\n- retro_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/711`\n- retro_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#710`\n- notification_comment_id: `4601735307`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `cbf283187782`\n- source_message_id_sha256_12: `f0c9a7130425`\n- notify_message_id_sha256_12: `964606d64be6`\n- notify_message_id_auto: `false`\n- retro_id_sha256_12: `be3249c64a5b`\n- retro_id_auto: `false`\n- retro_title_sha256_12: `6767206b9326`\n- retro_title_bytes: `29`\n- retro_title_lines: `1`\n- retro_went_well_sha256_12: `2cab5db3e227`\n- retro_went_well_bytes: `73`\n- retro_went_well_lines: `1`\n- retro_rough_edges_sha256_12: `30edee980ae4`\n- retro_rough_edges_bytes: `65`\n- retro_rough_edges_lines: `1`\n- retro_next_sha256_12: `f01d190f511d`\n- retro_next_bytes: `63`\n- retro_next_lines: `1`\n- notification_body_sha256_12: `66db782863f7`\n- target_from_current_channel_issue: `true`\n- raw_retro_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_retro_title_included: `false`\n- raw_retro_went_well_included: `false`\n- raw_retro_rough_edges_included: `false`\n- raw_retro_next_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_retro_action_change: `true`\n- issue_title_sha256_12: `62e880284e03`\n\nGitClaw recorded a mirrored channel retrospective as a durable GitHub issue, then queued a provider-facing link back to the original thread. The retro issue contains the human-readable title, went-well notes, rough edges, and next steps; this source receipt keeps provider IDs, retro IDs, section text, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the retro-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent retro links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate retro issues are suppressed by `retro_id`; duplicate retro-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the retro issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4601735577,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-02T11:01:48Z",
       "updated_at": "2026-06-02T11:01:48Z"
+    },
+    {
+      "id": 4601735307,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-retro-e2e-20260602t110008z\" message_id=\"retro-notify-20260602t110008z\" author=\"gitclaw\" --\u003e\nGitClaw channel retro recorded.\n\nRetro: #711\nURL: https://github.com/AnandChowdhary/gitclaw/issues/711\nTitle: Launch retro 20260602t110008z\n\nRecorded in the linked GitHub issue.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T11:03:14Z",
+      "updated_at": "2026-06-02T11:03:14Z"
+    },
+    {
+      "id": 4601735577,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26815487603\" event_id=\"comment-4601724484\" model=\"gitclaw/channels\" idempotency_key=\"1368117ac0142971ff5244b0058817b4\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26815487603\" --\u003e\n## GitClaw Channel Retro Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#710`\n- requested_channel_command: `/channels retro`\n- channel_retro_status: `recorded`\n- retro_issue: `#711`\n- retro_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/711`\n- retro_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#710`\n- notification_comment_id: `4601735307`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `cbf283187782`\n- source_message_id_sha256_12: `f0c9a7130425`\n- notify_message_id_sha256_12: `964606d64be6`\n- notify_message_id_auto: `false`\n- retro_id_sha256_12: `be3249c64a5b`\n- retro_id_auto: `false`\n- retro_title_sha256_12: `6767206b9326`\n- retro_title_bytes: `29`\n- retro_title_lines: `1`\n- retro_went_well_sha256_12: `2cab5db3e227`\n- retro_went_well_bytes: `73`\n- retro_went_well_lines: `1`\n- retro_rough_edges_sha256_12: `30edee980ae4`\n- retro_rough_edges_bytes: `65`\n- retro_rough_edges_lines: `1`\n- retro_next_sha256_12: `f01d190f511d`\n- retro_next_bytes: `63`\n- retro_next_lines: `1`\n- notification_body_sha256_12: `66db782863f7`\n- target_from_current_channel_issue: `true`\n- raw_retro_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_retro_title_included: `false`\n- raw_retro_went_well_included: `false`\n- raw_retro_rough_edges_included: `false`\n- raw_retro_next_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_retro_action_change: `true`\n- issue_title_sha256_12: `62e880284e03`\n\nGitClaw recorded a mirrored channel retrospective as a durable GitHub issue, then queued a provider-facing link back to the original thread. The retro issue contains the human-readable title, went-well notes, rough edges, and next steps; this source receipt keeps provider IDs, retro IDs, section text, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the retro-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent retro links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate retro issues are suppressed by `retro_id`; duplicate retro-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the retro issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T11:03:17Z",
+      "updated_at": "2026-06-02T11:03:17Z"
     }
   ]
 }
