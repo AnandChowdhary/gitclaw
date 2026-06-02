@@ -682,6 +682,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels request-run search_files --id <id> --message-id <id>
 @gitclaw /channels rehearse-skill repo-reader --id <id> --message-id <id>
 @gitclaw /channels rehearse-soul --target soul --id <id> --message-id <id>
+@gitclaw /channels rehearse-backup --id <id> --message-id <id>
 @gitclaw /channels remind --reminder-id <id> --message-id <id> --at <time>
 @gitclaw /channels done --message-id <id>
 gitclaw proactive list
@@ -951,6 +952,13 @@ back to the Slack/Telegram thread. The channel action does not call a model,
 generate candidate soul text, edit `.gitclaw/` files, or mutate the repository;
 the linked rehearsal issue is where a normal GitHub Models conversation can
 exercise the current high-authority context with prompt/tool/usage telemetry.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+rehearse-backup --id <id> --message-id <id>` opens or reuses a normal GitHub
+backup recovery rehearsal issue and queues a provider-facing rehearsal link
+back to the Slack/Telegram thread. The channel action does not call a model,
+read backup payloads, restore files, replay GitHub API calls, or mutate the
+repository; the linked rehearsal issue is where a normal GitHub Models
+conversation can exercise recovery procedures with prompt/tool/usage telemetry.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels remind
 --reminder-id <id> --message-id <id> --at <RFC3339-or-date>` creates or reuses
 a normal GitHub reminder issue with a `not_before` due gate, queues a
@@ -1053,6 +1061,7 @@ scripts/e2e/github-memory-rehearse-issue.sh
 scripts/e2e/github-backup-rehearse-issue.sh
 scripts/e2e/github-backup-restore-request-issue.sh
 scripts/e2e/github-backup-restore-request-channel-notify.sh
+scripts/e2e/github-channel-backup-rehearsal-slash.sh
 scripts/e2e/github-agents-catalog-report.sh
 scripts/e2e/github-agents-provenance-report.sh
 scripts/e2e/github-agents-risk-report.sh
@@ -1517,6 +1526,14 @@ issue, queues a provider-facing rehearsal link back to the mirrored thread,
 checks duplicate rehearsal and notification suppression, exposes the
 rehearsal-link notification through metadata-only outbox, and then continues on
 the rehearsal issue with a real GitHub Models repo-reader/search follow-up.
+The channel-backup-rehearsal slash harness turns the operator console into a
+recovery practice surface: a channel-ingested issue receives `@gitclaw
+/channels rehearse-backup`, creates or reuses a GitHub backup rehearsal issue,
+queues a provider-facing rehearsal link back to the mirrored thread, checks
+duplicate rehearsal and notification suppression, proves the channel issue was
+captured on the `gitclaw-backups` branch, exposes the rehearsal-link
+notification through metadata-only outbox, and then continues on the rehearsal
+issue with a real GitHub Models repo-reader/search follow-up.
 The channel-reminder slash harness turns the operator console into a scheduled
 nudge surface: a channel-ingested issue receives `@gitclaw /channels remind`,
 creates or reuses a GitHub reminder issue with a normalized `not_before` gate,

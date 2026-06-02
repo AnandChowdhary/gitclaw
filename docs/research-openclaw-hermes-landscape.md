@@ -212,6 +212,31 @@ persistent-memory docs
 and Hermes messaging MCP docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp/`).
 
+2026-06-02 channel-backup-rehearsal follow-up: OpenClaw's channel docs make
+Slack, Telegram, and other providers first-class message surfaces, while its
+tools/plugins docs separate typed tools, skills, plugin capabilities, channel
+messaging, cron, and gateway operations behind allow/deny controls. Hermes'
+persistent-memory docs add the useful distinction between bounded always-on
+memory and searchable session history, and Hermes MCP/tool-search docs show the
+same safety pressure in tool catalogs: expose only the relevant external tools
+instead of stuffing every capability into each turn. GitClaw's no-server
+version should make recovery practice channel-native without turning provider
+messages into raw restores: a Slack/Telegram thread can request
+`@gitclaw /channels rehearse-backup --id <id> --message-id <id>`, GitHub opens
+or reuses a normal `gitclaw:backup-rehearsal-issue`, the channel receives a
+rehearsal link, and any model-backed recovery discussion happens only on that
+GitHub issue with prompt/tool/usage telemetry. The channel action remains
+deterministic and body-free: no model call, no backup payload reads, no restore,
+no GitHub API replay, no provider API delivery, and no repository mutation.
+Sources: OpenClaw channel docs (`https://docs.openclaw.ai/channels`),
+OpenClaw tools/plugins docs (`https://docs.openclaw.ai/tools/index`), Hermes
+persistent-memory docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/memory/`),
+Hermes MCP docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp/`), and
+Hermes tool-search docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-search`).
+
 2026-05-30 skill-risk follow-up: current OpenClaw plugin-hook docs make prompt,
 model, tool-call, and heartbeat extension points explicit, while Hermes'
 toolsets and MCP docs emphasize filtering exposed capabilities per task. Recent
