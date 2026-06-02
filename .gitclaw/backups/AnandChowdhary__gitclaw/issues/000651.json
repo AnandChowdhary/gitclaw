@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T04:02:43Z",
+  "generated_at": "2026-06-02T04:04:23Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4598607082,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels propose-memory --target long-term --id weekly-ops-memory-20260602t035923z --message-id memory-proposal-ingest-20260602t035923z --notify-message-id memory-proposal-notify-20260602t035923z\n\nDo not leak duplicate hidden token: NOECHO_CHANNEL_MEMORY_PROPOSAL_DUPLICATE_20260602t035923z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4598610401,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Memory Proposal Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#651`\n- source_comment_id: `4598610401`\n- source_kind: `channel_comment`\n- requested_channel_command: `/channels propose-memory`\n- channel_memory_proposal_status: `duplicate`\n- memory_proposal_issue: `#652`\n- memory_proposal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/652`\n- memory_proposal_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#651`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- channel: `telegram`\n- thread_id_sha256_12: `967818c69d94`\n- source_message_id_sha256_12: `1c9d68a6f9ed`\n- notify_message_id_sha256_12: `b11aa6afcd1d`\n- notify_message_id_auto: `false`\n- memory_proposal_id_sha256_12: `5a72dbd1cff6`\n- memory_proposal_id_auto: `false`\n- requested_target_sha256_12: `3252503ad6ce`\n- requested_target_terms: `1`\n- target_path_sha256_12: `db7528fe0fc4`\n- normalized_target_kind: `long-term`\n- target_present: `true`\n- target_sha256_12: `9179d59e37bc`\n- target_bytes: `11916`\n- target_lines: `175`\n- memory_budget_bytes: `12000`\n- memory_budget_remaining_bytes: `84`\n- dated_memory_notes: `1`\n- latest_memory_note_sha256_12: `6506656d013e`\n- memory_validation_status: `ok`\n- memory_validation_errors: `0`\n- memory_validation_warnings: `0`\n- notification_body_sha256_12: `9c391eeb9e7c`\n- notification_body_bytes: `531`\n- notification_body_lines: `12`\n- target_from_current_channel_issue: `true`\n- proposal_store: `github-issue-to-git-reviewed-memory-file`\n- review_pr_required: `true`\n- model_call_performed: `false`\n- candidate_memory_generation_allowed: `false`\n- memory_file_written: `false`\n- raw_memory_proposal_id_included: `false`\n- raw_target_path_included: `false`\n- raw_latest_memory_note_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_existing_memory_included: `false`\n- raw_candidate_memory_included: `false`\n- provider_delivery_performed: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `5c45cd1f19fa`\n- source_bytes: `300`\n- source_lines: `3`\n- llm_e2e_required_after_channel_memory_proposal_change: `true`\n- issue_title_sha256_12: `c3b2628bf861`\n\nGitClaw opened or reused a GitHub issue for a durable memory proposal from a mirrored channel thread, then queued a provider-facing proposal link back to that thread. This action does not call a model, generate candidate memory, write `.gitclaw/` memory files, copy raw channel bodies, or mutate the repository.\n\n### Proposal Review Path\n- continue on memory proposal issue: `#652`\n- ask a normal `@gitclaw` follow-up on the proposal issue to discuss the reviewed memory change\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4598614668,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T04:02:19Z",
       "updated_at": "2026-06-02T04:02:19Z"
+    },
+    {
+      "id": 4598610401,
+      "body": "@gitclaw /channels propose-memory --target long-term --id weekly-ops-memory-20260602t035923z --message-id memory-proposal-ingest-20260602t035923z --notify-message-id memory-proposal-notify-20260602t035923z\n\nDo not leak duplicate hidden token: NOECHO_CHANNEL_MEMORY_PROPOSAL_DUPLICATE_20260602t035923z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T04:03:02Z",
+      "updated_at": "2026-06-02T04:03:02Z"
+    },
+    {
+      "id": 4598614668,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26797624171\" event_id=\"comment-4598610401\" model=\"gitclaw/channels\" idempotency_key=\"cf481b8e13adb65fc04022859fed829a\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26797624171\" --\u003e\n## GitClaw Channel Memory Proposal Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#651`\n- source_comment_id: `4598610401`\n- source_kind: `channel_comment`\n- requested_channel_command: `/channels propose-memory`\n- channel_memory_proposal_status: `duplicate`\n- memory_proposal_issue: `#652`\n- memory_proposal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/652`\n- memory_proposal_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#651`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- channel: `telegram`\n- thread_id_sha256_12: `967818c69d94`\n- source_message_id_sha256_12: `1c9d68a6f9ed`\n- notify_message_id_sha256_12: `b11aa6afcd1d`\n- notify_message_id_auto: `false`\n- memory_proposal_id_sha256_12: `5a72dbd1cff6`\n- memory_proposal_id_auto: `false`\n- requested_target_sha256_12: `3252503ad6ce`\n- requested_target_terms: `1`\n- target_path_sha256_12: `db7528fe0fc4`\n- normalized_target_kind: `long-term`\n- target_present: `true`\n- target_sha256_12: `9179d59e37bc`\n- target_bytes: `11916`\n- target_lines: `175`\n- memory_budget_bytes: `12000`\n- memory_budget_remaining_bytes: `84`\n- dated_memory_notes: `1`\n- latest_memory_note_sha256_12: `6506656d013e`\n- memory_validation_status: `ok`\n- memory_validation_errors: `0`\n- memory_validation_warnings: `0`\n- notification_body_sha256_12: `9c391eeb9e7c`\n- notification_body_bytes: `531`\n- notification_body_lines: `12`\n- target_from_current_channel_issue: `true`\n- proposal_store: `github-issue-to-git-reviewed-memory-file`\n- review_pr_required: `true`\n- model_call_performed: `false`\n- candidate_memory_generation_allowed: `false`\n- memory_file_written: `false`\n- raw_memory_proposal_id_included: `false`\n- raw_target_path_included: `false`\n- raw_latest_memory_note_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_existing_memory_included: `false`\n- raw_candidate_memory_included: `false`\n- provider_delivery_performed: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `5c45cd1f19fa`\n- source_bytes: `300`\n- source_lines: `3`\n- llm_e2e_required_after_channel_memory_proposal_change: `true`\n- issue_title_sha256_12: `c3b2628bf861`\n\nGitClaw opened or reused a GitHub issue for a durable memory proposal from a mirrored channel thread, then queued a provider-facing proposal link back to that thread. This action does not call a model, generate candidate memory, write `.gitclaw/` memory files, copy raw channel bodies, or mutate the repository.\n\n### Proposal Review Path\n- continue on memory proposal issue: `#652`\n- ask a normal `@gitclaw` follow-up on the proposal issue to discuss the reviewed memory change\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T04:03:55Z",
+      "updated_at": "2026-06-02T04:03:55Z"
     }
   ]
 }
