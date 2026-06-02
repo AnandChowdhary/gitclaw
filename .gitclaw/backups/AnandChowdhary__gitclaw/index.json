@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T03:20:52Z",
+  "generated_at": "2026-06-02T03:22:28Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 558,
   "issues": [
@@ -7037,15 +7037,15 @@
       "number": 647,
       "title": "GitClaw telegram thread channel-skill-proposal-e2e-20260602t031735z",
       "path": "issues/000647.json",
-      "backup_generated_at": "2026-06-02T03:20:51Z",
+      "backup_generated_at": "2026-06-02T03:22:27Z",
       "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 5,
-      "transcript_messages": 5
+      "comment_count": 7,
+      "transcript_messages": 7
     }
   ]
 }
