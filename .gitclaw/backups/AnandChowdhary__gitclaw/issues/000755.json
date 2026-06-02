@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T22:48:54Z",
+  "generated_at": "2026-06-02T22:50:33Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4607602004,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels rollback-status --message-id checkpoint-status-ingest-20260602t224526z --notify-message-id checkpoint-status-notify-20260602t224526z --status-id checkpoint-status-20260602t224526z\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_CHECKPOINT_STATUS_DUPLICATE_20260602t224526z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4607605759,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Checkpoint Status Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#755`\n- requested_channel_command: `/channels rollback-status`\n- channel_checkpoint_status_status: `duplicate`\n- checkpoint_snapshot_mode: `provider-facing-rollback-readiness`\n- checkpoint_status: `clean`\n- checkpoint_risk_status: `ok`\n- checkpoint_strategy: `git-history-plus-backup-branch`\n- rollback_mode: `inspect-only`\n- notification_target_issue: `#755`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `e37eec112f78`\n- source_message_id_sha256_12: `d05872b7d24a`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `08a9795ce687`\n- notify_message_id_auto: `false`\n- checkpoint_status_id_sha256_12: `c19280985ce1`\n- checkpoint_status_id_auto: `false`\n- git_available: `true`\n- git_repository: `true`\n- worktree_root: `.`\n- branch: `main`\n- head_commit: `bfddd33ad08c`\n- commits_available: `2`\n- recent_commits_returned: `2`\n- recent_commit_limit: `5`\n- recent_commit_index_sha256_12: `3e9b6fcf886f`\n- worktree_clean: `true`\n- staged_changes: `0`\n- unstaged_changes: `0`\n- untracked_files: `0`\n- backup_branch: `gitclaw-backups`\n- backup_branch_local_ref: `false`\n- surfaces_with_risk_findings: `0`\n- checkpoint_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- risk_finding_index_sha256_12: `none`\n- raw_diffs_included: `false`\n- raw_file_bodies_included: `false`\n- restore_operations_enabled: `false`\n- git_reset_allowed: `false`\n- git_clean_allowed: `false`\n- checkout_mutation_allowed: `false`\n- pre_restore_snapshot_required: `true`\n- rollback_diff_preview_required: `true`\n- backup_manifest_required_for_restore: `true`\n- shadow_store_path_included: `false`\n- notification_body_sha256_12: `02dcc571800d`\n- notification_body_bytes: `1520`\n- notification_body_lines: `50`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- restore_performed: `false`\n- git_reset_performed: `false`\n- git_clean_performed: `false`\n- checkout_mutation_performed: `false`\n- raw_diff_generation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_checkpoint_status_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_commit_subjects_included: `false`\n- raw_diffs_included_in_notification: `false`\n- raw_file_bodies_included_in_notification: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_channel_checkpoint_status_change: `true`\n- issue_title_sha256_12: `f256e6d3d86f`\n\nGitClaw queued a provider-facing checkpoint and rollback readiness card on the canonical channel issue. The action inspects only git metadata and checkpoint risk gates; it does not generate raw diffs, print file bodies or commit subjects, restore, reset, clean, checkout, mutate repository files, call a model, or call provider APIs. The source receipt keeps thread ids, message ids, status ids, channel bodies, issue bodies, comments, prompts, tool outputs, raw diffs, file bodies, and credential values out of band.\n\n### Follow-Up Delivery\n- provider gateways read checkpoint-status cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent checkpoint-status cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate checkpoint-status notifications are suppressed by `channel + notify_message_id`\n- use `/channels rehearse-checkpoint --target HEAD~1` when the channel message should become a rollback rehearsal lane",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4607609915,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T22:48:24Z",
       "updated_at": "2026-06-02T22:48:24Z"
+    },
+    {
+      "id": 4607605759,
+      "body": "@gitclaw /channels rollback-status --message-id checkpoint-status-ingest-20260602t224526z --notify-message-id checkpoint-status-notify-20260602t224526z --status-id checkpoint-status-20260602t224526z\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_CHECKPOINT_STATUS_DUPLICATE_20260602t224526z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T22:49:11Z",
+      "updated_at": "2026-06-02T22:49:11Z"
+    },
+    {
+      "id": 4607609915,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26852641934\" event_id=\"comment-4607605759\" model=\"gitclaw/channels\" idempotency_key=\"57d8f011d54a54f47ab8a86babdaa9af\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26852641934\" --\u003e\n## GitClaw Channel Checkpoint Status Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#755`\n- requested_channel_command: `/channels rollback-status`\n- channel_checkpoint_status_status: `duplicate`\n- checkpoint_snapshot_mode: `provider-facing-rollback-readiness`\n- checkpoint_status: `clean`\n- checkpoint_risk_status: `ok`\n- checkpoint_strategy: `git-history-plus-backup-branch`\n- rollback_mode: `inspect-only`\n- notification_target_issue: `#755`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `e37eec112f78`\n- source_message_id_sha256_12: `d05872b7d24a`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `08a9795ce687`\n- notify_message_id_auto: `false`\n- checkpoint_status_id_sha256_12: `c19280985ce1`\n- checkpoint_status_id_auto: `false`\n- git_available: `true`\n- git_repository: `true`\n- worktree_root: `.`\n- branch: `main`\n- head_commit: `bfddd33ad08c`\n- commits_available: `2`\n- recent_commits_returned: `2`\n- recent_commit_limit: `5`\n- recent_commit_index_sha256_12: `3e9b6fcf886f`\n- worktree_clean: `true`\n- staged_changes: `0`\n- unstaged_changes: `0`\n- untracked_files: `0`\n- backup_branch: `gitclaw-backups`\n- backup_branch_local_ref: `false`\n- surfaces_with_risk_findings: `0`\n- checkpoint_risk_findings: `0`\n- high_risk_findings: `0`\n- warning_risk_findings: `0`\n- info_risk_findings: `0`\n- risk_finding_index_sha256_12: `none`\n- raw_diffs_included: `false`\n- raw_file_bodies_included: `false`\n- restore_operations_enabled: `false`\n- git_reset_allowed: `false`\n- git_clean_allowed: `false`\n- checkout_mutation_allowed: `false`\n- pre_restore_snapshot_required: `true`\n- rollback_diff_preview_required: `true`\n- backup_manifest_required_for_restore: `true`\n- shadow_store_path_included: `false`\n- notification_body_sha256_12: `02dcc571800d`\n- notification_body_bytes: `1520`\n- notification_body_lines: `50`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- restore_performed: `false`\n- git_reset_performed: `false`\n- git_clean_performed: `false`\n- checkout_mutation_performed: `false`\n- raw_diff_generation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_checkpoint_status_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_commit_subjects_included: `false`\n- raw_diffs_included_in_notification: `false`\n- raw_file_bodies_included_in_notification: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- credential_values_included: `false`\n- llm_e2e_required_after_channel_checkpoint_status_change: `true`\n- issue_title_sha256_12: `f256e6d3d86f`\n\nGitClaw queued a provider-facing checkpoint and rollback readiness card on the canonical channel issue. The action inspects only git metadata and checkpoint risk gates; it does not generate raw diffs, print file bodies or commit subjects, restore, reset, clean, checkout, mutate repository files, call a model, or call provider APIs. The source receipt keeps thread ids, message ids, status ids, channel bodies, issue bodies, comments, prompts, tool outputs, raw diffs, file bodies, and credential values out of band.\n\n### Follow-Up Delivery\n- provider gateways read checkpoint-status cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent checkpoint-status cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate checkpoint-status notifications are suppressed by `channel + notify_message_id`\n- use `/channels rehearse-checkpoint --target HEAD~1` when the channel message should become a rollback rehearsal lane",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T22:50:05Z",
+      "updated_at": "2026-06-02T22:50:05Z"
     }
   ]
 }
