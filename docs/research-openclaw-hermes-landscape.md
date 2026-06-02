@@ -212,6 +212,27 @@ OpenClaw docs (`https://docs.openclaw.ai/`), OpenClaw channel docs
 and Hermes messaging docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/messaging/`).
 
+2026-06-02 channel-tool-info follow-up: Hermes' progressive-disclosure bridge
+does not stop at `tool_search`; it includes a focused describe/load step before
+a deferred tool is called, and the MCP docs reinforce that tools should stay
+capability-aware rather than globally dumped into every context. GitClaw's
+channel version should mirror that as `@gitclaw /channels tool-info <tool>
+--message-id <id> --notify-message-id <id>`: a Slack/Telegram user can inspect
+one tool card after search, while GitHub remains the only state and execution
+surface. The provider reply may include the matched tool name, source, mode,
+enabled/disabled/allowlist state, mutation flag, trigger hash, active-output
+counts, active-output hashes, output sizes, and validation summary. It must not
+include raw trigger text, raw tool inputs, tool output bodies, schemas,
+prompts, issue/comment bodies, or channel bodies. The source receipt should be
+stricter with only route/thread/message/info/tool/result hashes and counts plus
+explicit no-tool-execution/no-shell-execution/no-MCP-launch/no-toolset-
+activation/no-model-call/no-repository-mutation/no-provider-API flags. Sources:
+Hermes tool-search docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-search`),
+Hermes MCP docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp/`), and
+OpenClaw channel docs (`https://docs.openclaw.ai/cli/channels`).
+
 2026-06-02 channel-decision follow-up: current OpenClaw channel docs emphasize
 that chat surfaces are runtime accounts behind one Gateway, and the channel CLI
 separates socket/provider health from stored sessions. Hermes' cron docs point
