@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T03:24:03Z",
+  "generated_at": "2026-06-02T03:41:13Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 559,
+  "count": 560,
   "issues": [
     {
       "number": 3,
@@ -7053,6 +7053,20 @@
       "path": "issues/000648.json",
       "backup_generated_at": "2026-06-02T03:24:02Z",
       "event_name": "issue_comment",
+      "comment_count": 2,
+      "transcript_messages": 3
+    },
+    {
+      "number": 649,
+      "title": "GitClaw telegram thread channel-soul-proposal-e2e-20260602t033924z",
+      "path": "issues/000649.json",
+      "backup_generated_at": "2026-06-02T03:41:12Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:done",
+        "gitclaw:channel"
+      ],
       "comment_count": 2,
       "transcript_messages": 3
     }
