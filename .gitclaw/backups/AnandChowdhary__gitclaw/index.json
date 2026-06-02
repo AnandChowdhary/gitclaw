@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T01:10:22Z",
+  "generated_at": "2026-06-02T01:27:45Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 547,
+  "count": 548,
   "issues": [
     {
       "number": 3,
@@ -6895,6 +6895,20 @@
       "event_name": "issue_comment",
       "labels": [
         "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
+    },
+    {
+      "number": 634,
+      "title": "GitClaw telegram thread channel-session-handoff-e2e-20260602t012554z",
+      "path": "issues/000634.json",
+      "backup_generated_at": "2026-06-02T01:27:43Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:done",
+        "gitclaw:channel"
       ],
       "comment_count": 2,
       "transcript_messages": 3
