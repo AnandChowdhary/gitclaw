@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T20:01:57Z",
+  "generated_at": "2026-06-02T20:03:31Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 745,
     "title": "GitClaw telegram thread channel-tool-search-e2e-20260602t195933z",
@@ -51,6 +51,15 @@
       "CommentID": 4606549224,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Tool Search Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#745`\n- requested_channel_command: `/channels tool-search`\n- channel_tool_search_status: `queued`\n- tool_search_status: `ok`\n- search_mode: `deterministic-tool-contracts-local-lexical`\n- notification_target_issue: `#745`\n- notification_comment_id: `4606560233`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `a39bddcf1446`\n- source_message_id_sha256_12: `4c592d7c68b9`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `c00bc697af68`\n- notify_message_id_auto: `false`\n- tool_search_id_sha256_12: `60f56902644b`\n- tool_search_id_auto: `false`\n- query_sha256_12: `c9f8123bd272`\n- query_terms: `1`\n- query_bytes: `9`\n- query_source: `positional`\n- max_results: `5`\n- available_tools: `5`\n- active_tool_outputs: `3`\n- matched_contracts: `1`\n- matched_outputs: `1`\n- results_returned: `2`\n- matched_tool_names_sha256_12: `61b4182dceb8`\n- matched_tool_index_sha256_12: `66b132a58450`\n- notification_body_sha256_12: `de7aa1c47da4`\n- notification_body_bytes: `1078`\n- notification_body_lines: `18`\n- target_from_current_channel_issue: `true`\n- tool_execution_allowed: `false`\n- tool_execution_performed: `false`\n- shell_execution_allowed: `false`\n- mcp_server_launch_allowed: `false`\n- toolset_activation_allowed: `false`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_query_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_tool_search_id_included: `false`\n- raw_tool_names_included: `false`\n- raw_tool_triggers_included: `false`\n- raw_tool_inputs_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_tool_schemas_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompts_included: `false`\n- llm_e2e_required_after_channel_tool_search_change: `true`\n- issue_title_sha256_12: `478a4a224396`\n\nGitClaw searched deterministic tool contracts and active tool-output metadata, then queued a provider-facing capability search result. The source receipt keeps raw tool names, triggers, schemas, inputs, outputs, search queries, and channel bodies out of band. The action does not call a model, execute tools, launch MCP servers, activate toolsets, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read tool-search results with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent tool-search results with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate tool-search notifications are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4606560384,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-02T20:01:29Z",
       "updated_at": "2026-06-02T20:01:29Z"
+    },
+    {
+      "id": 4606560233,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-tool-search-e2e-20260602t195933z\" message_id=\"tool-search-notify-20260602t195933z\" author=\"gitclaw\" --\u003e\nGitClaw channel tool search\n\nSearch status: ok\nQuery hash: c9f8123bd272\nQuery terms: 1\nMax results: 5\nAvailable tools: 5\nActive tool outputs: 3\nMatched contracts: 1\nMatched outputs: 1\nResults returned: 2\nSearch id hash: 60f56902644b\n\nResults:\n- kind=contract name=gitclaw.read_file score=120 match_fields=name enabled=true disabled_by_config=false blocked_by_allowlist=false mode=read-only trigger_sha256_12=ca3dffec4f72\n- kind=active-output name=gitclaw.search_files score=37 match_fields=input input_sha256_12=74ba44d83382 output_bytes=1979 output_lines=24 output_sha256_12=38b184f03edb\n\nRaw tool inputs, tool output bodies, tool schemas, channel bodies, issue bodies, comment bodies, prompts, and raw search queries are not included. Tool execution: not performed by this action. Shell execution: not performed by this action. MCP server launch: not performed by this action. Toolset activation: not performed by this action. Model call: not performed by this action. Repository mutation: not performed by this action. Provider delivery: queued through GitHub channel outbox.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T20:03:01Z",
+      "updated_at": "2026-06-02T20:03:01Z"
+    },
+    {
+      "id": 4606560384,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26844731071\" event_id=\"comment-4606549224\" model=\"gitclaw/channels\" idempotency_key=\"ee1ed284ee3cf5ef8b1713e0a9dc49c5\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26844731071\" --\u003e\n## GitClaw Channel Tool Search Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#745`\n- requested_channel_command: `/channels tool-search`\n- channel_tool_search_status: `queued`\n- tool_search_status: `ok`\n- search_mode: `deterministic-tool-contracts-local-lexical`\n- notification_target_issue: `#745`\n- notification_comment_id: `4606560233`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `a39bddcf1446`\n- source_message_id_sha256_12: `4c592d7c68b9`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `c00bc697af68`\n- notify_message_id_auto: `false`\n- tool_search_id_sha256_12: `60f56902644b`\n- tool_search_id_auto: `false`\n- query_sha256_12: `c9f8123bd272`\n- query_terms: `1`\n- query_bytes: `9`\n- query_source: `positional`\n- max_results: `5`\n- available_tools: `5`\n- active_tool_outputs: `3`\n- matched_contracts: `1`\n- matched_outputs: `1`\n- results_returned: `2`\n- matched_tool_names_sha256_12: `61b4182dceb8`\n- matched_tool_index_sha256_12: `66b132a58450`\n- notification_body_sha256_12: `de7aa1c47da4`\n- notification_body_bytes: `1078`\n- notification_body_lines: `18`\n- target_from_current_channel_issue: `true`\n- tool_execution_allowed: `false`\n- tool_execution_performed: `false`\n- shell_execution_allowed: `false`\n- mcp_server_launch_allowed: `false`\n- toolset_activation_allowed: `false`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_query_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_tool_search_id_included: `false`\n- raw_tool_names_included: `false`\n- raw_tool_triggers_included: `false`\n- raw_tool_inputs_included: `false`\n- raw_tool_outputs_included: `false`\n- raw_tool_schemas_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompts_included: `false`\n- llm_e2e_required_after_channel_tool_search_change: `true`\n- issue_title_sha256_12: `478a4a224396`\n\nGitClaw searched deterministic tool contracts and active tool-output metadata, then queued a provider-facing capability search result. The source receipt keeps raw tool names, triggers, schemas, inputs, outputs, search queries, and channel bodies out of band. The action does not call a model, execute tools, launch MCP servers, activate toolsets, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read tool-search results with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent tool-search results with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate tool-search notifications are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T20:03:02Z",
+      "updated_at": "2026-06-02T20:03:02Z"
     }
   ]
 }
