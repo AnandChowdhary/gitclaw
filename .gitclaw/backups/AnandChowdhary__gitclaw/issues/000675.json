@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T07:33:51Z",
+  "generated_at": "2026-06-02T07:35:14Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 675,
     "title": "GitClaw telegram thread channel-link-e2e-20260602t073205z",
@@ -51,6 +51,15 @@
       "CommentID": 4599811649,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Link Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#675`\n- requested_channel_command: `/channels link`\n- channel_link_status: `saved`\n- link_issue: `#676`\n- link_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/676`\n- link_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#675`\n- notification_comment_id: `4599822709`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `9bbb95efdaf6`\n- source_message_id_sha256_12: `2758a74b2237`\n- notify_message_id_sha256_12: `650370fdae25`\n- notify_message_id_auto: `false`\n- link_id_sha256_12: `982b0809bfd6`\n- link_id_auto: `false`\n- link_title_sha256_12: `bb72a1782fd2`\n- link_title_bytes: `49`\n- link_title_lines: `1`\n- link_url_sha256_12: `cb9e8156c02c`\n- link_url_bytes: `107`\n- link_notes_sha256_12: `b1f07cf89910`\n- link_notes_bytes: `69`\n- link_notes_lines: `1`\n- notification_body_sha256_12: `a44a6ade7a9f`\n- target_from_current_channel_issue: `true`\n- raw_link_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_link_title_included: `false`\n- raw_link_url_included: `false`\n- raw_link_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_link_action_change: `true`\n- issue_title_sha256_12: `e4b8ea12d396`\n\nGitClaw saved channel-origin link metadata as a durable GitHub link-card issue, then queued a provider-facing issue link back to the original thread. The link-card issue contains the human-readable saved context and a URL hash; this source receipt keeps provider IDs, link IDs, raw URLs, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the link-card notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent link-card links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate link-card issues are suppressed by `link_id`; duplicate link-card notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the link issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4599822978,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-02T07:33:26Z",
       "updated_at": "2026-06-02T07:33:26Z"
+    },
+    {
+      "id": 4599822709,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-link-e2e-20260602t073205z\" message_id=\"link-notify-20260602t073205z\" author=\"gitclaw\" --\u003e\nGitClaw channel link card saved.\n\nLink card: #676\nURL: https://github.com/AnandChowdhary/gitclaw/issues/676\nTitle: Shape GitHub-native channel link 20260602t073205z\n\nSaved in the linked GitHub issue.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T07:34:45Z",
+      "updated_at": "2026-06-02T07:34:45Z"
+    },
+    {
+      "id": 4599822978,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26805385750\" event_id=\"comment-4599811649\" model=\"gitclaw/channels\" idempotency_key=\"00490a05d112e7b34ae54933b1ca18dd\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26805385750\" --\u003e\n## GitClaw Channel Link Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#675`\n- requested_channel_command: `/channels link`\n- channel_link_status: `saved`\n- link_issue: `#676`\n- link_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/676`\n- link_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#675`\n- notification_comment_id: `4599822709`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `9bbb95efdaf6`\n- source_message_id_sha256_12: `2758a74b2237`\n- notify_message_id_sha256_12: `650370fdae25`\n- notify_message_id_auto: `false`\n- link_id_sha256_12: `982b0809bfd6`\n- link_id_auto: `false`\n- link_title_sha256_12: `bb72a1782fd2`\n- link_title_bytes: `49`\n- link_title_lines: `1`\n- link_url_sha256_12: `cb9e8156c02c`\n- link_url_bytes: `107`\n- link_notes_sha256_12: `b1f07cf89910`\n- link_notes_bytes: `69`\n- link_notes_lines: `1`\n- notification_body_sha256_12: `a44a6ade7a9f`\n- target_from_current_channel_issue: `true`\n- raw_link_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_link_title_included: `false`\n- raw_link_url_included: `false`\n- raw_link_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_link_action_change: `true`\n- issue_title_sha256_12: `e4b8ea12d396`\n\nGitClaw saved channel-origin link metadata as a durable GitHub link-card issue, then queued a provider-facing issue link back to the original thread. The link-card issue contains the human-readable saved context and a URL hash; this source receipt keeps provider IDs, link IDs, raw URLs, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the link-card notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent link-card links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate link-card issues are suppressed by `link_id`; duplicate link-card notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the link issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T07:34:47Z",
+      "updated_at": "2026-06-02T07:34:47Z"
     }
   ]
 }
