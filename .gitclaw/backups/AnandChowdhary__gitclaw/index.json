@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T00:27:20Z",
+  "generated_at": "2026-06-02T00:28:50Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 542,
+  "count": 543,
   "issues": [
     {
       "number": 3,
@@ -6834,6 +6834,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 629,
+      "title": "GitClaw backup rehearsal: issue #628 (channel-backup-rehearsal-20260602t002233z)",
+      "path": "issues/000629.json",
+      "backup_generated_at": "2026-06-02T00:28:48Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
