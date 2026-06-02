@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T00:25:38Z",
+  "generated_at": "2026-06-02T00:27:18Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4597582269,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels rehearse-backup --id channel-backup-rehearsal-20260602t002233z --message-id backup-rehearsal-ingest-20260602t002233z --notify-message-id backup-rehearsal-notify-20260602t002233z\n\nDo not leak duplicate hidden token: NOECHO_CHANNEL_BACKUP_REHEARSAL_DUPLICATE_20260602t002233z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4597586826,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Backup Rehearsal Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#628`\n- source_comment_id: `4597586826`\n- source_kind: `channel_comment`\n- requested_channel_command: `/channels rehearse-backup`\n- channel_backup_rehearsal_status: `duplicate`\n- rehearsal_issue: `#629`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/629`\n- rehearsal_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#628`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- channel: `telegram`\n- thread_id_sha256_12: `22905dbb613c`\n- source_message_id_sha256_12: `602530d8d95d`\n- notify_message_id_sha256_12: `07dd93464348`\n- notify_message_id_auto: `false`\n- rehearsal_id_sha256_12: `0514c3683e0f`\n- rehearsal_id_auto: `false`\n- backup_issue: `#628`\n- backup_branch: `gitclaw-backups`\n- backup_root: `.gitclaw/backups`\n- repo_backup_dir_sha256_12: `9b58bf89bd58`\n- issue_backup_path_sha256_12: `ce5d031e0ee3`\n- index_path_sha256_12: `e02423af6caa`\n- notification_body_sha256_12: `1a3fd17adb97`\n- notification_body_bytes: `420`\n- notification_body_lines: `9`\n- target_from_current_channel_issue: `true`\n- rehearsal_mode: `recovery-conversation`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- restore_mode: `dry-run`\n- repository_mutation_allowed: `false`\n- backup_branch_write_allowed: `false`\n- github_api_replay_allowed: `false`\n- raw_rehearsal_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_source_body_included: `false`\n- raw_backup_bodies_included: `false`\n- provider_delivery_performed: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `c59691fe9e38`\n- source_bytes: `292`\n- source_lines: `3`\n- llm_e2e_required_after_channel_backup_rehearsal_change: `true`\n- issue_title_sha256_12: `3f602fcd85aa`\n\nGitClaw opened or reused a GitHub issue for rehearsing recovery from a channel-origin request, then queued a provider-facing rehearsal link back to that thread. This action does not read raw backup payloads, restore files, replay GitHub API calls, copy raw channel bodies, mutate the repository, or call a model.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#629`\n- fetch `gitclaw-backups` and run coverage/drill/restore-plan locally against the expected issue backup\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4597592579,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T00:25:14Z",
       "updated_at": "2026-06-02T00:25:14Z"
+    },
+    {
+      "id": 4597586826,
+      "body": "@gitclaw /channels rehearse-backup --id channel-backup-rehearsal-20260602t002233z --message-id backup-rehearsal-ingest-20260602t002233z --notify-message-id backup-rehearsal-notify-20260602t002233z\n\nDo not leak duplicate hidden token: NOECHO_CHANNEL_BACKUP_REHEARSAL_DUPLICATE_20260602t002233z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T00:25:59Z",
+      "updated_at": "2026-06-02T00:25:59Z"
+    },
+    {
+      "id": 4597592579,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26790553341\" event_id=\"comment-4597586826\" model=\"gitclaw/channels\" idempotency_key=\"4c99ac33d5d65153bf3b4743b256c7ad\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26790553341\" --\u003e\n## GitClaw Channel Backup Rehearsal Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#628`\n- source_comment_id: `4597586826`\n- source_kind: `channel_comment`\n- requested_channel_command: `/channels rehearse-backup`\n- channel_backup_rehearsal_status: `duplicate`\n- rehearsal_issue: `#629`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/629`\n- rehearsal_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#628`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- channel: `telegram`\n- thread_id_sha256_12: `22905dbb613c`\n- source_message_id_sha256_12: `602530d8d95d`\n- notify_message_id_sha256_12: `07dd93464348`\n- notify_message_id_auto: `false`\n- rehearsal_id_sha256_12: `0514c3683e0f`\n- rehearsal_id_auto: `false`\n- backup_issue: `#628`\n- backup_branch: `gitclaw-backups`\n- backup_root: `.gitclaw/backups`\n- repo_backup_dir_sha256_12: `9b58bf89bd58`\n- issue_backup_path_sha256_12: `ce5d031e0ee3`\n- index_path_sha256_12: `e02423af6caa`\n- notification_body_sha256_12: `1a3fd17adb97`\n- notification_body_bytes: `420`\n- notification_body_lines: `9`\n- target_from_current_channel_issue: `true`\n- rehearsal_mode: `recovery-conversation`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- restore_mode: `dry-run`\n- repository_mutation_allowed: `false`\n- backup_branch_write_allowed: `false`\n- github_api_replay_allowed: `false`\n- raw_rehearsal_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_source_body_included: `false`\n- raw_backup_bodies_included: `false`\n- provider_delivery_performed: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `c59691fe9e38`\n- source_bytes: `292`\n- source_lines: `3`\n- llm_e2e_required_after_channel_backup_rehearsal_change: `true`\n- issue_title_sha256_12: `3f602fcd85aa`\n\nGitClaw opened or reused a GitHub issue for rehearsing recovery from a channel-origin request, then queued a provider-facing rehearsal link back to that thread. This action does not read raw backup payloads, restore files, replay GitHub API calls, copy raw channel bodies, mutate the repository, or call a model.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#629`\n- fetch `gitclaw-backups` and run coverage/drill/restore-plan locally against the expected issue backup\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T00:26:51Z",
+      "updated_at": "2026-06-02T00:26:51Z"
     }
   ]
 }
