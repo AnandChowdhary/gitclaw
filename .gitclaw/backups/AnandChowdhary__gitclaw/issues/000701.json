@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-02T10:05:43Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 701,
+    "title": "GitClaw channel RSVP: Tiny channel RSVP response fixture 20260602T095841Z",
+    "body": "\u003c!-- gitclaw:channel-rsvp rsvp_id=\"rsvp-response-20260602t095841z\" source_issue=\"700\" source_comment_id=\"0\" routes_sha256_12=\"9892046e64ef\" details_sha256_12=\"cb5eaa136afa\" --\u003e\nGitClaw channel RSVP.\n\n- source_issue: `#700`\n- source_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/700`\n- rsvp_id_sha256_12: `1bc0f2aacdcf`\n- routes_sha256_12: `9892046e64ef`\n- route_count: `2`\n- raw_route_names_included: `false`\n\n## Event\n\nTitle: Tiny channel RSVP response fixture 20260602T095841Z\nWhen: 2026-06-04T16:00:00Z\nWhere: E2E response room 20260602T095841Z\nHost: GitClaw E2E\n\n## Details\n\nBring one clear yes/no/maybe answer and NOECHO_CHANNEL_RSVP_RESPONSE_DETAILS_20260602T095841Z.\n\nRSVP by commenting `yes`, `no`, or `maybe`. Participants can continue here from GitHub, or through a mirrored channel thread invited into this RSVP.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel RSVP: Tiny channel RSVP response fixture 20260602T095841Z\n\n\u003c!-- gitclaw:channel-rsvp rsvp_id=\"rsvp-response-20260602t095841z\" source_issue=\"700\" source_comment_id=\"0\" routes_sha256_12=\"9892046e64ef\" details_sha256_12=\"cb5eaa136afa\" --\u003e\nGitClaw channel RSVP.\n\n- source_issue: `#700`\n- source_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/700`\n- rsvp_id_sha256_12: `1bc0f2aacdcf`\n- routes_sha256_12: `9892046e64ef`\n- route_count: `2`\n- raw_route_names_included: `false`\n\n## Event\n\nTitle: Tiny channel RSVP response fixture 20260602T095841Z\nWhen: 2026-06-04T16:00:00Z\nWhere: E2E response room 20260602T095841Z\nHost: GitClaw E2E\n\n## Details\n\nBring one clear yes/no/maybe answer and NOECHO_CHANNEL_RSVP_RESPONSE_DETAILS_20260602T095841Z.\n\nRSVP by commenting `yes`, `no`, or `maybe`. Participants can continue here from GitHub, or through a mirrored channel thread invited into this RSVP.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel RSVP response thread and use the repo-reader skill.\n\nSearch the repository for `channel rsvp response unique search fixture phrase`.\nThe matching repository search result line ends with an all-caps token after the arrow.\nThat token starts with `GITCLAW_CHANNEL_RSVP_RESPONSE_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include route names, target issue numbers, message ids, account hashes, source issue title, RSVP id, event title, event time, location, host, details, responder name, or response note.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_RSVP_RESPONSE_FOLLOWUP_20260602T095841Z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4601298138,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_RSVP_RESPONSE_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4601305744,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4601278729,
+      "body": "\u003c!-- gitclaw:channel-rsvp-response rsvp_id=\"rsvp-response-20260602t095841z\" response_id=\"rsvp-response-msg-20260602t095841z\" source_issue=\"702\" source_comment_id=\"4601269748\" channel=\"slack\" response_sha256_12=\"8a798890fe93\" responder_sha256_12=\"8119d72fe2a2\" source_message_id_sha256_12=\"608d96254fd7\" note_sha256_12=\"873f23145de3\" --\u003e\nGitClaw channel RSVP response.\n\n- response: yes\n- source_channel: slack\n- source_issue: #702\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/702\n- source_comment_id: 4601269748\n- response_id_sha256_12: 9666ce5716ef\n- source_message_id_sha256_12: 608d96254fd7\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- provider_delivery_performed: false\n\n## Participant\n\nRSVP Response Tester 20260602T095841Z\n\n## Note\n\nPlease record this channel-origin note: NOECHO_CHANNEL_RSVP_RESPONSE_NOTE_20260602T095841Z.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T10:01:40Z",
+      "updated_at": "2026-06-02T10:01:40Z"
+    },
+    {
+      "id": 4601298138,
+      "body": "@gitclaw Continue this channel RSVP response thread and use the repo-reader skill.\n\nSearch the repository for `channel rsvp response unique search fixture phrase`.\nThe matching repository search result line ends with an all-caps token after the arrow.\nThat token starts with `GITCLAW_CHANNEL_RSVP_RESPONSE_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include route names, target issue numbers, message ids, account hashes, source issue title, RSVP id, event title, event time, location, host, details, responder name, or response note.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_RSVP_RESPONSE_FOLLOWUP_20260602T095841Z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T10:04:12Z",
+      "updated_at": "2026-06-02T10:04:12Z"
+    },
+    {
+      "id": 4601305744,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26812764573\" event_id=\"comment-4601298138\" model=\"openai/gpt-5-nano\" idempotency_key=\"2b110e09252e7a61479bfdd25df7e62e\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26812764573\" prompt_context_sha256_12=\"73c7e5978e33\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10760\" usage_completion_tokens=\"598\" usage_total_tokens=\"11358\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_RSVP_RESPONSE_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T10:05:11Z",
+      "updated_at": "2026-06-02T10:05:11Z"
+    }
+  ]
+}
