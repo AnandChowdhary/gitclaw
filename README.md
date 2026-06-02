@@ -706,6 +706,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels request-run search_files --id <id> --message-id <id>
 @gitclaw /channels approval-plan search_files --id <id> --message-id <id>
 @gitclaw /channels rehearse-tool search_files --id <id> --message-id <id>
+@gitclaw /channels propose-toolset --toolset-id <id> --message-id <id>
 @gitclaw /channels propose-skill weekly-review --message-id <id>
 @gitclaw /channels rehearse-skill repo-reader --id <id> --message-id <id>
 @gitclaw /channels propose-soul --target soul --id <id> --message-id <id>
@@ -1165,6 +1166,13 @@ the tool, generate tool inputs, create a run request, or mutate the repository;
 the linked rehearsal issue is where a normal GitHub Models conversation can
 exercise prompt-visible tool behavior with prompt/tool/usage telemetry.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+propose-toolset --toolset-id <id> --message-id <id>` opens or reuses a normal
+GitHub toolset proposal issue and queues a provider-facing proposal link back
+to the Slack/Telegram thread. The proposal issue stores the readable toolset
+name, purpose, proposed tool list, policy, and notes; the source receipt keeps
+only hashes/counts and explicitly does not call a model, enable toolsets,
+execute tools, write tool configuration, or mutate the repository.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 propose-skill <name> --message-id <id>` opens or reuses a normal GitHub skill
 proposal issue and queues a provider-facing proposal link back to the
 Slack/Telegram thread. The channel action does not call a model, generate a
@@ -1249,8 +1257,9 @@ receipt body-free. Scheduled GitHub Actions can later use the reminder issue as
 the canonical wake-up lane without a socket or webhook.
 Inside a channel-created task, watch, standing-order proposal, backup restore
 request, checkpoint rehearsal, clip, attachment, decision, digest, idea,
-retro, playbook, insight, board card, checklist, workspace proposal, incident,
-voice, image, link, access request, contact, or reminder issue, `@gitclaw /channels done --message-id <id>`
+retro, playbook, insight, board card, checklist, toolset proposal, workspace
+proposal, incident, voice, image, link, access request, contact, or reminder
+issue, `@gitclaw /channels done --message-id <id>`
 closes the GitHub artifact issue and queues a provider-facing acknowledgement
 back to the original
 mirrored Slack/Telegram thread. The artifact receipt reports hashes, close
@@ -1526,6 +1535,7 @@ scripts/e2e/github-channel-session-handoff-slash.sh
 scripts/e2e/github-channel-tool-run-request-slash.sh
 scripts/e2e/github-channel-tool-approval-plan-slash.sh
 scripts/e2e/github-channel-tool-rehearsal-slash.sh
+scripts/e2e/github-channel-toolset-proposal-slash.sh
 scripts/e2e/github-channel-skill-proposal-slash.sh
 scripts/e2e/github-channel-soul-proposal-slash.sh
 scripts/e2e/github-channel-skill-rehearsal-slash.sh
@@ -2004,6 +2014,13 @@ rehearse-tool`, creates or reuses a GitHub tool rehearsal issue, queues a
 provider-facing rehearsal link back to the mirrored thread, checks duplicate
 rehearsal and notification suppression, exposes the rehearsal-link notification
 through metadata-only outbox, and then continues on the rehearsal issue with a
+real GitHub Models repo-reader/search follow-up.
+The channel-toolset-proposal slash harness turns the operator console into a
+toolset intake surface: a channel-ingested issue receives `@gitclaw /channels
+propose-toolset`, creates or reuses a GitHub toolset proposal issue, queues a
+provider-facing proposal link back to the mirrored thread, checks duplicate
+proposal and notification suppression, exposes the proposal-link notification
+through metadata-only outbox, and then continues on the proposal issue with a
 real GitHub Models repo-reader/search follow-up.
 The channel-skill-proposal slash harness turns the operator console into a
 skill intake surface: a channel-ingested issue receives `@gitclaw /channels

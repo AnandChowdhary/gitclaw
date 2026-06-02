@@ -487,6 +487,30 @@ func TestChannelDoneArtifactRefSupportsChecklistIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsToolsetProposalIssues(t *testing.T) {
+	body := RenderChannelToolsetProposalIssueBody(ChannelToolsetProposalOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		ToolsetID:         "toolset-done-1",
+		Name:              "Research Toolset",
+		Purpose:           "Review a research tool bundle.",
+		Tools:             "- gitclaw.search_files\n- gitclaw.list_files",
+		Policy:            "Read-only tools only.",
+		Notes:             "Keep the proposal reviewable.",
+		SourceIssueNumber: 52,
+		SourceCommentID:   5200,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "toolset-proposal" || ref.ID != "toolset-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 52 || ref.SourceCommentID != 5200 {
+		t.Fatalf("unexpected toolset proposal artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsIncidentIssues(t *testing.T) {
 	body := RenderChannelIncidentIssueBody(ChannelIncidentOptions{
 		Repo:              "owner/repo",

@@ -4697,6 +4697,38 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-02 Channel Toolset Proposal Follow-Up
+
+Hermes' toolsets reference frames toolsets as named bundles that control tool
+availability per platform, session, or task, with core/composite/platform
+profiles plus dynamic MCP/plugin/custom toolsets. Its kanban reference also
+shows that tool availability can be tied to durable worker contexts rather than
+being a blanket chat capability. OpenClaw's session tooling keeps channel
+routing and tool profile boundaries explicit, so a GitHub-native agent should
+not treat a Telegram or Slack message as permission to enable a new tool
+bundle.
+
+GitClaw's serverless translation is `@gitclaw /channels propose-toolset
+--toolset-id <id> --message-id <id>`. It opens or reuses a normal
+`gitclaw:channel-toolset-proposal` issue with the readable toolset name,
+purpose, proposed tools, policy, and notes, while the source receipt only
+reports hashes/counts, duplicate state, and delivery gates. It queues one
+provider-facing proposal link back to the source Slack/Telegram thread and
+keeps provider delivery delegated to outbox/delivery. The action does not call
+a model, enable toolsets, execute tools, write `.gitclaw/toolsets/*.yaml`,
+call provider APIs, or mutate the repository. Acceptance requires live E2E for
+toolset proposal issue creation, metadata-only proposal-link outbox discovery,
+duplicate suppression, no-activation/no-mutation flags, and a real GitHub
+Models repo-reader/search follow-up on the proposal issue.
+
+Sources: Hermes toolsets reference
+(`https://hermes-agent.nousresearch.com/docs/reference/toolsets-reference`),
+Hermes kanban reference
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban`),
+OpenClaw session tool concept
+(`https://docs.openclaw.ai/concepts/session-tool`), and OpenClaw sessions CLI
+reference (`https://docs.openclaw.ai/cli/sessions`).
+
 ## 2026-06-02 Channel Board Card Follow-Up
 
 OpenClaw treats external channels and assistant sessions as first-class

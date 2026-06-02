@@ -5476,6 +5476,7 @@ accepts a structured reaction form:
 @gitclaw /channels request-run <tool-name> --id <stable-request-id> --message-id <provider-message-id>
 @gitclaw /channels approval-plan <tool-name> --id <stable-approval-plan-id> --message-id <provider-message-id>
 @gitclaw /channels rehearse-tool <tool-name> --id <stable-rehearsal-id> --message-id <provider-message-id>
+@gitclaw /channels propose-toolset --toolset-id <stable-toolset-proposal-id> --message-id <provider-message-id>
 @gitclaw /channels propose-skill <skill-name> --message-id <provider-message-id>
 @gitclaw /channels rehearse-skill <skill-name> --id <stable-rehearsal-id> --message-id <provider-message-id>
 @gitclaw /channels propose-soul --target <soul-path> --id <stable-proposal-id> --message-id <provider-message-id>
@@ -6469,6 +6470,51 @@ outbox, checks duplicate suppression, and then continues on the rehearsal issue
 with a normal GitHub Models repo-reader/search follow-up.
 
 The same channel-thread issue can also turn a mirrored provider message into a
+GitHub toolset proposal intake lane:
+
+```text
+@gitclaw /channels propose-toolset --toolset-id <stable-toolset-proposal-id> --message-id <provider-message-id>
+Name: short toolset name
+Purpose:
+why this bundle should exist
+Tools:
+- gitclaw.search_files
+- gitclaw.list_files
+Policy:
+review gates, allowed modes, and risk boundaries
+Notes:
+human-readable context
+```
+
+`/channels propose-toolset`, `/channels toolset-proposal`,
+`/channels toolset`, `/channels propose-tools`, `/channels tool-bundle`, and
+`/channels tools-bundle` infer the current channel and thread id from the issue
+marker when no explicit channel/thread target is provided. They create or
+reuse one open GitHub issue carrying the
+`gitclaw:channel-toolset-proposal` marker, label it with `gitclaw` so normal
+conversation can continue there, and queue a provider-facing proposal link
+back to the mirrored channel thread. The proposal issue contains the readable
+toolset name, purpose, proposed tool list, policy, and notes because it is the
+reviewable place to decide whether the bundle should become
+`.gitclaw/toolsets/*.yaml`, documentation, a skill, an approval plan, or a
+proactive workflow. The source receipt remains body-free, reporting only
+toolset/thread/message/name/purpose/tool/policy/note hashes, tool count,
+duplicate status, notification queue metadata, and delivery gates. The
+provider-facing acknowledgement can show the name, tool count, and GitHub
+issue link but not the proposed tools, policy, notes, provider IDs, or source
+message body. It does not call a model, enable toolsets, execute tools, write
+tool configuration, call provider APIs, mutate the repository, print raw
+toolset proposal ids, print raw thread ids, print raw source or notification
+message ids, print channel message bodies, or print raw section text in the
+source receipt. Duplicates are suppressed first by `toolset_id` for the GitHub
+proposal issue and then by `channel + notify_message_id` for the provider-
+facing proposal link. Changes to this surface require a live E2E that records
+the proposal, validates the metadata-only proposal-link outbox, checks
+duplicate suppression, asserts that no toolset activation or repository
+mutation happened, and then continues on the proposal issue with a normal
+GitHub Models repo-reader/search follow-up.
+
+The same channel-thread issue can also turn a mirrored provider message into a
 GitHub skill proposal intake lane:
 
 ```text
@@ -6878,6 +6924,11 @@ Behavior:
   queue one provider-facing checklist outbound comment per
   `channel + notify_message_id` without marking checklist items done, mutating
   the repository, calling provider APIs, or calling a model,
+- create or reuse one `gitclaw:channel-toolset-proposal` issue per toolset id
+  and queue one provider-facing proposal-link outbound comment per
+  `channel + notify_message_id` without enabling toolsets, executing tools,
+  writing tool configuration, mutating the repository, calling provider APIs,
+  or calling a model,
 - create or reuse one `gitclaw:channel-workspace-proposal` issue per proposal
   id and queue one provider-facing proposal-link outbound comment per
   `channel + notify_message_id` without writing workspace files, mutating the
@@ -6932,6 +6983,7 @@ Behavior:
   `gitclaw:channel-kudos`, `gitclaw:channel-retro`,
   `gitclaw:channel-playbook`, `gitclaw:channel-insight`,
   `gitclaw:channel-board-card`, `gitclaw:channel-checklist`,
+  `gitclaw:channel-toolset-proposal`,
   `gitclaw:channel-workspace-proposal`, `gitclaw:channel-incident`,
   `gitclaw:channel-voice`, `gitclaw:channel-image`, `gitclaw:channel-link`,
   `gitclaw:channel-access-request`, `gitclaw:channel-contact`, or
@@ -7138,6 +7190,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels request-run search_files --id channel-tool-request-1 --message-id provider-msg-1
 @gitclaw /channels approval-plan search_files --id channel-tool-approval-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-tool search_files --id channel-tool-rehearsal-1 --message-id provider-msg-1
+@gitclaw /channels propose-toolset --toolset-id channel-toolset-proposal-1 --message-id provider-msg-1
 @gitclaw /channels propose-skill weekly-review --message-id provider-msg-1
 @gitclaw /channels rehearse-skill repo-reader --id channel-skill-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels propose-soul --target soul --id channel-soul-proposal-1 --message-id provider-msg-1
@@ -9951,6 +10004,18 @@ examples/workflows/gitclaw.yml
   issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-tool-rehearsal fixture token,
   and avoid hidden channel, account, provider, message, rehearsal, and tool
+  sentinels.
+- A `gh`-driven channel-toolset-proposal-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels propose-toolset --toolset-id ... --message-id ...` on
+  that mirrored thread, verifies GitHub toolset proposal issue creation,
+  body-free source receipt metadata, provider-facing proposal-link queueing,
+  duplicate proposal and notification suppression, explicit no-toolset-
+  activation/no-repository-mutation gates, and metadata-only outbox discovery.
+  The proposal issue then gets a normal GitHub Models issue-comment follow-up
+  that must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-toolset-proposal fixture token, and avoid hidden channel, account,
+  provider, message, toolset, purpose, policy, notes, and proposed-tool
   sentinels.
 - A `gh`-driven channel-skill-proposal-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts

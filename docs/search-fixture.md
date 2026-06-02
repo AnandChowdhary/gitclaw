@@ -206,3 +206,4 @@ skill source lock unique search fixture phrase => GITCLAW_SKILL_SOURCE_LOCK_CONT
 skill source update plan unique search fixture phrase => GITCLAW_SKILL_SOURCE_UPDATE_PLAN_CONTEXT_V1
 nodes catalog unique search fixture phrase => GITCLAW_NODES_CATALOG_CONTEXT_V1
 artifacts catalog unique search fixture phrase => GITCLAW_ARTIFACTS_CATALOG_CONTEXT_V1
+channel toolset proposal unique search fixture phrase => GITCLAW_CHANNEL_TOOLSET_PROPOSAL_CONTEXT_V1
