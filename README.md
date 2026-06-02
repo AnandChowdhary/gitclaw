@@ -687,6 +687,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels decision --decision-id <id> --message-id <id>
 @gitclaw /channels digest --digest-id <id> --message-id <id>
 @gitclaw /channels idea --idea-id <id> --message-id <id>
+@gitclaw /channels kudos --kudos-id <id> --message-id <id>
 @gitclaw /channels incident --incident-id <id> --severity <severity> --message-id <id>
 @gitclaw /channels voice --voice-id <id> --duration <seconds> --message-id <id>
 @gitclaw /channels image --image-id <id> --width <px> --height <px> --message-id <id>
@@ -1016,6 +1017,12 @@ brainstorm can turn into a task, skill, memory, tool request, or proactive
 workflow in GitHub; the channel action queues a provider-facing idea link and
 keeps the source receipt body-free with hashes, duplicate state, notification
 metadata, and delivery gates.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels kudos
+--kudos-id <id> --message-id <id>` captures channel appreciation as a durable
+GitHub issue. The kudos issue holds the readable recipient and reason; the
+channel action queues a provider-facing acknowledgement that can show the
+recipient without leaking the reason, and keeps the source receipt body-free
+with hashes, duplicate state, notification metadata, and delivery gates.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels incident
 --incident-id <id> --severity <severity> --message-id <id>` captures a
 channel-origin incident/escalation as a durable GitHub issue. The incident
@@ -1438,6 +1445,7 @@ scripts/e2e/github-channel-attachment-slash.sh
 scripts/e2e/github-channel-decision-slash.sh
 scripts/e2e/github-channel-digest-slash.sh
 scripts/e2e/github-channel-idea-slash.sh
+scripts/e2e/github-channel-kudos-slash.sh
 scripts/e2e/github-channel-incident-slash.sh
 scripts/e2e/github-channel-voice-slash.sh
 scripts/e2e/github-channel-image-slash.sh
@@ -1785,6 +1793,13 @@ to the mirrored thread, checks duplicate idea and notification suppression,
 exposes the idea-link notification through metadata-only outbox, and then
 continues on the idea issue with a real GitHub Models repo-reader/search
 follow-up.
+The channel-kudos slash harness turns the operator console into an
+appreciation lane: a channel-ingested issue receives `@gitclaw /channels
+kudos`, creates or reuses a durable GitHub kudos issue with the readable
+recipient and reason, queues a provider-facing acknowledgement back to the
+mirrored thread, checks duplicate kudos and notification suppression, exposes
+the acknowledgement through metadata-only outbox, and then continues on the
+kudos issue with a real GitHub Models repo-reader/search follow-up.
 The channel-incident slash harness turns the operator console into an
 escalation intake surface: a channel-ingested issue receives `@gitclaw
 /channels incident`, creates or reuses a durable GitHub incident issue with a

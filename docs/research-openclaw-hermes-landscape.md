@@ -173,6 +173,25 @@ OpenClaw skills docs
 Hermes checkpoint/rollback docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback`).
 
+2026-06-02 channel-kudos follow-up: the current OpenClaw skills CLI docs make
+skills inspectable, installable, updatable, and workshop-reviewable artifacts
+rather than invisible runtime magic. ClawHub now exposes both text skills and
+souls with publish/version/search flows, while the Hermes Agent ClawHub skill
+describes a bounded learning loop: retrieve a small memory surface, reflect
+after meaningful work, and promote repeated patterns into skills or stable
+rules only after they recur. GitClaw's serverless analogue should make
+channel appreciation similarly explicit. `@gitclaw /channels kudos --kudos-id
+<id> --message-id <id>` opens or reuses a normal GitHub kudos issue with the
+readable recipient and reason, queues one provider-facing acknowledgement, and
+requires any conversion into memory, skill, task, or proactive workflow to
+happen through normal GitHub issue review. The source receipt stays body-free
+with only hashes, duplicate state, and outbox metadata, so appreciation can
+become durable workspace signal without silently rewriting soul, memory, or
+skills. Sources: OpenClaw skills CLI docs
+(`https://docs.openclaw.ai/cli/skills`), ClawHub repository docs
+(`https://github.com/openclaw/clawhub`), and Hermes Agent skill card
+(`https://clawhub.ai/ivangdavila/hermes-agent`).
+
 2026-06-02 channel-incident follow-up: OpenClaw's channel/session docs treat
 chat surfaces as live entry points while keeping session stores bounded, and
 its cron/task docs make recurring or high-priority work explicit control-plane

@@ -116,6 +116,7 @@ channel attachment unique search fixture phrase => GITCLAW_CHANNEL_ATTACHMENT_CO
 channel decision unique search fixture phrase => GITCLAW_CHANNEL_DECISION_CONTEXT_V1
 channel digest unique search fixture phrase => GITCLAW_CHANNEL_DIGEST_CONTEXT_V1
 channel idea unique search fixture phrase => GITCLAW_CHANNEL_IDEA_CONTEXT_V1
+channel kudos unique search fixture phrase => GITCLAW_CHANNEL_KUDOS_CONTEXT_V1
 channel incident unique search fixture phrase => GITCLAW_CHANNEL_INCIDENT_CONTEXT_V1
 channel voice unique search fixture phrase => GITCLAW_CHANNEL_VOICE_CONTEXT_V1
 channel image unique search fixture phrase => GITCLAW_CHANNEL_IMAGE_CONTEXT_V1

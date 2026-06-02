@@ -5823,6 +5823,36 @@ validates the metadata-only idea-link outbox, checks duplicate suppression, and
 then continues on the idea issue with a normal GitHub Models repo-reader/search
 follow-up.
 
+The same channel-thread issue can also capture channel appreciation:
+
+```text
+@gitclaw /channels kudos --kudos-id <stable-kudos-id> --message-id <provider-message-id>
+To: recipient or team
+Reason:
+optional human-readable appreciation note
+```
+
+`/channels kudos`, `/channels thanks`, `/channels thank`, `/channels
+shoutout`, `/channels appreciation`, and `/channels praise` infer the current
+channel and thread id from the issue marker when no explicit route/channel/
+thread target is provided. They create or reuse one open GitHub issue carrying
+a hidden `gitclaw:channel-kudos` marker for the stable kudos id, label it with
+`gitclaw` so normal conversation can continue there, and queue a
+provider-facing acknowledgement back to the mirrored channel thread. The kudos
+issue contains the human-readable recipient and reason because it is the
+reviewable appreciation record; the source receipt remains body-free,
+reporting only kudos/thread/message/recipient/reason hashes, duplicate status,
+notification queue metadata, and delivery gates. The acknowledgement can show
+the recipient but not the reason text. It does not call a model, call provider
+APIs, print raw kudos ids, print raw thread ids, print raw source or
+notification message ids, print channel message bodies, or print raw
+recipients/reasons in the source receipt. Duplicates are suppressed first by
+`kudos_id` for the GitHub kudos issue and then by `channel +
+notify_message_id` for the provider-facing acknowledgement. Changes to this
+surface require a live E2E that captures kudos, validates the metadata-only
+acknowledgement outbox, checks duplicate suppression, and then continues on
+the kudos issue with a normal GitHub Models repo-reader/search follow-up.
+
 The same channel-thread issue can also capture an incident or escalation:
 
 ```text
@@ -6642,6 +6672,7 @@ Behavior:
   `gitclaw:checkpoint-rehearsal-issue`, `gitclaw:channel-clip`,
   `gitclaw:channel-attachment`, `gitclaw:channel-decision`,
   `gitclaw:channel-digest`, `gitclaw:channel-idea`,
+  `gitclaw:channel-kudos`,
   `gitclaw:channel-incident`, `gitclaw:channel-voice`,
   `gitclaw:channel-image`, `gitclaw:channel-link`,
   `gitclaw:channel-access-request`, `gitclaw:channel-contact`, or
@@ -6832,6 +6863,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels decision --decision-id channel-decision-1 --message-id provider-msg-1
 @gitclaw /channels digest --digest-id channel-digest-1 --message-id provider-msg-1
 @gitclaw /channels idea --idea-id channel-idea-1 --message-id provider-msg-1
+@gitclaw /channels kudos --kudos-id channel-kudos-1 --message-id provider-msg-1
 @gitclaw /channels incident --incident-id channel-incident-1 --severity sev2 --message-id provider-msg-1
 @gitclaw /channels voice --voice-id channel-voice-1 --duration 47 --message-id provider-msg-1
 @gitclaw /channels image --image-id channel-image-1 --width 1280 --height 720 --message-id provider-msg-1
@@ -9464,6 +9496,16 @@ examples/workflows/gitclaw.yml
   normal GitHub Models issue-comment follow-up that must select `repo-reader`,
   expose `gitclaw.search_files`, recover the channel-idea fixture token, and
   avoid hidden channel, account, provider, message, and idea sentinels.
+- A `gh`-driven channel-kudos-slash E2E harness creates a real channel-thread
+  issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels kudos --kudos-id ... --message-id ...` on that mirrored
+  thread, verifies GitHub kudos issue creation, body-free source receipt
+  metadata, provider-facing acknowledgement queueing, duplicate kudos and
+  notification suppression, and metadata-only outbox discovery. The kudos
+  issue then gets a normal GitHub Models issue-comment follow-up that must
+  select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-kudos fixture token, and avoid hidden channel, account, provider,
+  message, kudos, recipient, and reason sentinels.
 - A `gh`-driven channel-incident-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels incident --incident-id ... --severity ... --message-id
