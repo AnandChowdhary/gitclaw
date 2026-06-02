@@ -4307,3 +4307,31 @@ Sources: Hermes deliverable mode docs
 OpenClaw media understanding docs
 (`https://docs.openclaw.ai/nodes/media-understanding`), OpenClaw message docs
 (`https://docs.openclaw.ai/concepts/messages`).
+
+## 2026-06-02 Channel Tool Approval Plan Follow-Up
+
+OpenClaw treats tools as typed agent capabilities and keeps approval-sensitive
+tool surfaces distinct from ordinary message delivery. Its exec approval docs
+also note that native chat approval clients can add channel-specific affordance
+on pending approval messages, while the tool boundary and host policy remain
+separate from the chat UI. Hermes similarly keeps generated deliverables and
+provider-visible chat delivery at the gateway layer rather than making the
+agent hand-write transport protocol.
+
+GitClaw should use the same split for channel-origin tool gates. A mirrored
+Telegram or Slack message can ask `@gitclaw /channels approval-plan <tool>
+--id <id> --message-id <id>`; GitClaw creates or reuses a durable
+`gitclaw:tool-approval-plan-issue`, queues a provider-facing link back to the
+channel thread, and leaves the actual review conversation in GitHub where
+labels, comments, Actions runs, model telemetry, and prompt-visible tools are
+auditable. The channel receipt remains body-free and hash-only, and the action
+does not approve, call a model, execute tools, generate inputs, call provider
+APIs, or mutate the repository. Acceptance requires live E2E for approval-plan
+issue creation, metadata-only approval-link outbox discovery, duplicate
+suppression, and a real GitHub Models repo-reader/search follow-up on the
+approval issue.
+
+Sources: OpenClaw tools overview (`https://docs.openclaw.ai/tools`),
+OpenClaw exec approvals docs
+(`https://docs.openclaw.ai/tools/exec-approvals`), Hermes deliverable mode docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/deliverable-mode`).

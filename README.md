@@ -683,6 +683,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels digest --digest-id <id> --message-id <id>
 @gitclaw /channels handoff --id <id> --message-id <id>
 @gitclaw /channels request-run search_files --id <id> --message-id <id>
+@gitclaw /channels approval-plan search_files --id <id> --message-id <id>
 @gitclaw /channels rehearse-tool search_files --id <id> --message-id <id>
 @gitclaw /channels rehearse-skill repo-reader --id <id> --message-id <id>
 @gitclaw /channels rehearse-soul --target soul --id <id> --message-id <id>
@@ -964,6 +965,13 @@ the Slack/Telegram thread. It does not call a model, execute the tool, run
 shell commands, or mutate the repository; the source receipt stays body-free
 with hashes, review status, duplicate state, notification metadata, and
 delivery gates.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+approval-plan <tool> --id <id> --message-id <id>` opens or reuses a normal
+GitHub approval-plan issue and queues a provider-facing approval link back to
+the Slack/Telegram thread. The channel action does not approve, call a model,
+execute the tool, generate tool inputs, or mutate the repository; the linked
+approval issue records the dry-run gate state and is where a normal GitHub
+Models conversation can continue with prompt-visible tool telemetry.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 rehearse-tool <tool> --id <id> --message-id <id>` opens or reuses a normal
 GitHub tool rehearsal issue and queues a provider-facing rehearsal link back to
@@ -1261,6 +1269,7 @@ scripts/e2e/github-channel-decision-slash.sh
 scripts/e2e/github-channel-digest-slash.sh
 scripts/e2e/github-channel-session-handoff-slash.sh
 scripts/e2e/github-channel-tool-run-request-slash.sh
+scripts/e2e/github-channel-tool-approval-plan-slash.sh
 scripts/e2e/github-channel-tool-rehearsal-slash.sh
 scripts/e2e/github-channel-skill-rehearsal-slash.sh
 scripts/e2e/github-channel-soul-rehearsal-slash.sh
@@ -1577,6 +1586,13 @@ reviewed tool intake surface: a channel-ingested issue receives `@gitclaw
 queues a provider-facing review link back to the mirrored thread, checks
 duplicate request and notification suppression, exposes the review-link
 notification through metadata-only outbox, and then continues on the review
+issue with a real GitHub Models repo-reader/search follow-up.
+The channel-tool-approval-plan slash harness turns the operator console into a
+tool approval gate surface: a channel-ingested issue receives `@gitclaw
+/channels approval-plan`, creates or reuses a GitHub tool approval-plan issue,
+queues a provider-facing approval-plan link back to the mirrored thread,
+checks duplicate plan and notification suppression, exposes the approval-link
+notification through metadata-only outbox, and then continues on the approval
 issue with a real GitHub Models repo-reader/search follow-up.
 The channel-tool-rehearsal slash harness turns the operator console into a
 tool practice surface: a channel-ingested issue receives `@gitclaw /channels

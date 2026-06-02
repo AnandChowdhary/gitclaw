@@ -1012,6 +1012,35 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		status.SetDone()
 		return nil
 	}
+	if IsChannelToolApprovalPlanActionRequest(ev, cfg) {
+		channelToolClient, ok := github.(interface {
+			ToolApprovalPlanIssueGitHubClient
+			ChannelSendGitHubClient
+		})
+		if !ok {
+			return failStartedTurn(ctx, cfg, github, ev, status, "channel", fmt.Errorf("github client cannot create channel tool approval plans"))
+		}
+		req, err := BuildChannelToolApprovalPlanActionRequest(ev, cfg, repoContext)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "channel", fmt.Errorf("build channel tool approval plan action: %w", err))
+		}
+		result, err := RunChannelToolApprovalPlan(ctx, cfg, repoContext, channelToolClient, req)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "channel", fmt.Errorf("run channel tool approval plan action: %w", err))
+		}
+		body := RenderAssistantComment(Marker{
+			RunID:          envFirst("GITHUB_RUN_ID", "local"),
+			EventID:        eventID(ev),
+			Model:          "gitclaw/channels",
+			IdempotencyKey: key,
+			RunURL:         actionRunURL(ev),
+		}, RenderChannelToolApprovalPlanActionReport(ev, req, result))
+		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post channel tool approval plan action comment: %w", err))
+		}
+		status.SetDone()
+		return nil
+	}
 	if IsChannelToolRehearsalActionRequest(ev, cfg) {
 		channelToolClient, ok := github.(interface {
 			ToolRehearsalIssueGitHubClient

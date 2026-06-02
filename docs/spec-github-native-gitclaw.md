@@ -5375,6 +5375,7 @@ accepts a structured reaction form:
 @gitclaw /channels digest --digest-id <stable-digest-id> --message-id <provider-message-id>
 @gitclaw /channels handoff --id <stable-handoff-id> --message-id <provider-message-id>
 @gitclaw /channels request-run <tool-name> --id <stable-request-id> --message-id <provider-message-id>
+@gitclaw /channels approval-plan <tool-name> --id <stable-approval-plan-id> --message-id <provider-message-id>
 @gitclaw /channels rehearse-tool <tool-name> --id <stable-rehearsal-id> --message-id <provider-message-id>
 @gitclaw /channels rehearse-skill <skill-name> --id <stable-rehearsal-id> --message-id <provider-message-id>
 @gitclaw /channels rehearse-soul --target <soul-path> --id <stable-rehearsal-id> --message-id <provider-message-id>
@@ -5685,6 +5686,40 @@ provider-facing review link. Changes to this surface require a live E2E that
 records the request, validates the metadata-only review-link outbox, checks
 duplicate suppression, and then continues on the review issue with a normal
 GitHub Models repo-reader/search follow-up.
+
+The same channel-thread issue can also turn a mirrored provider message into a
+dry-run tool approval gate:
+
+```text
+@gitclaw /channels approval-plan <tool-name> --id <stable-approval-plan-id> --message-id <provider-message-id>
+```
+
+`/channels approval-plan`, `/channels tool-approval`,
+`/channels approve-plan`, `/channels approval-gate`, `/channels tool-gate`,
+and `/channels approve-tool` infer the current channel and thread id from the
+issue marker when no explicit channel/thread target is provided. They create
+or reuse one open GitHub issue carrying the `gitclaw:tool-approval-plan-issue`
+marker, label that issue for normal GitClaw conversation, and queue a
+provider-facing approval-plan link back to the mirrored channel thread.
+
+This is not approval or execution: the action does not grant approval, call a
+model, execute the requested tool, generate tool inputs, create a tool-run
+request, run shell commands, call provider APIs, or mutate the repository. The
+approval-plan issue stores the normalized tool, approval-plan id, enabled
+state, approval-required decision, run-allowed-now decision, validation status,
+and body-free source hashes needed for a normal follow-up conversation; the
+channel source receipt remains body-free, reporting only
+approval-plan/thread/message/tool hashes, validation and gate metadata,
+duplicate status, notification queue metadata, and delivery gates. It does not
+print raw approval-plan ids, raw provider thread/message ids, raw requested
+tool names, raw channel message bodies, raw tool inputs, raw tool outputs, or
+raw approval payloads in the source receipt. Duplicates are suppressed first
+by approval-plan id for the GitHub approval issue and then by
+`channel + notify_message_id` for the provider-facing approval link. Changes
+to this surface require a live E2E that records the approval dry-run,
+validates the metadata-only approval-link outbox, checks duplicate
+suppression, and then continues on the approval issue with a normal GitHub
+Models repo-reader/search follow-up.
 
 The same channel-thread issue can also turn a mirrored provider message into a
 GitHub tool rehearsal lane:
@@ -6131,6 +6166,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels decision --decision-id channel-decision-1 --message-id provider-msg-1
 @gitclaw /channels digest --digest-id channel-digest-1 --message-id provider-msg-1
 @gitclaw /channels request-run search_files --id channel-tool-request-1 --message-id provider-msg-1
+@gitclaw /channels approval-plan search_files --id channel-tool-approval-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-tool search_files --id channel-tool-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-skill repo-reader --id channel-skill-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-soul --target soul --id channel-soul-rehearsal-1 --message-id provider-msg-1
@@ -8703,6 +8739,17 @@ examples/workflows/gitclaw.yml
   `gitclaw.search_files`, recover the channel-tool-request fixture token, and
   avoid hidden channel, account, provider, message, request, and tool
   sentinels.
+- A `gh`-driven channel-tool-approval-plan-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels approval-plan search_files --id ... --message-id ...`
+  on that mirrored thread, verifies GitHub tool approval-plan issue creation,
+  body-free source receipt metadata, provider-facing approval-link queueing,
+  duplicate approval-plan and notification suppression, and metadata-only
+  outbox discovery. The approval issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-tool-approval-plan fixture
+  token, and avoid hidden channel, account, provider, message, approval-plan,
+  and tool sentinels.
 - A `gh`-driven channel-tool-rehearsal-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels rehearse-tool search_files --id ... --message-id ...` on
