@@ -310,17 +310,19 @@ for expected in \
   grep -Fq -- "$expected" <<<"$response_record" || die "RSVP response record missing ${expected}"
 done
 
-target_after_response="$(gh issue view "$target_issue_number" --repo "$repo" --json comments --jq '[.comments[].body] | join("\n")')"
 [[ "$(outbound_comment_count "$target_issue_number")" == "2" ]] || die "RSVP response did not queue acknowledgement outbound comment"
+ack_marker="message_id=\"${ack_message_id}\""
+ack_body="$(gh issue view "$target_issue_number" --repo "$repo" --json comments | jq -r --arg marker "$ack_marker" '[.comments[] | select(.body | contains($marker)) | .body] | .[-1] // ""')"
+[[ -n "$ack_body" ]] || die "could not find RSVP response acknowledgement body"
 for expected in \
   "message_id=\"${ack_message_id}\"" \
   "GitClaw RSVP response recorded" \
   "RSVP: #${rsvp_issue_number}" \
   "Response: yes" \
   "Participant: ${responder_name}"; do
-  grep -Fq "$expected" <<<"$target_after_response" || die "RSVP response acknowledgement missing ${expected}"
+  grep -Fq "$expected" <<<"$ack_body" || die "RSVP response acknowledgement missing ${expected}"
 done
-if grep -Fq "$note_token" <<<"$target_after_response"; then
+if grep -Fq "$note_token" <<<"$ack_body"; then
   die "RSVP response acknowledgement leaked note token"
 fi
 
