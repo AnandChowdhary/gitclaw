@@ -351,7 +351,8 @@ for expected in \
   "- source_kind: channel_comment" \
   "- source_session_store: github-issue-thread" \
   "- assistant_turn_comments: 2" \
-  "- assistant_turns_with_prompt_provenance: 2" \
+  "- assistant_turns_with_prompt_provenance: 1" \
+  "- assistant_turns_missing_prompt_provenance: 1" \
   "- model_backed_assistant_turns: 1" \
   "- deterministic_assistant_turns: 1" \
   "- prompt_visible_skill_names: repo-reader" \
