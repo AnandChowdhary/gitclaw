@@ -316,8 +316,8 @@ for expected in \
   "approval_required: false" \
   "approval_decision: no_approval_required_read_only" \
   "run_allowed_now: true" \
-  "approval_plan_status: pass" \
-  "tool_validation_status: pass" \
+  "approval_plan_status: ok" \
+  "tool_validation_status: ok" \
   "approval_mode: github-issue-dry-run" \
   "model_call_performed: false" \
   "tool_execution_performed: false" \
