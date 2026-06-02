@@ -234,7 +234,7 @@ for _ in {1..90}; do
     die "issue #${issue_number} posted ${errors} error marker comment(s)"
   fi
   candidate_report="$(latest_assistant_comment_for_issue "$issue_number")"
-  if grep -Fq "$ingest_hidden_token" <<<"$candidate_report"; then
+  if grep -Fq -- "$ingest_hidden_token" <<<"$candidate_report"; then
     die "initial channel report leaked ingest hidden token"
   fi
   if grep -Fq "GitClaw Channel Report" <<<"$candidate_report" && grep -Fq 'channel_thread_issue: `true`' <<<"$candidate_report"; then
@@ -314,12 +314,12 @@ for expected in \
   "raw_prompts_included: \`false\`" \
   "raw_tool_outputs_included: \`false\`" \
   "llm_e2e_required_after_channel_soul_risk_change: \`true\`"; do
-  grep -Fq "$expected" <<<"$soul_risk_receipt" || die "channel soul-risk receipt missing ${expected}"
+  grep -Fq -- "$expected" <<<"$soul_risk_receipt" || die "channel soul-risk receipt missing ${expected}"
 done
 grep -Eq 'context_documents: `([1-9][0-9]*)`' <<<"$soul_risk_receipt" || die "channel soul-risk receipt did not report context documents"
 grep -Eq 'scanned_documents: `([1-9][0-9]*)`' <<<"$soul_risk_receipt" || die "channel soul-risk receipt did not report scanned documents"
 for leaked in "$ingest_hidden_token" "$command_hidden_token" "$thread_id" "$ingest_message_id" "$notify_message_id" "$soul_risk_id" ".gitclaw/SOUL.md" ".gitclaw/IDENTITY.md" ".gitclaw/USER.md" ".gitclaw/TOOLS.md" ".gitclaw/MEMORY.md" ".gitclaw/memory/" ".gitclaw/HEARTBEAT.md" "$expected_token"; do
-  if grep -Fq "$leaked" <<<"$soul_risk_receipt"; then
+  if grep -Fq -- "$leaked" <<<"$soul_risk_receipt"; then
     die "channel soul-risk receipt leaked ${leaked}"
   fi
 done
@@ -362,12 +362,12 @@ for expected in \
   "Registry contact: not performed by this action." \
   "Profile export: not performed by this action." \
   "Provider delivery: queued through GitHub channel outbox."; do
-  grep -Fq "$expected" <<<"$notification_bodies" || die "soul-risk notification missing ${expected}"
+  grep -Fq -- "$expected" <<<"$notification_bodies" || die "soul-risk notification missing ${expected}"
 done
 grep -Eq 'Context documents: ([1-9][0-9]*)' <<<"$notification_bodies" || die "soul-risk notification did not report context documents"
 grep -Eq 'Scanned documents: ([1-9][0-9]*)' <<<"$notification_bodies" || die "soul-risk notification did not report scanned documents"
 for leaked in "$ingest_hidden_token" "$command_hidden_token" "$soul_risk_id" "$expected_token"; do
-  if grep -Fq "$leaked" <<<"$notification_bodies"; then
+  if grep -Fq -- "$leaked" <<<"$notification_bodies"; then
     die "soul-risk notification leaked ${leaked}"
   fi
 done
@@ -382,7 +382,7 @@ grep -Fq "outbound_comments=1" <<<"$outbox_output" || die "channel outbox output
 grep -Fq "body_included=false" <<<"$outbox_output" || die "channel outbox should be metadata-only: ${outbox_output}"
 jq -e --arg hash "$notify_message_hash" '.messages[] | select(.kind == "channel-outbound" and .outbound_message_sha256_12 == $hash)' "$outbox_file" >/dev/null || die "outbox file missing soul-risk notify hash ${notify_message_hash}"
 for leaked in "$account_id" "$ingest_hidden_token" "$command_hidden_token" "$soul_risk_id" "$expected_token" ".gitclaw/SOUL.md" ".gitclaw/IDENTITY.md" ".gitclaw/USER.md" ".gitclaw/TOOLS.md" ".gitclaw/MEMORY.md" ".gitclaw/memory/" ".gitclaw/HEARTBEAT.md"; do
-  if grep -Fq "$leaked" <<<"$outbox_output" || grep -Fq "$leaked" "$outbox_file"; then
+  if grep -Fq -- "$leaked" <<<"$outbox_output" || grep -Fq -- "$leaked" "$outbox_file"; then
     die "metadata-only outbox leaked ${leaked}"
   fi
 done
@@ -405,11 +405,11 @@ for expected in \
   "model_call_performed: \`false\`" \
   "repository_mutation_performed: \`false\`" \
   "soul_writes_performed: \`false\`"; do
-  grep -Fq "$expected" <<<"$duplicate_receipt" || die "duplicate channel soul-risk receipt missing ${expected}"
+  grep -Fq -- "$expected" <<<"$duplicate_receipt" || die "duplicate channel soul-risk receipt missing ${expected}"
 done
 [[ "$(soul_risk_notification_count)" == "1" ]] || die "duplicate channel soul-risk queued another notification"
 for leaked in "$duplicate_hidden_token" "$thread_id" "$ingest_message_id" "$notify_message_id" "$soul_risk_id" "$expected_token"; do
-  if grep -Fq "$leaked" <<<"$duplicate_receipt"; then
+  if grep -Fq -- "$leaked" <<<"$duplicate_receipt"; then
     die "duplicate channel soul-risk receipt leaked ${leaked}"
   fi
 done
@@ -432,17 +432,17 @@ model_run_json="$(wait_for_issue_comment_run_for_title "$model_started_at" "$iss
 wait_for_assistant_count_for_issue "$issue_number" 4 || die "expected model-backed channel soul-risk follow-up"
 model_comment="$(latest_assistant_comment_for_issue "$issue_number")"
 
-grep -Fq "$expected_token" <<<"$model_comment" || die "assistant did not include channel soul-risk search_files token ${expected_token}"
-if ! grep -Fq 'model="openai/gpt-5-nano"' <<<"$model_comment" && ! grep -Fq 'model="openai/gpt-4.1-nano"' <<<"$model_comment"; then
+grep -Fq -- "$expected_token" <<<"$model_comment" || die "assistant did not include channel soul-risk search_files token ${expected_token}"
+if ! grep -Fq -- 'model="openai/gpt-5-nano"' <<<"$model_comment" && ! grep -Fq -- 'model="openai/gpt-4.1-nano"' <<<"$model_comment"; then
   die "assistant channel soul-risk follow-up marker did not use configured GitHub Models primary or fallback"
 fi
-grep -Fq 'prompt_context_sha256_12="' <<<"$model_comment" || die "assistant channel soul-risk follow-up marker missing prompt context hash"
-grep -Fq 'skills="repo-reader"' <<<"$model_comment" || die "assistant channel soul-risk follow-up marker missing selected repo-reader skill"
-grep -Fq 'tools="' <<<"$model_comment" || die "assistant channel soul-risk follow-up marker missing prompt-visible tools"
-grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant channel soul-risk follow-up marker did not prove search_files was prompt-visible"
-grep -Fq 'usage_total_tokens="' <<<"$model_comment" || die "assistant channel soul-risk follow-up marker missing usage token telemetry"
+grep -Fq -- 'prompt_context_sha256_12="' <<<"$model_comment" || die "assistant channel soul-risk follow-up marker missing prompt context hash"
+grep -Fq -- 'skills="repo-reader"' <<<"$model_comment" || die "assistant channel soul-risk follow-up marker missing selected repo-reader skill"
+grep -Fq -- 'tools="' <<<"$model_comment" || die "assistant channel soul-risk follow-up marker missing prompt-visible tools"
+grep -Fq -- 'gitclaw.search_files' <<<"$model_comment" || die "assistant channel soul-risk follow-up marker did not prove search_files was prompt-visible"
+grep -Fq -- 'usage_total_tokens="' <<<"$model_comment" || die "assistant channel soul-risk follow-up marker missing usage token telemetry"
 for leaked in "$ingest_hidden_token" "$command_hidden_token" "$duplicate_hidden_token" "$followup_hidden_token" "$soul_risk_id" "$account_id"; do
-  if grep -Fq "$leaked" <<<"$model_comment"; then
+  if grep -Fq -- "$leaked" <<<"$model_comment"; then
     die "model channel soul-risk follow-up leaked ${leaked}"
   fi
 done
