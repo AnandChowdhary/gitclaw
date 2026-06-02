@@ -677,6 +677,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels reply --message-id <id>
 @gitclaw /channels task --task-id <id> --message-id <id>
 @gitclaw /channels clip --clip-id <id> --message-id <id>
+@gitclaw /channels attachment --attachment-id <id> --message-id <id> --filename <name>
 @gitclaw /channels decision --decision-id <id> --message-id <id>
 @gitclaw /channels digest --digest-id <id> --message-id <id>
 @gitclaw /channels handoff --id <id> --message-id <id>
@@ -922,6 +923,14 @@ clip issue without treating it as work. The clip issue holds the readable title
 and notes, a provider-facing clip link is queued back to the Slack/Telegram
 thread, and the source receipt stays body-free with only hashes, duplicate
 state, notification metadata, and delivery gates.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+attachment --attachment-id <id> --message-id <id> --filename <name>` records
+channel-origin file/media metadata as a durable GitHub issue. The attachment
+issue holds readable filename, media type, size, checksum, and optional caption
+metadata; the action does not fetch or copy file bytes, and it queues a
+provider-facing attachment link back to Slack/Telegram. The source receipt
+stays body-free with only hashes, duplicate state, notification metadata,
+source URL hash, and delivery/fetch gates.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels decision
 --decision-id <id> --message-id <id>` records a channel decision as a durable
 GitHub issue. The decision issue holds the readable decision and rationale,
@@ -1238,6 +1247,7 @@ scripts/e2e/github-channel-pin-slash.sh
 scripts/e2e/github-channel-reply-slash.sh
 scripts/e2e/github-channel-task-slash.sh
 scripts/e2e/github-channel-clip-slash.sh
+scripts/e2e/github-channel-attachment-slash.sh
 scripts/e2e/github-channel-decision-slash.sh
 scripts/e2e/github-channel-digest-slash.sh
 scripts/e2e/github-channel-session-handoff-slash.sh
@@ -1518,6 +1528,13 @@ to the mirrored thread, checks duplicate clip and notification suppression,
 exposes the clip-link notification through metadata-only outbox, and then
 continues on the clip issue with a real GitHub Models repo-reader/search
 follow-up.
+The channel-attachment slash harness turns the operator console into a
+metadata-safe file/media intake surface: a channel-ingested issue receives
+`@gitclaw /channels attachment`, creates or reuses a durable GitHub attachment
+metadata issue, queues a provider-facing attachment link back to the mirrored
+thread, checks duplicate attachment and notification suppression, proves source
+URLs and file bytes are not copied into receipts/outbox, and then continues on
+the attachment issue with a real GitHub Models repo-reader/search follow-up.
 The channel-decision slash harness turns the operator console into a decision
 log: a channel-ingested issue receives `@gitclaw /channels decision`, creates
 or reuses a durable GitHub decision issue, queues a provider-facing decision

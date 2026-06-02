@@ -5369,6 +5369,7 @@ accepts a structured reaction form:
 @gitclaw /channels pin --message-id <provider-message-id>
 @gitclaw /channels task --task-id <stable-task-id> --message-id <provider-message-id>
 @gitclaw /channels clip --clip-id <stable-clip-id> --message-id <provider-message-id>
+@gitclaw /channels attachment --attachment-id <stable-attachment-id> --message-id <provider-message-id> --filename <name> --media-type <mime> --bytes <n>
 @gitclaw /channels decision --decision-id <stable-decision-id> --message-id <provider-message-id>
 @gitclaw /channels digest --digest-id <stable-digest-id> --message-id <provider-message-id>
 @gitclaw /channels handoff --id <stable-handoff-id> --message-id <provider-message-id>
@@ -5503,6 +5504,39 @@ provider-facing clip link. Changes to this surface require a live E2E that
 creates the clip, validates the metadata-only clip-link outbox, checks duplicate
 suppression, and then continues on the clip issue with a normal GitHub Models
 repo-reader/search follow-up.
+
+The same channel-thread issue can also record channel-origin file/media
+metadata without fetching provider bytes:
+
+```text
+@gitclaw /channels attachment --attachment-id <stable-attachment-id> --message-id <provider-message-id> --filename <name> --media-type <mime> --bytes <n>
+Caption:
+optional human-readable attachment caption
+```
+
+`/channels attachment`, `/channels attach`, `/channels file`,
+`/channels media`, `/channels upload`, and `/channels document` infer the
+current channel and thread id from the issue marker when no explicit
+route/channel/thread target is provided. They create or reuse one open GitHub
+issue carrying a hidden `gitclaw:channel-attachment` marker for the stable
+attachment id, label it with `gitclaw` so normal conversation can continue
+there, and queue a provider-facing attachment link back to the mirrored channel
+thread. The attachment issue contains readable metadata that humans need for
+inspection: filename, media type, byte count, checksum if supplied, source URL
+hash, and optional caption. The action does not fetch source URLs, copy file
+bytes, upload attachments, or call a model. The source receipt remains
+body-free, reporting only attachment/thread/message/filename/caption/source
+URL/checksum hashes, duplicate status, notification queue metadata, byte-count
+metadata, and delivery/fetch gates. It does not print raw attachment ids, raw
+thread ids, raw source or notification message ids, raw filenames, raw
+captions, raw source URLs, raw checksums, channel message bodies, or file
+bytes. Duplicates are suppressed first by `attachment_id` for the GitHub
+attachment metadata issue and then by `channel + notify_message_id` for the
+provider-facing attachment link. Changes to this surface require a live E2E
+that records the attachment metadata, validates the metadata-only
+attachment-link outbox, checks duplicate suppression, verifies no file/source
+URL material leaks into receipts, and then continues on the attachment issue
+with a normal GitHub Models repo-reader/search follow-up.
 
 The same channel-thread issue can also record a durable decision:
 
@@ -5814,8 +5848,8 @@ validates the metadata-only reminder-link outbox, checks duplicate suppression,
 and then continues on the reminder issue with a normal GitHub Models
 repo-reader/search follow-up.
 
-The channel-created task, clip, decision, digest, and reminder issues also
-accept a completion form:
+The channel-created task, clip, attachment, decision, digest, and reminder
+issues also accept a completion form:
 
 ```text
 @gitclaw /channels done --message-id <stable-outbound-id>
@@ -5856,6 +5890,9 @@ Behavior:
   provider-facing task-link outbound comment per `channel + notify_message_id`,
 - create or reuse one `gitclaw:channel-clip` issue per clip id and queue one
   provider-facing clip-link outbound comment per `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-attachment` issue per attachment id and
+  queue one provider-facing attachment-link outbound comment per
+  `channel + notify_message_id`,
 - create or reuse one `gitclaw:channel-decision` issue per decision id and
   queue one provider-facing decision-link outbound comment per
   `channel + notify_message_id`,
@@ -5877,9 +5914,9 @@ Behavior:
   queue one provider-facing reminder-link outbound comment per
   `channel + notify_message_id`,
 - close one `gitclaw:channel-task`, `gitclaw:channel-clip`,
-  `gitclaw:channel-decision`, `gitclaw:channel-digest`, or
-  `gitclaw:channel-reminder` issue and queue one provider-facing done
-  acknowledgement per `channel + notify_message_id`,
+  `gitclaw:channel-attachment`, `gitclaw:channel-decision`,
+  `gitclaw:channel-digest`, or `gitclaw:channel-reminder` issue and queue one
+  provider-facing done acknowledgement per `channel + notify_message_id`,
 - suppress duplicate outbound message IDs,
 - for issue-native `/channels send`, post a `model="gitclaw/channels"`
   receipt back to the source issue,
@@ -6054,6 +6091,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels edit --message-id provider-msg-1 --edit-id edit-1
 @gitclaw /channels task --task-id channel-task-1 --message-id provider-msg-1
 @gitclaw /channels clip --clip-id channel-clip-1 --message-id provider-msg-1
+@gitclaw /channels attachment --attachment-id channel-attachment-1 --message-id provider-msg-1 --filename launch-brief.pdf --media-type application/pdf --bytes 4242
 @gitclaw /channels decision --decision-id channel-decision-1 --message-id provider-msg-1
 @gitclaw /channels digest --digest-id channel-digest-1 --message-id provider-msg-1
 @gitclaw /channels request-run search_files --id channel-tool-request-1 --message-id provider-msg-1
@@ -8575,6 +8613,17 @@ examples/workflows/gitclaw.yml
   normal GitHub Models issue-comment follow-up that must select `repo-reader`,
   expose `gitclaw.search_files`, recover the channel-clip fixture token, and
   avoid hidden channel, account, provider, message, and clip sentinels.
+- A `gh`-driven channel-attachment-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels attachment --attachment-id ... --message-id ...
+  --filename ...` on that mirrored thread, verifies GitHub attachment metadata
+  issue creation, body-free source receipt metadata, provider-facing
+  attachment-link queueing, duplicate attachment and notification suppression,
+  source URL/file-byte leak boundaries, and metadata-only outbox discovery. The
+  attachment issue then gets a normal GitHub Models issue-comment follow-up
+  that must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-attachment fixture token, and avoid hidden channel, account,
+  provider, message, filename, caption, source URL, and attachment sentinels.
 - A `gh`-driven channel-decision-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels decision --decision-id ... --message-id ...` on that

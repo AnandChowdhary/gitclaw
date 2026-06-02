@@ -4249,3 +4249,32 @@ Sources: OpenClaw sessions docs (`https://docs.openclaw.ai/cli/sessions`),
 OpenClaw channels docs (`https://docs.openclaw.ai/cli/channels`), Hermes
 messaging gateway docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/messaging`).
+
+## 2026-06-02 Channel Attachment Follow-Up
+
+OpenClaw's media-understanding docs treat inbound attachments as first-class
+message context: the pipeline collects `MediaPaths`, `MediaUrls`, and
+`MediaTypes`, can summarize image/audio/video before routing, and still
+preserves the original attachments for the model path when understanding is
+disabled or fails. Hermes' deliverable-mode docs approach the same channel UX
+from the outbound side: generated charts, PDFs, spreadsheets, images, audio,
+and similar files are posted back into Slack/Discord/Telegram/Email as native
+attachments instead of asking the user to copy local paths.
+
+GitClaw's no-server analogue should start narrower: `@gitclaw /channels
+attachment --attachment-id <id> --message-id <id> --filename <name>` records
+metadata for a channel-origin file/media object as a GitHub issue, queues a
+provider-facing link back through `channel-outbox`, and deliberately does not
+fetch source URLs, copy file bytes, upload files, or run media understanding in
+the deterministic action. The attachment issue can carry readable filename,
+media type, size, checksum, source URL hash, and caption so humans can inspect
+it and continue with a normal GitHub Models conversation. The source receipt
+stays metadata-only with hashes and delivery/fetch gates. Acceptance requires
+live E2E for attachment issue creation, attachment-link outbox discovery,
+duplicate suppression, source URL/file-byte leak checks, and a real GitHub
+Models repo-reader/search follow-up on the attachment issue.
+
+Sources: OpenClaw media understanding docs
+(`https://docs.openclaw.ai/nodes/media-understanding`), Hermes deliverable
+mode docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/deliverable-mode`).
