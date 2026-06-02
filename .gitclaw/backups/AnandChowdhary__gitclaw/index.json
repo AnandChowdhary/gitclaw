@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T12:57:35Z",
+  "generated_at": "2026-06-02T13:01:19Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 616,
+  "count": 617,
   "issues": [
     {
       "number": 3,
@@ -7768,6 +7768,20 @@
       ],
       "comment_count": 5,
       "transcript_messages": 5
+    },
+    {
+      "number": 722,
+      "title": "GitClaw telegram thread channel-checklist-e2e-20260602t125919z",
+      "path": "issues/000722.json",
+      "backup_generated_at": "2026-06-02T13:01:18Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:done",
+        "gitclaw:channel"
+      ],
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
