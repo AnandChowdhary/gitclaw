@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T00:46:01Z",
+  "generated_at": "2026-06-02T00:47:36Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4597689003,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels rehearse-memory --target long-term --id channel-memory-rehearsal-20260602t004240z --message-id memory-rehearsal-ingest-20260602t004240z --notify-message-id memory-rehearsal-notify-20260602t004240z\n\nDo not leak duplicate hidden token: NOECHO_CHANNEL_MEMORY_REHEARSAL_DUPLICATE_20260602t004240z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4597692246,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Memory Rehearsal Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#630`\n- source_comment_id: `4597692246`\n- source_kind: `channel_comment`\n- requested_channel_command: `/channels rehearse-memory`\n- channel_memory_rehearsal_status: `duplicate`\n- rehearsal_issue: `#631`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/631`\n- rehearsal_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#630`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- channel: `telegram`\n- thread_id_sha256_12: `ef38ccbd68eb`\n- source_message_id_sha256_12: `107731d88424`\n- notify_message_id_sha256_12: `3b62ec6abc28`\n- notify_message_id_auto: `false`\n- rehearsal_id_sha256_12: `c35ef10319c7`\n- rehearsal_id_auto: `false`\n- requested_target_sha256_12: `3252503ad6ce`\n- requested_target_terms: `1`\n- normalized_target_kind: `long-term`\n- normalized_target_path: `.gitclaw/MEMORY.md`\n- target_present: `true`\n- target_sha256_12: `9179d59e37bc`\n- target_bytes: `11916`\n- target_lines: `175`\n- memory_budget_bytes: `12000`\n- memory_budget_remaining_bytes: `84`\n- dated_memory_notes: `1`\n- latest_memory_note: `.gitclaw/memory/2026-05-29.md`\n- memory_validation_status: `ok`\n- memory_validation_errors: `0`\n- memory_validation_warnings: `0`\n- notification_body_sha256_12: `7f8fa66d8f06`\n- notification_body_bytes: `392`\n- notification_body_lines: `8`\n- target_from_current_channel_issue: `true`\n- rehearsal_mode: `github-issue-conversation`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- memory_write_allowed: `false`\n- candidate_memory_generation_allowed: `false`\n- memory_file_written: `false`\n- raw_rehearsal_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_target_memory_included: `false`\n- raw_candidate_memory_included: `false`\n- provider_delivery_performed: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `d369fe5e9150`\n- source_bytes: `311`\n- source_lines: `3`\n- llm_e2e_required_after_channel_memory_rehearsal_change: `true`\n- issue_title_sha256_12: `20b35be7ea64`\n\nGitClaw opened or reused a GitHub issue for rehearsing current memory from a mirrored channel thread, then queued a provider-facing rehearsal link back to that thread. This action does not call a model, generate candidate memory, edit `.gitclaw/` files, copy raw channel bodies, or mutate the repository.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#631`\n- ask a normal `@gitclaw` follow-up on the rehearsal issue to exercise current prompt-visible memory behavior\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4597696384,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T00:45:37Z",
       "updated_at": "2026-06-02T00:45:37Z"
+    },
+    {
+      "id": 4597692246,
+      "body": "@gitclaw /channels rehearse-memory --target long-term --id channel-memory-rehearsal-20260602t004240z --message-id memory-rehearsal-ingest-20260602t004240z --notify-message-id memory-rehearsal-notify-20260602t004240z\n\nDo not leak duplicate hidden token: NOECHO_CHANNEL_MEMORY_REHEARSAL_DUPLICATE_20260602t004240z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T00:46:19Z",
+      "updated_at": "2026-06-02T00:46:19Z"
+    },
+    {
+      "id": 4597696384,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26791266697\" event_id=\"comment-4597692246\" model=\"gitclaw/channels\" idempotency_key=\"6ec6563be03f688f1732702cb75fe196\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26791266697\" --\u003e\n## GitClaw Channel Memory Rehearsal Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#630`\n- source_comment_id: `4597692246`\n- source_kind: `channel_comment`\n- requested_channel_command: `/channels rehearse-memory`\n- channel_memory_rehearsal_status: `duplicate`\n- rehearsal_issue: `#631`\n- rehearsal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/631`\n- rehearsal_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#630`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- channel: `telegram`\n- thread_id_sha256_12: `ef38ccbd68eb`\n- source_message_id_sha256_12: `107731d88424`\n- notify_message_id_sha256_12: `3b62ec6abc28`\n- notify_message_id_auto: `false`\n- rehearsal_id_sha256_12: `c35ef10319c7`\n- rehearsal_id_auto: `false`\n- requested_target_sha256_12: `3252503ad6ce`\n- requested_target_terms: `1`\n- normalized_target_kind: `long-term`\n- normalized_target_path: `.gitclaw/MEMORY.md`\n- target_present: `true`\n- target_sha256_12: `9179d59e37bc`\n- target_bytes: `11916`\n- target_lines: `175`\n- memory_budget_bytes: `12000`\n- memory_budget_remaining_bytes: `84`\n- dated_memory_notes: `1`\n- latest_memory_note: `.gitclaw/memory/2026-05-29.md`\n- memory_validation_status: `ok`\n- memory_validation_errors: `0`\n- memory_validation_warnings: `0`\n- notification_body_sha256_12: `7f8fa66d8f06`\n- notification_body_bytes: `392`\n- notification_body_lines: `8`\n- target_from_current_channel_issue: `true`\n- rehearsal_mode: `github-issue-conversation`\n- rehearsal_issue_labeled_for_gitclaw: `true`\n- model_call_performed: `false`\n- memory_write_allowed: `false`\n- candidate_memory_generation_allowed: `false`\n- memory_file_written: `false`\n- raw_rehearsal_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_target_memory_included: `false`\n- raw_candidate_memory_included: `false`\n- provider_delivery_performed: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `d369fe5e9150`\n- source_bytes: `311`\n- source_lines: `3`\n- llm_e2e_required_after_channel_memory_rehearsal_change: `true`\n- issue_title_sha256_12: `20b35be7ea64`\n\nGitClaw opened or reused a GitHub issue for rehearsing current memory from a mirrored channel thread, then queued a provider-facing rehearsal link back to that thread. This action does not call a model, generate candidate memory, edit `.gitclaw/` files, copy raw channel bodies, or mutate the repository.\n\n### Rehearsal Path\n- continue on rehearsal issue: `#631`\n- ask a normal `@gitclaw` follow-up on the rehearsal issue to exercise current prompt-visible memory behavior\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T00:47:10Z",
+      "updated_at": "2026-06-02T00:47:10Z"
     }
   ]
 }
