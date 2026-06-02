@@ -4623,7 +4623,29 @@ access, mutate allowlists, issue pairing codes, call provider APIs, print raw
 provider identifiers, or mutate the repository. Acceptance requires live E2E
 for contact-card issue creation, metadata-only contact-card outbox discovery,
 duplicate suppression, explicit no-grant/no-allowlist/no-pairing-code flags,
-and a real GitHub Models repo-reader/search follow-up on the contact issue.
+and a real GitHub Models repo-reader/search follow-up.
+
+## 2026-06-02 Channel Whoami Follow-Up
+
+OpenClaw's channel binding model is useful because it treats transport routing
+as a first-class concern instead of mixing every provider into the assistant
+loop. Hermes adds a sharper identity control-plane lesson: `/whoami` should be
+safe for normal users, should explain the active tier/scope, and should never
+silently grant access. The GitHub-native version should therefore report
+identity status as a queued channel reply while keeping authorization changes
+behind explicit GitHub review issues.
+
+GitClaw's serverless version is `@gitclaw /channels whoami --identity-id <id>
+--role <role> --message-id <id>`. It queues one provider-facing
+identity-status message back to the mirrored Slack/Telegram thread and keeps
+the source receipt body-free with hashes for identity ids, provider ids,
+handles, display names, roles, notes, thread ids, and message ids. It does not
+create a contact card, open an access review, grant access, mutate allowlists,
+issue pairing codes, call provider APIs, call a model, or mutate the
+repository. Acceptance requires live E2E for identity-status queueing,
+metadata-only outbox discovery, duplicate notification suppression, explicit
+no-contact/no-access/no-grant/no-allowlist/no-pairing-code flags, and a real
+GitHub Models repo-reader/search follow-up on the channel issue.
 
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 gateway (`https://hermes-agent.nousresearch.com/docs/user-guide/messaging/`),

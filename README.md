@@ -689,6 +689,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels image --image-id <id> --width <px> --height <px> --message-id <id>
 @gitclaw /channels link --link-id <id> --url <url> --message-id <id>
 @gitclaw /channels access-request --access-id <id> --scope <scope> --message-id <id>
+@gitclaw /channels whoami --identity-id <id> --message-id <id>
 @gitclaw /channels contact --contact-id <id> --role <role> --message-id <id>
 @gitclaw /channels handoff --id <id> --message-id <id>
 @gitclaw /channels request-run search_files --id <id> --message-id <id>
@@ -1026,6 +1027,15 @@ request. The review issue holds the readable requester, scope, requested role,
 and reason, while provider user IDs and handles stay hashed. The action queues
 a provider-facing review link and explicitly does not grant access, mutate
 allowlists, issue pairing codes, call provider APIs, or call a model.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels whoami
+--identity-id <id> --message-id <id>` queues a provider-facing identity-status
+message back to the current channel thread. This is the serverless Hermes-style
+`/whoami` primitive: it tells the sender the reviewed display name/role status
+GitClaw can safely show, while the source receipt stores only hashes for
+identity ids, provider user IDs, handles, display names, roles, notes, thread
+ids, and message ids. It does not create a contact card, open an access review,
+grant access, mutate allowlists, issue pairing codes, call provider APIs, or
+call a model.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels contact
 --contact-id <id> --role <role> --message-id <id>` opens or reuses a GitHub
 contact-card issue for a channel-origin identity. The contact issue holds the
@@ -1778,6 +1788,14 @@ allowlist mutation, pairing code, or provider API call happened, checks
 duplicate contact and notification suppression, exposes the contact-card
 notification through metadata-only outbox, and then continues on the contact
 issue with a real GitHub Models repo-reader/search follow-up.
+The channel-whoami slash harness turns the operator console into a lightweight
+identity-status surface: a channel-ingested issue receives `@gitclaw /channels
+whoami`, queues a provider-facing identity-status message back to the mirrored
+thread, checks that no contact-card issue, access-review issue, access grant,
+allowlist mutation, pairing code, or provider API call happened, checks
+duplicate notification suppression, exposes the identity-status notification
+through metadata-only outbox, and then continues on the channel thread itself
+with a real GitHub Models repo-reader/search follow-up.
 The channel-session-handoff slash harness turns the operator console into a
 conversation handoff surface: a channel-ingested issue receives `@gitclaw
 /channels handoff`, creates or reuses a GitHub session handoff issue, queues a
