@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T13:22:40Z",
+  "generated_at": "2026-06-02T13:24:22Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 724,
     "title": "GitClaw telegram thread channel-toolset-proposal-e2e-20260602t132044z",
@@ -51,6 +51,15 @@
       "CommentID": 4602805368,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Toolset Proposal Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#724`\n- requested_channel_command: `/channels propose-toolset`\n- channel_toolset_proposal_status: `created`\n- toolset_proposal_issue: `#725`\n- toolset_proposal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/725`\n- toolset_proposal_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#724`\n- notification_comment_id: `4602818487`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- channel: `telegram`\n- thread_id_sha256_12: `2315584bf46b`\n- source_message_id_sha256_12: `7d20e88aee7e`\n- notify_message_id_sha256_12: `a3ce38e7fe5e`\n- notify_message_id_auto: `false`\n- toolset_id_sha256_12: `c643ff0f38ed`\n- toolset_id_auto: `false`\n- tool_count: `2`\n- toolset_name_sha256_12: `911b08d59d98`\n- toolset_name_bytes: `47`\n- toolset_name_lines: `1`\n- toolset_purpose_sha256_12: `857553d82c88`\n- toolset_purpose_bytes: `196`\n- toolset_purpose_lines: `2`\n- toolset_tools_sha256_12: `9cbb982f23f0`\n- toolset_tools_bytes: `142`\n- toolset_tools_lines: `2`\n- toolset_policy_sha256_12: `32509538871a`\n- toolset_policy_bytes: `68`\n- toolset_policy_lines: `1`\n- toolset_notes_sha256_12: `e22251118b6f`\n- toolset_notes_bytes: `77`\n- toolset_notes_lines: `1`\n- notification_body_sha256_12: `5b894964cfb5`\n- target_from_current_channel_issue: `true`\n- proposal_store: `github-issue-to-git-reviewed-toolset`\n- review_pr_required: `true`\n- model_call_performed: `false`\n- toolset_enabled: `false`\n- tool_execution_performed: `false`\n- active_tool_config_write_performed: `false`\n- repository_mutation_performed: `false`\n- raw_toolset_id_included: `false`\n- raw_toolset_name_included: `false`\n- raw_toolset_purpose_included: `false`\n- raw_toolset_tools_included: `false`\n- raw_toolset_policy_included: `false`\n- raw_toolset_notes_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- llm_e2e_required_after_channel_toolset_proposal_change: `true`\n- issue_title_sha256_12: `eb7660bc3995`\n\nGitClaw opened or reused a GitHub issue for reviewing a channel-origin toolset proposal, then queued a provider-facing proposal link back to the mirrored thread. This action does not call a model, execute tools, enable toolsets, write tool configuration, copy raw channel bodies, or mutate the repository.\n\n### Proposal Review Path\n- continue on toolset proposal issue: `#725`\n- ask a normal `@gitclaw` follow-up on the proposal issue to refine the reviewed toolset bundle\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4602818633,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-02T13:22:14Z",
       "updated_at": "2026-06-02T13:22:14Z"
+    },
+    {
+      "id": 4602818487,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-toolset-proposal-e2e-20260602t132044z\" message_id=\"toolset-proposal-notify-20260602t132044z\" author=\"gitclaw\" --\u003e\nGitClaw channel toolset proposal captured.\n\nToolset proposal issue: #725\nURL: https://github.com/AnandChowdhary/gitclaw/issues/725\nName: GitHub-native research toolset 20260602t132044z\nTools: 2\nReview PR required: true\nToolset enabled: false\n\nContinue tracking it in the linked GitHub issue. This notification did not enable tools, call a model, execute a tool, or mutate the repository.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T13:23:49Z",
+      "updated_at": "2026-06-02T13:23:49Z"
+    },
+    {
+      "id": 4602818633,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26822574757\" event_id=\"comment-4602805368\" model=\"gitclaw/channels\" idempotency_key=\"625af70e9141efac21ff93da5dfd086e\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26822574757\" --\u003e\n## GitClaw Channel Toolset Proposal Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#724`\n- requested_channel_command: `/channels propose-toolset`\n- channel_toolset_proposal_status: `created`\n- toolset_proposal_issue: `#725`\n- toolset_proposal_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/725`\n- toolset_proposal_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#724`\n- notification_comment_id: `4602818487`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- channel: `telegram`\n- thread_id_sha256_12: `2315584bf46b`\n- source_message_id_sha256_12: `7d20e88aee7e`\n- notify_message_id_sha256_12: `a3ce38e7fe5e`\n- notify_message_id_auto: `false`\n- toolset_id_sha256_12: `c643ff0f38ed`\n- toolset_id_auto: `false`\n- tool_count: `2`\n- toolset_name_sha256_12: `911b08d59d98`\n- toolset_name_bytes: `47`\n- toolset_name_lines: `1`\n- toolset_purpose_sha256_12: `857553d82c88`\n- toolset_purpose_bytes: `196`\n- toolset_purpose_lines: `2`\n- toolset_tools_sha256_12: `9cbb982f23f0`\n- toolset_tools_bytes: `142`\n- toolset_tools_lines: `2`\n- toolset_policy_sha256_12: `32509538871a`\n- toolset_policy_bytes: `68`\n- toolset_policy_lines: `1`\n- toolset_notes_sha256_12: `e22251118b6f`\n- toolset_notes_bytes: `77`\n- toolset_notes_lines: `1`\n- notification_body_sha256_12: `5b894964cfb5`\n- target_from_current_channel_issue: `true`\n- proposal_store: `github-issue-to-git-reviewed-toolset`\n- review_pr_required: `true`\n- model_call_performed: `false`\n- toolset_enabled: `false`\n- tool_execution_performed: `false`\n- active_tool_config_write_performed: `false`\n- repository_mutation_performed: `false`\n- raw_toolset_id_included: `false`\n- raw_toolset_name_included: `false`\n- raw_toolset_purpose_included: `false`\n- raw_toolset_tools_included: `false`\n- raw_toolset_policy_included: `false`\n- raw_toolset_notes_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- llm_e2e_required_after_channel_toolset_proposal_change: `true`\n- issue_title_sha256_12: `eb7660bc3995`\n\nGitClaw opened or reused a GitHub issue for reviewing a channel-origin toolset proposal, then queued a provider-facing proposal link back to the mirrored thread. This action does not call a model, execute tools, enable toolsets, write tool configuration, copy raw channel bodies, or mutate the repository.\n\n### Proposal Review Path\n- continue on toolset proposal issue: `#725`\n- ask a normal `@gitclaw` follow-up on the proposal issue to refine the reviewed toolset bundle\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T13:23:50Z",
+      "updated_at": "2026-06-02T13:23:50Z"
     }
   ]
 }
