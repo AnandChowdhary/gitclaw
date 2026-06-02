@@ -6784,6 +6784,41 @@ duplicate suppression, verifies no registry/profile-export/soul-write/model/
 repository/provider side effects occurred, and then continues on the channel
 issue with a normal GitHub Models repo-reader/search follow-up.
 
+The same channel-thread issue can inspect one high-authority context file
+without dumping persona, identity, user, memory, tool, or heartbeat bodies into
+the provider channel:
+
+```text
+@gitclaw /channels soul-info SOUL --message-id <provider-message-id> --notify-message-id <stable-outbound-id>
+```
+
+`/channels soul-info`, `/channels souls-info`, `/channels context-info`,
+`/channels authority-info`, `/channels identity-info`,
+`/channels policy-info`, `/channels memory-info`, `/channels heartbeat-info`,
+`/channels soul-card`, `/channels authority-card`, and
+`/channels context-card` infer the current channel and thread id from the
+issue marker when no explicit route/channel/thread target is provided. They
+reuse the same normalization as `gitclaw soul info <path>` for aliases such as
+`SOUL`, `identity`, `memory`, `heartbeat`, `latest`, and dated memory-note
+paths. The provider-visible message can include soul-info status,
+requested/normalized path hashes, validation/risk counts, and one focused
+match card with normalized context path, category, source, present, required,
+canonical, latest, loaded-for-this-turn, byte/line counts, file hash, and
+context-limit flags. The source receipt is stricter: it records only
+thread/message/info hashes, requested/normalized path hashes, counts, delivery
+metadata, and hard disabled gates. It does not call a model, contact
+registries, export profiles, write soul or memory, call provider APIs, mutate
+repository files, print raw requested or normalized context paths, print raw
+thread/message/info ids, print raw soul bodies, print raw identity bodies,
+print raw user bodies, print raw memory bodies, print raw tool guidance, print
+raw heartbeat bodies, print prompts, print tool outputs, or print channel
+message bodies in the source receipt. Duplicate notifications are suppressed
+by `channel + notify_message_id`. Changes to this surface require a live E2E
+that validates the metadata-only soul-info outbox, checks duplicate
+suppression, verifies no registry/profile-export/soul-write/memory-write/
+model/repository/provider side effects occurred, and then continues on the
+channel issue with a normal GitHub Models repo-reader/search follow-up.
+
 The same channel-thread issue can search high-authority context without
 dumping persona, identity, user, memory, tool, or heartbeat bodies into the
 provider channel:
@@ -7912,6 +7947,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels backup-info #123 --message-id provider-msg-1 --notify-message-id provider-backup-info-ack-1
 @gitclaw /channels profile-status --message-id provider-msg-1
 @gitclaw /channels soul-status --message-id provider-msg-1
+@gitclaw /channels soul-info SOUL --message-id provider-msg-1 --notify-message-id provider-soul-info-ack-1
 @gitclaw /channels soul-search operating --message-id provider-msg-1 --notify-message-id provider-soul-search-ack-1
 @gitclaw /channels memory-status --message-id provider-msg-1
 @gitclaw /channels memory-search deployment --message-id provider-msg-1 --notify-message-id provider-memory-search-ack-1
@@ -10841,6 +10877,21 @@ examples/workflows/gitclaw.yml
   follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
   recover the channel-soul status fixture token, and avoid hidden channel,
   account, message, status, soul-body, identity-body, user-body, memory-body,
+  tool-guidance, heartbeat-body, prompt, session, backup, and notification
+  sentinels.
+- A `gh`-driven channel-soul-info-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels soul-info ...` on that mirrored thread, verifies one
+  provider-facing high-authority context metadata card, source receipt
+  metadata without raw context paths, raw ids, soul bodies, identity bodies,
+  user bodies, memory bodies, tool guidance, or heartbeat bodies, duplicate
+  notification suppression, metadata-only outbox discovery, and explicit
+  no-registry-contact/no-profile-export/no-soul-write/no-memory-write/
+  no-model-call/no-repository-mutation/no-provider-API flags. The
+  channel-thread issue then gets a normal GitHub Models issue-comment
+  follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
+  recover the channel-soul-info fixture token, and avoid hidden channel,
+  account, message, info, soul-body, identity-body, user-body, memory-body,
   tool-guidance, heartbeat-body, prompt, session, backup, and notification
   sentinels.
 - A `gh`-driven channel-soul-search-slash E2E harness creates a real

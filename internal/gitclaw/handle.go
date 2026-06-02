@@ -1139,6 +1139,32 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		status.SetDone()
 		return nil
 	}
+	if IsChannelSoulInfoActionRequest(ev, cfg) {
+		channelClient, ok := github.(ChannelSendGitHubClient)
+		if !ok {
+			return failStartedTurn(ctx, cfg, github, ev, status, "channel", fmt.Errorf("github client cannot queue channel soul info"))
+		}
+		req, err := BuildChannelSoulInfoActionRequest(ev, cfg, repoContext)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "channel", fmt.Errorf("build channel soul info action: %w", err))
+		}
+		result, err := RunChannelSoulInfo(ctx, cfg, channelClient, req, repoContext)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "channel", fmt.Errorf("run channel soul info action: %w", err))
+		}
+		body := RenderAssistantComment(Marker{
+			RunID:          envFirst("GITHUB_RUN_ID", "local"),
+			EventID:        eventID(ev),
+			Model:          "gitclaw/channels",
+			IdempotencyKey: key,
+			RunURL:         actionRunURL(ev),
+		}, RenderChannelSoulInfoActionReport(ev, req, result))
+		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post channel soul info action comment: %w", err))
+		}
+		status.SetDone()
+		return nil
+	}
 	if IsChannelSoulSearchActionRequest(ev, cfg) {
 		channelClient, ok := github.(ChannelSendGitHubClient)
 		if !ok {

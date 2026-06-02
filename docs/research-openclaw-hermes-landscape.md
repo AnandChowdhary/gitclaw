@@ -142,6 +142,30 @@ OpenClaw docs (`https://docs.openclaw.ai/`), OpenClaw sessions docs
 and Hermes features/memory docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/overview`).
 
+2026-06-02 channel-soul-info follow-up: OpenClaw's channel gateway treats chat
+surfaces as the user-facing transport, but its session docs deliberately keep
+trajectory tails bounded and redact prompt/tool bodies. Hermes' checkpoint
+model reinforces the same operating shape: inspect focused metadata before
+rollback or mutation, keep shadow/recovery state distinct from the working
+tree, and avoid broad destructive operations as an implicit side effect.
+GitClaw's serverless cut should therefore make `@gitclaw /channels soul-info
+<path> --message-id <id> --notify-message-id <id>` a channel-native focused
+high-authority context card. It can reuse the existing body-free `gitclaw soul
+info` normalization for `SOUL`, `identity`, `memory`, `heartbeat`, `latest`,
+and dated memory notes, queue one provider-facing metadata card through
+`channel-outbox`, and leave a stricter source receipt with only
+requested/normalized path hashes, counts, delivery gates, and no raw context
+paths. It should not call a model, execute tools, write soul or memory,
+contact registries, export profiles, call provider APIs, mutate repository
+files, or expose raw channel, soul, identity, user, memory, tool, heartbeat,
+prompt, or tool-output bodies. Sources: OpenClaw docs
+(`https://docs.openclaw.ai/`), OpenClaw sessions docs
+(`https://docs.openclaw.ai/cli/sessions`), OpenClaw channel docs
+(`https://docs.openclaw.ai/cli/channels`), Hermes checkpoint docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback`),
+and Hermes features/memory docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/overview`).
+
 2026-06-02 channel-soul-search follow-up: OpenClaw's channels and sessions
 docs treat chat delivery as the user-facing transport, while its identity,
 memory, and backup surfaces stay inspectable but separate from raw transcript
