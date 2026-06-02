@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T18:56:54Z",
+  "generated_at": "2026-06-02T18:58:40Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 742,
     "title": "GitClaw telegram thread channel-backup-search-e2e-20260602t185446z",
@@ -42,6 +42,24 @@
       "CommentID": 4606059424,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels backup-search channel-backup-search-anchor-20260602t185446z --message-id backup-search-ingest-20260602t185446z --notify-message-id backup-search-notify-20260602t185446z --search-id channel-backup-search-20260602t185446z --max-results 5\nDo not include this command hidden token in the receipt: NOECHO_CHANNEL_BACKUP_SEARCH_COMMAND_20260602t185446z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4606063996,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Backup Search Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#742`\n- requested_channel_command: `/channels backup-search`\n- channel_backup_search_status: `queued`\n- backup_search_status: `ok`\n- backup_verify_status: `ok`\n- backup_fetch_status: `fetched`\n- backup_branch: `gitclaw-backups`\n- search_mode: `gitclaw-backups-local-lexical`\n- notification_target_issue: `#742`\n- notification_comment_id: `4606072649`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `8f9070d8c1f5`\n- source_message_id_sha256_12: `673101e73c1b`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `db6d016074a0`\n- notify_message_id_auto: `false`\n- search_id_sha256_12: `b28f116dbacf`\n- search_id_auto: `false`\n- query_sha256_12: `10aa3e4818cb`\n- query_terms: `1`\n- query_bytes: `45`\n- query_source: `positional`\n- max_results: `5`\n- backup_root_sha256_12: `01bba4fdda7b`\n- repo_backup_dir_sha256_12: `d34f7eff6f54`\n- index_path_sha256_12: `85381a696296`\n- readme_path_sha256_12: `68f0377c0ee7`\n- backup_schema_version: `1`\n- issue_count: `637`\n- issue_fields_searched: `1274`\n- comment_bodies_searched: `1683`\n- transcript_messages_searched: `2235`\n- matched_issues: `1`\n- matched_lines: `2`\n- results_returned: `2`\n- search_error_kind: `none`\n- search_error_sha256_12: `none`\n- notification_body_sha256_12: `7771c68257f4`\n- notification_body_bytes: `1273`\n- notification_body_lines: `23`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- backup_branch_write_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_query_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_search_id_included: `false`\n- raw_backup_root_included: `false`\n- raw_backup_paths_included: `false`\n- raw_backup_payloads_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_transcript_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_channel_backup_search_change: `true`\n- issue_title_sha256_12: `d71f4389e665`\n\nGitClaw searched the fetched gitclaw-backups archive and queued provider-facing recall metadata. This action may fetch the backup branch read-only when the local backup root is absent, but it does not write the backup branch, restore files, replay GitHub APIs, call a model, call provider APIs, or print raw backup payloads.\n\n### Follow-Up Delivery\n- provider gateways read backup-search results with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent backup-search results with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate backup-search notifications are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4606072791,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -60,6 +78,30 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T18:56:25Z",
       "updated_at": "2026-06-02T18:56:25Z"
+    },
+    {
+      "id": 4606063996,
+      "body": "@gitclaw /channels backup-search channel-backup-search-anchor-20260602t185446z --message-id backup-search-ingest-20260602t185446z --notify-message-id backup-search-notify-20260602t185446z --search-id channel-backup-search-20260602t185446z --max-results 5\nDo not include this command hidden token in the receipt: NOECHO_CHANNEL_BACKUP_SEARCH_COMMAND_20260602t185446z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T18:57:01Z",
+      "updated_at": "2026-06-02T18:57:01Z"
+    },
+    {
+      "id": 4606072649,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-backup-search-e2e-20260602t185446z\" message_id=\"backup-search-notify-20260602t185446z\" author=\"gitclaw\" --\u003e\nGitClaw channel backup search\n\nBackup search status: ok\nBackup verify status: ok\nBackup branch: gitclaw-backups\nBackup fetch status: fetched\nQuery hash: 10aa3e4818cb\nQuery terms: 1\nMax results: 5\nIssue count: 637\nIssue fields searched: 1274\nComment bodies searched: 1683\nTranscript messages searched: 2235\nMatched issues: 1\nMatched lines: 2\nResults returned: 2\nSearch id hash: b28f116dbacf\n\nResults:\n- issue=#742 path=issues/000742.json source=comment:4606051780 role=comment trusted=false line=5 score=53 matched_terms=1 body_bytes=403 body_lines=7 body_sha256_12=4bd85f07ac40 line_sha256_12=3654ba7a8678 generated_at=2026-06-02T18:56:54Z event=workflow_dispatch\n- issue=#742 path=issues/000742.json source=transcript:02 role=user trusted=false line=4 score=53 matched_terms=1 body_bytes=223 body_lines=6 body_sha256_12=70184b0577eb line_sha256_12=3654ba7a8678 generated_at=2026-06-02T18:56:54Z event=workflow_dispatch\n\nRaw backup payloads, channel bodies, issue bodies, comment bodies, transcript messages, prompts, tool outputs, and raw search queries are not included. Model call: not performed by this action. Repository mutation: not performed by this action. Backup branch write: not performed by this action. Provider delivery: queued through GitHub channel outbox.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T18:58:11Z",
+      "updated_at": "2026-06-02T18:58:11Z"
+    },
+    {
+      "id": 4606072791,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26841394221\" event_id=\"comment-4606063996\" model=\"gitclaw/channels\" idempotency_key=\"9d57235983d8fd649a64f6f90079a3bd\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26841394221\" --\u003e\n## GitClaw Channel Backup Search Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#742`\n- requested_channel_command: `/channels backup-search`\n- channel_backup_search_status: `queued`\n- backup_search_status: `ok`\n- backup_verify_status: `ok`\n- backup_fetch_status: `fetched`\n- backup_branch: `gitclaw-backups`\n- search_mode: `gitclaw-backups-local-lexical`\n- notification_target_issue: `#742`\n- notification_comment_id: `4606072649`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `8f9070d8c1f5`\n- source_message_id_sha256_12: `673101e73c1b`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `db6d016074a0`\n- notify_message_id_auto: `false`\n- search_id_sha256_12: `b28f116dbacf`\n- search_id_auto: `false`\n- query_sha256_12: `10aa3e4818cb`\n- query_terms: `1`\n- query_bytes: `45`\n- query_source: `positional`\n- max_results: `5`\n- backup_root_sha256_12: `01bba4fdda7b`\n- repo_backup_dir_sha256_12: `d34f7eff6f54`\n- index_path_sha256_12: `85381a696296`\n- readme_path_sha256_12: `68f0377c0ee7`\n- backup_schema_version: `1`\n- issue_count: `637`\n- issue_fields_searched: `1274`\n- comment_bodies_searched: `1683`\n- transcript_messages_searched: `2235`\n- matched_issues: `1`\n- matched_lines: `2`\n- results_returned: `2`\n- search_error_kind: `none`\n- search_error_sha256_12: `none`\n- notification_body_sha256_12: `7771c68257f4`\n- notification_body_bytes: `1273`\n- notification_body_lines: `23`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- backup_branch_write_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_query_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_search_id_included: `false`\n- raw_backup_root_included: `false`\n- raw_backup_paths_included: `false`\n- raw_backup_payloads_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_transcript_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_channel_backup_search_change: `true`\n- issue_title_sha256_12: `d71f4389e665`\n\nGitClaw searched the fetched gitclaw-backups archive and queued provider-facing recall metadata. This action may fetch the backup branch read-only when the local backup root is absent, but it does not write the backup branch, restore files, replay GitHub APIs, call a model, call provider APIs, or print raw backup payloads.\n\n### Follow-Up Delivery\n- provider gateways read backup-search results with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent backup-search results with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate backup-search notifications are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T18:58:12Z",
+      "updated_at": "2026-06-02T18:58:12Z"
     }
   ]
 }
