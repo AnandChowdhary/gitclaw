@@ -701,6 +701,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels access-request --access-id <id> --scope <scope> --message-id <id>
 @gitclaw /channels platform telegram --state running --message-id <id>
 @gitclaw /channels model --message-id <id>
+@gitclaw /channels skills --message-id <id>
 @gitclaw /channels whoami --identity-id <id> --message-id <id>
 @gitclaw /channels contact --contact-id <id> --role <role> --message-id <id>
 @gitclaw /channels handoff --id <id> --message-id <id>
@@ -1134,6 +1135,15 @@ conversation. The action does not call a model, switch models, write model
 configuration, mutate the repository, or call provider APIs; source receipts
 hash thread IDs, source/notification message IDs, status IDs, and channel
 bodies.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels skills
+--message-id <id>` queues a provider-facing skill-status snapshot back to the
+current channel thread. It reports compact repo-local skill availability from
+the current GitHub Actions checkout, including counts and enabled skill names,
+while preserving progressive disclosure for full `SKILL.md` bodies. The action
+does not call a model, install or update skills, contact registries, run
+installer scripts, mutate the repository, or call provider APIs; source
+receipts hash thread IDs, source/notification message IDs, status IDs, skill
+names/paths, and channel bodies.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels whoami
 --identity-id <id> --message-id <id>` queues a provider-facing identity-status
 message back to the current channel thread. This is the serverless Hermes-style
@@ -2015,6 +2025,14 @@ model-config write, provider API call, or repository mutation happened, checks
 duplicate notification suppression, exposes the model-status notification
 through metadata-only outbox, and then continues on the channel thread itself
 with a real GitHub Models repo-reader/search follow-up.
+The channel-skill-status slash harness turns the operator console into a
+provider-visible skill discovery surface: a channel-ingested issue receives
+`@gitclaw /channels skills`, queues a provider-facing skill-status message back
+to the mirrored thread, checks that no model call, skill install/update,
+registry contact, installer run, provider API call, or repository mutation
+happened, checks duplicate notification suppression, exposes the skill-status
+notification through metadata-only outbox, and then continues on the channel
+thread itself with a real GitHub Models repo-reader/search follow-up.
 The channel-whoami slash harness turns the operator console into a lightweight
 identity-status surface: a channel-ingested issue receives `@gitclaw /channels
 whoami`, queues a provider-facing identity-status message back to the mirrored

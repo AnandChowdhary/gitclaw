@@ -131,6 +131,7 @@ channel access request unique search fixture phrase => GITCLAW_CHANNEL_ACCESS_RE
 channel contact unique search fixture phrase => GITCLAW_CHANNEL_CONTACT_CONTEXT_V1
 channel platform unique search fixture phrase => GITCLAW_CHANNEL_PLATFORM_CONTEXT_V1
 channel model status unique search fixture phrase => GITCLAW_CHANNEL_MODEL_STATUS_CONTEXT_V1
+channel skill status unique search fixture phrase => GITCLAW_CHANNEL_SKILL_STATUS_CONTEXT_V1
 channel whoami unique search fixture phrase => GITCLAW_CHANNEL_WHOAMI_CONTEXT_V1
 channel tool request unique search fixture phrase => GITCLAW_CHANNEL_TOOL_REQUEST_CONTEXT_V1
 channel tool rehearsal unique search fixture phrase => GITCLAW_CHANNEL_TOOL_REHEARSAL_CONTEXT_V1

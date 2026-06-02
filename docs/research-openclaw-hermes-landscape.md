@@ -4983,6 +4983,33 @@ docs (`https://docs.openclaw.ai/cli/models`), Hermes messaging guide
 (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`),
 GitHub Models inference REST docs (`https://docs.github.com/en/rest/models/inference`).
 
+## 2026-06-02 Channel Skill Status Follow-Up
+
+OpenClaw's skills surface emphasizes compact discovery first: list what is
+available, then load full skill instructions only when the agent actually needs
+that skill. Hermes has a similar operator lesson in its bundled skills and
+messaging surfaces: capability discovery should be easy for chat users, but
+runtime capability changes should remain explicit and reviewable. GitClaw can
+bring that into Slack/Telegram-style channels without adding a server by
+turning skill discovery into a queued GitHub channel reply.
+
+GitClaw's serverless version is `@gitclaw /channels skills --message-id <id>`.
+It queues one provider-facing skill-status message back to the mirrored
+Slack/Telegram thread with compact repo-local skill counts and enabled skill
+names from the current GitHub Actions checkout. The source receipt stays
+body-free for thread/message/status ids, skill names, skill paths, raw
+`SKILL.md` bodies, descriptions, and channel bodies. The action does not call a
+model, install skills, update skills, contact registries, run installer
+scripts, mutate the repository, call provider APIs, or create an artifact issue.
+Acceptance requires live E2E for skill-status queueing, metadata-only outbox
+discovery, duplicate notification suppression, explicit no-model/no-install/
+no-update/no-registry/no-installer/no-provider-API flags, and a real GitHub
+Models repo-reader/search follow-up on the same channel issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), OpenClaw skills CLI
+docs (`https://docs.openclaw.ai/cli/skills`), Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-02 Channel Platform Status Follow-Up
 
 OpenClaw treats the gateway/channel layer as an explicit control surface rather
