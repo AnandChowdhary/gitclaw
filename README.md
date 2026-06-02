@@ -679,6 +679,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels clip --clip-id <id> --message-id <id>
 @gitclaw /channels decision --decision-id <id> --message-id <id>
 @gitclaw /channels digest --digest-id <id> --message-id <id>
+@gitclaw /channels handoff --id <id> --message-id <id>
 @gitclaw /channels request-run search_files --id <id> --message-id <id>
 @gitclaw /channels rehearse-tool search_files --id <id> --message-id <id>
 @gitclaw /channels rehearse-skill repo-reader --id <id> --message-id <id>
@@ -933,6 +934,12 @@ GitHub issue. The digest issue holds the readable summary and highlights,
 queues a provider-facing digest link back to the Slack/Telegram thread, and
 keeps the source receipt body-free with hashes, duplicate state, notification
 metadata, and delivery gates.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels handoff
+--id <id> --message-id <id>` opens or reuses a normal GitHub session handoff
+issue and queues a provider-facing handoff link back to the Slack/Telegram
+thread. The channel action does not call a model, copy raw channel text, or
+require a server/socket; the linked handoff issue is where a normal GitHub
+Models conversation resumes with model, skill, tool, and usage telemetry.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 request-run <tool> --id <id> --message-id <id>` opens or reuses a reviewed
 GitHub tool-run request issue and queues a provider-facing review link back to
@@ -1233,6 +1240,7 @@ scripts/e2e/github-channel-task-slash.sh
 scripts/e2e/github-channel-clip-slash.sh
 scripts/e2e/github-channel-decision-slash.sh
 scripts/e2e/github-channel-digest-slash.sh
+scripts/e2e/github-channel-session-handoff-slash.sh
 scripts/e2e/github-channel-tool-run-request-slash.sh
 scripts/e2e/github-channel-tool-rehearsal-slash.sh
 scripts/e2e/github-channel-skill-rehearsal-slash.sh
@@ -1524,6 +1532,13 @@ back to the mirrored thread, checks duplicate digest and notification
 suppression, exposes the digest-link notification through metadata-only outbox,
 and then continues on the digest issue with a real GitHub Models
 repo-reader/search follow-up.
+The channel-session-handoff slash harness turns the operator console into a
+conversation handoff surface: a channel-ingested issue receives `@gitclaw
+/channels handoff`, creates or reuses a GitHub session handoff issue, queues a
+provider-facing handoff link back to the mirrored thread, checks duplicate
+handoff and notification suppression, exposes the handoff-link notification
+through metadata-only outbox, and then continues on the handoff issue with a
+real GitHub Models repo-reader/search follow-up.
 The channel-tool-run-request slash harness turns the operator console into a
 reviewed tool intake surface: a channel-ingested issue receives `@gitclaw
 /channels request-run`, creates or reuses a GitHub tool-run request issue,

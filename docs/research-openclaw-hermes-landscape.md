@@ -4220,3 +4220,32 @@ The source action stays deterministic, model-free, and provider-free, reports
 only hashes and delivery gates, suppresses duplicates by `channel + edit_id`,
 and requires a live GitHub Models repo-reader/search follow-up to prove the
 channel issue still supports ordinary grounded conversation.
+
+## 2026-06-02 Channel Session Handoff Follow-Up
+
+OpenClaw's session CLI explicitly separates stored conversation rows from live
+channel/provider liveness: a quiet Slack, Telegram, Discord, or other channel
+can be connected without showing a new session row until a message is actually
+processed. Its channel CLI treats `channels status --probe`, capabilities,
+resolution, and logs as the runtime surface. Hermes' messaging gateway points
+the other way around the same architecture: each platform adapter receives
+messages, routes them through a per-chat session store, and dispatches work to
+the agent, while a single gateway process handles messaging platforms, sessions,
+cron, and delivery.
+
+GitClaw's no-server analogue should let a mirrored channel thread fork into a
+GitHub-native session lane without pretending to own a provider socket:
+`@gitclaw /channels handoff --id <id> --message-id <id>` opens or reuses a
+`gitclaw:session-handoff-issue`, queues a provider-facing handoff link back to
+the Slack/Telegram thread, and keeps the source receipt body-free. The handoff
+issue carries counts, hashes, model/skill/tool provenance, usage telemetry, and
+reentry gates, but not raw channel text, raw provider ids in the source receipt,
+raw prompts, assistant bodies, or tool outputs. Acceptance requires live E2E
+with a model-backed source turn before the handoff, metadata-only handoff-link
+outbox validation, duplicate suppression, and a real GitHub Models
+repo-reader/search follow-up on the handoff issue.
+
+Sources: OpenClaw sessions docs (`https://docs.openclaw.ai/cli/sessions`),
+OpenClaw channels docs (`https://docs.openclaw.ai/cli/channels`), Hermes
+messaging gateway docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/messaging`).

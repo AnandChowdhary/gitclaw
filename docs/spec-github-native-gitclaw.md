@@ -5371,6 +5371,7 @@ accepts a structured reaction form:
 @gitclaw /channels clip --clip-id <stable-clip-id> --message-id <provider-message-id>
 @gitclaw /channels decision --decision-id <stable-decision-id> --message-id <provider-message-id>
 @gitclaw /channels digest --digest-id <stable-digest-id> --message-id <provider-message-id>
+@gitclaw /channels handoff --id <stable-handoff-id> --message-id <provider-message-id>
 @gitclaw /channels request-run <tool-name> --id <stable-request-id> --message-id <provider-message-id>
 @gitclaw /channels rehearse-tool <tool-name> --id <stable-rehearsal-id> --message-id <provider-message-id>
 @gitclaw /channels rehearse-skill <skill-name> --id <stable-rehearsal-id> --message-id <provider-message-id>
@@ -5561,6 +5562,38 @@ notify_message_id` for the provider-facing digest link. Changes to this
 surface require a live E2E that records the digest, validates the metadata-only
 digest-link outbox, checks duplicate suppression, and then continues on the
 digest issue with a normal GitHub Models repo-reader/search follow-up.
+
+The same channel-thread issue can also fork the mirrored conversation into a
+normal GitHub session lane:
+
+```text
+@gitclaw /channels handoff --id <stable-handoff-id> --message-id <provider-message-id>
+```
+
+`/channels handoff`, `/channels session-handoff`, `/channels handoff-session`,
+`/channels fork-session`, `/channels session-fork`, `/channels new-session`,
+`/channels new-issue`, and `/channels continue-github` infer the current
+channel and thread id from the issue marker when no explicit channel/thread
+target is provided. They create or reuse one open GitHub issue carrying the
+existing `gitclaw:session-handoff-issue` marker, label it with `gitclaw` so
+normal conversation can continue there, and queue a provider-facing handoff
+link back to the mirrored channel thread. The channel action does not call a
+model, call provider APIs, keep a server/socket open, copy raw channel bodies,
+copy raw issue/comment bodies, copy raw assistant replies, copy prompts, copy
+tool outputs, or mutate the repository. The linked handoff issue stores counts,
+hashes, marker provenance, reentry gates, model/skill/tool names, and usage
+totals from the source issue thread; a normal `@gitclaw` follow-up on that
+linked issue is the actual resumed LLM conversation. Duplicates are suppressed
+first by handoff id for the GitHub handoff issue and then by `channel +
+notify_message_id` for the provider-facing handoff link. The source receipt
+reports only source issue/comment ids, thread/message/notification/handoff
+hashes, duplicate state, notification queue metadata, transcript counts,
+model/skill/tool/usage telemetry, and delivery gates, including
+`llm_e2e_required_after_channel_session_handoff_change=true`. Changes to this
+surface require a live E2E that first gets a model-backed assistant turn on the
+channel issue, creates the handoff, validates the metadata-only handoff-link
+outbox, checks duplicate suppression, and then continues on the handoff issue
+with a normal GitHub Models repo-reader/search follow-up.
 
 The same channel-thread issue can also turn a mirrored provider message into a
 reviewed tool-run request:
