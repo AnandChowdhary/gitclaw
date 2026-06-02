@@ -224,6 +224,28 @@ func TestChannelDoneArtifactRefSupportsWatchIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsStandingOrderProposalIssues(t *testing.T) {
+	body := RenderChannelStandingOrderProposalIssueBody(ChannelStandingOrderProposalOptions{
+		Repo:              "owner/repo",
+		Channel:           "telegram",
+		ThreadID:          "thread-order-done",
+		SourceMessageID:   "source-order-done",
+		ProposalID:        "order-done-1",
+		Cadence:           "weekly",
+		Title:             "Weekly triage",
+		ProposalBody:      "## Program: Weekly triage\n**Authority:** Draft a private summary.",
+		SourceIssueNumber: 42,
+		SourceCommentID:   4201,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "standing-order-proposal" || ref.ID != "order-done-1" || ref.Channel != "telegram" || ref.SourceIssueNumber != 42 || ref.SourceCommentID != 4201 {
+		t.Fatalf("unexpected standing-order proposal ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsDigestIssues(t *testing.T) {
 	body := RenderChannelDigestIssueBody(ChannelDigestOptions{
 		Repo:              "owner/repo",

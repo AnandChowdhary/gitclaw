@@ -5370,6 +5370,7 @@ accepts a structured reaction form:
 @gitclaw /channels deliverable --deliverable-id <stable-deliverable-id> --message-id <provider-message-id> --filename <name> --media-type <mime> --url <download-url>
 @gitclaw /channels task --task-id <stable-task-id> --message-id <provider-message-id>
 @gitclaw /channels watch --watch-id <stable-watch-id> --cadence <cadence> --message-id <provider-message-id>
+@gitclaw /channels propose-order --id <stable-proposal-id> --cadence <cadence> --message-id <provider-message-id>
 @gitclaw /channels clip --clip-id <stable-clip-id> --message-id <provider-message-id>
 @gitclaw /channels attachment --attachment-id <stable-attachment-id> --message-id <provider-message-id> --filename <name> --media-type <mime> --bytes <n>
 @gitclaw /channels decision --decision-id <stable-decision-id> --message-id <provider-message-id>
@@ -5540,6 +5541,44 @@ Changes to this surface require a live E2E that creates the watch, validates
 the metadata-only watch-link outbox, checks duplicate suppression, and then
 continues on the watch issue with a normal GitHub Models repo-reader/search
 follow-up.
+
+The same channel-thread issue can also turn a provider message into a reviewed
+standing-order proposal:
+
+```text
+@gitclaw /channels propose-order --id <stable-proposal-id> --cadence <cadence> --message-id <provider-message-id>
+Title: short standing-order title
+## Program: short standing-order title
+**Authority:** narrow authority statement
+**Trigger:** schedule, event, or condition
+**Approval gate:** what needs human sign-off
+**Escalation:** when to stop and ask
+```
+
+`/channels propose-order`, `/channels order-propose`,
+`/channels order-proposal`, `/channels standing-order`,
+`/channels standing-order-proposal`, `/channels propose-standing-order`, and
+`/channels propose-orders` infer the current channel and thread id from the
+issue marker when no explicit route/channel/thread target is provided. They
+create or reuse one open GitHub issue carrying a hidden
+`gitclaw:channel-standing-order-proposal` marker for the stable proposal id,
+label it with `gitclaw` so normal conversation can continue there, and queue a
+provider-facing proposal link back to the mirrored channel thread. The
+proposal issue contains the candidate standing-order text because it is the
+review artifact. The source receipt remains body-free, reporting only
+proposal/thread/message/cadence/title/body hashes, duplicate status,
+notification queue metadata, and delivery gates. It does not call a model,
+call provider APIs, edit `.gitclaw/STANDING_ORDERS.md`, create schedules,
+mutate the repository, print raw proposal ids, print raw thread ids, print raw
+source or notification message ids, print channel message bodies, or print the
+raw proposal in the source receipt. Duplicates are suppressed first by
+`proposal_id` for the GitHub proposal issue and then by `channel +
+notify_message_id` for the provider-facing proposal link. Accepted proposals
+must become normal PRs that edit standing orders and any scheduled GitHub
+Actions workflows. Changes to this surface require a live E2E that creates the
+proposal, validates the metadata-only proposal-link outbox, checks duplicate
+suppression, and then continues on the proposal issue with a normal GitHub
+Models repo-reader/search follow-up.
 
 The same channel-thread issue can also save a mirrored provider message without
 turning it into work:
@@ -6089,6 +6128,10 @@ Behavior:
   provider-facing task-link outbound comment per `channel + notify_message_id`,
 - create or reuse one `gitclaw:channel-watch` issue per watch id and queue one
   provider-facing watch-link outbound comment per `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-standing-order-proposal` issue per
+  proposal id and queue one provider-facing proposal-link outbound comment per
+  `channel + notify_message_id` without executing a model, editing standing
+  orders, or creating schedules,
 - create or reuse one `gitclaw:channel-clip` issue per clip id and queue one
   provider-facing clip-link outbound comment per `channel + notify_message_id`,
 - create or reuse one `gitclaw:channel-attachment` issue per attachment id and
@@ -6115,7 +6158,7 @@ Behavior:
   queue one provider-facing reminder-link outbound comment per
   `channel + notify_message_id`,
 - close one `gitclaw:channel-task`, `gitclaw:channel-watch`,
-  `gitclaw:channel-clip`,
+  `gitclaw:channel-standing-order-proposal`, `gitclaw:channel-clip`,
   `gitclaw:channel-attachment`, `gitclaw:channel-decision`,
   `gitclaw:channel-digest`, or `gitclaw:channel-reminder` issue and queue one
   provider-facing done acknowledgement per `channel + notify_message_id`,
@@ -6298,6 +6341,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels deliverable --deliverable-id channel-file-1 --message-id provider-msg-1 --filename launch-report.pdf --media-type application/pdf --url https://example.invalid/launch-report.pdf
 @gitclaw /channels task --task-id channel-task-1 --message-id provider-msg-1
 @gitclaw /channels watch --watch-id channel-watch-1 --cadence hourly --message-id provider-msg-1
+@gitclaw /channels propose-order --id channel-order-1 --cadence weekly --message-id provider-msg-1
 @gitclaw /channels clip --clip-id channel-clip-1 --message-id provider-msg-1
 @gitclaw /channels attachment --attachment-id channel-attachment-1 --message-id provider-msg-1 --filename launch-brief.pdf --media-type application/pdf --bytes 4242
 @gitclaw /channels decision --decision-id channel-decision-1 --message-id provider-msg-1
@@ -8838,6 +8882,17 @@ examples/workflows/gitclaw.yml
   follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
   recover the channel-watch fixture token, and avoid hidden channel, account,
   provider, message, and watch sentinels.
+- A `gh`-driven channel-standing-order-proposal-slash E2E harness creates a
+  real channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels propose-order --id ... --cadence ... --message-id ...`
+  on that mirrored thread, verifies GitHub standing-order proposal issue
+  creation, proposal metadata, body-free source receipt metadata,
+  provider-facing proposal-link queueing, duplicate proposal and notification
+  suppression, and metadata-only outbox discovery. The proposal issue then
+  gets a normal GitHub Models issue-comment follow-up that must select
+  `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-standing-order-proposal fixture token, and avoid hidden channel,
+  account, provider, message, proposal, and order-body sentinels.
 - A `gh`-driven channel-clip-slash E2E harness creates a real channel-thread
   issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels clip --clip-id ... --message-id ...` on that mirrored

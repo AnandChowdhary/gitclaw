@@ -678,6 +678,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels deliverable --deliverable-id <id> --message-id <id> --filename <name>
 @gitclaw /channels task --task-id <id> --message-id <id>
 @gitclaw /channels watch --watch-id <id> --cadence <cadence> --message-id <id>
+@gitclaw /channels propose-order --id <id> --cadence <cadence> --message-id <id>
 @gitclaw /channels clip --clip-id <id> --message-id <id>
 @gitclaw /channels attachment --attachment-id <id> --message-id <id> --filename <name>
 @gitclaw /channels decision --decision-id <id> --message-id <id>
@@ -939,6 +940,15 @@ action itself does not open a socket, call a model, or call provider APIs. It
 queues a provider-facing watch link back to Slack/Telegram and keeps the source
 receipt body-free with only hashes, duplicate state, notification metadata, and
 delivery gates.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+propose-order --id <id> --cadence <cadence> --message-id <id>` creates or
+reuses a GitHub standing-order proposal issue for reviewed durable authority.
+The proposal issue stores the candidate program text and checklist for scope,
+trigger, approval gate, escalation, and later GitHub Actions enforcement; the
+channel action itself does not call a model, edit `.gitclaw/STANDING_ORDERS.md`,
+create schedules, or mutate the repository. It queues a provider-facing
+proposal link back to Slack/Telegram and keeps the source receipt body-free
+with only hashes, duplicate state, notification metadata, and delivery gates.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels clip
 --clip-id <id> --message-id <id>` saves a channel moment as a durable GitHub
 clip issue without treating it as work. The clip issue holds the readable title
@@ -1301,6 +1311,7 @@ scripts/e2e/github-channel-reply-slash.sh
 scripts/e2e/github-channel-deliverable-slash.sh
 scripts/e2e/github-channel-task-slash.sh
 scripts/e2e/github-channel-watch-slash.sh
+scripts/e2e/github-channel-standing-order-proposal-slash.sh
 scripts/e2e/github-channel-clip-slash.sh
 scripts/e2e/github-channel-attachment-slash.sh
 scripts/e2e/github-channel-decision-slash.sh
@@ -1593,6 +1604,13 @@ provider-facing watch link back to the mirrored thread, checks duplicate watch
 and notification suppression, exposes the watch-link notification through
 metadata-only outbox, and then continues on the watch issue with a real GitHub
 Models repo-reader/search follow-up.
+The channel-standing-order-proposal slash harness turns the operator console
+into a reviewed authority-intake surface: a channel-ingested issue receives
+`@gitclaw /channels propose-order`, creates or reuses a GitHub standing-order
+proposal issue, queues a provider-facing proposal link back to the mirrored
+thread, checks duplicate proposal and notification suppression, exposes the
+proposal-link notification through metadata-only outbox, and then continues on
+the proposal issue with a real GitHub Models repo-reader/search follow-up.
 The channel-clip slash harness turns the operator console into a save-for-later
 surface: a channel-ingested issue receives `@gitclaw /channels clip`, creates
 or reuses a durable GitHub clip issue, queues a provider-facing clip link back

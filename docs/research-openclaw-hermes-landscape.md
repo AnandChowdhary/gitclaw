@@ -4448,3 +4448,31 @@ Sources: OpenClaw automation docs (`https://docs.openclaw.ai/automation`),
 OpenClaw tools overview (`https://docs.openclaw.ai/tools`), Hermes built-in
 tools reference
 (`https://hermes-agent.nousresearch.com/docs/reference/tools-reference/`).
+
+## 2026-06-02 Channel Standing Order Proposal Follow-Up
+
+OpenClaw treats standing orders as durable authority: a program should define
+scope, trigger, approval gate, and escalation, and exact timing should be
+enforced by cron rather than repeated ad hoc prompts. The same page recommends
+starting with narrow authority, putting boundaries in writing, and combining
+standing orders with cron only after the authority is explicit. Hermes' cron
+docs reinforce the split: scheduled runs can attach skills and deliver results
+back to chat, but each run is a fresh scheduled session and cron-run sessions
+cannot recursively create more cron jobs.
+
+GitClaw's serverless version is `@gitclaw /channels propose-order --id <id>
+--cadence <cadence> --message-id <id>`. It opens or reuses a
+`gitclaw:channel-standing-order-proposal` issue, stores the candidate program
+text in that review issue, queues a provider-facing proposal link back to the
+mirrored Telegram or Slack thread, and leaves actual `.gitclaw/STANDING_ORDERS.md`
+and scheduled workflow changes for a normal PR. The channel receipt remains
+body-free and hash-only. The action does not call a model, edit standing
+orders, create schedules, call provider APIs, or mutate the repository.
+Acceptance requires live E2E for proposal issue creation, metadata-only
+proposal-link outbox discovery, duplicate suppression, and a real GitHub
+Models repo-reader/search follow-up on the proposal issue.
+
+Sources: OpenClaw standing orders docs
+(`https://docs.openclaw.ai/automation/standing-orders`), OpenClaw automation
+docs (`https://docs.openclaw.ai/automation`), Hermes scheduled tasks docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/cron/`).
