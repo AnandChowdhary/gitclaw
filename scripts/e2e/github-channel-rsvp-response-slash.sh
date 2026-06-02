@@ -331,8 +331,8 @@ outbox_output="$(GITCLAW_CHANNEL="$target_channel" \
   GITCLAW_CHANNEL_ACCOUNT_ID="$target_account_id" \
   GITCLAW_CHANNEL_ISSUE_NUMBER="$target_issue_number" \
   go run ./cmd/gitclaw channel-outbox --repo "$repo" --out "$outbox_file")"
-grep -Fq "pending=2" <<<"$outbox_output" || die "channel outbox did not report two pending messages after RSVP response: ${outbox_output}"
-grep -Fq '"pending_messages": 2' "$outbox_file" || die "channel outbox file missing two pending messages after RSVP response"
+grep -Fq "pending=3" <<<"$outbox_output" || die "channel outbox did not report three pending messages after RSVP response: ${outbox_output}"
+grep -Fq '"pending_messages": 3' "$outbox_file" || die "channel outbox file missing three pending messages after RSVP response"
 for leaked in "$details_token" "$note_token" "$responder_name"; do
   if grep -Fq "$leaked" <<<"$outbox_output" || grep -Fq "$leaked" "$outbox_file"; then
     die "channel outbox leaked ${leaked} without --include-body"
