@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-02T09:47:10Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 690,
+    "title": "GitClaw slack thread gitclaw-e2e-route-rsvp-response-invite-20260602T094403Z",
+    "body": "\u003c!-- gitclaw:channel-thread channel=\"slack\" thread_id=\"gitclaw-e2e-route-rsvp-response-invite-20260602T094403Z\" --\u003e\nGitClaw channel bridge thread.\n\n- channel: slack\n- thread_id: gitclaw-e2e-route-rsvp-response-invite-20260602T094403Z\n\nMessages from this external channel are mirrored into this issue as comments\nwith gitclaw:channel-message provenance markers.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw:channel"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw slack thread gitclaw-e2e-route-rsvp-response-invite-20260602T094403Z\n\n\u003c!-- gitclaw:channel-thread channel=\"slack\" thread_id=\"gitclaw-e2e-route-rsvp-response-invite-20260602T094403Z\" --\u003e\nGitClaw channel bridge thread.\n\n- channel: slack\n- thread_id: gitclaw-e2e-route-rsvp-response-invite-20260602T094403Z\n\nMessages from this external channel are mirrored into this issue as comments\nwith gitclaw:channel-message provenance markers.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels rsvp-response --rsvp-id rsvp-response-20260602T094403Z --message-id rsvp-response-msg-20260602T094403Z --notify-message-id rsvp-response-ack-20260602T094403Z --response yes\nResponder: RSVP Response Tester 20260602T094403Z\nNote:\nPlease record this channel-origin note: NOECHO_CHANNEL_RSVP_RESPONSE_NOTE_20260602T094403Z.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4601156882,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel RSVP Response Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#690`\n- requested_channel_command: `/channels rsvp-response`\n- channel_rsvp_response_status: `recorded`\n- rsvp_issue: `#689`\n- rsvp_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/689`\n- response_comment_id: `4601164235`\n- response_recorded: `true`\n- response_duplicate_suppressed: `false`\n- notification_target_issue: `#690`\n- notification_comment_id: `4601164409`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `slack`\n- thread_id_sha256_12: `2982d888532d`\n- rsvp_id_sha256_12: `ea2b615fe651`\n- response_id_sha256_12: `220e76345c66`\n- response_id_auto: `false`\n- response_sha256_12: `8a798890fe93`\n- responder_sha256_12: `0dc1cbdc3ab4`\n- responder_bytes: `37`\n- responder_lines: `1`\n- note_sha256_12: `bf58356903bb`\n- note_bytes: `91`\n- note_lines: `1`\n- source_message_id_sha256_12: `967aff1166e1`\n- notify_message_id_sha256_12: `8951f09164fc`\n- notify_message_id_auto: `false`\n- rsvp_response_body_sha256_12: `120853239e0a`\n- rsvp_response_body_bytes: `882`\n- rsvp_response_body_lines: `21`\n- notification_body_sha256_12: `e4153d3f8365`\n- target_from_current_channel_issue: `true`\n- raw_rsvp_id_included: `false`\n- raw_response_id_included: `false`\n- raw_response_included: `false`\n- raw_responder_included: `false`\n- raw_note_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_rsvp_response_action_change: `true`\n- issue_title_sha256_12: `ea99b276e270`\n\nGitClaw recorded a channel-origin RSVP response on the GitHub RSVP issue, then queued a provider-facing acknowledgement back to the mirrored channel thread. The RSVP issue contains the human-readable response; this source receipt keeps RSVP IDs, response IDs, participant text, notes, thread IDs, message IDs, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the RSVP response acknowledgement with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent acknowledgements with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate RSVP response records are suppressed by `rsvp_id + response_id`; duplicate acknowledgements are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the RSVP issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4601164540,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4601150442,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"slack\" thread_id=\"gitclaw-e2e-route-rsvp-response-invite-20260602T094403Z\" message_id=\"rsvp-response-invite-20260602T094403Z\" author=\"gitclaw:e2e\" --\u003e\nGitClaw channel RSVP\n\nRSVP: #689\nURL: https://github.com/AnandChowdhary/gitclaw/issues/689\nSource: #688\n\nEvent:\nTitle: Tiny channel RSVP response fixture 20260602T094403Z\nWhen: 2026-06-04T16:00:00Z\nWhere: E2E response room 20260602T094403Z\nHost: GitClaw E2E\n\nDetails:\nBring one clear yes/no/maybe answer and NOECHO_CHANNEL_RSVP_RESPONSE_DETAILS_20260602T094403Z.\n\nReply yes/no/maybe in the linked GitHub RSVP or continue through the mirrored channel thread.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T09:44:57Z",
+      "updated_at": "2026-06-02T09:44:57Z"
+    },
+    {
+      "id": 4601156882,
+      "body": "@gitclaw /channels rsvp-response --rsvp-id rsvp-response-20260602T094403Z --message-id rsvp-response-msg-20260602T094403Z --notify-message-id rsvp-response-ack-20260602T094403Z --response yes\nResponder: RSVP Response Tester 20260602T094403Z\nNote:\nPlease record this channel-origin note: NOECHO_CHANNEL_RSVP_RESPONSE_NOTE_20260602T094403Z.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T09:45:43Z",
+      "updated_at": "2026-06-02T09:45:43Z"
+    },
+    {
+      "id": 4601164409,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"slack\" thread_id=\"gitclaw-e2e-route-rsvp-response-invite-20260602T094403Z\" message_id=\"rsvp-response-ack-20260602T094403Z\" author=\"gitclaw\" --\u003e\nGitClaw RSVP response recorded.\n\nRSVP: #689\nURL: https://github.com/AnandChowdhary/gitclaw/issues/689\nResponse: yes\nParticipant: RSVP Response Tester 20260602T094403Z\n\nRecorded in the linked GitHub RSVP issue.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T09:46:41Z",
+      "updated_at": "2026-06-02T09:46:41Z"
+    },
+    {
+      "id": 4601164540,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26811851866\" event_id=\"comment-4601156882\" model=\"gitclaw/channels\" idempotency_key=\"164ec31eb08374c1d6b3adbc0538188c\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26811851866\" --\u003e\n## GitClaw Channel RSVP Response Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#690`\n- requested_channel_command: `/channels rsvp-response`\n- channel_rsvp_response_status: `recorded`\n- rsvp_issue: `#689`\n- rsvp_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/689`\n- response_comment_id: `4601164235`\n- response_recorded: `true`\n- response_duplicate_suppressed: `false`\n- notification_target_issue: `#690`\n- notification_comment_id: `4601164409`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `slack`\n- thread_id_sha256_12: `2982d888532d`\n- rsvp_id_sha256_12: `ea2b615fe651`\n- response_id_sha256_12: `220e76345c66`\n- response_id_auto: `false`\n- response_sha256_12: `8a798890fe93`\n- responder_sha256_12: `0dc1cbdc3ab4`\n- responder_bytes: `37`\n- responder_lines: `1`\n- note_sha256_12: `bf58356903bb`\n- note_bytes: `91`\n- note_lines: `1`\n- source_message_id_sha256_12: `967aff1166e1`\n- notify_message_id_sha256_12: `8951f09164fc`\n- notify_message_id_auto: `false`\n- rsvp_response_body_sha256_12: `120853239e0a`\n- rsvp_response_body_bytes: `882`\n- rsvp_response_body_lines: `21`\n- notification_body_sha256_12: `e4153d3f8365`\n- target_from_current_channel_issue: `true`\n- raw_rsvp_id_included: `false`\n- raw_response_id_included: `false`\n- raw_response_included: `false`\n- raw_responder_included: `false`\n- raw_note_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_rsvp_response_action_change: `true`\n- issue_title_sha256_12: `ea99b276e270`\n\nGitClaw recorded a channel-origin RSVP response on the GitHub RSVP issue, then queued a provider-facing acknowledgement back to the mirrored channel thread. The RSVP issue contains the human-readable response; this source receipt keeps RSVP IDs, response IDs, participant text, notes, thread IDs, message IDs, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the RSVP response acknowledgement with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent acknowledgements with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate RSVP response records are suppressed by `rsvp_id + response_id`; duplicate acknowledgements are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the RSVP issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T09:46:42Z",
+      "updated_at": "2026-06-02T09:46:42Z"
+    }
+  ]
+}
