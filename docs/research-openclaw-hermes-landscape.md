@@ -4335,3 +4335,31 @@ Sources: OpenClaw tools overview (`https://docs.openclaw.ai/tools`),
 OpenClaw exec approvals docs
 (`https://docs.openclaw.ai/tools/exec-approvals`), Hermes deliverable mode docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/features/deliverable-mode`).
+
+## 2026-06-02 Channel Skill Proposal Follow-Up
+
+OpenClaw's Skills Workshop pattern separates proposal, review, safety scan,
+and apply. That is the right shape for channel-origin skill requests too:
+external chat can start the intake, but the durable proposal state should stay
+in GitHub where comments, labels, model telemetry, and code-review branches
+are auditable. Hermes' skill model has the same operational implication from
+the chat side: skills are reusable agent capabilities, so channel gateways
+should route skill-change intent into a managed review flow rather than asking
+the agent to invent or rewrite active skill files inline.
+
+GitClaw's serverless version is `@gitclaw /channels propose-skill <name>
+--message-id <id>`. It opens or reuses a `gitclaw:skill-proposal-issue`, queues
+a provider-facing proposal link back to the mirrored Telegram or Slack thread,
+and leaves all actual skill drafting for a later GitHub Models conversation
+and normal code-review branch. The channel receipt remains body-free and
+hash-only. The action does not call a model, generate skill text, write
+`.gitclaw/skill-proposals`, edit active `SKILL.md` files, run installers, call
+provider APIs, or mutate the repository. Acceptance requires live E2E for
+proposal issue creation, metadata-only proposal-link outbox discovery,
+duplicate suppression, and a real GitHub Models repo-reader/search follow-up
+on the proposal issue.
+
+Sources: OpenClaw skill workshop docs
+(`https://docs.openclaw.ai/tools/skill-workshop`), OpenClaw tools overview
+(`https://docs.openclaw.ai/tools`), Hermes skills docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/skills`).
