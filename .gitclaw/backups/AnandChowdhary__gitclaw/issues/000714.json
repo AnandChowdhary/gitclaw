@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T11:36:48Z",
+  "generated_at": "2026-06-02T11:38:13Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 714,
     "title": "GitClaw telegram thread channel-insight-e2e-20260602t113441z",
@@ -51,6 +51,15 @@
       "CommentID": 4601991696,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Insight Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#714`\n- requested_channel_command: `/channels insight`\n- channel_insight_status: `recorded`\n- insight_issue: `#715`\n- insight_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/715`\n- insight_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#714`\n- notification_comment_id: `4602001197`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `774be4364a5c`\n- source_message_id_sha256_12: `4d292e417f9b`\n- notify_message_id_sha256_12: `53d46f74c9bd`\n- notify_message_id_auto: `false`\n- insight_id_sha256_12: `ff96e64ca995`\n- insight_id_auto: `false`\n- insight_title_sha256_12: `03bdae620aee`\n- insight_title_bytes: `31`\n- insight_title_lines: `1`\n- insight_observation_sha256_12: `6beece9899f4`\n- insight_observation_bytes: `79`\n- insight_observation_lines: `1`\n- insight_evidence_sha256_12: `3c29bc96da61`\n- insight_evidence_bytes: `73`\n- insight_evidence_lines: `1`\n- insight_recommendation_sha256_12: `caf646a18b16`\n- insight_recommendation_bytes: `85`\n- insight_recommendation_lines: `1`\n- notification_body_sha256_12: `1adf84e5f78a`\n- target_from_current_channel_issue: `true`\n- raw_insight_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_insight_title_included: `false`\n- raw_insight_observation_included: `false`\n- raw_insight_evidence_included: `false`\n- raw_insight_recommendation_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_insight_action_change: `true`\n- issue_title_sha256_12: `9152077587c5`\n\nGitClaw recorded a mirrored channel insight as a durable GitHub issue, then queued a provider-facing link back to the original thread. The insight issue contains the human-readable title, observation, evidence, and recommendation; this source receipt keeps provider IDs, insight IDs, section text, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the insight-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent insight links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate insight issues are suppressed by `insight_id`; duplicate insight-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the insight issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4602001324,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-02T11:36:23Z",
       "updated_at": "2026-06-02T11:36:23Z"
+    },
+    {
+      "id": 4602001197,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-insight-e2e-20260602t113441z\" message_id=\"insight-notify-20260602t113441z\" author=\"gitclaw\" --\u003e\nGitClaw channel insight recorded.\n\nInsight: #715\nURL: https://github.com/AnandChowdhary/gitclaw/issues/715\nTitle: Launch insight 20260602t113441z\n\nRecorded in the linked GitHub issue.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T11:37:42Z",
+      "updated_at": "2026-06-02T11:37:42Z"
+    },
+    {
+      "id": 4602001324,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26817138322\" event_id=\"comment-4601991696\" model=\"gitclaw/channels\" idempotency_key=\"1b50e692712e20e65a7b653f22e737c2\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26817138322\" --\u003e\n## GitClaw Channel Insight Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#714`\n- requested_channel_command: `/channels insight`\n- channel_insight_status: `recorded`\n- insight_issue: `#715`\n- insight_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/715`\n- insight_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#714`\n- notification_comment_id: `4602001197`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `774be4364a5c`\n- source_message_id_sha256_12: `4d292e417f9b`\n- notify_message_id_sha256_12: `53d46f74c9bd`\n- notify_message_id_auto: `false`\n- insight_id_sha256_12: `ff96e64ca995`\n- insight_id_auto: `false`\n- insight_title_sha256_12: `03bdae620aee`\n- insight_title_bytes: `31`\n- insight_title_lines: `1`\n- insight_observation_sha256_12: `6beece9899f4`\n- insight_observation_bytes: `79`\n- insight_observation_lines: `1`\n- insight_evidence_sha256_12: `3c29bc96da61`\n- insight_evidence_bytes: `73`\n- insight_evidence_lines: `1`\n- insight_recommendation_sha256_12: `caf646a18b16`\n- insight_recommendation_bytes: `85`\n- insight_recommendation_lines: `1`\n- notification_body_sha256_12: `1adf84e5f78a`\n- target_from_current_channel_issue: `true`\n- raw_insight_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_insight_title_included: `false`\n- raw_insight_observation_included: `false`\n- raw_insight_evidence_included: `false`\n- raw_insight_recommendation_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_insight_action_change: `true`\n- issue_title_sha256_12: `9152077587c5`\n\nGitClaw recorded a mirrored channel insight as a durable GitHub issue, then queued a provider-facing link back to the original thread. The insight issue contains the human-readable title, observation, evidence, and recommendation; this source receipt keeps provider IDs, insight IDs, section text, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the insight-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent insight links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate insight issues are suppressed by `insight_id`; duplicate insight-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the insight issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T11:37:43Z",
+      "updated_at": "2026-06-02T11:37:43Z"
     }
   ]
 }
