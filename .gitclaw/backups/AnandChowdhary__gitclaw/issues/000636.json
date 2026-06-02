@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T01:36:50Z",
+  "generated_at": "2026-06-02T01:38:27Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -78,6 +78,24 @@
       "CommentID": 4597937666,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels handoff --id channel-session-handoff-20260602t013146z --message-id session-handoff-ingest-20260602t013146z --notify-message-id session-handoff-notify-20260602t013146z\n\nRepeat the same channel session handoff.\nDo not leak duplicate hidden token: NOECHO_CHANNEL_SESSION_HANDOFF_DUPLICATE_20260602t013146z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4597941129,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Session Handoff Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#636`\n- source_comment_id: `4597941129`\n- source_kind: `channel_comment`\n- requested_channel_command: `/channels handoff`\n- channel_session_handoff_status: `duplicate`\n- handoff_issue: `#637`\n- handoff_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/637`\n- handoff_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#636`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- channel: `telegram`\n- thread_id_sha256_12: `a6017a4c7435`\n- source_message_id_sha256_12: `1b9d0dbacd9d`\n- notify_message_id_sha256_12: `da35db662c5f`\n- notify_message_id_auto: `false`\n- handoff_id_sha256_12: `d4ab9d63430b`\n- handoff_id_auto: `false`\n- handoff_mode: `github-issue-conversation`\n- handoff_issue_labeled_for_gitclaw: `true`\n- source_session_store: `github-issue-thread`\n- transcript_messages: `8`\n- raw_comments: `8`\n- user_messages: `5`\n- assistant_messages: `3`\n- assistant_turn_comments: `3`\n- assistant_turns_with_prompt_provenance: `1`\n- assistant_turns_missing_prompt_provenance: `2`\n- unique_prompt_context_hashes: `1`\n- model_backed_assistant_turns: `1`\n- deterministic_assistant_turns: `2`\n- model_names: `gitclaw/channels, openai/gpt-4.1-nano`\n- prompt_visible_skill_names: `repo-reader`\n- prompt_visible_tool_names: `gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index`\n- usage_bearing_assistant_turns: `1`\n- usage_total_tokens: `11905`\n- notification_body_sha256_12: `eac194aea5d3`\n- notification_body_bytes: `356`\n- notification_body_lines: `10`\n- target_from_current_channel_issue: `true`\n- next_issue_comment_resumes_handoff: `true`\n- source_issue_continuation_supported: `true`\n- github_actions_reentry_supported: `true`\n- workflow_event: `issue_comment`\n- workflow_dispatch_required: `false`\n- server_required: `false`\n- socket_required: `false`\n- external_session_db_required: `false`\n- backup_branch_replay_preferred: `true`\n- model_call_performed: `false`\n- raw_handoff_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_replies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- provider_delivery_performed: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `41d6494fe1f5`\n- source_bytes: `321`\n- source_lines: `4`\n- llm_e2e_required_after_channel_session_handoff_change: `true`\n- issue_title_sha256_12: `99aeeaa3a92d`\n\nGitClaw opened or reused a labeled GitHub issue for continuing a mirrored channel session in a new GitHub lane, then queued a provider-facing handoff link back to that channel thread. This action does not copy raw channel bodies, issue bodies, comments, assistant replies, prompts, or tool outputs.\n\n### Handoff Path\n- continue on handoff issue: `#637`\n- ask a normal `@gitclaw` follow-up on the handoff issue to exercise model, skill, tool, and usage telemetry\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4597944824,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -136,6 +154,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-02T01:36:20Z",
       "updated_at": "2026-06-02T01:36:20Z"
+    },
+    {
+      "id": 4597941129,
+      "body": "@gitclaw /channels handoff --id channel-session-handoff-20260602t013146z --message-id session-handoff-ingest-20260602t013146z --notify-message-id session-handoff-notify-20260602t013146z\n\nRepeat the same channel session handoff.\nDo not leak duplicate hidden token: NOECHO_CHANNEL_SESSION_HANDOFF_DUPLICATE_20260602t013146z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T01:37:09Z",
+      "updated_at": "2026-06-02T01:37:09Z"
+    },
+    {
+      "id": 4597944824,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26792971230\" event_id=\"comment-4597941129\" model=\"gitclaw/channels\" idempotency_key=\"63225f44d4c60b9d50bbe32d6f5f9bd7\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26792971230\" --\u003e\n## GitClaw Channel Session Handoff Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#636`\n- source_comment_id: `4597941129`\n- source_kind: `channel_comment`\n- requested_channel_command: `/channels handoff`\n- channel_session_handoff_status: `duplicate`\n- handoff_issue: `#637`\n- handoff_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/637`\n- handoff_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#636`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- channel: `telegram`\n- thread_id_sha256_12: `a6017a4c7435`\n- source_message_id_sha256_12: `1b9d0dbacd9d`\n- notify_message_id_sha256_12: `da35db662c5f`\n- notify_message_id_auto: `false`\n- handoff_id_sha256_12: `d4ab9d63430b`\n- handoff_id_auto: `false`\n- handoff_mode: `github-issue-conversation`\n- handoff_issue_labeled_for_gitclaw: `true`\n- source_session_store: `github-issue-thread`\n- transcript_messages: `8`\n- raw_comments: `8`\n- user_messages: `5`\n- assistant_messages: `3`\n- assistant_turn_comments: `3`\n- assistant_turns_with_prompt_provenance: `1`\n- assistant_turns_missing_prompt_provenance: `2`\n- unique_prompt_context_hashes: `1`\n- model_backed_assistant_turns: `1`\n- deterministic_assistant_turns: `2`\n- model_names: `gitclaw/channels, openai/gpt-4.1-nano`\n- prompt_visible_skill_names: `repo-reader`\n- prompt_visible_tool_names: `gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index`\n- usage_bearing_assistant_turns: `1`\n- usage_total_tokens: `11905`\n- notification_body_sha256_12: `eac194aea5d3`\n- notification_body_bytes: `356`\n- notification_body_lines: `10`\n- target_from_current_channel_issue: `true`\n- next_issue_comment_resumes_handoff: `true`\n- source_issue_continuation_supported: `true`\n- github_actions_reentry_supported: `true`\n- workflow_event: `issue_comment`\n- workflow_dispatch_required: `false`\n- server_required: `false`\n- socket_required: `false`\n- external_session_db_required: `false`\n- backup_branch_replay_preferred: `true`\n- model_call_performed: `false`\n- raw_handoff_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_assistant_replies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- provider_delivery_performed: `false`\n- repository_mutation_performed: `false`\n- source_sha256_12: `41d6494fe1f5`\n- source_bytes: `321`\n- source_lines: `4`\n- llm_e2e_required_after_channel_session_handoff_change: `true`\n- issue_title_sha256_12: `99aeeaa3a92d`\n\nGitClaw opened or reused a labeled GitHub issue for continuing a mirrored channel session in a new GitHub lane, then queued a provider-facing handoff link back to that channel thread. This action does not copy raw channel bodies, issue bodies, comments, assistant replies, prompts, or tool outputs.\n\n### Handoff Path\n- continue on handoff issue: `#637`\n- ask a normal `@gitclaw` follow-up on the handoff issue to exercise model, skill, tool, and usage telemetry\n- provider delivery remains delegated to `gitclaw channel-outbox` and `gitclaw channel-delivery`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T01:38:03Z",
+      "updated_at": "2026-06-02T01:38:03Z"
     }
   ]
 }
