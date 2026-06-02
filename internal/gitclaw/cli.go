@@ -5178,7 +5178,7 @@ func runChannelOutboxCommand(ctx context.Context, args []string) error {
 		return err
 	}
 	fmt.Printf(
-		"channel_outbox issue=%d state_issue=%d assistant_comments=%d outbound_comments=%d reaction_comments=%d status_comments=%d edit_comments=%d deliverable_comments=%d delivered=%d pending=%d returned=%d body_included=%t account_sha256_12=%s out=%s\n",
+		"channel_outbox issue=%d state_issue=%d assistant_comments=%d outbound_comments=%d reaction_comments=%d status_comments=%d edit_comments=%d topic_comments=%d deliverable_comments=%d delivered=%d pending=%d returned=%d body_included=%t account_sha256_12=%s out=%s\n",
 		result.IssueNumber,
 		result.StateIssueNumber,
 		result.SourceAssistantComments,
@@ -5186,6 +5186,7 @@ func runChannelOutboxCommand(ctx context.Context, args []string) error {
 		result.SourceReactionComments,
 		result.SourceStatusComments,
 		result.SourceEditComments,
+		result.SourceTopicComments,
 		result.SourceDeliverableComments,
 		result.DeliveredAssistantComments,
 		result.PendingMessages,

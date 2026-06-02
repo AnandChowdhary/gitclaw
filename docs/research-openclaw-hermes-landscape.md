@@ -5089,6 +5089,30 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Topic Follow-Up
+
+OpenClaw's channel/session split keeps chat transport details separate from
+the assistant's durable task surface, while Hermes' messaging layer treats
+provider capabilities such as media, reactions, and chat metadata as adapter
+work rather than core agent authority. GitClaw should follow that line for
+provider thread titles: the agent can request a topic update, but the canonical
+GitHub issue remains the source of truth and the bridge should not directly
+rename GitHub issues or call provider APIs from the handler.
+
+GitClaw's serverless version is `@gitclaw /channels topic --topic-id <id>` on
+a mirrored channel-thread issue. It queues one `gitclaw:channel-topic` comment
+with the visible topic for provider gateways, exposes it through
+`channel-outbox` as `channel-topic`, and records delivery through
+`channel-delivery`. The source receipt is body-free and reports only hashes,
+counts, duplicate status, and explicit no-provider-API/no-GitHub-issue-rename
+flags. Acceptance requires live E2E for same-thread queueing, metadata-only
+outbox discovery, delivery receipts, duplicate suppression, no GitHub issue
+title mutation, and a real GitHub Models repo-reader/search follow-up.
+
+Sources: OpenClaw sessions (`https://docs.openclaw.ai/cli/sessions`),
+OpenClaw channels (`https://github.com/openclaw/openclaw/blob/main/docs/cli/channels.md`),
+Hermes features (`https://hermes-agent.nousresearch.com/docs/user-guide/features/overview/`).
+
 ## 2026-06-02 Channel Memory Status Follow-Up
 
 OpenClaw's `SOUL.md` and related Markdown context model treats durable memory

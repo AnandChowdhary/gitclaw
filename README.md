@@ -680,6 +680,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels backup-info <issue> --message-id <id> --notify-message-id <id>
 @gitclaw /channels checkpoint-status --message-id <id> --notify-message-id <id>
 @gitclaw /channels availability --message-id <id> --notify-message-id <id>
+@gitclaw /channels topic --topic-id <id>
 @gitclaw /channels soul-info <path> --message-id <id> --notify-message-id <id>
 @gitclaw /channels soul-risk --message-id <id> --notify-message-id <id>
 @gitclaw /channels soul-search <query> --message-id <id> --notify-message-id <id>
@@ -737,6 +738,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels restore-request --id <id> --message-id <id>
 @gitclaw /channels checkpoint-status --message-id <id> --notify-message-id <id>
 @gitclaw /channels availability --message-id <id> --notify-message-id <id>
+@gitclaw /channels topic --topic-id <id>
 @gitclaw /channels rehearse-checkpoint --target HEAD~1 --id <id> --message-id <id>
 @gitclaw /channels remind --reminder-id <id> --message-id <id> --at <time>
 @gitclaw /channels done --message-id <id>
@@ -1024,6 +1026,12 @@ Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels edit
 `gitclaw:channel-edit` replacement for a provider message. The replacement body
 is deliverable through `channel-outbox`, while the source receipt reports only
 hashes, duplicate status, and delivery gates.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels topic
+--topic-id <id>` queues a structured `gitclaw:channel-topic` thread title/topic
+update for provider gateways. The topic text is deliverable through
+`channel-outbox`, while the source receipt reports only hashes, duplicate
+status, delivery gates, and explicit no-provider-API/no-GitHub-issue-rename
+flags.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels react
 --message-id <id> --reaction <name>` queues a structured
 `gitclaw:channel-reaction` acknowledgement for the provider gateway. Duplicate
@@ -1725,6 +1733,7 @@ scripts/e2e/github-channel-mood-slash.sh
 scripts/e2e/github-channel-session-search-slash.sh
 scripts/e2e/github-channel-status-slash.sh
 scripts/e2e/github-channel-edit-slash.sh
+scripts/e2e/github-channel-topic-slash.sh
 scripts/e2e/github-channel-reaction-slash.sh
 scripts/e2e/github-channel-pin-slash.sh
 scripts/e2e/github-channel-reply-slash.sh
@@ -2058,6 +2067,12 @@ provider message without a resident gateway socket: a channel issue receives
 `@gitclaw /channels edit`, queues one structured provider edit, exposes it
 through metadata-only outbox, records delivery, suppresses duplicate edit ids,
 and then runs a real GitHub Models repo-reader/search follow-up.
+The channel-topic slash harness proves mirrored channel issues can queue a
+provider thread title/topic update without renaming the GitHub issue or calling
+provider APIs: a channel issue receives `@gitclaw /channels topic`, queues one
+structured provider topic update, exposes it through metadata-only outbox,
+records delivery, suppresses duplicate topic ids, and then runs a real GitHub
+Models repo-reader/search follow-up.
 The channel-pin slash harness proves the same operator-console path has a
 one-word shortcut: a channel-ingested issue receives `@gitclaw /channels pin`,
 queues a default `pushpin` provider reaction, exposes and delivers it through

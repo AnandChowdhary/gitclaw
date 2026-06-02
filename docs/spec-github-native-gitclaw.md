@@ -5674,6 +5674,7 @@ accepts a structured reaction form:
 ```text
 @gitclaw /channels status --message-id <provider-message-id> --status-id <stable-status-id> --state working
 @gitclaw /channels edit --message-id <provider-message-id> --edit-id <stable-edit-id>
+@gitclaw /channels topic --topic-id <stable-topic-id>
 @gitclaw /channels react --message-id <provider-message-id> --reaction eyes
 @gitclaw /channels pin --message-id <provider-message-id>
 @gitclaw /channels deliverable --deliverable-id <stable-deliverable-id> --message-id <provider-message-id> --filename <name> --media-type <mime> --url <download-url>
@@ -5716,6 +5717,7 @@ accepts a structured reaction form:
 @gitclaw /channels restore-request --id <stable-request-id> --message-id <provider-message-id>
 @gitclaw /channels checkpoint-status --message-id <provider-message-id> --notify-message-id <stable-outbound-id>
 @gitclaw /channels availability --message-id <provider-message-id> --notify-message-id <stable-outbound-id>
+@gitclaw /channels topic --topic-id <stable-topic-id>
 @gitclaw /channels rehearse-checkpoint --target HEAD~1 --id <stable-rehearsal-id> --message-id <provider-message-id>
 @gitclaw /channels remind --reminder-id <stable-reminder-id> --message-id <provider-message-id> --at <RFC3339-or-date>
 @gitclaw /channels done --message-id <stable-outbound-id>
@@ -5750,6 +5752,22 @@ print raw thread ids, print raw target message ids, print raw edit ids, print
 replacement bodies, or print channel message bodies. The pending update appears
 in `channel-outbox` as kind `channel-edit`, and `channel-delivery` records the
 provider receipt for the edit comment.
+
+`/channels topic`, `/channels thread-topic`, `/channels thread-title`,
+`/channels title`, `/channels rename`, and `/channels subject` infer the
+current channel and thread id from the issue marker when no explicit
+route/channel/thread target is provided, then post one `gitclaw:channel-topic`
+comment on the same canonical channel issue. This gives provider gateways a
+serverless topic/title update operation for Slack, Telegram, or a future
+provider surface without renaming the canonical GitHub issue. Duplicate topic
+updates are suppressed by `channel + topic_id`. The source receipt reports only
+target issue/comment ids, topic id hash, topic text hash, route/thread hashes,
+duplicate status, and delivery gates. It does not call a model, call provider
+APIs, rename GitHub issues, print raw route names, print raw thread ids, print
+raw topic ids, print topic text, print prompts, print tool outputs, or mutate
+the repository. The pending update appears in `channel-outbox` as kind
+`channel-topic`, and `channel-delivery` records the provider receipt for the
+topic comment.
 
 `/channels react`, `/channels reaction`, `/channels emoji`, `/channels ack`,
 `/channels pin`, `/channels star`, and `/channels bookmark` infer the current
@@ -10610,6 +10628,15 @@ examples/workflows/gitclaw.yml
   must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-edit fixture token, and avoid hidden channel, account, provider,
   edit, target-message, and replacement-body sentinels.
+- A `gh`-driven channel-topic-slash E2E harness creates a real channel-thread
+  issue, posts `@gitclaw /channels topic --topic-id ...` on that mirrored
+  thread, verifies same-issue structured topic queueing, body-free receipt
+  metadata, duplicate suppression, metadata-only outbox discovery with kind
+  `channel-topic`, channel-delivery workflow receipts, no GitHub issue-title
+  rename, and no provider API mutation. The same issue then gets a normal
+  GitHub Models issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-topic fixture token, and avoid
+  hidden channel, account, provider, topic, and body sentinels.
 - A `gh`-driven channel-reaction-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels react --message-id ... --reaction ...` on that mirrored
