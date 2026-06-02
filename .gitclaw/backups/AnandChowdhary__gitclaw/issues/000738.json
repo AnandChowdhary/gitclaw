@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T17:25:31Z",
+  "generated_at": "2026-06-02T17:27:01Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 738,
     "title": "GitClaw telegram thread channel-roll-e2e-20260602t172326z",
@@ -51,6 +51,15 @@
       "CommentID": 4605108969,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Roll Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#738`\n- requested_channel_command: `/channels roll`\n- channel_roll_status: `queued`\n- roll_mode: `deterministic-channel-randomizer`\n- notification_target_issue: `#738`\n- notification_comment_id: `4605127468`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `f2e5515c8bd6`\n- source_message_id_sha256_12: `4b3e90305338`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `1e610d943470`\n- notify_message_id_auto: `false`\n- roll_id_sha256_12: `d4e1507427fc`\n- roll_id_auto: `false`\n- roll_expression_sha256_12: `ed8855700b4d`\n- roll_expression_bytes: `5`\n- roll_kind: `dice`\n- dice_count: `2`\n- dice_sides: `6`\n- dice_modifier: `1`\n- roll_total: `12`\n- roll_label_sha256_12: `e3b0c44298fc`\n- roll_values_sha256_12: `f49fc45889af`\n- roll_result_sha256_12: `6b51d431df5d`\n- roll_seed_sha256_12: `7ba55f7a7f0b`\n- notification_body_sha256_12: `ccaffea826a5`\n- target_from_current_channel_issue: `true`\n- deterministic_rng_used: `true`\n- external_randomness_used: `false`\n- cryptographic_randomness_used: `false`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_roll_id_included: `false`\n- raw_roll_expression_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_roll_action_change: `true`\n- issue_title_sha256_12: `fb67a8b0109c`\n\nGitClaw queued a provider-facing deterministic dice/coin result on the canonical channel issue. This is a small channel-native interaction: provider users get a useful roll result, while the source receipt keeps thread ids, message ids, roll ids, expressions, and channel bodies out of band. The action does not call a model, use external randomness, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read roll notifications with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent roll notifications with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate roll notifications are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4605127716,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-02T17:25:03Z",
       "updated_at": "2026-06-02T17:25:03Z"
+    },
+    {
+      "id": 4605127468,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-roll-e2e-20260602t172326z\" message_id=\"roll-notify-20260602t172326z\" author=\"gitclaw\" --\u003e\nGitClaw channel roll.\n\nRoll: 2d6+1\nResult: 12\nDice: 5, 6\nModifier: +1\nRoll hash: 6b51d431df5d\nSeed hash: 7ba55f7a7f0b\n\nRandom source: deterministic GitHub channel action seed.\nModel call: not performed by this action.\nExternal randomness: not used.\nRepository mutation: not performed by this action.\nProvider delivery: queued through GitHub channel outbox.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T17:26:31Z",
+      "updated_at": "2026-06-02T17:26:31Z"
+    },
+    {
+      "id": 4605127716,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26836503518\" event_id=\"comment-4605108969\" model=\"gitclaw/channels\" idempotency_key=\"f7e9c1d6d03dee87b2bf88af44e7b839\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26836503518\" --\u003e\n## GitClaw Channel Roll Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#738`\n- requested_channel_command: `/channels roll`\n- channel_roll_status: `queued`\n- roll_mode: `deterministic-channel-randomizer`\n- notification_target_issue: `#738`\n- notification_comment_id: `4605127468`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `f2e5515c8bd6`\n- source_message_id_sha256_12: `4b3e90305338`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `1e610d943470`\n- notify_message_id_auto: `false`\n- roll_id_sha256_12: `d4e1507427fc`\n- roll_id_auto: `false`\n- roll_expression_sha256_12: `ed8855700b4d`\n- roll_expression_bytes: `5`\n- roll_kind: `dice`\n- dice_count: `2`\n- dice_sides: `6`\n- dice_modifier: `1`\n- roll_total: `12`\n- roll_label_sha256_12: `e3b0c44298fc`\n- roll_values_sha256_12: `f49fc45889af`\n- roll_result_sha256_12: `6b51d431df5d`\n- roll_seed_sha256_12: `7ba55f7a7f0b`\n- notification_body_sha256_12: `ccaffea826a5`\n- target_from_current_channel_issue: `true`\n- deterministic_rng_used: `true`\n- external_randomness_used: `false`\n- cryptographic_randomness_used: `false`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_roll_id_included: `false`\n- raw_roll_expression_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_roll_action_change: `true`\n- issue_title_sha256_12: `fb67a8b0109c`\n\nGitClaw queued a provider-facing deterministic dice/coin result on the canonical channel issue. This is a small channel-native interaction: provider users get a useful roll result, while the source receipt keeps thread ids, message ids, roll ids, expressions, and channel bodies out of band. The action does not call a model, use external randomness, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read roll notifications with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent roll notifications with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate roll notifications are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T17:26:32Z",
+      "updated_at": "2026-06-02T17:26:32Z"
     }
   ]
 }
