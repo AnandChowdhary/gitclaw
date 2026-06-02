@@ -1843,6 +1843,9 @@ func TestRunsCommandReportsLocalRunLedgerWithoutBodies(t *testing.T) {
 	dir := t.TempDir()
 	writeTestFile(t, dir, "README.md", "RUNS_CLI_FILE_SECRET\n")
 	t.Setenv("GITCLAW_WORKDIR", dir)
+	// Local CLI reports must stay local even when run under GitHub Actions.
+	t.Setenv("GITHUB_RUN_ID", "123456789")
+	t.Setenv("GITHUB_RUN_ATTEMPT", "3")
 	output := captureStdout(t, func() {
 		if err := RunCLI(context.Background(), []string{"runs", "verify"}); err != nil {
 			t.Fatalf("runs verify returned error: %v", err)
