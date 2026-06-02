@@ -51,6 +51,8 @@ rsvp_id="rsvp-response-${timestamp}"
 invite_message_id="rsvp-response-invite-${timestamp}"
 response_message_id="rsvp-response-msg-${timestamp}"
 ack_message_id="rsvp-response-ack-${timestamp}"
+rsvp_id_marker="$(tr '[:upper:]' '[:lower:]' <<<"$rsvp_id")"
+response_id_marker="$(tr '[:upper:]' '[:lower:]' <<<"$response_message_id")"
 slack_account_id="slack-rsvp-response-account-NOECHO_CHANNEL_RSVP_RESPONSE_SLACK_${timestamp}"
 telegram_account_id="telegram-rsvp-response-account-NOECHO_CHANNEL_RSVP_RESPONSE_TELEGRAM_${timestamp}"
 details_token="NOECHO_CHANNEL_RSVP_RESPONSE_DETAILS_${timestamp}"
@@ -296,8 +298,8 @@ done
 response_record="$(latest_rsvp_response_record)"
 for expected in \
   "gitclaw:channel-rsvp-response" \
-  "rsvp_id=\"${rsvp_id}\"" \
-  "response_id=\"${response_message_id}\"" \
+  "rsvp_id=\"${rsvp_id_marker}\"" \
+  "response_id=\"${response_id_marker}\"" \
   "- response: yes" \
   "- source_channel: ${target_channel}" \
   "- source_issue: #${target_issue_number}" \
