@@ -6333,6 +6333,38 @@ validates the metadata-only skill-status outbox, checks duplicate suppression,
 verifies no skill/model/config side effects occurred, and then continues on the
 channel issue with a normal GitHub Models repo-reader/search follow-up.
 
+The same channel-thread issue can answer a tools/capabilities status request
+without executing tools or exposing raw schemas:
+
+```text
+@gitclaw /channels tools --message-id <provider-message-id>
+```
+
+`/channels tools`, `/channels tool-status`, `/channels tools-status`,
+`/channels tool-list`, `/channels tools-list`, `/channels tool-capabilities`,
+and `/channels tool-capability-status` infer the current channel and thread id
+from the issue marker when no explicit route/channel/thread target is provided.
+They queue one provider-facing tool-status message back to the mirrored thread
+and do not create any durable artifact issue. The provider-visible message can
+include compact deterministic tool availability, enabled tool names,
+read-only/metadata/mutating contract counts, repo-reviewed toolset and MCP
+metadata counts, prompt-visible entry counts, active-output counts, validation
+status, risk status, and the current Actions checkout as the snapshot source.
+The source receipt keeps thread ids, source message ids, notification message
+ids, status ids, enabled-tool manifests, prompt-visible tool manifests,
+active-output manifests, and channel bodies out of band with hashes. It does
+not execute tools, run shell commands, launch MCP servers, activate toolsets,
+call a model, mutate the repository, call provider APIs, print raw tool
+schemas, print raw tool inputs, print raw tool outputs, print raw toolset
+instructions, print raw MCP command args, print raw thread ids, print raw
+source or notification message ids, print raw status ids, or print channel
+message bodies in the source receipt. Duplicate notifications are suppressed by
+`channel + notify_message_id`. Changes to this surface require a live E2E that
+validates the metadata-only tool-status outbox, checks duplicate suppression,
+verifies no tool/model/MCP/toolset/repository side effects occurred, and then
+continues on the channel issue with a normal GitHub Models repo-reader/search
+follow-up.
+
 The same channel-thread issue can answer an identity-status request without
 turning that status into authorization state:
 
@@ -10132,6 +10164,18 @@ examples/workflows/gitclaw.yml
   `gitclaw.search_files`, recover the channel-skill status fixture token, and
   avoid hidden channel, account, message, status, skill-body, and notification
   sentinels.
+- A `gh`-driven channel-tool-status-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels tools --message-id ...` on that mirrored thread,
+  verifies body-free source receipt metadata, provider-facing tool-status
+  queueing, duplicate notification suppression, metadata-only outbox
+  discovery, and explicit no-tool-execution/no-shell-execution/no-MCP-launch/
+  no-toolset-activation/no-model-call/no-repository-mutation/no-provider-API
+  flags. The channel-thread issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-tool status fixture token, and
+  avoid hidden channel, account, message, status, tool-schema, tool-input,
+  tool-output, and notification sentinels.
 - A `gh`-driven channel-whoami-slash E2E harness creates a real channel-thread
   issue through `gitclaw-channel-ingest.yml`, posts `@gitclaw /channels
   whoami --identity-id ... --role ... --message-id ...` on that mirrored

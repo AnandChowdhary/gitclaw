@@ -93,6 +93,7 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"`gitclaw channels risk` command=`/channels`",
 		"queue mirrored channel model-status replies without switching models",
 		"queue mirrored channel skill-status replies without installing skills",
+		"queue mirrored channel tool-status replies without executing tools or exposing raw schemas",
 		"`gitclaw bundles catalog` command=`/bundles`",
 		"`gitclaw bundles list` command=`/bundles`",
 		"`gitclaw bundles risk` command=`/bundles`",

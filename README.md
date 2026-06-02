@@ -1144,6 +1144,16 @@ does not call a model, install or update skills, contact registries, run
 installer scripts, mutate the repository, or call provider APIs; source
 receipts hash thread IDs, source/notification message IDs, status IDs, skill
 names/paths, and channel bodies.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels tools
+--message-id <id>` queues a provider-facing tool-status snapshot back to the
+current channel thread. It reports compact deterministic tool availability,
+read-only/metadata/mutating contract counts, enabled tool names, toolset/MCP
+metadata counts, prompt-visible entry counts, active output counts, validation
+status, and risk status from the current GitHub Actions checkout. The action
+does not execute tools, launch MCP servers, activate toolsets, call a model,
+mutate the repository, or call provider APIs; source receipts hash thread IDs,
+source/notification message IDs, status IDs, tool-name manifests, prompt-visible
+tool manifests, active-output manifests, and channel bodies.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels whoami
 --identity-id <id> --message-id <id>` queues a provider-facing identity-status
 message back to the current channel thread. This is the serverless Hermes-style
@@ -2033,6 +2043,14 @@ registry contact, installer run, provider API call, or repository mutation
 happened, checks duplicate notification suppression, exposes the skill-status
 notification through metadata-only outbox, and then continues on the channel
 thread itself with a real GitHub Models repo-reader/search follow-up.
+The channel-tool-status slash harness turns the operator console into a
+provider-visible tool discovery surface: a channel-ingested issue receives
+`@gitclaw /channels tools`, queues a provider-facing tool-status message back
+to the mirrored thread, checks that no tool execution, shell execution, MCP
+server launch, toolset activation, model call, provider API call, or repository
+mutation happened, checks duplicate notification suppression, exposes the
+tool-status notification through metadata-only outbox, and then continues on the
+channel thread itself with a real GitHub Models repo-reader/search follow-up.
 The channel-whoami slash harness turns the operator console into a lightweight
 identity-status surface: a channel-ingested issue receives `@gitclaw /channels
 whoami`, queues a provider-facing identity-status message back to the mirrored

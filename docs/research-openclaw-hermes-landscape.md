@@ -5010,6 +5010,41 @@ Sources: OpenClaw overview (`https://docs.openclaw.ai/`), OpenClaw skills CLI
 docs (`https://docs.openclaw.ai/cli/skills`), Hermes messaging guide
 (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-02 Channel Tool Status Follow-Up
+
+Hermes makes tools and toolsets a first-class operator surface: messaging users
+can ask status-style questions, and the project documents toolsets, terminal
+backends, automation/delivery tools, and gateway commands as discoverable
+capability boundaries. OpenClaw points in the same direction from the other
+side: skills and tool-facing workflows are locally inspectable, eligible
+surfaces are filtered before prompt use, and install/update paths stay
+separate from ordinary conversation. GitClaw's GitHub-native channel bridge
+should therefore let a Slack/Telegram user ask "what tools can you use?"
+without converting that question into tool execution or runtime mutation.
+
+GitClaw's serverless version is `@gitclaw /channels tools --message-id <id>`.
+It queues one provider-facing tool-status message back to the mirrored
+Slack/Telegram thread with compact deterministic tool counts, enabled tool
+names, read-only/metadata/mutating contract counts, repo-reviewed toolset/MCP
+metadata counts, prompt-visible entry counts, active-output counts, validation
+status, and risk status from the current GitHub Actions checkout. The source
+receipt stays body-free for thread/message/status ids, enabled-tool manifests,
+prompt-visible tool manifests, active-output manifests, raw schemas, raw
+inputs, raw outputs, toolset instructions, MCP command args, and channel
+bodies. The action does not execute tools, run shell commands, launch MCP
+servers, activate toolsets, call a model, mutate the repository, call provider
+APIs, or create an artifact issue. Acceptance requires live E2E for
+tool-status queueing, metadata-only outbox discovery, duplicate notification
+suppression, explicit no-tool/no-shell/no-MCP/no-toolset/no-model/no-provider-
+API flags, and a real GitHub Models repo-reader/search follow-up on the same
+channel issue.
+
+Sources: OpenClaw skills CLI docs (`https://docs.openclaw.ai/cli/skills`),
+Hermes tools guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/tools.md`),
+Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-02 Channel Platform Status Follow-Up
 
 OpenClaw treats the gateway/channel layer as an explicit control surface rather

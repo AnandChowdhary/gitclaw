@@ -211,3 +211,4 @@ artifacts catalog unique search fixture phrase => GITCLAW_ARTIFACTS_CATALOG_CONT
 channel toolset proposal unique search fixture phrase => GITCLAW_CHANNEL_TOOLSET_PROPOSAL_CONTEXT_V1
 channel prompt proposal unique search fixture phrase => GITCLAW_CHANNEL_PROMPT_PROPOSAL_CONTEXT_V1
 channel bundle proposal unique search fixture phrase => GITCLAW_CHANNEL_BUNDLE_PROPOSAL_CONTEXT_V1
+channel tool status unique search fixture phrase => GITCLAW_CHANNEL_TOOL_STATUS_CONTEXT_V1
