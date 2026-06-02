@@ -275,6 +275,39 @@ func TestChannelDoneArtifactRefSupportsBackupRestoreRequestIssues(t *testing.T) 
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsCheckpointRehearsalIssues(t *testing.T) {
+	body := RenderCheckpointRehearsalIssueBody(CheckpointRehearsalIssueRequest{
+		Repo:                 "owner/repo",
+		RehearsalID:          "checkpoint-done-1",
+		TargetRef:            "HEAD~1",
+		TargetRefSHA:         shortDocumentHash("HEAD~1"),
+		TargetAllowed:        true,
+		CheckpointStatus:     "clean",
+		GitAvailable:         true,
+		GitRepository:        true,
+		Branch:               "main",
+		HeadCommit:           "abcdef123456",
+		TargetCommit:         "123456abcdef",
+		ComparisonRangeSHA:   shortDocumentHash("HEAD~1..HEAD"),
+		RestoreMode:          "rehearsal-only",
+		SourceIssueNumber:    44,
+		SourceCommentID:      4401,
+		SourceKind:           "channel_comment",
+		CheckpointStatusCmd:  "gitclaw checkpoints status",
+		CheckpointPreviewCmd: "gitclaw checkpoints preview HEAD~1",
+		CheckpointRiskCmd:    "gitclaw checkpoints risk",
+		RollbackDiffCmd:      "gitclaw rollback diff HEAD~1",
+		RollbackRiskCmd:      "gitclaw rollback risk",
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "checkpoint-rehearsal" || ref.ID != "checkpoint-done-1" || ref.SourceIssueNumber != 44 || ref.SourceCommentID != 4401 {
+		t.Fatalf("unexpected checkpoint rehearsal ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsDigestIssues(t *testing.T) {
 	body := RenderChannelDigestIssueBody(ChannelDigestOptions{
 		Repo:              "owner/repo",

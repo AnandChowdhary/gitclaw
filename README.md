@@ -695,6 +695,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels rehearse-memory --target long-term --id <id> --message-id <id>
 @gitclaw /channels rehearse-backup --id <id> --message-id <id>
 @gitclaw /channels restore-request --id <id> --message-id <id>
+@gitclaw /channels rehearse-checkpoint --target HEAD~1 --id <id> --message-id <id>
 @gitclaw /channels remind --reminder-id <id> --message-id <id> --at <time>
 @gitclaw /channels done --message-id <id>
 gitclaw proactive list
@@ -1064,6 +1065,14 @@ read backup payloads, restore files, replay GitHub API calls, or mutate the
 repository; the linked restore request issue records the dry-run
 verify/coverage/drill/restore-plan/manifest commands and keeps any real
 restore behind explicit human approval.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+rehearse-checkpoint --target HEAD~1 --id <id> --message-id <id>` opens or
+reuses a normal GitHub checkpoint rollback rehearsal issue and queues a
+provider-facing rehearsal link back to the Slack/Telegram thread. The channel
+action does not call a model, print raw diffs, print file bodies, run
+`git reset`, run `git clean`, run checkout mutations, or mutate the repository;
+the linked rehearsal issue records inspect-only checkpoint/rollback commands
+for normal GitHub Models conversation before any reviewed recovery branch.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels remind
 --reminder-id <id> --message-id <id> --at <RFC3339-or-date>` creates or reuses
 a normal GitHub reminder issue with a `not_before` due gate, queues a
@@ -1071,12 +1080,13 @@ provider-facing reminder link back to the mirrored thread, and keeps the source
 receipt body-free. Scheduled GitHub Actions can later use the reminder issue as
 the canonical wake-up lane without a socket or webhook.
 Inside a channel-created task, watch, standing-order proposal, backup restore
-request, clip, attachment, decision, digest, or reminder issue, `@gitclaw
-/channels done --message-id <id>` closes the GitHub artifact issue and queues
-a provider-facing acknowledgement back to the original mirrored Slack/Telegram
-thread. The artifact receipt reports hashes, close status, notification queue
-metadata, and delivery gates without printing artifact IDs, thread IDs,
-message IDs, titles, notes, or channel message bodies.
+request, checkpoint rehearsal, clip, attachment, decision, digest, or reminder
+issue, `@gitclaw /channels done --message-id <id>` closes the GitHub artifact
+issue and queues a provider-facing acknowledgement back to the original
+mirrored Slack/Telegram thread. The artifact receipt reports hashes, close
+status, notification queue metadata, and delivery gates without printing
+artifact IDs, thread IDs, message IDs, titles, notes, or channel message
+bodies.
 The live proactive-report, proactive-list, and proactive-schedule harnesses use
 the same two-proof shape for scheduled work: body-free workflow/prompt metadata
 first, then a normal GitHub Models repo-reader/search follow-up.
@@ -1169,6 +1179,7 @@ scripts/e2e/github-backup-restore-request-issue.sh
 scripts/e2e/github-backup-restore-request-channel-notify.sh
 scripts/e2e/github-channel-backup-rehearsal-slash.sh
 scripts/e2e/github-channel-backup-restore-request-slash.sh
+scripts/e2e/github-channel-checkpoint-rehearsal-slash.sh
 scripts/e2e/github-agents-catalog-report.sh
 scripts/e2e/github-agents-provenance-report.sh
 scripts/e2e/github-agents-risk-report.sh
@@ -1337,6 +1348,7 @@ scripts/e2e/github-channel-skill-rehearsal-slash.sh
 scripts/e2e/github-channel-soul-rehearsal-slash.sh
 scripts/e2e/github-channel-memory-proposal-slash.sh
 scripts/e2e/github-channel-memory-rehearsal-slash.sh
+scripts/e2e/github-channel-checkpoint-rehearsal-slash.sh
 scripts/e2e/github-channel-reminder-slash.sh
 scripts/e2e/github-channel-done-slash.sh
 scripts/e2e/github-channel-delivery-workflow.sh
@@ -1736,6 +1748,15 @@ thread, checks duplicate request and notification suppression, proves the
 channel issue was captured on the `gitclaw-backups` branch, exposes the
 restore-review notification through metadata-only outbox, and then continues
 on the restore request issue with a real GitHub Models repo-reader/search
+follow-up.
+The channel-checkpoint-rehearsal slash harness turns the operator console into
+a rollback practice surface: a channel-ingested issue receives `@gitclaw
+/channels rehearse-checkpoint`, creates or reuses a GitHub checkpoint rollback
+rehearsal issue, queues a provider-facing rehearsal link back to the mirrored
+thread, checks duplicate rehearsal and notification suppression, runs
+inspect-only checkpoint status/preview/risk and rollback diff commands, exposes
+the rehearsal-link notification through metadata-only outbox, and then
+continues on the rehearsal issue with a real GitHub Models repo-reader/search
 follow-up.
 The channel-reminder slash harness turns the operator console into a scheduled
 nudge surface: a channel-ingested issue receives `@gitclaw /channels remind`,

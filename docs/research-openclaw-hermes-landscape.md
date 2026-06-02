@@ -4506,3 +4506,33 @@ Hermes CLI command reference
 (`https://hermes-agent.nousresearch.com/docs/reference/cli-commands/`), and
 Hermes profile docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/profiles/`).
+
+## 2026-06-02 Channel Checkpoint Rehearsal Follow-Up
+
+Hermes' checkpoint manager treats rollback as a local safety layer: snapshots
+live in a shadow git store, `/rollback diff` previews what would change, and
+destructive restore commands are separated from ordinary chat. OpenClaw's
+backup and migration docs make the same product point from the repository
+side: verify recovery artifacts and inspect scope before applying anything
+dangerous. For GitClaw, the channel-native version should therefore create a
+review issue, not run rollback from a Telegram or Slack message.
+
+GitClaw's serverless version is `@gitclaw /channels rehearse-checkpoint
+--target HEAD~1 --id <id> --message-id <id>`. It opens or reuses a normal
+`gitclaw:checkpoint-rehearsal-issue`, queues a provider-facing rehearsal link
+back to the mirrored Slack or Telegram thread, and records inspect-only
+checkpoint status, preview, risk, rollback diff, and rollback risk commands for
+the reviewer. The channel receipt remains body-free and hash-only. The action
+does not call a model, print raw diffs, print file bodies, restore files, run
+`git reset`, run `git clean`, run checkout mutations, call provider APIs, or
+mutate the repository. Acceptance requires live E2E for checkpoint rehearsal
+issue creation, metadata-only rehearsal outbox discovery, duplicate
+suppression, local inspect-only checkpoint/rollback commands, and a real GitHub
+Models repo-reader/search follow-up on the rehearsal issue.
+
+Sources: Hermes checkpoints and rollback docs
+(`https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback`),
+Hermes slash commands reference
+(`https://hermes-agent.nousresearch.com/docs/reference/slash-commands/`),
+OpenClaw backup docs (`https://docs.openclaw.ai/cli/backup`), and OpenClaw
+migration safety docs (`https://docs.openclaw.ai/cli/migrate`).

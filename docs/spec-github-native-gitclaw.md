@@ -5387,6 +5387,7 @@ accepts a structured reaction form:
 @gitclaw /channels rehearse-memory --target <memory-target> --id <stable-rehearsal-id> --message-id <provider-message-id>
 @gitclaw /channels rehearse-backup --id <stable-rehearsal-id> --message-id <provider-message-id>
 @gitclaw /channels restore-request --id <stable-request-id> --message-id <provider-message-id>
+@gitclaw /channels rehearse-checkpoint --target HEAD~1 --id <stable-rehearsal-id> --message-id <provider-message-id>
 @gitclaw /channels remind --reminder-id <stable-reminder-id> --message-id <provider-message-id> --at <RFC3339-or-date>
 @gitclaw /channels done --message-id <stable-outbound-id>
 ```
@@ -6085,6 +6086,40 @@ duplicate suppression, verifies the source issue backup appears on the
 a normal GitHub Models repo-reader/search follow-up.
 
 The same channel-thread issue can also turn a mirrored provider message into a
+checkpoint rollback rehearsal lane:
+
+```text
+@gitclaw /channels rehearse-checkpoint --target HEAD~1 --id <stable-rehearsal-id> --message-id <provider-message-id>
+```
+
+`/channels rehearse-checkpoint`, `/channels checkpoint-rehearse`,
+`/channels checkpoint-rehearsal`, `/channels rehearse-rollback`,
+`/channels rollback-rehearsal`, `/channels rollback-drill`,
+`/channels checkpoint-drill`, `/channels rollback-lab`, and
+`/channels checkpoint-lab` infer the current channel and thread id from the
+issue marker when no explicit channel/thread target is provided. They create
+or reuse one open GitHub issue carrying the existing
+`gitclaw:checkpoint-rehearsal-issue` marker, label that issue for normal
+GitClaw conversation, and queue a provider-facing rehearsal link back to the
+mirrored channel thread. This is not a rollback: the channel action does not
+call a model, print raw diffs, print file bodies, run restore, run `git reset`,
+run `git clean`, run checkout mutations, call provider APIs, or mutate the
+repository. The rehearsal issue stores the stable rehearsal id, readable target
+ref, target ref hash, checkpoint status, inspect-only rollback preview
+metadata, and dry-run checkpoint/rollback commands; the channel source receipt
+remains body-free, reporting only rehearsal/thread/message/target hashes,
+duplicate status, notification queue metadata, and disabled mutation gates. It
+does not print raw rehearsal ids, raw target refs, raw provider thread/message
+ids, raw channel message bodies, source bodies, raw diffs, or file bodies in
+the source receipt. Duplicates are suppressed first by rehearsal id for the
+GitHub checkpoint rehearsal issue and then by `channel + notify_message_id` for
+the provider-facing rehearsal link. Changes to this surface require a live E2E
+that records the checkpoint rehearsal, validates the metadata-only rehearsal
+outbox, checks duplicate suppression, runs local checkpoint status/preview/risk
+and rollback diff commands, and then continues on the rehearsal issue with a
+normal GitHub Models repo-reader/search follow-up.
+
+The same channel-thread issue can also turn a mirrored provider message into a
 GitHub-native reminder:
 
 ```text
@@ -6119,8 +6154,8 @@ and then continues on the reminder issue with a normal GitHub Models
 repo-reader/search follow-up.
 
 The channel-created task, watch, standing-order proposal, backup restore
-request, clip, attachment, decision, digest, and reminder issues also accept a
-completion form:
+request, checkpoint rehearsal, clip, attachment, decision, digest, and reminder
+issues also accept a completion form:
 
 ```text
 @gitclaw /channels done --message-id <stable-outbound-id>
@@ -6197,9 +6232,15 @@ Behavior:
   comment per `channel + notify_message_id` without executing a model, reading
   backup payloads, restoring files, replaying GitHub API calls, or mutating the
   repository,
+- create or reuse one `gitclaw:checkpoint-rehearsal-issue` issue per channel
+  rehearsal id and queue one provider-facing checkpoint-rehearsal outbound
+  comment per `channel + notify_message_id` without executing a model, printing
+  raw diffs, printing file bodies, running restore/reset/clean/checkout, or
+  mutating the repository,
 - close one `gitclaw:channel-task`, `gitclaw:channel-watch`,
   `gitclaw:channel-standing-order-proposal`,
-  `gitclaw:backup-restore-request-issue`, `gitclaw:channel-clip`,
+  `gitclaw:backup-restore-request-issue`,
+  `gitclaw:checkpoint-rehearsal-issue`, `gitclaw:channel-clip`,
   `gitclaw:channel-attachment`, `gitclaw:channel-decision`,
   `gitclaw:channel-digest`, or `gitclaw:channel-reminder` issue and queue one
   provider-facing done acknowledgement per `channel + notify_message_id`,
@@ -6398,6 +6439,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels rehearse-memory --target long-term --id channel-memory-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-backup --id channel-backup-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels restore-request --id channel-backup-restore-1 --message-id provider-msg-1
+@gitclaw /channels rehearse-checkpoint --target HEAD~1 --id channel-checkpoint-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels room team-alerts,ops-alerts --room-id design-room --message-id design-room-1
 @gitclaw /channels huddle team-alerts,ops-alerts --huddle-id design-room --message-id design-room-1
 @gitclaw /channels rollcall team-alerts,ops-alerts --rollcall-id standup --message-id standup-1
@@ -9096,6 +9138,18 @@ examples/workflows/gitclaw.yml
   `gitclaw.search_files`, recover the channel-backup-restore-request fixture
   token, and avoid hidden channel, account, provider, message, request,
   backup-path, source-body, and backup sentinels.
+- A `gh`-driven channel-checkpoint-rehearsal-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels rehearse-checkpoint --target HEAD~1 --id ...
+  --message-id ...` on that mirrored thread, verifies GitHub checkpoint
+  rehearsal issue creation, body-free source receipt metadata, provider-facing
+  rehearsal-link queueing, duplicate rehearsal and notification suppression,
+  inspect-only checkpoint status/preview/risk and rollback diff reports, and
+  metadata-only outbox discovery. The rehearsal issue then gets a normal GitHub
+  Models issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-checkpoint-rehearsal fixture
+  token, and avoid hidden channel, account, provider, message, rehearsal,
+  target-ref, source-body, raw-diff, and file-body sentinels.
 - A `gh`-driven channel-reminder-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels remind --reminder-id ... --message-id ... --at ...` on

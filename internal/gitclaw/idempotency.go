@@ -12,6 +12,7 @@ var markerPattern = regexp.MustCompile(`<!--\s*gitclaw:assistant-turn\s+([^>]*)-
 var heartbeatMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:heartbeat\s+([^>]*)-->`)
 var errorMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:error\s+([^>]*)-->`)
 var backupRestoreRequestIssueMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:backup-restore-request-issue\s+([^>]*)-->`)
+var checkpointRehearsalIssueMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:checkpoint-rehearsal-issue\s+([^>]*)-->`)
 var channelMessageMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-message\s+([^>]*)-->`)
 var channelOutboundMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-outbound\s+([^>]*)-->`)
 var channelDeliverableMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-deliverable\s+([^>]*)-->`)
@@ -157,6 +158,10 @@ func HasGitClawErrorMarker(body string) bool {
 
 func HasBackupRestoreRequestIssueMarker(body string) bool {
 	return backupRestoreRequestIssueMarkerPattern.MatchString(body)
+}
+
+func HasCheckpointRehearsalIssueMarker(body string) bool {
+	return checkpointRehearsalIssueMarkerPattern.MatchString(body)
 }
 
 func HasChannelMessageMarker(body string) bool {

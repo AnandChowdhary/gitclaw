@@ -121,6 +121,7 @@ channel reminder unique search fixture phrase => GITCLAW_CHANNEL_REMINDER_CONTEX
 channel status unique search fixture phrase => GITCLAW_CHANNEL_STATUS_CONTEXT_V1
 channel edit unique search fixture phrase => GITCLAW_CHANNEL_EDIT_CONTEXT_V1
 checkpoint rehearsal unique search fixture phrase => GITCLAW_CHECKPOINT_REHEARSAL_CONTEXT_V1
+channel checkpoint rehearsal unique search fixture phrase => GITCLAW_CHANNEL_CHECKPOINT_REHEARSAL_CONTEXT_V1
 backup verify unique search fixture phrase => GITCLAW_BACKUP_VERIFY_CONTEXT_V1
 backup index unique search fixture phrase => GITCLAW_BACKUP_INDEX_CONTEXT_V1
 backup report unique search fixture phrase => GITCLAW_BACKUP_REPORT_CONTEXT_V1
