@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-02T01:38:28Z",
+  "generated_at": "2026-06-02T01:39:57Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 549,
+  "count": 550,
   "issues": [
     {
       "number": 3,
@@ -6926,6 +6926,18 @@
       ],
       "comment_count": 9,
       "transcript_messages": 9
+    },
+    {
+      "number": 637,
+      "title": "GitClaw session handoff: issue #636 (channel-session-handoff-20260602t013146z)",
+      "path": "issues/000637.json",
+      "backup_generated_at": "2026-06-02T01:39:56Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }

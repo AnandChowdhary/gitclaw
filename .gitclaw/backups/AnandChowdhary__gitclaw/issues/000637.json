@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-02T01:39:56Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 637,
+    "title": "GitClaw session handoff: issue #636 (channel-session-handoff-20260602t013146z)",
+    "body": "\u003c!-- gitclaw:session-handoff-issue id=\"channel-session-handoff-20260602t013146z\" source_issue=\"636\" source_comment_id=\"4597933536\" source_sha256_12=\"683f1fb9dae5\" --\u003e\nGitClaw session handoff issue.\n\n- handoff_id: channel-session-handoff-20260602t013146z\n- handoff_mode: github-issue-conversation\n- source_issue: #636\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/636\n- source_comment_id: 4597933536\n- source_kind: channel_comment\n- source_sha256_12: 683f1fb9dae5\n- source_session_store: github-issue-thread\n- transcript_messages: 6\n- user_messages: 4\n- assistant_messages: 2\n- assistant_turn_comments: 2\n- assistant_turns_with_prompt_provenance: 1\n- assistant_turns_missing_prompt_provenance: 1\n- unique_prompt_context_hashes: 1\n- model_backed_assistant_turns: 1\n- deterministic_assistant_turns: 1\n- model_names: gitclaw/channels, openai/gpt-4.1-nano\n- prompt_visible_skill_names: repo-reader\n- prompt_visible_tool_names: gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index\n- latest_user_message_sha256_12: 683f1fb9dae5\n- latest_assistant_message_sha256_12: be9afcd298b2\n- latest_assistant_prompt_context_sha256_12: bd4210171a95\n- usage_bearing_assistant_turns: 1\n- usage_total_tokens: 11905\n- next_issue_comment_resumes_handoff: true\n- source_issue_continuation_supported: true\n- github_actions_reentry_supported: true\n- workflow_event: issue_comment\n- workflow_dispatch_required: false\n- server_required: false\n- socket_required: false\n- external_session_db_required: false\n- backup_branch_replay_preferred: true\n- repository_mutation_allowed: false\n- handoff_mutation_allowed: false\n- raw_source_body_included: false\n- raw_issue_bodies_included: false\n- raw_comment_bodies_included: false\n- raw_assistant_replies_included: false\n- raw_prompts_included: false\n- raw_tool_outputs_included: false\n\nContinue here with a normal `@gitclaw` message. This issue is a body-free handoff lane: it preserves source session counts, hashes, marker provenance, and reentry gates without copying source issue bodies, comments, prompts, assistant replies, or tool outputs.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw session handoff: issue #636 (channel-session-handoff-20260602t013146z)\n\n\u003c!-- gitclaw:session-handoff-issue id=\"channel-session-handoff-20260602t013146z\" source_issue=\"636\" source_comment_id=\"4597933536\" source_sha256_12=\"683f1fb9dae5\" --\u003e\nGitClaw session handoff issue.\n\n- handoff_id: channel-session-handoff-20260602t013146z\n- handoff_mode: github-issue-conversation\n- source_issue: #636\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/636\n- source_comment_id: 4597933536\n- source_kind: channel_comment\n- source_sha256_12: 683f1fb9dae5\n- source_session_store: github-issue-thread\n- transcript_messages: 6\n- user_messages: 4\n- assistant_messages: 2\n- assistant_turn_comments: 2\n- assistant_turns_with_prompt_provenance: 1\n- assistant_turns_missing_prompt_provenance: 1\n- unique_prompt_context_hashes: 1\n- model_backed_assistant_turns: 1\n- deterministic_assistant_turns: 1\n- model_names: gitclaw/channels, openai/gpt-4.1-nano\n- prompt_visible_skill_names: repo-reader\n- prompt_visible_tool_names: gitclaw.list_files, gitclaw.search_files, gitclaw.skill_index\n- latest_user_message_sha256_12: 683f1fb9dae5\n- latest_assistant_message_sha256_12: be9afcd298b2\n- latest_assistant_prompt_context_sha256_12: bd4210171a95\n- usage_bearing_assistant_turns: 1\n- usage_total_tokens: 11905\n- next_issue_comment_resumes_handoff: true\n- source_issue_continuation_supported: true\n- github_actions_reentry_supported: true\n- workflow_event: issue_comment\n- workflow_dispatch_required: false\n- server_required: false\n- socket_required: false\n- external_session_db_required: false\n- backup_branch_replay_preferred: true\n- repository_mutation_allowed: false\n- handoff_mutation_allowed: false\n- raw_source_body_included: false\n- raw_issue_bodies_included: false\n- raw_comment_bodies_included: false\n- raw_assistant_replies_included: false\n- raw_prompts_included: false\n- raw_tool_outputs_included: false\n\nContinue here with a normal `@gitclaw` message. This issue is a body-free handoff lane: it preserves source session counts, hashes, marker provenance, and reentry gates without copying source issue bodies, comments, prompts, assistant replies, or tool outputs.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created session handoff and use the repo-reader skill.\n\nSearch the repository for `channel session handoff unique search fixture phrase`.\nThe matching repository search result line has the form `channel session handoff unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_SESSION_HANDOFF_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include handoff ids, message ids, thread ids, account hashes, issue numbers, or source bodies.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_SESSION_HANDOFF_FOLLOWUP_20260602t013146z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4597947805,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_SESSION_HANDOFF_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4597953169,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4597947805,
+      "body": "@gitclaw Continue this channel-created session handoff and use the repo-reader skill.\n\nSearch the repository for `channel session handoff unique search fixture phrase`.\nThe matching repository search result line has the form `channel session handoff unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_SESSION_HANDOFF_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include handoff ids, message ids, thread ids, account hashes, issue numbers, or source bodies.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_SESSION_HANDOFF_FOLLOWUP_20260602t013146z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-02T01:38:43Z",
+      "updated_at": "2026-06-02T01:38:43Z"
+    },
+    {
+      "id": 4597953169,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26793023412\" event_id=\"comment-4597947805\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"0151b88ce36927d4aa9c92365ae648a1\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26793023412\" prompt_context_sha256_12=\"95870ecd0d45\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"11047\" usage_completion_tokens=\"12\" usage_total_tokens=\"11059\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_SESSION_HANDOFF_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-02T01:39:32Z",
+      "updated_at": "2026-06-02T01:39:32Z"
+    }
+  ]
+}
