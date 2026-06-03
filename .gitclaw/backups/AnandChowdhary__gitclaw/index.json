@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T12:48:03Z",
+  "generated_at": "2026-06-03T12:50:00Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 718,
   "issues": [
@@ -9126,15 +9126,15 @@
       "number": 827,
       "title": "GitClaw telegram thread channel-toast-e2e-20260603t124353z",
       "path": "issues/000827.json",
-      "backup_generated_at": "2026-06-03T12:48:01Z",
+      "backup_generated_at": "2026-06-03T12:49:59Z",
       "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 5,
-      "transcript_messages": 5
+      "comment_count": 7,
+      "transcript_messages": 7
     }
   ]
 }
