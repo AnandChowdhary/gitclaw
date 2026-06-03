@@ -301,6 +301,9 @@ func channelDoneArtifactRefFromBody(body string) (channelDoneArtifactRef, error)
 	if ref, ok := channelDoneArtifactRefFromMarker(body, "soul-note", channelSoulNoteMarkerPattern, "note_id"); ok {
 		return ref, nil
 	}
+	if ref, ok := channelDoneArtifactRefFromMarker(body, "backup-note", channelBackupNoteMarkerPattern, "note_id"); ok {
+		return ref, nil
+	}
 	if ref, ok := channelDoneArtifactRefFromMarker(body, "idea", channelIdeaMarkerPattern, "idea_id"); ok {
 		return ref, nil
 	}
@@ -370,7 +373,7 @@ func channelDoneArtifactRefFromBody(body string) (channelDoneArtifactRef, error)
 	if ref, ok := channelDoneArtifactRefFromMarker(body, "reminder", channelReminderMarkerPattern, "reminder_id"); ok {
 		return ref, nil
 	}
-	return channelDoneArtifactRef{}, fmt.Errorf("channel done requires a gitclaw:channel-task, gitclaw:channel-watch, gitclaw:channel-standing-order-proposal, gitclaw:backup-restore-request-issue, gitclaw:checkpoint-rehearsal-issue, gitclaw:channel-clip, gitclaw:channel-open-loop, gitclaw:channel-attachment, gitclaw:channel-snippet, gitclaw:channel-decision, gitclaw:channel-digest, gitclaw:channel-journal, gitclaw:channel-quote, gitclaw:channel-glossary, gitclaw:channel-faq, gitclaw:channel-skill-note, gitclaw:channel-soul-note, gitclaw:channel-idea, gitclaw:channel-jam, gitclaw:channel-retro, gitclaw:channel-playbook, gitclaw:channel-insight, gitclaw:channel-workspace-proposal, gitclaw:channel-board-card, gitclaw:channel-checklist, gitclaw:channel-agenda, gitclaw:channel-tool-result, gitclaw:channel-toolset-proposal, gitclaw:channel-prompt-proposal, gitclaw:channel-bundle-proposal, gitclaw:channel-incident, gitclaw:channel-voice, gitclaw:channel-image, gitclaw:channel-link, gitclaw:channel-bookmark, gitclaw:channel-fork, gitclaw:channel-merge, gitclaw:channel-access-request, gitclaw:channel-contact, or gitclaw:channel-reminder issue")
+	return channelDoneArtifactRef{}, fmt.Errorf("channel done requires a gitclaw:channel-task, gitclaw:channel-watch, gitclaw:channel-standing-order-proposal, gitclaw:backup-restore-request-issue, gitclaw:checkpoint-rehearsal-issue, gitclaw:channel-clip, gitclaw:channel-open-loop, gitclaw:channel-attachment, gitclaw:channel-snippet, gitclaw:channel-decision, gitclaw:channel-digest, gitclaw:channel-journal, gitclaw:channel-quote, gitclaw:channel-glossary, gitclaw:channel-faq, gitclaw:channel-skill-note, gitclaw:channel-soul-note, gitclaw:channel-backup-note, gitclaw:channel-idea, gitclaw:channel-jam, gitclaw:channel-retro, gitclaw:channel-playbook, gitclaw:channel-insight, gitclaw:channel-workspace-proposal, gitclaw:channel-board-card, gitclaw:channel-checklist, gitclaw:channel-agenda, gitclaw:channel-tool-result, gitclaw:channel-toolset-proposal, gitclaw:channel-prompt-proposal, gitclaw:channel-bundle-proposal, gitclaw:channel-incident, gitclaw:channel-voice, gitclaw:channel-image, gitclaw:channel-link, gitclaw:channel-bookmark, gitclaw:channel-fork, gitclaw:channel-merge, gitclaw:channel-access-request, gitclaw:channel-contact, or gitclaw:channel-reminder issue")
 }
 
 func channelDoneArtifactRefFromMarker(body, kind string, pattern interface{ FindStringSubmatch(string) []string }, idKey string) (channelDoneArtifactRef, bool) {

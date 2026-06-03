@@ -528,6 +528,28 @@ func TestChannelDoneArtifactRefSupportsSoulNoteIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsBackupNoteIssues(t *testing.T) {
+	body := RenderChannelBackupNoteIssueBody(ChannelBackupNoteOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		NoteID:            "backup-note-done-1",
+		BackupScope:       "restore-readiness",
+		Title:             "Prefer GitHub review before backup restores",
+		Note:              "Close this after the recovery context note has been reviewed.",
+		SourceIssueNumber: 43,
+		SourceCommentID:   4302,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "backup-note" || ref.ID != "backup-note-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 43 || ref.SourceCommentID != 4302 {
+		t.Fatalf("unexpected backup-note artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsIdeaIssues(t *testing.T) {
 	body := RenderChannelIdeaIssueBody(ChannelIdeaOptions{
 		Repo:              "owner/repo",

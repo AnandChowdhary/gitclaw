@@ -5134,6 +5134,35 @@ on the glossary issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Backup Note Follow-Up
+
+OpenClaw's channel-first framing and Hermes' messaging gateway both make chat
+useful as an operational intake surface, but backup and restore decisions are
+too sensitive to run directly from a provider message. GitClaw should capture
+recovery observations from Slack or Telegram while keeping backup branches,
+payload reads, and restores behind explicit reviewed commands. A channel backup
+note is the review-only primitive: a provider thread can preserve a backup or
+recovery lesson, and GitHub becomes the durable place to decide whether it
+should lead to a rehearsal, restore request, or documentation update.
+
+GitClaw's serverless version is `@gitclaw /channels backup-note --note-id <id>
+--scope <scope> --message-id <id>`. It opens or reuses a normal
+`gitclaw:channel-backup-note` issue with the readable scope, title, and note,
+queues one provider-facing backup-note issue link back to the source
+Slack/Telegram thread, and keeps the source receipt body-free with only
+scope/title/text/id hashes, counts, duplicate status, notification metadata,
+and delivery gates. The provider-facing notification includes the link, visible
+scope, and visible title only, not the note body. The action does not call a
+model, fetch backup branches, read backup payloads, restore files, mutate
+memory, mutate the repository, call provider APIs, or print raw provider IDs,
+note IDs, backup scopes, titles, note text, or channel bodies in the source
+receipt. Acceptance requires live E2E for backup-note issue creation,
+metadata-only outbox discovery, duplicate suppression, and a real GitHub
+Models repo-reader/search follow-up on the backup-note issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Soul Note Follow-Up
 
 OpenClaw's current channel framing and Hermes' SOUL/messaging framing both

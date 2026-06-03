@@ -716,6 +716,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels faq --faq-id <id> --message-id <id>
 @gitclaw /channels skill-note --note-id <id> --skill <name> --message-id <id>
 @gitclaw /channels soul-note --note-id <id> --area <area> --message-id <id>
+@gitclaw /channels backup-note --note-id <id> --scope <scope> --message-id <id>
 @gitclaw /channels idea --idea-id <id> --message-id <id>
 @gitclaw /channels whiteboard --jam-id <id> --message-id <id>
 @gitclaw /channels kudos --kudos-id <id> --message-id <id>
@@ -1196,6 +1197,14 @@ note issue holds the readable area, title, and note, queues a provider-facing
 soul-note link with the issue link, area, and title only, and keeps the source
 receipt body-free. It does not write `.gitclaw/SOUL.md`, mutate memory, or edit
 repository files; promotion to SOUL remains a reviewed follow-up.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+backup-note --note-id <id> --scope <scope> --message-id <id>` preserves a
+channel note about backup or recovery context as a durable GitHub backup-note
+issue. The note issue holds the readable scope, title, and note, queues a
+provider-facing backup-note link with the issue link, scope, and title only,
+and keeps the source receipt body-free. It does not fetch backup branches, read
+backup payloads, restore files, mutate memory, or edit repository files;
+recovery work stays in explicit reviewed follow-ups.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 tool-result --tool <tool> --result-id <id> --status <status> --message-id
 <id>` records an externally observed channel tool outcome as a durable GitHub
@@ -1888,6 +1897,7 @@ scripts/e2e/github-channel-glossary-slash.sh
 scripts/e2e/github-channel-faq-slash.sh
 scripts/e2e/github-channel-skill-note-slash.sh
 scripts/e2e/github-channel-soul-note-slash.sh
+scripts/e2e/github-channel-backup-note-slash.sh
 scripts/e2e/github-channel-tool-result-slash.sh
 scripts/e2e/github-channel-idea-slash.sh
 scripts/e2e/github-channel-jam-slash.sh
@@ -2357,6 +2367,14 @@ title back to the mirrored thread, checks duplicate soul-note and notification
 suppression, exposes the soul-note notification through metadata-only outbox,
 and then continues on the soul-note issue with a real GitHub Models
 repo-reader/search follow-up.
+The channel-backup-note slash harness turns the operator console into a
+recovery-context capture surface: a channel-ingested issue receives
+`@gitclaw /channels backup-note`, creates or reuses a durable GitHub
+backup-note issue, queues a provider-facing backup-note link with only the
+visible scope and title back to the mirrored thread, checks duplicate
+backup-note and notification suppression, exposes the backup-note notification
+through metadata-only outbox, and then continues on the backup-note issue with
+a real GitHub Models repo-reader/search follow-up.
 The channel-idea slash harness turns the operator console into an idea intake
 surface: a channel-ingested issue receives `@gitclaw /channels idea`, creates
 or reuses a durable GitHub idea issue, queues a provider-facing idea link back

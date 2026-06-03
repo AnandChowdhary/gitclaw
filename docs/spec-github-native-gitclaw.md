@@ -6351,6 +6351,40 @@ soul note, validates the metadata-only soul-note outbox, checks duplicate
 suppression, and then continues on the soul-note issue with a normal GitHub
 Models repo-reader/search follow-up that makes a real LLM call.
 
+The same channel-thread issue can also preserve a backup/recovery note without
+touching the backup branch:
+
+```text
+@gitclaw /channels backup-note --note-id <stable-note-id> --scope <backup-scope> --message-id <provider-message-id>
+Title: channel-origin backup/recovery note
+Note:
+optional human-readable note/context/source text
+```
+
+`/channels backup-note`, `/channels backup-lesson`, `/channels restore-note`,
+`/channels recovery-note`, and `/channels capture-backup-note` infer the
+current channel and thread id from the issue marker when no explicit
+route/channel/thread target is provided. They create or reuse one open GitHub
+issue carrying a hidden `gitclaw:channel-backup-note` marker for the stable
+note id, label it with `gitclaw` so normal conversation can continue there,
+and queue a provider-facing backup-note link back to the mirrored channel
+thread. The backup-note issue contains the human-readable scope, title, and
+note because it is the durable review card; the source receipt remains
+body-free, reporting only note/thread/message/scope/title/text hashes, counts,
+duplicate status, notification queue metadata, and delivery gates. It does not
+call a model, call provider APIs, fetch backup branches, read backup payloads,
+restore files, mutate memory, mutate the repository, print raw note ids, print
+raw backup scopes, print raw thread ids, print raw source or notification
+message ids, print channel message bodies, or print raw titles or note text in
+the source receipt. Provider-facing notifications include the issue link,
+visible scope, and visible title only, never the note body. Duplicates are
+suppressed first by `note_id` for the GitHub backup-note issue and then by
+`channel + notify_message_id` for the provider-facing backup-note link.
+Changes to this surface require a live E2E that records the backup note,
+validates the metadata-only backup-note outbox, checks duplicate suppression,
+and then continues on the backup-note issue with a normal GitHub Models
+repo-reader/search follow-up that makes a real LLM call.
+
 The same channel-thread issue can also record an externally observed tool
 result without executing the tool:
 
@@ -11390,6 +11424,19 @@ examples/workflows/gitclaw.yml
   `gitclaw.search_files`, recover the channel-soul-note fixture token, and
   avoid hidden channel, account, provider, message, note id, soul area, title,
   note text, and notification sentinels.
+- A `gh`-driven channel-backup-note-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels backup-note --note-id ... --scope ... --message-id ...`
+  on that mirrored thread, verifies GitHub backup-note issue creation,
+  body-free source receipt metadata, provider-facing backup-note-link queueing,
+  duplicate backup-note and notification suppression, explicit
+  no-backup-fetch/no-backup-restore/no-backup-payload-read/no-memory-mutation/
+  no-repository-mutation gates, and metadata-only outbox discovery. The
+  backup-note issue then gets a normal GitHub Models issue-comment follow-up
+  that must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-backup-note fixture token, and avoid hidden channel, account,
+  provider, message, note id, backup scope, title, note text, and notification
+  sentinels.
 - A `gh`-driven channel-tool-result-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels tool-result --result-id ... --tool ... --status ...
