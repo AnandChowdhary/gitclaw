@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T10:34:53Z",
+  "generated_at": "2026-06-03T10:36:52Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 711,
   "issues": [
@@ -9030,15 +9030,15 @@
       "number": 820,
       "title": "GitClaw telegram thread channel-compass-e2e-20260603t102904z",
       "path": "issues/000820.json",
-      "backup_generated_at": "2026-06-03T10:34:51Z",
+      "backup_generated_at": "2026-06-03T10:36:51Z",
       "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 7,
-      "transcript_messages": 7
+      "comment_count": 9,
+      "transcript_messages": 9
     }
   ]
 }
