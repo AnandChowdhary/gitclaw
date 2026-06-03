@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T01:21:06Z",
+  "generated_at": "2026-06-03T01:22:57Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 659,
+  "count": 660,
   "issues": [
     {
       "number": 3,
@@ -8357,6 +8357,19 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 768,
+      "title": "GitClaw telegram thread channel-fork-child-20260603t011544z",
+      "path": "issues/000768.json",
+      "backup_generated_at": "2026-06-03T01:22:56Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw",
+        "gitclaw:channel"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }

@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-03T01:22:56Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 768,
+    "title": "GitClaw telegram thread channel-fork-child-20260603t011544z",
+    "body": "\u003c!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"channel-fork-child-20260603t011544z\" --\u003e\n\u003c!-- gitclaw:channel-fork fork_id=\"channel-fork-20260603t011544z\" channel=\"telegram\" source_thread_id_sha256_12=\"2ec164d6016e\" target_thread_id=\"channel-fork-child-20260603t011544z\" source_message_id_sha256_12=\"13c559fbc6f2\" source_issue=\"767\" source_comment_id=\"4608266903\" --\u003e\nGitClaw forked channel thread.\n\n- channel: telegram\n- thread_id: channel-fork-child-20260603t011544z\n- fork_id: channel-fork-20260603t011544z\n- source_issue: #767\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/767\n- source_comment_id: 4608266903\n- source_thread_id_sha256_12: 2ec164d6016e\n- source_message_id_sha256_12: 13c559fbc6f2\n- fork_mode: github-issue-channel-thread-fork\n- model_call_performed: false\n- provider_delivery_performed: false\n- raw_source_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Fork\n\nShape GitHub-native channel fork 20260603t011544z\n\n## Notes\n\nVisible fork notes token: VISIBLE_CHANNEL_FORK_NOTES_20260603t011544z\n\nMessages for this forked channel thread can continue in this issue as normal GitClaw comments.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw",
+      "gitclaw:channel"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw telegram thread channel-fork-child-20260603t011544z\n\n\u003c!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"channel-fork-child-20260603t011544z\" --\u003e\n\u003c!-- gitclaw:channel-fork fork_id=\"channel-fork-20260603t011544z\" channel=\"telegram\" source_thread_id_sha256_12=\"2ec164d6016e\" target_thread_id=\"channel-fork-child-20260603t011544z\" source_message_id_sha256_12=\"13c559fbc6f2\" source_issue=\"767\" source_comment_id=\"4608266903\" --\u003e\nGitClaw forked channel thread.\n\n- channel: telegram\n- thread_id: channel-fork-child-20260603t011544z\n- fork_id: channel-fork-20260603t011544z\n- source_issue: #767\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/767\n- source_comment_id: 4608266903\n- source_thread_id_sha256_12: 2ec164d6016e\n- source_message_id_sha256_12: 13c559fbc6f2\n- fork_mode: github-issue-channel-thread-fork\n- model_call_performed: false\n- provider_delivery_performed: false\n- raw_source_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Fork\n\nShape GitHub-native channel fork 20260603t011544z\n\n## Notes\n\nVisible fork notes token: VISIBLE_CHANNEL_FORK_NOTES_20260603t011544z\n\nMessages for this forked channel thread can continue in this issue as normal GitClaw comments.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created fork issue and use the repo-reader skill.\n\nSearch the repository for `channel fork unique search fixture phrase`.\nThe matching repository search result line has the form `channel fork unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_FORK_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include fork ids, message ids, thread ids, account hashes, issue numbers, fork titles, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_FORK_FOLLOWUP_20260603t011544z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4608282848,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_FORK_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4608287260,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4608282848,
+      "body": "@gitclaw Continue this channel-created fork issue and use the repo-reader skill.\n\nSearch the repository for `channel fork unique search fixture phrase`.\nThe matching repository search result line has the form `channel fork unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_FORK_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include fork ids, message ids, thread ids, account hashes, issue numbers, fork titles, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_FORK_FOLLOWUP_20260603t011544z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T01:21:16Z",
+      "updated_at": "2026-06-03T01:21:16Z"
+    },
+    {
+      "id": 4608287260,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26857936356\" event_id=\"comment-4608282848\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"26d8f126bdfea872726078dd8ee2a5d8\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26857936356\" prompt_context_sha256_12=\"4df7d4e0c2c0\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10874\" usage_completion_tokens=\"11\" usage_total_tokens=\"10885\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_FORK_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T01:22:21Z",
+      "updated_at": "2026-06-03T01:22:21Z"
+    }
+  ]
+}
