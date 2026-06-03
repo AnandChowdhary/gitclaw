@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T02:44:43Z",
+  "generated_at": "2026-06-03T02:46:24Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 667,
+  "count": 668,
   "issues": [
     {
       "number": 3,
@@ -8463,6 +8463,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 776,
+      "title": "GitClaw channel open loop: Resolve channel open loop 20260603t023907z",
+      "path": "issues/000776.json",
+      "backup_generated_at": "2026-06-03T02:46:23Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
