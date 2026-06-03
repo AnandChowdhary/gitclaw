@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T12:24:27Z",
+  "generated_at": "2026-06-03T12:26:37Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4612258160,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels browser-status --message-id browser-status-ingest-20260603t122029z --notify-message-id browser-status-notify-20260603t122029z --status-id runtime-browser-status-20260603t122029z\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_BROWSER_STATUS_DUPLICATE_20260603t122029z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4612265977,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Browser Status Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#826`\n- requested_channel_command: `/channels browser-status`\n- channel_browser_status_status: `duplicate`\n- browser_status_mode: `provider-facing-browser-readiness`\n- notification_target_issue: `#826`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `f08fe61be269`\n- source_message_id_sha256_12: `ec735391daa2`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `f318fcdc7a92`\n- notify_message_id_auto: `false`\n- browser_status_id_sha256_12: `dc574ceee0cf`\n- browser_status_id_auto: `false`\n- mcp_specs_scanned: `1`\n- browser_mcp_specs: `0`\n- browser_bridge_reviewed: `false`\n- channel_gateway_workflow_present: `true`\n- channel_outbox_workflow_present: `true`\n- run_mode: `read-only-status-card`\n- notification_body_sha256_12: `6d62871cb036`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- tool_execution_performed: `false`\n- browser_session_opened: `false`\n- browser_navigation_performed: `false`\n- browser_screenshot_performed: `false`\n- browser_mcp_server_launch_performed: `false`\n- workflow_mutation_performed: `false`\n- provider_api_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_browser_status_id_included: `false`\n- raw_mcp_spec_body_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_browser_status_action_change: `true`\n- issue_title_sha256_12: `7fb34d705780`\n\nGitClaw queued a provider-facing browser readiness card on the canonical channel issue. This is a channel-native way to ask whether browser automation is reviewed/configured, while keeping browser sessions, navigation, screenshots, browser MCP server launches, model calls, provider APIs, workflow edits, and repository mutations out of this action. The source receipt keeps thread ids, message ids, status ids, MCP spec bodies, and channel bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read browser-status updates with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent browser-status updates with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate browser-status updates are suppressed by `channel + notify_message_id`\n- normal follow-up comments on the same GitHub issue still take the GitHub Models path and must expose model, tool, skill, prompt-context, and usage telemetry",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4612277056,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T12:23:56Z",
       "updated_at": "2026-06-03T12:23:56Z"
+    },
+    {
+      "id": 4612265977,
+      "body": "@gitclaw /channels browser-status --message-id browser-status-ingest-20260603t122029z --notify-message-id browser-status-notify-20260603t122029z --status-id runtime-browser-status-20260603t122029z\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_BROWSER_STATUS_DUPLICATE_20260603t122029z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T12:24:48Z",
+      "updated_at": "2026-06-03T12:24:48Z"
+    },
+    {
+      "id": 4612277056,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26884540797\" event_id=\"comment-4612265977\" model=\"gitclaw/channels\" idempotency_key=\"39dea51ec689fe598e33ac257fc405f1\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26884540797\" --\u003e\n## GitClaw Channel Browser Status Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#826`\n- requested_channel_command: `/channels browser-status`\n- channel_browser_status_status: `duplicate`\n- browser_status_mode: `provider-facing-browser-readiness`\n- notification_target_issue: `#826`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `f08fe61be269`\n- source_message_id_sha256_12: `ec735391daa2`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `f318fcdc7a92`\n- notify_message_id_auto: `false`\n- browser_status_id_sha256_12: `dc574ceee0cf`\n- browser_status_id_auto: `false`\n- mcp_specs_scanned: `1`\n- browser_mcp_specs: `0`\n- browser_bridge_reviewed: `false`\n- channel_gateway_workflow_present: `true`\n- channel_outbox_workflow_present: `true`\n- run_mode: `read-only-status-card`\n- notification_body_sha256_12: `6d62871cb036`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- tool_execution_performed: `false`\n- browser_session_opened: `false`\n- browser_navigation_performed: `false`\n- browser_screenshot_performed: `false`\n- browser_mcp_server_launch_performed: `false`\n- workflow_mutation_performed: `false`\n- provider_api_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_browser_status_id_included: `false`\n- raw_mcp_spec_body_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_browser_status_action_change: `true`\n- issue_title_sha256_12: `7fb34d705780`\n\nGitClaw queued a provider-facing browser readiness card on the canonical channel issue. This is a channel-native way to ask whether browser automation is reviewed/configured, while keeping browser sessions, navigation, screenshots, browser MCP server launches, model calls, provider APIs, workflow edits, and repository mutations out of this action. The source receipt keeps thread ids, message ids, status ids, MCP spec bodies, and channel bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read browser-status updates with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent browser-status updates with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate browser-status updates are suppressed by `channel + notify_message_id`\n- normal follow-up comments on the same GitHub issue still take the GitHub Models path and must expose model, tool, skill, prompt-context, and usage telemetry",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T12:26:02Z",
+      "updated_at": "2026-06-03T12:26:02Z"
     }
   ]
 }
