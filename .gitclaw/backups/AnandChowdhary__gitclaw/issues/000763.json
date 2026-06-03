@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T00:36:47Z",
+  "generated_at": "2026-06-03T00:38:24Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -50,6 +50,24 @@
       "CommentID": 4608097781,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /tools cancel-run --id e2e-tool-run-cancel-20260603t003337z\n\nRepeat the same tool-run cancellation.\nDo not include this hidden duplicate token: NOECHO_TOOLS_RUN_CANCEL_DUPLICATE_20260603t003337z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4608100782,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Tool Run Cancel Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#763`\n- source_comment_id: `4608100782`\n- requested_tool_command: `/tools cancel-run`\n- tool_run_cancel_status: `not_found_or_closed`\n- tool_run_request_issue: `#0`\n- tool_run_request_issue_url: ``\n- cancel_comment_id: `0`\n- cancellation_comment_posted: `false`\n- issue_closed: `false`\n- cancellation_duplicate_suppressed: `false`\n- request_not_found_or_closed: `true`\n- request_id_sha256_12: `0e741cebac51`\n- request_id_auto_from_current_issue: `false`\n- cancellation_store: `github-issue-comment-plus-closed-state`\n- model_call_performed: `false`\n- tool_execution_performed: `false`\n- approval_granted: `false`\n- repository_mutation_performed: `false`\n- raw_request_id_included: `false`\n- raw_source_body_included: `false`\n- raw_tool_inputs_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_tool_run_cancel_change: `true`\n- issue_title_sha256_12: `1204be9a6118`\n\nGitClaw cancelled an open reviewed tool-run request issue when one was found. This does not approve or execute the requested tool, call a model, copy raw source text, or mutate repository files.\n\n### Review Path\n- cancellation is durable as a request-issue comment plus closed GitHub issue state\n- a missing request means the request id was not open in the current GitHub issue store",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4608104816,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -76,6 +94,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T00:36:21Z",
       "updated_at": "2026-06-03T00:36:21Z"
+    },
+    {
+      "id": 4608100782,
+      "body": "@gitclaw /tools cancel-run --id e2e-tool-run-cancel-20260603t003337z\n\nRepeat the same tool-run cancellation.\nDo not include this hidden duplicate token: NOECHO_TOOLS_RUN_CANCEL_DUPLICATE_20260603t003337z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T00:37:00Z",
+      "updated_at": "2026-06-03T00:37:00Z"
+    },
+    {
+      "id": 4608104816,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26856505682\" event_id=\"comment-4608100782\" model=\"gitclaw/tools\" idempotency_key=\"a66f24d3c4a9d176ca38b54c15466bfc\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26856505682\" --\u003e\n## GitClaw Tool Run Cancel Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#763`\n- source_comment_id: `4608100782`\n- requested_tool_command: `/tools cancel-run`\n- tool_run_cancel_status: `not_found_or_closed`\n- tool_run_request_issue: `#0`\n- tool_run_request_issue_url: ``\n- cancel_comment_id: `0`\n- cancellation_comment_posted: `false`\n- issue_closed: `false`\n- cancellation_duplicate_suppressed: `false`\n- request_not_found_or_closed: `true`\n- request_id_sha256_12: `0e741cebac51`\n- request_id_auto_from_current_issue: `false`\n- cancellation_store: `github-issue-comment-plus-closed-state`\n- model_call_performed: `false`\n- tool_execution_performed: `false`\n- approval_granted: `false`\n- repository_mutation_performed: `false`\n- raw_request_id_included: `false`\n- raw_source_body_included: `false`\n- raw_tool_inputs_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_tool_run_cancel_change: `true`\n- issue_title_sha256_12: `1204be9a6118`\n\nGitClaw cancelled an open reviewed tool-run request issue when one was found. This does not approve or execute the requested tool, call a model, copy raw source text, or mutate repository files.\n\n### Review Path\n- cancellation is durable as a request-issue comment plus closed GitHub issue state\n- a missing request means the request id was not open in the current GitHub issue store",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T00:37:58Z",
+      "updated_at": "2026-06-03T00:37:58Z"
     }
   ]
 }
