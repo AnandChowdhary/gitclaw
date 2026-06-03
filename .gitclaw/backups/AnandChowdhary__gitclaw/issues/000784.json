@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-03T03:53:43Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 784,
+    "title": "GitClaw channel tool result: Record GitHub-native channel tool result 20260603t034626z",
+    "body": "\u003c!-- gitclaw:channel-tool-result result_id=\"channel-tool-result-20260603t034626z\" channel=\"telegram\" tool_sha256_12=\"d04ad0c5d344\" status_sha256_12=\"aee408847d35\" recorded_at_sha256_12=\"462488de3ef0\" thread_id_sha256_12=\"6b494f394302\" source_message_id_sha256_12=\"b0d430ebdedb\" source_issue=\"783\" source_comment_id=\"4608899980\" --\u003e\nGitClaw channel tool result.\n\n- result_id: channel-tool-result-20260603t034626z\n- tool_name: gitclaw.search_files\n- status: success\n- exit_code: 0\n- recorded_at: 2037-07-19T10:11:12Z\n- source_channel: telegram\n- source_issue: #783\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/783\n- source_comment_id: 4608899980\n- thread_id_sha256_12: 6b494f394302\n- source_message_id_sha256_12: b0d430ebdedb\n- tool_result_mode: github-issue-tool-result\n- tool_execution_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Tool\n\ngitclaw.search_files\n\n## Status\n\nsuccess\n\nExit code: 0\n\n## Recorded At\n\n2037-07-19T10:11:12Z\n\n## Summary\n\nRecord GitHub-native channel tool result 20260603t034626z\n\n## Result Details\n\nVisible tool-result detail token: VISIBLE_CHANNEL_TOOL_RESULT_DETAIL_20260603t034626z\n\nUse this issue as the durable GitHub home for the externally observed tool result. GitClaw did not execute the tool for this channel action.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel tool result: Record GitHub-native channel tool result 20260603t034626z\n\n\u003c!-- gitclaw:channel-tool-result result_id=\"channel-tool-result-20260603t034626z\" channel=\"telegram\" tool_sha256_12=\"d04ad0c5d344\" status_sha256_12=\"aee408847d35\" recorded_at_sha256_12=\"462488de3ef0\" thread_id_sha256_12=\"6b494f394302\" source_message_id_sha256_12=\"b0d430ebdedb\" source_issue=\"783\" source_comment_id=\"4608899980\" --\u003e\nGitClaw channel tool result.\n\n- result_id: channel-tool-result-20260603t034626z\n- tool_name: gitclaw.search_files\n- status: success\n- exit_code: 0\n- recorded_at: 2037-07-19T10:11:12Z\n- source_channel: telegram\n- source_issue: #783\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/783\n- source_comment_id: 4608899980\n- thread_id_sha256_12: 6b494f394302\n- source_message_id_sha256_12: b0d430ebdedb\n- tool_result_mode: github-issue-tool-result\n- tool_execution_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Tool\n\ngitclaw.search_files\n\n## Status\n\nsuccess\n\nExit code: 0\n\n## Recorded At\n\n2037-07-19T10:11:12Z\n\n## Summary\n\nRecord GitHub-native channel tool result 20260603t034626z\n\n## Result Details\n\nVisible tool-result detail token: VISIBLE_CHANNEL_TOOL_RESULT_DETAIL_20260603t034626z\n\nUse this issue as the durable GitHub home for the externally observed tool result. GitClaw did not execute the tool for this channel action.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created tool result and use the repo-reader skill.\n\nSearch the repository for `channel tool result unique search fixture phrase`.\nThe matching repository search result line has the form `channel tool result unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_TOOL_RESULT_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include tool result ids, recorded timestamps, statuses, message ids, thread ids, account hashes, issue numbers, tool result summaries, or result details.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_TOOL_RESULT_FOLLOWUP_20260603t034626z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4608914855,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_TOOL_RESULT_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4608919498,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4608914855,
+      "body": "@gitclaw Continue this channel-created tool result and use the repo-reader skill.\n\nSearch the repository for `channel tool result unique search fixture phrase`.\nThe matching repository search result line has the form `channel tool result unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_TOOL_RESULT_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include tool result ids, recorded timestamps, statuses, message ids, thread ids, account hashes, issue numbers, tool result summaries, or result details.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_TOOL_RESULT_FOLLOWUP_20260603t034626z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T03:52:12Z",
+      "updated_at": "2026-06-03T03:52:12Z"
+    },
+    {
+      "id": 4608919498,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26862620340\" event_id=\"comment-4608914855\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"3207d3a7f50b1b3a57da99cc0509836a\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26862620340\" prompt_context_sha256_12=\"104e99efe750\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10965\" usage_completion_tokens=\"11\" usage_total_tokens=\"10976\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_TOOL_RESULT_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T03:53:15Z",
+      "updated_at": "2026-06-03T03:53:15Z"
+    }
+  ]
+}
