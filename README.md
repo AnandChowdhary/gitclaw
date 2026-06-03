@@ -682,6 +682,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels mood focused --message-id <id> --notify-message-id <id> --intensity 4
 @gitclaw /channels sticker confetti --sticker-id <id> --message-id <id> --notify-message-id <id> --scale 4
 @gitclaw /channels toast launch-ready --toast-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels haiku launch --haiku-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels nudge release-captain --nudge-id <id> --message-id <id> --notify-message-id <id> --tone gentle
 @gitclaw /channels palette fun --palette-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels compass all --compass-id <id> --message-id <id> --notify-message-id <id>
@@ -1025,6 +1026,13 @@ visible in the provider update, while the source receipt keeps raw toast ids,
 titles, reasons, tones, thread ids, message ids, and channel bodies out of
 band. This does not open durable kudos issues, call provider APIs, call a
 model, edit workflows, or mutate the repository.
+`@gitclaw /channels haiku <theme> --haiku-id <id> --message-id <id>
+--notify-message-id <id>` queues a provider-facing three-line poem card from a
+bounded static line deck. Optional `Note: ...` trailing text is visible in the
+provider update, while the source receipt keeps raw haiku ids, themes, notes,
+poem lines, thread ids, message ids, and channel bodies out of band. This does
+not call a model, use external randomness, generate media, call provider APIs,
+edit workflows, or mutate the repository.
 `@gitclaw /channels nudge <target> --nudge-id <id> --message-id <id>
 --notify-message-id <id> --tone gentle|normal|urgent` queues a provider-facing
 attention nudge back to the current Slack/Telegram thread. Optional `Note: ...`

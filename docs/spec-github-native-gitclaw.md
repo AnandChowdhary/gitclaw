@@ -5552,6 +5552,32 @@ outbox discovery, verifies duplicate suppression, proves no kudos issue/model/
 provider-API/workflow/repository mutation was performed, and then continues on
 the same GitHub issue with a real GitHub Models repo-reader/search follow-up.
 
+For tiny channel-native color that should feel alive without calling an LLM,
+GitClaw also supports:
+
+```text
+@gitclaw /channels haiku launch --haiku-id <stable-haiku-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
+Note: Release handoff steady.
+```
+
+`/channels haiku`, `/channels poem`, `/channels poems`, `/channels tiny-poem`,
+`/channels micropoem`, `/channels micro-poem`, `/channels poem-card`, and
+`/channels verse` queue one provider-facing three-line poem card back onto the
+current `gitclaw:channel-thread` issue or an explicit reviewed route. The poem
+is selected deterministically from bounded static line decks keyed by the
+normalized theme and GitHub/channel metadata. Optional `Note: ...` trailing
+text is visible in the provider-facing update. The source receipt remains
+body-free and reports only hashes, sizes, line count, duplicate status, outbox
+delivery instructions, and safety gates. It does not call a model, use external
+randomness, generate media, call provider APIs, edit workflows, mutate
+repository files, print raw haiku ids, print raw themes, print raw notes, or
+print raw poem lines. Duplicates are suppressed by `channel + notify_message_id`.
+Changes to this surface require a live E2E that ingests a real channel issue,
+queues the haiku card, validates metadata-only outbox discovery, verifies
+duplicate suppression, proves no model/randomness/media/provider-API/workflow/
+repository mutation was performed, and then continues on the same GitHub issue
+with a real GitHub Models repo-reader/search follow-up.
+
 For immediate channel-native nudges that should ask for attention without
 becoming task state, GitClaw also supports:
 
@@ -11826,6 +11852,16 @@ examples/workflows/gitclaw.yml
   issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-toast fixture token, and avoid
   hidden channel/message/toast sentinels.
+- A `gh`-driven channel-haiku-slash E2E harness ingests a real mirrored channel
+  issue, replies with `@gitclaw /channels haiku ...`, verifies the
+  provider-facing deterministic poem card, body-free source receipt metadata,
+  duplicate poem notification suppression from a later issue comment with the
+  same acknowledgement id, explicit no model/external-randomness/media/provider-
+  API/workflow/repository mutation gates, and metadata-only outbox discovery for
+  the acknowledgement. The same channel issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-haiku fixture token, and avoid
+  hidden channel/message/haiku sentinels.
 - A `gh`-driven channel-nudge-slash E2E harness ingests a real mirrored channel
   issue, replies with `@gitclaw /channels nudge ...`, verifies the
   provider-facing target/tone/note card, body-free source receipt metadata,

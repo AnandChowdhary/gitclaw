@@ -5136,6 +5136,29 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Haiku Follow-Up
+
+OpenClaw's channel framing keeps the assistant present in normal conversation,
+while Hermes' messaging guide shows that provider-native chat affordances can
+be explicit commands instead of implicit gateway state. The useful GitHub-native
+translation is not to add a hidden creative service, but to make small channel
+signals reviewable: the same GitHub issue thread receives the command, queues
+the provider-visible reply, and records a body-free receipt.
+
+GitClaw's version is `@gitclaw /channels haiku <theme> --haiku-id <id>
+--message-id <id> --notify-message-id <id>`. It queues one provider-facing
+three-line poem card from a bounded static line deck selected by deterministic
+GitHub/channel metadata. Optional `Note: ...` text is visible only in the
+provider-facing card; the source receipt carries hashes, sizes, line count,
+duplicate status, and delivery gates. The action does not call a model, use
+external randomness, generate media, call provider APIs, mutate workflows, or
+mutate repository files. Acceptance requires live E2E for channel ingest,
+haiku card queueing, metadata-only outbox discovery, duplicate suppression, and
+a real GitHub Models repo-reader/search follow-up on the same issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Mode Card Follow-Up
 
 OpenClaw's channel surface and session framing point toward chat threads that
