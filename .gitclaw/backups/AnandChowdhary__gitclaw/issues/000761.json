@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T00:17:17Z",
+  "generated_at": "2026-06-03T00:19:00Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -11,6 +11,7 @@
     "author_association": "OWNER",
     "labels": [
       "gitclaw",
+      "gitclaw:done",
       "gitclaw:channel"
     ]
   },
@@ -50,6 +51,24 @@
       "CommentID": 4608014195,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels activity uploading --activity-id activity-update-20260603t001438z --message-id activity-ingest-20260603T001438Z --ttl-seconds 30\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_ACTIVITY_DUPLICATE_20260603T001438Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4608018266,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Activity Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#761`\n- requested_channel_command: `/channels activity`\n- channel_activity_status: `duplicate`\n- target_issue: `#761`\n- target_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/761`\n- activity_comment_id: `0`\n- target_issue_created: `false`\n- duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `cb1bc1822dcd`\n- target_message_id_sha256_12: `eeac0b8c53ca`\n- activity_id_sha256_12: `9301027c723f`\n- activity_id_auto: `false`\n- activity_sha256_12: `39e15e2c9d48`\n- ttl_seconds: `30`\n- target_from_current_channel_issue: `true`\n- target_issue_is_source: `true`\n- raw_route_name_included: `false`\n- raw_thread_id_included: `false`\n- raw_target_message_id_included: `false`\n- raw_activity_id_included: `false`\n- raw_activity_included: `false`\n- provider_delivery_performed: `false`\n- provider_activity_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- repository_mutation_performed: `false`\n- model_call_performed: `false`\n- llm_e2e_required_after_channel_activity_action_change: `true`\n- issue_title_sha256_12: `a837949039d0`\n\nGitClaw queued a structured `gitclaw:channel-activity` comment on the canonical channel issue. Provider tokens, provider APIs, raw thread IDs, raw target message IDs, raw activity IDs, raw activity names, channel message bodies, prompts, tool outputs, and credentials are not included in this receipt.\n\n### Follow-Up Delivery\n- provider gateways read pending activity signals with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent activity signals with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate activity signals are suppressed by `channel + activity_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4608022531,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -84,6 +103,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T00:16:49Z",
       "updated_at": "2026-06-03T00:16:49Z"
+    },
+    {
+      "id": 4608018266,
+      "body": "@gitclaw /channels activity uploading --activity-id activity-update-20260603t001438z --message-id activity-ingest-20260603T001438Z --ttl-seconds 30\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_ACTIVITY_DUPLICATE_20260603T001438Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T00:17:36Z",
+      "updated_at": "2026-06-03T00:17:36Z"
+    },
+    {
+      "id": 4608022531,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26855856253\" event_id=\"comment-4608018266\" model=\"gitclaw/channels\" idempotency_key=\"5ede7c60411593cf0097ae2d8ddf2d0f\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26855856253\" --\u003e\n## GitClaw Channel Activity Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#761`\n- requested_channel_command: `/channels activity`\n- channel_activity_status: `duplicate`\n- target_issue: `#761`\n- target_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/761`\n- activity_comment_id: `0`\n- target_issue_created: `false`\n- duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `cb1bc1822dcd`\n- target_message_id_sha256_12: `eeac0b8c53ca`\n- activity_id_sha256_12: `9301027c723f`\n- activity_id_auto: `false`\n- activity_sha256_12: `39e15e2c9d48`\n- ttl_seconds: `30`\n- target_from_current_channel_issue: `true`\n- target_issue_is_source: `true`\n- raw_route_name_included: `false`\n- raw_thread_id_included: `false`\n- raw_target_message_id_included: `false`\n- raw_activity_id_included: `false`\n- raw_activity_included: `false`\n- provider_delivery_performed: `false`\n- provider_activity_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- repository_mutation_performed: `false`\n- model_call_performed: `false`\n- llm_e2e_required_after_channel_activity_action_change: `true`\n- issue_title_sha256_12: `a837949039d0`\n\nGitClaw queued a structured `gitclaw:channel-activity` comment on the canonical channel issue. Provider tokens, provider APIs, raw thread IDs, raw target message IDs, raw activity IDs, raw activity names, channel message bodies, prompts, tool outputs, and credentials are not included in this receipt.\n\n### Follow-Up Delivery\n- provider gateways read pending activity signals with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent activity signals with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate activity signals are suppressed by `channel + activity_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T00:18:31Z",
+      "updated_at": "2026-06-03T00:18:31Z"
     }
   ]
 }
