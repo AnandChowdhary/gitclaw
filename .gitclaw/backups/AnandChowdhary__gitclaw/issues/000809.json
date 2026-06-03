@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T08:01:24Z",
+  "generated_at": "2026-06-03T08:03:16Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4610269850,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels pact --pact-id channel-pact-20260603t075746z --message-id pact-ingest-20260603t075746z --notify-message-id pact-notify-20260603t075746z\nTitle: Find the shortest useful channel loop 20260603t075746z\nScope:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_PACT_DUPLICATE_20260603t075746z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4610276177,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Pact Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#809`\n- requested_channel_command: `/channels pact`\n- channel_pact_status: `duplicate`\n- pact_issue: `#810`\n- pact_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/810`\n- pact_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#809`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `56ce71141a59`\n- source_message_id_sha256_12: `cefdcc597926`\n- notify_message_id_sha256_12: `f28d0a65f2e9`\n- notify_message_id_auto: `false`\n- pact_id_sha256_12: `c7987c971d90`\n- pact_id_auto: `false`\n- pact_title_sha256_12: `35ab79209816`\n- pact_title_bytes: `54`\n- pact_title_lines: `1`\n- pact_participants_sha256_12: `e3b0c44298fc`\n- pact_participants_bytes: `0`\n- pact_participants_lines: `0`\n- pact_agreement_sha256_12: `e3b0c44298fc`\n- pact_agreement_bytes: `0`\n- pact_agreement_lines: `0`\n- pact_scope_sha256_12: `f811d26226f2`\n- pact_scope_bytes: `82`\n- pact_scope_lines: `1`\n- pact_revisit_sha256_12: `e3b0c44298fc`\n- pact_revisit_bytes: `0`\n- pact_revisit_lines: `0`\n- notification_body_sha256_12: `08786126402a`\n- target_from_current_channel_issue: `true`\n- raw_pact_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_pact_title_included: `false`\n- raw_pact_participants_included: `false`\n- raw_pact_agreement_included: `false`\n- raw_pact_scope_included: `false`\n- raw_pact_revisit_included: `false`\n- raw_channel_message_body_included: `false`\n- scheduled_workflow_created: `false`\n- reminder_created: `false`\n- standing_order_created: `false`\n- soul_write_performed: `false`\n- memory_write_performed: `false`\n- policy_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_pact_action_change: `true`\n- issue_title_sha256_12: `1a2139ea77f1`\n\nGitClaw recorded a mirrored channel pact as a durable GitHub issue, then queued a provider-facing link back to the original thread. The pact issue contains the human-readable title, participants, agreement, scope, and revisit notes; this source receipt keeps provider IDs, pact IDs, section text, and channel message bodies out of band. No schedule, reminder, standing order, SOUL write, memory write, policy mutation, workflow edit, or repository mutation is created by this action.\n\n### Follow-Up Delivery\n- provider gateways read the pact-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent pact links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate pact issues are suppressed by `pact_id`; duplicate pact-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the pact issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4610283148,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T08:00:55Z",
       "updated_at": "2026-06-03T08:00:55Z"
+    },
+    {
+      "id": 4610276177,
+      "body": "@gitclaw /channels pact --pact-id channel-pact-20260603t075746z --message-id pact-ingest-20260603t075746z --notify-message-id pact-notify-20260603t075746z\nTitle: Find the shortest useful channel loop 20260603t075746z\nScope:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_PACT_DUPLICATE_20260603t075746z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T08:01:45Z",
+      "updated_at": "2026-06-03T08:01:45Z"
+    },
+    {
+      "id": 4610283148,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26871776277\" event_id=\"comment-4610276177\" model=\"gitclaw/channels\" idempotency_key=\"0fd69bac71d2403d5580ae6f1da39fbc\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26871776277\" --\u003e\n## GitClaw Channel Pact Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#809`\n- requested_channel_command: `/channels pact`\n- channel_pact_status: `duplicate`\n- pact_issue: `#810`\n- pact_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/810`\n- pact_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#809`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `56ce71141a59`\n- source_message_id_sha256_12: `cefdcc597926`\n- notify_message_id_sha256_12: `f28d0a65f2e9`\n- notify_message_id_auto: `false`\n- pact_id_sha256_12: `c7987c971d90`\n- pact_id_auto: `false`\n- pact_title_sha256_12: `35ab79209816`\n- pact_title_bytes: `54`\n- pact_title_lines: `1`\n- pact_participants_sha256_12: `e3b0c44298fc`\n- pact_participants_bytes: `0`\n- pact_participants_lines: `0`\n- pact_agreement_sha256_12: `e3b0c44298fc`\n- pact_agreement_bytes: `0`\n- pact_agreement_lines: `0`\n- pact_scope_sha256_12: `f811d26226f2`\n- pact_scope_bytes: `82`\n- pact_scope_lines: `1`\n- pact_revisit_sha256_12: `e3b0c44298fc`\n- pact_revisit_bytes: `0`\n- pact_revisit_lines: `0`\n- notification_body_sha256_12: `08786126402a`\n- target_from_current_channel_issue: `true`\n- raw_pact_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_pact_title_included: `false`\n- raw_pact_participants_included: `false`\n- raw_pact_agreement_included: `false`\n- raw_pact_scope_included: `false`\n- raw_pact_revisit_included: `false`\n- raw_channel_message_body_included: `false`\n- scheduled_workflow_created: `false`\n- reminder_created: `false`\n- standing_order_created: `false`\n- soul_write_performed: `false`\n- memory_write_performed: `false`\n- policy_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_pact_action_change: `true`\n- issue_title_sha256_12: `1a2139ea77f1`\n\nGitClaw recorded a mirrored channel pact as a durable GitHub issue, then queued a provider-facing link back to the original thread. The pact issue contains the human-readable title, participants, agreement, scope, and revisit notes; this source receipt keeps provider IDs, pact IDs, section text, and channel message bodies out of band. No schedule, reminder, standing order, SOUL write, memory write, policy mutation, workflow edit, or repository mutation is created by this action.\n\n### Follow-Up Delivery\n- provider gateways read the pact-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent pact links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate pact issues are suppressed by `pact_id`; duplicate pact-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the pact issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T08:02:48Z",
+      "updated_at": "2026-06-03T08:02:48Z"
     }
   ]
 }
