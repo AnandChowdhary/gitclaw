@@ -6444,6 +6444,27 @@ sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes tools guide
 Hermes messaging guide
 (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Toast Follow-Up
+
+OpenClaw's channel model makes the assistant feel present in conversation, and
+Hermes' messaging guide keeps provider transport separate from the agent's
+normalized session. The GitHub-native translation is not only reports: small
+chat-native gestures can still be durable and auditable when they are queued as
+GitHub comments and delivered later by the provider outbox.
+
+GitClaw's version is `@gitclaw /channels toast --toast-id <id> --message-id
+<id>`. It queues one provider-facing celebration card back to the mirrored
+Slack/Telegram thread, keeps the source receipt body-free with only hashes,
+duplicate state, and delivery gates, and deliberately avoids opening a durable
+kudos issue. The action does not call a model, call provider APIs, edit
+workflows, or mutate the repository. Acceptance requires live E2E for toast
+queueing, metadata-only outbox discovery, duplicate suppression, explicit
+no-kudos/no-provider-API/no-workflow-mutation gates, and a real GitHub Models
+repo-reader/search follow-up on the same channel issue.
+
+Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), Hermes
+messaging guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Agenda Follow-Up
 
 OpenClaw's durable workspace framing points toward turning fuzzy chat context

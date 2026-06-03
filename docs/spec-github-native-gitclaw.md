@@ -5519,6 +5519,30 @@ model/image/media/upload/provider-API/repository mutation was performed, and
 then continues on the same GitHub issue with a real GitHub Models
 repo-reader/search follow-up.
 
+For lightweight celebrations that should stay in chat instead of becoming a
+durable kudos issue, GitClaw also supports:
+
+```text
+@gitclaw /channels toast launch-ready --toast-id <stable-toast-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
+Reason: Release handoff steady.
+```
+
+`/channels toast`, `/channels cheer`, `/channels cheers`, `/channels salute`,
+`/channels ship-it`, `/channels shipit`, `/channels high-five`, and
+`/channels highfive` queue one provider-facing celebration toast back onto the
+current `gitclaw:channel-thread` issue or an explicit reviewed route. The
+toast title, tone, and optional `Reason: ...` trailing text are visible in the
+provider-facing update; the source receipt remains body-free and reports only
+hashes, reason size, duplicate status, outbox delivery instructions, and safety
+gates. It does not open durable kudos issues, call a model, call provider APIs,
+edit workflows, mutate repository files, print raw toast ids, print raw toast
+titles, or print raw reasons. Duplicates are suppressed by
+`channel + notify_message_id`. Changes to this surface require a live E2E that
+ingests a real channel issue, queues the toast card, validates metadata-only
+outbox discovery, verifies duplicate suppression, proves no kudos issue/model/
+provider-API/workflow/repository mutation was performed, and then continues on
+the same GitHub issue with a real GitHub Models repo-reader/search follow-up.
+
 For immediate channel-native nudges that should ask for attention without
 becoming task state, GitClaw also supports:
 
@@ -5904,6 +5928,7 @@ accepts a structured reaction form:
 @gitclaw /channels react --message-id <provider-message-id> --reaction eyes
 @gitclaw /channels pin --message-id <provider-message-id>
 @gitclaw /channels sticker confetti --sticker-id <stable-sticker-id> --message-id <provider-message-id> --notify-message-id <provider-sticker-id> --scale 4
+@gitclaw /channels toast launch-ready --toast-id <stable-toast-id> --message-id <provider-message-id> --notify-message-id <provider-toast-id>
 @gitclaw /channels deliverable --deliverable-id <stable-deliverable-id> --message-id <provider-message-id> --filename <name> --media-type <mime> --url <download-url>
 @gitclaw /channels task --task-id <stable-task-id> --message-id <provider-message-id>
 @gitclaw /channels watch --watch-id <stable-watch-id> --cadence <cadence> --message-id <provider-message-id>
@@ -9267,6 +9292,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels choose --message-id provider-msg-1 --notify-message-id provider-choice-ack-1
 @gitclaw /channels mood focused --message-id provider-msg-1 --notify-message-id provider-mood-ack-1 --intensity 4
 @gitclaw /channels sticker confetti --sticker-id channel-sticker-1 --message-id provider-msg-1 --notify-message-id provider-sticker-ack-1 --scale 4
+@gitclaw /channels toast launch-ready --toast-id channel-toast-1 --message-id provider-msg-1 --notify-message-id provider-toast-ack-1
 @gitclaw /channels nudge release-captain --nudge-id channel-nudge-1 --message-id provider-msg-1 --notify-message-id provider-nudge-ack-1 --tone gentle
 @gitclaw /channels palette fun --palette-id channel-palette-1 --message-id provider-msg-1 --notify-message-id provider-palette-ack-1
 @gitclaw /channels compass all --compass-id channel-compass-1 --message-id provider-msg-1 --notify-message-id provider-compass-ack-1
@@ -11774,6 +11800,16 @@ examples/workflows/gitclaw.yml
   issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-sticker fixture token, and avoid
   hidden channel/message/sticker sentinels.
+- A `gh`-driven channel-toast-slash E2E harness ingests a real mirrored channel
+  issue, replies with `@gitclaw /channels toast ...`, verifies the
+  provider-facing toast card, body-free source receipt metadata, duplicate
+  toast notification suppression from a later issue comment with the same
+  acknowledgement id, explicit no kudos issue/model/provider-API/workflow/
+  repository mutation gates, and metadata-only outbox discovery for the
+  acknowledgement. The same channel issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-toast fixture token, and avoid
+  hidden channel/message/toast sentinels.
 - A `gh`-driven channel-nudge-slash E2E harness ingests a real mirrored channel
   issue, replies with `@gitclaw /channels nudge ...`, verifies the
   provider-facing target/tone/note card, body-free source receipt metadata,

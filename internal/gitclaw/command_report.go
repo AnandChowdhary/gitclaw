@@ -136,6 +136,9 @@ func commandSummaryForReport(entry commandCatalogEntry) string {
 	if !strings.Contains(summary, "channel warmup cards") {
 		summary += " Queue provider-facing channel warmup cards with deterministic conversation starters without executing commands, installing skills, executing tools, reading backup payloads, reading soul bodies, creating schedules, model calls, provider API calls, or repo mutation."
 	}
+	if !strings.Contains(summary, "celebration toast cards") {
+		summary += " Queue provider-facing celebration toast cards without opening durable kudos issues, model calls, provider API calls, workflow edits, or repo mutation."
+	}
 	if !strings.Contains(summary, "browser-readiness replies") {
 		summary += " Queue mirrored channel browser-readiness replies without opening browser sessions, navigating pages, taking screenshots, launching browser MCP servers, executing tools, model calls, provider API calls, workflow edits, or repo mutation."
 	}

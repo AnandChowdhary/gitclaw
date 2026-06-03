@@ -680,6 +680,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels choose --message-id <id> --notify-message-id <id>
 @gitclaw /channels mood focused --message-id <id> --notify-message-id <id> --intensity 4
 @gitclaw /channels sticker confetti --sticker-id <id> --message-id <id> --notify-message-id <id> --scale 4
+@gitclaw /channels toast launch-ready --toast-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels nudge release-captain --nudge-id <id> --message-id <id> --notify-message-id <id> --tone gentle
 @gitclaw /channels palette fun --palette-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels compass all --compass-id <id> --message-id <id> --notify-message-id <id>
@@ -1009,6 +1010,13 @@ is visible in the provider update, while the source receipt keeps raw sticker
 ids, sticker names, notes, thread ids, message ids, and channel bodies out of
 band. This does not generate images, fetch media, upload files, call provider
 APIs, call a model, or mutate the repository.
+`@gitclaw /channels toast <title> --toast-id <id> --message-id <id>
+--notify-message-id <id>` queues a provider-facing celebration toast back to
+the current Slack/Telegram thread. Optional `Reason: ...` trailing text is
+visible in the provider update, while the source receipt keeps raw toast ids,
+titles, reasons, tones, thread ids, message ids, and channel bodies out of
+band. This does not open durable kudos issues, call provider APIs, call a
+model, edit workflows, or mutate the repository.
 `@gitclaw /channels nudge <target> --nudge-id <id> --message-id <id>
 --notify-message-id <id> --tone gentle|normal|urgent` queues a provider-facing
 attention nudge back to the current Slack/Telegram thread. Optional `Note: ...`
@@ -2033,6 +2041,7 @@ scripts/e2e/github-channel-roll-slash.sh
 scripts/e2e/github-channel-choose-slash.sh
 scripts/e2e/github-channel-mood-slash.sh
 scripts/e2e/github-channel-sticker-slash.sh
+scripts/e2e/github-channel-toast-slash.sh
 scripts/e2e/github-channel-nudge-slash.sh
 scripts/e2e/github-channel-palette-slash.sh
 scripts/e2e/github-channel-compass-slash.sh
@@ -2373,6 +2382,13 @@ exposes it through metadata-only outbox, suppresses duplicate sticker
 notifications, proves no model/image/media/upload/provider-API/repository
 mutation was performed, and then runs a real GitHub Models repo-reader/search
 follow-up.
+The channel-toast slash harness adds a lightweight celebration lane that is
+more chat-native than a report and less durable than a kudos issue: a
+channel-ingested issue receives `@gitclaw /channels toast`, queues one
+provider-visible toast with an optional reason, exposes it through
+metadata-only outbox, suppresses duplicate toast notifications, proves no
+kudos issue/model/provider-API/workflow/repository mutation was performed, and
+then runs a real GitHub Models repo-reader/search follow-up.
 The channel-nudge slash harness adds a tiny attention lane that is more chat
 than report: a channel-ingested issue receives `@gitclaw /channels nudge`,
 queues one provider-visible target/tone/note card, exposes it through

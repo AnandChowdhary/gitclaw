@@ -267,3 +267,4 @@ channel tool result unique search fixture phrase => GITCLAW_CHANNEL_TOOL_RESULT_
 channel dock unique search fixture phrase => GITCLAW_CHANNEL_DOCK_CONTEXT_V1
 channel warmup unique search fixture phrase => GITCLAW_CHANNEL_WARMUP_CONTEXT_V1
 channel browser status unique search fixture phrase => GITCLAW_CHANNEL_BROWSER_STATUS_CONTEXT_V1
+channel toast unique search fixture phrase => GITCLAW_CHANNEL_TOAST_CONTEXT_V1
