@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T06:27:56Z",
+  "generated_at": "2026-06-03T06:29:44Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 692,
+  "count": 693,
   "issues": [
     {
       "number": 3,
@@ -8789,6 +8789,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 802,
+      "title": "GitClaw channel memory note: durable-recall: Prefer GitHub review before memory writes 20260603t062220z",
+      "path": "issues/000802.json",
+      "backup_generated_at": "2026-06-03T06:29:43Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
