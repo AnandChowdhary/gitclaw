@@ -225,6 +225,28 @@ func TestChannelDoneArtifactRefSupportsSnippetIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsOpenLoopIssues(t *testing.T) {
+	body := RenderChannelOpenLoopIssueBody(ChannelOpenLoopOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		LoopID:            "loop-done-1",
+		Title:             "Resolve channel open loop",
+		Context:           "A channel conversation left a question unresolved.",
+		NextStep:          "Convert it into a task or close it.",
+		SourceIssueNumber: 44,
+		SourceCommentID:   4400,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "open-loop" || ref.ID != "loop-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 44 || ref.SourceCommentID != 4400 {
+		t.Fatalf("unexpected open-loop artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsWatchIssues(t *testing.T) {
 	body := RenderChannelWatchIssueBody(ChannelWatchOptions{
 		Repo:              "owner/repo",

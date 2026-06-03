@@ -702,6 +702,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels watch --watch-id <id> --cadence <cadence> --message-id <id>
 @gitclaw /channels propose-order --id <id> --cadence <cadence> --message-id <id>
 @gitclaw /channels clip --clip-id <id> --message-id <id>
+@gitclaw /channels open-loop --loop-id <id> --message-id <id>
 @gitclaw /channels snippet --snippet-id <id> --language <lang> --message-id <id>
 @gitclaw /channels bookmark-message --bookmark-id <id> --message-id <id>
 @gitclaw /channels fork --fork-id <id> --new-thread-id <id> --message-id <id>
@@ -1100,6 +1101,16 @@ clip issue without treating it as work. The clip issue holds the readable title
 and notes, a provider-facing clip link is queued back to the Slack/Telegram
 thread, and the source receipt stays body-free with only hashes, duplicate
 state, notification metadata, and delivery gates.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+open-loop --loop-id <id> --message-id <id>` captures an unresolved channel
+question or loose end as a durable GitHub issue without treating it as a task,
+reminder, or watch yet. The open-loop issue contains the readable title,
+context, and next step so normal GitHub conversation can clarify it; the source
+receipt stays body-free with only loop/thread/message/title/context/next-step
+hashes, byte/line counts, duplicate state, notification metadata, and delivery
+gates. It does not call a model, call provider APIs, copy raw mirrored channel
+bodies, or print raw loop ids, provider ids, titles, context, or next steps in
+the source receipt.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels snippet
 --snippet-id <id> --language <lang> --message-id <id>` saves an explicit code
 or config block as a durable GitHub snippet issue. The snippet issue contains
@@ -1800,6 +1811,7 @@ scripts/e2e/github-channel-task-slash.sh
 scripts/e2e/github-channel-watch-slash.sh
 scripts/e2e/github-channel-standing-order-proposal-slash.sh
 scripts/e2e/github-channel-clip-slash.sh
+scripts/e2e/github-channel-open-loop-slash.sh
 scripts/e2e/github-channel-snippet-slash.sh
 scripts/e2e/github-channel-attachment-slash.sh
 scripts/e2e/github-channel-decision-slash.sh
@@ -2191,6 +2203,13 @@ to the mirrored thread, checks duplicate clip and notification suppression,
 exposes the clip-link notification through metadata-only outbox, and then
 continues on the clip issue with a real GitHub Models repo-reader/search
 follow-up.
+The channel-open-loop slash harness turns the operator console into a loose-end
+capture surface: a channel-ingested issue receives `@gitclaw /channels
+open-loop`, creates or reuses a durable GitHub open-loop issue, queues a
+provider-facing open-loop link back to the mirrored thread, checks duplicate
+loop and notification suppression, proves source receipts/outbox do not copy
+context, next steps, or raw provider ids, and then continues on the open-loop
+issue with a real GitHub Models repo-reader/search follow-up.
 The channel-snippet slash harness turns the operator console into a code/config
 capture surface: a channel-ingested issue receives `@gitclaw /channels
 snippet` with an explicit fenced snippet, creates or reuses a durable GitHub

@@ -5700,6 +5700,7 @@ accepts a structured reaction form:
 @gitclaw /channels watch --watch-id <stable-watch-id> --cadence <cadence> --message-id <provider-message-id>
 @gitclaw /channels propose-order --id <stable-proposal-id> --cadence <cadence> --message-id <provider-message-id>
 @gitclaw /channels clip --clip-id <stable-clip-id> --message-id <provider-message-id>
+@gitclaw /channels open-loop --loop-id <stable-loop-id> --message-id <provider-message-id>
 @gitclaw /channels snippet --snippet-id <stable-snippet-id> --language <lang> --message-id <provider-message-id>
 @gitclaw /channels attachment --attachment-id <stable-attachment-id> --message-id <provider-message-id> --filename <name> --media-type <mime> --bytes <n>
 @gitclaw /channels decision --decision-id <stable-decision-id> --message-id <provider-message-id>
@@ -5994,6 +5995,41 @@ provider-facing clip link. Changes to this surface require a live E2E that
 creates the clip, validates the metadata-only clip-link outbox, checks duplicate
 suppression, and then continues on the clip issue with a normal GitHub Models
 repo-reader/search follow-up.
+
+The same channel-thread issue can also capture a loose end before it is mature
+enough to become a task, reminder, watch, or memory proposal:
+
+```text
+@gitclaw /channels open-loop --loop-id <stable-loop-id> --message-id <provider-message-id>
+Title: unresolved channel question
+Context:
+human-readable context from the channel conversation
+Next step:
+what someone should clarify or decide next
+```
+
+`/channels open-loop`, `/channels loop`, `/channels follow-up`,
+`/channels followup`, `/channels loose-end`, and `/channels parking-lot` infer
+the current channel and thread id from the issue marker when no explicit
+route/channel/thread target is provided. They create or reuse one open GitHub
+issue carrying a hidden `gitclaw:channel-open-loop` marker for the stable loop
+id, label it with `gitclaw` so normal conversation can continue there, and
+queue a provider-facing open-loop link back to the mirrored channel thread.
+The open-loop issue intentionally contains the readable title, context, and
+next step because it is the durable clarification surface. The source receipt
+remains body-free, reporting only loop/thread/message/title/context/next-step
+hashes, byte/line counts, duplicate status, notification queue metadata, and
+delivery gates. It does not call a model, call provider APIs, fetch provider
+context, copy raw mirrored channel message bodies, print raw loop ids, print
+raw thread ids, print raw source or notification message ids, or print raw
+title/context/next-step values in the source receipt. Duplicates are suppressed
+first by `loop_id` for the GitHub open-loop issue and then by
+`channel + notify_message_id` for the provider-facing open-loop link. Changes
+to this surface require a live E2E that creates the open-loop issue from a real
+channel-ingested issue, validates metadata-only open-loop outbox discovery,
+checks duplicate suppression, verifies source receipts/outbox do not copy
+context, next steps, or raw provider ids, and then continues on the open-loop
+issue with a normal GitHub Models repo-reader/search follow-up.
 
 The same channel-thread issue can also save an explicit code/config block from
 Slack, Telegram, or another channel into a durable GitHub conversation:
@@ -7939,6 +7975,10 @@ Behavior:
   orders, or creating schedules,
 - create or reuse one `gitclaw:channel-clip` issue per clip id and queue one
   provider-facing clip-link outbound comment per `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-open-loop` issue per loop id and queue
+  one provider-facing open-loop link outbound comment per
+  `channel + notify_message_id` without copying raw mirrored channel message
+  bodies, calling provider APIs, mutating the repository, or calling a model,
 - create or reuse one `gitclaw:channel-snippet` issue per snippet id and queue
   one provider-facing snippet-link outbound comment per
   `channel + notify_message_id` without copying raw mirrored channel message
@@ -8048,7 +8088,8 @@ Behavior:
   `gitclaw:channel-standing-order-proposal`,
   `gitclaw:backup-restore-request-issue`,
   `gitclaw:checkpoint-rehearsal-issue`, `gitclaw:channel-clip`,
-  `gitclaw:channel-attachment`, `gitclaw:channel-snippet`,
+  `gitclaw:channel-open-loop`, `gitclaw:channel-attachment`,
+  `gitclaw:channel-snippet`,
   `gitclaw:channel-decision`,
   `gitclaw:channel-digest`, `gitclaw:channel-idea`,
   `gitclaw:channel-jam`,
@@ -8244,6 +8285,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels watch --watch-id channel-watch-1 --cadence hourly --message-id provider-msg-1
 @gitclaw /channels propose-order --id channel-order-1 --cadence weekly --message-id provider-msg-1
 @gitclaw /channels clip --clip-id channel-clip-1 --message-id provider-msg-1
+@gitclaw /channels open-loop --loop-id channel-loop-1 --message-id provider-msg-1
 @gitclaw /channels snippet --snippet-id channel-snippet-1 --language go --message-id provider-msg-1
 @gitclaw /channels attachment --attachment-id channel-attachment-1 --message-id provider-msg-1 --filename launch-brief.pdf --media-type application/pdf --bytes 4242
 @gitclaw /channels decision --decision-id channel-decision-1 --message-id provider-msg-1
@@ -10956,6 +10998,17 @@ examples/workflows/gitclaw.yml
   normal GitHub Models issue-comment follow-up that must select `repo-reader`,
   expose `gitclaw.search_files`, recover the channel-clip fixture token, and
   avoid hidden channel, account, provider, message, and clip sentinels.
+- A `gh`-driven channel-open-loop-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels open-loop --loop-id ... --message-id ...` with explicit
+  context and next-step sections on that mirrored thread, verifies GitHub
+  open-loop issue creation, source receipt metadata with context and next-step
+  hashes only, provider-facing open-loop link queueing, duplicate loop and
+  notification suppression, and metadata-only outbox discovery. The open-loop
+  issue then gets a normal GitHub Models issue-comment follow-up that must
+  select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-open-loop fixture token, and avoid hidden channel, account, provider,
+  message, loop-id, context, next-step, and title sentinels.
 - A `gh`-driven channel-snippet-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels snippet --snippet-id ... --language ... --message-id ...`

@@ -5107,6 +5107,31 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Open Loop Follow-Up
+
+OpenClaw's workspace model points toward durable agent context that can hold
+open loops, decisions, and follow-up state between conversations. Hermes'
+messaging gateway keeps chat sessions normalized across providers while still
+separating transport from agent authority. The GitHub-native translation is a
+channel-origin loose-end artifact: capture the unresolved thing in GitHub, but
+do not turn the transport event into autonomous work by default.
+
+GitClaw's serverless version is `@gitclaw /channels open-loop --loop-id <id>
+--message-id <id>` with explicit `Title`, `Context`, and `Next step` sections.
+It opens or reuses a normal `gitclaw:channel-open-loop` issue containing the
+readable context and next step, queues one provider-facing open-loop link back
+to the mirrored Slack/Telegram thread, and keeps the source receipt body-free
+with only hashes, byte/line counts, duplicate status, and delivery gates. The
+action does not call a model, call provider APIs, fetch provider message
+bodies, copy raw mirrored channel bodies, mutate the repository, schedule work,
+or print raw loop/context/next-step/provider IDs in the source receipt.
+Acceptance requires live E2E for open-loop issue creation, metadata-only outbox
+discovery, duplicate suppression, `/channels done` artifact recognition, and a
+real GitHub Models repo-reader/search follow-up on the open-loop issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Snippet Capture Follow-Up
 
 OpenClaw's channel framing treats chat as a durable assistant surface rather
