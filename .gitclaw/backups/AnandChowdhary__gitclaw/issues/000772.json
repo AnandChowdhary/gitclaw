@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-03T02:00:19Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 772,
+    "title": "GitClaw channel jam: Shape GitHub-native channel jam 20260603t015335z",
+    "body": "\u003c!-- gitclaw:channel-jam jam_id=\"channel-jam-20260603t015335z\" channel=\"telegram\" thread_id_sha256_12=\"22ba5aae41a1\" source_message_id_sha256_12=\"803bd8d58791\" source_issue=\"771\" source_comment_id=\"4608423591\" --\u003e\nGitClaw channel jam.\n\n- jam_id: channel-jam-20260603t015335z\n- source_channel: telegram\n- source_issue: #771\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/771\n- source_comment_id: 4608423591\n- thread_id_sha256_12: 22ba5aae41a1\n- source_message_id_sha256_12: 803bd8d58791\n- jam_mode: github-issue-jam\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Jam\n\nShape GitHub-native channel jam 20260603t015335z\n\n## Notes\n\nVisible jam notes token: VISIBLE_CHANNEL_JAM_NOTES_20260603t015335z\n\nUse this issue as the reviewable GitHub home for shaping the channel jam into a task, skill, memory, tool request, or proactive workflow.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel jam: Shape GitHub-native channel jam 20260603t015335z\n\n\u003c!-- gitclaw:channel-jam jam_id=\"channel-jam-20260603t015335z\" channel=\"telegram\" thread_id_sha256_12=\"22ba5aae41a1\" source_message_id_sha256_12=\"803bd8d58791\" source_issue=\"771\" source_comment_id=\"4608423591\" --\u003e\nGitClaw channel jam.\n\n- jam_id: channel-jam-20260603t015335z\n- source_channel: telegram\n- source_issue: #771\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/771\n- source_comment_id: 4608423591\n- thread_id_sha256_12: 22ba5aae41a1\n- source_message_id_sha256_12: 803bd8d58791\n- jam_mode: github-issue-jam\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Jam\n\nShape GitHub-native channel jam 20260603t015335z\n\n## Notes\n\nVisible jam notes token: VISIBLE_CHANNEL_JAM_NOTES_20260603t015335z\n\nUse this issue as the reviewable GitHub home for shaping the channel jam into a task, skill, memory, tool request, or proactive workflow.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created jam and use the repo-reader skill.\n\nSearch the repository for `channel jam unique search fixture phrase`.\nThe matching repository search result line has the form `channel jam unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_JAM_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include jam ids, message ids, thread ids, account hashes, issue numbers, jam titles, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_JAM_FOLLOWUP_20260603t015335z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4608438403,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_JAM_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4608442248,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4608438403,
+      "body": "@gitclaw Continue this channel-created jam and use the repo-reader skill.\n\nSearch the repository for `channel jam unique search fixture phrase`.\nThe matching repository search result line has the form `channel jam unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_JAM_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include jam ids, message ids, thread ids, account hashes, issue numbers, jam titles, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_JAM_FOLLOWUP_20260603t015335z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T01:58:51Z",
+      "updated_at": "2026-06-03T01:58:51Z"
+    },
+    {
+      "id": 4608442248,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26859125501\" event_id=\"comment-4608438403\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"ec86a5ae04282605695b0a1b804fb223\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26859125501\" prompt_context_sha256_12=\"6820a09ba510\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10809\" usage_completion_tokens=\"11\" usage_total_tokens=\"10820\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_JAM_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T01:59:52Z",
+      "updated_at": "2026-06-03T01:59:52Z"
+    }
+  ]
+}
