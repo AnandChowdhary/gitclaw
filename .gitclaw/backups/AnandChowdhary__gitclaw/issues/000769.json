@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T01:37:52Z",
+  "generated_at": "2026-06-03T01:39:36Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4608351883,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels merge --merge-id channel-merge-20260603t013424z --from-thread channel-merge-source-20260603t013424z --message-id merge-ingest-20260603t013424z --notify-message-id merge-notify-20260603t013424z\nMerge: Shape GitHub-native channel merge 20260603t013424z\nNotes:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_MERGE_DUPLICATE_20260603t013424z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4608355303,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Merge Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#769`\n- requested_channel_command: `/channels merge`\n- channel_merge_status: `duplicate`\n- merge_issue: `#770`\n- merge_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/770`\n- merge_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#769`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- channel: `telegram`\n- source_thread_id_sha256_12: `b378bb015e49`\n- target_thread_id_sha256_12: `87f663a64a73`\n- source_message_id_sha256_12: `72a0a4722f16`\n- notify_message_id_sha256_12: `7f063e2bfd64`\n- merge_id_sha256_12: `6f3318749063`\n- merge_id_auto: `false`\n- notify_message_id_auto: `false`\n- merge_title_sha256_12: `11185ccb6bb4`\n- merge_title_bytes: `50`\n- merge_title_lines: `1`\n- merge_notes_sha256_12: `bdd49db21363`\n- merge_notes_bytes: `83`\n- merge_notes_lines: `1`\n- notification_body_sha256_12: `0a6adec22ec3`\n- target_from_current_channel_issue: `true`\n- raw_merge_id_included: `false`\n- raw_source_thread_id_included: `false`\n- raw_target_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_merge_title_included: `false`\n- raw_merge_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- model_call_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_merge_action_change: `true`\n- issue_title_sha256_12: `b5fdff70b134`\n\nGitClaw recorded a channel-thread merge as a durable GitHub issue, then queued a provider-facing merge acknowledgement back to the target thread. The merge issue is the reviewable convergence record; this source receipt keeps provider thread IDs, message IDs, merge IDs, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the merge acknowledgement with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent merge acknowledgements with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate merge issues are suppressed by `merge_id`; duplicate notifications are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4608358557,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T01:37:23Z",
       "updated_at": "2026-06-03T01:37:23Z"
+    },
+    {
+      "id": 4608355303,
+      "body": "@gitclaw /channels merge --merge-id channel-merge-20260603t013424z --from-thread channel-merge-source-20260603t013424z --message-id merge-ingest-20260603t013424z --notify-message-id merge-notify-20260603t013424z\nMerge: Shape GitHub-native channel merge 20260603t013424z\nNotes:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_MERGE_DUPLICATE_20260603t013424z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T01:38:12Z",
+      "updated_at": "2026-06-03T01:38:12Z"
+    },
+    {
+      "id": 4608358557,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26858473562\" event_id=\"comment-4608355303\" model=\"gitclaw/channels\" idempotency_key=\"3d442e19b6b2fdea97535b4bd4b26270\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26858473562\" --\u003e\n## GitClaw Channel Merge Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#769`\n- requested_channel_command: `/channels merge`\n- channel_merge_status: `duplicate`\n- merge_issue: `#770`\n- merge_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/770`\n- merge_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#769`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- channel: `telegram`\n- source_thread_id_sha256_12: `b378bb015e49`\n- target_thread_id_sha256_12: `87f663a64a73`\n- source_message_id_sha256_12: `72a0a4722f16`\n- notify_message_id_sha256_12: `7f063e2bfd64`\n- merge_id_sha256_12: `6f3318749063`\n- merge_id_auto: `false`\n- notify_message_id_auto: `false`\n- merge_title_sha256_12: `11185ccb6bb4`\n- merge_title_bytes: `50`\n- merge_title_lines: `1`\n- merge_notes_sha256_12: `bdd49db21363`\n- merge_notes_bytes: `83`\n- merge_notes_lines: `1`\n- notification_body_sha256_12: `0a6adec22ec3`\n- target_from_current_channel_issue: `true`\n- raw_merge_id_included: `false`\n- raw_source_thread_id_included: `false`\n- raw_target_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_merge_title_included: `false`\n- raw_merge_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- model_call_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_merge_action_change: `true`\n- issue_title_sha256_12: `b5fdff70b134`\n\nGitClaw recorded a channel-thread merge as a durable GitHub issue, then queued a provider-facing merge acknowledgement back to the target thread. The merge issue is the reviewable convergence record; this source receipt keeps provider thread IDs, message IDs, merge IDs, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the merge acknowledgement with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent merge acknowledgements with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate merge issues are suppressed by `merge_id`; duplicate notifications are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T01:39:06Z",
+      "updated_at": "2026-06-03T01:39:06Z"
     }
   ]
 }
