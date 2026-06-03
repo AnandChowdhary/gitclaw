@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T21:34:52Z",
+  "generated_at": "2026-06-03T21:36:46Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4616909925,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels scene-card launch-ready --message-id postcard-ingest-20260603t213045z --notify-message-id postcard-notify-20260603t213045z --postcard-id postcard-20260603t213045z --tone bright\nCaption: Release handoff is steady\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_POSTCARD_DUPLICATE_20260603t213045z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4616915634,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Postcard Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#852`\n- requested_channel_command: `/channels scene-card`\n- channel_postcard_status: `duplicate`\n- postcard_mode: `provider-facing-scene-card`\n- notification_target_issue: `#852`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `ad1da4988d54`\n- source_message_id_sha256_12: `6574e12d9529`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `277c64874ee3`\n- notify_message_id_auto: `false`\n- postcard_id_sha256_12: `57e7e50fe9ca`\n- postcard_id_auto: `false`\n- postcard_title_sha256_12: `d307c578f132`\n- postcard_title_bytes: `12`\n- postcard_title_lines: `1`\n- postcard_title_source: `positional-title`\n- postcard_caption_sha256_12: `16ffe31f1453`\n- postcard_caption_bytes: `25`\n- postcard_caption_lines: `1`\n- postcard_caption_source: `trailing-caption`\n- postcard_tone_sha256_12: `a87b3e348ccb`\n- postcard_tone_bytes: `6`\n- notification_body_sha256_12: `0294e2d5ad78`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- image_generation_performed: `false`\n- media_fetch_performed: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_postcard_id_included: `false`\n- raw_postcard_title_included: `false`\n- raw_postcard_caption_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_postcard_action_change: `true`\n- issue_title_sha256_12: `5071d5872d3c`\n\nGitClaw queued a provider-facing channel postcard on the canonical channel issue. This is a tiny scene-card lane: Slack or Telegram can receive a compact place/caption postcard while the source receipt keeps thread ids, message ids, postcard ids, titles, captions, and channel bodies out of band. The action does not call a model, generate images, fetch media, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read postcard cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent postcard cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate postcard cards are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4616922912,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T21:34:21Z",
       "updated_at": "2026-06-03T21:34:21Z"
+    },
+    {
+      "id": 4616915634,
+      "body": "@gitclaw /channels scene-card launch-ready --message-id postcard-ingest-20260603t213045z --notify-message-id postcard-notify-20260603t213045z --postcard-id postcard-20260603t213045z --tone bright\nCaption: Release handoff is steady\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_POSTCARD_DUPLICATE_20260603t213045z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T21:35:11Z",
+      "updated_at": "2026-06-03T21:35:11Z"
+    },
+    {
+      "id": 4616922912,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26914472396\" event_id=\"comment-4616915634\" model=\"gitclaw/channels\" idempotency_key=\"a76c1537b56d61496d2f9a82460ac7a9\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26914472396\" --\u003e\n## GitClaw Channel Postcard Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#852`\n- requested_channel_command: `/channels scene-card`\n- channel_postcard_status: `duplicate`\n- postcard_mode: `provider-facing-scene-card`\n- notification_target_issue: `#852`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `ad1da4988d54`\n- source_message_id_sha256_12: `6574e12d9529`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `277c64874ee3`\n- notify_message_id_auto: `false`\n- postcard_id_sha256_12: `57e7e50fe9ca`\n- postcard_id_auto: `false`\n- postcard_title_sha256_12: `d307c578f132`\n- postcard_title_bytes: `12`\n- postcard_title_lines: `1`\n- postcard_title_source: `positional-title`\n- postcard_caption_sha256_12: `16ffe31f1453`\n- postcard_caption_bytes: `25`\n- postcard_caption_lines: `1`\n- postcard_caption_source: `trailing-caption`\n- postcard_tone_sha256_12: `a87b3e348ccb`\n- postcard_tone_bytes: `6`\n- notification_body_sha256_12: `0294e2d5ad78`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- image_generation_performed: `false`\n- media_fetch_performed: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_postcard_id_included: `false`\n- raw_postcard_title_included: `false`\n- raw_postcard_caption_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_postcard_action_change: `true`\n- issue_title_sha256_12: `5071d5872d3c`\n\nGitClaw queued a provider-facing channel postcard on the canonical channel issue. This is a tiny scene-card lane: Slack or Telegram can receive a compact place/caption postcard while the source receipt keeps thread ids, message ids, postcard ids, titles, captions, and channel bodies out of band. The action does not call a model, generate images, fetch media, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read postcard cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent postcard cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate postcard cards are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T21:36:19Z",
+      "updated_at": "2026-06-03T21:36:19Z"
     }
   ]
 }
