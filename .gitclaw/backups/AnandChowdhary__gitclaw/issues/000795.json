@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T05:35:58Z",
+  "generated_at": "2026-06-03T05:37:56Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4609413274,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels backup-note --note-id channel-backup-note-20260603t053230z --scope restore-readiness --message-id backup-note-ingest-20260603t053230z --notify-message-id backup-note-notify-20260603t053230z\nTitle: Prefer GitHub review before backup restores 20260603t053230z\nNote:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_BACKUP_NOTE_DUPLICATE_20260603t053230z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4609418866,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Backup Note Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#795`\n- requested_channel_command: `/channels backup-note`\n- channel_backup_note_status: `duplicate`\n- backup_note_issue: `#796`\n- backup_note_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/796`\n- backup_note_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#795`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `9c621a20ab42`\n- source_message_id_sha256_12: `e511d5610cac`\n- notify_message_id_sha256_12: `570669650415`\n- notify_message_id_auto: `false`\n- backup_note_id_sha256_12: `ff4c2f6f3344`\n- backup_note_id_auto: `false`\n- backup_scope_sha256_12: `0062857d41f9`\n- backup_scope_bytes: `17`\n- backup_scope_lines: `1`\n- backup_scope_auto: `false`\n- backup_note_title_sha256_12: `92159268cfc1`\n- backup_note_title_bytes: `60`\n- backup_note_title_lines: `1`\n- backup_note_text_sha256_12: `bb1cbd635f1c`\n- backup_note_text_bytes: `89`\n- backup_note_text_lines: `1`\n- notification_body_sha256_12: `547ba58a8e33`\n- target_from_current_channel_issue: `true`\n- raw_backup_note_id_included: `false`\n- raw_backup_scope_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_backup_note_title_included: `false`\n- raw_backup_note_text_included: `false`\n- raw_channel_message_body_included: `false`\n- backup_fetch_performed: `false`\n- backup_restore_performed: `false`\n- backup_payload_read_performed: `false`\n- memory_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_backup_note_action_change: `true`\n- issue_title_sha256_12: `6665ccfb7b33`\n\nGitClaw captured a channel-origin backup note as a durable GitHub issue, then queued a provider-facing backup-note link back to the mirrored thread. The backup-note issue contains the human-readable scope, title, and note; this source receipt keeps provider IDs, note IDs, backup scopes, notes, and channel message bodies out of band. It does not fetch backups, restore files, read backup payloads, or mutate repository state.\n\n### Follow-Up Delivery\n- provider gateways read the backup-note notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent backup-note links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate backup-note issues are suppressed by `note_id`; duplicate backup-note notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the backup-note issue with the `gitclaw` label; backup fetch, payload inspection, and restore remain explicit reviewed follow-ups",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4609425069,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T05:35:26Z",
       "updated_at": "2026-06-03T05:35:26Z"
+    },
+    {
+      "id": 4609418866,
+      "body": "@gitclaw /channels backup-note --note-id channel-backup-note-20260603t053230z --scope restore-readiness --message-id backup-note-ingest-20260603t053230z --notify-message-id backup-note-notify-20260603t053230z\nTitle: Prefer GitHub review before backup restores 20260603t053230z\nNote:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_BACKUP_NOTE_DUPLICATE_20260603t053230z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T05:36:20Z",
+      "updated_at": "2026-06-03T05:36:20Z"
+    },
+    {
+      "id": 4609425069,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26865881231\" event_id=\"comment-4609418866\" model=\"gitclaw/channels\" idempotency_key=\"522f573975986b6019134d3d81f67d1a\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26865881231\" --\u003e\n## GitClaw Channel Backup Note Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#795`\n- requested_channel_command: `/channels backup-note`\n- channel_backup_note_status: `duplicate`\n- backup_note_issue: `#796`\n- backup_note_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/796`\n- backup_note_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#795`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `9c621a20ab42`\n- source_message_id_sha256_12: `e511d5610cac`\n- notify_message_id_sha256_12: `570669650415`\n- notify_message_id_auto: `false`\n- backup_note_id_sha256_12: `ff4c2f6f3344`\n- backup_note_id_auto: `false`\n- backup_scope_sha256_12: `0062857d41f9`\n- backup_scope_bytes: `17`\n- backup_scope_lines: `1`\n- backup_scope_auto: `false`\n- backup_note_title_sha256_12: `92159268cfc1`\n- backup_note_title_bytes: `60`\n- backup_note_title_lines: `1`\n- backup_note_text_sha256_12: `bb1cbd635f1c`\n- backup_note_text_bytes: `89`\n- backup_note_text_lines: `1`\n- notification_body_sha256_12: `547ba58a8e33`\n- target_from_current_channel_issue: `true`\n- raw_backup_note_id_included: `false`\n- raw_backup_scope_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_backup_note_title_included: `false`\n- raw_backup_note_text_included: `false`\n- raw_channel_message_body_included: `false`\n- backup_fetch_performed: `false`\n- backup_restore_performed: `false`\n- backup_payload_read_performed: `false`\n- memory_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_backup_note_action_change: `true`\n- issue_title_sha256_12: `6665ccfb7b33`\n\nGitClaw captured a channel-origin backup note as a durable GitHub issue, then queued a provider-facing backup-note link back to the mirrored thread. The backup-note issue contains the human-readable scope, title, and note; this source receipt keeps provider IDs, note IDs, backup scopes, notes, and channel message bodies out of band. It does not fetch backups, restore files, read backup payloads, or mutate repository state.\n\n### Follow-Up Delivery\n- provider gateways read the backup-note notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent backup-note links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate backup-note issues are suppressed by `note_id`; duplicate backup-note notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the backup-note issue with the `gitclaw` label; backup fetch, payload inspection, and restore remain explicit reviewed follow-ups",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T05:37:24Z",
+      "updated_at": "2026-06-03T05:37:24Z"
     }
   ]
 }
