@@ -457,6 +457,25 @@ is `/channels whiteboard`, `/channels workshop`, `/channels collab`,
 (`https://docs.openclaw.ai/cli/sessions`), and Hermes messaging guide
 (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+2026-06-03 channel-quest follow-up: OpenClaw's channel and session framing is
+useful for more than formal tasks: casual chat can become a persisted agent
+surface without immediately becoming a memory, skill, scheduled job, or
+assignment. Hermes' messaging guide reinforces the same split by normalizing
+provider messages into agent conversations while leaving transport-specific
+details outside the core agent loop. GitClaw's serverless channel analogue is
+`@gitclaw /channels quest --quest-id <id> --message-id <id>`, which opens or
+reuses a normal GitHub quest issue with a readable title, objective, first
+move, and win condition, queues one provider-facing quest link back to the
+mirrored Slack/Telegram thread, and then lets the quest continue through normal
+GitHub Models/tool conversation. The source receipt stays body-free with only
+hashes, duplicate state, notification metadata, and delivery gates. This keeps
+playful exploratory challenges cheap to start while preserving the GitHub
+review boundary before anything becomes a task, memory, skill, tool request,
+or proactive workflow. Sources: OpenClaw channel docs
+(`https://docs.openclaw.ai/channels`), OpenClaw sessions docs
+(`https://docs.openclaw.ai/cli/sessions`), and Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 2026-06-02 channel-retro follow-up: OpenClaw's current channel and session
 docs keep chat surfaces and persisted conversation rows distinct, while the
 skills and ClawHub docs make reusable procedures inspectable before they are

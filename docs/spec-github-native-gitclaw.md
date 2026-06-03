@@ -5706,6 +5706,7 @@ accepts a structured reaction form:
 @gitclaw /channels decision --decision-id <stable-decision-id> --message-id <provider-message-id>
 @gitclaw /channels digest --digest-id <stable-digest-id> --message-id <provider-message-id>
 @gitclaw /channels idea --idea-id <stable-idea-id> --message-id <provider-message-id>
+@gitclaw /channels quest --quest-id <stable-quest-id> --message-id <provider-message-id>
 @gitclaw /channels retro --retro-id <stable-retro-id> --message-id <provider-message-id>
 @gitclaw /channels playbook --playbook-id <stable-playbook-id> --message-id <provider-message-id>
 @gitclaw /channels insight --insight-id <stable-insight-id> --message-id <provider-message-id>
@@ -6551,6 +6552,40 @@ idea issue and then by `channel + notify_message_id` for the provider-facing
 idea link. Changes to this surface require a live E2E that captures the idea,
 validates the metadata-only idea-link outbox, checks duplicate suppression, and
 then continues on the idea issue with a normal GitHub Models repo-reader/search
+follow-up.
+
+The same channel-thread issue can also capture an exploratory quest:
+
+```text
+@gitclaw /channels quest --quest-id <stable-quest-id> --message-id <provider-message-id>
+Title: short challenge title
+Objective:
+what the channel wants to try
+First Move:
+the smallest useful starting step
+Win Condition:
+how the issue knows the quest is complete or ready to become something else
+```
+
+`/channels quest`, `/channels challenge`, `/channels side-quest`,
+`/channels mini-quest`, `/channels mission`, and `/channels experiment` infer
+the current channel and thread id from the issue marker when no explicit
+route/channel/thread target is provided. They create or reuse one open GitHub
+issue carrying a hidden `gitclaw:channel-quest` marker for the stable quest
+id, label it with `gitclaw` so normal conversation can continue there, and
+queue a provider-facing quest link back to the mirrored channel thread. The
+quest issue contains the human-readable title, objective, first move, and win
+condition because it is a lightweight challenge surface; the source receipt
+remains body-free, reporting only quest/thread/message/section hashes,
+duplicate status, notification queue metadata, and delivery gates. It does not
+call a model, call provider APIs, print raw quest ids, print raw thread ids,
+print raw source or notification message ids, print channel message bodies, or
+print raw quest sections in the source receipt. Duplicates are suppressed
+first by `quest_id` for the GitHub quest issue and then by
+`channel + notify_message_id` for the provider-facing quest link. Changes to
+this surface require a live E2E that captures the quest, validates the
+metadata-only quest-link outbox, checks duplicate suppression, and then
+continues on the quest issue with a normal GitHub Models repo-reader/search
 follow-up.
 
 The same channel-thread issue can also capture a live brainstorm jam:
@@ -8703,6 +8738,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels decision --decision-id channel-decision-1 --message-id provider-msg-1
 @gitclaw /channels digest --digest-id channel-digest-1 --message-id provider-msg-1
 @gitclaw /channels idea --idea-id channel-idea-1 --message-id provider-msg-1
+@gitclaw /channels quest --quest-id channel-quest-1 --message-id provider-msg-1
 @gitclaw /channels whiteboard --jam-id channel-jam-1 --message-id provider-msg-1
 @gitclaw /channels kudos --kudos-id channel-kudos-1 --message-id provider-msg-1
 @gitclaw /channels retro --retro-id channel-retro-1 --message-id provider-msg-1
@@ -11605,6 +11641,16 @@ examples/workflows/gitclaw.yml
   normal GitHub Models issue-comment follow-up that must select `repo-reader`,
   expose `gitclaw.search_files`, recover the channel-idea fixture token, and
   avoid hidden channel, account, provider, message, and idea sentinels.
+- A `gh`-driven channel-quest-slash E2E harness creates a real channel-thread
+  issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels quest --quest-id ... --message-id ...` on that mirrored
+  thread, verifies GitHub quest issue creation, body-free source receipt
+  metadata, provider-facing quest-link queueing, duplicate quest and
+  notification suppression, and metadata-only outbox discovery. The quest
+  issue then gets a normal GitHub Models issue-comment follow-up that must
+  select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-quest fixture token, and avoid hidden channel, account, provider,
+  message, quest, objective, first-move, and win-condition sentinels.
 - A `gh`-driven channel-jam-slash E2E harness creates a real channel-thread
   issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels whiteboard --jam-id ... --message-id ...` on that mirrored

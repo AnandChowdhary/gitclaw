@@ -721,6 +721,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels memory-note --note-id <id> --target <target> --message-id <id>
 @gitclaw /channels tool-lesson --note-id <id> --tool <tool> --message-id <id>
 @gitclaw /channels idea --idea-id <id> --message-id <id>
+@gitclaw /channels quest --quest-id <id> --message-id <id>
 @gitclaw /channels whiteboard --jam-id <id> --message-id <id>
 @gitclaw /channels kudos --kudos-id <id> --message-id <id>
 @gitclaw /channels retro --retro-id <id> --message-id <id>
@@ -1249,6 +1250,14 @@ brainstorm can turn into a task, skill, memory, tool request, or proactive
 workflow in GitHub; the channel action queues a provider-facing idea link and
 keeps the source receipt body-free with hashes, duplicate state, notification
 metadata, and delivery gates.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels quest
+--quest-id <id> --message-id <id>` captures an exploratory channel challenge
+as a durable GitHub quest issue. The quest issue holds the readable title,
+objective, first move, and win condition so a playful prompt can become a
+reviewable GitHub conversation without pretending it is already a task,
+playbook, or scheduled job; the channel action queues a provider-facing quest
+link and keeps the source receipt body-free with hashes, duplicate state,
+notification metadata, and delivery gates.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels whiteboard
 --jam-id <id> --message-id <id>` captures a messy channel brainstorm as a
 durable GitHub jam issue. The jam issue holds the readable topic and seeds,
@@ -1930,6 +1939,7 @@ scripts/e2e/github-channel-memory-note-slash.sh
 scripts/e2e/github-channel-tool-lesson-slash.sh
 scripts/e2e/github-channel-tool-result-slash.sh
 scripts/e2e/github-channel-idea-slash.sh
+scripts/e2e/github-channel-quest-slash.sh
 scripts/e2e/github-channel-jam-slash.sh
 scripts/e2e/github-channel-kudos-slash.sh
 scripts/e2e/github-channel-retro-slash.sh
@@ -2436,6 +2446,13 @@ to the mirrored thread, checks duplicate idea and notification suppression,
 exposes the idea-link notification through metadata-only outbox, and then
 continues on the idea issue with a real GitHub Models repo-reader/search
 follow-up.
+The channel-quest slash harness turns the operator console into a lightweight
+challenge lane: a channel-ingested issue receives `@gitclaw /channels quest`,
+creates or reuses a durable GitHub quest issue with readable title, objective,
+first move, and win condition, queues a provider-facing quest link back to the
+mirrored thread, checks duplicate quest and notification suppression, exposes
+the quest-link notification through metadata-only outbox, and then continues
+on the quest issue with a real GitHub Models repo-reader/search follow-up.
 The channel-jam slash harness turns the operator console into a brainstorm
 lane: a channel-ingested issue receives `@gitclaw /channels whiteboard`, creates or
 reuses a durable GitHub jam issue with the readable topic and seeds, queues a

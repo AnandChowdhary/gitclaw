@@ -637,6 +637,29 @@ func TestChannelDoneArtifactRefSupportsIdeaIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsQuestIssues(t *testing.T) {
+	body := RenderChannelQuestIssueBody(ChannelQuestOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		QuestID:           "quest-done-1",
+		Title:             "Find the shortest useful channel loop",
+		Objective:         "Try a focused channel challenge before turning it into a task.",
+		FirstMove:         "Collect one example from the current thread.",
+		WinCondition:      "The issue has enough signal to become a task, memory, or closure.",
+		SourceIssueNumber: 46,
+		SourceCommentID:   4600,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "quest" || ref.ID != "quest-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 46 || ref.SourceCommentID != 4600 {
+		t.Fatalf("unexpected quest artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsJamIssues(t *testing.T) {
 	body := RenderChannelJamIssueBody(ChannelJamOptions{
 		Repo:              "owner/repo",
