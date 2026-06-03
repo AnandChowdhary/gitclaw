@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T20:25:14Z",
+  "generated_at": "2026-06-03T20:27:03Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 848,
     "title": "GitClaw telegram thread channel-soundtrack-e2e-20260603t202259z",
@@ -51,6 +51,15 @@
       "CommentID": 4616413459,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Soundtrack Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#848`\n- requested_channel_command: `/channels soundtrack`\n- channel_soundtrack_status: `queued`\n- soundtrack_mode: `deterministic-channel-mix`\n- notification_target_issue: `#848`\n- notification_comment_id: `4616424162`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `621d4b908779`\n- source_message_id_sha256_12: `5df64893ff27`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `d038f527f24b`\n- notify_message_id_auto: `false`\n- soundtrack_id_sha256_12: `062f9a19b6f0`\n- soundtrack_id_auto: `false`\n- soundtrack_theme_sha256_12: `abfc412ce6e5`\n- soundtrack_theme_bytes: `6`\n- soundtrack_note_sha256_12: `16ffe31f1453`\n- soundtrack_note_bytes: `25`\n- soundtrack_note_lines: `1`\n- soundtrack_note_source: `trailing-note`\n- soundtrack_seed_sha256_12: `8e2eff9ea4f2`\n- soundtrack_sha256_12: `eb7a62ffe03c`\n- soundtrack_track_count: `3`\n- notification_body_sha256_12: `4a2f991b082f`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- external_randomness_used: `false`\n- media_generation_performed: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_soundtrack_id_included: `false`\n- raw_soundtrack_theme_included: `false`\n- raw_soundtrack_note_included: `false`\n- raw_soundtrack_tracks_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_soundtrack_action_change: `true`\n- issue_title_sha256_12: `37999dfefdec`\n\nGitClaw queued a provider-facing channel soundtrack on the canonical channel issue. This is a tiny chat-native signal: Slack or Telegram can get a bounded, deterministic mix card while the source receipt keeps thread ids, message ids, soundtrack ids, themes, notes, and mix tracks out of band. The action does not call a model, use external randomness, generate media, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read soundtrack cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent soundtrack cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate soundtrack cards are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4616424277,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-03T20:24:52Z",
       "updated_at": "2026-06-03T20:24:52Z"
+    },
+    {
+      "id": 4616424162,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-soundtrack-e2e-20260603t202259z\" message_id=\"soundtrack-notify-20260603t202259z\" author=\"gitclaw\" --\u003e\nGitClaw channel soundtrack.\n\nTheme: launch\nTracks:\n1. Diffstat Pulse - small changes moving\n2. Review Room Echo - notes settle\n3. Deploy Window - steady hands\nSoundtrack hash: eb7a62ffe03c\nSeed hash: 8e2eff9ea4f2\nNote: Release handoff is steady\nNote hash: 16ffe31f1453\n\nMix source: deterministic GitHub channel action seed.\nSoundtrack deck: bounded static GitClaw track deck.\nModel call: not performed by this action.\nExternal randomness: not used.\nMedia generation: not performed by this action.\nProvider API call: not performed by this action.\nWorkflow mutation: not performed by this action.\nRepository mutation: not performed by this action.\nProvider delivery: queued through GitHub channel outbox.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T20:26:27Z",
+      "updated_at": "2026-06-03T20:26:27Z"
+    },
+    {
+      "id": 4616424277,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26910876068\" event_id=\"comment-4616413459\" model=\"gitclaw/channels\" idempotency_key=\"9eea86d95bf1112d1716d6f9a2d953db\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26910876068\" --\u003e\n## GitClaw Channel Soundtrack Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#848`\n- requested_channel_command: `/channels soundtrack`\n- channel_soundtrack_status: `queued`\n- soundtrack_mode: `deterministic-channel-mix`\n- notification_target_issue: `#848`\n- notification_comment_id: `4616424162`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `621d4b908779`\n- source_message_id_sha256_12: `5df64893ff27`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `d038f527f24b`\n- notify_message_id_auto: `false`\n- soundtrack_id_sha256_12: `062f9a19b6f0`\n- soundtrack_id_auto: `false`\n- soundtrack_theme_sha256_12: `abfc412ce6e5`\n- soundtrack_theme_bytes: `6`\n- soundtrack_note_sha256_12: `16ffe31f1453`\n- soundtrack_note_bytes: `25`\n- soundtrack_note_lines: `1`\n- soundtrack_note_source: `trailing-note`\n- soundtrack_seed_sha256_12: `8e2eff9ea4f2`\n- soundtrack_sha256_12: `eb7a62ffe03c`\n- soundtrack_track_count: `3`\n- notification_body_sha256_12: `4a2f991b082f`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- external_randomness_used: `false`\n- media_generation_performed: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_soundtrack_id_included: `false`\n- raw_soundtrack_theme_included: `false`\n- raw_soundtrack_note_included: `false`\n- raw_soundtrack_tracks_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_soundtrack_action_change: `true`\n- issue_title_sha256_12: `37999dfefdec`\n\nGitClaw queued a provider-facing channel soundtrack on the canonical channel issue. This is a tiny chat-native signal: Slack or Telegram can get a bounded, deterministic mix card while the source receipt keeps thread ids, message ids, soundtrack ids, themes, notes, and mix tracks out of band. The action does not call a model, use external randomness, generate media, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read soundtrack cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent soundtrack cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate soundtrack cards are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T20:26:28Z",
+      "updated_at": "2026-06-03T20:26:28Z"
     }
   ]
 }
