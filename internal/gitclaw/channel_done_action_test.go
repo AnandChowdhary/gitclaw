@@ -572,6 +572,28 @@ func TestChannelDoneArtifactRefSupportsBackupNoteIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsMemoryNoteIssues(t *testing.T) {
+	body := RenderChannelMemoryNoteIssueBody(ChannelMemoryNoteOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		NoteID:            "memory-note-done-1",
+		MemoryTarget:      "durable-recall",
+		Title:             "Prefer GitHub review before memory writes",
+		Note:              "Close this after the memory observation has been reviewed.",
+		SourceIssueNumber: 43,
+		SourceCommentID:   4302,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "memory-note" || ref.ID != "memory-note-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 43 || ref.SourceCommentID != 4302 {
+		t.Fatalf("unexpected memory-note artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsIdeaIssues(t *testing.T) {
 	body := RenderChannelIdeaIssueBody(ChannelIdeaOptions{
 		Repo:              "owner/repo",

@@ -6385,6 +6385,41 @@ validates the metadata-only backup-note outbox, checks duplicate suppression,
 and then continues on the backup-note issue with a normal GitHub Models
 repo-reader/search follow-up that makes a real LLM call.
 
+The same channel-thread issue can also preserve a durable-memory observation
+without writing memory:
+
+```text
+@gitclaw /channels memory-note --note-id <stable-note-id> --target <memory-target> --message-id <provider-message-id>
+Title: channel-origin memory observation
+Note:
+optional human-readable memory observation/context/source text
+```
+
+`/channels memory-note`, `/channels memory-lesson`, `/channels
+memory-guidance`, `/channels memory-observation`, `/channels
+memory-capture-note`, and `/channels capture-memory-note` infer the current
+channel and thread id from the issue marker when no explicit route/channel/thread
+target is provided. They create or reuse one open GitHub issue carrying a hidden
+`gitclaw:channel-memory-note` marker for the stable note id, label it with
+`gitclaw` so normal conversation can continue there, and queue a provider-facing
+memory-note link back to the mirrored channel thread. The memory-note issue
+contains the human-readable target, title, and note because it is the durable
+review card; the source receipt remains body-free, reporting only
+note/thread/message/target/title/note hashes, counts, duplicate status,
+notification queue metadata, and delivery gates. It does not call a model, call
+provider APIs, write `.gitclaw/MEMORY.md`, promote memory, mutate memory,
+mutate the repository, print raw note ids, print raw memory targets, print raw
+thread ids, print raw source or notification message ids, print channel message
+bodies, or print raw titles or note text in the source receipt.
+Provider-facing notifications include the issue link, visible memory target,
+and visible title only, never the note body. Duplicates are suppressed first by
+`note_id` for the GitHub memory-note issue and then by
+`channel + notify_message_id` for the provider-facing memory-note link.
+Changes to this surface require a live E2E that records the memory note,
+validates the metadata-only memory-note outbox, checks duplicate suppression,
+and then continues on the memory-note issue with a normal GitHub Models
+repo-reader/search follow-up that makes a real LLM call.
+
 The same channel-thread issue can also preserve a tool lesson without executing
 or installing tools:
 
@@ -11471,6 +11506,18 @@ examples/workflows/gitclaw.yml
   channel-backup-note fixture token, and avoid hidden channel, account,
   provider, message, note id, backup scope, title, note text, and notification
   sentinels.
+- A `gh`-driven channel-memory-note-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels memory-note --note-id ... --target ... --message-id ...`
+  on that mirrored thread, verifies GitHub memory-note issue creation,
+  body-free source receipt metadata, provider-facing memory-note-link queueing,
+  duplicate memory-note and notification suppression, explicit
+  no-memory-write/no-memory-promotion/no-memory-mutation/no-repository-mutation
+  gates, and metadata-only outbox discovery. The memory-note issue then gets a
+  normal GitHub Models issue-comment follow-up that must select `repo-reader`,
+  expose `gitclaw.search_files`, recover the channel-memory-note fixture token,
+  and avoid hidden channel, account, provider, message, note id, memory target,
+  title, note text, and notification sentinels.
 - A `gh`-driven channel-tool-lesson-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels tool-lesson --note-id ... --tool ... --message-id ...`

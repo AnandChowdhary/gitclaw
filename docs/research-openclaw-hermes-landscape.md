@@ -5134,6 +5134,34 @@ on the glossary issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Memory Note Follow-Up
+
+OpenClaw's gateway framing makes channel conversations a natural intake
+surface for durable context, while Hermes' memory model keeps long-term memory
+as an explicit agent/runtime concern rather than an automatic property of
+every chat message. GitClaw should preserve that distinction: a Slack or
+Telegram thread can capture a useful memory observation, but writing
+`.gitclaw/MEMORY.md` or promoting it into durable memory should remain a
+reviewed GitHub step.
+
+GitClaw's serverless version is `@gitclaw /channels memory-note --note-id <id>
+--target <target> --message-id <id>`. It opens or reuses a normal
+`gitclaw:channel-memory-note` issue with the readable target, title, and note,
+queues one provider-facing memory-note issue link back to the source
+Slack/Telegram thread, and keeps the source receipt body-free with only
+target/title/text/id hashes, counts, duplicate status, notification metadata,
+and delivery gates. The provider-facing notification includes the link, visible
+target, and visible title only, not the note body. The action does not call a
+model, write `.gitclaw/MEMORY.md`, promote memory, mutate memory, mutate the
+repository, call provider APIs, or print raw provider IDs, note IDs, targets,
+titles, note text, or channel bodies in the source receipt. Acceptance requires
+live E2E for memory-note issue creation, metadata-only outbox discovery,
+duplicate suppression, and a real GitHub Models repo-reader/search follow-up
+on the memory-note issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Tool Lesson Follow-Up
 
 OpenClaw's channel gateway framing and Hermes' messaging model both make
