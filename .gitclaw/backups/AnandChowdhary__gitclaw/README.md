@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-03T06:18:28Z`
-- issue_count: `690`
+- generated_at: `2026-06-03T06:20:22Z`
+- issue_count: `691`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -695,3 +695,4 @@
 | #797 | GitClaw telegram thread channel-tool-lesson-e2e-20260603t055247z | `2026-06-03T05:58:00Z` | 7 | 7 | `issues/000797.json` |
 | #798 | GitClaw channel tool lesson: gitclaw.search_files: Prefer GitHub review before tool installs 20260603t055247z | `2026-06-03T05:59:40Z` | 2 | 3 | `issues/000798.json` |
 | #799 | GitClaw telegram thread channel-memory-note-e2e-20260603t061306z | `2026-06-03T06:18:26Z` | 7 | 7 | `issues/000799.json` |
+| #800 | GitClaw channel memory note: durable-recall: Prefer GitHub review before memory writes 20260603t061306z | `2026-06-03T06:20:20Z` | 2 | 3 | `issues/000800.json` |
