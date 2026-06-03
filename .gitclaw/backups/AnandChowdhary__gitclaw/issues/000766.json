@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-03T01:00:44Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 766,
+    "title": "GitClaw channel bookmark: Shape GitHub-native channel bookmark 20260603t005329z",
+    "body": "\u003c!-- gitclaw:channel-bookmark bookmark_id=\"channel-bookmark-20260603t005329z\" channel=\"telegram\" reference_url_sha256_12=\"none\" thread_id_sha256_12=\"e5b3bcccfe1b\" source_message_id_sha256_12=\"3c6b01eaae4c\" source_issue=\"765\" source_comment_id=\"4608174273\" --\u003e\nGitClaw channel bookmark.\n\n- bookmark_id: channel-bookmark-20260603t005329z\n- source_channel: telegram\n- source_issue: #765\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/765\n- source_comment_id: 4608174273\n- thread_id_sha256_12: e5b3bcccfe1b\n- source_message_id_sha256_12: 3c6b01eaae4c\n- reference_url_sha256_12: none\n- reference_url_present: false\n- bookmark_mode: github-issue-message-bookmark\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_reference_url_included: false\n- raw_channel_message_body_included: false\n\n## Bookmark\n\nShape GitHub-native channel bookmark 20260603t005329z\n\n## Notes\n\nVisible bookmark notes token: VISIBLE_CHANNEL_BOOKMARK_NOTES_20260603t005329z\n\nUse this issue as the durable GitHub home for the channel-origin bookmark. The referenced channel message body was not copied into the receipt or provider acknowledgement.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel bookmark: Shape GitHub-native channel bookmark 20260603t005329z\n\n\u003c!-- gitclaw:channel-bookmark bookmark_id=\"channel-bookmark-20260603t005329z\" channel=\"telegram\" reference_url_sha256_12=\"none\" thread_id_sha256_12=\"e5b3bcccfe1b\" source_message_id_sha256_12=\"3c6b01eaae4c\" source_issue=\"765\" source_comment_id=\"4608174273\" --\u003e\nGitClaw channel bookmark.\n\n- bookmark_id: channel-bookmark-20260603t005329z\n- source_channel: telegram\n- source_issue: #765\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/765\n- source_comment_id: 4608174273\n- thread_id_sha256_12: e5b3bcccfe1b\n- source_message_id_sha256_12: 3c6b01eaae4c\n- reference_url_sha256_12: none\n- reference_url_present: false\n- bookmark_mode: github-issue-message-bookmark\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_reference_url_included: false\n- raw_channel_message_body_included: false\n\n## Bookmark\n\nShape GitHub-native channel bookmark 20260603t005329z\n\n## Notes\n\nVisible bookmark notes token: VISIBLE_CHANNEL_BOOKMARK_NOTES_20260603t005329z\n\nUse this issue as the durable GitHub home for the channel-origin bookmark. The referenced channel message body was not copied into the receipt or provider acknowledgement.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created bookmark issue and use the repo-reader skill.\n\nSearch the repository for `channel bookmark unique search fixture phrase`.\nThe matching repository search result line has the form `channel bookmark unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_BOOKMARK_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include bookmark ids, message ids, thread ids, account hashes, issue numbers, bookmark titles, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_BOOKMARK_FOLLOWUP_20260603t005329z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4608191635,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_BOOKMARK_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4608195218,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4608191635,
+      "body": "@gitclaw Continue this channel-created bookmark issue and use the repo-reader skill.\n\nSearch the repository for `channel bookmark unique search fixture phrase`.\nThe matching repository search result line has the form `channel bookmark unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_BOOKMARK_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include bookmark ids, message ids, thread ids, account hashes, issue numbers, bookmark titles, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_BOOKMARK_FOLLOWUP_20260603t005329z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T00:59:17Z",
+      "updated_at": "2026-06-03T00:59:17Z"
+    },
+    {
+      "id": 4608195218,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26857242687\" event_id=\"comment-4608191635\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"55ab1a5574d25f8568488195e2d4b51c\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26857242687\" prompt_context_sha256_12=\"6a45face6fd9\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10858\" usage_completion_tokens=\"11\" usage_total_tokens=\"10869\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_BOOKMARK_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T01:00:12Z",
+      "updated_at": "2026-06-03T01:00:12Z"
+    }
+  ]
+}
