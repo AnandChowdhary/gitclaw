@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-03T05:04:17Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 792,
+    "title": "GitClaw channel skill note: repo-reader: Prefer GitHub review before skill installs 20260603t045654z",
+    "body": "\u003c!-- gitclaw:channel-skill-note note_id=\"channel-skill-note-20260603t045654z\" channel=\"telegram\" skill_name_sha256_12=\"ba915a2978d8\" thread_id_sha256_12=\"a038ef112df2\" source_message_id_sha256_12=\"8072c911e6a3\" source_issue=\"791\" source_comment_id=\"4609213445\" --\u003e\nGitClaw channel skill note.\n\n- note_id: channel-skill-note-20260603t045654z\n- source_channel: telegram\n- source_issue: #791\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/791\n- source_comment_id: 4609213445\n- thread_id_sha256_12: a038ef112df2\n- source_message_id_sha256_12: 8072c911e6a3\n- skill_note_mode: github-issue-skill-note\n- skill_install_performed: false\n- memory_mutation_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Skill\n\nrepo-reader\n\n## Title\n\nPrefer GitHub review before skill installs 20260603t045654z\n\n## Lesson\n\nVisible skill note lesson token: VISIBLE_CHANNEL_SKILL_NOTE_LESSON_20260603t045654z\n\nUse this issue as the reviewable GitHub home for preserving the channel skill note without installing a skill, mutating memory, or changing repository files automatically.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel skill note: repo-reader: Prefer GitHub review before skill installs 20260603t045654z\n\n\u003c!-- gitclaw:channel-skill-note note_id=\"channel-skill-note-20260603t045654z\" channel=\"telegram\" skill_name_sha256_12=\"ba915a2978d8\" thread_id_sha256_12=\"a038ef112df2\" source_message_id_sha256_12=\"8072c911e6a3\" source_issue=\"791\" source_comment_id=\"4609213445\" --\u003e\nGitClaw channel skill note.\n\n- note_id: channel-skill-note-20260603t045654z\n- source_channel: telegram\n- source_issue: #791\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/791\n- source_comment_id: 4609213445\n- thread_id_sha256_12: a038ef112df2\n- source_message_id_sha256_12: 8072c911e6a3\n- skill_note_mode: github-issue-skill-note\n- skill_install_performed: false\n- memory_mutation_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Skill\n\nrepo-reader\n\n## Title\n\nPrefer GitHub review before skill installs 20260603t045654z\n\n## Lesson\n\nVisible skill note lesson token: VISIBLE_CHANNEL_SKILL_NOTE_LESSON_20260603t045654z\n\nUse this issue as the reviewable GitHub home for preserving the channel skill note without installing a skill, mutating memory, or changing repository files automatically.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created skill note and use the repo-reader skill.\n\nSearch the repository for `channel skill note unique search fixture phrase`.\nThe matching repository search result line has the form `channel skill note unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_SKILL_NOTE_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include note ids, message ids, thread ids, account hashes, issue numbers, skill names, titles, or lessons.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_SKILL_NOTE_FOLLOWUP_20260603t045654z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4609235390,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_SKILL_NOTE_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4609241488,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4609235390,
+      "body": "@gitclaw Continue this channel-created skill note and use the repo-reader skill.\n\nSearch the repository for `channel skill note unique search fixture phrase`.\nThe matching repository search result line has the form `channel skill note unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_SKILL_NOTE_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include note ids, message ids, thread ids, account hashes, issue numbers, skill names, titles, or lessons.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_SKILL_NOTE_FOLLOWUP_20260603t045654z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T05:02:35Z",
+      "updated_at": "2026-06-03T05:02:35Z"
+    },
+    {
+      "id": 4609241488,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26864807022\" event_id=\"comment-4609235390\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"f8b1d825c69f2bfc4bf632d79cb0ef30\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26864807022\" prompt_context_sha256_12=\"7c5856fea233\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10872\" usage_completion_tokens=\"12\" usage_total_tokens=\"10884\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_SKILL_NOTE_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T05:03:43Z",
+      "updated_at": "2026-06-03T05:03:43Z"
+    }
+  ]
+}

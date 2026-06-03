@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T05:02:23Z",
+  "generated_at": "2026-06-03T05:04:18Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 682,
+  "count": 683,
   "issues": [
     {
       "number": 3,
@@ -8659,6 +8659,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 792,
+      "title": "GitClaw channel skill note: repo-reader: Prefer GitHub review before skill installs 20260603t045654z",
+      "path": "issues/000792.json",
+      "backup_generated_at": "2026-06-03T05:04:17Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }

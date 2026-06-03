@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-03T05:02:23Z`
-- issue_count: `682`
+- generated_at: `2026-06-03T05:04:18Z`
+- issue_count: `683`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -687,3 +687,4 @@
 | #789 | GitClaw telegram thread channel-faq-e2e-20260603t043639z | `2026-06-03T04:41:47Z` | 7 | 7 | `issues/000789.json` |
 | #790 | GitClaw channel FAQ: How should channel FAQs stay GitHub-native 20260603t043639z? | `2026-06-03T04:43:36Z` | 2 | 3 | `issues/000790.json` |
 | #791 | GitClaw telegram thread channel-skill-note-e2e-20260603t045654z | `2026-06-03T05:02:21Z` | 7 | 7 | `issues/000791.json` |
+| #792 | GitClaw channel skill note: repo-reader: Prefer GitHub review before skill installs 20260603t045654z | `2026-06-03T05:04:17Z` | 2 | 3 | `issues/000792.json` |
