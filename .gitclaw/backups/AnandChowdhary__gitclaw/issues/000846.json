@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T19:15:22Z",
+  "generated_at": "2026-06-03T19:17:07Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 846,
     "title": "GitClaw telegram thread channel-bingo-e2e-20260603t191300z",
@@ -51,6 +51,15 @@
       "CommentID": 4615899115,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Bingo Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#846`\n- requested_channel_command: `/channels bingo`\n- channel_bingo_status: `queued`\n- bingo_mode: `provider-facing-deterministic-mini-game`\n- notification_target_issue: `#846`\n- notification_comment_id: `4615911752`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `9a3794d999a0`\n- source_message_id_sha256_12: `6222f011fd0f`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `878325b104f6`\n- notify_message_id_auto: `false`\n- bingo_id_sha256_12: `f2020ab8e17d`\n- bingo_id_auto: `false`\n- bingo_theme_sha256_12: `a4d451ec2346`\n- bingo_theme_bytes: `7`\n- bingo_theme_source: `positional-theme`\n- bingo_grid_size: `3`\n- bingo_cell_count: `9`\n- bingo_board_sha256_12: `b42ae987c8d2`\n- bingo_note_sha256_12: `f157a472a980`\n- bingo_note_bytes: `16`\n- bingo_note_lines: `1`\n- bingo_note_source: `trailing-note`\n- notification_body_sha256_12: `b377b70cad7e`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- external_randomness_used: `false`\n- game_state_persisted: `false`\n- score_tracking_performed: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_bingo_id_included: `false`\n- raw_bingo_theme_included: `false`\n- raw_bingo_note_included: `false`\n- raw_bingo_board_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_bingo_action_change: `true`\n- issue_title_sha256_12: `bd8688eac2a5`\n\nGitClaw queued a provider-facing channel bingo card on the canonical channel issue. The readable board is delivered through the channel outbox, while this source receipt keeps thread ids, message ids, bingo ids, themes, notes, card cells, and channel bodies out of band. The action does not call a model, use external randomness, persist game state, track scores, mutate repository files, edit workflows, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read bingo cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent bingo cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate bingo cards are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4615911881,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-03T19:14:50Z",
       "updated_at": "2026-06-03T19:14:50Z"
+    },
+    {
+      "id": 4615911752,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-bingo-e2e-20260603t191300z\" message_id=\"bingo-notify-20260603t191300z\" author=\"gitclaw\" --\u003e\nGitClaw channel bingo.\n\nTheme: release\nGrid: 3x3\nNote: Ship room warmup\n\n- [ ] Green CI\n- [ ] Rollback note named\n- [ ] Owner tagged\n\n- [ ] Docs touched\n- [ ] Free: keep it on GitHub\n- [ ] User impact clear\n\n- [ ] Migration path checked\n- [ ] Metric chosen\n- [ ] Flag plan ready\n\nBingo hash: b42ae987c8d2\nTheme hash: a4d451ec2346\nNote hash: f157a472a980\n\nBingo source: GitHub channel action.\nModel call: not performed by this action.\nExternal randomness: not used by this action.\nGame state: not persisted by this action.\nScore tracking: not performed by this action.\nProvider API call: not performed by this action.\nWorkflow mutation: not performed by this action.\nRepository mutation: not performed by this action.\nProvider delivery: queued through GitHub channel outbox.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T19:16:32Z",
+      "updated_at": "2026-06-03T19:16:32Z"
+    },
+    {
+      "id": 4615911881,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26907267257\" event_id=\"comment-4615899115\" model=\"gitclaw/channels\" idempotency_key=\"57d6f49631812cf1a78faf087d5f0d29\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26907267257\" --\u003e\n## GitClaw Channel Bingo Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#846`\n- requested_channel_command: `/channels bingo`\n- channel_bingo_status: `queued`\n- bingo_mode: `provider-facing-deterministic-mini-game`\n- notification_target_issue: `#846`\n- notification_comment_id: `4615911752`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `9a3794d999a0`\n- source_message_id_sha256_12: `6222f011fd0f`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `878325b104f6`\n- notify_message_id_auto: `false`\n- bingo_id_sha256_12: `f2020ab8e17d`\n- bingo_id_auto: `false`\n- bingo_theme_sha256_12: `a4d451ec2346`\n- bingo_theme_bytes: `7`\n- bingo_theme_source: `positional-theme`\n- bingo_grid_size: `3`\n- bingo_cell_count: `9`\n- bingo_board_sha256_12: `b42ae987c8d2`\n- bingo_note_sha256_12: `f157a472a980`\n- bingo_note_bytes: `16`\n- bingo_note_lines: `1`\n- bingo_note_source: `trailing-note`\n- notification_body_sha256_12: `b377b70cad7e`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- external_randomness_used: `false`\n- game_state_persisted: `false`\n- score_tracking_performed: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_bingo_id_included: `false`\n- raw_bingo_theme_included: `false`\n- raw_bingo_note_included: `false`\n- raw_bingo_board_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_bingo_action_change: `true`\n- issue_title_sha256_12: `bd8688eac2a5`\n\nGitClaw queued a provider-facing channel bingo card on the canonical channel issue. The readable board is delivered through the channel outbox, while this source receipt keeps thread ids, message ids, bingo ids, themes, notes, card cells, and channel bodies out of band. The action does not call a model, use external randomness, persist game state, track scores, mutate repository files, edit workflows, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read bingo cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent bingo cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate bingo cards are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T19:16:33Z",
+      "updated_at": "2026-06-03T19:16:33Z"
     }
   ]
 }
