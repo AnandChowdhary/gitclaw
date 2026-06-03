@@ -6149,6 +6149,49 @@ notification, validates metadata-only outbox discovery, verifies duplicate
 suppression, and then continues on the same GitHub issue with a real GitHub
 Models repo-reader/search follow-up.
 
+For channel-native archive continuity checks that should answer "are there
+large gaps in the durable backup stream?" without restoring anything, GitClaw
+also supports:
+
+```text
+@gitclaw /channels backup-continuity --continuity-id <stable-continuity-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id> --max-gap-hours 168
+```
+
+`/channels backup-continuity`, `/channels backups-continuity`,
+`/channels backup-gaps`, `/channels backups-gaps`, `/channels backup-gap`,
+`/channels archive-continuity`, `/channels archive-gaps`,
+`/channels archive-health-gaps`, and `/channels recovery-continuity` infer the
+current channel and thread id from the issue marker when no explicit route/
+channel thread target is provided. They inspect the repo's
+`gitclaw-backups` archive with the same body-free continuity gate as
+`gitclaw backup continuity`. In a GitHub Actions handler job, the local
+checkout normally does not contain `.gitclaw/backups`; the action must
+therefore fetch `gitclaw-backups` read-only into a temporary git worktree,
+build the continuity report from that fetched backup root, and clean it up
+before exit. If local backups are present, the action may use them without
+fetching. It must never write the backup branch, restore files, replay GitHub
+API calls, call provider APIs, mutate repository files, execute tools, or call
+a model.
+
+The provider-facing outbound comment reports only backup/continuity status,
+backup verify status, continuity gate, backup fetch status, backup branch,
+issue count, scanned point count, timeline ordering, max-gap threshold,
+first/latest issue numbers and timestamps, total span seconds, longest gap
+metadata, reported gaps over the threshold, and continuity id hash. The source
+receipt stays stricter: it records target issue/comment ids, route/thread/
+message hashes, continuity id hash, backup root/path hashes, max-gap source,
+first/latest and longest-gap hashes, continuity gap list hash, outbox delivery
+instructions, and safety gates. It does not print raw continuity ids, raw
+backup roots, raw backup paths, raw backup payloads, raw channel message
+bodies, raw issue titles, raw issue bodies, raw comment bodies, raw transcript
+bodies, prompts, or tool outputs. Duplicates are suppressed by
+`channel + notify_message_id`. Changes to this surface require a live E2E that
+ingests a real channel issue, waits until that issue is present on the real
+`gitclaw-backups` branch, queues a backup-continuity notification, validates
+metadata-only outbox discovery, verifies duplicate suppression, and then
+continues on the same GitHub issue with a real GitHub Models
+repo-reader/search follow-up.
+
 For channel-native recovery inspection that should describe one archived issue
 without restoring it, GitClaw also supports:
 
@@ -9785,6 +9828,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels recovery-map incident --map-id channel-recovery-map-1 --message-id provider-msg-1 --notify-message-id provider-recovery-map-ack-1
 @gitclaw /channels backup-search deployment --message-id provider-msg-1 --notify-message-id provider-backup-search-ack-1
 @gitclaw /channels backup-timeline --timeline-id channel-backup-timeline-1 --message-id provider-msg-1 --notify-message-id provider-backup-timeline-ack-1
+@gitclaw /channels backup-continuity --continuity-id channel-backup-continuity-1 --message-id provider-msg-1 --notify-message-id provider-backup-continuity-ack-1
 @gitclaw /channels backup-info #123 --message-id provider-msg-1 --notify-message-id provider-backup-info-ack-1
 @gitclaw /channels profile-status --message-id provider-msg-1
 @gitclaw /channels soul-status --message-id provider-msg-1
@@ -13561,6 +13605,20 @@ examples/workflows/gitclaw.yml
   that must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-backup-timeline fixture token, and avoid hidden channel, account,
   message, timeline, backup path, source-body, and archive sentinels.
+- A `gh`-driven channel-backup-continuity-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, waits until that
+  issue exists on the real `gitclaw-backups` branch, posts
+  `@gitclaw /channels backup-continuity --continuity-id ... --message-id ...
+  --notify-message-id ...` on that mirrored thread, verifies one
+  provider-facing archive continuity/longest-gap card, source receipt metadata
+  without raw backup paths, raw continuity ids, gap lists, titles, bodies, or
+  transcript text, duplicate notification suppression, metadata-only outbox
+  discovery, and explicit no-model-call/no-backup-branch-write/no-restore/
+  no-GitHub-API-replay/no-repository-mutation/no-provider-API flags. The
+  channel-thread issue then gets a normal GitHub Models issue-comment follow-up
+  that must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-backup-continuity fixture token, and avoid hidden channel, account,
+  message, continuity, backup path, source-body, and archive sentinels.
 - A `gh`-driven channel-backup-info-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, waits until that
   issue exists on the real `gitclaw-backups` branch, posts
@@ -14061,6 +14119,13 @@ examples/workflows/gitclaw.yml
   provider-facing latest-backup freshness gate through metadata-only outbox,
   suppresses duplicate freshness notifications, and posts a normal follow-up
   that must use GitHub Models, `repo-reader`, and `gitclaw.search_files`.
+- A `gh`-driven channel-backup-continuity-slash E2E harness verifies a real
+  channel-thread issue is present on the fetched `gitclaw-backups` branch,
+  then queues `@gitclaw /channels backup-continuity`, exposes one
+  provider-facing backup continuity and longest-gap card through metadata-only
+  outbox, suppresses duplicate continuity notifications, and posts a normal
+  follow-up that must use GitHub Models, `repo-reader`, and
+  `gitclaw.search_files`.
 - A `gh`-driven backup-info E2E harness verifies
   `@gitclaw /backup info` records the deferred issue-side command intent, then
   verifies the fetched `gitclaw-backups` branch can produce a focused
