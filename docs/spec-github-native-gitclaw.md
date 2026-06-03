@@ -6318,6 +6318,39 @@ that records the skill note, validates the metadata-only skill-note outbox,
 checks duplicate suppression, and then continues on the skill-note issue with a
 normal GitHub Models repo-reader/search follow-up that makes a real LLM call.
 
+The same channel-thread issue can also preserve a high-authority context note
+without writing SOUL:
+
+```text
+@gitclaw /channels soul-note --note-id <stable-note-id> --area <soul-area> --message-id <provider-message-id>
+Title: channel-origin high-authority context note
+Note:
+optional human-readable note/context/source text
+```
+
+`/channels soul-note`, `/channels soul-lesson`, `/channels authority-note`,
+`/channels context-note`, and `/channels capture-soul-note` infer the current
+channel and thread id from the issue marker when no explicit route/channel/thread
+target is provided. They create or reuse one open GitHub issue carrying a hidden
+`gitclaw:channel-soul-note` marker for the stable note id, label it with
+`gitclaw` so normal conversation can continue there, and queue a provider-facing
+soul-note link back to the mirrored channel thread. The soul-note issue
+contains the human-readable area, title, and note because it is the durable
+review card; the source receipt remains body-free, reporting only
+note/thread/message/area/title/text hashes, counts, duplicate status,
+notification queue metadata, and delivery gates. It does not call a model, call
+provider APIs, write `.gitclaw/SOUL.md`, mutate memory, mutate the repository,
+print raw note ids, print raw soul areas, print raw thread ids, print raw
+source or notification message ids, print channel message bodies, or print raw
+titles or note text in the source receipt. Provider-facing notifications
+include the issue link, visible area, and visible title only, never the note
+body. Duplicates are suppressed first by `note_id` for the GitHub soul-note
+issue and then by `channel + notify_message_id` for the provider-facing
+soul-note link. Changes to this surface require a live E2E that records the
+soul note, validates the metadata-only soul-note outbox, checks duplicate
+suppression, and then continues on the soul-note issue with a normal GitHub
+Models repo-reader/search follow-up that makes a real LLM call.
+
 The same channel-thread issue can also record an externally observed tool
 result without executing the tool:
 
@@ -11345,6 +11378,18 @@ examples/workflows/gitclaw.yml
   `gitclaw.search_files`, recover the channel-skill-note fixture token, and
   avoid hidden channel, account, provider, message, note id, skill name, title,
   lesson, and notification sentinels.
+- A `gh`-driven channel-soul-note-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels soul-note --note-id ... --area ... --message-id ...` on
+  that mirrored thread, verifies GitHub soul-note issue creation, body-free
+  source receipt metadata, provider-facing soul-note-link queueing, duplicate
+  soul-note and notification suppression, explicit
+  no-soul-mutation/no-memory-mutation/no-repository-mutation gates, and
+  metadata-only outbox discovery. The soul-note issue then gets a normal GitHub
+  Models issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-soul-note fixture token, and
+  avoid hidden channel, account, provider, message, note id, soul area, title,
+  note text, and notification sentinels.
 - A `gh`-driven channel-tool-result-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels tool-result --result-id ... --tool ... --status ...

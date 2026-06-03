@@ -715,6 +715,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels glossary --glossary-id <id> --message-id <id>
 @gitclaw /channels faq --faq-id <id> --message-id <id>
 @gitclaw /channels skill-note --note-id <id> --skill <name> --message-id <id>
+@gitclaw /channels soul-note --note-id <id> --area <area> --message-id <id>
 @gitclaw /channels idea --idea-id <id> --message-id <id>
 @gitclaw /channels whiteboard --jam-id <id> --message-id <id>
 @gitclaw /channels kudos --kudos-id <id> --message-id <id>
@@ -1188,6 +1189,13 @@ skill-note link with the issue link, skill, and title only, and keeps the
 source receipt body-free. It does not install skills, mutate memory, or edit
 repository files; promotion to a skill change stays in the reviewed follow-up
 flow.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+soul-note --note-id <id> --area <area> --message-id <id>` preserves a channel
+note about high-authority context as a durable GitHub soul-note issue. The
+note issue holds the readable area, title, and note, queues a provider-facing
+soul-note link with the issue link, area, and title only, and keeps the source
+receipt body-free. It does not write `.gitclaw/SOUL.md`, mutate memory, or edit
+repository files; promotion to SOUL remains a reviewed follow-up.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 tool-result --tool <tool> --result-id <id> --status <status> --message-id
 <id>` records an externally observed channel tool outcome as a durable GitHub
@@ -1879,6 +1887,7 @@ scripts/e2e/github-channel-quote-slash.sh
 scripts/e2e/github-channel-glossary-slash.sh
 scripts/e2e/github-channel-faq-slash.sh
 scripts/e2e/github-channel-skill-note-slash.sh
+scripts/e2e/github-channel-soul-note-slash.sh
 scripts/e2e/github-channel-tool-result-slash.sh
 scripts/e2e/github-channel-idea-slash.sh
 scripts/e2e/github-channel-jam-slash.sh
@@ -2340,6 +2349,14 @@ the mirrored thread, checks duplicate skill-note and notification suppression,
 exposes the skill-note notification through metadata-only outbox, and then
 continues on the skill-note issue with a real GitHub Models repo-reader/search
 follow-up.
+The channel-soul-note slash harness turns the operator console into a
+high-authority context capture surface: a channel-ingested issue receives
+`@gitclaw /channels soul-note`, creates or reuses a durable GitHub soul-note
+issue, queues a provider-facing soul-note link with only the visible area and
+title back to the mirrored thread, checks duplicate soul-note and notification
+suppression, exposes the soul-note notification through metadata-only outbox,
+and then continues on the soul-note issue with a real GitHub Models
+repo-reader/search follow-up.
 The channel-idea slash harness turns the operator console into an idea intake
 surface: a channel-ingested issue receives `@gitclaw /channels idea`, creates
 or reuses a durable GitHub idea issue, queues a provider-facing idea link back

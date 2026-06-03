@@ -5134,6 +5134,34 @@ on the glossary issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Soul Note Follow-Up
+
+OpenClaw's current channel framing and Hermes' SOUL/messaging framing both
+point at an agent whose durable operating context can be shaped through
+conversation. GitClaw should preserve that possibility without making a
+provider message powerful enough to rewrite `.gitclaw/SOUL.md`, memory, or
+repository files. A channel soul note is the review-only primitive: a Slack or
+Telegram thread can capture a proposed high-authority context note, and GitHub
+becomes the place where a human can decide whether it should become a real SOUL
+change.
+
+GitClaw's serverless version is `@gitclaw /channels soul-note --note-id <id>
+--area <area> --message-id <id>`. It opens or reuses a normal
+`gitclaw:channel-soul-note` issue with the readable area, title, and note,
+queues one provider-facing soul-note issue link back to the source
+Slack/Telegram thread, and keeps the source receipt body-free with only
+area/title/text/id hashes, counts, duplicate status, notification metadata, and
+delivery gates. The provider-facing notification includes the link, visible
+area, and visible title only, not the note body. The action does not call a
+model, write SOUL, mutate memory, mutate the repository, call provider APIs, or
+print raw provider IDs, note IDs, soul areas, titles, note text, or channel
+bodies in the source receipt. Acceptance requires live E2E for soul-note issue
+creation, metadata-only outbox discovery, duplicate suppression, and a real
+GitHub Models repo-reader/search follow-up on the soul-note issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Skill Note Follow-Up
 
 OpenClaw's skill direction and Hermes' messaging direction both make ordinary

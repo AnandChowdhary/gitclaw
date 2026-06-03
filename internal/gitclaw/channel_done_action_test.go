@@ -506,6 +506,28 @@ func TestChannelDoneArtifactRefSupportsSkillNoteIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsSoulNoteIssues(t *testing.T) {
+	body := RenderChannelSoulNoteIssueBody(ChannelSoulNoteOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		NoteID:            "soul-note-done-1",
+		SoulArea:          "operating-principles",
+		Title:             "Prefer review before SOUL writes",
+		Note:              "Close this after the high-authority context note has been reviewed.",
+		SourceIssueNumber: 43,
+		SourceCommentID:   4302,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "soul-note" || ref.ID != "soul-note-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 43 || ref.SourceCommentID != 4302 {
+		t.Fatalf("unexpected soul-note artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsIdeaIssues(t *testing.T) {
 	body := RenderChannelIdeaIssueBody(ChannelIdeaOptions{
 		Repo:              "owner/repo",
