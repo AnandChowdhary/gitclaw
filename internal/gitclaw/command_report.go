@@ -118,6 +118,9 @@ func commandSummaryForReport(entry commandCatalogEntry) string {
 	if !strings.Contains(summary, "queue provider-facing sticker cards") {
 		summary += " Queue provider-facing sticker cards without model calls, image generation, media fetches, file uploads, provider API calls, or repo mutation."
 	}
+	if !strings.Contains(summary, "queue provider-facing attention nudges") {
+		summary += " Queue provider-facing attention nudges without creating tasks, reminders, watches, scheduled workflows, model calls, provider API calls, or repo mutation."
+	}
 	return summary
 }
 

@@ -5184,6 +5184,33 @@ Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw CLI
 sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes messaging guide
 (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Nudge Follow-Up
+
+OpenClaw's channel/session split suggests that chat-provider affordances should
+stay recoverable through a stable session surface rather than depending on a
+live socket as the source of truth. Hermes' messaging guide points in the same
+direction: commands and lightweight chat affordances can happen in the
+provider-facing conversation while durable work remains in the agent/session
+layer. A useful GitHub-native translation is an attention nudge: it is visible
+and immediate in Slack/Telegram, but it does not imply task creation,
+scheduling, provider delivery, or model reasoning.
+
+GitClaw's version is `@gitclaw /channels nudge <target> --nudge-id <id>
+--message-id <id> --notify-message-id <id> --tone gentle|normal|urgent`. It
+queues one provider-facing target/tone/note card on the canonical channel
+issue, exposes only metadata through `channel-outbox`, and records eventual
+delivery through the existing `channel-delivery` receipt path. The source
+receipt keeps raw nudge ids, targets, tones, notes, thread ids, message ids,
+and channel bodies out of band. Acceptance requires live E2E for nudge
+queueing, metadata-only outbox discovery, duplicate suppression, explicit
+no-task/no-reminder/no-watch/no-schedule/no-provider-API/no-model/no-repo
+mutation gates, and a real GitHub Models repo-reader/search follow-up on the
+same channel issue.
+
+Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw CLI
+sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Ritual Follow-Up
 
 OpenClaw's current channel docs frame chat apps as Gateway-connected surfaces:
