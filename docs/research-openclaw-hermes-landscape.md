@@ -5107,6 +5107,32 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Tool Result Follow-Up
+
+OpenClaw's overview keeps channels, tools, and memory in one assistant
+experience, but the useful boundary is that a channel message should not imply
+unchecked local execution. Hermes' messaging gateway documentation makes the
+same separation practical: provider adapters normalize messages and media into
+agent sessions, while tool behavior remains part of the agent/runtime side
+rather than the chat transport itself. GitClaw's serverless translation should
+therefore record externally observed tool outcomes as durable GitHub artifacts
+without turning a Slack or Telegram message into a tool executor.
+
+GitClaw's version is `@gitclaw /channels tool-result --tool <tool>
+--result-id <id> --status <status> --message-id <id>`. It opens or reuses a
+normal `gitclaw:channel-tool-result` issue with readable tool name, status,
+recorded timestamp, summary, and details, queues one provider-facing
+tool-result link to the source Slack/Telegram thread, and keeps the source
+receipt body-free with only hashes, counts, duplicate status, and delivery
+gates. The action does not execute tools, call a model, call provider APIs,
+mutate the repository, or print raw result details in the source receipt.
+Acceptance requires live E2E for tool-result issue creation, metadata-only
+tool-result-link outbox discovery, duplicate suppression, and a real GitHub
+Models repo-reader/search follow-up on the tool-result issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Journal Follow-Up
 
 OpenClaw's current framing keeps conversations and channels as durable surfaces

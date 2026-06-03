@@ -396,6 +396,31 @@ func TestChannelDoneArtifactRefSupportsJournalIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsToolResultIssues(t *testing.T) {
+	body := RenderChannelToolResultIssueBody(ChannelToolResultOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		ResultID:          "tool-result-done-1",
+		ToolName:          "gitclaw.search_files",
+		Status:            "success",
+		ExitCode:          "0",
+		RecordedAt:        "2037-07-19T10:11:12Z",
+		Summary:           "External gateway found the requested fixture",
+		Details:           "Close this after the result has been reviewed.",
+		SourceIssueNumber: 43,
+		SourceCommentID:   4302,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "tool-result" || ref.ID != "tool-result-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 43 || ref.SourceCommentID != 4302 {
+		t.Fatalf("unexpected tool-result artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsIdeaIssues(t *testing.T) {
 	body := RenderChannelIdeaIssueBody(ChannelIdeaOptions{
 		Repo:              "owner/repo",

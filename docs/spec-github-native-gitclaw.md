@@ -6193,6 +6193,40 @@ journal, validates the metadata-only journal-link outbox, checks duplicate
 suppression, and then continues on the journal issue with a normal GitHub
 Models repo-reader/search follow-up.
 
+The same channel-thread issue can also record an externally observed tool
+result without executing the tool:
+
+```text
+@gitclaw /channels tool-result --tool <tool-name> --result-id <stable-result-id> --status <status> --message-id <provider-message-id>
+Summary: short result summary
+Result:
+optional human-readable tool output details
+```
+
+`/channels tool-result`, `/channels tool-output`, `/channels tool-receipt`,
+`/channels tool-note`, `/channels run-result`, and `/channels result-note`
+infer the current channel and thread id from the issue marker when no explicit
+route/channel/thread target is provided. They create or reuse one open GitHub
+issue carrying a hidden `gitclaw:channel-tool-result` marker for the stable
+result id, label it with `gitclaw` so normal conversation can continue there,
+and queue a provider-facing tool-result link back to the mirrored channel
+thread. The tool-result issue contains the human-readable tool name, status,
+optional exit code, recorded timestamp, summary, and result details because it
+is the durable tool-gateway receipt. The source receipt remains body-free,
+reporting only result/thread/message/tool/status/recorded-at/summary/detail
+hashes, counts, duplicate status, notification queue metadata, and delivery
+gates. It does not execute tools, call a model, call provider APIs, mutate the
+repository, print raw result ids, print raw tool names or statuses, print raw
+recorded timestamps, print raw thread ids, print raw source or notification
+message ids, print channel message bodies, or print raw result summary/details
+in the source receipt. Duplicates are suppressed first by `result_id` for the
+GitHub tool-result issue and then by `channel + notify_message_id` for the
+provider-facing tool-result link. Changes to this surface require a live E2E
+that records the tool result, validates the metadata-only tool-result-link
+outbox, checks duplicate suppression, and then continues on the tool-result
+issue with a normal GitHub Models repo-reader/search follow-up that makes a
+real LLM call.
+
 The same channel-thread issue can also capture a channel-origin idea:
 
 ```text
@@ -11140,6 +11174,18 @@ examples/workflows/gitclaw.yml
   that must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-journal fixture token, and avoid hidden channel, account, provider,
   message, date, summary, entry, and journal sentinels.
+- A `gh`-driven channel-tool-result-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels tool-result --result-id ... --tool ... --status ...
+  --message-id ...` on that mirrored thread, verifies GitHub tool-result issue
+  creation, body-free source receipt metadata, provider-facing tool-result-link
+  queueing, duplicate result and notification suppression, explicit
+  no-tool-execution/no-repository-mutation/no-provider-delivery gates, and
+  metadata-only outbox discovery. The tool-result issue then gets a normal
+  GitHub Models issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-tool-result fixture token, and
+  avoid hidden channel, account, provider, message, result id, recorded
+  timestamp, summary, detail, and notification sentinels.
 - A `gh`-driven channel-idea-slash E2E harness creates a real channel-thread
   issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels idea --idea-id ... --message-id ...` on that mirrored
