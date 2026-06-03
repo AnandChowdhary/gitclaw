@@ -71,7 +71,7 @@ func isChannelWarmupActionFields(fields []string) bool {
 		return false
 	}
 	switch strings.ToLower(strings.Trim(fields[1], " \t\r\n.,:;!?")) {
-	case "warmup", "warmups", "set-warmup", "thread-warmup", "starter", "starters", "icebreaker", "icebreakers", "kickoff", "prompt-card", "conversation-starter", "question-card":
+	case "warmup", "warmups", "set-warmup", "thread-warmup", "starter", "starters", "icebreaker", "icebreakers", "kickoff", "prompt-card", "conversation-starter", "question-card", "vibe-check", "vibecheck", "pulse-check", "pulsecheck", "thread-pulse":
 		return true
 	default:
 		return false
@@ -87,7 +87,7 @@ func BuildChannelWarmupActionRequest(ev Event, cfg Config) (ChannelWarmupActionR
 		Options: ChannelWarmupOptions{
 			Repo:              ev.Repo,
 			SourceIssueNumber: ev.Issue.Number,
-			Theme:             "focus",
+			Theme:             defaultChannelWarmupThemeForSubcommand(fields[1]),
 		},
 		Command:    strings.ToLower(strings.Trim(fields[0], " \t\r\n.,:;!?")),
 		Subcommand: strings.ToLower(strings.Trim(fields[1], " \t\r\n.,:;!?")),
@@ -129,7 +129,7 @@ func BuildChannelWarmupActionRequest(ev Event, cfg Config) (ChannelWarmupActionR
 			}
 			req.Options.NotifyMessageID = fields[i+1]
 			i++
-		case "--warmup-id", "--starter-id", "--icebreaker-id", "--prompt-card-id", "--id":
+		case "--warmup-id", "--starter-id", "--icebreaker-id", "--prompt-card-id", "--vibe-id", "--pulse-id", "--id":
 			if i+1 >= len(fields) {
 				return ChannelWarmupActionRequest{}, fmt.Errorf("%s requires a value", field)
 			}
@@ -401,12 +401,13 @@ func applyChannelWarmupPositionals(req *ChannelWarmupActionRequest, positional [
 	if req == nil {
 		return nil
 	}
+	defaultTheme := defaultChannelWarmupThemeForSubcommand(req.Subcommand)
 	for _, value := range positional {
 		if value == "" {
 			continue
 		}
 		if req.TargetFromIssue {
-			if req.Options.Theme == "" || req.Options.Theme == "focus" {
+			if req.Options.Theme == "" || req.Options.Theme == defaultTheme {
 				req.Options.Theme = value
 				continue
 			}
@@ -416,7 +417,7 @@ func applyChannelWarmupPositionals(req *ChannelWarmupActionRequest, positional [
 			req.Options.Route = value
 			continue
 		}
-		if req.Options.Theme == "" || req.Options.Theme == "focus" {
+		if req.Options.Theme == "" || req.Options.Theme == defaultTheme {
 			req.Options.Theme = value
 			continue
 		}
@@ -545,6 +546,15 @@ func cleanChannelWarmupTheme(value string) string {
 		return "fun"
 	default:
 		return ""
+	}
+}
+
+func defaultChannelWarmupThemeForSubcommand(subcommand string) string {
+	switch strings.ToLower(strings.Trim(subcommand, " \t\r\n.,:;!?")) {
+	case "vibe-check", "vibecheck", "pulse-check", "pulsecheck", "thread-pulse":
+		return "fun"
+	default:
+		return "focus"
 	}
 }
 

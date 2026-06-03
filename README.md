@@ -686,6 +686,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels compass all --compass-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels mode tool-review --mode-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels warmup tools --warmup-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels vibe-check --vibe-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels dock <target-route> --dock-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels session-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels memory-search <query> --message-id <id> --notify-message-id <id>
@@ -1058,6 +1059,11 @@ warmup ids, theme names, prompt text, notes, thread ids, message ids, and
 channel bodies out of band. This does not call a model, execute commands,
 install skills, execute tools, read backup payloads, read soul bodies, create
 schedules, call provider APIs, or mutate the repository.
+`@gitclaw /channels vibe-check --vibe-id <id> --message-id <id>
+--notify-message-id <id>` is the chat-native alias for the same provider-facing
+warmup card, defaulting to the `fun` theme when no theme is supplied. It gives
+Slack/Telegram a quick, low-ceremony check-in prompt without creating a poll,
+rollcall, task, schedule, model call, provider API call, or repository mutation.
 `@gitclaw /channels dock <target-route> --dock-id <id> --message-id <id>
 --notify-message-id <id>` captures a channel-origin route-continuity request
 as a durable GitHub dock issue and queues a provider-facing review link back
@@ -2419,6 +2425,14 @@ notifications from the `posture` alias, proves no command execution/skill
 install/tool execution/backup payload read/soul body read/provider-API/model/
 workflow/policy/schedule/repository mutation or durable mode persistence
 happened, and then runs a real GitHub Models repo-reader/search follow-up.
+The channel-warmup slash harness now exercises the playful `@gitclaw
+/channels vibe-check` alias as a chat-native entry point into the same
+provider-facing conversation-starter card. It queues the default `fun` theme,
+exposes the card through metadata-only outbox, suppresses a duplicate warmup
+notification, proves no command execution/skill install/tool execution/backup
+payload read/soul body read/provider-API/model/workflow/policy/schedule/
+repository mutation happened, and then runs a real GitHub Models
+repo-reader/search follow-up.
 The channel-session-search slash harness makes recall a channel-native action:
 a channel-ingested issue receives `@gitclaw /channels session-search`, queues
 provider-visible body-free search metadata from the GitHub-backed transcript,

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# gitclaw-doctor-live-issue: channel-warmup slash action queues provider-visible warmup updates and proves model/tool follow-up.
+# gitclaw-doctor-live-issue: channel-warmup slash action queues provider-visible vibe-check/warmup updates and proves model/tool follow-up.
 set -euo pipefail
 
 log() {
@@ -51,19 +51,19 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ | tr '[:upper:]' '[:lower:]')"
 channel="telegram"
-thread_id="channel-warmup-e2e-${timestamp}"
-ingest_message_id="warmup-ingest-${timestamp}"
-notify_message_id="warmup-notify-${timestamp}"
-warmup_id="warmup-${timestamp}"
-warmup_theme="launch"
-warmup_note="Use this tiny launcher"
-account_id="telegram-warmup-account-NOECHO_CHANNEL_WARMUP_ACCOUNT_${timestamp}"
-ingest_hidden_token="NOECHO_CHANNEL_WARMUP_INGEST_${timestamp}"
-command_hidden_token="NOECHO_CHANNEL_WARMUP_COMMAND_${timestamp}"
-duplicate_hidden_token="NOECHO_CHANNEL_WARMUP_DUPLICATE_${timestamp}"
-followup_hidden_token="NOECHO_CHANNEL_WARMUP_FOLLOWUP_${timestamp}"
-expected_token="GITCLAW_CHANNEL_WARMUP_CONTEXT_V1"
-search_phrase="channel warmup unique search fixture phrase"
+thread_id="channel-vibe-check-e2e-${timestamp}"
+ingest_message_id="vibe-ingest-${timestamp}"
+notify_message_id="vibe-notify-${timestamp}"
+warmup_id="vibe-${timestamp}"
+warmup_theme="fun"
+warmup_note="Keep the thread easy to enter"
+account_id="telegram-vibe-account-NOECHO_CHANNEL_VIBE_ACCOUNT_${timestamp}"
+ingest_hidden_token="NOECHO_CHANNEL_VIBE_INGEST_${timestamp}"
+command_hidden_token="NOECHO_CHANNEL_VIBE_COMMAND_${timestamp}"
+duplicate_hidden_token="NOECHO_CHANNEL_VIBE_DUPLICATE_${timestamp}"
+followup_hidden_token="NOECHO_CHANNEL_VIBE_FOLLOWUP_${timestamp}"
+expected_token="GITCLAW_CHANNEL_VIBE_CHECK_CONTEXT_V1"
+search_phrase="channel vibe-check unique search fixture phrase"
 notify_message_hash="$(sha256_12 "$notify_message_id")"
 issue_number=""
 issue_title="GitClaw ${channel} thread ${thread_id}"
@@ -250,7 +250,7 @@ done
 warmup_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \
   --repo "$repo" \
-  --body "@gitclaw /channels warmup ${warmup_theme} --message-id ${ingest_message_id} --notify-message-id ${notify_message_id} --warmup-id ${warmup_id}
+  --body "@gitclaw /channels vibe-check --message-id ${ingest_message_id} --notify-message-id ${notify_message_id} --vibe-id ${warmup_id}
 Note: ${warmup_note}
 Do not include this command hidden token in the receipt: ${command_hidden_token}" >/dev/null
 
@@ -261,7 +261,7 @@ for expected in \
   "GitClaw Channel Warmup Action" \
   "Generated without a model call" \
   'model="gitclaw/channels"' \
-  "requested_channel_command: \`/channels warmup\`" \
+  "requested_channel_command: \`/channels vibe-check\`" \
   "channel_warmup_status: \`queued\`" \
   "warmup_card_mode: \`structured-channel-warmup\`" \
   "notification_target_issue: \`#${issue_number}\`" \
@@ -270,7 +270,7 @@ for expected in \
   "target_from_current_channel_issue: \`true\`" \
   "warmup_id_sha256_12: \`" \
   "warmup_theme_sha256_12: \`" \
-  "warmup_theme_bytes: \`6\`" \
+  "warmup_theme_bytes: \`3\`" \
   "warmup_prompt_count: \`3\`" \
   "warmup_note_sha256_12: \`" \
   "warmup_note_bytes: \`" \
@@ -302,7 +302,7 @@ for expected in \
   "llm_e2e_required_after_channel_warmup_action_change: \`true\`"; do
   grep -Fq "$expected" <<<"$warmup_receipt" || die "channel warmup receipt missing ${expected}"
 done
-for leaked in "$ingest_hidden_token" "$command_hidden_token" "$thread_id" "$ingest_message_id" "$notify_message_id" "$warmup_id" "$warmup_theme" "$warmup_note" "$expected_token" "What has to be true"; do
+for leaked in "$ingest_hidden_token" "$command_hidden_token" "$thread_id" "$ingest_message_id" "$notify_message_id" "$warmup_id" "$warmup_note" "$expected_token" "What tiny win"; do
   if grep -Fq "$leaked" <<<"$warmup_receipt"; then
     die "channel warmup receipt leaked ${leaked}"
   fi
@@ -315,11 +315,11 @@ notification_bodies="$(jq -r '[.comments[].body | select(contains("<!-- gitclaw:
 for expected in \
   "GitClaw channel warmup." \
   "Theme: ${warmup_theme}" \
-  "Frame: Surface readiness, blockers, and owner clarity before a release moves." \
+  "Frame: Make the thread easier to enter without losing the GitHub-native audit trail." \
   "Conversation starters:" \
-  "What has to be true before this ships?" \
-  "What is the smallest rollback or recovery signal we need?" \
-  "Who owns the next visible status update?" \
+  "What tiny win should we notice before moving on?" \
+  "What playful option would still leave a useful GitHub breadcrumb?" \
+  "What would make this thread easier for the next person to join?" \
   "Note: ${warmup_note}" \
   "Warmup hash: " \
   "Note hash: " \
@@ -354,7 +354,7 @@ grep -Fq "channel_outbox issue=${issue_number}" <<<"$outbox_output" || die "chan
 grep -Fq "outbound_comments=1" <<<"$outbox_output" || die "channel outbox output missing outbound count: ${outbox_output}"
 grep -Fq "body_included=false" <<<"$outbox_output" || die "channel outbox should be metadata-only: ${outbox_output}"
 jq -e --arg hash "$notify_message_hash" '.messages[] | select(.kind == "channel-outbound" and .outbound_message_sha256_12 == $hash)' "$outbox_file" >/dev/null || die "outbox file missing warmup notify hash ${notify_message_hash}"
-for leaked in "$account_id" "$ingest_hidden_token" "$command_hidden_token" "$warmup_id" "$expected_token" "$warmup_theme" "$warmup_note" "What has to be true"; do
+for leaked in "$account_id" "$ingest_hidden_token" "$command_hidden_token" "$warmup_id" "$expected_token" "$warmup_note" "What tiny win"; do
   if grep -Fq "$leaked" <<<"$outbox_output" || grep -Fq "$leaked" "$outbox_file"; then
     die "metadata-only outbox leaked ${leaked}"
   fi
@@ -363,7 +363,7 @@ done
 duplicate_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \
   --repo "$repo" \
-  --body "@gitclaw /channels icebreaker ${warmup_theme} --message-id ${ingest_message_id} --notify-message-id ${notify_message_id} --warmup-id ${warmup_id}
+  --body "@gitclaw /channels pulse-check --message-id ${ingest_message_id} --notify-message-id ${notify_message_id} --vibe-id ${warmup_id}
 Note: ${warmup_note}
 Do not include this duplicate hidden token in any receipt: ${duplicate_hidden_token}" >/dev/null
 
@@ -372,7 +372,7 @@ wait_for_assistant_count_for_issue "$issue_number" 3 || die "expected duplicate 
 duplicate_receipt="$(latest_assistant_comment_for_issue "$issue_number")"
 for expected in \
   "GitClaw Channel Warmup Action" \
-  "requested_channel_command: \`/channels icebreaker\`" \
+  "requested_channel_command: \`/channels pulse-check\`" \
   "channel_warmup_status: \`duplicate\`" \
   "notification_queued: \`false\`" \
   "notification_duplicate_suppressed: \`true\`" \
@@ -391,7 +391,7 @@ for expected in \
   grep -Fq "$expected" <<<"$duplicate_receipt" || die "duplicate channel warmup receipt missing ${expected}"
 done
 [[ "$(warmup_notification_count)" == "1" ]] || die "duplicate channel warmup queued another notification"
-for leaked in "$duplicate_hidden_token" "$thread_id" "$ingest_message_id" "$notify_message_id" "$warmup_id" "$warmup_theme" "$warmup_note" "$expected_token" "What has to be true"; do
+for leaked in "$duplicate_hidden_token" "$thread_id" "$ingest_message_id" "$notify_message_id" "$warmup_id" "$warmup_note" "$expected_token" "What tiny win"; do
   if grep -Fq "$leaked" <<<"$duplicate_receipt"; then
     die "duplicate channel warmup receipt leaked ${leaked}"
   fi
@@ -400,14 +400,14 @@ done
 model_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \
   --repo "$repo" \
-  --body "@gitclaw Continue this channel warmup thread and use the repo-reader skill.
+  --body "@gitclaw Continue this channel vibe-check thread and use the repo-reader skill.
 
 Search the repository for \`${search_phrase}\`.
 The matching repository search result line has the form \`${search_phrase} => <token>\`.
-The exact answer starts with \`GITCLAW_CHANNEL_WARMUP_\`.
+The exact answer starts with \`GITCLAW_CHANNEL_VIBE_CHECK_\`.
 Reply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.
 Do not reply with a placeholder like \`<token>\` or the word \`token\`.
-Do not include provider ids, notification ids, thread ids, message ids, account hashes, warmup ids, warmup themes, warmup notes, warmup prompt text, issue numbers, or previous channel bodies.
+Do not include provider ids, notification ids, thread ids, message ids, account hashes, vibe ids, warmup ids, warmup themes, warmup notes, warmup prompt text, issue numbers, or previous channel bodies.
 Do not include this hidden follow-up token: ${followup_hidden_token}
 Keep the answer under 30 words." >/dev/null
 
@@ -424,7 +424,7 @@ grep -Fq 'skills="repo-reader"' <<<"$model_comment" || die "assistant channel wa
 grep -Fq 'tools="' <<<"$model_comment" || die "assistant channel warmup follow-up marker missing prompt-visible tools"
 grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant channel warmup follow-up marker did not prove search_files was prompt-visible"
 grep -Fq 'usage_total_tokens="' <<<"$model_comment" || die "assistant channel warmup follow-up marker missing usage token telemetry"
-for leaked in "$ingest_hidden_token" "$command_hidden_token" "$duplicate_hidden_token" "$followup_hidden_token" "$warmup_id" "$warmup_theme" "$warmup_note" "$account_id"; do
+for leaked in "$ingest_hidden_token" "$command_hidden_token" "$duplicate_hidden_token" "$followup_hidden_token" "$warmup_id" "$warmup_note" "$account_id"; do
   if grep -Fq "$leaked" <<<"$model_comment"; then
     die "model channel warmup follow-up leaked ${leaked}"
   fi

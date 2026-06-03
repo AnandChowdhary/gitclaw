@@ -277,3 +277,40 @@ func TestBuildChannelWarmupActionRequestParsesPositionalRouteAndTheme(t *testing
 		t.Fatalf("unexpected positional channel warmup parsing: %#v", req)
 	}
 }
+
+func TestBuildChannelWarmupActionRequestParsesVibeCheckDefaultFun(t *testing.T) {
+	ev := Event{
+		Kind:      EventIssueComment,
+		EventName: "issue_comment",
+		Repo:      "owner/repo",
+		Issue: Issue{
+			Number: 44,
+			Title:  "Channel vibe-check",
+			Body:   RenderChannelThreadBody(ChannelIngestOptions{Channel: "telegram", ThreadID: "chat-vibe-44"}),
+		},
+		Comment: &Comment{
+			ID: 4401,
+			Body: `@gitclaw /channels vibe-check --message-id source-3 --notify-message-id notify-3 --vibe-id Vibe.One
+Note: Keep it light.`,
+		},
+	}
+	if IsChannelMoodActionRequest(ev, DefaultConfig()) {
+		t.Fatal("/channels vibe-check must remain outside channel mood aliases")
+	}
+	if !IsChannelWarmupActionRequest(ev, DefaultConfig()) {
+		t.Fatal("/channels vibe-check should route to channel warmup")
+	}
+	req, err := BuildChannelWarmupActionRequest(ev, DefaultConfig())
+	if err != nil {
+		t.Fatalf("BuildChannelWarmupActionRequest returned error: %v", err)
+	}
+	if req.Command != "/channels" || req.Subcommand != "vibe-check" || req.Options.Theme != "fun" || req.Options.WarmupID != "vibe-one" || req.Options.SourceMessageID != "source-3" || req.Options.NotifyMessageID != "notify-3" || req.PromptCount != 3 || !req.TargetFromIssue {
+		t.Fatalf("unexpected vibe-check warmup parsing: %#v", req)
+	}
+	if req.Options.Note != "Keep it light." || req.NoteSource != "trailing-note" {
+		t.Fatalf("unexpected vibe-check note parsing: %#v", req)
+	}
+	if req.AutoNotifyMessageID || req.AutoSourceMessageID || req.AutoWarmupID || req.WarmupIDHash == "" || req.ThemeSHA == "" || req.NoteSHA == "" || req.NotificationBodySHA == "" {
+		t.Fatalf("expected explicit vibe-check hashes: %#v", req)
+	}
+}
