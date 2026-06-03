@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T13:07:27Z",
+  "generated_at": "2026-06-03T13:09:08Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 719,
   "issues": [
@@ -9140,15 +9140,15 @@
       "number": 828,
       "title": "GitClaw telegram thread channel-vibe-check-e2e-20260603t130506z",
       "path": "issues/000828.json",
-      "backup_generated_at": "2026-06-03T13:07:25Z",
-      "event_name": "workflow_dispatch",
+      "backup_generated_at": "2026-06-03T13:09:06Z",
+      "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 3,
-      "transcript_messages": 4
+      "comment_count": 5,
+      "transcript_messages": 5
     }
   ]
 }
