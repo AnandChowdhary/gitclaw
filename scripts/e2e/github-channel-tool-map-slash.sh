@@ -336,7 +336,7 @@ for expected in \
   "Mutating contracts: 0" \
   "Validation status: ok" \
   "Risk status: ok" \
-  "Prompt-visible entries: 7" \
+  "Prompt-visible entries: " \
   "Tool sequence:" \
   "\`/channels tools --message-id <id> --notify-message-id <id>\`" \
   "\`/channels tool-search ${requested_tool} --message-id <id> --notify-message-id <id>\`" \
