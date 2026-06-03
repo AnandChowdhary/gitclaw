@@ -5511,7 +5511,7 @@ a media pipeline, GitClaw also supports:
 Note: Release handoff steady.
 ```
 
-`/channels sticker`, `/channels stamp`, `/channels badge`, `/channels spark`,
+`/channels sticker`, `/channels stamp`, `/channels badge`,
 `/channels confetti`, and `/channels celebrate` queue one provider-facing
 sticker card back onto the current `gitclaw:channel-thread` issue or an
 explicit reviewed route. The sticker name is normalized to a compact slug,
@@ -6853,8 +6853,8 @@ Notes:
 optional human-readable shaping notes
 ```
 
-`/channels idea`, `/channels ideate`, `/channels brainstorm`,
-`/channels concept`, `/channels pitch`, and `/channels spark` infer the current
+`/channels idea`, `/channels ideate`, `/channels concept`, and
+`/channels pitch` infer the current
 channel and thread id from the issue marker when no explicit route/channel/
 thread target is provided. They create or reuse one open GitHub issue carrying
 a hidden `gitclaw:channel-idea` marker for the stable idea id, label it with

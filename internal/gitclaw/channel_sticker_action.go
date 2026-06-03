@@ -71,7 +71,7 @@ func isChannelStickerActionFields(fields []string) bool {
 		return false
 	}
 	switch strings.ToLower(strings.Trim(fields[1], " \t\r\n.,:;!?")) {
-	case "sticker", "stamp", "badge", "spark", "confetti", "celebrate":
+	case "sticker", "stamp", "badge", "confetti", "celebrate":
 		return true
 	default:
 		return false

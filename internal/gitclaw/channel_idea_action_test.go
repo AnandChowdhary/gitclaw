@@ -203,7 +203,7 @@ func TestBuildChannelIdeaActionRequestParsesRouteAlias(t *testing.T) {
 		Issue:     Issue{Number: 31, Title: "Channel idea"},
 		Comment: &Comment{
 			ID: 3101,
-			Body: `@gitclaw /channel brainstorm --route team-demo --idea-id Roadmap.Spark --message-id source-1 --notify-message-id notify-1
+			Body: `@gitclaw /channel ideate --route team-demo --idea-id Roadmap.Spark --message-id source-1 --notify-message-id notify-1
 Title: Make channel messages spawn GitHub-native idea labs
 Context:
 - Keep Slack/Telegram lightweight.
@@ -214,7 +214,7 @@ Context:
 	if err != nil {
 		t.Fatalf("BuildChannelIdeaActionRequest returned error: %v", err)
 	}
-	if req.Command != "/channel" || req.Subcommand != "brainstorm" || req.Options.Route != "team-demo" || req.Options.IdeaID != "roadmap-spark" || req.Options.SourceMessageID != "source-1" || req.Options.NotifyMessageID != "notify-1" {
+	if req.Command != "/channel" || req.Subcommand != "ideate" || req.Options.Route != "team-demo" || req.Options.IdeaID != "roadmap-spark" || req.Options.SourceMessageID != "source-1" || req.Options.NotifyMessageID != "notify-1" {
 		t.Fatalf("unexpected channel idea parsing: %#v", req)
 	}
 	if req.Options.Title != "Make channel messages spawn GitHub-native idea labs" || !strings.Contains(req.Options.Notes, "Keep Slack/Telegram lightweight") {

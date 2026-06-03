@@ -302,6 +302,9 @@ func TestBuildChannelWarmupActionRequestParsesSparkDefault(t *testing.T) {
 Note: Find the smallest experiment.`,
 		},
 	}
+	if IsChannelStickerActionRequest(ev, DefaultConfig()) {
+		t.Fatal("/channels spark must remain outside channel sticker aliases")
+	}
 	if !IsChannelWarmupActionRequest(ev, DefaultConfig()) {
 		t.Fatal("/channels spark should route to channel warmup")
 	}

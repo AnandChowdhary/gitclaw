@@ -67,7 +67,7 @@ func isChannelIdeaActionFields(fields []string) bool {
 		return false
 	}
 	switch strings.ToLower(strings.Trim(fields[1], " \t\r\n.,:;!?")) {
-	case "idea", "ideate", "brainstorm", "concept", "pitch", "spark":
+	case "idea", "ideate", "concept", "pitch":
 		return true
 	default:
 		return false
