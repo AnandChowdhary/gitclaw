@@ -5718,6 +5718,7 @@ accepts a structured reaction form:
 @gitclaw /channels checkpoint-status --message-id <provider-message-id> --notify-message-id <stable-outbound-id>
 @gitclaw /channels availability --message-id <provider-message-id> --notify-message-id <stable-outbound-id>
 @gitclaw /channels topic --topic-id <stable-topic-id>
+@gitclaw /channels activity typing --activity-id <stable-activity-id> --message-id <provider-message-id>
 @gitclaw /channels rehearse-checkpoint --target HEAD~1 --id <stable-rehearsal-id> --message-id <provider-message-id>
 @gitclaw /channels remind --reminder-id <stable-reminder-id> --message-id <provider-message-id> --at <RFC3339-or-date>
 @gitclaw /channels done --message-id <stable-outbound-id>
@@ -5738,6 +5739,23 @@ raw target message ids, print raw status ids, print raw status states, print
 status bodies, or print channel message bodies. The pending update appears in
 `channel-outbox` as kind `channel-status`, and `channel-delivery` records the
 provider receipt for the status comment.
+
+`/channels activity`, `/channels chat-action`, `/channels recording`,
+`/channels uploading`, `/channels thinking`, and `/channels stop-activity`
+infer the current channel and thread id from the issue marker when no explicit
+route/channel/thread target is provided, then post one
+`gitclaw:channel-activity` comment on the same canonical channel issue. This
+is the provider-native UI path for transient activity signals such as typing,
+recording, uploading, thinking, or clearing an indicator. Duplicate activity
+signals are suppressed by `channel + activity_id`. The source receipt reports
+only target issue/comment ids, target message hash, activity id hash, activity
+hash, TTL, route/thread hashes, duplicate status, and delivery gates. It does
+not call a model, call provider APIs, open a socket, launch a long-running
+gateway, print raw route names, print raw thread ids, print raw target message
+ids, print raw activity ids, print raw activity names, print channel message
+bodies, or mutate the repository. The pending signal appears in
+`channel-outbox` as kind `channel-activity`, and `channel-delivery` records the
+provider receipt for the activity comment.
 
 `/channels edit`, `/channels update`, and `/channels replace` infer the current
 channel and thread id from the issue marker when no explicit route/channel/thread
@@ -10637,6 +10655,16 @@ examples/workflows/gitclaw.yml
   GitHub Models issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-topic fixture token, and avoid
   hidden channel, account, provider, topic, and body sentinels.
+- A `gh`-driven channel-activity-slash E2E harness creates a real
+  channel-thread issue, posts `@gitclaw /channels activity ...` on that
+  mirrored thread, verifies same-issue structured activity queueing, body-free
+  receipt metadata, TTL metadata, duplicate suppression, metadata-only outbox
+  discovery with kind `channel-activity`, channel-delivery workflow receipts,
+  no socket/gateway/provider API mutation, and no repository mutation. The
+  same issue then gets a normal GitHub Models issue-comment follow-up that
+  must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-activity fixture token, and avoid hidden channel, account, provider,
+  activity, target-message, and source sentinels.
 - A `gh`-driven channel-reaction-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels react --message-id ... --reaction ...` on that mirrored

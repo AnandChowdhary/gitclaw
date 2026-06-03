@@ -33,6 +33,7 @@ type ChannelOutboxResult struct {
 	SourceStatusComments       int
 	SourceEditComments         int
 	SourceTopicComments        int
+	SourceActivityComments     int
 	SourceDeliverableComments  int
 	DeliveredAssistantComments int
 	PendingMessages            int
@@ -66,6 +67,7 @@ type channelOutboxFile struct {
 	SourceStatusComments      int                    `json:"source_status_comments"`
 	SourceEditComments        int                    `json:"source_edit_comments"`
 	SourceTopicComments       int                    `json:"source_topic_comments"`
+	SourceActivityComments    int                    `json:"source_activity_comments"`
 	SourceDeliverableComments int                    `json:"source_deliverable_comments"`
 	DeliveredAssistantReplies int                    `json:"delivered_assistant_comments"`
 	PendingMessages           int                    `json:"pending_messages"`
@@ -141,6 +143,8 @@ func RunChannelOutbox(ctx context.Context, cfg Config, github ChannelOutboxGitHu
 			result.SourceEditComments++
 		} else if kind == "channel-topic" {
 			result.SourceTopicComments++
+		} else if kind == "channel-activity" {
+			result.SourceActivityComments++
 		}
 		if delivered[comment.ID] {
 			result.DeliveredAssistantComments++
@@ -200,6 +204,16 @@ func channelOutboxDeliverable(body, channel, threadID string) (string, string, s
 					return "", "", "", false
 				}
 				return "channel-status", StripChannelStatusMarker(body), channelStateHash(statusID + "|" + state), true
+			}
+			activityChannel, activityThread, activityTargetMessageID, activityID, activity := channelActivityMarkerFields(body)
+			if activityChannel != "" {
+				if activityChannel != channel {
+					return "", "", "", false
+				}
+				if activityThread != "" && threadID != "" && activityThread != threadID {
+					return "", "", "", false
+				}
+				return "channel-activity", StripChannelActivityMarker(body), channelStateHash(activityID + "|" + activity + "|" + activityTargetMessageID), true
 			}
 			editChannel, editThread, targetMessageID, editID := channelEditMarkerFields(body)
 			if editChannel == "" {
@@ -332,6 +346,7 @@ func writeChannelOutboxFile(opts ChannelOutboxOptions, result ChannelOutboxResul
 		SourceStatusComments:      result.SourceStatusComments,
 		SourceEditComments:        result.SourceEditComments,
 		SourceTopicComments:       result.SourceTopicComments,
+		SourceActivityComments:    result.SourceActivityComments,
 		SourceDeliverableComments: result.SourceDeliverableComments,
 		DeliveredAssistantReplies: result.DeliveredAssistantComments,
 		PendingMessages:           result.PendingMessages,
@@ -365,6 +380,7 @@ func writeChannelOutboxOutputs(result ChannelOutboxResult) error {
 	fmt.Fprintf(file, "source_assistant_comments=%d\n", result.SourceAssistantComments)
 	fmt.Fprintf(file, "source_edit_comments=%d\n", result.SourceEditComments)
 	fmt.Fprintf(file, "source_topic_comments=%d\n", result.SourceTopicComments)
+	fmt.Fprintf(file, "source_activity_comments=%d\n", result.SourceActivityComments)
 	fmt.Fprintf(file, "delivered_assistant_comments=%d\n", result.DeliveredAssistantComments)
 	fmt.Fprintf(file, "pending_messages=%d\n", result.PendingMessages)
 	fmt.Fprintf(file, "messages_returned=%d\n", result.MessagesReturned)

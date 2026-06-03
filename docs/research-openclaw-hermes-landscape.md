@@ -5089,6 +5089,33 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Activity Signal Follow-Up
+
+OpenClaw's channel/session framing keeps chat interaction visible while hiding
+transport mechanics behind the runtime, and Hermes' command surface treats
+messaging operations as explicit user-facing commands rather than private
+socket state. GitClaw should follow that split for transient provider UI:
+activity indicators are useful in Slack/Telegram-style channels, but the core
+agent should not hold a socket open or call provider APIs from the issue
+handler.
+
+GitClaw's serverless version is `@gitclaw /channels activity typing
+--activity-id <id>` plus direct aliases such as `/channels recording` and
+`/channels uploading`. It queues one `gitclaw:channel-activity` comment on the
+canonical channel issue, exposes it through `channel-outbox` as
+`channel-activity`, and lets the provider gateway acknowledge delivery through
+`channel-delivery`. The source receipt keeps only hashes, TTL, duplicate
+state, and delivery gates; it does not call a model, open sockets, launch a
+long-running gateway, call provider APIs, print raw route/thread/message ids,
+print raw activity ids or names, or mutate the repository. Acceptance requires
+live E2E for metadata-only outbox discovery, delivery receipts, duplicate
+suppression, and a real GitHub Models repo-reader/search follow-up.
+
+Sources: OpenClaw channels CLI
+(`https://github.com/openclaw/openclaw/blob/main/docs/cli/channels.md`),
+Hermes slash commands
+(`https://hermes-agent.nousresearch.com/docs/reference/slash-commands/`).
+
 ## 2026-06-03 Channel Topic Follow-Up
 
 OpenClaw's channel/session split keeps chat transport details separate from

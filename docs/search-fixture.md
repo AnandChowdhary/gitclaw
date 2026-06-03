@@ -94,6 +94,7 @@ channels list unique search fixture phrase => GITCLAW_CHANNELS_LIST_CONTEXT_V1
 channels verify unique search fixture phrase => GITCLAW_CHANNELS_VERIFY_CONTEXT_V1
 channel backup info unique search fixture phrase => GITCLAW_CHANNEL_BACKUP_INFO_CONTEXT_V1
 channel checkpoint status unique search fixture phrase => GITCLAW_CHANNEL_CHECKPOINT_STATUS_CONTEXT_V1
+channel activity unique search fixture phrase => GITCLAW_CHANNEL_ACTIVITY_CONTEXT_V1
 channel soul info unique search fixture phrase => GITCLAW_CHANNEL_SOUL_INFO_CONTEXT_V1
 channel soul risk unique search fixture phrase => GITCLAW_CHANNEL_SOUL_RISK_CONTEXT_V1
 channel soul search unique search fixture phrase => GITCLAW_CHANNEL_SOUL_SEARCH_CONTEXT_V1

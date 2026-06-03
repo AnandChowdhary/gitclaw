@@ -20,6 +20,7 @@ var channelReactionMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-re
 var channelStatusMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-status\s+([^>]*)-->`)
 var channelEditMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-edit\s+([^>]*)-->`)
 var channelTopicMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-topic\s+([^>]*)-->`)
+var channelActivityMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-activity\s+([^>]*)-->`)
 var channelThreadMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-thread\s+([^>]*)-->`)
 var channelRoomMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-room\s+([^>]*)-->`)
 var channelHuddleMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-huddle\s+([^>]*)-->`)
@@ -211,6 +212,10 @@ func HasChannelEditMarker(body string) bool {
 
 func HasChannelTopicMarker(body string) bool {
 	return channelTopicMarkerPattern.MatchString(body)
+}
+
+func HasChannelActivityMarker(body string) bool {
+	return channelActivityMarkerPattern.MatchString(body)
 }
 
 func HasChannelThreadMarker(body string) bool {
@@ -405,6 +410,10 @@ func StripChannelEditMarker(body string) string {
 
 func StripChannelTopicMarker(body string) string {
 	return strings.TrimSpace(channelTopicMarkerPattern.ReplaceAllString(body, ""))
+}
+
+func StripChannelActivityMarker(body string) string {
+	return strings.TrimSpace(channelActivityMarkerPattern.ReplaceAllString(body, ""))
 }
 
 func withWorkflowDispatchActiveText(ev Event, comments []Comment) Event {
