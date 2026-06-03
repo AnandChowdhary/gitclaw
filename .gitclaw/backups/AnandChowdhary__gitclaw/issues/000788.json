@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-03T04:27:58Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 788,
+    "title": "GitClaw channel glossary: Channel-native glossary term 20260603t042111z",
+    "body": "\u003c!-- gitclaw:channel-glossary glossary_id=\"channel-glossary-20260603t042111z\" channel=\"telegram\" thread_id_sha256_12=\"4632f172bc9a\" source_message_id_sha256_12=\"fce8204db819\" source_issue=\"787\" source_comment_id=\"4609042258\" --\u003e\nGitClaw channel glossary entry.\n\n- glossary_id: channel-glossary-20260603t042111z\n- source_channel: telegram\n- source_issue: #787\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/787\n- source_comment_id: 4609042258\n- thread_id_sha256_12: 4632f172bc9a\n- source_message_id_sha256_12: fce8204db819\n- glossary_mode: github-issue-glossary\n- memory_mutation_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Term\n\nChannel-native glossary term 20260603t042111z\n\n## Definition\n\nVisible glossary definition token: VISIBLE_CHANNEL_GLOSSARY_DEFINITION_20260603t042111z\n\nUse this issue as the reviewable GitHub home for preserving the channel glossary entry without mutating memory or turning it into a task automatically.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel glossary: Channel-native glossary term 20260603t042111z\n\n\u003c!-- gitclaw:channel-glossary glossary_id=\"channel-glossary-20260603t042111z\" channel=\"telegram\" thread_id_sha256_12=\"4632f172bc9a\" source_message_id_sha256_12=\"fce8204db819\" source_issue=\"787\" source_comment_id=\"4609042258\" --\u003e\nGitClaw channel glossary entry.\n\n- glossary_id: channel-glossary-20260603t042111z\n- source_channel: telegram\n- source_issue: #787\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/787\n- source_comment_id: 4609042258\n- thread_id_sha256_12: 4632f172bc9a\n- source_message_id_sha256_12: fce8204db819\n- glossary_mode: github-issue-glossary\n- memory_mutation_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Term\n\nChannel-native glossary term 20260603t042111z\n\n## Definition\n\nVisible glossary definition token: VISIBLE_CHANNEL_GLOSSARY_DEFINITION_20260603t042111z\n\nUse this issue as the reviewable GitHub home for preserving the channel glossary entry without mutating memory or turning it into a task automatically.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created glossary and use the repo-reader skill.\n\nSearch the repository for `channel glossary unique search fixture phrase`.\nThe matching repository search result line has the form `channel glossary unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_GLOSSARY_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include glossary ids, message ids, thread ids, account hashes, issue numbers, glossary terms, or definitions.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_GLOSSARY_FOLLOWUP_20260603t042111z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4609057758,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_GLOSSARY_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4609061617,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4609057758,
+      "body": "@gitclaw Continue this channel-created glossary and use the repo-reader skill.\n\nSearch the repository for `channel glossary unique search fixture phrase`.\nThe matching repository search result line has the form `channel glossary unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_GLOSSARY_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include glossary ids, message ids, thread ids, account hashes, issue numbers, glossary terms, or definitions.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_GLOSSARY_FOLLOWUP_20260603t042111z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T04:26:27Z",
+      "updated_at": "2026-06-03T04:26:27Z"
+    },
+    {
+      "id": 4609061617,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26863654210\" event_id=\"comment-4609057758\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"69d09294ba7e363eca90c062152e053c\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26863654210\" prompt_context_sha256_12=\"6b57459d1951\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10817\" usage_completion_tokens=\"12\" usage_total_tokens=\"10829\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_GLOSSARY_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T04:27:29Z",
+      "updated_at": "2026-06-03T04:27:29Z"
+    }
+  ]
+}

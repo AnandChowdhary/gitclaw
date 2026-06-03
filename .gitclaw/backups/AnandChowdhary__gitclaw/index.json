@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T04:26:14Z",
+  "generated_at": "2026-06-03T04:27:59Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 678,
+  "count": 679,
   "issues": [
     {
       "number": 3,
@@ -8607,6 +8607,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 788,
+      "title": "GitClaw channel glossary: Channel-native glossary term 20260603t042111z",
+      "path": "issues/000788.json",
+      "backup_generated_at": "2026-06-03T04:27:58Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
