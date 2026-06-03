@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T01:17:57Z",
+  "generated_at": "2026-06-03T01:19:26Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 767,
     "title": "GitClaw telegram thread channel-fork-e2e-20260603t011544z",
@@ -51,6 +51,15 @@
       "CommentID": 4608266903,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Fork Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#767`\n- requested_channel_command: `/channels fork`\n- channel_fork_status: `created`\n- fork_issue: `#768`\n- fork_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/768`\n- fork_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#767`\n- notification_comment_id: `4608273509`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- channel: `telegram`\n- source_thread_id_sha256_12: `2ec164d6016e`\n- target_thread_id_sha256_12: `90bb56a3fa1a`\n- source_message_id_sha256_12: `13c559fbc6f2`\n- notify_message_id_sha256_12: `c3a39cbce63f`\n- fork_id_sha256_12: `2d5b1033a6c2`\n- fork_id_auto: `false`\n- target_thread_id_auto: `false`\n- notify_message_id_auto: `false`\n- fork_title_sha256_12: `4371fb51754c`\n- fork_title_bytes: `49`\n- fork_title_lines: `1`\n- fork_notes_sha256_12: `790e44ce15ae`\n- fork_notes_bytes: `69`\n- fork_notes_lines: `1`\n- notification_body_sha256_12: `d624abc55f60`\n- target_from_current_channel_issue: `true`\n- raw_fork_id_included: `false`\n- raw_source_thread_id_included: `false`\n- raw_target_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_fork_title_included: `false`\n- raw_fork_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- model_call_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_fork_action_change: `true`\n- issue_title_sha256_12: `3a65804c0c5c`\n\nGitClaw created or reused a new GitHub-backed channel thread, then queued a provider-facing fork acknowledgement back to the source thread. The fork issue is a normal channel thread where conversation can continue; this source receipt keeps provider thread IDs, message IDs, fork IDs, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the fork acknowledgement with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent fork acknowledgements with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate fork issues are suppressed by channel and target thread id; duplicate notifications are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4608273584,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-03T01:17:30Z",
       "updated_at": "2026-06-03T01:17:30Z"
+    },
+    {
+      "id": 4608273509,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-fork-e2e-20260603t011544z\" message_id=\"fork-notify-20260603t011544z\" author=\"gitclaw\" --\u003e\nGitClaw channel thread forked.\n\nFork: #768\nURL: https://github.com/AnandChowdhary/gitclaw/issues/768\nTitle: Shape GitHub-native channel fork 20260603t011544z\n\nContinue in the linked GitHub channel thread.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T01:18:57Z",
+      "updated_at": "2026-06-03T01:18:57Z"
+    },
+    {
+      "id": 4608273584,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26857818417\" event_id=\"comment-4608266903\" model=\"gitclaw/channels\" idempotency_key=\"a309fc44ea0a41a734166d454490c0d6\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26857818417\" --\u003e\n## GitClaw Channel Fork Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#767`\n- requested_channel_command: `/channels fork`\n- channel_fork_status: `created`\n- fork_issue: `#768`\n- fork_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/768`\n- fork_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#767`\n- notification_comment_id: `4608273509`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- channel: `telegram`\n- source_thread_id_sha256_12: `2ec164d6016e`\n- target_thread_id_sha256_12: `90bb56a3fa1a`\n- source_message_id_sha256_12: `13c559fbc6f2`\n- notify_message_id_sha256_12: `c3a39cbce63f`\n- fork_id_sha256_12: `2d5b1033a6c2`\n- fork_id_auto: `false`\n- target_thread_id_auto: `false`\n- notify_message_id_auto: `false`\n- fork_title_sha256_12: `4371fb51754c`\n- fork_title_bytes: `49`\n- fork_title_lines: `1`\n- fork_notes_sha256_12: `790e44ce15ae`\n- fork_notes_bytes: `69`\n- fork_notes_lines: `1`\n- notification_body_sha256_12: `d624abc55f60`\n- target_from_current_channel_issue: `true`\n- raw_fork_id_included: `false`\n- raw_source_thread_id_included: `false`\n- raw_target_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_fork_title_included: `false`\n- raw_fork_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- model_call_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_fork_action_change: `true`\n- issue_title_sha256_12: `3a65804c0c5c`\n\nGitClaw created or reused a new GitHub-backed channel thread, then queued a provider-facing fork acknowledgement back to the source thread. The fork issue is a normal channel thread where conversation can continue; this source receipt keeps provider thread IDs, message IDs, fork IDs, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the fork acknowledgement with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent fork acknowledgements with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate fork issues are suppressed by channel and target thread id; duplicate notifications are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T01:18:58Z",
+      "updated_at": "2026-06-03T01:18:58Z"
     }
   ]
 }
