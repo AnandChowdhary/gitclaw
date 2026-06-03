@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-03T07:41:17Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 808,
+    "title": "GitClaw channel ritual: Find the shortest useful channel loop 20260603t073334z",
+    "body": "\u003c!-- gitclaw:channel-ritual ritual_id=\"channel-ritual-20260603t073334z\" channel=\"telegram\" thread_id_sha256_12=\"41809cfbf4e3\" source_message_id_sha256_12=\"98fd6c9422c8\" source_issue=\"807\" source_comment_id=\"4610096977\" --\u003e\nGitClaw channel ritual.\n\n- ritual_id: channel-ritual-20260603t073334z\n- source_channel: telegram\n- source_issue: #807\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/807\n- source_comment_id: 4610096977\n- thread_id_sha256_12: 41809cfbf4e3\n- source_message_id_sha256_12: 98fd6c9422c8\n- ritual_mode: github-issue-ritual\n- scheduled_workflow_created: false\n- reminder_created: false\n- standing_order_created: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Title\n\nFind the shortest useful channel loop 20260603t073334z\n\n## Cadence\n\nVisible cadence token: VISIBLE_CHANNEL_RITUAL_CADENCE_20260603t073334z\n\n## Trigger\n\nVisible trigger token: VISIBLE_CHANNEL_RITUAL_TRIGGER_20260603t073334z\n\n## Practice\n\nVisible practice token: VISIBLE_CHANNEL_RITUAL_PRACTICE_20260603t073334z\n\n## Review\n\nVisible review token: VISIBLE_CHANNEL_RITUAL_REVIEW_20260603t073334z\n\nUse this issue as the reviewable GitHub home for deciding whether the channel ritual should become a standing order, proactive workflow, reminder, skill, memory, or be closed.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel ritual: Find the shortest useful channel loop 20260603t073334z\n\n\u003c!-- gitclaw:channel-ritual ritual_id=\"channel-ritual-20260603t073334z\" channel=\"telegram\" thread_id_sha256_12=\"41809cfbf4e3\" source_message_id_sha256_12=\"98fd6c9422c8\" source_issue=\"807\" source_comment_id=\"4610096977\" --\u003e\nGitClaw channel ritual.\n\n- ritual_id: channel-ritual-20260603t073334z\n- source_channel: telegram\n- source_issue: #807\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/807\n- source_comment_id: 4610096977\n- thread_id_sha256_12: 41809cfbf4e3\n- source_message_id_sha256_12: 98fd6c9422c8\n- ritual_mode: github-issue-ritual\n- scheduled_workflow_created: false\n- reminder_created: false\n- standing_order_created: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Title\n\nFind the shortest useful channel loop 20260603t073334z\n\n## Cadence\n\nVisible cadence token: VISIBLE_CHANNEL_RITUAL_CADENCE_20260603t073334z\n\n## Trigger\n\nVisible trigger token: VISIBLE_CHANNEL_RITUAL_TRIGGER_20260603t073334z\n\n## Practice\n\nVisible practice token: VISIBLE_CHANNEL_RITUAL_PRACTICE_20260603t073334z\n\n## Review\n\nVisible review token: VISIBLE_CHANNEL_RITUAL_REVIEW_20260603t073334z\n\nUse this issue as the reviewable GitHub home for deciding whether the channel ritual should become a standing order, proactive workflow, reminder, skill, memory, or be closed.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created ritual and use the repo-reader skill.\n\nSearch the repository for `channel ritual unique search fixture phrase`.\nThe matching repository search result line has the form `channel ritual unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_RITUAL_`.\nCopy the complete right-hand side token exactly, including the final `CONTEXT_V1` suffix.\nThe answer must end with `CONTEXT_V1`; `GITCLAW_CHANNEL_RITUAL_` alone is incomplete and must not be used.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include ritual ids, message ids, thread ids, account hashes, issue numbers, ritual titles, cadences, triggers, practices, or reviews.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_RITUAL_FOLLOWUP_20260603t073334z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4610125309,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_RITUAL_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4610133089,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4610125309,
+      "body": "@gitclaw Continue this channel-created ritual and use the repo-reader skill.\n\nSearch the repository for `channel ritual unique search fixture phrase`.\nThe matching repository search result line has the form `channel ritual unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_RITUAL_`.\nCopy the complete right-hand side token exactly, including the final `CONTEXT_V1` suffix.\nThe answer must end with `CONTEXT_V1`; `GITCLAW_CHANNEL_RITUAL_` alone is incomplete and must not be used.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include ritual ids, message ids, thread ids, account hashes, issue numbers, ritual titles, cadences, triggers, practices, or reviews.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_RITUAL_FOLLOWUP_20260603t073334z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T07:39:33Z",
+      "updated_at": "2026-06-03T07:39:33Z"
+    },
+    {
+      "id": 4610133089,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26870725805\" event_id=\"comment-4610125309\" model=\"openai/gpt-5-nano\" idempotency_key=\"d45c48dfa3c816cca45b2d62f8cfb72b\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26870725805\" prompt_context_sha256_12=\"e70fafc10fd4\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10971\" usage_completion_tokens=\"597\" usage_total_tokens=\"11568\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_RITUAL_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T07:40:43Z",
+      "updated_at": "2026-06-03T07:40:43Z"
+    }
+  ]
+}
