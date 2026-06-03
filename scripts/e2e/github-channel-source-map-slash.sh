@@ -458,11 +458,15 @@ grep -Fq 'skills="repo-reader"' <<<"$model_comment" || die "assistant channel so
 grep -Fq 'tools="' <<<"$model_comment" || die "assistant channel source map follow-up marker missing prompt-visible tools"
 grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant channel source map follow-up marker did not prove search_files was prompt-visible"
 grep -Fq 'usage_total_tokens="' <<<"$model_comment" || die "assistant channel source map follow-up marker missing usage token telemetry"
-for leaked in "$ingest_hidden_token" "$command_hidden_token" "$duplicate_hidden_token" "$followup_hidden_token" "$source_map_id" "$source_map_note" "$requested_source" "$account_id"; do
+model_visible_body="$(sed '1{/^<!-- gitclaw:assistant-turn /d;}' <<<"$model_comment")"
+for leaked in "$ingest_hidden_token" "$command_hidden_token" "$duplicate_hidden_token" "$followup_hidden_token" "$source_map_id" "$source_map_note" "$account_id"; do
   if grep -Fq -- "$leaked" <<<"$model_comment"; then
     die "model channel source map follow-up leaked ${leaked}"
   fi
 done
+if grep -Fq -- "$requested_source" <<<"$model_visible_body"; then
+  die "model channel source map follow-up visible answer leaked ${requested_source}"
+fi
 
 model_url="$(jq -r '.url' <<<"$model_run_json")"
 log "passed for channel issue #${issue_number} (model follow-up: ${model_url})"
