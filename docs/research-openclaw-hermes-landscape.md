@@ -5089,6 +5089,32 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Fork Follow-Up
+
+OpenClaw's channel framing treats the conversation surface itself as the agent
+control plane, while Hermes' messaging gateway keeps provider chat sessions
+and platform adapters separate from the agent's internal execution. A useful
+GitHub-native translation is not only "send a report back", but "make a new
+issue-backed channel lane when the conversation naturally branches", with all
+provider delivery still handled through queued GitHub comments.
+
+GitClaw's serverless version is `@gitclaw /channels fork --fork-id <id>
+--new-thread-id <id> --message-id <id>`. It creates or reuses a normal
+`gitclaw:channel-thread` issue that also carries `gitclaw:channel-fork`
+provenance, stores the readable fork title/notes there, and queues one
+provider-facing acknowledgement back to the source Slack/Telegram thread. The
+source receipt remains body-free and hash-only for fork ids, source/target
+thread ids, source/notification message ids, title, notes, and channel message
+bodies. The action does not call a model, call provider APIs, keep a
+server/socket open, mutate the repository beyond issue/comment/label writes,
+or copy source channel bodies. Acceptance requires live E2E for fork-thread
+issue creation, metadata-only fork acknowledgement outbox discovery, duplicate
+suppression, and a real GitHub Models repo-reader/search follow-up on the
+forked channel issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Bookmark Follow-Up
 
 OpenClaw's channel-first framing treats chat as the operator surface, while

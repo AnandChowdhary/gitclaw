@@ -236,3 +236,4 @@ channel backup search unique search fixture phrase => GITCLAW_CHANNEL_BACKUP_SEA
 channel profile status unique search fixture phrase => GITCLAW_CHANNEL_PROFILE_STATUS_CONTEXT_V1
 channel soul status unique search fixture phrase => GITCLAW_CHANNEL_SOUL_STATUS_CONTEXT_V1
 channel topic unique search fixture phrase => GITCLAW_CHANNEL_TOPIC_CONTEXT_V1
+channel fork unique search fixture phrase => GITCLAW_CHANNEL_FORK_CONTEXT_V1

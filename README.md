@@ -703,6 +703,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels propose-order --id <id> --cadence <cadence> --message-id <id>
 @gitclaw /channels clip --clip-id <id> --message-id <id>
 @gitclaw /channels bookmark-message --bookmark-id <id> --message-id <id>
+@gitclaw /channels fork --fork-id <id> --new-thread-id <id> --message-id <id>
 @gitclaw /channels attachment --attachment-id <id> --message-id <id> --filename <name>
 @gitclaw /channels decision --decision-id <id> --message-id <id>
 @gitclaw /channels digest --digest-id <id> --message-id <id>
@@ -1305,6 +1306,14 @@ issue and queues a provider-facing handoff link back to the Slack/Telegram
 thread. The channel action does not call a model, copy raw channel text, or
 require a server/socket; the linked handoff issue is where a normal GitHub
 Models conversation resumes with model, skill, tool, and usage telemetry.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels fork
+--fork-id <id> --new-thread-id <id> --message-id <id>` creates or reuses a
+second GitHub-backed channel-thread issue for a branch of the same external
+conversation and queues a provider-facing fork acknowledgement back to the
+source Slack/Telegram thread. The source receipt stays body-free and hash-only
+for source/target thread ids, message ids, fork ids, titles, and notes; the new
+fork issue carries the readable fork title/notes and the raw target thread id
+because it is the new channel address.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 request-run <tool> --id <id> --message-id <id>` opens or reuses a reviewed
 GitHub tool-run request issue and queues a provider-facing review link back to

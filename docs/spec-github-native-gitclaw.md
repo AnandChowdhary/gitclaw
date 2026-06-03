@@ -6528,6 +6528,42 @@ checks duplicate suppression, verifies provider message ids and notes do not
 leak into receipts, and then continues on the bookmark issue with a normal
 GitHub Models repo-reader/search follow-up.
 
+The same channel-thread issue can also fork the mirrored conversation into a
+new GitHub-backed channel thread:
+
+```text
+@gitclaw /channels fork --fork-id <stable-fork-id> --new-thread-id <new-provider-thread-id> --message-id <provider-message-id>
+Fork: short branch title
+Notes:
+optional human-readable context for the branch
+```
+
+`/channels fork`, `/channels branch`, `/channels split`,
+`/channels thread-fork`, `/channels fork-thread`, `/channels branch-thread`,
+and `/channels split-thread` infer the source channel and source thread id from
+the current issue marker when no explicit channel/source-thread target is
+provided. They create or reuse one open GitHub issue carrying both
+`gitclaw:channel-thread` and `gitclaw:channel-fork` markers, label it with
+`gitclaw` and `gitclaw:channel`, and queue a provider-facing fork
+acknowledgement back to the original mirrored channel thread. This is distinct
+from `/channels handoff`: a fork remains a channel-addressed conversation lane,
+while a handoff opens a normal GitHub session issue. The fork issue contains
+the readable title/notes and the raw target thread id because that issue is the
+new channel address; the source receipt remains body-free, reporting only
+fork/source-thread/target-thread/message/title/note hashes, duplicate status,
+notification queue metadata, and delivery gates. It does not call a model, call
+provider APIs, keep a server/socket open, print raw fork ids, print raw source
+or target thread ids, print raw source or notification message ids, print
+channel message bodies, or print raw titles/notes in the source receipt.
+Duplicates are suppressed first by `channel + target_thread_id` for the forked
+channel-thread issue and then by `channel + notify_message_id` for the
+provider-facing acknowledgement. Changes to this surface require a live E2E
+that creates the fork issue from a real channel-ingested issue, validates the
+metadata-only fork acknowledgement outbox, checks duplicate suppression,
+verifies provider message ids and notes do not leak into source receipts, and
+then continues on the fork issue with a normal GitHub Models
+repo-reader/search follow-up.
+
 The same channel-thread issue can also open an access or pairing review:
 
 ```text
