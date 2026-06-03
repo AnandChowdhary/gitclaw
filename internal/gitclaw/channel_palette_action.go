@@ -612,6 +612,7 @@ func channelPaletteCommandsForLane(lane string) []string {
 	case "core":
 		return []string{
 			"/channels compass all --compass-id <id> --message-id <id> --notify-message-id <id>",
+			"/channels mode focus --mode-id <id> --message-id <id> --notify-message-id <id>",
 			"/channels availability --message-id <id> --notify-message-id <id>",
 			"/channels topic --topic-id <id>",
 			"/channels activity typing --activity-id <id> --message-id <id>",
@@ -656,6 +657,7 @@ func channelPaletteCommandsForLane(lane string) []string {
 	case "all":
 		return []string{
 			"/channels compass all --compass-id <id> --message-id <id> --notify-message-id <id>",
+			"/channels mode focus --mode-id <id> --message-id <id> --notify-message-id <id>",
 			"/channels availability --message-id <id> --notify-message-id <id>",
 			"/channels skills --message-id <id>",
 			"/channels skill-search <query> --message-id <id> --notify-message-id <id>",

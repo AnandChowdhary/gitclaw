@@ -613,6 +613,7 @@ func channelCompassStepsForFocus(focus string) []string {
 	switch cleanChannelCompassFocus(focus) {
 	case "core":
 		return []string{
+			"/channels mode focus --mode-id <id> --message-id <id> --notify-message-id <id>",
 			"/channels availability --message-id <id> --notify-message-id <id>",
 			"/channels topic --topic-id <id>",
 			"/channels activity typing --activity-id <id> --message-id <id>",
@@ -627,6 +628,7 @@ func channelCompassStepsForFocus(focus string) []string {
 		}
 	case "tools":
 		return []string{
+			"/channels mode tool-review --mode-id <id> --message-id <id> --notify-message-id <id>",
 			"/channels tools --message-id <id>",
 			"/channels tool-search <query> --message-id <id> --notify-message-id <id>",
 			"/channels tool-info <tool> --message-id <id> --notify-message-id <id>",
@@ -634,6 +636,7 @@ func channelCompassStepsForFocus(focus string) []string {
 		}
 	case "soul":
 		return []string{
+			"/channels mode soul-review --mode-id <id> --message-id <id> --notify-message-id <id>",
 			"/channels soul-status --message-id <id>",
 			"/channels soul-search <query> --message-id <id> --notify-message-id <id>",
 			"/channels soul-info <path> --message-id <id> --notify-message-id <id>",
@@ -648,6 +651,7 @@ func channelCompassStepsForFocus(focus string) []string {
 		}
 	case "backups":
 		return []string{
+			"/channels mode backup-review --mode-id <id> --message-id <id> --notify-message-id <id>",
 			"/channels backup --message-id <id>",
 			"/channels backup-search <query> --message-id <id> --notify-message-id <id>",
 			"/channels backup-info <issue> --message-id <id> --notify-message-id <id>",
@@ -663,6 +667,7 @@ func channelCompassStepsForFocus(focus string) []string {
 		}
 	case "all":
 		return []string{
+			"/channels mode focus --mode-id <id> --message-id <id> --notify-message-id <id>",
 			"/channels availability --message-id <id> --notify-message-id <id>",
 			"/channels skills --message-id <id>",
 			"/channels skill-search <query> --message-id <id> --notify-message-id <id>",

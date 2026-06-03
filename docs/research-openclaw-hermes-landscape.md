@@ -5126,6 +5126,35 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Mode Card Follow-Up
+
+OpenClaw's channel surface and session framing point toward chat threads that
+can carry lightweight interaction state without requiring the user to leave the
+conversation. Hermes' messaging guide similarly separates user-facing chat
+adapters from agent sessions, so platform-specific transport and internal
+agent posture do not need to be the same thing. GitClaw's serverless
+translation should keep that distinction: a Slack or Telegram user can say the
+thread is in a posture such as pairing, triage, recovery, tool review, soul
+review, backup review, or quiet, but the action must not secretly persist
+state, edit policy, create schedules, or execute work.
+
+GitClaw's version is `@gitclaw /channels mode <mode> --mode-id <id>
+--message-id <id> --notify-message-id <id>`. It queues one provider-facing
+advisory mode card with a posture sentence and suggested next channel-native
+steps, while the source receipt remains body-free with only hashes, counts,
+duplicate status, delivery gates, and explicit no-model/no-tool/no-policy/
+no-workflow/no-schedule/no-persistence flags. Duplicate mode cards are
+suppressed by `channel + notify_message_id`; actual delivery remains the
+existing metadata-only outbox plus delivery receipt path. Acceptance requires a
+live GitHub issue/comment E2E that proves the deterministic mode card, then a
+normal GitHub Models repo-reader/search follow-up that recovers a repository
+fixture token without leaking channel ids, mode ids, raw mode names, notes, or
+suggested-step text.
+
+Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw
+sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Boundary Follow-Up
 
 OpenClaw's channel/session framing treats each external channel as a durable

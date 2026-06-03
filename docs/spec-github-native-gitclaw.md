@@ -5607,6 +5607,38 @@ soul-body-read/provider-API/model/repository mutation was performed, and then
 continues on the same GitHub issue with a real GitHub Models
 repo-reader/search follow-up.
 
+For channel-native posture setting that should help a Slack/Telegram thread
+coordinate intent without secretly mutating state, GitClaw also supports:
+
+```text
+@gitclaw /channels mode tool-review --mode-id <stable-mode-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
+Note: Review tool context before asking for execution.
+```
+
+`/channels mode`, `/channels modes`, `/channels set-mode`,
+`/channels thread-mode`, `/channels stance`, and `/channels posture` queue one
+provider-facing advisory mode card back onto the current
+`gitclaw:channel-thread` issue or an explicit reviewed route. The mode is
+bounded to `focus`, `pairing`, `triage`, `recovery`, `tool-review`,
+`soul-review`, `backup-review`, or `quiet`. Each mode renders a compact static
+posture sentence and suggested channel-native next steps; it does not persist
+state or execute those commands. Optional `Note: ...` trailing text is included
+in the provider-facing update. The source receipt remains body-free and
+reports only hashes, sizes, step count, duplicate status, outbox delivery
+instructions, and safety gates. It does not execute commands, install skills,
+execute tools, read backup payloads, read soul bodies, call provider APIs, call
+a model, edit workflows, change policy, create schedules, persist durable mode
+state, mutate repository files, or perform provider delivery. It does not
+print raw mode ids, mode names, notes, step text, thread ids, message ids, or
+channel bodies in the source receipt. Duplicates are suppressed by `channel +
+notify_message_id`. Changes to this surface require a live E2E that ingests a
+real channel issue, queues the mode card, validates metadata-only outbox
+discovery, verifies duplicate suppression, proves no command-execution/
+skill-install/tool-execution/backup-payload-read/soul-body-read/provider-API/
+model/workflow/policy/schedule/repository mutation or durable mode persistence
+was performed, and then continues on the same GitHub issue with a real GitHub
+Models repo-reader/search follow-up.
+
 For channel-native recall that should answer in the same Slack/Telegram thread
 without a full model turn, GitClaw also supports:
 
@@ -9147,6 +9179,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels nudge release-captain --nudge-id channel-nudge-1 --message-id provider-msg-1 --notify-message-id provider-nudge-ack-1 --tone gentle
 @gitclaw /channels palette fun --palette-id channel-palette-1 --message-id provider-msg-1 --notify-message-id provider-palette-ack-1
 @gitclaw /channels compass all --compass-id channel-compass-1 --message-id provider-msg-1 --notify-message-id provider-compass-ack-1
+@gitclaw /channels mode tool-review --mode-id channel-mode-1 --message-id provider-msg-1 --notify-message-id provider-mode-ack-1
 @gitclaw /channels session-search deployment --message-id provider-msg-1 --notify-message-id provider-search-ack-1
 ```
 
@@ -11679,6 +11712,18 @@ examples/workflows/gitclaw.yml
   issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-compass fixture token, and avoid
   hidden channel/message/compass sentinels.
+- A `gh`-driven channel-mode-slash E2E harness ingests a real mirrored channel
+  issue, replies with `@gitclaw /channels mode ...`, verifies the
+  provider-facing advisory posture/suggested-step/note card, body-free source
+  receipt metadata, duplicate mode notification suppression from a later issue
+  comment with the same acknowledgement id, explicit no command-execution/
+  skill-install/tool-execution/backup-payload-read/soul-body-read/provider-API/
+  model/workflow/policy/schedule/repository mutation and no durable mode
+  persistence gates, and metadata-only outbox discovery for the acknowledgement.
+  The same channel issue then gets a normal GitHub Models issue-comment
+  follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
+  recover the channel-mode fixture token, and avoid hidden channel/message/mode
+  sentinels.
 - A `gh`-driven channel-session-search-slash E2E harness ingests a real
   mirrored channel issue, replies with `@gitclaw /channels session-search ...`,
   verifies provider-facing body-free recall metadata from the current

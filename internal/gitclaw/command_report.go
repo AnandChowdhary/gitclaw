@@ -127,6 +127,9 @@ func commandSummaryForReport(entry commandCatalogEntry) string {
 	if !strings.Contains(summary, "queue provider-facing safe-next-step orientation cards") {
 		summary += " Queue provider-facing safe-next-step orientation cards without executing commands, installing skills, executing tools, reading backup payloads, reading soul bodies, model calls, provider API calls, or repo mutation."
 	}
+	if !strings.Contains(summary, "queue provider-facing advisory thread mode cards") {
+		summary += " Queue provider-facing advisory thread mode cards without executing commands, persisting mode state, changing policy, editing workflows, creating schedules, model calls, provider API calls, or repo mutation."
+	}
 	return summary
 }
 

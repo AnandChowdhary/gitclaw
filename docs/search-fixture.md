@@ -118,6 +118,7 @@ channel sticker unique search fixture phrase => GITCLAW_CHANNEL_STICKER_CONTEXT_
 channel nudge unique search fixture phrase => GITCLAW_CHANNEL_NUDGE_CONTEXT_V1
 channel palette unique search fixture phrase => GITCLAW_CHANNEL_PALETTE_CONTEXT_V1
 channel compass unique search fixture phrase => GITCLAW_CHANNEL_COMPASS_CONTEXT_V1
+channel mode unique search fixture phrase => GITCLAW_CHANNEL_MODE_CONTEXT_V1
 channel session search unique search fixture phrase => GITCLAW_CHANNEL_SESSION_SEARCH_CONTEXT_V1
 channel rsvp unique search fixture phrase => GITCLAW_CHANNEL_RSVP_CONTEXT_V1
 channel rsvp response unique search fixture phrase => GITCLAW_CHANNEL_RSVP_RESPONSE_CONTEXT_V1

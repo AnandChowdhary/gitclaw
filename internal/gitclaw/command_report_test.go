@@ -108,6 +108,7 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"queue mirrored channel memory-status replies without memory writes, external provider access, embedding vectors, or raw memory bodies",
 		"queue deterministic channel dice/coin rolls without external randomness",
 		"queue deterministic channel option picks without external randomness",
+		"Queue provider-facing advisory thread mode cards without executing commands",
 		"`gitclaw bundles catalog` command=`/bundles`",
 		"`gitclaw bundles list` command=`/bundles`",
 		"`gitclaw bundles risk` command=`/bundles`",
