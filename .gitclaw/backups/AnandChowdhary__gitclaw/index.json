@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T11:28:12Z",
+  "generated_at": "2026-06-03T11:30:03Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 713,
+  "count": 714,
   "issues": [
     {
       "number": 3,
@@ -9067,6 +9067,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 823,
+      "title": "GitClaw channel dock: dock to design-review-20260603t112228z",
+      "path": "issues/000823.json",
+      "backup_generated_at": "2026-06-03T11:30:01Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
