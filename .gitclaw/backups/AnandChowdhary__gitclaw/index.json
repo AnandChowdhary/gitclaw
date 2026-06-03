@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T08:50:56Z",
+  "generated_at": "2026-06-03T09:09:08Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 705,
+  "count": 706,
   "issues": [
     {
       "number": 3,
@@ -8957,6 +8957,20 @@
       ],
       "comment_count": 2,
       "transcript_messages": 3
+    },
+    {
+      "number": 815,
+      "title": "GitClaw telegram thread channel-boundary-e2e-20260603t090652z",
+      "path": "issues/000815.json",
+      "backup_generated_at": "2026-06-03T09:09:06Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:done",
+        "gitclaw:channel"
+      ],
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
