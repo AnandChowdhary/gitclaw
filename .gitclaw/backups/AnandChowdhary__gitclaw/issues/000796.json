@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-03T05:39:37Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 796,
+    "title": "GitClaw channel backup note: restore-readiness: Prefer GitHub review before backup restores 20260603t053230z",
+    "body": "\u003c!-- gitclaw:channel-backup-note note_id=\"channel-backup-note-20260603t053230z\" channel=\"telegram\" backup_scope_sha256_12=\"0062857d41f9\" thread_id_sha256_12=\"9c621a20ab42\" source_message_id_sha256_12=\"e511d5610cac\" source_issue=\"795\" source_comment_id=\"4609403150\" --\u003e\nGitClaw channel backup note.\n\n- note_id: channel-backup-note-20260603t053230z\n- source_channel: telegram\n- source_issue: #795\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/795\n- source_comment_id: 4609403150\n- thread_id_sha256_12: 9c621a20ab42\n- source_message_id_sha256_12: e511d5610cac\n- backup_note_mode: github-issue-backup-note\n- backup_fetch_performed: false\n- backup_restore_performed: false\n- backup_payload_read_performed: false\n- memory_mutation_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Scope\n\nrestore-readiness\n\n## Title\n\nPrefer GitHub review before backup restores 20260603t053230z\n\n## Note\n\nVisible backup note token: VISIBLE_CHANNEL_BACKUP_NOTE_TEXT_20260603t053230z\n\nUse this issue as the reviewable GitHub home for preserving the channel backup note without fetching backups, reading backup payloads, restoring files, mutating memory, or changing repository files automatically.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel backup note: restore-readiness: Prefer GitHub review before backup restores 20260603t053230z\n\n\u003c!-- gitclaw:channel-backup-note note_id=\"channel-backup-note-20260603t053230z\" channel=\"telegram\" backup_scope_sha256_12=\"0062857d41f9\" thread_id_sha256_12=\"9c621a20ab42\" source_message_id_sha256_12=\"e511d5610cac\" source_issue=\"795\" source_comment_id=\"4609403150\" --\u003e\nGitClaw channel backup note.\n\n- note_id: channel-backup-note-20260603t053230z\n- source_channel: telegram\n- source_issue: #795\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/795\n- source_comment_id: 4609403150\n- thread_id_sha256_12: 9c621a20ab42\n- source_message_id_sha256_12: e511d5610cac\n- backup_note_mode: github-issue-backup-note\n- backup_fetch_performed: false\n- backup_restore_performed: false\n- backup_payload_read_performed: false\n- memory_mutation_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Scope\n\nrestore-readiness\n\n## Title\n\nPrefer GitHub review before backup restores 20260603t053230z\n\n## Note\n\nVisible backup note token: VISIBLE_CHANNEL_BACKUP_NOTE_TEXT_20260603t053230z\n\nUse this issue as the reviewable GitHub home for preserving the channel backup note without fetching backups, reading backup payloads, restoring files, mutating memory, or changing repository files automatically.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created backup note and use the repo-reader skill.\n\nSearch the repository for `channel backup note unique search fixture phrase`.\nThe matching repository search result line has the form `channel backup note unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_BACKUP_NOTE_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include note ids, message ids, thread ids, account hashes, issue numbers, backup scopes, titles, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_BACKUP_NOTE_FOLLOWUP_20260603t053230z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4609430077,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_BACKUP_NOTE_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4609436547,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4609430077,
+      "body": "@gitclaw Continue this channel-created backup note and use the repo-reader skill.\n\nSearch the repository for `channel backup note unique search fixture phrase`.\nThe matching repository search result line has the form `channel backup note unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_BACKUP_NOTE_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include note ids, message ids, thread ids, account hashes, issue numbers, backup scopes, titles, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_BACKUP_NOTE_FOLLOWUP_20260603t053230z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T05:38:10Z",
+      "updated_at": "2026-06-03T05:38:10Z"
+    },
+    {
+      "id": 4609436547,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26865943024\" event_id=\"comment-4609430077\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"516393c787f607ca165daf5fb7c9eeca\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26865943024\" prompt_context_sha256_12=\"9d59e24b04c5\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10893\" usage_completion_tokens=\"12\" usage_total_tokens=\"10905\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_BACKUP_NOTE_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T05:39:09Z",
+      "updated_at": "2026-06-03T05:39:09Z"
+    }
+  ]
+}
