@@ -6193,6 +6193,36 @@ journal, validates the metadata-only journal-link outbox, checks duplicate
 suppression, and then continues on the journal issue with a normal GitHub
 Models repo-reader/search follow-up.
 
+The same channel-thread issue can also preserve a channel quote:
+
+```text
+@gitclaw /channels quote --quote-id <stable-quote-id> --message-id <provider-message-id>
+Quote: notable line from the channel
+Context:
+optional human-readable source/context notes
+```
+
+`/channels quote`, `/channels save-quote`, `/channels quotebook`,
+`/channels pullquote`, `/channels quote-card`, and `/channels capture-quote`
+infer the current channel and thread id from the issue marker when no explicit
+route/channel/thread target is provided. They create or reuse one open GitHub
+issue carrying a hidden `gitclaw:channel-quote` marker for the stable quote id,
+label it with `gitclaw` so normal conversation can continue there, and queue a
+provider-facing quote link back to the mirrored channel thread. The quote issue
+contains the human-readable quote text and context because it is the durable
+quote card; the source receipt remains body-free, reporting only
+quote/thread/message/text/context hashes, counts, duplicate status,
+notification queue metadata, and delivery gates. It does not call a model, call
+provider APIs, mutate `.gitclaw/MEMORY.md`, mutate the repository, print raw
+quote ids, print raw thread ids, print raw source or notification message ids,
+print channel message bodies, or print raw quote text/context in the source
+receipt. Duplicates are suppressed first by `quote_id` for the GitHub quote
+issue and then by `channel + notify_message_id` for the provider-facing quote
+link. Changes to this surface require a live E2E that records the quote,
+validates the metadata-only quote-link outbox, checks duplicate suppression,
+and then continues on the quote issue with a normal GitHub Models
+repo-reader/search follow-up that makes a real LLM call.
+
 The same channel-thread issue can also record an externally observed tool
 result without executing the tool:
 
@@ -11174,6 +11204,17 @@ examples/workflows/gitclaw.yml
   that must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-journal fixture token, and avoid hidden channel, account, provider,
   message, date, summary, entry, and journal sentinels.
+- A `gh`-driven channel-quote-slash E2E harness creates a real channel-thread
+  issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels quote --quote-id ... --message-id ...` on that mirrored
+  thread, verifies GitHub quote issue creation, body-free source receipt
+  metadata, provider-facing quote-link queueing, duplicate quote and
+  notification suppression, explicit no-memory-mutation/no-repository-mutation
+  gates, and metadata-only outbox discovery. The quote issue then gets a normal
+  GitHub Models issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-quote fixture token, and avoid
+  hidden channel, account, provider, message, quote id, quote text, context,
+  and notification sentinels.
 - A `gh`-driven channel-tool-result-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels tool-result --result-id ... --tool ... --status ...

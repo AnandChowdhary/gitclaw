@@ -5107,6 +5107,29 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Quote Follow-Up
+
+OpenClaw frames channels as durable assistant surfaces, not disposable
+transport pipes, and Hermes' messaging guide shows why provider adapters should
+normalize messages while leaving long-term state changes to explicit agent
+flows. GitClaw's serverless version should let a Slack or Telegram line become
+reviewable GitHub context without silently promoting it into memory, a task, or
+a standing instruction.
+
+GitClaw's version is `@gitclaw /channels quote --quote-id <id> --message-id
+<id>`. It opens or reuses a normal `gitclaw:channel-quote` issue with readable
+quote text and context, queues one provider-facing quote link to the source
+Slack/Telegram thread, and keeps the source receipt body-free with only hashes,
+counts, duplicate status, and delivery gates. The action does not call a model,
+call provider APIs, mutate `.gitclaw/MEMORY.md`, mutate the repository, or
+print raw quote text/context in the source receipt. Acceptance requires live
+E2E for quote issue creation, metadata-only quote-link outbox discovery,
+duplicate suppression, and a real GitHub Models repo-reader/search follow-up
+on the quote issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Tool Result Follow-Up
 
 OpenClaw's overview keeps channels, tools, and memory in one assistant

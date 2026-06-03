@@ -421,6 +421,27 @@ func TestChannelDoneArtifactRefSupportsToolResultIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsQuoteIssues(t *testing.T) {
+	body := RenderChannelQuoteIssueBody(ChannelQuoteOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		QuoteID:           "quote-done-1",
+		Title:             "Preserve the line, not the whole meeting.",
+		Notes:             "Close this after the quote has been reviewed.",
+		SourceIssueNumber: 43,
+		SourceCommentID:   4302,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "quote" || ref.ID != "quote-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 43 || ref.SourceCommentID != 4302 {
+		t.Fatalf("unexpected quote artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsIdeaIssues(t *testing.T) {
 	body := RenderChannelIdeaIssueBody(ChannelIdeaOptions{
 		Repo:              "owner/repo",

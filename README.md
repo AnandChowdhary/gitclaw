@@ -1157,6 +1157,12 @@ link back to the Slack/Telegram thread, and keeps the source receipt body-free
 with hashes, duplicate state, notification metadata, and delivery gates. It
 does not mutate `.gitclaw/MEMORY.md`; promotion to memory stays in the reviewed
 memory proposal flow.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels quote
+--quote-id <id> --message-id <id>` preserves a channel quote as a durable
+GitHub issue without turning it into a task or memory write. The quote issue
+holds the readable quote text and context, queues a provider-facing quote link
+back to Slack/Telegram, and keeps the source receipt body-free with only
+hashes, counts, duplicate state, notification metadata, and delivery gates.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 tool-result --tool <tool> --result-id <id> --status <status> --message-id
 <id>` records an externally observed channel tool outcome as a durable GitHub
@@ -1844,6 +1850,7 @@ scripts/e2e/github-channel-attachment-slash.sh
 scripts/e2e/github-channel-decision-slash.sh
 scripts/e2e/github-channel-digest-slash.sh
 scripts/e2e/github-channel-journal-slash.sh
+scripts/e2e/github-channel-quote-slash.sh
 scripts/e2e/github-channel-tool-result-slash.sh
 scripts/e2e/github-channel-idea-slash.sh
 scripts/e2e/github-channel-jam-slash.sh
