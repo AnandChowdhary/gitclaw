@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T22:00:34Z",
+  "generated_at": "2026-06-03T22:02:46Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4617073036,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels archive-timeline --message-id backup-timeline-ingest-20260603t215643z --notify-message-id backup-timeline-notify-20260603t215643z --timeline-id channel-backup-timeline-20260603t215643z --limit 25\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_BACKUP_TIMELINE_DUPLICATE_20260603t215643z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4617077849,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Backup Timeline Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#853`\n- requested_channel_command: `/channels archive-timeline`\n- channel_backup_timeline_status: `duplicate`\n- backup_timeline_status: `ok`\n- backup_verify_status: `ok`\n- backup_fetch_status: `fetched`\n- backup_branch: `gitclaw-backups`\n- timeline_mode: `gitclaw-backups-chronology-card`\n- notification_target_issue: `#853`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `093dc9760c59`\n- source_message_id_sha256_12: `4d78eb670cd2`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `f73c366a16b8`\n- notify_message_id_auto: `false`\n- timeline_id_sha256_12: `455377d60229`\n- timeline_id_auto: `false`\n- limit: `25`\n- limit_source: `flag`\n- backup_root_sha256_12: `d2a0479437f9`\n- repo_backup_dir_sha256_12: `6be9f8afed80`\n- index_path_sha256_12: `dcd1fd592f52`\n- readme_path_sha256_12: `6c855e766f43`\n- backup_schema_version: `1`\n- index_generated_at_sha256_12: `5a26214a86f8`\n- verification_failures: `0`\n- issue_count: `743`\n- timeline_points: `25`\n- timeline_order: `chronological`\n- timeline_window: `latest_by_backup_generated_at`\n- first_issue_sha256_12: `43d244581aa2`\n- first_generated_at_sha256_12: `18245b1bd080`\n- latest_issue_sha256_12: `7fc81a57656e`\n- latest_generated_at_sha256_12: `c1da4c346067`\n- total_span_seconds: `31647`\n- timeline_points_sha256_12: `b8d3083646ea`\n- timeline_error_kind: `none`\n- timeline_error_sha256_12: `none`\n- notification_body_sha256_12: `be19380065ab`\n- notification_body_bytes: `7882`\n- notification_body_lines: `46`\n- target_from_current_channel_issue: `true`\n- backup_branch_fetch_performed: `true`\n- raw_backup_payloads_read: `true`\n- restore_performed: `false`\n- backup_branch_write_performed: `false`\n- github_api_replay_performed: `false`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_timeline_id_included: `false`\n- raw_backup_root_included: `false`\n- raw_backup_paths_included: `false`\n- raw_timeline_points_included: `false`\n- raw_backup_payloads_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_titles_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_transcript_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_channel_backup_timeline_change: `true`\n- source_issue_title_sha256_12: `18e019e7b256`\n\nGitClaw inspected the local or read-only fetched gitclaw-backups chronology and queued a provider-facing timeline card. It reports issue numbers, backup timestamps, gaps, counts, and hashes in the provider card while this source receipt keeps raw paths, titles, bodies, comments, transcripts, prompts, tool outputs, provider IDs, and timeline IDs out of band. This action does not write the backup branch, restore files, replay GitHub APIs, call a model, call provider APIs, or mutate the repository.\n\n### Follow-Up Delivery\n- provider gateways read backup-timeline cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent backup-timeline cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate backup-timeline notifications are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4617086017,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T22:00:03Z",
       "updated_at": "2026-06-03T22:00:03Z"
+    },
+    {
+      "id": 4617077849,
+      "body": "@gitclaw /channels archive-timeline --message-id backup-timeline-ingest-20260603t215643z --notify-message-id backup-timeline-notify-20260603t215643z --timeline-id channel-backup-timeline-20260603t215643z --limit 25\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_BACKUP_TIMELINE_DUPLICATE_20260603t215643z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T22:00:50Z",
+      "updated_at": "2026-06-03T22:00:50Z"
+    },
+    {
+      "id": 4617086017,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26915719919\" event_id=\"comment-4617077849\" model=\"gitclaw/channels\" idempotency_key=\"08c473de722c6311eaae103acd5c32a5\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26915719919\" --\u003e\n## GitClaw Channel Backup Timeline Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#853`\n- requested_channel_command: `/channels archive-timeline`\n- channel_backup_timeline_status: `duplicate`\n- backup_timeline_status: `ok`\n- backup_verify_status: `ok`\n- backup_fetch_status: `fetched`\n- backup_branch: `gitclaw-backups`\n- timeline_mode: `gitclaw-backups-chronology-card`\n- notification_target_issue: `#853`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `093dc9760c59`\n- source_message_id_sha256_12: `4d78eb670cd2`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `f73c366a16b8`\n- notify_message_id_auto: `false`\n- timeline_id_sha256_12: `455377d60229`\n- timeline_id_auto: `false`\n- limit: `25`\n- limit_source: `flag`\n- backup_root_sha256_12: `d2a0479437f9`\n- repo_backup_dir_sha256_12: `6be9f8afed80`\n- index_path_sha256_12: `dcd1fd592f52`\n- readme_path_sha256_12: `6c855e766f43`\n- backup_schema_version: `1`\n- index_generated_at_sha256_12: `5a26214a86f8`\n- verification_failures: `0`\n- issue_count: `743`\n- timeline_points: `25`\n- timeline_order: `chronological`\n- timeline_window: `latest_by_backup_generated_at`\n- first_issue_sha256_12: `43d244581aa2`\n- first_generated_at_sha256_12: `18245b1bd080`\n- latest_issue_sha256_12: `7fc81a57656e`\n- latest_generated_at_sha256_12: `c1da4c346067`\n- total_span_seconds: `31647`\n- timeline_points_sha256_12: `b8d3083646ea`\n- timeline_error_kind: `none`\n- timeline_error_sha256_12: `none`\n- notification_body_sha256_12: `be19380065ab`\n- notification_body_bytes: `7882`\n- notification_body_lines: `46`\n- target_from_current_channel_issue: `true`\n- backup_branch_fetch_performed: `true`\n- raw_backup_payloads_read: `true`\n- restore_performed: `false`\n- backup_branch_write_performed: `false`\n- github_api_replay_performed: `false`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_timeline_id_included: `false`\n- raw_backup_root_included: `false`\n- raw_backup_paths_included: `false`\n- raw_timeline_points_included: `false`\n- raw_backup_payloads_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_titles_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_transcript_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_channel_backup_timeline_change: `true`\n- source_issue_title_sha256_12: `18e019e7b256`\n\nGitClaw inspected the local or read-only fetched gitclaw-backups chronology and queued a provider-facing timeline card. It reports issue numbers, backup timestamps, gaps, counts, and hashes in the provider card while this source receipt keeps raw paths, titles, bodies, comments, transcripts, prompts, tool outputs, provider IDs, and timeline IDs out of band. This action does not write the backup branch, restore files, replay GitHub APIs, call a model, call provider APIs, or mutate the repository.\n\n### Follow-Up Delivery\n- provider gateways read backup-timeline cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent backup-timeline cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate backup-timeline notifications are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T22:02:09Z",
+      "updated_at": "2026-06-03T22:02:09Z"
     }
   ]
 }
