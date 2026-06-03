@@ -24,6 +24,7 @@ func TestRenderChannelListReportCarriesDedicatedE2EMarker(t *testing.T) {
 		"llm_e2e_required_after_channel_list_change: `true`",
 		"`/channels propose-prompt --prompt-id <id> --message-id <message>`",
 		"`/channels propose-bundle --bundle-id <id> --message-id <message>`",
+		"`/channels browser --message-id <message>`",
 		"`/channels model --message-id <message>`",
 		"`/channels skills --message-id <message>`",
 		"`/channels skill-search <query> --message-id <message>`",

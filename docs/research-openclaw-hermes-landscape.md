@@ -6414,6 +6414,36 @@ and a real GitHub Models repo-reader/search follow-up on the channel issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Browser Status Follow-Up
+
+OpenClaw's channel model keeps external chat transport separate from the agent
+session that owns tools and work. Hermes points to the same boundary from the
+browser/tool side: browser automation is useful, but it belongs behind an
+explicit tool/control surface rather than being implied by a casual chat
+message. The GitHub-native translation should let a Slack or Telegram user ask
+"is browser automation reviewed/configured here?" without opening a browser,
+connecting CDP, navigating pages, taking screenshots, or launching a browser
+MCP server.
+
+GitClaw's serverless version is `@gitclaw /channels browser --message-id <id>
+--notify-message-id <id>`. It queues one provider-facing browser-readiness
+message back to the mirrored channel thread with MCP spec counts and
+channel-gateway/outbox workflow presence. The source receipt stays body-free
+for thread ids, message ids, status ids, MCP spec bodies, and channel bodies.
+The action does not call a model, execute tools, open browser sessions,
+navigate pages, take screenshots, launch browser MCP servers, edit workflows,
+call provider APIs, or mutate the repository. Acceptance requires live E2E for
+browser-status queueing, metadata-only outbox discovery, duplicate
+notification suppression, explicit no-browser/no-tool/no-model/no-workflow/
+no-provider-API/no-repo-mutation flags, and a real GitHub Models
+repo-reader/search follow-up on the channel issue.
+
+Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw
+sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes tools guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/tools.md`),
+Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Agenda Follow-Up
 
 OpenClaw's durable workspace framing points toward turning fuzzy chat context

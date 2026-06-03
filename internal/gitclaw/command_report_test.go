@@ -111,6 +111,7 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"Queue provider-facing advisory thread mode cards without executing commands",
 		"create reviewable channel dock requests without changing routebooks or provider routes",
 		"queue provider-facing channel warmup cards with deterministic conversation starters",
+		"queue mirrored channel browser-readiness replies without opening browser sessions",
 		"`gitclaw bundles catalog` command=`/bundles`",
 		"`gitclaw bundles list` command=`/bundles`",
 		"`gitclaw bundles risk` command=`/bundles`",

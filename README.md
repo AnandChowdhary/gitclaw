@@ -749,6 +749,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels link --link-id <id> --url <url> --message-id <id>
 @gitclaw /channels access-request --access-id <id> --scope <scope> --message-id <id>
 @gitclaw /channels platform telegram --state running --message-id <id>
+@gitclaw /channels browser --message-id <id> --notify-message-id <id>
 @gitclaw /channels model --message-id <id>
 @gitclaw /channels skills --message-id <id>
 @gitclaw /channels skill-search <query> --message-id <id> --notify-message-id <id>
@@ -1484,6 +1485,15 @@ workflow-dispatch gateway shape, outbox/delivery path, and adapter state claim.
 It explicitly does not pause/resume adapters, mutate breaker state, change home
 channels, start gateways, call provider APIs, or call a model; source receipts
 hash reasons, home selectors, thread IDs, and message IDs.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels browser
+--message-id <id> --notify-message-id <id>` queues a provider-facing browser
+readiness card back to the current channel thread. It reports reviewed browser
+MCP spec count, total MCP spec count, and channel gateway/outbox workflow
+presence, while keeping browser automation as a separate explicit capability.
+The action does not open browser sessions, navigate pages, take screenshots,
+launch browser MCP servers, execute tools, call a model, edit workflows, call
+provider APIs, or mutate the repository; source receipts hash thread IDs,
+message IDs, status IDs, and never include MCP spec bodies or channel bodies.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels model
 --message-id <id>` queues a provider-facing model-status snapshot back to the
 current channel thread. It reports the effective provider, model, fallback
@@ -2029,6 +2039,7 @@ scripts/e2e/github-channel-compass-slash.sh
 scripts/e2e/github-channel-mode-slash.sh
 scripts/e2e/github-channel-warmup-slash.sh
 scripts/e2e/github-channel-dock-slash.sh
+scripts/e2e/github-channel-browser-status-slash.sh
 scripts/e2e/github-channel-session-search-slash.sh
 scripts/e2e/github-channel-status-slash.sh
 scripts/e2e/github-channel-edit-slash.sh

@@ -7620,6 +7620,34 @@ suppression, verifies no adapter/control side effects occurred, and then
 continues on the channel issue with a normal GitHub Models repo-reader/search
 follow-up.
 
+The same channel-thread issue can answer a browser readiness request without
+opening or controlling a browser:
+
+```text
+@gitclaw /channels browser --message-id <provider-message-id> --notify-message-id <stable-outbound-id>
+```
+
+`/channels browser`, `/channels browsers`, `/channels browser-status`,
+`/channels web-status`, `/channels web`, `/channels playwright-status`,
+`/channels cdp-status`, and `/channels browser-tools` infer the current
+channel and thread id from the issue marker when no explicit route/channel/
+thread target is provided. They queue one provider-facing browser-readiness
+message back to the mirrored thread and do not create any durable artifact
+issue. The provider-visible message can include browser MCP spec counts, total
+MCP spec count, channel gateway workflow presence, channel outbox workflow
+presence, and read-only status-card mode. The source receipt remains body-free
+for thread ids, source message ids, notification message ids, status ids, MCP
+spec bodies, and channel bodies. It does not call a model, execute tools, open
+browser sessions, navigate pages, take screenshots, launch browser MCP servers,
+edit workflows, call provider APIs, mutate the repository, print raw thread
+ids, print raw source or notification message ids, print raw status ids, print
+MCP spec bodies, or print channel message bodies in the source receipt.
+Duplicate notifications are suppressed by `channel + notify_message_id`.
+Changes to this surface require a live E2E that validates the metadata-only
+browser-status outbox, checks duplicate suppression, verifies no browser/tool/
+model/workflow/provider/repository side effects occurred, and then continues
+on the channel issue with a normal GitHub Models repo-reader/search follow-up.
+
 The same channel-thread issue can answer a model/runtime status request without
 calling or switching models:
 
@@ -9245,6 +9273,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels mode tool-review --mode-id channel-mode-1 --message-id provider-msg-1 --notify-message-id provider-mode-ack-1
 @gitclaw /channels warmup tools --warmup-id channel-warmup-1 --message-id provider-msg-1 --notify-message-id provider-warmup-ack-1
 @gitclaw /channels dock design-review --dock-id channel-dock-1 --message-id provider-msg-1 --notify-message-id provider-dock-ack-1
+@gitclaw /channels browser --message-id provider-msg-1 --notify-message-id provider-browser-ack-1
 @gitclaw /channels session-search deployment --message-id provider-msg-1 --notify-message-id provider-search-ack-1
 ```
 
@@ -12433,6 +12462,19 @@ examples/workflows/gitclaw.yml
   `repo-reader`, expose `gitclaw.search_files`, recover the channel-model
   status fixture token, and avoid hidden channel, account, message, status,
   and notification sentinels.
+- A `gh`-driven channel-browser-status-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels browser --message-id ... --notify-message-id ...` on
+  that mirrored thread, verifies body-free source receipt metadata,
+  provider-facing browser-readiness queueing, duplicate notification
+  suppression, metadata-only outbox discovery, and explicit no-browser-session/
+  no-navigation/no-screenshot/no-browser-MCP-launch/no-tool-execution/
+  no-model-call/no-workflow-mutation/no-provider-API/no-repository-mutation
+  flags. The channel-thread issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-browser-status fixture token,
+  and avoid hidden channel, account, message, browser-status, and notification
+  sentinels.
 - A `gh`-driven channel-availability-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels availability --message-id ...` on that mirrored thread,
