@@ -94,7 +94,7 @@ func TestHandleChannelBackupStatusQueuesSnapshotWithoutLLM(t *testing.T) {
 		"Fetched-branch inspection commands: 17",
 		"Metadata-only commands: 1",
 		"Raw recovery commands: 1",
-		"Channel backup actions: status, rehearse-backup, restore-request",
+		"Channel backup actions: status, recovery-map, rehearse-backup, restore-request",
 		"Backup docs: present",
 		"Latest backup freshness: requires fetched backup branch",
 		"Raw backup payloads: not read by this action.",
@@ -144,7 +144,7 @@ func TestHandleChannelBackupStatusQueuesSnapshotWithoutLLM(t *testing.T) {
 		"fetched_branch_required_commands: `17`",
 		"metadata_only_commands: `1`",
 		"raw_recovery_commands: `1`",
-		"provider_visible_backup_actions: `3`",
+		"provider_visible_backup_actions: `4`",
 		"catalog_command_names_sha256_12: `",
 		"backup_status_snapshot_sha256_12: `",
 		"notification_body_sha256_12: `",
@@ -264,7 +264,7 @@ func TestBuildChannelBackupStatusActionRequestParsesRouteAlias(t *testing.T) {
 	if req.Command != "/channel" || req.Subcommand != "recovery-health" || req.Options.Route != "team-demo" || req.Options.SourceMessageID != "source-1" || req.Options.NotifyMessageID != "notify-1" || req.Options.StatusID != "backup-status" {
 		t.Fatalf("unexpected channel backup status parsing: %#v", req)
 	}
-	if req.TargetFromIssue || req.AutoNotifyMessageID || req.AutoSourceMessageID || req.AutoStatusID || req.RequestedRouteHash == "" || req.StatusIDHash == "" || req.CatalogEntries != 18 || req.FetchedBranchRequiredCommands != 17 || req.MetadataOnlyCommands != 1 || req.RawRecoveryCommands != 1 || req.ProviderVisibleActions != 3 || req.CatalogCommandNamesHash == "" || req.BackupStatusSnapshotHash == "" {
+	if req.TargetFromIssue || req.AutoNotifyMessageID || req.AutoSourceMessageID || req.AutoStatusID || req.RequestedRouteHash == "" || req.StatusIDHash == "" || req.CatalogEntries != 18 || req.FetchedBranchRequiredCommands != 17 || req.MetadataOnlyCommands != 1 || req.RawRecoveryCommands != 1 || req.ProviderVisibleActions != 4 || req.CatalogCommandNamesHash == "" || req.BackupStatusSnapshotHash == "" {
 		t.Fatalf("expected explicit route backup-status hashes and counts: %#v", req)
 	}
 }

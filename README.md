@@ -693,6 +693,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels dock <target-route> --dock-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels session-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels memory-search <query> --message-id <id> --notify-message-id <id>
+@gitclaw /channels recovery-map issue --map-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels backup-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels backup-info <issue> --message-id <id> --notify-message-id <id>
 @gitclaw /channels checkpoint-status --message-id <id> --notify-message-id <id>
@@ -1112,6 +1113,16 @@ hashes, memory paths, line numbers, scores, file hashes, line hashes, and
 duplicate status without printing raw search queries, memory bodies, channel
 bodies, issue bodies, comment bodies, prompts, tool outputs, or calling an
 external memory provider.
+`@gitclaw /channels recovery-map <issue|repo|channel|incident> --map-id <id>
+--message-id <id> --notify-message-id <id>` queues a provider-facing backup
+recovery sequence back to Slack/Telegram. The card shows the safe order:
+backup status, backup search, backup info, reviewed rehearsal, then reviewed
+restore request. It reads only repo-local backup catalog metadata and local
+backup docs presence; it does not fetch backup branches, read backup payloads,
+restore files, create rehearsal issues, create restore-request issues, replay
+GitHub APIs, call provider APIs, call a model, or mutate the repository. The
+source receipt keeps raw map ids, scopes, notes, step text, provider ids, issue
+bodies, comments, and backup payloads out of band.
 `@gitclaw /channels backup-search <query> --message-id <id>
 --notify-message-id <id>` searches the durable `gitclaw-backups` archive and
 queues provider-facing recall metadata back to Slack/Telegram. In GitHub
@@ -1730,6 +1741,13 @@ mutate the repository; it reports the backup branch, root, schema, catalog
 counts, and local backup-doc metadata with raw provider ids and repo backup
 paths kept out of the source receipt.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+recovery-map --message-id <id>` queues a provider-facing recovery sequence
+card back to the Slack/Telegram thread. It is the safe next-step bridge between
+backup status and explicit recovery workflow creation: no backup branch fetch,
+payload read, restore, rehearsal issue, restore-request issue, GitHub API
+replay, model call, provider API call, or repository mutation happens in this
+action.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 profile-status --message-id <id>` queues a provider-facing repo-profile
 snapshot back to the Slack/Telegram thread. The channel action does not call a
 model, export profiles, import profiles, switch profiles, read external agent
@@ -1905,6 +1923,7 @@ scripts/e2e/github-backup-rehearse-issue.sh
 scripts/e2e/github-backup-restore-request-issue.sh
 scripts/e2e/github-backup-restore-request-channel-notify.sh
 scripts/e2e/github-channel-backup-status-slash.sh
+scripts/e2e/github-channel-recovery-map-slash.sh
 scripts/e2e/github-channel-backup-search-slash.sh
 scripts/e2e/github-channel-backup-info-slash.sh
 scripts/e2e/github-channel-checkpoint-status-slash.sh
@@ -3045,6 +3064,14 @@ queues a provider-facing backup status snapshot back to the mirrored thread,
 checks duplicate notification suppression, exposes the backup-status
 notification through metadata-only outbox, and then continues on the same
 channel issue with a real GitHub Models repo-reader/search follow-up.
+The channel-recovery-map slash harness turns that cockpit into a safe recovery
+route card: a channel-ingested issue receives `@gitclaw /channels
+recovery-map`, queues one provider-visible status/search/info/rehearsal/restore
+sequence, checks duplicate notification suppression, exposes the card through
+metadata-only outbox, proves no backup fetch/payload read/restore/rehearsal
+issue/restore-request issue/GitHub API replay/provider API/model/repository
+mutation happened, and then continues on the same channel issue with a real
+GitHub Models repo-reader/search follow-up.
 The channel-profile-status slash harness turns the operator console into a
 repo-profile cockpit: a channel-ingested issue receives `@gitclaw /channels
 profile-status`, queues a provider-facing profile snapshot back to the

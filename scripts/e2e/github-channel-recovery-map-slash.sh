@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# gitclaw-doctor-live-issue: channel-backup-status slash action queues provider-visible backup status and proves model/tool follow-up.
+# gitclaw-doctor-live-issue: channel-recovery-map slash action queues provider-visible next-move cards and proves model/tool follow-up.
 set -euo pipefail
 
 log() {
-  echo "channel-backup-status-slash-e2e: $*" >&2
+  echo "channel-recovery-map-slash-e2e: $*" >&2
 }
 
 die() {
@@ -14,10 +14,10 @@ die() {
 repo="${GITCLAW_E2E_REPO:-}"
 ingest_workflow="${GITCLAW_E2E_INGEST_WORKFLOW:-.github/workflows/gitclaw-channel-ingest.yml}"
 main_workflow="${GITCLAW_E2E_WORKFLOW:-.github/workflows/gitclaw.yml}"
-lock_dir="/tmp/gitclaw-channel-backup-status-slash-e2e.lock"
+lock_dir="/tmp/gitclaw-channel-recovery-map-slash-e2e.lock"
 
 if ! mkdir "$lock_dir" 2>/dev/null; then
-  die "another channel-backup-status slash E2E appears to be running: ${lock_dir}"
+  die "another channel-recovery-map slash E2E appears to be running: ${lock_dir}"
 fi
 
 if [[ -z "$repo" ]]; then
@@ -51,17 +51,19 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ | tr '[:upper:]' '[:lower:]')"
 channel="telegram"
-thread_id="channel-backup-status-e2e-${timestamp}"
-ingest_message_id="backup-status-ingest-${timestamp}"
-notify_message_id="backup-status-notify-${timestamp}"
-backup_status_id="backup-status-${timestamp}"
-account_id="telegram-backup-status-account-NOECHO_CHANNEL_BACKUP_STATUS_ACCOUNT_${timestamp}"
-ingest_hidden_token="NOECHO_CHANNEL_BACKUP_STATUS_INGEST_${timestamp}"
-command_hidden_token="NOECHO_CHANNEL_BACKUP_STATUS_COMMAND_${timestamp}"
-duplicate_hidden_token="NOECHO_CHANNEL_BACKUP_STATUS_DUPLICATE_${timestamp}"
-followup_hidden_token="NOECHO_CHANNEL_BACKUP_STATUS_FOLLOWUP_${timestamp}"
-expected_token="GITCLAW_CHANNEL_BACKUP_STATUS_CONTEXT_V1"
-search_phrase="channel backup status unique search fixture phrase"
+thread_id="channel-recovery-map-e2e-${timestamp}"
+ingest_message_id="recovery_map-ingest-${timestamp}"
+notify_message_id="recovery_map-notify-${timestamp}"
+recovery_map_id="recovery_map-${timestamp}"
+recovery_scope="incident"
+recovery_map_note="Keep restore review explicit"
+account_id="telegram-recovery-map-account-NOECHO_CHANNEL_RECOVERY_MAP_ACCOUNT_${timestamp}"
+ingest_hidden_token="NOECHO_CHANNEL_RECOVERY_MAP_INGEST_${timestamp}"
+command_hidden_token="NOECHO_CHANNEL_RECOVERY_MAP_COMMAND_${timestamp}"
+duplicate_hidden_token="NOECHO_CHANNEL_RECOVERY_MAP_DUPLICATE_${timestamp}"
+followup_hidden_token="NOECHO_CHANNEL_RECOVERY_MAP_FOLLOWUP_${timestamp}"
+expected_token="GITCLAW_CHANNEL_RECOVERY_MAP_CONTEXT_V1"
+search_phrase="channel recovery map unique search fixture phrase"
 notify_message_hash="$(sha256_12 "$notify_message_id")"
 issue_number=""
 issue_title="GitClaw ${channel} thread ${thread_id}"
@@ -190,7 +192,7 @@ latest_assistant_comment_for_issue() {
     --jq '[.comments[] | select(.body | contains("gitclaw:assistant-turn")) | .body] | .[-1] // ""'
 }
 
-backup_status_notification_count() {
+recovery_map_notification_count() {
   gh issue view "$issue_number" \
     --repo "$repo" \
     --json comments \
@@ -201,7 +203,7 @@ cleanup() {
   if [[ -n "${issue_number:-}" && "$issue_number" != "null" ]]; then
     gh issue edit "$issue_number" --repo "$repo" --add-label gitclaw:e2e --add-label gitclaw:disabled >/dev/null 2>&1 || true
     if [[ "${GITCLAW_E2E_KEEP_ISSUE:-0}" != "1" ]]; then
-      gh issue close "$issue_number" --repo "$repo" --comment "channel-backup-status slash e2e cleanup" >/dev/null 2>&1 || true
+      gh issue close "$issue_number" --repo "$repo" --comment "channel-recovery-map slash e2e cleanup" >/dev/null 2>&1 || true
     fi
   fi
   rm -rf "$lock_dir"
@@ -210,7 +212,7 @@ trap cleanup EXIT
 
 ingest_body="@gitclaw /channels
 
-Mirrored Telegram thread for channel-backup-status slash E2E.
+Mirrored Telegram thread for channel-recovery-map slash E2E.
 
 Hidden ingest token: ${ingest_hidden_token}"
 
@@ -234,7 +236,7 @@ for _ in {1..90}; do
     die "issue #${issue_number} posted ${errors} error marker comment(s)"
   fi
   candidate_report="$(latest_assistant_comment_for_issue "$issue_number")"
-  if grep -Fq "$ingest_hidden_token" <<<"$candidate_report"; then
+  if grep -Fq -- "$ingest_hidden_token" <<<"$candidate_report"; then
     die "initial channel report leaked ingest hidden token"
   fi
   if grep -Fq "GitClaw Channel Report" <<<"$candidate_report" && grep -Fq 'channel_thread_issue: `true`' <<<"$candidate_report"; then
@@ -245,101 +247,119 @@ for _ in {1..90}; do
 done
 [[ -n "$initial_report" ]] || die "expected initial channel report"
 
-backup_status_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+recovery_map_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \
   --repo "$repo" \
-  --body "@gitclaw /channels backup --message-id ${ingest_message_id} --notify-message-id ${notify_message_id} --status-id ${backup_status_id}
+  --body "@gitclaw /channels recovery-map ${recovery_scope} --message-id ${ingest_message_id} --notify-message-id ${notify_message_id} --map-id ${recovery_map_id}
+Note: ${recovery_map_note}
 Do not include this command hidden token in the receipt: ${command_hidden_token}" >/dev/null
 
-wait_for_issue_comment_run_for_title "$backup_status_started_at" "$issue_title" >/dev/null || die "timed out waiting for channel backup-status action"
-wait_for_assistant_count_for_issue "$issue_number" 2 || die "expected channel backup-status action receipt"
-backup_status_receipt="$(latest_assistant_comment_for_issue "$issue_number")"
+wait_for_issue_comment_run_for_title "$recovery_map_started_at" "$issue_title" >/dev/null || die "timed out waiting for channel recovery map action"
+wait_for_assistant_count_for_issue "$issue_number" 2 || die "expected channel recovery map action receipt"
+recovery_map_receipt="$(latest_assistant_comment_for_issue "$issue_number")"
 for expected in \
-  "GitClaw Channel Backup Status Action" \
+  "GitClaw Channel Recovery Map Action" \
   "Generated without a model call" \
   'model="gitclaw/channels"' \
-  "requested_channel_command: \`/channels backup\`" \
-  "channel_backup_status_status: \`queued\`" \
-  "backup_snapshot_mode: \`provider-facing-backup-status\`" \
+  "requested_channel_command: \`/channels recovery-map\`" \
+  "channel_recovery_map_status: \`queued\`" \
+  "recovery_map_mode: \`provider-facing-recovery-sequence\`" \
   "notification_target_issue: \`#${issue_number}\`" \
   "notification_queued: \`true\`" \
   "notification_duplicate_suppressed: \`false\`" \
   "target_from_current_channel_issue: \`true\`" \
+  "recovery_map_id_sha256_12: \`" \
+  "recovery_map_id_auto: \`false\`" \
+  "recovery_scope_sha256_12: \`" \
+  "recovery_scope_bytes: \`8\`" \
+  "recovery_note_sha256_12: \`" \
+  "recovery_note_bytes: \`28\`" \
+  "recovery_note_lines: \`1\`" \
+  "recovery_note_source: \`trailing-note\`" \
+  "recovery_step_count: \`5\`" \
+  "recovery_step_sha256_12: \`" \
+  "recovery_snapshot_sha256_12: \`" \
   "backup_branch: \`gitclaw-backups\`" \
   "backup_root: \`.gitclaw/backups\`" \
   "backup_schema_version: \`1\`" \
-  "repo_backup_dir_sha256_12: \`" \
-  "index_path_sha256_12: \`" \
-  "readme_path_sha256_12: \`" \
-  "backup_docs_path_sha256_12: \`" \
   "backup_docs_present: \`true\`" \
-  "backup_docs_sha256_12: \`" \
   "catalog_entries: \`18\`" \
   "fetched_branch_required_commands: \`17\`" \
   "metadata_only_commands: \`1\`" \
   "raw_recovery_commands: \`1\`" \
   "provider_visible_backup_actions: \`4\`" \
-  "catalog_command_names_sha256_12: \`" \
-  "backup_status_snapshot_sha256_12: \`" \
   "notification_body_sha256_12: \`" \
   "backup_branch_fetch_performed: \`false\`" \
   "raw_backup_payloads_read: \`false\`" \
   "restore_performed: \`false\`" \
   "backup_branch_write_performed: \`false\`" \
   "github_api_replay_performed: \`false\`" \
+  "rehearsal_issue_created: \`false\`" \
+  "restore_request_issue_created: \`false\`" \
   "model_call_performed: \`false\`" \
+  "provider_api_call_performed: \`false\`" \
   "repository_mutation_performed: \`false\`" \
   "provider_delivery_performed: \`false\`" \
+  "provider_delivery_strategy: \`channel-outbox + channel-delivery\`" \
   "raw_thread_id_included: \`false\`" \
   "raw_source_message_id_included: \`false\`" \
   "raw_notify_message_id_included: \`false\`" \
-  "raw_backup_status_id_included: \`false\`" \
-  "raw_repo_backup_dir_included: \`false\`" \
-  "raw_index_path_included: \`false\`" \
-  "raw_readme_path_included: \`false\`" \
+  "raw_recovery_map_id_included: \`false\`" \
+  "raw_recovery_scope_included: \`false\`" \
+  "raw_recovery_note_included: \`false\`" \
+  "raw_recovery_steps_included: \`false\`" \
   "raw_issue_bodies_included: \`false\`" \
   "raw_comment_bodies_included: \`false\`" \
-  "raw_transcript_bodies_included: \`false\`" \
   "raw_backup_payloads_included: \`false\`" \
   "raw_channel_message_body_included: \`false\`" \
-  "llm_e2e_required_after_channel_backup_status_action_change: \`true\`"; do
-  grep -Fq "$expected" <<<"$backup_status_receipt" || die "channel backup-status receipt missing ${expected}"
+  "llm_e2e_required_after_channel_recovery_map_action_change: \`true\`"; do
+  grep -Fq -- "$expected" <<<"$recovery_map_receipt" || die "channel recovery map receipt missing ${expected}"
 done
-for leaked in "$ingest_hidden_token" "$command_hidden_token" "$thread_id" "$ingest_message_id" "$notify_message_id" "$backup_status_id" "owner__repo" "GITCLAW_CHANNEL_BACKUP_STATUS_CONTEXT_V1"; do
-  if grep -Fq "$leaked" <<<"$backup_status_receipt"; then
-    die "channel backup-status receipt leaked ${leaked}"
+for leaked in "$ingest_hidden_token" "$command_hidden_token" "$thread_id" "$ingest_message_id" "$notify_message_id" "$recovery_map_id" "$recovery_scope" "$recovery_map_note" "$expected_token"; do
+  if grep -Fq -- "$leaked" <<<"$recovery_map_receipt"; then
+    die "channel recovery map receipt leaked ${leaked}"
   fi
 done
 
-[[ "$(backup_status_notification_count)" == "1" ]] || die "channel backup-status did not queue exactly one backup-status notification"
+[[ "$(recovery_map_notification_count)" == "1" ]] || die "channel recovery map did not queue exactly one notification"
 issue_json="$(gh issue view "$issue_number" --repo "$repo" --json body,comments,labels)"
 grep -Fq "gitclaw:channel-thread" <<<"$(jq -r '.body' <<<"$issue_json")" || die "channel issue lost channel-thread marker"
 notification_bodies="$(jq -r '[.comments[].body | select(contains("<!-- gitclaw:channel-outbound") and contains("'"${notify_message_id}"'"))] | join("\n")' <<<"$issue_json")"
 for expected in \
-  "GitClaw channel backup status." \
+  "GitClaw channel recovery map." \
+  "Scope: ${recovery_scope}" \
   "Backup branch: gitclaw-backups" \
   "Backup root: .gitclaw/backups" \
   "Schema version: 1" \
+  "Backup docs: present" \
   "Catalog commands: 18" \
   "Fetched-branch inspection commands: 17" \
-  "Metadata-only commands: 1" \
-  "Raw recovery commands: 1" \
-  "Channel backup actions: status, recovery-map, rehearse-backup, restore-request" \
-  "Backup docs: present" \
-  "Latest backup freshness: requires fetched backup branch" \
-  "Raw backup payloads: not read by this action." \
+  "Recovery sequence:" \
+  "\`/channels backup --message-id <id> --notify-message-id <id>\`" \
+  "\`/channels backup-search <query> --message-id <id> --notify-message-id <id>\`" \
+  "\`/channels backup-info <issue> --message-id <id> --notify-message-id <id>\`" \
+  "\`/channels rehearse-backup --issue <issue> --id <id> --message-id <id>\`" \
+  "\`/channels restore-request --issue <issue> --id <id> --message-id <id>\`" \
+  "Note: ${recovery_map_note}" \
+  "Note hash: " \
+  "Recovery map hash: " \
+  "Recovery step hash: " \
+  "Map source: current GitHub Actions checkout backup catalog." \
   "Backup branch fetch: not performed by this action." \
+  "Raw backup payloads: not read by this action." \
   "Restore: not performed by this action." \
-  "Backup branch write: not performed by this action." \
+  "Rehearsal issue creation: not performed by this action." \
+  "Restore-request issue creation: not performed by this action." \
   "GitHub API replay: not performed by this action." \
   "Model call: not performed by this action." \
+  "Provider API call: not performed by this action." \
   "Repository mutation: not performed by this action." \
   "Provider delivery: queued through GitHub channel outbox."; do
-  grep -Fq "$expected" <<<"$notification_bodies" || die "backup-status notification missing ${expected}"
+  grep -Fq -- "$expected" <<<"$notification_bodies" || die "recovery_map notification missing ${expected}"
 done
-for leaked in "$ingest_hidden_token" "$command_hidden_token" "$backup_status_id" "GITCLAW_CHANNEL_BACKUP_STATUS_CONTEXT_V1"; do
-  if grep -Fq "$leaked" <<<"$notification_bodies"; then
-    die "backup-status notification leaked ${leaked}"
+for leaked in "$ingest_hidden_token" "$command_hidden_token" "$recovery_map_id" "$expected_token"; do
+  if grep -Fq -- "$leaked" <<<"$notification_bodies"; then
+    die "recovery_map notification leaked ${leaked}"
   fi
 done
 
@@ -351,9 +371,9 @@ outbox_output="$(GITCLAW_CHANNEL="$channel" \
 grep -Fq "channel_outbox issue=${issue_number}" <<<"$outbox_output" || die "channel outbox output missing issue number: ${outbox_output}"
 grep -Fq "outbound_comments=1" <<<"$outbox_output" || die "channel outbox output missing outbound count: ${outbox_output}"
 grep -Fq "body_included=false" <<<"$outbox_output" || die "channel outbox should be metadata-only: ${outbox_output}"
-jq -e --arg hash "$notify_message_hash" '.messages[] | select(.kind == "channel-outbound" and .outbound_message_sha256_12 == $hash)' "$outbox_file" >/dev/null || die "outbox file missing backup-status notify hash ${notify_message_hash}"
-for leaked in "$account_id" "$ingest_hidden_token" "$command_hidden_token" "$backup_status_id" "GITCLAW_CHANNEL_BACKUP_STATUS_CONTEXT_V1"; do
-  if grep -Fq "$leaked" <<<"$outbox_output" || grep -Fq "$leaked" "$outbox_file"; then
+jq -e --arg hash "$notify_message_hash" '.messages[] | select(.kind == "channel-outbound" and .outbound_message_sha256_12 == $hash)' "$outbox_file" >/dev/null || die "outbox file missing recovery_map notify hash ${notify_message_hash}"
+for leaked in "$account_id" "$ingest_hidden_token" "$command_hidden_token" "$recovery_map_id" "$expected_token" "$recovery_scope" "$recovery_map_note"; do
+  if grep -Fq -- "$leaked" <<<"$outbox_output" || grep -Fq -- "$leaked" "$outbox_file"; then
     die "metadata-only outbox leaked ${leaked}"
   fi
 done
@@ -361,17 +381,17 @@ done
 duplicate_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \
   --repo "$repo" \
-  --body "@gitclaw /channels backup-status --message-id ${ingest_message_id} --notify-message-id ${notify_message_id} --status-id ${backup_status_id}
+  --body "@gitclaw /channels restore-map ${recovery_scope} --message-id ${ingest_message_id} --notify-message-id ${notify_message_id} --map-id ${recovery_map_id}
+Note: ${recovery_map_note}
 Do not include this duplicate hidden token in any receipt: ${duplicate_hidden_token}" >/dev/null
 
-wait_for_issue_comment_run_for_title "$duplicate_started_at" "$issue_title" >/dev/null || die "timed out waiting for duplicate channel backup-status action"
-wait_for_assistant_count_for_issue "$issue_number" 3 || die "expected duplicate channel backup-status receipt"
+wait_for_issue_comment_run_for_title "$duplicate_started_at" "$issue_title" >/dev/null || die "timed out waiting for duplicate channel recovery map action"
+wait_for_assistant_count_for_issue "$issue_number" 3 || die "expected duplicate channel recovery map receipt"
 duplicate_receipt="$(latest_assistant_comment_for_issue "$issue_number")"
 for expected in \
-  "GitClaw Channel Backup Status Action" \
-  "requested_channel_command: \`/channels backup-status\`" \
-  "channel_backup_status_status: \`duplicate\`" \
-  "notification_target_issue: \`#${issue_number}\`" \
+  "GitClaw Channel Recovery Map Action" \
+  "requested_channel_command: \`/channels restore-map\`" \
+  "channel_recovery_map_status: \`duplicate\`" \
   "notification_queued: \`false\`" \
   "notification_duplicate_suppressed: \`true\`" \
   "backup_branch_fetch_performed: \`false\`" \
@@ -379,47 +399,50 @@ for expected in \
   "restore_performed: \`false\`" \
   "backup_branch_write_performed: \`false\`" \
   "github_api_replay_performed: \`false\`" \
+  "rehearsal_issue_created: \`false\`" \
+  "restore_request_issue_created: \`false\`" \
   "model_call_performed: \`false\`" \
+  "provider_api_call_performed: \`false\`" \
   "repository_mutation_performed: \`false\`"; do
-  grep -Fq "$expected" <<<"$duplicate_receipt" || die "duplicate channel backup-status receipt missing ${expected}"
+  grep -Fq -- "$expected" <<<"$duplicate_receipt" || die "duplicate channel recovery map receipt missing ${expected}"
 done
-[[ "$(backup_status_notification_count)" == "1" ]] || die "duplicate channel backup-status queued another notification"
-for leaked in "$duplicate_hidden_token" "$thread_id" "$ingest_message_id" "$notify_message_id" "$backup_status_id" "owner__repo" "GITCLAW_CHANNEL_BACKUP_STATUS_CONTEXT_V1"; do
-  if grep -Fq "$leaked" <<<"$duplicate_receipt"; then
-    die "duplicate channel backup-status receipt leaked ${leaked}"
+[[ "$(recovery_map_notification_count)" == "1" ]] || die "duplicate channel recovery map queued another notification"
+for leaked in "$duplicate_hidden_token" "$thread_id" "$ingest_message_id" "$notify_message_id" "$recovery_map_id" "$recovery_scope" "$recovery_map_note" "$expected_token"; do
+  if grep -Fq -- "$leaked" <<<"$duplicate_receipt"; then
+    die "duplicate channel recovery map receipt leaked ${leaked}"
   fi
 done
 
 model_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \
   --repo "$repo" \
-  --body "@gitclaw Continue this channel backup-status thread and use the repo-reader skill.
+  --body "@gitclaw Continue this channel recovery map thread and use the repo-reader skill.
 
 Search the repository for \`${search_phrase}\`.
 The matching repository search result line has the form \`${search_phrase} => <token>\`.
-The exact answer starts with \`GITCLAW_CHANNEL_BACKUP_STATUS_\`.
+The exact answer starts with \`GITCLAW_CHANNEL_RECOVERY_MAP_\`.
 Reply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.
 Do not reply with a placeholder like \`<token>\` or the word \`token\`.
-Do not include provider ids, notification ids, thread ids, message ids, account hashes, backup-status ids, backup paths, backup doc contents, backup payloads, issue numbers, or previous channel bodies.
+Do not include provider ids, notification ids, thread ids, message ids, account hashes, recovery map ids, recovery scopes, recovery notes, recovery steps, backup docs, issue numbers, or previous channel bodies.
 Do not include this hidden follow-up token: ${followup_hidden_token}
 Keep the answer under 30 words." >/dev/null
 
-model_run_json="$(wait_for_issue_comment_run_for_title "$model_started_at" "$issue_title")" || die "timed out waiting for channel backup-status model follow-up"
-wait_for_assistant_count_for_issue "$issue_number" 4 || die "expected model-backed channel backup-status follow-up"
+model_run_json="$(wait_for_issue_comment_run_for_title "$model_started_at" "$issue_title")" || die "timed out waiting for channel recovery map model follow-up"
+wait_for_assistant_count_for_issue "$issue_number" 4 || die "expected model-backed channel recovery map follow-up"
 model_comment="$(latest_assistant_comment_for_issue "$issue_number")"
 
-grep -Fq "$expected_token" <<<"$model_comment" || die "assistant did not include channel backup-status search_files token ${expected_token}"
+grep -Fq -- "$expected_token" <<<"$model_comment" || die "assistant did not include channel recovery map search_files token ${expected_token}"
 if ! grep -Fq 'model="openai/gpt-5-nano"' <<<"$model_comment" && ! grep -Fq 'model="openai/gpt-4.1-nano"' <<<"$model_comment"; then
-  die "assistant channel backup-status follow-up marker did not use configured GitHub Models primary or fallback"
+  die "assistant channel recovery map follow-up marker did not use configured GitHub Models primary or fallback"
 fi
-grep -Fq 'prompt_context_sha256_12="' <<<"$model_comment" || die "assistant channel backup-status follow-up marker missing prompt context hash"
-grep -Fq 'skills="repo-reader"' <<<"$model_comment" || die "assistant channel backup-status follow-up marker missing selected repo-reader skill"
-grep -Fq 'tools="' <<<"$model_comment" || die "assistant channel backup-status follow-up marker missing prompt-visible tools"
-grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant channel backup-status follow-up marker did not prove search_files was prompt-visible"
-grep -Fq 'usage_total_tokens="' <<<"$model_comment" || die "assistant channel backup-status follow-up marker missing usage token telemetry"
-for leaked in "$ingest_hidden_token" "$command_hidden_token" "$duplicate_hidden_token" "$followup_hidden_token" "$backup_status_id" "$account_id"; do
-  if grep -Fq "$leaked" <<<"$model_comment"; then
-    die "model channel backup-status follow-up leaked ${leaked}"
+grep -Fq 'prompt_context_sha256_12="' <<<"$model_comment" || die "assistant channel recovery map follow-up marker missing prompt context hash"
+grep -Fq 'skills="repo-reader"' <<<"$model_comment" || die "assistant channel recovery map follow-up marker missing selected repo-reader skill"
+grep -Fq 'tools="' <<<"$model_comment" || die "assistant channel recovery map follow-up marker missing prompt-visible tools"
+grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant channel recovery map follow-up marker did not prove search_files was prompt-visible"
+grep -Fq 'usage_total_tokens="' <<<"$model_comment" || die "assistant channel recovery map follow-up marker missing usage token telemetry"
+for leaked in "$ingest_hidden_token" "$command_hidden_token" "$duplicate_hidden_token" "$followup_hidden_token" "$recovery_map_id" "$recovery_map_note" "$account_id"; do
+  if grep -Fq -- "$leaked" <<<"$model_comment"; then
+    die "model channel recovery map follow-up leaked ${leaked}"
   fi
 done
 

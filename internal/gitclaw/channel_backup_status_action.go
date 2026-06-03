@@ -596,7 +596,7 @@ func backupCatalogCommandNames(entries []backupCatalogEntry) []string {
 }
 
 func channelBackupStatusProviderActions() []string {
-	return []string{"status", "rehearse-backup", "restore-request"}
+	return []string{"status", "recovery-map", "rehearse-backup", "restore-request"}
 }
 
 func channelBackupStatusPresentLabel(present bool) string {

@@ -8736,6 +8736,37 @@ metadata-only backup-status outbox, checks duplicate suppression, and then
 continues on the same channel issue with a normal GitHub Models
 repo-reader/search follow-up.
 
+The same channel-thread issue can also ask for a provider-facing recovery map:
+
+```text
+@gitclaw /channels recovery-map incident --map-id <stable-map-id> --message-id <provider-message-id> --notify-message-id <provider-notify-id>
+Note: Keep restore review explicit.
+```
+
+`/channels recovery-map`, `/channels restore-map`, `/channels backup-map`,
+`/channels recovery-path`, `/channels restore-path`, `/channels backup-path`,
+`/channels recovery-flow`, and `/channels restore-flow` infer the current
+channel and thread id from the issue marker when no explicit route/channel/
+thread target is provided. They queue one provider-facing recovery sequence
+card back to the mirrored thread and suppress duplicates by `channel +
+notify_message_id`. This is a channel map, not recovery execution: the action
+does not call a model, fetch the backup branch, read raw backup payloads,
+restore files, create rehearsal issues, create restore-request issues, replay
+GitHub API calls, call provider APIs, or mutate repository files. The provider
+message reports the backup branch, backup root, schema version, backup-doc
+presence, catalog counts, and the safe next steps: backup status, backup
+search, backup info, reviewed recovery rehearsal, then reviewed restore
+request. The source receipt remains body-free, reporting only hashes, sizes,
+counts, duplicate status, notification metadata, and hard delivery gates. It
+does not print raw map ids, raw scope values, raw notes, raw provider thread/
+message ids, raw recovery steps, raw channel message bodies, source bodies,
+backup payload bodies, issue bodies, comment bodies, or transcripts. Changes
+to this surface require a live E2E that records the recovery-map request,
+validates the metadata-only outbox, checks duplicate suppression, proves no
+backup fetch/payload read/restore/recovery issue/API replay/model/provider API/
+repository mutation happened, and then continues on the same channel issue
+with a normal GitHub Models repo-reader/search follow-up.
+
 The same channel-thread issue can also turn a mirrored provider message into a
 backup recovery rehearsal lane:
 
@@ -9344,6 +9375,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels propose-memory --target long-term --id channel-memory-proposal-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-memory --target long-term --id channel-memory-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels backup --message-id provider-msg-1
+@gitclaw /channels recovery-map incident --map-id channel-recovery-map-1 --message-id provider-msg-1 --notify-message-id provider-recovery-map-ack-1
 @gitclaw /channels backup-search deployment --message-id provider-msg-1 --notify-message-id provider-backup-search-ack-1
 @gitclaw /channels backup-info #123 --message-id provider-msg-1 --notify-message-id provider-backup-info-ack-1
 @gitclaw /channels profile-status --message-id provider-msg-1
@@ -12948,6 +12980,19 @@ examples/workflows/gitclaw.yml
   issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-backup-status fixture token, and
   avoid hidden channel, account, provider, message, status, backup-doc, path,
+  source-body, and backup sentinels.
+- A `gh`-driven channel-recovery-map-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels recovery-map --message-id ... --notify-message-id ...`
+  on that mirrored thread, verifies the provider-facing backup recovery
+  sequence card, body-free source receipt metadata, duplicate notification
+  suppression, no backup-branch fetch, no raw backup payload reads, no restore,
+  no rehearsal issue, no restore-request issue, no GitHub API replay, no
+  provider API call, no model call, no repository mutation, and metadata-only
+  outbox discovery. The same channel issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-recovery-map fixture token, and
+  avoid hidden channel, account, provider, message, map, step, backup-doc,
   source-body, and backup sentinels.
 - A `gh`-driven channel-backup-info-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, waits until that
