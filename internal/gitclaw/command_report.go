@@ -89,7 +89,8 @@ func renderCommandReport(ev Event, cfg Config, includeIssue bool) string {
 
 	b.WriteString("### Slash Commands\n")
 	for _, entry := range commandCatalog {
-		fmt.Fprintf(&b, "- `%s` model=`%s` category=`%s` aliases=`%s` - %s\n", entry.Command, entry.Model, entry.Category, inlineList(entry.Aliases), entry.Summary)
+		summary := commandSummaryForReport(entry)
+		fmt.Fprintf(&b, "- `%s` model=`%s` category=`%s` aliases=`%s` - %s\n", entry.Command, entry.Model, entry.Category, inlineList(entry.Aliases), summary)
 	}
 
 	b.WriteString("\n### Local CLI Helpers\n")
@@ -104,6 +105,16 @@ func renderCommandReport(ev Event, cfg Config, includeIssue bool) string {
 		b.WriteString("- none\n")
 	}
 	return strings.TrimSpace(b.String())
+}
+
+func commandSummaryForReport(entry commandCatalogEntry) string {
+	if entry.Command != "/channels" {
+		return entry.Summary
+	}
+	if strings.Contains(entry.Summary, "capture channel-origin boundaries") {
+		return entry.Summary
+	}
+	return entry.Summary + " Capture channel-origin boundaries as reviewable GitHub issues without enforcement, allowlist changes, pairing codes, workflow/provider-setting mutations, soul writes, memory writes, policy mutations, skill installs, or repo files."
 }
 
 func commandCatalogNames() []string {

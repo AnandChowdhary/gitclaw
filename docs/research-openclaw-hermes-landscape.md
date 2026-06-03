@@ -5126,6 +5126,37 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Boundary Follow-Up
+
+OpenClaw's channel/session framing treats each external channel as a durable
+conversation surface with recoverable session state rather than a transient
+chat socket. Hermes' cron and messaging docs reinforce a complementary split:
+scheduled or proactive work can be represented as normal agent work, while
+provider adapters stay at the edge and messages are routed into agent
+sessions. GitClaw's useful translation is to make channel-origin norms
+reviewable GitHub issues, not implicit runtime policy.
+
+GitClaw's version is `@gitclaw /channels boundary --boundary-id <id>
+--message-id <id>`. It opens or reuses a normal
+`gitclaw:channel-boundary` issue with readable title, boundary, scope, reason,
+and review timing, queues one provider-facing boundary link with only title and
+review timing back to the source Slack/Telegram thread, and keeps the source
+receipt body-free with boundary/thread/message/section hashes, duplicate
+status, notification metadata, and explicit non-mutation gates. The action
+does not call a model, enforce the boundary, change allowlists, issue pairing
+codes, mutate workflows or provider settings, write SOUL.md, write memory,
+mutate policy, install skills, call provider APIs, or mutate the repository.
+Acceptance requires live E2E for boundary issue creation, metadata-only
+boundary-link outbox discovery, duplicate suppression, the explicit
+non-enforcement gates, and a real GitHub Models repo-reader/search follow-up on
+the boundary issue.
+
+Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw CLI
+sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes cron
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/cron/`),
+Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Ritual Follow-Up
 
 OpenClaw's current channel docs frame chat apps as Gateway-connected surfaces:

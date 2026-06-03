@@ -298,6 +298,30 @@ func TestChannelDoneArtifactRefSupportsLoreIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsBoundaryIssues(t *testing.T) {
+	body := RenderChannelBoundaryIssueBody(ChannelBoundaryOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		BoundaryID:        "boundary-done-1",
+		Title:             "Launch room boundary",
+		Boundary:          "Keep consent-sensitive decisions in GitHub review issues.",
+		Scope:             "Applies to release week channel conversations.",
+		Reason:            "Saved by a channel action.",
+		Review:            "Review when the launch process changes.",
+		SourceIssueNumber: 42,
+		SourceCommentID:   4200,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "boundary" || ref.ID != "boundary-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 42 || ref.SourceCommentID != 4200 {
+		t.Fatalf("unexpected boundary artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsSnippetIssues(t *testing.T) {
 	body := RenderChannelSnippetIssueBody(ChannelSnippetOptions{
 		Repo:              "owner/repo",

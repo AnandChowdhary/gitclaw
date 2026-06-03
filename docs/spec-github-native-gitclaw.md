@@ -5711,6 +5711,7 @@ accepts a structured reaction form:
 @gitclaw /channels pact --pact-id <stable-pact-id> --message-id <provider-message-id>
 @gitclaw /channels forecast --forecast-id <stable-forecast-id> --message-id <provider-message-id>
 @gitclaw /channels lore --lore-id <stable-lore-id> --message-id <provider-message-id>
+@gitclaw /channels boundary --boundary-id <stable-boundary-id> --message-id <provider-message-id>
 @gitclaw /channels retro --retro-id <stable-retro-id> --message-id <provider-message-id>
 @gitclaw /channels playbook --playbook-id <stable-playbook-id> --message-id <provider-message-id>
 @gitclaw /channels insight --insight-id <stable-insight-id> --message-id <provider-message-id>
@@ -6752,6 +6753,48 @@ this surface require a live E2E that captures the lore, validates the
 metadata-only lore-link outbox, checks duplicate suppression, proves no
 soul/memory/policy/skill/repository mutation occurred, and then continues on
 the lore issue with a normal GitHub Models repo-reader/search follow-up.
+
+The same channel-thread issue can also capture a boundary, guardrail,
+constraint, or consent note without enforcing it:
+
+```text
+@gitclaw /channels boundary --boundary-id <stable-boundary-id> --message-id <provider-message-id>
+Title: short boundary title
+Boundary:
+the norm, constraint, consent note, or guardrail to preserve
+Scope:
+where the boundary applies
+Reason:
+why this boundary was captured
+Review:
+when to revisit, retire, or promote it
+```
+
+`/channels boundary`, `/channels guardrail`, `/channels constraint`,
+`/channels consent`, `/channels ground-rule`, and `/channels house-rule` infer
+the current channel and thread id from the issue marker when no explicit
+route/channel/thread target is provided. They create or reuse one open GitHub
+issue carrying a hidden `gitclaw:channel-boundary` marker for the stable
+boundary id, label it with `gitclaw` so normal conversation can continue there,
+and queue a provider-facing boundary link with the visible title and review
+timing back to the mirrored channel thread. The boundary issue contains the
+human-readable title, boundary, scope, reason, and review note because it is a
+review surface for channel-origin norms, not an enforcement system. The source
+receipt remains body-free, reporting only boundary/thread/message/section
+hashes, duplicate status, notification queue metadata, and delivery gates. It
+does not call a model, call provider APIs, enforce the boundary, change
+allowlists, issue pairing codes, write SOUL.md, write `.gitclaw/MEMORY.md`,
+mutate policy, install skills, mutate workflows, mutate provider settings,
+mutate the repository, print raw boundary ids, print raw thread ids, print raw
+source or notification message ids, print channel message bodies, or print raw
+boundary sections in the source receipt. Duplicates are suppressed first by
+`boundary_id` for the GitHub boundary issue and then by
+`channel + notify_message_id` for the provider-facing boundary link. Changes
+to this surface require a live E2E that captures the boundary, validates the
+metadata-only boundary-link outbox, checks duplicate suppression, proves no
+enforcement/allowlist/pairing-code/workflow/provider-setting/soul/memory/
+policy/skill/repository mutation occurred, and then continues on the boundary
+issue with a normal GitHub Models repo-reader/search follow-up.
 
 The same channel-thread issue can also capture a live brainstorm jam:
 
@@ -8617,6 +8660,12 @@ Behavior:
   provider-facing lore-link outbound comment per `channel + notify_message_id`
   without writing SOUL.md, writing memory, mutating policy, installing skills,
   mutating repository files, provider API calls, or model calls,
+- create or reuse one `gitclaw:channel-boundary` issue per boundary id and
+  queue one provider-facing boundary-link outbound comment per
+  `channel + notify_message_id` without enforcing the boundary, changing
+  allowlists, issuing pairing codes, mutating workflows or provider settings,
+  writing SOUL.md, writing memory, mutating policy, installing skills, mutating
+  repository files, provider API calls, or model calls,
 - create or reuse one `gitclaw:channel-kudos` issue per kudos id and queue
   one provider-facing acknowledgement outbound comment per
   `channel + notify_message_id`,
@@ -8719,6 +8768,7 @@ Behavior:
   `gitclaw:channel-digest`, `gitclaw:channel-idea`,
   `gitclaw:channel-jam`, `gitclaw:channel-pact`,
   `gitclaw:channel-forecast`, `gitclaw:channel-lore`,
+  `gitclaw:channel-boundary`,
   `gitclaw:channel-kudos`, `gitclaw:channel-retro`,
   `gitclaw:channel-playbook`, `gitclaw:channel-insight`,
   `gitclaw:channel-board-card`, `gitclaw:channel-checklist`,
@@ -8923,6 +8973,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels pact --pact-id channel-pact-1 --message-id provider-msg-1
 @gitclaw /channels forecast --forecast-id channel-forecast-1 --message-id provider-msg-1
 @gitclaw /channels lore --lore-id channel-lore-1 --message-id provider-msg-1
+@gitclaw /channels boundary --boundary-id channel-boundary-1 --message-id provider-msg-1
 @gitclaw /channels whiteboard --jam-id channel-jam-1 --message-id provider-msg-1
 @gitclaw /channels kudos --kudos-id channel-kudos-1 --message-id provider-msg-1
 @gitclaw /channels retro --retro-id channel-retro-1 --message-id provider-msg-1
@@ -11881,6 +11932,18 @@ examples/workflows/gitclaw.yml
   `gitclaw.search_files`, recover the channel-lore fixture token, and avoid
   hidden channel, account, provider, message, lore, context, source, and review
   sentinels.
+- A `gh`-driven channel-boundary-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels boundary --boundary-id ... --message-id ...` on that
+  mirrored thread, verifies GitHub boundary issue creation, body-free source
+  receipt metadata, provider-facing boundary-link queueing with title and
+  review timing, duplicate boundary and notification suppression, explicit no
+  enforcement/allowlist/pairing-code/workflow/provider-setting/soul/memory/
+  policy/skill/repository mutation gates, and metadata-only outbox discovery.
+  The boundary issue then gets a normal GitHub Models issue-comment follow-up
+  that must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-boundary fixture token, and avoid hidden channel, account, provider,
+  message, boundary, scope, reason, and review sentinels.
 - A `gh`-driven channel-jam-slash E2E harness creates a real channel-thread
   issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels whiteboard --jam-id ... --message-id ...` on that mirrored

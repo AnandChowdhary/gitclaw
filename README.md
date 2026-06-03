@@ -726,6 +726,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels pact --pact-id <id> --message-id <id>
 @gitclaw /channels forecast --forecast-id <id> --message-id <id>
 @gitclaw /channels lore --lore-id <id> --message-id <id>
+@gitclaw /channels boundary --boundary-id <id> --message-id <id>
 @gitclaw /channels whiteboard --jam-id <id> --message-id <id>
 @gitclaw /channels kudos --kudos-id <id> --message-id <id>
 @gitclaw /channels retro --retro-id <id> --message-id <id>
@@ -1296,6 +1297,16 @@ revisited without writing SOUL.md, memory, policy, skills, or repository files;
 the channel action queues a provider-facing lore link with title and review
 timing and keeps the source receipt body-free with hashes, duplicate state,
 notification metadata, and delivery gates.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels boundary
+--boundary-id <id> --message-id <id>` captures channel-origin boundaries,
+guardrails, constraints, or consent notes as durable GitHub boundary issues.
+The boundary issue holds the readable title, boundary, scope, reason, and
+review note so norms can be revisited without enforcement, allowlist changes,
+pairing codes, workflow/provider-setting mutations, SOUL.md writes, memory
+writes, policy mutations, skill installs, or repository files; the channel
+action queues a provider-facing boundary link with title and review timing and
+keeps the source receipt body-free with hashes, duplicate state, notification
+metadata, and delivery gates.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels whiteboard
 --jam-id <id> --message-id <id>` captures a messy channel brainstorm as a
 durable GitHub jam issue. The jam issue holds the readable topic and seeds,
@@ -1982,6 +1993,7 @@ scripts/e2e/github-channel-ritual-slash.sh
 scripts/e2e/github-channel-pact-slash.sh
 scripts/e2e/github-channel-forecast-slash.sh
 scripts/e2e/github-channel-lore-slash.sh
+scripts/e2e/github-channel-boundary-slash.sh
 scripts/e2e/github-channel-jam-slash.sh
 scripts/e2e/github-channel-kudos-slash.sh
 scripts/e2e/github-channel-retro-slash.sh
@@ -2531,6 +2543,16 @@ notification suppression, proves no soul/memory/policy/skill/repository
 mutation was performed, exposes the lore-link notification through
 metadata-only outbox, and then continues on the lore issue with a real GitHub
 Models repo-reader/search follow-up.
+The channel-boundary slash harness turns the operator console into a reviewable
+norms lane: a channel-ingested issue receives `@gitclaw /channels boundary`,
+creates or reuses a durable GitHub boundary issue with readable title,
+boundary, scope, reason, and review note, queues a provider-facing boundary
+link with title and review timing back to the mirrored thread, checks duplicate
+boundary and notification suppression, proves no enforcement, allowlist,
+pairing-code, workflow/provider-setting, soul, memory, policy, skill, or
+repository mutation was performed, exposes the boundary-link notification
+through metadata-only outbox, and then continues on the boundary issue with a
+real GitHub Models repo-reader/search follow-up.
 The channel-jam slash harness turns the operator console into a brainstorm
 lane: a channel-ingested issue receives `@gitclaw /channels whiteboard`, creates or
 reuses a durable GitHub jam issue with the readable topic and seeds, queues a
