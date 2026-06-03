@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T22:09:01Z",
+  "generated_at": "2026-06-03T22:10:46Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 744,
   "issues": [
@@ -9488,15 +9488,15 @@
       "number": 854,
       "title": "GitClaw telegram thread channel-spark-e2e-20260603t220643z",
       "path": "issues/000854.json",
-      "backup_generated_at": "2026-06-03T22:08:59Z",
-      "event_name": "workflow_dispatch",
+      "backup_generated_at": "2026-06-03T22:10:45Z",
+      "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 3,
-      "transcript_messages": 4
+      "comment_count": 5,
+      "transcript_messages": 5
     }
   ]
 }
