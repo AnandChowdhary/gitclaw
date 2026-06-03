@@ -5451,26 +5451,35 @@ Options:
 - Fast path
 - Careful path
 - Ask again tomorrow
+
+@gitclaw /channels oracle --choose-id <stable-choose-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
+Question: Should we ship the tiny feature?
 ```
 
 `/channels choose`, `/channels choice`, `/channels pick`, `/channels select`,
-and `/channels decide` queue one provider-facing selected option back onto the
-current `gitclaw:channel-thread` issue or an explicit reviewed route. Choices
-can come from repeated `--option <value>` flags, a compact `--options
-alpha|beta|gamma` field for simple one-word inputs, or bullet/numbered lines
-after an `Options:` or `Choices:` heading in the comment body. The selected
-choice is derived from a deterministic seed containing the repository, channel,
-thread, source message id, notification message id, choose id, and normalized
-choice-list hash. The provider-facing outbound comment may show the selected
-choice; the source receipt remains body-free and reports only hashes, counts,
-selected index, duplicate status, outbox delivery instructions, and safety
-gates. It does not call a model, use external randomness, call provider APIs,
-mutate the repository, print raw choices, or print the raw selected choice.
+`/channels decide`, `/channels oracle`, `/channels fortune`, `/channels 8ball`,
+`/channels 8-ball`, `/channels magic-8`, `/channels magic-8-ball`, and
+`/channels fate` queue one provider-facing selected option or bounded oracle
+answer back onto the current `gitclaw:channel-thread` issue or an explicit
+reviewed route. Choices can come from repeated `--option <value>` flags, a
+compact `--options alpha|beta|gamma` field for simple one-word inputs, or
+bullet/numbered lines after an `Options:` or `Choices:` heading in the comment
+body. Oracle aliases may omit explicit options; in that case GitClaw uses a
+bounded static answer deck and an optional `--question`/`Question:` prompt. The
+selected choice or answer is derived from a deterministic seed containing the
+repository, channel, thread, source message id, notification message id, choose
+id, mode, question hash, and normalized choice-list/deck hash. The
+provider-facing outbound comment may show the selected choice, question, or
+oracle answer; the source receipt remains body-free and reports only hashes,
+counts, selected index, duplicate status, outbox delivery instructions, and
+safety gates. It does not call a model, use external randomness, call
+prediction services, call provider APIs, mutate the repository, print raw
+questions, print raw choices, or print the raw selected choice/answer.
 Duplicates are suppressed by `channel + notify_message_id`. Changes to this
 surface require a live E2E that ingests a real channel issue, queues the
-deterministic choice, validates metadata-only outbox discovery, verifies
-duplicate suppression, and then continues on the same GitHub issue with a real
-GitHub Models repo-reader/search follow-up.
+deterministic choice or oracle answer, validates metadata-only outbox discovery,
+verifies duplicate suppression, and then continues on the same GitHub issue
+with a real GitHub Models repo-reader/search follow-up.
 
 For channel-native presence signals that should feel more like chat than a
 report, GitClaw also supports:

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# gitclaw-doctor-live-issue: channel-choose slash action queues deterministic provider-visible option picks and proves model/tool follow-up.
+# gitclaw-doctor-live-issue: channel-choose slash action queues deterministic provider-visible oracle/option picks and proves model/tool follow-up.
 set -euo pipefail
 
 log() {
@@ -51,20 +51,18 @@ ensure_label gitclaw:disabled 6a737d "Disable GitClaw on this issue"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ | tr '[:upper:]' '[:lower:]')"
 channel="telegram"
-thread_id="channel-choose-e2e-${timestamp}"
-ingest_message_id="choose-ingest-${timestamp}"
-notify_message_id="choose-notify-${timestamp}"
-choose_id="choose-${timestamp}"
-choice_a="Alpha Lane"
-choice_b="Beta Lane"
-choice_c="Gamma Lane"
-account_id="telegram-choose-account-NOECHO_CHANNEL_CHOOSE_ACCOUNT_${timestamp}"
-ingest_hidden_token="NOECHO_CHANNEL_CHOOSE_INGEST_${timestamp}"
-command_hidden_token="NOECHO_CHANNEL_CHOOSE_COMMAND_${timestamp}"
-duplicate_hidden_token="NOECHO_CHANNEL_CHOOSE_DUPLICATE_${timestamp}"
-followup_hidden_token="NOECHO_CHANNEL_CHOOSE_FOLLOWUP_${timestamp}"
-expected_token="GITCLAW_CHANNEL_CHOOSE_CONTEXT_V1"
-search_phrase="channel choose unique search fixture phrase"
+thread_id="channel-oracle-e2e-${timestamp}"
+ingest_message_id="oracle-ingest-${timestamp}"
+notify_message_id="oracle-notify-${timestamp}"
+choose_id="oracle-${timestamp}"
+oracle_question="Should this tiny channel feature ship?"
+account_id="telegram-oracle-account-NOECHO_CHANNEL_ORACLE_ACCOUNT_${timestamp}"
+ingest_hidden_token="NOECHO_CHANNEL_ORACLE_INGEST_${timestamp}"
+command_hidden_token="NOECHO_CHANNEL_ORACLE_COMMAND_${timestamp}"
+duplicate_hidden_token="NOECHO_CHANNEL_ORACLE_DUPLICATE_${timestamp}"
+followup_hidden_token="NOECHO_CHANNEL_ORACLE_FOLLOWUP_${timestamp}"
+expected_token="GITCLAW_CHANNEL_ORACLE_CONTEXT_V1"
+search_phrase="channel oracle unique search fixture phrase"
 notify_message_hash="$(sha256_12 "$notify_message_id")"
 issue_number=""
 issue_title="GitClaw ${channel} thread ${thread_id}"
@@ -213,7 +211,7 @@ trap cleanup EXIT
 
 ingest_body="@gitclaw /channels
 
-Mirrored Telegram thread for channel-choose slash E2E.
+Mirrored Telegram thread for channel-oracle slash E2E.
 
 Hidden ingest token: ${ingest_hidden_token}"
 
@@ -251,29 +249,29 @@ done
 choose_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \
   --repo "$repo" \
-  --body "@gitclaw /channels choose --message-id ${ingest_message_id} --notify-message-id ${notify_message_id} --choose-id ${choose_id}
-Options:
-- ${choice_a}
-- ${choice_b}
-- ${choice_c}
+  --body "@gitclaw /channels oracle --message-id ${ingest_message_id} --notify-message-id ${notify_message_id} --choose-id ${choose_id}
+Question: ${oracle_question}
 Do not include this command hidden token in the receipt: ${command_hidden_token}" >/dev/null
 
-wait_for_issue_comment_run_for_title "$choose_started_at" "$issue_title" >/dev/null || die "timed out waiting for channel choose action"
-wait_for_assistant_count_for_issue "$issue_number" 2 || die "expected channel choose action receipt"
+wait_for_issue_comment_run_for_title "$choose_started_at" "$issue_title" >/dev/null || die "timed out waiting for channel oracle action"
+wait_for_assistant_count_for_issue "$issue_number" 2 || die "expected channel oracle action receipt"
 choose_receipt="$(latest_assistant_comment_for_issue "$issue_number")"
 for expected in \
   "GitClaw Channel Choose Action" \
   "Generated without a model call" \
   'model="gitclaw/channels"' \
-  "requested_channel_command: \`/channels choose\`" \
+  "requested_channel_command: \`/channels oracle\`" \
   "channel_choose_status: \`queued\`" \
-  "choose_mode: \`deterministic-channel-option-picker\`" \
+  "choose_mode: \`deterministic-channel-oracle\`" \
   "notification_target_issue: \`#${issue_number}\`" \
   "notification_queued: \`true\`" \
   "notification_duplicate_suppressed: \`false\`" \
   "target_from_current_channel_issue: \`true\`" \
   "choose_id_sha256_12: \`" \
-  "choices_count: \`3\`" \
+  "question_sha256_12: \`" \
+  "question_bytes: \`" \
+  "oracle_default_deck_used: \`true\`" \
+  "choices_count: \`12\`" \
   "choices_sha256_12: \`" \
   "choices_bytes: \`" \
   "selected_choice_index: \`" \
@@ -292,42 +290,41 @@ for expected in \
   "raw_source_message_id_included: \`false\`" \
   "raw_notify_message_id_included: \`false\`" \
   "raw_choose_id_included: \`false\`" \
+  "raw_question_included: \`false\`" \
   "raw_choices_included: \`false\`" \
   "raw_selected_choice_included: \`false\`" \
   "raw_channel_message_body_included: \`false\`" \
   "llm_e2e_required_after_channel_choose_action_change: \`true\`"; do
-  grep -Fq "$expected" <<<"$choose_receipt" || die "channel choose receipt missing ${expected}"
+  grep -Fq "$expected" <<<"$choose_receipt" || die "channel oracle receipt missing ${expected}"
 done
-for leaked in "$ingest_hidden_token" "$command_hidden_token" "$thread_id" "$ingest_message_id" "$notify_message_id" "$choose_id" "$choice_a" "$choice_b" "$choice_c" "$expected_token"; do
+for leaked in "$ingest_hidden_token" "$command_hidden_token" "$thread_id" "$ingest_message_id" "$notify_message_id" "$choose_id" "$oracle_question" "$expected_token"; do
   if grep -Fq "$leaked" <<<"$choose_receipt"; then
-    die "channel choose receipt leaked ${leaked}"
+    die "channel oracle receipt leaked ${leaked}"
   fi
 done
 
-[[ "$(choose_notification_count)" == "1" ]] || die "channel choose did not queue exactly one notification"
+[[ "$(choose_notification_count)" == "1" ]] || die "channel oracle did not queue exactly one notification"
 issue_json="$(gh issue view "$issue_number" --repo "$repo" --json body,comments,labels)"
 grep -Fq "gitclaw:channel-thread" <<<"$(jq -r '.body' <<<"$issue_json")" || die "channel issue lost channel-thread marker"
 notification_bodies="$(jq -r '[.comments[].body | select(contains("<!-- gitclaw:channel-outbound") and contains("'"${notify_message_id}"'"))] | join("\n")' <<<"$issue_json")"
 for expected in \
-  "GitClaw channel choice." \
-  "Choices: 3" \
-  "Picked: #" \
-  "Choice: " \
-  "Choice hash: " \
+  "GitClaw channel oracle." \
+  "Question: ${oracle_question}" \
+  "Answer: " \
+  "Answer hash: " \
+  "Oracle hash: " \
   "Seed hash: " \
   "Selection source: deterministic GitHub channel action seed." \
+  "Oracle deck: bounded static GitClaw answer deck." \
   "Model call: not performed by this action." \
   "External randomness: not used." \
   "Repository mutation: not performed by this action." \
   "Provider delivery: queued through GitHub channel outbox."; do
-  grep -Fq "$expected" <<<"$notification_bodies" || die "choice notification missing ${expected}"
+  grep -Fq "$expected" <<<"$notification_bodies" || die "oracle notification missing ${expected}"
 done
-if ! grep -Fq "$choice_a" <<<"$notification_bodies" && ! grep -Fq "$choice_b" <<<"$notification_bodies" && ! grep -Fq "$choice_c" <<<"$notification_bodies"; then
-  die "choice notification did not include one visible selected choice"
-fi
 for leaked in "$ingest_hidden_token" "$command_hidden_token" "$choose_id" "$expected_token"; do
   if grep -Fq "$leaked" <<<"$notification_bodies"; then
-    die "choice notification leaked ${leaked}"
+    die "oracle notification leaked ${leaked}"
   fi
 done
 
@@ -340,7 +337,7 @@ grep -Fq "channel_outbox issue=${issue_number}" <<<"$outbox_output" || die "chan
 grep -Fq "outbound_comments=1" <<<"$outbox_output" || die "channel outbox output missing outbound count: ${outbox_output}"
 grep -Fq "body_included=false" <<<"$outbox_output" || die "channel outbox should be metadata-only: ${outbox_output}"
 jq -e --arg hash "$notify_message_hash" '.messages[] | select(.kind == "channel-outbound" and .outbound_message_sha256_12 == $hash)' "$outbox_file" >/dev/null || die "outbox file missing choose notify hash ${notify_message_hash}"
-for leaked in "$account_id" "$ingest_hidden_token" "$command_hidden_token" "$choose_id" "$expected_token" "$choice_a" "$choice_b" "$choice_c"; do
+for leaked in "$account_id" "$ingest_hidden_token" "$command_hidden_token" "$choose_id" "$expected_token" "$oracle_question"; do
   if grep -Fq "$leaked" <<<"$outbox_output" || grep -Fq "$leaked" "$outbox_file"; then
     die "metadata-only outbox leaked ${leaked}"
   fi
@@ -349,19 +346,16 @@ done
 duplicate_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \
   --repo "$repo" \
-  --body "@gitclaw /channels pick --message-id ${ingest_message_id} --notify-message-id ${notify_message_id} --choose-id ${choose_id}
-Options:
-- ${choice_a}
-- ${choice_b}
-- ${choice_c}
+  --body "@gitclaw /channels fortune --message-id ${ingest_message_id} --notify-message-id ${notify_message_id} --choose-id ${choose_id}
+Question: ${oracle_question}
 Do not include this duplicate hidden token in any receipt: ${duplicate_hidden_token}" >/dev/null
 
-wait_for_issue_comment_run_for_title "$duplicate_started_at" "$issue_title" >/dev/null || die "timed out waiting for duplicate channel choose action"
-wait_for_assistant_count_for_issue "$issue_number" 3 || die "expected duplicate channel choose receipt"
+wait_for_issue_comment_run_for_title "$duplicate_started_at" "$issue_title" >/dev/null || die "timed out waiting for duplicate channel oracle action"
+wait_for_assistant_count_for_issue "$issue_number" 3 || die "expected duplicate channel oracle receipt"
 duplicate_receipt="$(latest_assistant_comment_for_issue "$issue_number")"
 for expected in \
   "GitClaw Channel Choose Action" \
-  "requested_channel_command: \`/channels pick\`" \
+  "requested_channel_command: \`/channels fortune\`" \
   "channel_choose_status: \`duplicate\`" \
   "notification_queued: \`false\`" \
   "notification_duplicate_suppressed: \`true\`" \
@@ -369,45 +363,45 @@ for expected in \
   "external_randomness_used: \`false\`" \
   "model_call_performed: \`false\`" \
   "repository_mutation_performed: \`false\`"; do
-  grep -Fq "$expected" <<<"$duplicate_receipt" || die "duplicate channel choose receipt missing ${expected}"
+  grep -Fq "$expected" <<<"$duplicate_receipt" || die "duplicate channel oracle receipt missing ${expected}"
 done
-[[ "$(choose_notification_count)" == "1" ]] || die "duplicate channel choose queued another notification"
-for leaked in "$duplicate_hidden_token" "$thread_id" "$ingest_message_id" "$notify_message_id" "$choose_id" "$choice_a" "$choice_b" "$choice_c" "$expected_token"; do
+[[ "$(choose_notification_count)" == "1" ]] || die "duplicate channel oracle queued another notification"
+for leaked in "$duplicate_hidden_token" "$thread_id" "$ingest_message_id" "$notify_message_id" "$choose_id" "$oracle_question" "$expected_token"; do
   if grep -Fq "$leaked" <<<"$duplicate_receipt"; then
-    die "duplicate channel choose receipt leaked ${leaked}"
+    die "duplicate channel oracle receipt leaked ${leaked}"
   fi
 done
 
 model_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 gh issue comment "$issue_number" \
   --repo "$repo" \
-  --body "@gitclaw Continue this channel choose thread and use the repo-reader skill.
+  --body "@gitclaw Continue this channel oracle thread and use the repo-reader skill.
 
 Search the repository for \`${search_phrase}\`.
 The matching repository search result line has the form \`${search_phrase} => <token>\`.
-The exact answer starts with \`GITCLAW_CHANNEL_CHOOSE_\`.
+The exact answer starts with \`GITCLAW_CHANNEL_ORACLE_\`.
 Reply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.
 Do not reply with a placeholder like \`<token>\` or the word \`token\`.
-Do not include provider ids, notification ids, thread ids, message ids, account hashes, choose ids, option labels, issue numbers, or previous channel bodies.
+Do not include provider ids, notification ids, thread ids, message ids, account hashes, choose ids, oracle questions, oracle answers, issue numbers, or previous channel bodies.
 Do not include this hidden follow-up token: ${followup_hidden_token}
 Keep the answer under 30 words." >/dev/null
 
-model_run_json="$(wait_for_issue_comment_run_for_title "$model_started_at" "$issue_title")" || die "timed out waiting for channel choose model follow-up"
-wait_for_assistant_count_for_issue "$issue_number" 4 || die "expected model-backed channel choose follow-up"
+model_run_json="$(wait_for_issue_comment_run_for_title "$model_started_at" "$issue_title")" || die "timed out waiting for channel oracle model follow-up"
+wait_for_assistant_count_for_issue "$issue_number" 4 || die "expected model-backed channel oracle follow-up"
 model_comment="$(latest_assistant_comment_for_issue "$issue_number")"
 
-grep -Fq "$expected_token" <<<"$model_comment" || die "assistant did not include channel choose search_files token ${expected_token}"
+grep -Fq "$expected_token" <<<"$model_comment" || die "assistant did not include channel oracle search_files token ${expected_token}"
 if ! grep -Fq 'model="openai/gpt-5-nano"' <<<"$model_comment" && ! grep -Fq 'model="openai/gpt-4.1-nano"' <<<"$model_comment"; then
-  die "assistant channel choose follow-up marker did not use configured GitHub Models primary or fallback"
+  die "assistant channel oracle follow-up marker did not use configured GitHub Models primary or fallback"
 fi
-grep -Fq 'prompt_context_sha256_12="' <<<"$model_comment" || die "assistant channel choose follow-up marker missing prompt context hash"
-grep -Fq 'skills="repo-reader"' <<<"$model_comment" || die "assistant channel choose follow-up marker missing selected repo-reader skill"
-grep -Fq 'tools="' <<<"$model_comment" || die "assistant channel choose follow-up marker missing prompt-visible tools"
-grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant channel choose follow-up marker did not prove search_files was prompt-visible"
-grep -Fq 'usage_total_tokens="' <<<"$model_comment" || die "assistant channel choose follow-up marker missing usage token telemetry"
-for leaked in "$ingest_hidden_token" "$command_hidden_token" "$duplicate_hidden_token" "$followup_hidden_token" "$choose_id" "$account_id"; do
+grep -Fq 'prompt_context_sha256_12="' <<<"$model_comment" || die "assistant channel oracle follow-up marker missing prompt context hash"
+grep -Fq 'skills="repo-reader"' <<<"$model_comment" || die "assistant channel oracle follow-up marker missing selected repo-reader skill"
+grep -Fq 'tools="' <<<"$model_comment" || die "assistant channel oracle follow-up marker missing prompt-visible tools"
+grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant channel oracle follow-up marker did not prove search_files was prompt-visible"
+grep -Fq 'usage_total_tokens="' <<<"$model_comment" || die "assistant channel oracle follow-up marker missing usage token telemetry"
+for leaked in "$ingest_hidden_token" "$command_hidden_token" "$duplicate_hidden_token" "$followup_hidden_token" "$choose_id" "$account_id" "$oracle_question"; do
   if grep -Fq "$leaked" <<<"$model_comment"; then
-    die "model channel choose follow-up leaked ${leaked}"
+    die "model channel oracle follow-up leaked ${leaked}"
   fi
 done
 

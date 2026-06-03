@@ -16,6 +16,8 @@ type ChannelChooseOptions struct {
 	SourceMessageID   string
 	NotifyMessageID   string
 	ChooseID          string
+	Mode              string
+	Question          string
 	Choices           []string
 	Author            string
 	SourceIssueNumber int
@@ -48,13 +50,20 @@ type ChannelChooseActionRequest struct {
 	RequestedMsgHash    string
 	NotifyMessageHash   string
 	ChooseIDHash        string
+	QuestionSHA         string
+	QuestionBytes       int
 	ChoicesSHA          string
 	ChoicesBytes        int
+	OracleDefaultDeck   bool
 	NotificationBodySHA string
 	Outcome             ChannelChooseOutcome
 }
 
 type ChannelChooseOutcome struct {
+	Mode          string
+	Question      string
+	QuestionSHA   string
+	QuestionBytes int
 	Choices       []string
 	ChoiceIndex   int
 	Choice        string
@@ -78,7 +87,7 @@ func isChannelChooseActionFields(fields []string) bool {
 		return false
 	}
 	switch strings.ToLower(strings.Trim(fields[1], " \t\r\n.,:;!?")) {
-	case "choose", "choice", "pick", "select", "decide", "picker", "random-choice":
+	case "choose", "choice", "pick", "select", "decide", "picker", "random-choice", "oracle", "fortune", "8ball", "8-ball", "magic-8", "magic-8-ball", "fate":
 		return true
 	default:
 		return false
@@ -94,6 +103,7 @@ func BuildChannelChooseActionRequest(ev Event, cfg Config) (ChannelChooseActionR
 		Options: ChannelChooseOptions{
 			Repo:              ev.Repo,
 			SourceIssueNumber: ev.Issue.Number,
+			Mode:              channelChooseModeForSubcommand(fields[1]),
 		},
 		Command:    strings.ToLower(strings.Trim(fields[0], " \t\r\n.,:;!?")),
 		Subcommand: strings.ToLower(strings.Trim(fields[1], " \t\r\n.,:;!?")),
@@ -140,6 +150,12 @@ func BuildChannelChooseActionRequest(ev Event, cfg Config) (ChannelChooseActionR
 			}
 			req.Options.ChooseID = cleanChannelChooseID(fields[i+1])
 			i++
+		case "--question", "--prompt", "--ask":
+			if i+1 >= len(fields) {
+				return ChannelChooseActionRequest{}, fmt.Errorf("%s requires a value", field)
+			}
+			req.Options.Question = fields[i+1]
+			i++
 		case "--option", "--choice":
 			if i+1 >= len(fields) {
 				return ChannelChooseActionRequest{}, fmt.Errorf("%s requires a value", field)
@@ -170,9 +186,13 @@ func BuildChannelChooseActionRequest(ev Event, cfg Config) (ChannelChooseActionR
 		}
 	}
 	req.Options.Choices = append(req.Options.Choices, parseChannelChooseTrailingChoices(trailingBody)...)
+	if strings.TrimSpace(req.Options.Question) == "" {
+		req.Options.Question = parseChannelChooseTrailingQuestion(trailingBody)
+	}
 	if err := applyChannelChooseIssueTarget(ev, &req); err != nil {
 		return ChannelChooseActionRequest{}, err
 	}
+	req.OracleDefaultDeck = req.Options.Mode == "oracle" && len(normalizeChannelChooseChoices(req.Options.Choices)) == 0
 	if strings.TrimSpace(req.Options.SourceMessageID) == "" {
 		req.Options.SourceMessageID = autoChannelChooseSourceMessageID(ev)
 		req.AutoSourceMessageID = true
@@ -201,6 +221,8 @@ func BuildChannelChooseActionRequest(ev Event, cfg Config) (ChannelChooseActionR
 	req.RequestedMsgHash = shortDocumentHash(req.Options.SourceMessageID)
 	req.NotifyMessageHash = shortDocumentHash(req.Options.NotifyMessageID)
 	req.ChooseIDHash = shortDocumentHash(req.Options.ChooseID)
+	req.QuestionSHA = shortDocumentHash(req.Options.Question)
+	req.QuestionBytes = len(req.Options.Question)
 	req.ChoicesSHA = outcome.ChoicesSHA
 	req.ChoicesBytes = outcome.ChoicesBytes
 	req.NotificationBodySHA = shortDocumentHash(body)
@@ -289,7 +311,7 @@ func RenderChannelChooseActionReport(ev Event, req ChannelChooseActionRequest, r
 	fmt.Fprintf(&b, "- source_issue: `#%d`\n", ev.Issue.Number)
 	fmt.Fprintf(&b, "- requested_channel_command: `%s %s`\n", req.Command, req.Subcommand)
 	fmt.Fprintf(&b, "- channel_choose_status: `%s`\n", status)
-	fmt.Fprintf(&b, "- choose_mode: `%s`\n", "deterministic-channel-option-picker")
+	fmt.Fprintf(&b, "- choose_mode: `%s`\n", outcome.SelectionMode)
 	fmt.Fprintf(&b, "- notification_target_issue: `#%d`\n", result.Notification.IssueNumber)
 	fmt.Fprintf(&b, "- notification_comment_id: `%d`\n", result.Notification.CommentID)
 	fmt.Fprintf(&b, "- notification_queued: `%t`\n", notificationQueued)
@@ -305,6 +327,9 @@ func RenderChannelChooseActionReport(ev Event, req ChannelChooseActionRequest, r
 	fmt.Fprintf(&b, "- notify_message_id_auto: `%t`\n", req.AutoNotifyMessageID)
 	fmt.Fprintf(&b, "- choose_id_sha256_12: `%s`\n", noneIfEmpty(chooseIDHash))
 	fmt.Fprintf(&b, "- choose_id_auto: `%t`\n", req.AutoChooseID)
+	fmt.Fprintf(&b, "- question_sha256_12: `%s`\n", noneIfEmpty(req.QuestionSHA))
+	fmt.Fprintf(&b, "- question_bytes: `%d`\n", req.QuestionBytes)
+	fmt.Fprintf(&b, "- oracle_default_deck_used: `%t`\n", req.OracleDefaultDeck)
 	fmt.Fprintf(&b, "- choices_count: `%d`\n", len(outcome.Choices))
 	fmt.Fprintf(&b, "- choices_sha256_12: `%s`\n", noneIfEmpty(outcome.ChoicesSHA))
 	fmt.Fprintf(&b, "- choices_bytes: `%d`\n", outcome.ChoicesBytes)
@@ -325,13 +350,14 @@ func RenderChannelChooseActionReport(ev Event, req ChannelChooseActionRequest, r
 	fmt.Fprintf(&b, "- raw_source_message_id_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_notify_message_id_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_choose_id_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_question_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_choices_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_selected_choice_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_channel_message_body_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- llm_e2e_required_after_channel_choose_action_change: `%t`\n", true)
 	fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
 	b.WriteByte('\n')
-	b.WriteString("GitClaw queued a provider-facing deterministic option pick on the canonical channel issue. This is a small channel-native interaction: provider users get one selected choice, while the source receipt keeps thread ids, message ids, choose ids, option text, selected choice text, and channel bodies out of band. The action does not call a model, use external randomness, mutate repository files, or call provider APIs.\n\n")
+	b.WriteString("GitClaw queued a provider-facing deterministic option or oracle pick on the canonical channel issue. This is a small channel-native interaction: provider users get one selected answer, while the source receipt keeps thread ids, message ids, choose ids, questions, option text, selected answer text, and channel bodies out of band. The action does not call a model, use external randomness, mutate repository files, or call provider APIs.\n\n")
 	b.WriteString("### Follow-Up Delivery\n")
 	b.WriteString("- provider gateways read choice notifications with `gitclaw channel-outbox --channel <provider> --account-id <account> --issue-number <issue> --out <file>`\n")
 	b.WriteString("- provider gateways record sent choice notifications with `gitclaw channel-delivery --channel <provider> --account-id <account> --issue-number <issue> --comment-id <comment> --external-message-id <message>`\n")
@@ -376,7 +402,13 @@ func normalizeChannelChooseOptions(opts ChannelChooseOptions) ChannelChooseOptio
 	opts.SourceMessageID = strings.TrimSpace(opts.SourceMessageID)
 	opts.NotifyMessageID = strings.TrimSpace(opts.NotifyMessageID)
 	opts.ChooseID = cleanChannelChooseID(opts.ChooseID)
-	opts.Choices = normalizeChannelChooseChoices(opts.Choices)
+	opts.Mode = cleanChannelChooseMode(opts.Mode)
+	opts.Question = cleanChannelChooseQuestion(opts.Question)
+	choices := normalizeChannelChooseChoices(opts.Choices)
+	if opts.Mode == "oracle" && len(choices) == 0 {
+		choices = defaultChannelOracleChoices()
+	}
+	opts.Choices = choices
 	opts.Author = strings.TrimSpace(opts.Author)
 	return opts
 }
@@ -463,12 +495,42 @@ func cleanChannelChooseID(value string) string {
 	return cleanChannelHuddleID(value)
 }
 
+func channelChooseModeForSubcommand(subcommand string) string {
+	switch strings.ToLower(strings.Trim(subcommand, " \t\r\n.,:;!?")) {
+	case "oracle", "fortune", "8ball", "8-ball", "magic-8", "magic-8-ball", "fate":
+		return "oracle"
+	default:
+		return "choice"
+	}
+}
+
+func cleanChannelChooseMode(value string) string {
+	value = strings.ToLower(strings.Trim(strings.TrimSpace(value), " \t\r\n.,:;!?`\"'"))
+	value = strings.NewReplacer("_", "-", " ", "-").Replace(value)
+	switch value {
+	case "oracle", "fortune", "8ball", "8-ball", "magic-8", "magic-8-ball", "fate":
+		return "oracle"
+	default:
+		return "choice"
+	}
+}
+
+func cleanChannelChooseQuestion(value string) string {
+	value = strings.TrimSpace(value)
+	value = strings.Trim(value, " \t\r\n`\"'")
+	value = strings.Join(strings.Fields(value), " ")
+	if len(value) > 240 {
+		value = strings.TrimSpace(value[:240])
+	}
+	return value
+}
+
 func autoChannelChooseSourceMessageID(ev Event) string {
 	return fmt.Sprintf("gitclaw-channel-choose-source-%s", eventID(ev))
 }
 
 func autoChannelChooseID(ev Event, opts ChannelChooseOptions) string {
-	seed := strings.Join([]string{eventID(ev), opts.Route, opts.Channel, opts.ThreadID, opts.SourceMessageID, strings.Join(normalizeChannelChooseChoices(opts.Choices), "\n")}, "|")
+	seed := strings.Join([]string{eventID(ev), opts.Route, opts.Channel, opts.ThreadID, opts.SourceMessageID, cleanChannelChooseMode(opts.Mode), cleanChannelChooseQuestion(opts.Question), strings.Join(normalizeChannelChooseChoices(opts.Choices), "\n")}, "|")
 	return fmt.Sprintf("choose-%s-%s", eventID(ev), shortDocumentHash(seed))
 }
 
@@ -514,6 +576,24 @@ func parseChannelChooseTrailingChoices(trailing string) []string {
 	return normalizeChannelChooseChoices(choices)
 }
 
+func parseChannelChooseTrailingQuestion(trailing string) string {
+	for _, line := range strings.Split(strings.TrimSpace(trailing), "\n") {
+		trimmed := strings.TrimSpace(strings.TrimRight(line, " \t\r"))
+		if trimmed == "" {
+			continue
+		}
+		lower := strings.ToLower(trimmed)
+		for _, prefix := range []string{"question:", "ask:", "prompt:"} {
+			if strings.HasPrefix(lower, prefix) {
+				if idx := strings.Index(trimmed, ":"); idx >= 0 {
+					return cleanChannelChooseQuestion(trimmed[idx+1:])
+				}
+			}
+		}
+	}
+	return ""
+}
+
 func isChannelChooseChoiceLine(value string) bool {
 	value = strings.TrimSpace(value)
 	if strings.HasPrefix(value, "- ") || strings.HasPrefix(value, "* ") {
@@ -546,6 +626,7 @@ func normalizeChannelChooseChoices(choices []string) []string {
 }
 
 func BuildChannelChooseOutcome(opts ChannelChooseOptions) (ChannelChooseOutcome, error) {
+	opts = normalizeChannelChooseOptions(opts)
 	choices := normalizeChannelChooseChoices(opts.Choices)
 	if len(choices) < 2 {
 		return ChannelChooseOutcome{}, fmt.Errorf("channel choose requires at least 2 choices")
@@ -555,11 +636,17 @@ func BuildChannelChooseOutcome(opts ChannelChooseOptions) (ChannelChooseOutcome,
 	}
 	choicesText := strings.Join(choices, "\n")
 	choicesSHA := shortDocumentHash(choicesText)
-	seed := strings.Join([]string{opts.Repo, opts.Channel, opts.ThreadID, opts.SourceMessageID, opts.NotifyMessageID, opts.ChooseID, choicesSHA}, "|")
+	mode := cleanChannelChooseMode(opts.Mode)
+	question := cleanChannelChooseQuestion(opts.Question)
+	seed := strings.Join([]string{opts.Repo, opts.Channel, opts.ThreadID, opts.SourceMessageID, opts.NotifyMessageID, opts.ChooseID, mode, question, choicesSHA}, "|")
 	choiceIndex := deterministicChannelChooseIndex(seed, len(choices))
 	choice := choices[choiceIndex]
 	selectionText := fmt.Sprintf("%d|%s", choiceIndex+1, choice)
 	return ChannelChooseOutcome{
+		Mode:          mode,
+		Question:      question,
+		QuestionSHA:   shortDocumentHash(question),
+		QuestionBytes: len(question),
 		Choices:       choices,
 		ChoiceIndex:   choiceIndex + 1,
 		Choice:        choice,
@@ -568,7 +655,7 @@ func BuildChannelChooseOutcome(opts ChannelChooseOptions) (ChannelChooseOutcome,
 		ChoicesBytes:  len(choicesText),
 		SeedSHA:       shortDocumentHash(seed),
 		SelectionSHA:  shortDocumentHash(selectionText),
-		SelectionMode: "deterministic-channel-option-picker",
+		SelectionMode: channelChooseSelectionMode(mode),
 	}, nil
 }
 
@@ -582,6 +669,9 @@ func deterministicChannelChooseIndex(seed string, choices int) int {
 }
 
 func renderChannelChooseNotificationBody(outcome ChannelChooseOutcome) string {
+	if outcome.Mode == "oracle" {
+		return renderChannelOracleNotificationBody(outcome)
+	}
 	var b strings.Builder
 	b.WriteString("GitClaw channel choice.\n\n")
 	fmt.Fprintf(&b, "Choices: %d\n", len(outcome.Choices))
@@ -595,4 +685,47 @@ func renderChannelChooseNotificationBody(outcome ChannelChooseOutcome) string {
 	b.WriteString("Repository mutation: not performed by this action.\n")
 	b.WriteString("Provider delivery: queued through GitHub channel outbox.")
 	return strings.TrimSpace(b.String())
+}
+
+func renderChannelOracleNotificationBody(outcome ChannelChooseOutcome) string {
+	var b strings.Builder
+	b.WriteString("GitClaw channel oracle.\n\n")
+	if outcome.Question != "" {
+		fmt.Fprintf(&b, "Question: %s\n", outcome.Question)
+	}
+	fmt.Fprintf(&b, "Answer: %s\n", outcome.Choice)
+	fmt.Fprintf(&b, "Answer hash: %s\n", outcome.ChoiceSHA)
+	fmt.Fprintf(&b, "Oracle hash: %s\n", outcome.SelectionSHA)
+	fmt.Fprintf(&b, "Seed hash: %s\n", outcome.SeedSHA)
+	b.WriteString("\nSelection source: deterministic GitHub channel action seed.\n")
+	b.WriteString("Oracle deck: bounded static GitClaw answer deck.\n")
+	b.WriteString("Model call: not performed by this action.\n")
+	b.WriteString("External randomness: not used.\n")
+	b.WriteString("Repository mutation: not performed by this action.\n")
+	b.WriteString("Provider delivery: queued through GitHub channel outbox.")
+	return strings.TrimSpace(b.String())
+}
+
+func channelChooseSelectionMode(mode string) string {
+	if cleanChannelChooseMode(mode) == "oracle" {
+		return "deterministic-channel-oracle"
+	}
+	return "deterministic-channel-option-picker"
+}
+
+func defaultChannelOracleChoices() []string {
+	return []string{
+		"Yes, but keep it reviewable.",
+		"Not yet; gather one sharper signal.",
+		"Take the smaller reversible step.",
+		"Ask the thread for one constraint first.",
+		"Ship the tiny version and leave a breadcrumb.",
+		"Pause and name the risk out loud.",
+		"Turn it into a GitHub issue before it grows.",
+		"The playful path is acceptable if the audit trail stays clean.",
+		"Choose the option with the clearest rollback.",
+		"Make the next move boring and observable.",
+		"Invite one more reviewer before acting.",
+		"Write down the decision, then proceed.",
+	}
 }

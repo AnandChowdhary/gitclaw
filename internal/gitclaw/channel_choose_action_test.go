@@ -240,3 +240,160 @@ func TestBuildChannelChooseActionRequestParsesRouteAliasAndInlineChoices(t *test
 		t.Fatalf("expected explicit route choose hashes and outcome: %#v", req)
 	}
 }
+
+func TestHandleChannelOracleQueuesBoundedAnswerWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, "README.md", "fixture repo\n")
+
+	threadBody := RenderChannelThreadBody(ChannelIngestOptions{
+		Channel:  "telegram",
+		ThreadID: "chat-oracle-123",
+	})
+	ev, err := ParseEvent("issue_comment", []byte(`{
+		"action": "created",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 894,
+			"title": "GitClaw telegram thread chat-oracle-123",
+			"body": "<!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"chat-oracle-123\" -->\nGitClaw channel bridge thread.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}, {"name": "gitclaw:channel"}]
+		},
+		"comment": {
+			"id": 89401,
+			"body": "@gitclaw /channels oracle --message-id oracle-inbound-894 --notify-message-id oracle-notify-894 --choose-id oracle-secret-894\nQuestion: Should we ship the tiny channel feature?\nDo not include this command hidden token in the receipt: CHANNEL_ORACLE_COMMAND_MARKER.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"}
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	github := &FakeGitHub{
+		Issues: []Issue{{
+			Number: 894,
+			Title:  "GitClaw telegram thread chat-oracle-123",
+			Body:   threadBody,
+			Labels: []string{"gitclaw", "gitclaw:channel"},
+		}},
+		CommentsByIssue: map[int][]Comment{894: {{
+			ID: 89400,
+			Body: RenderChannelMessageComment(ChannelIngestOptions{
+				Channel:   "telegram",
+				ThreadID:  "chat-oracle-123",
+				MessageID: "oracle-inbound-894",
+				Author:    "telegram",
+				Body:      "Original mirrored oracle command with CHANNEL_ORACLE_INGEST_MARKER.",
+			}),
+		}}},
+		IssueLabels: map[int][]string{894: []string{"gitclaw", "gitclaw:channel"}},
+	}
+	llm := &FakeLLM{Response: "should not be called"}
+
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for channel oracle action", llm.Calls)
+	}
+	if len(github.Issues) != 1 {
+		t.Fatalf("oracle action should not create artifact issues: %#v", github.Issues)
+	}
+
+	outcome, err := BuildChannelChooseOutcome(ChannelChooseOptions{
+		Repo:            "owner/repo",
+		Channel:         "telegram",
+		ThreadID:        "chat-oracle-123",
+		SourceMessageID: "oracle-inbound-894",
+		NotifyMessageID: "oracle-notify-894",
+		ChooseID:        "oracle-secret-894",
+		Mode:            "oracle",
+		Question:        "Should we ship the tiny channel feature?",
+	})
+	if err != nil {
+		t.Fatalf("BuildChannelChooseOutcome returned error: %v", err)
+	}
+	if outcome.SelectionMode != "deterministic-channel-oracle" || len(outcome.Choices) != len(defaultChannelOracleChoices()) || outcome.Choice == "" {
+		t.Fatalf("unexpected oracle outcome: %#v", outcome)
+	}
+
+	sourceComments := github.CommentsByIssue[894]
+	if len(sourceComments) != 3 {
+		t.Fatalf("source comments = %d, want message + outbound + receipt: %#v", len(sourceComments), sourceComments)
+	}
+	outbound := sourceComments[1].Body
+	for _, want := range []string{
+		"gitclaw:channel-outbound",
+		`channel="telegram"`,
+		`message_id="oracle-notify-894"`,
+		"GitClaw channel oracle.",
+		"Question: Should we ship the tiny channel feature?",
+		fmt.Sprintf("Answer: %s", outcome.Choice),
+		"Answer hash: ",
+		"Oracle hash: ",
+		"Seed hash: ",
+		"Selection source: deterministic GitHub channel action seed.",
+		"Oracle deck: bounded static GitClaw answer deck.",
+		"Model call: not performed by this action.",
+		"External randomness: not used.",
+		"Repository mutation: not performed by this action.",
+		"Provider delivery: queued through GitHub channel outbox.",
+	} {
+		if !strings.Contains(outbound, want) {
+			t.Fatalf("oracle notification missing %q:\n%s", want, outbound)
+		}
+	}
+	for _, leaked := range []string{"CHANNEL_ORACLE_INGEST_MARKER", "CHANNEL_ORACLE_COMMAND_MARKER", "oracle-secret-894"} {
+		if strings.Contains(outbound, leaked) {
+			t.Fatalf("oracle notification leaked %q:\n%s", leaked, outbound)
+		}
+	}
+
+	receipt := sourceComments[2].Body
+	for _, want := range []string{
+		"GitClaw Channel Choose Action",
+		"Generated without a model call",
+		`model="gitclaw/channels"`,
+		"requested_channel_command: `/channels oracle`",
+		"channel_choose_status: `queued`",
+		"choose_mode: `deterministic-channel-oracle`",
+		"notification_target_issue: `#894`",
+		"notification_comment_id: `9000`",
+		"notification_queued: `true`",
+		"notification_duplicate_suppressed: `false`",
+		"target_from_current_channel_issue: `true`",
+		"choose_id_sha256_12: `",
+		"question_sha256_12: `",
+		"question_bytes: `40`",
+		"oracle_default_deck_used: `true`",
+		"choices_count: `12`",
+		"selected_choice_index: `",
+		"selected_choice_sha256_12: `",
+		"selection_sha256_12: `",
+		"choice_seed_sha256_12: `",
+		"deterministic_picker_used: `true`",
+		"external_randomness_used: `false`",
+		"cryptographic_randomness_used: `false`",
+		"model_call_performed: `false`",
+		"repository_mutation_performed: `false`",
+		"provider_delivery_performed: `false`",
+		"raw_question_included: `false`",
+		"raw_choices_included: `false`",
+		"raw_selected_choice_included: `false`",
+		"raw_channel_message_body_included: `false`",
+		"llm_e2e_required_after_channel_choose_action_change: `true`",
+	} {
+		if !strings.Contains(receipt, want) {
+			t.Fatalf("channel oracle receipt missing %q:\n%s", want, receipt)
+		}
+	}
+	for _, leaked := range []string{"CHANNEL_ORACLE_INGEST_MARKER", "CHANNEL_ORACLE_COMMAND_MARKER", "chat-oracle-123", "oracle-inbound-894", "oracle-notify-894", "oracle-secret-894", "Should we ship", outcome.Choice} {
+		if strings.Contains(receipt, leaked) {
+			t.Fatalf("channel oracle receipt leaked %q:\n%s", leaked, receipt)
+		}
+	}
+}

@@ -4587,6 +4587,16 @@ provider-facing selected-choice output, duplicate suppression, metadata-only
 outbox discovery, and a real GitHub Models repo-reader/search follow-up on the
 same channel issue.
 
+The same primitive now covers `@gitclaw /channels oracle` and
+`@gitclaw /channels fortune` for moments that want a lightweight answer card
+rather than a user-supplied option list. This is not a prediction service and
+does not ask an LLM to invent an answer; it uses a bounded static answer deck,
+the same deterministic GitHub/channel seed, body-free source receipts, and
+metadata-only channel outbox. The provider thread sees the question and answer;
+the GitHub receipt keeps only hashes, counts, duplicate state, and explicit
+no-model/no-randomness/no-provider-API/no-repo-mutation gates. Acceptance is the
+same live channel E2E shape, retargeted to oracle plus duplicate fortune.
+
 ## 2026-06-02 Channel Mood Follow-Up
 
 [OpenClaw's channel guide](https://clawdocs.org/guides/channels/) frames

@@ -265,6 +265,7 @@ channel backup note unique search fixture phrase => GITCLAW_CHANNEL_BACKUP_NOTE_
 channel tool lesson unique search fixture phrase => GITCLAW_CHANNEL_TOOL_LESSON_CONTEXT_V1
 channel tool result unique search fixture phrase => GITCLAW_CHANNEL_TOOL_RESULT_CONTEXT_V1
 channel dock unique search fixture phrase => GITCLAW_CHANNEL_DOCK_CONTEXT_V1
+channel oracle unique search fixture phrase => GITCLAW_CHANNEL_ORACLE_CONTEXT_V1
 channel warmup unique search fixture phrase => GITCLAW_CHANNEL_WARMUP_CONTEXT_V1
 channel vibe-check unique search fixture phrase => GITCLAW_CHANNEL_VIBE_CHECK_CONTEXT_V1
 channel browser status unique search fixture phrase => GITCLAW_CHANNEL_BROWSER_STATUS_CONTEXT_V1
