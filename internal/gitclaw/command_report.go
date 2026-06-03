@@ -160,6 +160,9 @@ func commandSummaryForReport(entry commandCatalogEntry) string {
 	if !strings.Contains(summary, "deterministic haiku cards") {
 		summary += " Queue provider-facing deterministic haiku cards from bounded static line decks without model calls, external randomness, media generation, provider API calls, workflow edits, or repo mutation."
 	}
+	if !strings.Contains(summary, "deterministic story-dice cards") {
+		summary += " Queue provider-facing deterministic story-dice cards from bounded static prompt decks without model calls, external randomness, media generation, provider API calls, workflow edits, or repo mutation."
+	}
 	if !strings.Contains(summary, "repo-aware next-move coach cards") {
 		summary += " Queue provider-facing repo-aware next-move coach cards from skill/tool/soul metadata without command execution, skill installs, tool execution, backup payload reads, soul body reads, model calls, provider API calls, workflow edits, or repo mutation."
 	}

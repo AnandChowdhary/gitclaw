@@ -285,6 +285,7 @@ channel toast unique search fixture phrase => GITCLAW_CHANNEL_TOAST_CONTEXT_V1
 channel postcard unique search fixture phrase => GITCLAW_CHANNEL_POSTCARD_CONTEXT_V1
 channel haiku unique search fixture phrase => GITCLAW_CHANNEL_HAIKU_CONTEXT_V1
 channel soundtrack unique search fixture phrase => GITCLAW_CHANNEL_SOUNDTRACK_CONTEXT_V1
+channel story dice unique search fixture phrase => GITCLAW_CHANNEL_STORY_DICE_CONTEXT_V1
 channel coach unique search fixture phrase => GITCLAW_CHANNEL_COACH_CONTEXT_V1
 channel quick replies unique search fixture phrase => GITCLAW_CHANNEL_QUICK_REPLIES_CONTEXT_V1
 channel status wheel unique search fixture phrase => GITCLAW_CHANNEL_STATUS_WHEEL_CONTEXT_V1

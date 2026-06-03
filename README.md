@@ -699,6 +699,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels bingo release --bingo-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels haiku launch --haiku-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels soundtrack launch --soundtrack-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels story-dice fun --story-dice-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels coach skills --coach-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels nudge release-captain --nudge-id <id> --message-id <id> --notify-message-id <id> --tone gentle
 @gitclaw /channels palette fun --palette-id <id> --message-id <id> --notify-message-id <id>
@@ -1107,6 +1108,13 @@ provider update, while the source receipt keeps raw soundtrack ids, themes,
 notes, track text, thread ids, message ids, and channel bodies out of band.
 This does not call a model, use external randomness, generate media, fetch
 audio, call provider APIs, edit workflows, or mutate the repository.
+`@gitclaw /channels story-dice <theme> --story-dice-id <id> --message-id <id>
+--notify-message-id <id>` queues a provider-facing prompt-dice card from
+bounded static decks. Optional `Note: ...` trailing text is visible in the
+provider update, while the source receipt keeps raw story-dice ids, themes,
+notes, rolled prompts, thread ids, message ids, and channel bodies out of band.
+This does not call a model, use external randomness, generate media, call
+provider APIs, edit workflows, or mutate the repository.
 `@gitclaw /channels coach <all|skills|tools|soul|memory|backups|channels|fun>
 --coach-id <id> --message-id <id> --notify-message-id <id>` queues a
 provider-facing next-move card from repo-local skill, tool, and soul metadata.
@@ -2248,6 +2256,7 @@ scripts/e2e/github-channel-timer-slash.sh
 scripts/e2e/github-channel-bingo-slash.sh
 scripts/e2e/github-channel-haiku-slash.sh
 scripts/e2e/github-channel-soundtrack-slash.sh
+scripts/e2e/github-channel-story-dice-slash.sh
 scripts/e2e/github-channel-coach-slash.sh
 scripts/e2e/github-channel-nudge-slash.sh
 scripts/e2e/github-channel-palette-slash.sh
@@ -2638,6 +2647,12 @@ provider-visible three-track card with an optional note, exposes it through
 metadata-only outbox, suppresses duplicate soundtrack notifications, proves no
 model/media/audio/provider-API/workflow/repository mutation was performed, and
 then runs a real GitHub Models repo-reader/search follow-up.
+The channel-story-dice slash harness adds a tiny channel-native prompt-game
+lane: a channel-ingested issue receives `@gitclaw /channels story-dice`, queues
+one provider-visible four-die prompt card with an optional note, exposes it
+through metadata-only outbox, suppresses duplicate story-dice notifications,
+proves no model/randomness/media/provider-API/workflow/repository mutation was
+performed, and then runs a real GitHub Models repo-reader/search follow-up.
 The channel-coach slash harness adds repo-aware next-move cards to Slack and
 Telegram: a channel-ingested issue receives `@gitclaw /channels coach skills`,
 queues one provider-visible skill/tool/soul signal card with suggested

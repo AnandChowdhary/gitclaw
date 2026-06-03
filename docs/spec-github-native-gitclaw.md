@@ -5718,6 +5718,33 @@ duplicate suppression, proves no model/randomness/media/provider-API/workflow/
 repository mutation was performed, and then continues on the same GitHub issue
 with a real GitHub Models repo-reader/search follow-up.
 
+For channel-native play that should give a room a tiny activity rather than a
+report, GitClaw also supports:
+
+```text
+@gitclaw /channels story-dice fun --story-dice-id <stable-story-dice-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
+Note: Give us one playful next move.
+```
+
+`/channels story-dice`, `/channels storydice`, `/channels plot-dice`,
+`/channels prompt-dice`, `/channels scene-dice`, `/channels story-card`,
+`/channels plot-card`, `/channels improv`, and `/channels riff` queue one
+provider-facing prompt-dice card back onto the current
+`gitclaw:channel-thread` issue or an explicit reviewed route. The card rolls a
+bounded static deck into four visible prompts: opening, constraint, move, and
+button. Optional `Note: ...` trailing text is visible in the provider-facing
+update. The source receipt remains body-free and reports only hashes, sizes,
+line count, duplicate status, outbox delivery instructions, and safety gates.
+It does not call a model, use external randomness, generate media, call
+provider APIs, edit workflows, mutate repository files, print raw story-dice
+ids, print raw themes, print raw notes, or print raw rolled prompts.
+Duplicates are suppressed by `channel + notify_message_id`. Changes to this
+surface require a live E2E that ingests a real channel issue, queues the
+story-dice card, validates metadata-only outbox discovery, verifies duplicate
+suppression, proves no model/randomness/media/provider-API/workflow/repository
+mutation was performed, and then continues on the same GitHub issue with a
+real GitHub Models repo-reader/search follow-up.
+
 For repo-aware channel coaching that should suggest a useful next move without
 executing anything, GitClaw also supports:
 
@@ -9784,6 +9811,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels postcard launch-ready --postcard-id channel-postcard-1 --message-id provider-msg-1 --notify-message-id provider-postcard-ack-1
 @gitclaw /channels timer 25m --timer-id channel-timer-1 --message-id provider-msg-1 --notify-message-id provider-timer-ack-1
 @gitclaw /channels haiku launch --haiku-id channel-haiku-1 --message-id provider-msg-1 --notify-message-id provider-haiku-ack-1
+@gitclaw /channels story-dice fun --story-dice-id channel-story-dice-1 --message-id provider-msg-1 --notify-message-id provider-story-dice-ack-1
 @gitclaw /channels coach skills --coach-id channel-coach-1 --message-id provider-msg-1 --notify-message-id provider-coach-ack-1
 @gitclaw /channels nudge release-captain --nudge-id channel-nudge-1 --message-id provider-msg-1 --notify-message-id provider-nudge-ack-1 --tone gentle
 @gitclaw /channels palette fun --palette-id channel-palette-1 --message-id provider-msg-1 --notify-message-id provider-palette-ack-1
@@ -12370,6 +12398,17 @@ examples/workflows/gitclaw.yml
   issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-haiku fixture token, and avoid
   hidden channel/message/haiku sentinels.
+- A `gh`-driven channel-story-dice-slash E2E harness ingests a real mirrored
+  channel issue, replies with `@gitclaw /channels story-dice ...`, verifies the
+  provider-facing deterministic prompt-dice card, body-free source receipt
+  metadata, duplicate story-dice notification suppression from a later issue
+  comment with the same acknowledgement id, explicit no model/external-
+  randomness/media/provider-API/workflow/repository mutation gates, and
+  metadata-only outbox discovery for the acknowledgement. The same channel
+  issue then gets a normal GitHub Models issue-comment follow-up that must
+  select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-story-dice fixture token, and avoid hidden channel/message/story-dice
+  sentinels.
 - A `gh`-driven channel-coach-slash E2E harness ingests a real mirrored channel
   issue, replies with `@gitclaw /channels coach ...`, verifies the
   provider-facing skill/tool/soul signal card with suggested channel-native

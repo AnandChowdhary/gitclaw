@@ -121,6 +121,7 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"Queue provider-facing timebox timer cards without creating reminder issues",
 		"Queue provider-facing deterministic mini-game bingo cards from bounded static decks",
 		"Queue provider-facing deterministic haiku cards from bounded static line decks",
+		"Queue provider-facing deterministic story-dice cards from bounded static prompt decks",
 		"Queue provider-facing repo-aware next-move coach cards from skill/tool/soul metadata",
 		"Queue mirrored channel safe skill-bundle map cards without installing skills",
 		"Queue mirrored channel safe skill-source map cards without registry contact",
