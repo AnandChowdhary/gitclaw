@@ -58,6 +58,7 @@ func TestRenderChannelListReportCarriesDedicatedE2EMarker(t *testing.T) {
 		"`/channels oracle --choose-id <id> --message-id <message>`",
 		"`/channels mood <mood> --message-id <message>`",
 		"`/channels room-pulse <focus> --pulse-id <id> --message-id <message>`",
+		"`/channels quick-replies <lane> --reply-id <id> --message-id <message>`",
 		"`/channels toast <title> --toast-id <id> --message-id <message>`",
 		"`/channels haiku <theme> --haiku-id <id> --message-id <message>`",
 		"`/channels coach <lane> --coach-id <id> --message-id <message>`",

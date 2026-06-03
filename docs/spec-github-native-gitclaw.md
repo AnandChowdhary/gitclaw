@@ -5533,6 +5533,34 @@ suppression, proves no raw body leakage or mutation side effects, and then
 continues on the same GitHub issue with a real GitHub Models repo-reader/search
 follow-up.
 
+For provider-facing next actions that should feel like native reply chips
+rather than a report, GitClaw also supports:
+
+```text
+@gitclaw /channels quick-replies handoff --reply-id <stable-replies-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
+Note: Keep replies short.
+```
+
+`/channels quick-replies`, `/channels quick-reply`, `/channels reply-options`,
+`/channels reply-chips`, `/channels chips`, `/channels suggest-replies`,
+`/channels suggested-replies`, `/channels reply-suggestions`, and
+`/channels next-replies` queue one provider-facing reply-chip card back onto the
+current `gitclaw:channel-thread` issue or an explicit reviewed route. Lanes are
+static and bounded: `general`, `handoff`, `skills`, `tools`, and `fun`. The
+provider-facing outbound card may show the lane, optional note, option labels,
+copyable suggested commands, and short reasons. The source receipt remains
+body-free and reports only hashes, note size, option count, duplicate status,
+outbox delivery instructions, and safety gates. This action does not execute
+commands, create artifacts/tasks/reminders, install skills, execute tools, call
+a model, call provider APIs, edit workflows, mutate repository files, print raw
+lanes, print raw notes, print raw reply ids, print option text, or print channel
+bodies. Duplicates are suppressed by `channel + notify_message_id`. Changes to
+this surface require a live E2E that ingests a real channel issue, queues the
+quick-replies card, validates metadata-only outbox discovery, verifies duplicate
+suppression, proves no command/artifact/task/reminder/model/provider-API/
+workflow/skill/tool/repository mutation side effects, and then continues on the
+same GitHub issue with a real GitHub Models repo-reader/search follow-up.
+
 For channel-native sticker signals that should feel like chat without becoming
 a media pipeline, GitClaw also supports:
 
@@ -9504,6 +9532,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels choose --message-id provider-msg-1 --notify-message-id provider-choice-ack-1
 @gitclaw /channels mood focused --message-id provider-msg-1 --notify-message-id provider-mood-ack-1 --intensity 4
 @gitclaw /channels room-pulse handoff --pulse-id channel-room-pulse-1 --message-id provider-msg-1 --notify-message-id provider-room-pulse-ack-1
+@gitclaw /channels quick-replies handoff --reply-id channel-quick-replies-1 --message-id provider-msg-1 --notify-message-id provider-quick-replies-ack-1
 @gitclaw /channels sticker confetti --sticker-id channel-sticker-1 --message-id provider-msg-1 --notify-message-id provider-sticker-ack-1 --scale 4
 @gitclaw /channels toast launch-ready --toast-id channel-toast-1 --message-id provider-msg-1 --notify-message-id provider-toast-ack-1
 @gitclaw /channels haiku launch --haiku-id channel-haiku-1 --message-id provider-msg-1 --notify-message-id provider-haiku-ack-1
@@ -12015,6 +12044,16 @@ examples/workflows/gitclaw.yml
   issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-room-pulse fixture token, and
   avoid hidden channel/message/pulse/focus/note sentinels.
+- A `gh`-driven channel-quick-replies-slash E2E harness ingests a real mirrored
+  channel issue, replies with `@gitclaw /channels quick-replies ...`, verifies
+  the provider-facing reply-chip card, body-free source receipt metadata,
+  duplicate reply-chip notification suppression from a later issue comment with
+  the same acknowledgement id, explicit no command/artifact/task/reminder/model/
+  provider-API/workflow/skill/tool/repository mutation gates, and metadata-only
+  outbox discovery for the acknowledgement. The same channel issue then gets a
+  normal GitHub Models issue-comment follow-up that must select `repo-reader`,
+  expose `gitclaw.search_files`, recover the channel-quick-replies fixture token,
+  and avoid hidden channel/message/reply/lane/note sentinels.
 - A `gh`-driven channel-sticker-slash E2E harness ingests a real mirrored
   channel issue, replies with `@gitclaw /channels sticker ...`, verifies the
   provider-facing sticker card, body-free source receipt metadata, duplicate

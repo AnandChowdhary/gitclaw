@@ -681,6 +681,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels oracle --choose-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels mood focused --message-id <id> --notify-message-id <id> --intensity 4
 @gitclaw /channels room-pulse handoff --pulse-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels quick-replies handoff --reply-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels sticker confetti --sticker-id <id> --message-id <id> --notify-message-id <id> --scale 4
 @gitclaw /channels toast launch-ready --toast-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels haiku launch --haiku-id <id> --message-id <id> --notify-message-id <id>
@@ -1024,6 +1025,12 @@ current Slack/Telegram thread. It counts safe GitClaw issue/comment markers,
 reports whether the room looks active, and suggests a next command while the
 source receipt keeps raw issue/comment bodies, focus values, notes, step text,
 thread ids, message ids, and pulse ids out of band.
+`@gitclaw /channels quick-replies <lane> --reply-id <id> --message-id <id>
+--notify-message-id <id>` queues provider-facing reply chips back to the current
+Slack/Telegram thread. Lanes such as `general`, `handoff`, `skills`, `tools`,
+and `fun` expose a small copyable set of next commands, while the source
+receipt keeps raw option text, lane values, notes, thread ids, message ids, and
+reply ids out of band. The action does not execute any suggested command.
 `@gitclaw /channels sticker <sticker> --sticker-id <id> --message-id <id>
 --notify-message-id <id> --scale 1..5` queues a provider-facing sticker card
 back to the current Slack/Telegram thread. Optional `Note: ...` trailing text
@@ -2129,6 +2136,7 @@ scripts/e2e/github-channel-roll-slash.sh
 scripts/e2e/github-channel-choose-slash.sh
 scripts/e2e/github-channel-mood-slash.sh
 scripts/e2e/github-channel-room-pulse-slash.sh
+scripts/e2e/github-channel-quick-replies-slash.sh
 scripts/e2e/github-channel-sticker-slash.sh
 scripts/e2e/github-channel-toast-slash.sh
 scripts/e2e/github-channel-haiku-slash.sh
@@ -2473,6 +2481,13 @@ queues one provider-visible marker-count pulse with a suggested next command,
 exposes it through metadata-only outbox, suppresses duplicate room-pulse
 notifications, proves no raw issue/comment body exposure, task/reminder
 creation, provider API call, model call, workflow edit, or repository mutation
+happened, and then runs a real GitHub Models repo-reader/search follow-up.
+The channel-quick-replies slash harness adds a provider-facing command-chip
+launcher: a channel-ingested issue receives `@gitclaw /channels quick-replies`,
+queues one provider-visible reply-chip card for a lane, exposes it through
+metadata-only outbox, suppresses duplicate reply-chip notifications, proves no
+command execution, artifact/task/reminder creation, model call, provider API
+call, workflow edit, skill install, tool execution, or repository mutation
 happened, and then runs a real GitHub Models repo-reader/search follow-up.
 The channel-sticker slash harness adds a provider-facing flourish lane without
 media side effects: a channel-ingested issue receives `@gitclaw /channels

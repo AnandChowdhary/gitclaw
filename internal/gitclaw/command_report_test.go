@@ -99,6 +99,7 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"queue mirrored channel skill-status replies without installing skills",
 		"queue mirrored channel tool-status replies without executing tools or exposing raw schemas",
 		"queue mirrored channel backup-status replies without reading backup payloads or restoring files",
+		"queue mirrored channel quick-reply chips without executing commands",
 		"queue mirrored channel profile-status replies without exporting, importing, switching, or mutating profiles",
 		"queue mirrored channel checkpoint-status replies without raw diffs, file bodies, commit subjects, restore, reset, clean, checkout, or repo mutation",
 		"queue mirrored channel soul-status replies without registry contact, profile export, soul writes, or raw bodies",
