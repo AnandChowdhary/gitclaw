@@ -220,6 +220,7 @@ for expected in \
   'gitclaw channel-gateway' \
   'gitclaw channel-outbox' \
   'gitclaw channel-delivery' \
+  '`/channels soundtrack <theme> --soundtrack-id <id> --message-id <message>`' \
   'dispatch id: `<channel>-<message_id>`'; do
   grep -Fq "$expected" <<<"$comments" || die "channels report missing ${expected}"
 done
