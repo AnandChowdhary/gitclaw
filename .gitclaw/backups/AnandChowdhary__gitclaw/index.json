@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T09:55:17Z",
+  "generated_at": "2026-06-03T09:57:18Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 709,
   "issues": [
@@ -9002,15 +9002,15 @@
       "number": 818,
       "title": "GitClaw telegram thread channel-nudge-e2e-20260603t094937z",
       "path": "issues/000818.json",
-      "backup_generated_at": "2026-06-03T09:55:15Z",
+      "backup_generated_at": "2026-06-03T09:57:16Z",
       "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 7,
-      "transcript_messages": 7
+      "comment_count": 9,
+      "transcript_messages": 9
     }
   ]
 }
