@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T07:10:43Z",
+  "generated_at": "2026-06-03T07:12:28Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 805,
     "title": "GitClaw telegram thread channel-quest-e2e-20260603t070840z",
@@ -51,6 +51,15 @@
       "CommentID": 4609936065,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Quest Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#805`\n- requested_channel_command: `/channels quest`\n- channel_quest_status: `recorded`\n- quest_issue: `#806`\n- quest_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/806`\n- quest_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#805`\n- notification_comment_id: `4609946523`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `c86e57fe7af4`\n- source_message_id_sha256_12: `684cd423905f`\n- notify_message_id_sha256_12: `6f043db11ab3`\n- notify_message_id_auto: `false`\n- quest_id_sha256_12: `64af4393d753`\n- quest_id_auto: `false`\n- quest_title_sha256_12: `7a8967744f96`\n- quest_title_bytes: `54`\n- quest_title_lines: `1`\n- quest_objective_sha256_12: `6cdc61fb04b1`\n- quest_objective_bytes: `73`\n- quest_objective_lines: `1`\n- quest_first_move_sha256_12: `9455df696efc`\n- quest_first_move_bytes: `75`\n- quest_first_move_lines: `1`\n- quest_win_condition_sha256_12: `93364822dc21`\n- quest_win_condition_bytes: `81`\n- quest_win_condition_lines: `1`\n- notification_body_sha256_12: `6227ed409b71`\n- target_from_current_channel_issue: `true`\n- raw_quest_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_quest_title_included: `false`\n- raw_quest_objective_included: `false`\n- raw_quest_first_move_included: `false`\n- raw_quest_win_condition_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_quest_action_change: `true`\n- issue_title_sha256_12: `75f7b8edb975`\n\nGitClaw recorded a mirrored channel quest as a durable GitHub issue, then queued a provider-facing link back to the original thread. The quest issue contains the human-readable title, objective, first move, and win condition; this source receipt keeps provider IDs, quest IDs, section text, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the quest-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent quest links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate quest issues are suppressed by `quest_id`; duplicate quest-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the quest issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4609946651,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-03T07:10:16Z",
       "updated_at": "2026-06-03T07:10:16Z"
+    },
+    {
+      "id": 4609946523,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-quest-e2e-20260603t070840z\" message_id=\"quest-notify-20260603t070840z\" author=\"gitclaw\" --\u003e\nGitClaw channel quest recorded.\n\nQuest: #806\nURL: https://github.com/AnandChowdhary/gitclaw/issues/806\nTitle: Find the shortest useful channel loop 20260603t070840z\n\nRecorded in the linked GitHub issue.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T07:11:52Z",
+      "updated_at": "2026-06-03T07:11:52Z"
+    },
+    {
+      "id": 4609946651,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26869432785\" event_id=\"comment-4609936065\" model=\"gitclaw/channels\" idempotency_key=\"6abd1663b6d83809e81550768ff187ab\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26869432785\" --\u003e\n## GitClaw Channel Quest Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#805`\n- requested_channel_command: `/channels quest`\n- channel_quest_status: `recorded`\n- quest_issue: `#806`\n- quest_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/806`\n- quest_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#805`\n- notification_comment_id: `4609946523`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `c86e57fe7af4`\n- source_message_id_sha256_12: `684cd423905f`\n- notify_message_id_sha256_12: `6f043db11ab3`\n- notify_message_id_auto: `false`\n- quest_id_sha256_12: `64af4393d753`\n- quest_id_auto: `false`\n- quest_title_sha256_12: `7a8967744f96`\n- quest_title_bytes: `54`\n- quest_title_lines: `1`\n- quest_objective_sha256_12: `6cdc61fb04b1`\n- quest_objective_bytes: `73`\n- quest_objective_lines: `1`\n- quest_first_move_sha256_12: `9455df696efc`\n- quest_first_move_bytes: `75`\n- quest_first_move_lines: `1`\n- quest_win_condition_sha256_12: `93364822dc21`\n- quest_win_condition_bytes: `81`\n- quest_win_condition_lines: `1`\n- notification_body_sha256_12: `6227ed409b71`\n- target_from_current_channel_issue: `true`\n- raw_quest_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_quest_title_included: `false`\n- raw_quest_objective_included: `false`\n- raw_quest_first_move_included: `false`\n- raw_quest_win_condition_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_quest_action_change: `true`\n- issue_title_sha256_12: `75f7b8edb975`\n\nGitClaw recorded a mirrored channel quest as a durable GitHub issue, then queued a provider-facing link back to the original thread. The quest issue contains the human-readable title, objective, first move, and win condition; this source receipt keeps provider IDs, quest IDs, section text, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the quest-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent quest links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate quest issues are suppressed by `quest_id`; duplicate quest-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the quest issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T07:11:54Z",
+      "updated_at": "2026-06-03T07:11:54Z"
     }
   ]
 }
