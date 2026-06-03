@@ -686,6 +686,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels sticker confetti --sticker-id <id> --message-id <id> --notify-message-id <id> --scale 4
 @gitclaw /channels toast launch-ready --toast-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels timer 25m --timer-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels bingo release --bingo-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels haiku launch --haiku-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels coach skills --coach-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels nudge release-captain --nudge-id <id> --message-id <id> --notify-message-id <id> --tone gentle
@@ -1064,6 +1065,14 @@ timer ids, durations, labels, notes, thread ids, message ids, and channel
 bodies out of band. This does not create reminder issues, schedule workflows,
 start provider timers, call provider APIs, call a model, edit workflows, or
 mutate the repository.
+`@gitclaw /channels bingo <theme> --bingo-id <id> --message-id <id>
+--notify-message-id <id>` queues a provider-facing deterministic mini-game
+card from bounded static decks such as `fun`, `release`, `triage`, and
+`pairing`. Optional `Note: ...` trailing text is visible in the provider
+update, while the source receipt keeps raw bingo ids, themes, notes, card
+cells, thread ids, message ids, and channel bodies out of band. This does not
+call a model, use external randomness, persist game state, track scores, call
+provider APIs, edit workflows, or mutate the repository.
 `@gitclaw /channels haiku <theme> --haiku-id <id> --message-id <id>
 --notify-message-id <id>` queues a provider-facing three-line poem card from a
 bounded static line deck. Optional `Note: ...` trailing text is visible in the
@@ -2184,6 +2193,7 @@ scripts/e2e/github-channel-status-wheel-slash.sh
 scripts/e2e/github-channel-sticker-slash.sh
 scripts/e2e/github-channel-toast-slash.sh
 scripts/e2e/github-channel-timer-slash.sh
+scripts/e2e/github-channel-bingo-slash.sh
 scripts/e2e/github-channel-haiku-slash.sh
 scripts/e2e/github-channel-coach-slash.sh
 scripts/e2e/github-channel-nudge-slash.sh
