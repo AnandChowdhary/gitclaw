@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T08:23:26Z",
+  "generated_at": "2026-06-03T08:25:02Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 811,
     "title": "GitClaw telegram thread channel-forecast-e2e-20260603t082122z",
@@ -51,6 +51,15 @@
       "CommentID": 4610420986,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Forecast Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#811`\n- requested_channel_command: `/channels forecast`\n- channel_forecast_status: `recorded`\n- forecast_issue: `#812`\n- forecast_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/812`\n- forecast_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#811`\n- notification_comment_id: `4610431509`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `dd5f31893600`\n- source_message_id_sha256_12: `30a64a576d5a`\n- notify_message_id_sha256_12: `3214af6c6e0b`\n- notify_message_id_auto: `false`\n- forecast_id_sha256_12: `c5f450b75f67`\n- forecast_id_auto: `false`\n- forecast_title_sha256_12: `6ec8c3c28f66`\n- forecast_title_bytes: `54`\n- forecast_title_lines: `1`\n- forecast_prediction_sha256_12: `96acc8399f9a`\n- forecast_prediction_bytes: `78`\n- forecast_prediction_lines: `1`\n- forecast_evidence_sha256_12: `6baf46a049d7`\n- forecast_evidence_bytes: `74`\n- forecast_evidence_lines: `1`\n- forecast_resolution_sha256_12: `5947930109d8`\n- forecast_resolution_bytes: `78`\n- forecast_resolution_lines: `1`\n- forecast_due_sha256_12: `86d7caa29e57`\n- forecast_due_bytes: `64`\n- forecast_due_lines: `1`\n- notification_body_sha256_12: `7bc9fe6998f6`\n- target_from_current_channel_issue: `true`\n- raw_forecast_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_forecast_title_included: `false`\n- raw_forecast_prediction_included: `false`\n- raw_forecast_evidence_included: `false`\n- raw_forecast_resolution_included: `false`\n- raw_forecast_due_included: `false`\n- raw_channel_message_body_included: `false`\n- scheduled_workflow_created: `false`\n- reminder_created: `false`\n- wager_created: `false`\n- money_or_points_tracked: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_forecast_action_change: `true`\n- issue_title_sha256_12: `ebcdec9b32e5`\n\nGitClaw recorded a mirrored channel forecast as a durable GitHub issue, then queued a provider-facing link back to the original thread. The forecast issue contains the human-readable title, prediction, evidence, resolution, and due/review timing; this source receipt keeps provider IDs, forecast IDs, section text, and channel message bodies out of band. No schedule, reminder, betting market, money/points tracking, provider delivery, or repository mutation is created by this action.\n\n### Follow-Up Delivery\n- provider gateways read the forecast-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent forecast links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate forecast issues are suppressed by `forecast_id`; duplicate forecast-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the forecast issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4610431669,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-03T08:22:59Z",
       "updated_at": "2026-06-03T08:22:59Z"
+    },
+    {
+      "id": 4610431509,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-forecast-e2e-20260603t082122z\" message_id=\"forecast-notify-20260603t082122z\" author=\"gitclaw\" --\u003e\nGitClaw channel forecast recorded.\n\nForecast: #812\nURL: https://github.com/AnandChowdhary/gitclaw/issues/812\nTitle: Find the shortest useful channel loop 20260603t082122z\nDue: Visible due token: VISIBLE_CHANNEL_FORECAST_DUE_20260603t082122z\n\nRecorded in the linked GitHub issue.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T08:24:32Z",
+      "updated_at": "2026-06-03T08:24:32Z"
+    },
+    {
+      "id": 4610431669,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26872762890\" event_id=\"comment-4610420986\" model=\"gitclaw/channels\" idempotency_key=\"e50146b451985242b2889de03c60244c\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26872762890\" --\u003e\n## GitClaw Channel Forecast Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#811`\n- requested_channel_command: `/channels forecast`\n- channel_forecast_status: `recorded`\n- forecast_issue: `#812`\n- forecast_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/812`\n- forecast_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#811`\n- notification_comment_id: `4610431509`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `dd5f31893600`\n- source_message_id_sha256_12: `30a64a576d5a`\n- notify_message_id_sha256_12: `3214af6c6e0b`\n- notify_message_id_auto: `false`\n- forecast_id_sha256_12: `c5f450b75f67`\n- forecast_id_auto: `false`\n- forecast_title_sha256_12: `6ec8c3c28f66`\n- forecast_title_bytes: `54`\n- forecast_title_lines: `1`\n- forecast_prediction_sha256_12: `96acc8399f9a`\n- forecast_prediction_bytes: `78`\n- forecast_prediction_lines: `1`\n- forecast_evidence_sha256_12: `6baf46a049d7`\n- forecast_evidence_bytes: `74`\n- forecast_evidence_lines: `1`\n- forecast_resolution_sha256_12: `5947930109d8`\n- forecast_resolution_bytes: `78`\n- forecast_resolution_lines: `1`\n- forecast_due_sha256_12: `86d7caa29e57`\n- forecast_due_bytes: `64`\n- forecast_due_lines: `1`\n- notification_body_sha256_12: `7bc9fe6998f6`\n- target_from_current_channel_issue: `true`\n- raw_forecast_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_forecast_title_included: `false`\n- raw_forecast_prediction_included: `false`\n- raw_forecast_evidence_included: `false`\n- raw_forecast_resolution_included: `false`\n- raw_forecast_due_included: `false`\n- raw_channel_message_body_included: `false`\n- scheduled_workflow_created: `false`\n- reminder_created: `false`\n- wager_created: `false`\n- money_or_points_tracked: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_forecast_action_change: `true`\n- issue_title_sha256_12: `ebcdec9b32e5`\n\nGitClaw recorded a mirrored channel forecast as a durable GitHub issue, then queued a provider-facing link back to the original thread. The forecast issue contains the human-readable title, prediction, evidence, resolution, and due/review timing; this source receipt keeps provider IDs, forecast IDs, section text, and channel message bodies out of band. No schedule, reminder, betting market, money/points tracking, provider delivery, or repository mutation is created by this action.\n\n### Follow-Up Delivery\n- provider gateways read the forecast-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent forecast links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate forecast issues are suppressed by `forecast_id`; duplicate forecast-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the forecast issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T08:24:33Z",
+      "updated_at": "2026-06-03T08:24:33Z"
     }
   ]
 }
