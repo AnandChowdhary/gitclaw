@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T00:57:07Z",
+  "generated_at": "2026-06-03T00:59:02Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4608180728,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels bookmark-message --bookmark-id channel-bookmark-20260603t005329z --message-id bookmark-ingest-20260603t005329z --notify-message-id bookmark-notify-20260603t005329z\nBookmark: Shape GitHub-native channel bookmark 20260603t005329z\nReason:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_BOOKMARK_DUPLICATE_20260603t005329z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4608183846,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Bookmark Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#765`\n- requested_channel_command: `/channels bookmark-message`\n- channel_bookmark_status: `duplicate`\n- bookmark_issue: `#766`\n- bookmark_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/766`\n- bookmark_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#765`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `e5b3bcccfe1b`\n- source_message_id_sha256_12: `3c6b01eaae4c`\n- notify_message_id_sha256_12: `9f9033e9e7ee`\n- notify_message_id_auto: `false`\n- bookmark_id_sha256_12: `f43a1590cae1`\n- bookmark_id_auto: `false`\n- bookmark_title_sha256_12: `041c1bf6fdb3`\n- bookmark_title_bytes: `53`\n- bookmark_title_lines: `1`\n- reference_url_sha256_12: `none`\n- reference_url_bytes: `0`\n- reference_url_present: `false`\n- bookmark_notes_sha256_12: `401386b0f2a9`\n- bookmark_notes_bytes: `86`\n- bookmark_notes_lines: `1`\n- notification_body_sha256_12: `8e90aa0cf907`\n- target_from_current_channel_issue: `true`\n- raw_bookmark_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_bookmark_title_included: `false`\n- raw_reference_url_included: `false`\n- raw_bookmark_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_bookmark_action_change: `true`\n- issue_title_sha256_12: `65887737225a`\n\nGitClaw saved a channel-origin message pointer as a durable GitHub bookmark issue, then queued a provider-facing acknowledgement back to the original thread. The bookmark issue contains the human-readable saved context and optional reference URL hash; this source receipt keeps provider IDs, bookmark IDs, raw reference URLs, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the bookmark acknowledgement with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent bookmark acknowledgements with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate bookmark issues are suppressed by `bookmark_id`; duplicate bookmark notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the bookmark issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4608188484,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T00:56:39Z",
       "updated_at": "2026-06-03T00:56:39Z"
+    },
+    {
+      "id": 4608183846,
+      "body": "@gitclaw /channels bookmark-message --bookmark-id channel-bookmark-20260603t005329z --message-id bookmark-ingest-20260603t005329z --notify-message-id bookmark-notify-20260603t005329z\nBookmark: Shape GitHub-native channel bookmark 20260603t005329z\nReason:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_BOOKMARK_DUPLICATE_20260603t005329z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T00:57:23Z",
+      "updated_at": "2026-06-03T00:57:23Z"
+    },
+    {
+      "id": 4608188484,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26857183887\" event_id=\"comment-4608183846\" model=\"gitclaw/channels\" idempotency_key=\"201fb31e5007885de3a2a3c0dfa809bb\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26857183887\" --\u003e\n## GitClaw Channel Bookmark Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#765`\n- requested_channel_command: `/channels bookmark-message`\n- channel_bookmark_status: `duplicate`\n- bookmark_issue: `#766`\n- bookmark_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/766`\n- bookmark_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#765`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `e5b3bcccfe1b`\n- source_message_id_sha256_12: `3c6b01eaae4c`\n- notify_message_id_sha256_12: `9f9033e9e7ee`\n- notify_message_id_auto: `false`\n- bookmark_id_sha256_12: `f43a1590cae1`\n- bookmark_id_auto: `false`\n- bookmark_title_sha256_12: `041c1bf6fdb3`\n- bookmark_title_bytes: `53`\n- bookmark_title_lines: `1`\n- reference_url_sha256_12: `none`\n- reference_url_bytes: `0`\n- reference_url_present: `false`\n- bookmark_notes_sha256_12: `401386b0f2a9`\n- bookmark_notes_bytes: `86`\n- bookmark_notes_lines: `1`\n- notification_body_sha256_12: `8e90aa0cf907`\n- target_from_current_channel_issue: `true`\n- raw_bookmark_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_bookmark_title_included: `false`\n- raw_reference_url_included: `false`\n- raw_bookmark_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_bookmark_action_change: `true`\n- issue_title_sha256_12: `65887737225a`\n\nGitClaw saved a channel-origin message pointer as a durable GitHub bookmark issue, then queued a provider-facing acknowledgement back to the original thread. The bookmark issue contains the human-readable saved context and optional reference URL hash; this source receipt keeps provider IDs, bookmark IDs, raw reference URLs, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the bookmark acknowledgement with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent bookmark acknowledgements with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate bookmark issues are suppressed by `bookmark_id`; duplicate bookmark notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the bookmark issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T00:58:29Z",
+      "updated_at": "2026-06-03T00:58:29Z"
     }
   ]
 }
