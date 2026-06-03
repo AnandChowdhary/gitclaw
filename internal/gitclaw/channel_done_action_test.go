@@ -421,6 +421,28 @@ func TestChannelDoneArtifactRefSupportsToolResultIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsToolLessonIssues(t *testing.T) {
+	body := RenderChannelToolLessonIssueBody(ChannelToolLessonOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		NoteID:            "tool-lesson-done-1",
+		ToolName:          "gitclaw.search_files",
+		Title:             "Prefer search_files for precise repo recall",
+		Lesson:            "Close this after the tool lesson has been reviewed.",
+		SourceIssueNumber: 43,
+		SourceCommentID:   4302,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "tool-lesson" || ref.ID != "tool-lesson-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 43 || ref.SourceCommentID != 4302 {
+		t.Fatalf("unexpected tool-lesson artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsQuoteIssues(t *testing.T) {
 	body := RenderChannelQuoteIssueBody(ChannelQuoteOptions{
 		Repo:              "owner/repo",

@@ -6385,6 +6385,40 @@ validates the metadata-only backup-note outbox, checks duplicate suppression,
 and then continues on the backup-note issue with a normal GitHub Models
 repo-reader/search follow-up that makes a real LLM call.
 
+The same channel-thread issue can also preserve a tool lesson without executing
+or installing tools:
+
+```text
+@gitclaw /channels tool-lesson --note-id <stable-note-id> --tool <tool-name> --message-id <provider-message-id>
+Title: channel-origin tool usage lesson
+Lesson:
+optional human-readable lesson/context/source text
+```
+
+`/channels tool-lesson`, `/channels tool-guidance`, `/channels tool-tip`,
+`/channels tool-rule`, and `/channels capture-tool-lesson` infer the current
+channel and thread id from the issue marker when no explicit route/channel/thread
+target is provided. They create or reuse one open GitHub issue carrying a hidden
+`gitclaw:channel-tool-lesson` marker for the stable note id, label it with
+`gitclaw` so normal conversation can continue there, and queue a provider-facing
+tool-lesson link back to the mirrored channel thread. The tool-lesson issue
+contains the human-readable tool name, title, and lesson because it is the
+durable review card; the source receipt remains body-free, reporting only
+note/thread/message/tool/title/lesson hashes, counts, duplicate status,
+notification queue metadata, and delivery gates. It does not call a model, call
+provider APIs, execute tools, install tools, update tool policy, mutate memory,
+mutate the repository, print raw note ids, print raw tool names, print raw
+thread ids, print raw source or notification message ids, print channel message
+bodies, or print raw titles or lesson text in the source receipt.
+Provider-facing notifications include the issue link, visible tool name, and
+visible title only, never the lesson body. Duplicates are suppressed first by
+`note_id` for the GitHub tool-lesson issue and then by
+`channel + notify_message_id` for the provider-facing tool-lesson link.
+Changes to this surface require a live E2E that records the tool lesson,
+validates the metadata-only tool-lesson outbox, checks duplicate suppression,
+and then continues on the tool-lesson issue with a normal GitHub Models
+repo-reader/search follow-up that makes a real LLM call.
+
 The same channel-thread issue can also record an externally observed tool
 result without executing the tool:
 
@@ -11436,6 +11470,19 @@ examples/workflows/gitclaw.yml
   that must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-backup-note fixture token, and avoid hidden channel, account,
   provider, message, note id, backup scope, title, note text, and notification
+  sentinels.
+- A `gh`-driven channel-tool-lesson-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels tool-lesson --note-id ... --tool ... --message-id ...`
+  on that mirrored thread, verifies GitHub tool-lesson issue creation,
+  body-free source receipt metadata, provider-facing tool-lesson-link queueing,
+  duplicate tool-lesson and notification suppression, explicit
+  no-tool-execution/no-tool-install/no-tool-policy-mutation/no-memory-mutation/
+  no-repository-mutation gates, and metadata-only outbox discovery. The
+  tool-lesson issue then gets a normal GitHub Models issue-comment follow-up
+  that must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-tool-lesson fixture token, and avoid hidden channel, account,
+  provider, message, note id, tool name, title, lesson, and notification
   sentinels.
 - A `gh`-driven channel-tool-result-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts

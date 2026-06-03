@@ -5134,6 +5134,35 @@ on the glossary issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Tool Lesson Follow-Up
+
+OpenClaw's channel gateway framing and Hermes' messaging model both make
+provider conversations useful places to notice operational knowledge, but
+tool behavior still needs a runtime boundary. GitClaw should let Slack or
+Telegram preserve a lesson about when or how to use a tool without treating
+the provider message as permission to execute, install, or rewrite tool
+policy. A channel tool lesson is the review-only primitive: chat captures the
+lesson, GitHub becomes the durable issue, and any real tool execution or policy
+change remains a separate reviewed follow-up.
+
+GitClaw's serverless version is `@gitclaw /channels tool-lesson --note-id <id>
+--tool <tool> --message-id <id>`. It opens or reuses a normal
+`gitclaw:channel-tool-lesson` issue with the readable tool, title, and lesson,
+queues one provider-facing tool-lesson issue link back to the source
+Slack/Telegram thread, and keeps the source receipt body-free with only
+tool/title/text/id hashes, counts, duplicate status, notification metadata,
+and delivery gates. The provider-facing notification includes the link, visible
+tool, and visible title only, not the lesson body. The action does not call a
+model, execute tools, install tools, mutate tool policy, mutate memory, mutate
+the repository, call provider APIs, or print raw provider IDs, note IDs, tool
+names, titles, lesson text, or channel bodies in the source receipt.
+Acceptance requires live E2E for tool-lesson issue creation, metadata-only
+outbox discovery, duplicate suppression, and a real GitHub Models
+repo-reader/search follow-up on the tool-lesson issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Backup Note Follow-Up
 
 OpenClaw's channel-first framing and Hermes' messaging gateway both make chat

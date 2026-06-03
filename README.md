@@ -717,6 +717,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels skill-note --note-id <id> --skill <name> --message-id <id>
 @gitclaw /channels soul-note --note-id <id> --area <area> --message-id <id>
 @gitclaw /channels backup-note --note-id <id> --scope <scope> --message-id <id>
+@gitclaw /channels tool-lesson --note-id <id> --tool <tool> --message-id <id>
 @gitclaw /channels idea --idea-id <id> --message-id <id>
 @gitclaw /channels whiteboard --jam-id <id> --message-id <id>
 @gitclaw /channels kudos --kudos-id <id> --message-id <id>
@@ -1205,6 +1206,14 @@ provider-facing backup-note link with the issue link, scope, and title only,
 and keeps the source receipt body-free. It does not fetch backup branches, read
 backup payloads, restore files, mutate memory, or edit repository files;
 recovery work stays in explicit reviewed follow-ups.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+tool-lesson --note-id <id> --tool <tool> --message-id <id>` preserves a
+channel lesson about tool usage as a durable GitHub tool-lesson issue. The
+note issue holds the readable tool, title, and lesson, queues a provider-facing
+tool-lesson link with the issue link, tool, and title only, and keeps the
+source receipt body-free. It does not execute tools, install tools, update
+tool policy, mutate memory, or edit repository files; tool execution and tool
+policy changes stay in explicit reviewed follow-ups.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 tool-result --tool <tool> --result-id <id> --status <status> --message-id
 <id>` records an externally observed channel tool outcome as a durable GitHub
@@ -1898,6 +1907,7 @@ scripts/e2e/github-channel-faq-slash.sh
 scripts/e2e/github-channel-skill-note-slash.sh
 scripts/e2e/github-channel-soul-note-slash.sh
 scripts/e2e/github-channel-backup-note-slash.sh
+scripts/e2e/github-channel-tool-lesson-slash.sh
 scripts/e2e/github-channel-tool-result-slash.sh
 scripts/e2e/github-channel-idea-slash.sh
 scripts/e2e/github-channel-jam-slash.sh
@@ -2375,6 +2385,14 @@ visible scope and title back to the mirrored thread, checks duplicate
 backup-note and notification suppression, exposes the backup-note notification
 through metadata-only outbox, and then continues on the backup-note issue with
 a real GitHub Models repo-reader/search follow-up.
+The channel-tool-lesson slash harness turns the operator console into a tool
+guidance capture surface: a channel-ingested issue receives `@gitclaw
+/channels tool-lesson`, creates or reuses a durable GitHub tool-lesson issue,
+queues a provider-facing tool-lesson link with only the visible tool and title
+back to the mirrored thread, checks duplicate tool-lesson and notification
+suppression, exposes the tool-lesson notification through metadata-only outbox,
+and then continues on the tool-lesson issue with a real GitHub Models
+repo-reader/search follow-up.
 The channel-idea slash harness turns the operator console into an idea intake
 surface: a channel-ingested issue receives `@gitclaw /channels idea`, creates
 or reuses a durable GitHub idea issue, queues a provider-facing idea link back
