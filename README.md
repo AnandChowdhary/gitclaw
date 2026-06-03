@@ -342,6 +342,7 @@ gitclaw tools toolsets risk
 gitclaw tools toolsets provenance
 gitclaw tools toolsets info <name>
 gitclaw tools approval-plan <name>
+gitclaw tools map <name>
 gitclaw tools run-plan <name>
 gitclaw tools info <name>
 gitclaw tools search <query>
@@ -366,6 +367,14 @@ text, include raw tool inputs/outputs, or mutate the repository.
 Add `--notify-route <route>` or `--notify-routes <a,b>` to queue a body-safe
 Slack/Telegram channel notification for the review issue through the existing
 routebook, outbox, and delivery receipt path.
+`gitclaw tools map <name>` and `@gitclaw /tools map <name>` render a
+body-safe OpenClaw/Hermes-style tool sequence: list, search, info,
+approval-plan, run-plan, then optional reviewed request-run. The map reports
+only normalized contract metadata, hashes, validation/risk gates, and review
+steps; it does not execute tools, launch MCP servers, create approval,
+rehearsal, or run-request issues, call a model, mutate workflows, mutate the
+repository, or print raw issue bodies, comments, prompts, tool inputs, or tool
+outputs.
 `@gitclaw /tools cancel-run --id <id>` closes an open reviewed tool-run request
 issue after posting a durable `gitclaw:tool-run-cancel` marker on that request.
 It does not approve or execute the tool, call a model, copy raw source text, or
@@ -2160,6 +2169,7 @@ scripts/e2e/github-tools-exposure-report.sh
 scripts/e2e/github-tools-defer-plan-report.sh
 scripts/e2e/github-tools-boundary-report.sh
 scripts/e2e/github-tools-approval-plan-report.sh
+scripts/e2e/github-tools-map-report.sh
 scripts/e2e/github-tools-rehearse-issue.sh
 scripts/e2e/github-tools-run-request-issue.sh
 scripts/e2e/github-tools-run-request-channel-notify.sh

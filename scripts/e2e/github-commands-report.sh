@@ -149,7 +149,7 @@ for expected in \
   'trigger_prefix: `@gitclaw`' \
   'commands: `35`' \
   'aliases: `33`' \
-  'local_cli_helpers: `231`' \
+  'local_cli_helpers: `232`' \
   'run_mode: `read-only`' \
   'llm_e2e_required_after_commands_report_change: `true`' \
   "### Slash Commands" \
@@ -427,6 +427,7 @@ for expected in \
   'gitclaw tools toolsets provenance' \
   'gitclaw tools toolsets info <name>' \
   'gitclaw tools approval-plan <name>' \
+  'gitclaw tools map <name>' \
   'gitclaw tools run-plan <name>' \
   'gitclaw tools info <name>' \
   'gitclaw tools search <query>' \
