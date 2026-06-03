@@ -166,6 +166,7 @@ channel time capsule unique search fixture phrase => GITCLAW_CHANNEL_TIME_CAPSUL
 channel whoami unique search fixture phrase => GITCLAW_CHANNEL_WHOAMI_CONTEXT_V1
 channel tool request unique search fixture phrase => GITCLAW_CHANNEL_TOOL_REQUEST_CONTEXT_V1
 channel tool rehearsal unique search fixture phrase => GITCLAW_CHANNEL_TOOL_REHEARSAL_CONTEXT_V1
+channel tool map unique search fixture phrase => GITCLAW_CHANNEL_TOOL_MAP_CONTEXT_V1
 channel skill rehearsal unique search fixture phrase => GITCLAW_CHANNEL_SKILL_REHEARSAL_CONTEXT_V1
 channel soul rehearsal unique search fixture phrase => GITCLAW_CHANNEL_SOUL_REHEARSAL_CONTEXT_V1
 channel memory rehearsal unique search fixture phrase => GITCLAW_CHANNEL_MEMORY_REHEARSAL_CONTEXT_V1

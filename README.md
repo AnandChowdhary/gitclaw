@@ -763,6 +763,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels skill-info <skill> --message-id <id> --notify-message-id <id>
 @gitclaw /channels tool-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels tool-info <tool> --message-id <id> --notify-message-id <id>
+@gitclaw /channels tool-map <tool> --map-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels whoami --identity-id <id> --message-id <id>
 @gitclaw /channels contact --contact-id <id> --role <role> --message-id <id>
 @gitclaw /channels handoff --id <id> --message-id <id>
@@ -1121,6 +1122,15 @@ hashes, memory paths, line numbers, scores, file hashes, line hashes, and
 duplicate status without printing raw search queries, memory bodies, channel
 bodies, issue bodies, comment bodies, prompts, tool outputs, or calling an
 external memory provider.
+`@gitclaw /channels tool-map <tool> --map-id <id> --message-id <id>
+--notify-message-id <id>` queues a provider-facing safe tool sequence back to
+Slack/Telegram. The card shows the reviewed path from tool status, tool search,
+and tool info through approval-plan, rehearsal, and run-request issue commands.
+It does not execute tools, run shells, launch MCP servers, activate toolsets,
+create approval/rehearsal/run-request issues, call provider APIs, call a model,
+mutate workflows, or mutate the repository. The source receipt keeps raw map
+ids, requested tool names, notes, step text, provider ids, issue bodies,
+comments, raw schemas, raw inputs, and raw outputs out of band.
 `@gitclaw /channels recovery-map <issue|repo|channel|incident> --map-id <id>
 --message-id <id> --notify-message-id <id>` queues a provider-facing backup
 recovery sequence back to Slack/Telegram. The card shows the safe order:
@@ -1932,6 +1942,7 @@ scripts/e2e/github-backup-restore-request-issue.sh
 scripts/e2e/github-backup-restore-request-channel-notify.sh
 scripts/e2e/github-channel-backup-status-slash.sh
 scripts/e2e/github-channel-recovery-map-slash.sh
+scripts/e2e/github-channel-tool-map-slash.sh
 scripts/e2e/github-channel-backup-search-slash.sh
 scripts/e2e/github-channel-backup-info-slash.sh
 scripts/e2e/github-channel-checkpoint-status-slash.sh
@@ -2968,6 +2979,13 @@ provider-facing tool card back to the mirrored thread without executing tools
 or exposing raw schemas, checks duplicate notification suppression, exposes the
 tool-info notification through metadata-only outbox, and then continues on the
 channel thread itself with a real GitHub Models repo-reader/search follow-up.
+The channel-tool-map slash harness adds the safe sequence card: a
+channel-ingested issue receives `@gitclaw /channels tool-map`, queues a
+provider-facing path from tool status/search/info to reviewed approval-plan,
+rehearsal, and request-run commands without executing tools or creating those
+review issues, checks duplicate notification suppression, exposes the tool-map
+notification through metadata-only outbox, and then continues on the channel
+thread itself with a real GitHub Models repo-reader/search follow-up.
 The channel-tool-status slash harness turns the operator console into a
 provider-visible tool discovery surface: a channel-ingested issue receives
 `@gitclaw /channels tools`, queues a provider-facing tool-status message back

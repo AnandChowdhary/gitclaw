@@ -7995,6 +7995,39 @@ queues a tool-info notification, validates metadata-only outbox discovery,
 verifies duplicate suppression, and then continues on the same GitHub issue
 with a real GitHub Models repo-reader/search follow-up.
 
+The same channel-thread issue can ask for a safe tool-use map before opening
+any reviewed issue:
+
+```text
+@gitclaw /channels tool-map search_files --map-id <stable-map-id> --message-id <provider-message-id> --notify-message-id <stable-outbound-id>
+Note: Keep tool execution reviewed.
+```
+
+`/channels tool-map`, `/channels tools-map`, `/channels tool-path`,
+`/channels tools-path`, `/channels tool-flow`, `/channels tools-flow`,
+`/channels tool-safety`, `/channels tools-safety`, `/channels safe-tool`, and
+`/channels tool-runbook` infer the current channel and thread id from the
+issue marker when no explicit route/channel/thread target is provided. They
+queue one provider-facing sequence card that shows the safe path through tool
+status, tool search, tool info, approval-plan, rehearsal, and request-run
+commands. This is a map, not execution or review creation: the action does not
+call a model, execute tools, run shell commands, launch MCP servers, activate
+toolsets, create approval issues, create rehearsal issues, create run-request
+issues, call provider APIs, mutate workflows, or mutate repository files. The
+provider card may show the requested tool, note, and step commands because it
+is the user-facing map. The source receipt remains body-free, reporting only
+hashes, sizes, counts, duplicate status, notification metadata, tool snapshot
+metadata, and hard delivery gates. It does not print raw map ids, raw requested
+tool names, raw notes, raw provider thread/message ids, raw step text, raw tool
+schemas, raw tool inputs, raw tool outputs, raw channel bodies, source bodies,
+issue bodies, comment bodies, or prompts. Duplicates are suppressed by
+`channel + notify_message_id`. Changes to this surface require a live E2E that
+records the tool-map request, validates the metadata-only outbox, checks
+duplicate suppression, proves no tool execution/review issue creation/model/
+provider API/workflow mutation/repository mutation happened, and then
+continues on the same channel issue with a normal GitHub Models
+repo-reader/search follow-up.
+
 The same channel-thread issue can answer a repo-profile status request without
 exporting, importing, switching, or mutating profiles:
 
@@ -9378,6 +9411,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels skill-info repo-reader --message-id provider-msg-1 --notify-message-id provider-skill-info-ack-1
 @gitclaw /channels tool-search read_file --message-id provider-msg-1 --notify-message-id provider-tool-search-ack-1
 @gitclaw /channels tool-info read_file --message-id provider-msg-1 --notify-message-id provider-tool-info-ack-1
+@gitclaw /channels tool-map search_files --map-id channel-tool-map-1 --message-id provider-msg-1 --notify-message-id provider-tool-map-ack-1
 @gitclaw /channels propose-soul --target soul --id channel-soul-proposal-1 --message-id provider-msg-1
 @gitclaw /channels rehearse-soul --target soul --id channel-soul-rehearsal-1 --message-id provider-msg-1
 @gitclaw /channels propose-memory --target long-term --id channel-memory-proposal-1 --message-id provider-msg-1
@@ -12732,6 +12766,20 @@ examples/workflows/gitclaw.yml
   that must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-tool-info fixture token, and avoid hidden channel, account, message,
   info, tool-input/output, and notification sentinels.
+- A `gh`-driven channel-tool-map-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels tool-map ...` on that mirrored thread, verifies one
+  provider-facing safe tool sequence card, source receipt metadata without raw
+  tool-map ids, requested tool names, notes, step text, schemas, inputs, or
+  outputs, duplicate notification suppression, metadata-only outbox discovery,
+  and explicit no-tool-execution/no-shell-execution/no-MCP-launch/no-toolset-
+  activation/no-approval-issue/no-rehearsal-issue/no-run-request-issue/no-
+  model-call/no-provider-API/no-workflow-mutation/no-repository-mutation
+  flags. The channel-thread issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-tool-map fixture token, and
+  avoid hidden channel, account, message, map, note, tool-input/output, and
+  notification sentinels.
 - A `gh`-driven channel-tool-status-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels tools --message-id ...` on that mirrored thread,
