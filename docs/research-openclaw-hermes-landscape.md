@@ -5107,6 +5107,29 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Journal Follow-Up
+
+OpenClaw's current framing keeps conversations and channels as durable surfaces
+around the assistant rather than disposable transports. Hermes' messaging guide
+points in the same direction: provider gateways carry messages, but the agent
+experience is organized around continuing sessions. GitClaw's serverless
+translation should therefore let important channel moments become GitHub-native
+conversation issues without silently promoting them into long-term memory.
+
+GitClaw's version is `@gitclaw /channels journal --journal-id <id> --date
+<date> --message-id <id>`. It opens or reuses a normal
+`gitclaw:channel-journal` issue with readable date, summary, and entry details,
+queues one provider-facing journal link to the source Slack/Telegram thread,
+and keeps the source receipt body-free with only date/summary/entry/provider
+hashes, duplicate status, and delivery gates. The action does not call a model,
+call provider APIs, mutate `.gitclaw/MEMORY.md`, print raw provider IDs, or
+write repository files. Acceptance requires live E2E for journal issue
+creation, metadata-only journal-link outbox discovery, duplicate suppression,
+and a real GitHub Models repo-reader/search follow-up on the journal issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Open Loop Follow-Up
 
 OpenClaw's workspace model points toward durable agent context that can hold

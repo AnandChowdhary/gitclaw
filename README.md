@@ -1149,6 +1149,14 @@ GitHub issue. The digest issue holds the readable summary and highlights,
 queues a provider-facing digest link back to the Slack/Telegram thread, and
 keeps the source receipt body-free with hashes, duplicate state, notification
 metadata, and delivery gates.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels journal
+--journal-id <id> --date <date> --message-id <id>` records a dated channel
+journal/log entry as a durable GitHub issue. The journal issue holds the
+readable date, summary, and entry details, queues a provider-facing journal
+link back to the Slack/Telegram thread, and keeps the source receipt body-free
+with hashes, duplicate state, notification metadata, and delivery gates. It
+does not mutate `.gitclaw/MEMORY.md`; promotion to memory stays in the reviewed
+memory proposal flow.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels idea
 --idea-id <id> --message-id <id>` captures a channel-origin idea as a durable
 GitHub issue. The idea issue holds the readable title and notes so the
@@ -1825,6 +1833,7 @@ scripts/e2e/github-channel-snippet-slash.sh
 scripts/e2e/github-channel-attachment-slash.sh
 scripts/e2e/github-channel-decision-slash.sh
 scripts/e2e/github-channel-digest-slash.sh
+scripts/e2e/github-channel-journal-slash.sh
 scripts/e2e/github-channel-idea-slash.sh
 scripts/e2e/github-channel-jam-slash.sh
 scripts/e2e/github-channel-kudos-slash.sh
@@ -2249,6 +2258,13 @@ back to the mirrored thread, checks duplicate digest and notification
 suppression, exposes the digest-link notification through metadata-only outbox,
 and then continues on the digest issue with a real GitHub Models
 repo-reader/search follow-up.
+The channel-journal slash harness turns the operator console into a durable
+field-note surface: a channel-ingested issue receives `@gitclaw /channels
+journal`, creates or reuses a dated GitHub journal issue, queues a
+provider-facing journal link back to the mirrored thread, checks duplicate
+journal and notification suppression, exposes the journal-link notification
+through metadata-only outbox, and then continues on the journal issue with a
+real GitHub Models repo-reader/search follow-up.
 The channel-idea slash harness turns the operator console into an idea intake
 surface: a channel-ingested issue receives `@gitclaw /channels idea`, creates
 or reuses a durable GitHub idea issue, queues a provider-facing idea link back

@@ -6161,6 +6161,38 @@ surface require a live E2E that records the digest, validates the metadata-only
 digest-link outbox, checks duplicate suppression, and then continues on the
 digest issue with a normal GitHub Models repo-reader/search follow-up.
 
+The same channel-thread issue can also record a dated channel journal entry:
+
+```text
+@gitclaw /channels journal --journal-id <stable-journal-id> --date <journal-date> --message-id <provider-message-id>
+Summary: short journal summary
+Entry:
+optional human-readable field note
+```
+
+`/channels journal`, `/channels log`, `/channels log-entry`,
+`/channels daily-log`, `/channels daily-note`, `/channels note`, and
+`/channels field-note` infer the current channel and thread id from the issue
+marker when no explicit route/channel/thread target is provided. They create or
+reuse one open GitHub issue carrying a hidden `gitclaw:channel-journal` marker
+for the stable journal id, label it with `gitclaw` so normal conversation can
+continue there, and queue a provider-facing journal link back to the mirrored
+channel thread. The journal issue contains the human-readable date, summary,
+and entry details because it is a durable GitHub-native field note; the source
+receipt remains body-free, reporting only journal/thread/message/date/summary/
+entry hashes, duplicate status, notification queue metadata, and delivery
+gates. It does not call a model, call provider APIs, mutate `.gitclaw/MEMORY.md`,
+print raw journal ids, print raw dates in the source receipt, print raw thread
+ids, print raw source or notification message ids, print channel message bodies,
+or print raw summary/entry details in the source receipt. Promotion from a
+journal issue into `.gitclaw/MEMORY.md` must go through the reviewed memory
+proposal flow. Duplicates are suppressed first by `journal_id` for the GitHub
+journal issue and then by `channel + notify_message_id` for the provider-facing
+journal link. Changes to this surface require a live E2E that records the
+journal, validates the metadata-only journal-link outbox, checks duplicate
+suppression, and then continues on the journal issue with a normal GitHub
+Models repo-reader/search follow-up.
+
 The same channel-thread issue can also capture a channel-origin idea:
 
 ```text
@@ -8029,6 +8061,9 @@ Behavior:
 - create or reuse one `gitclaw:channel-digest` issue per digest id and queue
   one provider-facing digest-link outbound comment per
   `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-journal` issue per journal id and queue
+  one provider-facing journal-link outbound comment per
+  `channel + notify_message_id` without mutating `.gitclaw/MEMORY.md`,
 - create or reuse one `gitclaw:channel-idea` issue per idea id and queue one
   provider-facing idea-link outbound comment per `channel + notify_message_id`,
 - create or reuse one `gitclaw:channel-jam` issue per jam id and queue one
@@ -11095,6 +11130,16 @@ examples/workflows/gitclaw.yml
   select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-digest fixture token, and avoid hidden channel, account, provider,
   message, and digest sentinels.
+- A `gh`-driven channel-journal-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels journal --journal-id ... --date ... --message-id ...` on
+  that mirrored thread, verifies GitHub journal issue creation, body-free
+  source receipt metadata, provider-facing journal-link queueing, duplicate
+  journal and notification suppression, and metadata-only outbox discovery.
+  The journal issue then gets a normal GitHub Models issue-comment follow-up
+  that must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-journal fixture token, and avoid hidden channel, account, provider,
+  message, date, summary, entry, and journal sentinels.
 - A `gh`-driven channel-idea-slash E2E harness creates a real channel-thread
   issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels idea --idea-id ... --message-id ...` on that mirrored

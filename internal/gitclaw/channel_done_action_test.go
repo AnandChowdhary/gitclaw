@@ -374,6 +374,28 @@ func TestChannelDoneArtifactRefSupportsDigestIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsJournalIssues(t *testing.T) {
+	body := RenderChannelJournalIssueBody(ChannelJournalOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		JournalID:         "journal-done-1",
+		JournalDate:       "2026-06-03",
+		Summary:           "Team channel recorded a useful field note",
+		Highlights:        "Move the rest of the follow-up to GitHub.",
+		SourceIssueNumber: 43,
+		SourceCommentID:   4301,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "journal" || ref.ID != "journal-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 43 || ref.SourceCommentID != 4301 {
+		t.Fatalf("unexpected journal artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsIdeaIssues(t *testing.T) {
 	body := RenderChannelIdeaIssueBody(ChannelIdeaOptions{
 		Repo:              "owner/repo",
