@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T06:49:10Z",
+  "generated_at": "2026-06-03T06:50:55Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 803,
     "title": "GitClaw telegram thread channel-time-capsule-e2e-20260603t064705z",
@@ -51,6 +51,15 @@
       "CommentID": 4609806188,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Time Capsule Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#803`\n- requested_channel_command: `/channels time-capsule`\n- channel_time_capsule_status: `recorded`\n- capsule_issue: `#804`\n- capsule_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/804`\n- capsule_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#803`\n- notification_comment_id: `4609815602`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `fbf8363a8079`\n- source_message_id_sha256_12: `f0483a81602b`\n- notify_message_id_sha256_12: `5a12bcc9b3ab`\n- notify_message_id_auto: `false`\n- capsule_id_sha256_12: `efe75df6b263`\n- capsule_id_auto: `false`\n- open_after_sha256_12: `61d815f58243`\n- open_after_bytes: `10`\n- open_after_lines: `1`\n- capsule_title_sha256_12: `310c7b675b25`\n- capsule_title_bytes: `58`\n- capsule_title_lines: `1`\n- capsule_message_sha256_12: `c482b7ed88ea`\n- capsule_message_bytes: `89`\n- capsule_message_lines: `1`\n- notification_body_sha256_12: `6bf330423a18`\n- target_from_current_channel_issue: `true`\n- raw_capsule_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_open_after_included: `false`\n- raw_capsule_title_included: `false`\n- raw_capsule_message_included: `false`\n- raw_channel_message_body_included: `false`\n- scheduled_delivery_created: `false`\n- reminder_created: `false`\n- workflow_created: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_time_capsule_action_change: `true`\n- issue_title_sha256_12: `1a16028e29ff`\n\nGitClaw recorded a mirrored channel time capsule as a durable GitHub issue, then queued a provider-facing link back to the original thread. The capsule issue contains the human-readable open-after hint, title, and message; this source receipt keeps provider IDs, capsule IDs, open-after hints, titles, messages, and channel message bodies out of band. This action does not schedule future delivery, create cron workflows, mutate repository files, or call a model.\n\n### Follow-Up Delivery\n- provider gateways read the time-capsule-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent time-capsule links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate capsule issues are suppressed by `capsule_id`; duplicate time-capsule-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the capsule issue with the `gitclaw` label; scheduled reminders remain a separate explicit workflow",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4609815713,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-03T06:48:45Z",
       "updated_at": "2026-06-03T06:48:45Z"
+    },
+    {
+      "id": 4609815602,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-time-capsule-e2e-20260603t064705z\" message_id=\"time-capsule-notify-20260603t064705z\" author=\"gitclaw\" --\u003e\nGitClaw channel time capsule recorded.\n\nTime capsule: #804\nURL: https://github.com/AnandChowdhary/gitclaw/issues/804\nOpen after: 2030-01-01\nTitle: Open when the channel roadmap feels stale 20260603t064705z\n\nRecorded in the linked GitHub issue.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T06:50:22Z",
+      "updated_at": "2026-06-03T06:50:22Z"
+    },
+    {
+      "id": 4609815713,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26868533926\" event_id=\"comment-4609806188\" model=\"gitclaw/channels\" idempotency_key=\"db0c5e4884ea50eead3a17358f106395\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26868533926\" --\u003e\n## GitClaw Channel Time Capsule Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#803`\n- requested_channel_command: `/channels time-capsule`\n- channel_time_capsule_status: `recorded`\n- capsule_issue: `#804`\n- capsule_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/804`\n- capsule_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#803`\n- notification_comment_id: `4609815602`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `fbf8363a8079`\n- source_message_id_sha256_12: `f0483a81602b`\n- notify_message_id_sha256_12: `5a12bcc9b3ab`\n- notify_message_id_auto: `false`\n- capsule_id_sha256_12: `efe75df6b263`\n- capsule_id_auto: `false`\n- open_after_sha256_12: `61d815f58243`\n- open_after_bytes: `10`\n- open_after_lines: `1`\n- capsule_title_sha256_12: `310c7b675b25`\n- capsule_title_bytes: `58`\n- capsule_title_lines: `1`\n- capsule_message_sha256_12: `c482b7ed88ea`\n- capsule_message_bytes: `89`\n- capsule_message_lines: `1`\n- notification_body_sha256_12: `6bf330423a18`\n- target_from_current_channel_issue: `true`\n- raw_capsule_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_open_after_included: `false`\n- raw_capsule_title_included: `false`\n- raw_capsule_message_included: `false`\n- raw_channel_message_body_included: `false`\n- scheduled_delivery_created: `false`\n- reminder_created: `false`\n- workflow_created: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_time_capsule_action_change: `true`\n- issue_title_sha256_12: `1a16028e29ff`\n\nGitClaw recorded a mirrored channel time capsule as a durable GitHub issue, then queued a provider-facing link back to the original thread. The capsule issue contains the human-readable open-after hint, title, and message; this source receipt keeps provider IDs, capsule IDs, open-after hints, titles, messages, and channel message bodies out of band. This action does not schedule future delivery, create cron workflows, mutate repository files, or call a model.\n\n### Follow-Up Delivery\n- provider gateways read the time-capsule-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent time-capsule links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate capsule issues are suppressed by `capsule_id`; duplicate time-capsule-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the capsule issue with the `gitclaw` label; scheduled reminders remain a separate explicit workflow",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T06:50:23Z",
+      "updated_at": "2026-06-03T06:50:23Z"
     }
   ]
 }
