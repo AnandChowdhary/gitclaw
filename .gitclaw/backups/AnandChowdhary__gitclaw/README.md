@@ -1,6 +1,6 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-03T11:58:55Z`
+- generated_at: `2026-06-03T12:00:47Z`
 - issue_count: `716`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
@@ -720,4 +720,4 @@
 | #822 | GitClaw telegram thread channel-dock-e2e-20260603t112228z | `2026-06-03T11:28:10Z` | 7 | 7 | `issues/000822.json` |
 | #823 | GitClaw channel dock: dock to design-review-20260603t112228z | `2026-06-03T11:30:01Z` | 2 | 3 | `issues/000823.json` |
 | #824 | GitClaw telegram thread channel-warmup-e2e-20260603t114558z | `2026-06-03T11:53:47Z` | 9 | 9 | `issues/000824.json` |
-| #825 | GitClaw telegram thread channel-warmup-e2e-20260603t115507z | `2026-06-03T11:58:54Z` | 5 | 5 | `issues/000825.json` |
+| #825 | GitClaw telegram thread channel-warmup-e2e-20260603t115507z | `2026-06-03T12:00:46Z` | 7 | 7 | `issues/000825.json` |
