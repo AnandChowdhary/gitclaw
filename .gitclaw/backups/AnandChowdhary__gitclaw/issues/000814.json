@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-03T08:50:55Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 814,
+    "title": "GitClaw channel lore: Save the quiet channel context 20260603t084259z",
+    "body": "\u003c!-- gitclaw:channel-lore lore_id=\"channel-lore-20260603t084259z\" channel=\"telegram\" thread_id_sha256_12=\"48e7f6437354\" source_message_id_sha256_12=\"756f986c9543\" source_issue=\"813\" source_comment_id=\"4610580578\" --\u003e\nGitClaw channel lore.\n\n- lore_id: channel-lore-20260603t084259z\n- source_channel: telegram\n- source_issue: #813\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/813\n- source_comment_id: 4610580578\n- thread_id_sha256_12: 48e7f6437354\n- source_message_id_sha256_12: 756f986c9543\n- lore_mode: github-issue-lore\n- model_call_performed: false\n- scheduled_workflow_created: false\n- reminder_created: false\n- soul_write_performed: false\n- memory_write_performed: false\n- policy_mutation_performed: false\n- skill_install_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Title\n\nSave the quiet channel context 20260603t084259z\n\n## Lore\n\nVisible lore token: VISIBLE_CHANNEL_LORE_BODY_20260603t084259z\n\n## Context\n\nVisible context token: VISIBLE_CHANNEL_LORE_CONTEXT_20260603t084259z\n\n## Source\n\nVisible source token: VISIBLE_CHANNEL_LORE_SOURCE_20260603t084259z\n\n## Review\n\nVisible review token: VISIBLE_CHANNEL_LORE_REVIEW_20260603t084259z\n\nUse this issue as the durable GitHub home for channel lore. Close it when the lore is stale, superseded, or promoted through normal reviewed GitHub issues.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel lore: Save the quiet channel context 20260603t084259z\n\n\u003c!-- gitclaw:channel-lore lore_id=\"channel-lore-20260603t084259z\" channel=\"telegram\" thread_id_sha256_12=\"48e7f6437354\" source_message_id_sha256_12=\"756f986c9543\" source_issue=\"813\" source_comment_id=\"4610580578\" --\u003e\nGitClaw channel lore.\n\n- lore_id: channel-lore-20260603t084259z\n- source_channel: telegram\n- source_issue: #813\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/813\n- source_comment_id: 4610580578\n- thread_id_sha256_12: 48e7f6437354\n- source_message_id_sha256_12: 756f986c9543\n- lore_mode: github-issue-lore\n- model_call_performed: false\n- scheduled_workflow_created: false\n- reminder_created: false\n- soul_write_performed: false\n- memory_write_performed: false\n- policy_mutation_performed: false\n- skill_install_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Title\n\nSave the quiet channel context 20260603t084259z\n\n## Lore\n\nVisible lore token: VISIBLE_CHANNEL_LORE_BODY_20260603t084259z\n\n## Context\n\nVisible context token: VISIBLE_CHANNEL_LORE_CONTEXT_20260603t084259z\n\n## Source\n\nVisible source token: VISIBLE_CHANNEL_LORE_SOURCE_20260603t084259z\n\n## Review\n\nVisible review token: VISIBLE_CHANNEL_LORE_REVIEW_20260603t084259z\n\nUse this issue as the durable GitHub home for channel lore. Close it when the lore is stale, superseded, or promoted through normal reviewed GitHub issues.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created lore and use the repo-reader skill.\n\nSearch the repository for `channel lore unique search fixture phrase`.\nThe matching repository search result line has the form `channel lore unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_LORE_`.\nCopy the complete right-hand side token exactly, including the final `CONTEXT_V1` suffix.\nThe answer must end with `CONTEXT_V1`; `GITCLAW_CHANNEL_LORE_` alone is incomplete and must not be used.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include lore ids, message ids, thread ids, account hashes, issue numbers, lore titles, lore bodies, context, sources, or review notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_LORE_FOLLOWUP_20260603t084259z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4610612358,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_LORE_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4610623287,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4610612358,
+      "body": "@gitclaw Continue this channel-created lore and use the repo-reader skill.\n\nSearch the repository for `channel lore unique search fixture phrase`.\nThe matching repository search result line has the form `channel lore unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_LORE_`.\nCopy the complete right-hand side token exactly, including the final `CONTEXT_V1` suffix.\nThe answer must end with `CONTEXT_V1`; `GITCLAW_CHANNEL_LORE_` alone is incomplete and must not be used.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include lore ids, message ids, thread ids, account hashes, issue numbers, lore titles, lore bodies, context, sources, or review notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_LORE_FOLLOWUP_20260603t084259z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T08:48:58Z",
+      "updated_at": "2026-06-03T08:48:58Z"
+    },
+    {
+      "id": 4610623287,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26874025621\" event_id=\"comment-4610612358\" model=\"openai/gpt-5-nano\" idempotency_key=\"29cdca0a45f835f7c3ba405337fd3b30\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26874025621\" prompt_context_sha256_12=\"3ccf5eff3e15\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10971\" usage_completion_tokens=\"2132\" usage_total_tokens=\"13103\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_LORE_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T08:50:19Z",
+      "updated_at": "2026-06-03T08:50:19Z"
+    }
+  ]
+}

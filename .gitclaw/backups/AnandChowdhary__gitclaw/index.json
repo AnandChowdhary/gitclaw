@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T08:48:41Z",
+  "generated_at": "2026-06-03T08:50:56Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 704,
+  "count": 705,
   "issues": [
     {
       "number": 3,
@@ -8945,6 +8945,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 814,
+      "title": "GitClaw channel lore: Save the quiet channel context 20260603t084259z",
+      "path": "issues/000814.json",
+      "backup_generated_at": "2026-06-03T08:50:55Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
