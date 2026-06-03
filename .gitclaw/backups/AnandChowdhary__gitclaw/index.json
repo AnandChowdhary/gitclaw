@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T20:31:18Z",
+  "generated_at": "2026-06-03T20:43:17Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 739,
+  "count": 740,
   "issues": [
     {
       "number": 3,
@@ -9428,6 +9428,19 @@
       ],
       "comment_count": 9,
       "transcript_messages": 9
+    },
+    {
+      "number": 850,
+      "title": "GitClaw channels report e2e 20260603T204108Z",
+      "path": "issues/000850.json",
+      "backup_generated_at": "2026-06-03T20:43:16Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw",
+        "gitclaw:channel"
+      ],
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }

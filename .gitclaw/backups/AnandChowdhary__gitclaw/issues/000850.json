@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-03T20:43:16Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 850,
+    "title": "GitClaw channels report e2e 20260603T204108Z",
+    "body": "\u003c!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"channels-report-e2e-20260603T204108Z\" --\u003e\nGitClaw channels-report E2E thread.\n\nHidden issue token: NOECHO_CHANNELS_REPORT_ISSUE_20260603T204108Z",
+    "author": "AnandChowdhary",
+    "author_association": "OWNER",
+    "labels": [
+      "gitclaw",
+      "gitclaw:channel"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channels report e2e 20260603T204108Z\n\n\u003c!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"channels-report-e2e-20260603T204108Z\" --\u003e\nGitClaw channels-report E2E thread.\n\nHidden issue token: NOECHO_CHANNELS_REPORT_ISSUE_20260603T204108Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "Hidden mirrored message token: NOECHO_CHANNELS_REPORT_MESSAGE_20260603T204108Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4616528566,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels\n\nPlease audit channel bridge config.\nHidden command token: NOECHO_CHANNELS_REPORT_COMMAND_20260603T204108Z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4616528678,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "The repository search results indicate that the channels configuration is defined in `.gitclaw/channels/routes.yaml`. The report in the issue thread references the `telegram` channel and a thread with ID `gitclaw-e2e-telegram-{route}-{message_id}`. The report is part of an end-to-end (E2E) test for channels, specifically for the date 20260603T204108Z. The corresponding token in the search results for configuration phrase \"config.\" in context is: \n\n`.gitclaw/MEMORY.md:173:- Keep trigger behavior explicit in `.gitclaw/config.yml`: default` \n\nwhich confirms channel bridge config validation is associated with `.gitclaw/config.yml`.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4616539250,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4616528566,
+      "body": "\u003c!-- gitclaw:channel-message channel=\"telegram\" thread_id=\"channels-report-e2e-20260603T204108Z\" message_id=\"message-20260603T204108Z\" author=\"telegram:e2e\" --\u003e\nHidden mirrored message token: NOECHO_CHANNELS_REPORT_MESSAGE_20260603T204108Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T20:41:10Z",
+      "updated_at": "2026-06-03T20:41:10Z"
+    },
+    {
+      "id": 4616528678,
+      "body": "@gitclaw /channels\n\nPlease audit channel bridge config.\nHidden command token: NOECHO_CHANNELS_REPORT_COMMAND_20260603T204108Z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T20:41:11Z",
+      "updated_at": "2026-06-03T20:41:11Z"
+    },
+    {
+      "id": 4616539250,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26911716344\" event_id=\"comment-4616528566\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"e53e91fe6e833c9629ba14f2d47695de\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26911716344\" prompt_context_sha256_12=\"2ff97bd22037\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10638\" usage_completion_tokens=\"146\" usage_total_tokens=\"10784\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nThe repository search results indicate that the channels configuration is defined in `.gitclaw/channels/routes.yaml`. The report in the issue thread references the `telegram` channel and a thread with ID `gitclaw-e2e-telegram-{route}-{message_id}`. The report is part of an end-to-end (E2E) test for channels, specifically for the date 20260603T204108Z. The corresponding token in the search results for configuration phrase \"config.\" in context is: \n\n`.gitclaw/MEMORY.md:173:- Keep trigger behavior explicit in `.gitclaw/config.yml`: default` \n\nwhich confirms channel bridge config validation is associated with `.gitclaw/config.yml`.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T20:42:44Z",
+      "updated_at": "2026-06-03T20:42:44Z"
+    }
+  ]
+}
