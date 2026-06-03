@@ -71,7 +71,7 @@ func isChannelWarmupActionFields(fields []string) bool {
 		return false
 	}
 	switch strings.ToLower(strings.Trim(fields[1], " \t\r\n.,:;!?")) {
-	case "warmup", "warmups", "set-warmup", "thread-warmup", "starter", "starters", "icebreaker", "icebreakers", "kickoff", "prompt-card", "conversation-starter", "question-card", "vibe-check", "vibecheck", "pulse-check", "pulsecheck", "thread-pulse":
+	case "warmup", "warmups", "set-warmup", "thread-warmup", "starter", "starters", "icebreaker", "icebreakers", "kickoff", "prompt-card", "conversation-starter", "question-card", "spark", "sparks", "idea-spark", "idea-sparks", "brainstorm", "brainstorm-card", "vibe-check", "vibecheck", "pulse-check", "pulsecheck", "thread-pulse":
 		return true
 	default:
 		return false
@@ -129,7 +129,7 @@ func BuildChannelWarmupActionRequest(ev Event, cfg Config) (ChannelWarmupActionR
 			}
 			req.Options.NotifyMessageID = fields[i+1]
 			i++
-		case "--warmup-id", "--starter-id", "--icebreaker-id", "--prompt-card-id", "--vibe-id", "--pulse-id", "--id":
+		case "--warmup-id", "--starter-id", "--icebreaker-id", "--prompt-card-id", "--spark-id", "--brainstorm-id", "--vibe-id", "--pulse-id", "--id":
 			if i+1 >= len(fields) {
 				return ChannelWarmupActionRequest{}, fmt.Errorf("%s requires a value", field)
 			}
@@ -320,6 +320,10 @@ func RenderChannelWarmupActionReport(ev Event, req ChannelWarmupActionRequest, r
 	fmt.Fprintf(&b, "- notification_body_sha256_12: `%s`\n", noneIfEmpty(bodyHash))
 	fmt.Fprintf(&b, "- target_from_current_channel_issue: `%t`\n", req.TargetFromIssue)
 	fmt.Fprintf(&b, "- model_call_performed: `%t`\n", false)
+	fmt.Fprintf(&b, "- dynamic_prompt_generation_performed: `%t`\n", false)
+	fmt.Fprintf(&b, "- quest_created: `%t`\n", false)
+	fmt.Fprintf(&b, "- task_created: `%t`\n", false)
+	fmt.Fprintf(&b, "- proposal_created: `%t`\n", false)
 	fmt.Fprintf(&b, "- command_execution_performed: `%t`\n", false)
 	fmt.Fprintf(&b, "- skill_install_performed: `%t`\n", false)
 	fmt.Fprintf(&b, "- tool_execution_performed: `%t`\n", false)
@@ -536,6 +540,8 @@ func cleanChannelWarmupTheme(value string) string {
 		return "launch"
 	case "retro", "retrospective", "review", "after-action", "lessons":
 		return "retro"
+	case "spark", "sparks", "idea", "ideas", "idea-spark", "ideation", "brainstorm", "brainstorming":
+		return "spark"
 	case "tool", "tools", "tool-review", "review-tools", "approval", "approvals":
 		return "tools"
 	case "soul", "souls", "soul-review", "identity", "authority", "context":
@@ -551,6 +557,8 @@ func cleanChannelWarmupTheme(value string) string {
 
 func defaultChannelWarmupThemeForSubcommand(subcommand string) string {
 	switch strings.ToLower(strings.Trim(subcommand, " \t\r\n.,:;!?")) {
+	case "spark", "sparks", "idea-spark", "idea-sparks", "brainstorm", "brainstorm-card":
+		return "spark"
 	case "vibe-check", "vibecheck", "pulse-check", "pulsecheck", "thread-pulse":
 		return "fun"
 	default:
@@ -600,8 +608,10 @@ func autoChannelWarmupNotifyMessageID(ev Event, warmupID string) string {
 
 func renderChannelWarmupNotificationBody(opts ChannelWarmupOptions) string {
 	prompts := channelWarmupPromptsForTheme(opts.Theme)
+	label := channelWarmupCardLabel(opts.Theme)
+	titleLabel := strings.ToUpper(label[:1]) + label[1:]
 	var b strings.Builder
-	b.WriteString("GitClaw channel warmup.\n\n")
+	fmt.Fprintf(&b, "GitClaw channel %s.\n\n", label)
 	fmt.Fprintf(&b, "Theme: %s\n", opts.Theme)
 	fmt.Fprintf(&b, "Frame: %s\n", channelWarmupFrame(opts.Theme))
 	b.WriteString("Conversation starters:\n")
@@ -611,12 +621,12 @@ func renderChannelWarmupNotificationBody(opts ChannelWarmupOptions) string {
 	if opts.Note != "" {
 		fmt.Fprintf(&b, "\nNote: %s\n", opts.Note)
 	}
-	fmt.Fprintf(&b, "\nWarmup hash: %s\n", shortDocumentHash(opts.Theme+"|"+strings.Join(prompts, "|")))
+	fmt.Fprintf(&b, "\n%s hash: %s\n", titleLabel, shortDocumentHash(opts.Theme+"|"+strings.Join(prompts, "|")))
 	if opts.Note != "" {
 		fmt.Fprintf(&b, "Note hash: %s\n", shortDocumentHash(opts.Note))
 	}
-	b.WriteString("Warmup persistence: advisory only; no durable channel state changed.\n")
-	b.WriteString("\nWarmup source: GitHub channel action.\n")
+	fmt.Fprintf(&b, "%s persistence: advisory only; no durable channel state changed.\n", titleLabel)
+	fmt.Fprintf(&b, "\n%s source: GitHub channel action.\n", titleLabel)
 	b.WriteString("Model call: not performed by this action.\n")
 	b.WriteString("Command execution: not performed by this action.\n")
 	b.WriteString("Skill install: not performed by this action.\n")
@@ -630,6 +640,13 @@ func renderChannelWarmupNotificationBody(opts ChannelWarmupOptions) string {
 	b.WriteString("Provider API call: not performed by this action.\n")
 	b.WriteString("Provider delivery: queued through GitHub channel outbox.")
 	return strings.TrimSpace(b.String())
+}
+
+func channelWarmupCardLabel(theme string) string {
+	if cleanChannelWarmupTheme(theme) == "spark" {
+		return "spark"
+	}
+	return "warmup"
 }
 
 func channelWarmupFrame(theme string) string {
@@ -646,6 +663,8 @@ func channelWarmupFrame(theme string) string {
 		return "Surface readiness, blockers, and owner clarity before a release moves."
 	case "retro":
 		return "Make reflection specific enough to preserve as issues or follow-up work."
+	case "spark":
+		return "Turn a fuzzy idea into one concrete next experiment."
 	case "tools":
 		return "Turn tool energy into reviewed requests before execution."
 	case "soul":
@@ -696,6 +715,12 @@ func channelWarmupPromptsForTheme(theme string) []string {
 			"What surprised us in this thread?",
 			"What should we repeat next time?",
 			"What should become a durable note, checklist, or playbook?",
+		}
+	case "spark":
+		return []string{
+			"What is the smallest interesting version of this idea?",
+			"What evidence would make it worth turning into a quest, task, or proposal?",
+			"What should we deliberately not build yet?",
 		}
 	case "tools":
 		return []string{

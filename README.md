@@ -689,6 +689,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels compass all --compass-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels mode tool-review --mode-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels warmup tools --warmup-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels spark --spark-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels vibe-check --vibe-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels dock <target-route> --dock-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels session-search <query> --message-id <id> --notify-message-id <id>
@@ -1077,7 +1078,7 @@ ids, message ids, and channel bodies out of band. This does not persist mode
 state, execute commands, install skills, execute tools, read backup payloads,
 read soul bodies, edit workflows, change policy, create schedules, call
 provider APIs, call a model, or mutate the repository.
-`@gitclaw /channels warmup <focus|pairing|triage|design|launch|retro|tools|soul|backups|fun>
+`@gitclaw /channels warmup <focus|pairing|triage|design|launch|retro|spark|tools|soul|backups|fun>
 --warmup-id <id> --message-id <id> --notify-message-id <id>` queues a
 provider-facing conversation-starter card back to the current Slack/Telegram
 thread. The card includes three deterministic prompts for the selected theme
@@ -1086,6 +1087,13 @@ warmup ids, theme names, prompt text, notes, thread ids, message ids, and
 channel bodies out of band. This does not call a model, execute commands,
 install skills, execute tools, read backup payloads, read soul bodies, create
 schedules, call provider APIs, or mutate the repository.
+`@gitclaw /channels spark --spark-id <id> --message-id <id>
+--notify-message-id <id>` is the brainstorming alias for the same
+provider-facing warmup card, defaulting to the `spark` theme when no theme is
+supplied. It helps a loose idea become one concrete experiment without
+generating prompt text dynamically, creating a quest, creating a task, opening
+a proposal, creating a schedule, calling a model, calling provider APIs, or
+mutating the repository.
 `@gitclaw /channels vibe-check --vibe-id <id> --message-id <id>
 --notify-message-id <id>` is the chat-native alias for the same provider-facing
 warmup card, defaulting to the `fun` theme when no theme is supplied. It gives
@@ -2100,6 +2108,7 @@ scripts/e2e/github-channel-palette-slash.sh
 scripts/e2e/github-channel-compass-slash.sh
 scripts/e2e/github-channel-mode-slash.sh
 scripts/e2e/github-channel-warmup-slash.sh
+scripts/e2e/github-channel-spark-slash.sh
 scripts/e2e/github-channel-dock-slash.sh
 scripts/e2e/github-channel-browser-status-slash.sh
 scripts/e2e/github-channel-session-search-slash.sh
@@ -2487,6 +2496,14 @@ exposes the card through metadata-only outbox, suppresses a duplicate warmup
 notification, proves no command execution/skill install/tool execution/backup
 payload read/soul body read/provider-API/model/workflow/policy/schedule/
 repository mutation happened, and then runs a real GitHub Models
+repo-reader/search follow-up.
+The channel-spark slash harness exercises `@gitclaw /channels spark` as the
+brainstorming entry point into the same provider-facing conversation-starter
+card. It queues the bounded `spark` theme, exposes the card through
+metadata-only outbox, suppresses a duplicate spark notification from the
+`brainstorm` alias, proves no dynamic prompt generation, quest/task/proposal
+creation, command execution, provider API call, model call, workflow edit,
+schedule, or repository mutation happened, and then runs a real GitHub Models
 repo-reader/search follow-up.
 The channel-session-search slash harness makes recall a channel-native action:
 a channel-ingested issue receives `@gitclaw /channels session-search`, queues

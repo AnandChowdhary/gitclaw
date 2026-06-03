@@ -137,6 +137,10 @@ func TestHandleChannelWarmupQueuesWarmupWithoutLLM(t *testing.T) {
 		"warmup_note_source: `trailing-note`",
 		"notification_body_sha256_12: `",
 		"model_call_performed: `false`",
+		"dynamic_prompt_generation_performed: `false`",
+		"quest_created: `false`",
+		"task_created: `false`",
+		"proposal_created: `false`",
 		"command_execution_performed: `false`",
 		"skill_install_performed: `false`",
 		"tool_execution_performed: `false`",
@@ -208,6 +212,10 @@ func TestHandleChannelWarmupQueuesWarmupWithoutLLM(t *testing.T) {
 		"notification_queued: `false`",
 		"notification_duplicate_suppressed: `true`",
 		"model_call_performed: `false`",
+		"dynamic_prompt_generation_performed: `false`",
+		"quest_created: `false`",
+		"task_created: `false`",
+		"proposal_created: `false`",
 		"command_execution_performed: `false`",
 		"skill_install_performed: `false`",
 		"tool_execution_performed: `false`",
@@ -275,6 +283,52 @@ func TestBuildChannelWarmupActionRequestParsesPositionalRouteAndTheme(t *testing
 	}
 	if req.Options.Route != "team-demo" || req.Options.Theme != "backups" || req.PromptCount != 3 || req.TargetFromIssue {
 		t.Fatalf("unexpected positional channel warmup parsing: %#v", req)
+	}
+}
+
+func TestBuildChannelWarmupActionRequestParsesSparkDefault(t *testing.T) {
+	ev := Event{
+		Kind:      EventIssueComment,
+		EventName: "issue_comment",
+		Repo:      "owner/repo",
+		Issue: Issue{
+			Number: 44,
+			Title:  "Channel spark",
+			Body:   RenderChannelThreadBody(ChannelIngestOptions{Channel: "telegram", ThreadID: "chat-spark-44"}),
+		},
+		Comment: &Comment{
+			ID: 4401,
+			Body: `@gitclaw /channels spark --message-id source-3 --notify-message-id notify-3 --spark-id Spark.One
+Note: Find the smallest experiment.`,
+		},
+	}
+	if !IsChannelWarmupActionRequest(ev, DefaultConfig()) {
+		t.Fatal("/channels spark should route to channel warmup")
+	}
+	req, err := BuildChannelWarmupActionRequest(ev, DefaultConfig())
+	if err != nil {
+		t.Fatalf("BuildChannelWarmupActionRequest returned error: %v", err)
+	}
+	if req.Command != "/channels" || req.Subcommand != "spark" || req.Options.Theme != "spark" || req.Options.WarmupID != "spark-one" || req.Options.SourceMessageID != "source-3" || req.Options.NotifyMessageID != "notify-3" || req.PromptCount != 3 || !req.TargetFromIssue {
+		t.Fatalf("unexpected spark warmup parsing: %#v", req)
+	}
+	if req.Options.Note != "Find the smallest experiment." || req.NoteSource != "trailing-note" {
+		t.Fatalf("unexpected spark note parsing: %#v", req)
+	}
+	body := renderChannelWarmupNotificationBody(req.Options)
+	for _, want := range []string{
+		"Theme: spark",
+		"Frame: Turn a fuzzy idea into one concrete next experiment.",
+		"What is the smallest interesting version of this idea?",
+		"What evidence would make it worth turning into a quest, task, or proposal?",
+		"What should we deliberately not build yet?",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("spark warmup body missing %q:\n%s", want, body)
+		}
+	}
+	if req.AutoNotifyMessageID || req.AutoSourceMessageID || req.AutoWarmupID || req.WarmupIDHash == "" || req.ThemeSHA == "" || req.NoteSHA == "" || req.NotificationBodySHA == "" {
+		t.Fatalf("expected explicit spark hashes: %#v", req)
 	}
 }
 
