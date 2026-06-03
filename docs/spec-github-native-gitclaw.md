@@ -5708,6 +5708,7 @@ accepts a structured reaction form:
 @gitclaw /channels idea --idea-id <stable-idea-id> --message-id <provider-message-id>
 @gitclaw /channels quest --quest-id <stable-quest-id> --message-id <provider-message-id>
 @gitclaw /channels ritual --ritual-id <stable-ritual-id> --message-id <provider-message-id>
+@gitclaw /channels pact --pact-id <stable-pact-id> --message-id <provider-message-id>
 @gitclaw /channels retro --retro-id <stable-retro-id> --message-id <provider-message-id>
 @gitclaw /channels playbook --playbook-id <stable-playbook-id> --message-id <provider-message-id>
 @gitclaw /channels insight --insight-id <stable-insight-id> --message-id <provider-message-id>
@@ -6627,6 +6628,48 @@ captures the ritual, validates the metadata-only ritual-link outbox, checks
 duplicate suppression, proves no scheduled workflow/reminder/standing order was
 created, and then continues on the ritual issue with a normal GitHub Models
 repo-reader/search follow-up.
+
+The same channel-thread issue can also record a channel working agreement
+without promoting it to durable authority:
+
+```text
+@gitclaw /channels pact --pact-id <stable-pact-id> --message-id <provider-message-id>
+Title: short agreement title
+Participants:
+who is in the pact
+Agreement:
+the norm, promise, or working agreement
+Scope:
+where the pact applies
+Revisit:
+when to review, close, or promote it
+```
+
+`/channels pact`, `/channels agreement`, `/channels norm`,
+`/channels accord`, `/channels working-agreement`, and
+`/channels team-agreement` infer the current channel and thread id from the
+issue marker when no explicit route/channel/thread target is provided. They
+create or reuse one open GitHub issue carrying a hidden
+`gitclaw:channel-pact` marker for the stable pact id, label it with `gitclaw`
+so normal conversation can continue there, and queue a provider-facing pact
+link with the visible title and participants back to the mirrored channel
+thread. The pact issue contains the human-readable title, participants,
+agreement, scope, and revisit notes because it is a review surface for a norm
+that may later become a standing order, SOUL proposal, memory proposal, policy
+change, skill, or be closed. The source receipt remains body-free, reporting
+only pact/thread/message/section hashes, duplicate status, notification queue
+metadata, and delivery gates. It does not call a model, call provider APIs,
+create scheduled workflows, create reminders, create standing orders, write
+SOUL, write memory, mutate policy, mutate the repository, print raw pact ids,
+print raw thread ids, print raw source or notification message ids, print
+channel message bodies, or print raw pact sections in the source receipt.
+Duplicates are suppressed first by `pact_id` for the GitHub pact issue and
+then by `channel + notify_message_id` for the provider-facing pact link.
+Changes to this surface require a live E2E that captures the pact, validates
+the metadata-only pact-link outbox, checks duplicate suppression, proves no
+scheduled workflow/reminder/standing-order/SOUL/memory/policy/repository
+mutation occurred, and then continues on the pact issue with a normal GitHub
+Models repo-reader/search follow-up.
 
 The same channel-thread issue can also capture a live brainstorm jam:
 
@@ -8400,8 +8443,8 @@ repo-reader/search follow-up.
 
 The channel-created task, watch, standing-order proposal, backup restore
 request, checkpoint rehearsal, clip, attachment, decision, digest, idea, quest,
-ritual, incident, insight, voice, image, and reminder issues also accept a completion
-form:
+ritual, pact, incident, insight, voice, image, and reminder issues also accept
+a completion form:
 
 ```text
 @gitclaw /channels done --message-id <stable-outbound-id>
@@ -8478,6 +8521,11 @@ Behavior:
   provider-facing idea-link outbound comment per `channel + notify_message_id`,
 - create or reuse one `gitclaw:channel-jam` issue per jam id and queue one
   provider-facing jam-link outbound comment per `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-pact` issue per pact id and queue one
+  provider-facing pact-link outbound comment per `channel + notify_message_id`
+  without creating scheduled workflows, reminders, standing orders, SOUL
+  writes, memory writes, policy mutations, repository mutations, provider API
+  calls, or model calls,
 - create or reuse one `gitclaw:channel-kudos` issue per kudos id and queue
   one provider-facing acknowledgement outbound comment per
   `channel + notify_message_id`,
@@ -8578,7 +8626,7 @@ Behavior:
   `gitclaw:channel-snippet`,
   `gitclaw:channel-decision`,
   `gitclaw:channel-digest`, `gitclaw:channel-idea`,
-  `gitclaw:channel-jam`,
+  `gitclaw:channel-jam`, `gitclaw:channel-pact`,
   `gitclaw:channel-kudos`, `gitclaw:channel-retro`,
   `gitclaw:channel-playbook`, `gitclaw:channel-insight`,
   `gitclaw:channel-board-card`, `gitclaw:channel-checklist`,
@@ -8780,6 +8828,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels idea --idea-id channel-idea-1 --message-id provider-msg-1
 @gitclaw /channels quest --quest-id channel-quest-1 --message-id provider-msg-1
 @gitclaw /channels ritual --ritual-id channel-ritual-1 --message-id provider-msg-1
+@gitclaw /channels pact --pact-id channel-pact-1 --message-id provider-msg-1
 @gitclaw /channels whiteboard --jam-id channel-jam-1 --message-id provider-msg-1
 @gitclaw /channels kudos --kudos-id channel-kudos-1 --message-id provider-msg-1
 @gitclaw /channels retro --retro-id channel-retro-1 --message-id provider-msg-1
@@ -11703,6 +11752,18 @@ examples/workflows/gitclaw.yml
   expose `gitclaw.search_files`, recover the channel-ritual fixture token, and
   avoid hidden channel, account, provider, message, ritual, cadence, trigger,
   practice, and review sentinels.
+- A `gh`-driven channel-pact-slash E2E harness creates a real channel-thread
+  issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels pact --pact-id ... --message-id ...` on that mirrored
+  thread, verifies GitHub pact issue creation, body-free source receipt
+  metadata, provider-facing pact-link queueing with title and participants,
+  duplicate pact and notification suppression, explicit no
+  schedule/reminder/standing-order/SOUL/memory/policy/repository mutation
+  gates, and metadata-only outbox discovery. The pact issue then gets a normal
+  GitHub Models issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-pact fixture token, and avoid
+  hidden channel, account, provider, message, pact, participants, agreement,
+  scope, and revisit sentinels.
 - A `gh`-driven channel-jam-slash E2E harness creates a real channel-thread
   issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels whiteboard --jam-id ... --message-id ...` on that mirrored

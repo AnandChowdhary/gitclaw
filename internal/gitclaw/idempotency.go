@@ -51,6 +51,7 @@ var channelMemoryNoteMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-
 var channelIdeaMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-idea\s+([^>]*)-->`)
 var channelQuestMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-quest\s+([^>]*)-->`)
 var channelRitualMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-ritual\s+([^>]*)-->`)
+var channelPactMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-pact\s+([^>]*)-->`)
 var channelJamMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-jam\s+([^>]*)-->`)
 var channelKudosMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-kudos\s+([^>]*)-->`)
 var channelRetroMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-retro\s+([^>]*)-->`)
@@ -356,6 +357,10 @@ func HasChannelQuestMarker(body string) bool {
 
 func HasChannelRitualMarker(body string) bool {
 	return channelRitualMarkerPattern.MatchString(body)
+}
+
+func HasChannelPactMarker(body string) bool {
+	return channelPactMarkerPattern.MatchString(body)
 }
 
 func HasChannelJamMarker(body string) bool {

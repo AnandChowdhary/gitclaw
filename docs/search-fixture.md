@@ -132,6 +132,7 @@ channel digest unique search fixture phrase => GITCLAW_CHANNEL_DIGEST_CONTEXT_V1
 channel idea unique search fixture phrase => GITCLAW_CHANNEL_IDEA_CONTEXT_V1
 channel quest unique search fixture phrase => GITCLAW_CHANNEL_QUEST_CONTEXT_V1
 channel ritual unique search fixture phrase => GITCLAW_CHANNEL_RITUAL_CONTEXT_V1
+channel pact unique search fixture phrase => GITCLAW_CHANNEL_PACT_CONTEXT_V1
 channel jam unique search fixture phrase => GITCLAW_CHANNEL_JAM_CONTEXT_V1
 channel kudos unique search fixture phrase => GITCLAW_CHANNEL_KUDOS_CONTEXT_V1
 channel retro unique search fixture phrase => GITCLAW_CHANNEL_RETRO_CONTEXT_V1

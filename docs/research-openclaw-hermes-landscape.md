@@ -5156,6 +5156,32 @@ sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes cron
 Hermes messaging guide
 (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Pact Follow-Up
+
+OpenClaw's channel/session split and Hermes' messaging/cron split point to the
+same boundary: chat is a transport and working surface, while durable norms,
+memory, policy, and scheduled behavior need separate review paths. A Slack or
+Telegram thread can produce a working agreement, but the serverless GitHub loop
+should not quietly turn that agreement into authority or automation.
+
+GitClaw's translation is `@gitclaw /channels pact --pact-id <id>
+--message-id <id>`. It opens or reuses a normal `gitclaw:channel-pact` issue
+with readable title, participants, agreement, scope, and revisit notes, queues
+one provider-facing pact link with title and participants back to the source
+Slack/Telegram thread, and keeps the source receipt body-free with only
+hashes, duplicate state, notification metadata, and delivery gates. The key
+boundary is that this is not SOUL, memory, policy, a standing order, a
+reminder, cron, provider delivery, or repository mutation. Acceptance requires
+live E2E for pact issue creation, metadata-only pact-link outbox discovery,
+duplicate suppression, explicit no-authority/no-schedule gates, and a real
+GitHub Models repo-reader/search follow-up on the pact issue.
+
+Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw
+sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes cron
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/cron/`),
+Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Glossary Follow-Up
 
 OpenClaw and Hermes both treat chat as a live working surface where concepts,

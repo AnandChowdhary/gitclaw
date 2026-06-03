@@ -226,6 +226,30 @@ func TestChannelDoneArtifactRefSupportsRitualIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsPactIssues(t *testing.T) {
+	body := RenderChannelPactIssueBody(ChannelPactOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		PactID:            "pact-done-1",
+		Title:             "Launch readiness working agreement",
+		Participants:      "Release and design leads.",
+		Agreement:         "Pause launch talk until every checklist item has an owner.",
+		Scope:             "Launch-readiness channel threads only.",
+		Revisit:           "Close when superseded, or promote through a reviewed standing order.",
+		SourceIssueNumber: 42,
+		SourceCommentID:   4200,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "pact" || ref.ID != "pact-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 42 || ref.SourceCommentID != 4200 {
+		t.Fatalf("unexpected pact artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsSnippetIssues(t *testing.T) {
 	body := RenderChannelSnippetIssueBody(ChannelSnippetOptions{
 		Repo:              "owner/repo",
