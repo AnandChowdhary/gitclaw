@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T22:31:55Z",
+  "generated_at": "2026-06-03T22:33:36Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 745,
   "issues": [
@@ -9502,15 +9502,15 @@
       "number": 855,
       "title": "GitClaw telegram thread channel-backup-freshness-e2e-20260603t222943z",
       "path": "issues/000855.json",
-      "backup_generated_at": "2026-06-03T22:31:53Z",
-      "event_name": "workflow_dispatch",
+      "backup_generated_at": "2026-06-03T22:33:35Z",
+      "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 2,
-      "transcript_messages": 3
+      "comment_count": 5,
+      "transcript_messages": 5
     }
   ]
 }

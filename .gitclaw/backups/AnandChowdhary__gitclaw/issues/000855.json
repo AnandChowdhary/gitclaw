@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T22:31:53Z",
+  "generated_at": "2026-06-03T22:33:35Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 855,
     "title": "GitClaw telegram thread channel-backup-freshness-e2e-20260603t222943z",
@@ -42,6 +42,24 @@
       "CommentID": 4617255607,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels backup-freshness --message-id backup-freshness-ingest-20260603t222943z --notify-message-id backup-freshness-notify-20260603t222943z --freshness-id channel-backup-freshness-20260603t222943z --max-age-hours 8760\nDo not include this command hidden token in the receipt: NOECHO_CHANNEL_BACKUP_FRESHNESS_COMMAND_20260603t222943z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4617259241,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Backup Freshness Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#855`\n- requested_channel_command: `/channels backup-freshness`\n- channel_backup_freshness_status: `queued`\n- backup_freshness_status: `ok`\n- backup_verify_status: `ok`\n- freshness_gate: `pass`\n- backup_fetch_status: `fetched`\n- backup_branch: `gitclaw-backups`\n- freshness_mode: `gitclaw-backups-freshness-card`\n- notification_target_issue: `#855`\n- notification_comment_id: `4617264835`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `f4210cf41f90`\n- source_message_id_sha256_12: `bd160bcb8c2f`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `d8d599f3317e`\n- notify_message_id_auto: `false`\n- freshness_id_sha256_12: `dda0f121f775`\n- freshness_id_auto: `false`\n- max_age_hours: `8760`\n- max_age_seconds: `31536000`\n- max_age_source: `flag`\n- backup_root_sha256_12: `42041115ae5a`\n- repo_backup_dir_sha256_12: `ecc4a2ee52d4`\n- index_path_sha256_12: `e28da291628c`\n- readme_path_sha256_12: `624dc7f4073a`\n- backup_schema_version: `1`\n- index_generated_at_sha256_12: `4db67aa950b2`\n- as_of_sha256_12: `de7bcced7e01`\n- verification_failures: `0`\n- issue_count: `745`\n- latest_issue_sha256_12: `3097fc802d49`\n- latest_generated_at_sha256_12: `695970152194`\n- latest_age_seconds: `70`\n- clock_skew_seconds: `0`\n- latest_payload_bytes: `56426`\n- latest_payload_sha256_12: `3686466bf5ce`\n- latest_event_name_sha256_12: `260b1e6ac23c`\n- latest_issue_title_sha256_12: `7a6d67a34f4c`\n- freshness_error_kind: `none`\n- freshness_error_sha256_12: `none`\n- notification_body_sha256_12: `32d6d6712f5a`\n- notification_body_bytes: `981`\n- notification_body_lines: `21`\n- target_from_current_channel_issue: `true`\n- backup_branch_fetch_performed: `true`\n- raw_backup_payloads_read: `true`\n- restore_performed: `false`\n- backup_branch_write_performed: `false`\n- github_api_replay_performed: `false`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_freshness_id_included: `false`\n- raw_backup_root_included: `false`\n- raw_backup_paths_included: `false`\n- raw_backup_payloads_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_titles_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_transcript_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_channel_backup_freshness_change: `true`\n- source_issue_title_sha256_12: `7a6d67a34f4c`\n\nGitClaw inspected the local or read-only fetched gitclaw-backups freshness gate and queued a provider-facing freshness card. It reports status, age, counts, timestamps, and hashes while keeping raw paths, titles, bodies, comments, transcripts, prompts, tool outputs, provider IDs, and freshness IDs out of the source receipt. This action does not write the backup branch, restore files, replay GitHub APIs, call a model, call provider APIs, or mutate the repository.\n\n### Follow-Up Delivery\n- provider gateways read backup-freshness cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent backup-freshness cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate backup-freshness notifications are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4617264912,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -60,6 +78,30 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T22:31:23Z",
       "updated_at": "2026-06-03T22:31:23Z"
+    },
+    {
+      "id": 4617259241,
+      "body": "@gitclaw /channels backup-freshness --message-id backup-freshness-ingest-20260603t222943z --notify-message-id backup-freshness-notify-20260603t222943z --freshness-id channel-backup-freshness-20260603t222943z --max-age-hours 8760\nDo not include this command hidden token in the receipt: NOECHO_CHANNEL_BACKUP_FRESHNESS_COMMAND_20260603t222943z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T22:32:03Z",
+      "updated_at": "2026-06-03T22:32:03Z"
+    },
+    {
+      "id": 4617264835,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-backup-freshness-e2e-20260603t222943z\" message_id=\"backup-freshness-notify-20260603t222943z\" author=\"gitclaw\" --\u003e\nGitClaw channel backup freshness\n\nBackup freshness status: ok\nBackup verify status: ok\nFreshness gate: pass\nBackup branch: gitclaw-backups\nBackup fetch status: fetched\nIssue count: 745\nMax age hours: 8760\nMax age seconds: 31536000\nLatest issue: #855\nLatest backup generated at: 2026-06-03T22:31:53Z\nLatest age seconds: 70\nClock skew seconds: 0\nLatest payload bytes: 56426\nLatest payload sha256_12: 3686466bf5ce\nLatest event hash: 260b1e6ac23c\nLatest issue title hash: 7a6d67a34f4c\nFreshness id hash: dda0f121f775\n\nRaw backup payloads, backup paths, channel bodies, issue titles, issue bodies, comment bodies, transcript messages, prompts, tool outputs, and raw freshness ids are not included. Model call: not performed by this action. Repository mutation: not performed by this action. Backup branch write: not performed by this action. Restore: not performed by this action. GitHub API replay: not performed by this action. Provider delivery: queued through GitHub channel outbox.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T22:33:04Z",
+      "updated_at": "2026-06-03T22:33:04Z"
+    },
+    {
+      "id": 4617264912,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26917160228\" event_id=\"comment-4617259241\" model=\"gitclaw/channels\" idempotency_key=\"61eb43e5895191ef998e5341b4da0c88\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26917160228\" --\u003e\n## GitClaw Channel Backup Freshness Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#855`\n- requested_channel_command: `/channels backup-freshness`\n- channel_backup_freshness_status: `queued`\n- backup_freshness_status: `ok`\n- backup_verify_status: `ok`\n- freshness_gate: `pass`\n- backup_fetch_status: `fetched`\n- backup_branch: `gitclaw-backups`\n- freshness_mode: `gitclaw-backups-freshness-card`\n- notification_target_issue: `#855`\n- notification_comment_id: `4617264835`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `f4210cf41f90`\n- source_message_id_sha256_12: `bd160bcb8c2f`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `d8d599f3317e`\n- notify_message_id_auto: `false`\n- freshness_id_sha256_12: `dda0f121f775`\n- freshness_id_auto: `false`\n- max_age_hours: `8760`\n- max_age_seconds: `31536000`\n- max_age_source: `flag`\n- backup_root_sha256_12: `42041115ae5a`\n- repo_backup_dir_sha256_12: `ecc4a2ee52d4`\n- index_path_sha256_12: `e28da291628c`\n- readme_path_sha256_12: `624dc7f4073a`\n- backup_schema_version: `1`\n- index_generated_at_sha256_12: `4db67aa950b2`\n- as_of_sha256_12: `de7bcced7e01`\n- verification_failures: `0`\n- issue_count: `745`\n- latest_issue_sha256_12: `3097fc802d49`\n- latest_generated_at_sha256_12: `695970152194`\n- latest_age_seconds: `70`\n- clock_skew_seconds: `0`\n- latest_payload_bytes: `56426`\n- latest_payload_sha256_12: `3686466bf5ce`\n- latest_event_name_sha256_12: `260b1e6ac23c`\n- latest_issue_title_sha256_12: `7a6d67a34f4c`\n- freshness_error_kind: `none`\n- freshness_error_sha256_12: `none`\n- notification_body_sha256_12: `32d6d6712f5a`\n- notification_body_bytes: `981`\n- notification_body_lines: `21`\n- target_from_current_channel_issue: `true`\n- backup_branch_fetch_performed: `true`\n- raw_backup_payloads_read: `true`\n- restore_performed: `false`\n- backup_branch_write_performed: `false`\n- github_api_replay_performed: `false`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_freshness_id_included: `false`\n- raw_backup_root_included: `false`\n- raw_backup_paths_included: `false`\n- raw_backup_payloads_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_titles_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_transcript_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_channel_backup_freshness_change: `true`\n- source_issue_title_sha256_12: `7a6d67a34f4c`\n\nGitClaw inspected the local or read-only fetched gitclaw-backups freshness gate and queued a provider-facing freshness card. It reports status, age, counts, timestamps, and hashes while keeping raw paths, titles, bodies, comments, transcripts, prompts, tool outputs, provider IDs, and freshness IDs out of the source receipt. This action does not write the backup branch, restore files, replay GitHub APIs, call a model, call provider APIs, or mutate the repository.\n\n### Follow-Up Delivery\n- provider gateways read backup-freshness cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent backup-freshness cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate backup-freshness notifications are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T22:33:05Z",
+      "updated_at": "2026-06-03T22:33:05Z"
     }
   ]
 }
