@@ -350,6 +350,27 @@ func TestChannelDoneArtifactRefSupportsIdeaIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsJamIssues(t *testing.T) {
+	body := RenderChannelJamIssueBody(ChannelJamOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		JamID:             "jam-done-1",
+		Title:             "Shape channel brainstorms into GitHub jam labs",
+		Notes:             "Preserve messy seeds before converting them into tasks or skills.",
+		SourceIssueNumber: 46,
+		SourceCommentID:   4600,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "jam" || ref.ID != "jam-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 46 || ref.SourceCommentID != 4600 {
+		t.Fatalf("unexpected jam artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsRetroIssues(t *testing.T) {
 	body := RenderChannelRetroIssueBody(ChannelRetroOptions{
 		Repo:              "owner/repo",

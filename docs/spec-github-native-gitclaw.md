@@ -6115,6 +6115,35 @@ validates the metadata-only idea-link outbox, checks duplicate suppression, and
 then continues on the idea issue with a normal GitHub Models repo-reader/search
 follow-up.
 
+The same channel-thread issue can also capture a live brainstorm jam:
+
+```text
+@gitclaw /channels whiteboard --jam-id <stable-jam-id> --message-id <provider-message-id>
+Topic: working question or theme
+Seeds:
+optional messy notes, links, constraints, and half-formed options
+```
+
+`/channels whiteboard`, `/channels workshop`, `/channels collab`,
+`/channels riff`, and `/channels co-create` infer the
+current channel and thread id from the issue marker when no explicit route/
+channel/thread target is provided. They create or reuse one open GitHub issue
+carrying a hidden `gitclaw:channel-jam` marker for the stable jam id, label it
+with `gitclaw` so normal conversation can continue there, and queue a
+provider-facing jam link back to the mirrored channel thread. The jam issue
+contains the human-readable topic and seeds because it is the shared
+whiteboard/workshop surface; the source receipt remains body-free, reporting
+only jam/thread/message/topic/note hashes, duplicate status, notification queue
+metadata, and delivery gates. It does not call a model, call provider APIs,
+print raw jam ids, print raw thread ids, print raw source or notification
+message ids, print channel message bodies, or print raw topics/notes in the
+source receipt. Duplicates are suppressed first by `jam_id` for the GitHub jam
+issue and then by `channel + notify_message_id` for the provider-facing jam
+link. Changes to this surface require a live E2E that captures the jam,
+validates the metadata-only jam-link outbox, checks duplicate suppression, and
+then continues on the jam issue with a normal GitHub Models repo-reader/search
+follow-up.
+
 The same channel-thread issue can also capture channel appreciation:
 
 ```text
@@ -7882,6 +7911,8 @@ Behavior:
   `channel + notify_message_id`,
 - create or reuse one `gitclaw:channel-idea` issue per idea id and queue one
   provider-facing idea-link outbound comment per `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-jam` issue per jam id and queue one
+  provider-facing jam-link outbound comment per `channel + notify_message_id`,
 - create or reuse one `gitclaw:channel-kudos` issue per kudos id and queue
   one provider-facing acknowledgement outbound comment per
   `channel + notify_message_id`,
@@ -7976,6 +8007,7 @@ Behavior:
   `gitclaw:checkpoint-rehearsal-issue`, `gitclaw:channel-clip`,
   `gitclaw:channel-attachment`, `gitclaw:channel-decision`,
   `gitclaw:channel-digest`, `gitclaw:channel-idea`,
+  `gitclaw:channel-jam`,
   `gitclaw:channel-kudos`, `gitclaw:channel-retro`,
   `gitclaw:channel-playbook`, `gitclaw:channel-insight`,
   `gitclaw:channel-board-card`, `gitclaw:channel-checklist`,
@@ -8172,6 +8204,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels decision --decision-id channel-decision-1 --message-id provider-msg-1
 @gitclaw /channels digest --digest-id channel-digest-1 --message-id provider-msg-1
 @gitclaw /channels idea --idea-id channel-idea-1 --message-id provider-msg-1
+@gitclaw /channels whiteboard --jam-id channel-jam-1 --message-id provider-msg-1
 @gitclaw /channels kudos --kudos-id channel-kudos-1 --message-id provider-msg-1
 @gitclaw /channels retro --retro-id channel-retro-1 --message-id provider-msg-1
 @gitclaw /channels playbook --playbook-id channel-playbook-1 --message-id provider-msg-1
@@ -10918,6 +10951,15 @@ examples/workflows/gitclaw.yml
   normal GitHub Models issue-comment follow-up that must select `repo-reader`,
   expose `gitclaw.search_files`, recover the channel-idea fixture token, and
   avoid hidden channel, account, provider, message, and idea sentinels.
+- A `gh`-driven channel-jam-slash E2E harness creates a real channel-thread
+  issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels whiteboard --jam-id ... --message-id ...` on that mirrored
+  thread, verifies GitHub jam issue creation, body-free source receipt
+  metadata, provider-facing jam-link queueing, duplicate jam and notification
+  suppression, and metadata-only outbox discovery. The jam issue then gets a
+  normal GitHub Models issue-comment follow-up that must select `repo-reader`,
+  expose `gitclaw.search_files`, recover the channel-jam fixture token, and
+  avoid hidden channel, account, provider, message, and jam sentinels.
 - A `gh`-driven channel-kudos-slash E2E harness creates a real channel-thread
   issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels kudos --kudos-id ... --message-id ...` on that mirrored

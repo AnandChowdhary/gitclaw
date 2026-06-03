@@ -128,6 +128,7 @@ channel attachment unique search fixture phrase => GITCLAW_CHANNEL_ATTACHMENT_CO
 channel decision unique search fixture phrase => GITCLAW_CHANNEL_DECISION_CONTEXT_V1
 channel digest unique search fixture phrase => GITCLAW_CHANNEL_DIGEST_CONTEXT_V1
 channel idea unique search fixture phrase => GITCLAW_CHANNEL_IDEA_CONTEXT_V1
+channel jam unique search fixture phrase => GITCLAW_CHANNEL_JAM_CONTEXT_V1
 channel kudos unique search fixture phrase => GITCLAW_CHANNEL_KUDOS_CONTEXT_V1
 channel retro unique search fixture phrase => GITCLAW_CHANNEL_RETRO_CONTEXT_V1
 channel playbook unique search fixture phrase => GITCLAW_CHANNEL_PLAYBOOK_CONTEXT_V1

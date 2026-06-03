@@ -709,6 +709,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels decision --decision-id <id> --message-id <id>
 @gitclaw /channels digest --digest-id <id> --message-id <id>
 @gitclaw /channels idea --idea-id <id> --message-id <id>
+@gitclaw /channels whiteboard --jam-id <id> --message-id <id>
 @gitclaw /channels kudos --kudos-id <id> --message-id <id>
 @gitclaw /channels retro --retro-id <id> --message-id <id>
 @gitclaw /channels playbook --playbook-id <id> --message-id <id>
@@ -1132,6 +1133,13 @@ brainstorm can turn into a task, skill, memory, tool request, or proactive
 workflow in GitHub; the channel action queues a provider-facing idea link and
 keeps the source receipt body-free with hashes, duplicate state, notification
 metadata, and delivery gates.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels whiteboard
+--jam-id <id> --message-id <id>` captures a messy channel brainstorm as a
+durable GitHub jam issue. The jam issue holds the readable topic and seeds,
+queues a provider-facing jam link back to the Slack/Telegram thread, and keeps
+the source receipt body-free with hashes, duplicate state, notification
+metadata, and delivery gates. The linked jam issue is where normal GitHub
+Models conversation can continue with skills and tools.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels kudos
 --kudos-id <id> --message-id <id>` captures channel appreciation as a durable
 GitHub issue. The kudos issue holds the readable recipient and reason; the
@@ -1785,6 +1793,7 @@ scripts/e2e/github-channel-attachment-slash.sh
 scripts/e2e/github-channel-decision-slash.sh
 scripts/e2e/github-channel-digest-slash.sh
 scripts/e2e/github-channel-idea-slash.sh
+scripts/e2e/github-channel-jam-slash.sh
 scripts/e2e/github-channel-kudos-slash.sh
 scripts/e2e/github-channel-retro-slash.sh
 scripts/e2e/github-channel-playbook-slash.sh
@@ -2198,6 +2207,13 @@ to the mirrored thread, checks duplicate idea and notification suppression,
 exposes the idea-link notification through metadata-only outbox, and then
 continues on the idea issue with a real GitHub Models repo-reader/search
 follow-up.
+The channel-jam slash harness turns the operator console into a brainstorm
+lane: a channel-ingested issue receives `@gitclaw /channels whiteboard`, creates or
+reuses a durable GitHub jam issue with the readable topic and seeds, queues a
+provider-facing jam link back to the mirrored thread, checks duplicate jam and
+notification suppression, exposes the jam-link notification through
+metadata-only outbox, and then continues on the jam issue with a real GitHub
+Models repo-reader/search follow-up.
 The channel-kudos slash harness turns the operator console into an
 appreciation lane: a channel-ingested issue receives `@gitclaw /channels
 kudos`, creates or reuses a durable GitHub kudos issue with the readable

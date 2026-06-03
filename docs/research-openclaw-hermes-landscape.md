@@ -439,6 +439,24 @@ OpenClaw skills docs
 Hermes checkpoint/rollback docs
 (`https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback`).
 
+2026-06-03 channel-jam follow-up: OpenClaw's channel/session framing treats
+chat channels as entry and delivery points while keeping durable work state in
+reviewable agent sessions and workspace artifacts. Hermes' messaging gateway
+similarly keeps provider transport separate from the agent's actual task
+surface. GitClaw's serverless channel analogue should preserve that split for
+messy collaboration: `@gitclaw /channels whiteboard --jam-id <id>
+--message-id <id>` opens or reuses a normal GitHub jam issue with the readable
+topic and seeds, queues one provider-facing jam link back to the mirrored
+Slack/Telegram thread, and then lets the jam continue as a normal GitHub
+Models/tool conversation. The source receipt stays body-free with only hashes,
+duplicate state, notification metadata, and delivery gates. This deliberately
+does not claim the existing `/channels jam` huddle alias; the command surface
+is `/channels whiteboard`, `/channels workshop`, `/channels collab`,
+`/channels riff`, or `/channels co-create`. Sources: OpenClaw channel docs
+(`https://docs.openclaw.ai/channels`), OpenClaw sessions docs
+(`https://docs.openclaw.ai/cli/sessions`), and Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 2026-06-02 channel-retro follow-up: OpenClaw's current channel and session
 docs keep chat surfaces and persisted conversation rows distinct, while the
 skills and ClawHub docs make reusable procedures inspectable before they are
