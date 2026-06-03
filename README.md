@@ -722,6 +722,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels tool-lesson --note-id <id> --tool <tool> --message-id <id>
 @gitclaw /channels idea --idea-id <id> --message-id <id>
 @gitclaw /channels quest --quest-id <id> --message-id <id>
+@gitclaw /channels ritual --ritual-id <id> --cadence <cadence> --message-id <id>
 @gitclaw /channels whiteboard --jam-id <id> --message-id <id>
 @gitclaw /channels kudos --kudos-id <id> --message-id <id>
 @gitclaw /channels retro --retro-id <id> --message-id <id>
@@ -1258,6 +1259,14 @@ reviewable GitHub conversation without pretending it is already a task,
 playbook, or scheduled job; the channel action queues a provider-facing quest
 link and keeps the source receipt body-free with hashes, duplicate state,
 notification metadata, and delivery gates.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels ritual
+--ritual-id <id> --message-id <id>` captures a recurring channel practice as a
+durable GitHub ritual issue. The ritual issue holds the readable title,
+cadence, trigger, practice, and review notes so a loose habit or team routine
+can be discussed before becoming a standing order, reminder, proactive
+workflow, skill, memory, or closed; the channel action queues a provider-facing
+ritual link, creates no schedule, and keeps the source receipt body-free with
+hashes, duplicate state, notification metadata, and delivery gates.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels whiteboard
 --jam-id <id> --message-id <id>` captures a messy channel brainstorm as a
 durable GitHub jam issue. The jam issue holds the readable topic and seeds,
@@ -1641,8 +1650,8 @@ provider-facing reminder link back to the mirrored thread, and keeps the source
 receipt body-free. Scheduled GitHub Actions can later use the reminder issue as
 the canonical wake-up lane without a socket or webhook.
 Inside a channel-created task, watch, standing-order proposal, backup restore
-request, checkpoint rehearsal, clip, attachment, decision, digest, idea,
-retro, playbook, insight, board card, checklist, agenda, toolset proposal, workspace
+request, checkpoint rehearsal, clip, attachment, decision, digest, idea, quest,
+ritual, retro, playbook, insight, board card, checklist, agenda, toolset proposal, workspace
 proposal, incident, voice, image, link, access request, contact, or reminder
 issue, `@gitclaw /channels done --message-id <id>`
 closes the GitHub artifact issue and queues a provider-facing acknowledgement
@@ -1940,6 +1949,7 @@ scripts/e2e/github-channel-tool-lesson-slash.sh
 scripts/e2e/github-channel-tool-result-slash.sh
 scripts/e2e/github-channel-idea-slash.sh
 scripts/e2e/github-channel-quest-slash.sh
+scripts/e2e/github-channel-ritual-slash.sh
 scripts/e2e/github-channel-jam-slash.sh
 scripts/e2e/github-channel-kudos-slash.sh
 scripts/e2e/github-channel-retro-slash.sh
@@ -2453,6 +2463,15 @@ first move, and win condition, queues a provider-facing quest link back to the
 mirrored thread, checks duplicate quest and notification suppression, exposes
 the quest-link notification through metadata-only outbox, and then continues
 on the quest issue with a real GitHub Models repo-reader/search follow-up.
+The channel-ritual slash harness turns the operator console into a lightweight
+practice lane: a channel-ingested issue receives `@gitclaw /channels ritual`,
+creates or reuses a durable GitHub ritual issue with readable title, cadence,
+trigger, practice, and review notes, queues a provider-facing ritual link with
+title and cadence back to the mirrored thread, checks duplicate ritual and
+notification suppression, proves no scheduled workflow/reminder/standing order
+was created, exposes the ritual-link notification through metadata-only
+outbox, and then continues on the ritual issue with a real GitHub Models
+repo-reader/search follow-up.
 The channel-jam slash harness turns the operator console into a brainstorm
 lane: a channel-ingested issue receives `@gitclaw /channels whiteboard`, creates or
 reuses a durable GitHub jam issue with the readable topic and seeds, queues a

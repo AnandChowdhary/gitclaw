@@ -5126,6 +5126,36 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Ritual Follow-Up
+
+OpenClaw's current channel docs frame chat apps as Gateway-connected surfaces:
+text works everywhere, channel media/reactions vary, and routing/account
+details belong behind the gateway boundary. Its sessions docs keep persisted
+conversation rows separate from live channel liveness. Hermes' messaging guide
+similarly presents one background gateway across many platforms, while Hermes
+cron is explicitly a separate scheduled-task system that can create recurring
+jobs, attach skills, and deliver results back to chats or other targets.
+
+GitClaw's serverless translation is `@gitclaw /channels ritual --ritual-id
+<id> --message-id <id>`. It opens or reuses a normal
+`gitclaw:channel-ritual` issue with readable title, cadence, trigger,
+practice, and review notes, queues one provider-facing ritual link with title
+and cadence back to the source Slack/Telegram thread, and keeps the source
+receipt body-free with only hashes, duplicate state, notification metadata, and
+delivery gates. The key boundary is that this is not cron: it does not create a
+scheduled GitHub Actions workflow, reminder, standing order, provider delivery,
+model call, provider API call, or repository mutation. Acceptance requires live
+E2E for ritual issue creation, metadata-only ritual-link outbox discovery,
+duplicate suppression, explicit no-schedule/no-reminder/no-standing-order
+flags, and a real GitHub Models repo-reader/search follow-up on the ritual
+issue.
+
+Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw
+sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes cron
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/cron/`),
+Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Glossary Follow-Up
 
 OpenClaw and Hermes both treat chat as a live working surface where concepts,

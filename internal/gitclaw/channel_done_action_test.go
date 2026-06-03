@@ -202,6 +202,30 @@ func TestChannelDoneArtifactRefSupportsDecisionIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsRitualIssues(t *testing.T) {
+	body := RenderChannelRitualIssueBody(ChannelRitualOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		RitualID:          "ritual-done-1",
+		Title:             "Friday closeout ritual",
+		Cadence:           "Every Friday afternoon.",
+		Trigger:           "The week is ending.",
+		Practice:          "Summarize open loops and pick one next step.",
+		Review:            "Close when the ritual should stop or become a scheduled workflow.",
+		SourceIssueNumber: 42,
+		SourceCommentID:   4200,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "ritual" || ref.ID != "ritual-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 42 || ref.SourceCommentID != 4200 {
+		t.Fatalf("unexpected ritual artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsSnippetIssues(t *testing.T) {
 	body := RenderChannelSnippetIssueBody(ChannelSnippetOptions{
 		Repo:              "owner/repo",

@@ -5707,6 +5707,7 @@ accepts a structured reaction form:
 @gitclaw /channels digest --digest-id <stable-digest-id> --message-id <provider-message-id>
 @gitclaw /channels idea --idea-id <stable-idea-id> --message-id <provider-message-id>
 @gitclaw /channels quest --quest-id <stable-quest-id> --message-id <provider-message-id>
+@gitclaw /channels ritual --ritual-id <stable-ritual-id> --message-id <provider-message-id>
 @gitclaw /channels retro --retro-id <stable-retro-id> --message-id <provider-message-id>
 @gitclaw /channels playbook --playbook-id <stable-playbook-id> --message-id <provider-message-id>
 @gitclaw /channels insight --insight-id <stable-insight-id> --message-id <provider-message-id>
@@ -6587,6 +6588,45 @@ this surface require a live E2E that captures the quest, validates the
 metadata-only quest-link outbox, checks duplicate suppression, and then
 continues on the quest issue with a normal GitHub Models repo-reader/search
 follow-up.
+
+The same channel-thread issue can also capture a recurring practice before it
+becomes automation:
+
+```text
+@gitclaw /channels ritual --ritual-id <stable-ritual-id> --message-id <provider-message-id>
+Title: short practice title
+Cadence:
+when this should naturally happen
+Trigger:
+the cue that starts the practice
+Practice:
+the small repeatable steps to try
+Review:
+how the issue decides whether to close, keep, or promote the ritual
+```
+
+`/channels ritual`, `/channels practice`, `/channels routine`,
+`/channels habit`, and `/channels cadence` infer the current channel and
+thread id from the issue marker when no explicit route/channel/thread target is
+provided. They create or reuse one open GitHub issue carrying a hidden
+`gitclaw:channel-ritual` marker for the stable ritual id, label it with
+`gitclaw` so normal conversation can continue there, and queue a
+provider-facing ritual link back to the mirrored channel thread. The ritual
+issue contains the human-readable title, cadence, trigger, practice, and
+review notes because it is a review surface for a possible routine, not active
+automation. The source receipt remains body-free, reporting only
+ritual/thread/message/section hashes, duplicate status, notification queue
+metadata, and delivery gates. It does not call a model, call provider APIs,
+create scheduled workflows, create reminders, create standing orders, mutate
+the repository, print raw ritual ids, print raw thread ids, print raw source or
+notification message ids, print channel message bodies, or print raw ritual
+sections in the source receipt. Duplicates are suppressed first by `ritual_id`
+for the GitHub ritual issue and then by `channel + notify_message_id` for the
+provider-facing ritual link. Changes to this surface require a live E2E that
+captures the ritual, validates the metadata-only ritual-link outbox, checks
+duplicate suppression, proves no scheduled workflow/reminder/standing order was
+created, and then continues on the ritual issue with a normal GitHub Models
+repo-reader/search follow-up.
 
 The same channel-thread issue can also capture a live brainstorm jam:
 
@@ -8359,8 +8399,8 @@ and then continues on the reminder issue with a normal GitHub Models
 repo-reader/search follow-up.
 
 The channel-created task, watch, standing-order proposal, backup restore
-request, checkpoint rehearsal, clip, attachment, decision, digest, idea,
-incident, insight, voice, image, and reminder issues also accept a completion
+request, checkpoint rehearsal, clip, attachment, decision, digest, idea, quest,
+ritual, incident, insight, voice, image, and reminder issues also accept a completion
 form:
 
 ```text
@@ -8739,6 +8779,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels digest --digest-id channel-digest-1 --message-id provider-msg-1
 @gitclaw /channels idea --idea-id channel-idea-1 --message-id provider-msg-1
 @gitclaw /channels quest --quest-id channel-quest-1 --message-id provider-msg-1
+@gitclaw /channels ritual --ritual-id channel-ritual-1 --message-id provider-msg-1
 @gitclaw /channels whiteboard --jam-id channel-jam-1 --message-id provider-msg-1
 @gitclaw /channels kudos --kudos-id channel-kudos-1 --message-id provider-msg-1
 @gitclaw /channels retro --retro-id channel-retro-1 --message-id provider-msg-1
@@ -11651,6 +11692,17 @@ examples/workflows/gitclaw.yml
   select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-quest fixture token, and avoid hidden channel, account, provider,
   message, quest, objective, first-move, and win-condition sentinels.
+- A `gh`-driven channel-ritual-slash E2E harness creates a real channel-thread
+  issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels ritual --ritual-id ... --message-id ...` on that
+  mirrored thread, verifies GitHub ritual issue creation, body-free source
+  receipt metadata, provider-facing ritual-link queueing with title and
+  cadence, duplicate ritual and notification suppression, explicit no-schedule
+  gates, and metadata-only outbox discovery. The ritual issue then gets a
+  normal GitHub Models issue-comment follow-up that must select `repo-reader`,
+  expose `gitclaw.search_files`, recover the channel-ritual fixture token, and
+  avoid hidden channel, account, provider, message, ritual, cadence, trigger,
+  practice, and review sentinels.
 - A `gh`-driven channel-jam-slash E2E harness creates a real channel-thread
   issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels whiteboard --jam-id ... --message-id ...` on that mirrored
