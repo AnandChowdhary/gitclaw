@@ -5107,6 +5107,31 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Snippet Capture Follow-Up
+
+OpenClaw's channel framing treats chat as a durable assistant surface rather
+than a thin notification pipe, while Hermes' messaging guide separates provider
+transport from normalized agent sessions and media-capable chat routing. The
+useful GitClaw translation is to let Slack/Telegram code or config snippets
+become GitHub-native review surfaces without requiring a webhook server, socket
+gateway, or provider fetch step.
+
+GitClaw's serverless version is `@gitclaw /channels snippet --snippet-id <id>
+--language <lang> --message-id <id>` with an explicit trailing fenced snippet
+body. It opens or reuses a normal `gitclaw:channel-snippet` issue containing
+the readable code/config block, language, title, and notes; queues one
+provider-facing snippet link back to the mirrored thread; and keeps the source
+receipt body-free with only hashes, byte/line counts, duplicate status, and
+delivery gates. The action does not call a model, call provider APIs, fetch
+provider message bodies, copy raw mirrored channel bodies, mutate the
+repository, or print raw snippet language/body/title/note/provider IDs in the
+source receipt. Acceptance requires live E2E for snippet issue creation,
+metadata-only outbox discovery, duplicate suppression, and a real GitHub
+Models repo-reader/search follow-up on the snippet issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Fork Follow-Up
 
 OpenClaw's channel framing treats the conversation surface itself as the agent

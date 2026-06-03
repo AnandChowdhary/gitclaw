@@ -202,6 +202,29 @@ func TestChannelDoneArtifactRefSupportsDecisionIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsSnippetIssues(t *testing.T) {
+	body := RenderChannelSnippetIssueBody(ChannelSnippetOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		SnippetID:         "snippet-done-1",
+		Title:             "Review channel code snippet",
+		Language:          "go",
+		Snippet:           "func doneSnippet() string { return \"ok\" }",
+		Notes:             "Close this snippet after it has been converted into a task.",
+		SourceIssueNumber: 43,
+		SourceCommentID:   4300,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "snippet" || ref.ID != "snippet-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 43 || ref.SourceCommentID != 4300 {
+		t.Fatalf("unexpected snippet artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsWatchIssues(t *testing.T) {
 	body := RenderChannelWatchIssueBody(ChannelWatchOptions{
 		Repo:              "owner/repo",

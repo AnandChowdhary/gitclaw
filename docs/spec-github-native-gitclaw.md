@@ -5700,6 +5700,7 @@ accepts a structured reaction form:
 @gitclaw /channels watch --watch-id <stable-watch-id> --cadence <cadence> --message-id <provider-message-id>
 @gitclaw /channels propose-order --id <stable-proposal-id> --cadence <cadence> --message-id <provider-message-id>
 @gitclaw /channels clip --clip-id <stable-clip-id> --message-id <provider-message-id>
+@gitclaw /channels snippet --snippet-id <stable-snippet-id> --language <lang> --message-id <provider-message-id>
 @gitclaw /channels attachment --attachment-id <stable-attachment-id> --message-id <provider-message-id> --filename <name> --media-type <mime> --bytes <n>
 @gitclaw /channels decision --decision-id <stable-decision-id> --message-id <provider-message-id>
 @gitclaw /channels digest --digest-id <stable-digest-id> --message-id <provider-message-id>
@@ -5993,6 +5994,44 @@ provider-facing clip link. Changes to this surface require a live E2E that
 creates the clip, validates the metadata-only clip-link outbox, checks duplicate
 suppression, and then continues on the clip issue with a normal GitHub Models
 repo-reader/search follow-up.
+
+The same channel-thread issue can also save an explicit code/config block from
+Slack, Telegram, or another channel into a durable GitHub conversation:
+
+````text
+@gitclaw /channels snippet --snippet-id <stable-snippet-id> --language <lang> --message-id <provider-message-id>
+Title: short snippet title
+Snippet:
+```go
+func example() string { return "ok" }
+```
+Notes:
+optional human-readable snippet context
+````
+
+`/channels snippet`, `/channels code`, `/channels paste`,
+`/channels code-block`, `/channels code-snippet`, `/channels config-snippet`,
+and `/channels fragment` infer the current channel and thread id from the issue
+marker when no explicit route/channel/thread target is provided. They create or
+reuse one open GitHub issue carrying a hidden `gitclaw:channel-snippet` marker
+for the stable snippet id, label it with `gitclaw` so normal review can
+continue there, and queue a provider-facing snippet link back to the mirrored
+channel thread. The snippet issue intentionally contains the readable title,
+fenced code/config body, language, and notes because it is the durable review
+surface. The source receipt remains body-free, reporting only
+snippet/thread/message/title/language/body/note hashes, snippet byte/line
+counts, duplicate status, notification queue metadata, and delivery gates. It
+does not call a model, call provider APIs, fetch provider context, copy raw
+mirrored channel message bodies, print raw snippet ids, print raw thread ids,
+print raw source or notification message ids, or print raw language/title/note
+or code-body values in the source receipt. Duplicates are suppressed first by
+`snippet_id` for the GitHub snippet issue and then by
+`channel + notify_message_id` for the provider-facing snippet link. Changes to
+this surface require a live E2E that creates the snippet issue from a real
+channel-ingested issue, validates metadata-only snippet-link outbox discovery,
+checks duplicate suppression, verifies source receipts/outbox do not copy code
+bodies or raw provider ids, and then continues on the snippet issue with a
+normal GitHub Models repo-reader/search follow-up.
 
 The same channel-thread issue can also record channel-origin file/media
 metadata without fetching provider bytes:
@@ -7900,6 +7939,10 @@ Behavior:
   orders, or creating schedules,
 - create or reuse one `gitclaw:channel-clip` issue per clip id and queue one
   provider-facing clip-link outbound comment per `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-snippet` issue per snippet id and queue
+  one provider-facing snippet-link outbound comment per
+  `channel + notify_message_id` without copying raw mirrored channel message
+  bodies, calling provider APIs, mutating the repository, or calling a model,
 - create or reuse one `gitclaw:channel-attachment` issue per attachment id and
   queue one provider-facing attachment-link outbound comment per
   `channel + notify_message_id`,
@@ -8005,7 +8048,8 @@ Behavior:
   `gitclaw:channel-standing-order-proposal`,
   `gitclaw:backup-restore-request-issue`,
   `gitclaw:checkpoint-rehearsal-issue`, `gitclaw:channel-clip`,
-  `gitclaw:channel-attachment`, `gitclaw:channel-decision`,
+  `gitclaw:channel-attachment`, `gitclaw:channel-snippet`,
+  `gitclaw:channel-decision`,
   `gitclaw:channel-digest`, `gitclaw:channel-idea`,
   `gitclaw:channel-jam`,
   `gitclaw:channel-kudos`, `gitclaw:channel-retro`,
@@ -8200,6 +8244,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels watch --watch-id channel-watch-1 --cadence hourly --message-id provider-msg-1
 @gitclaw /channels propose-order --id channel-order-1 --cadence weekly --message-id provider-msg-1
 @gitclaw /channels clip --clip-id channel-clip-1 --message-id provider-msg-1
+@gitclaw /channels snippet --snippet-id channel-snippet-1 --language go --message-id provider-msg-1
 @gitclaw /channels attachment --attachment-id channel-attachment-1 --message-id provider-msg-1 --filename launch-brief.pdf --media-type application/pdf --bytes 4242
 @gitclaw /channels decision --decision-id channel-decision-1 --message-id provider-msg-1
 @gitclaw /channels digest --digest-id channel-digest-1 --message-id provider-msg-1
@@ -10911,6 +10956,18 @@ examples/workflows/gitclaw.yml
   normal GitHub Models issue-comment follow-up that must select `repo-reader`,
   expose `gitclaw.search_files`, recover the channel-clip fixture token, and
   avoid hidden channel, account, provider, message, and clip sentinels.
+- A `gh`-driven channel-snippet-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels snippet --snippet-id ... --language ... --message-id ...`
+  with an explicit fenced code/config block on that mirrored thread, verifies
+  GitHub snippet issue creation, source receipt metadata with snippet body and
+  language hashes only, provider-facing snippet-link queueing, duplicate
+  snippet and notification suppression, and metadata-only outbox discovery. The
+  snippet issue then gets a normal GitHub Models issue-comment follow-up that
+  must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-snippet fixture token, and avoid hidden channel, account, provider,
+  message, snippet-id, snippet-language, snippet-body, title, and note
+  sentinels.
 - A `gh`-driven channel-attachment-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels attachment --attachment-id ... --message-id ...

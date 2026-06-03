@@ -123,6 +123,7 @@ channel reply slash unique search fixture phrase => GITCLAW_CHANNEL_REPLY_SLASH_
 channel deliverable unique search fixture phrase => GITCLAW_CHANNEL_DELIVERABLE_CONTEXT_V1
 channel task unique search fixture phrase => GITCLAW_CHANNEL_TASK_CONTEXT_V1
 channel clip unique search fixture phrase => GITCLAW_CHANNEL_CLIP_CONTEXT_V1
+channel snippet unique search fixture phrase => GITCLAW_CHANNEL_SNIPPET_CONTEXT_V1
 channel bookmark unique search fixture phrase => GITCLAW_CHANNEL_BOOKMARK_CONTEXT_V1
 channel attachment unique search fixture phrase => GITCLAW_CHANNEL_ATTACHMENT_CONTEXT_V1
 channel decision unique search fixture phrase => GITCLAW_CHANNEL_DECISION_CONTEXT_V1
