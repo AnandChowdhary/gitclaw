@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T11:48:08Z",
+  "generated_at": "2026-06-03T11:49:50Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 824,
     "title": "GitClaw telegram thread channel-warmup-e2e-20260603t114558z",
@@ -51,6 +51,15 @@
       "CommentID": 4611978524,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Warmup Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#824`\n- requested_channel_command: `/channels warmup`\n- channel_warmup_status: `queued`\n- warmup_card_mode: `structured-channel-warmup`\n- notification_target_issue: `#824`\n- notification_comment_id: `4611990124`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `c0da7971ba0d`\n- source_message_id_sha256_12: `aec7553d3766`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `d26ff0f7e953`\n- notify_message_id_auto: `false`\n- warmup_id_sha256_12: `8c1e52c18461`\n- warmup_id_auto: `false`\n- warmup_theme_sha256_12: `f9d35d43770d`\n- warmup_theme_bytes: `5`\n- warmup_prompt_count: `3`\n- warmup_note_sha256_12: `53aebc0cbb8c`\n- warmup_note_bytes: `22`\n- warmup_note_lines: `1`\n- warmup_note_source: `trailing-note`\n- notification_body_sha256_12: `ae7690ccf134`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- command_execution_performed: `false`\n- skill_install_performed: `false`\n- tool_execution_performed: `false`\n- backup_payload_read: `false`\n- soul_body_read: `false`\n- warmup_persistence_performed: `false`\n- workflow_mutation_performed: `false`\n- policy_mutation_performed: `false`\n- schedule_created: `false`\n- provider_api_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_warmup_id_included: `false`\n- raw_warmup_theme_included: `false`\n- raw_warmup_note_included: `false`\n- raw_warmup_prompts_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_warmup_action_change: `true`\n- issue_title_sha256_12: `13af186c484c`\n\nGitClaw queued a provider-facing channel warmup card on the canonical channel issue. This gives the chat thread deterministic conversation starters selected by the caller while keeping command execution, skill installs, tool execution, backup payload reads, soul body reads, provider API calls, model calls, provider delivery, workflow edits, policy changes, schedules, durable warmup persistence, and repository mutations out of this action. The source receipt keeps thread ids, message ids, warmup ids, warmup themes, notes, prompt text, and channel bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read warmup updates with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent warmup updates with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate warmup updates are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4611990244,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-03T11:47:39Z",
       "updated_at": "2026-06-03T11:47:39Z"
+    },
+    {
+      "id": 4611990124,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-warmup-e2e-20260603t114558z\" message_id=\"warmup-notify-20260603t114558z\" author=\"gitclaw\" --\u003e\nGitClaw channel warmup.\n\nTheme: tools\nFrame: Turn tool energy into reviewed requests before execution.\nConversation starters:\n- What decision needs a reviewed tool run, and what evidence would make it safe?\n- Which tool result would change the next step?\n- What must stay human-reviewed before execution?\n\nNote: Use this tiny launcher\n\nWarmup hash: 5a0764846855\nNote hash: 53aebc0cbb8c\nWarmup persistence: advisory only; no durable channel state changed.\n\nWarmup source: GitHub channel action.\nModel call: not performed by this action.\nCommand execution: not performed by this action.\nSkill install: not performed by this action.\nTool execution: not performed by this action.\nBackup payload read: not performed by this action.\nSoul body read: not performed by this action.\nWorkflow mutation: not performed by this action.\nPolicy mutation: not performed by this action.\nSchedule creation: not performed by this action.\nRepository mutation: not performed by this action.\nProvider API call: not performed by this action.\nProvider delivery: queued through GitHub channel outbox.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T11:49:18Z",
+      "updated_at": "2026-06-03T11:49:18Z"
+    },
+    {
+      "id": 4611990244,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26882709948\" event_id=\"comment-4611978524\" model=\"gitclaw/channels\" idempotency_key=\"765cabdd127837aa11279f48d726d26a\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26882709948\" --\u003e\n## GitClaw Channel Warmup Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#824`\n- requested_channel_command: `/channels warmup`\n- channel_warmup_status: `queued`\n- warmup_card_mode: `structured-channel-warmup`\n- notification_target_issue: `#824`\n- notification_comment_id: `4611990124`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `c0da7971ba0d`\n- source_message_id_sha256_12: `aec7553d3766`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `d26ff0f7e953`\n- notify_message_id_auto: `false`\n- warmup_id_sha256_12: `8c1e52c18461`\n- warmup_id_auto: `false`\n- warmup_theme_sha256_12: `f9d35d43770d`\n- warmup_theme_bytes: `5`\n- warmup_prompt_count: `3`\n- warmup_note_sha256_12: `53aebc0cbb8c`\n- warmup_note_bytes: `22`\n- warmup_note_lines: `1`\n- warmup_note_source: `trailing-note`\n- notification_body_sha256_12: `ae7690ccf134`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- command_execution_performed: `false`\n- skill_install_performed: `false`\n- tool_execution_performed: `false`\n- backup_payload_read: `false`\n- soul_body_read: `false`\n- warmup_persistence_performed: `false`\n- workflow_mutation_performed: `false`\n- policy_mutation_performed: `false`\n- schedule_created: `false`\n- provider_api_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_warmup_id_included: `false`\n- raw_warmup_theme_included: `false`\n- raw_warmup_note_included: `false`\n- raw_warmup_prompts_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_warmup_action_change: `true`\n- issue_title_sha256_12: `13af186c484c`\n\nGitClaw queued a provider-facing channel warmup card on the canonical channel issue. This gives the chat thread deterministic conversation starters selected by the caller while keeping command execution, skill installs, tool execution, backup payload reads, soul body reads, provider API calls, model calls, provider delivery, workflow edits, policy changes, schedules, durable warmup persistence, and repository mutations out of this action. The source receipt keeps thread ids, message ids, warmup ids, warmup themes, notes, prompt text, and channel bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read warmup updates with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent warmup updates with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate warmup updates are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T11:49:19Z",
+      "updated_at": "2026-06-03T11:49:19Z"
     }
   ]
 }
