@@ -52,6 +52,7 @@ issue_url="$(gh issue create \
   --repo "$repo" \
   --title "$title" \
   --body "$body" \
+  --label gitclaw \
   --label gitclaw:channel)"
 issue_number="${issue_url##*/}"
 
