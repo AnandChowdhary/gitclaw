@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T00:35:06Z",
+  "generated_at": "2026-06-03T00:36:49Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 656,
   "issues": [
@@ -8309,13 +8309,14 @@
       "number": 763,
       "title": "@gitclaw /tools request-run search_files --id e2e-tool-run-cancel-20260603t003337z",
       "path": "issues/000763.json",
-      "backup_generated_at": "2026-06-03T00:35:04Z",
-      "event_name": "issues",
+      "backup_generated_at": "2026-06-03T00:36:47Z",
+      "event_name": "issue_comment",
       "labels": [
-        "gitclaw"
+        "gitclaw",
+        "gitclaw:done"
       ],
-      "comment_count": 1,
-      "transcript_messages": 2
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
