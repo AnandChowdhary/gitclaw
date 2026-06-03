@@ -52,6 +52,7 @@ skills source proposal unique search fixture phrase => GITCLAW_SKILLS_SOURCE_PRO
 skills source proposal channel notify unique search fixture phrase => GITCLAW_SKILLS_SOURCE_NOTIFY_CONTEXT_V1
 skills rehearsal unique search fixture phrase => GITCLAW_SKILLS_REHEARSAL_CONTEXT_V1
 channel skill map unique search fixture phrase => GITCLAW_CHANNEL_SKILL_MAP_CONTEXT_V1
+channel room pulse unique search fixture phrase => GITCLAW_CHANNEL_ROOM_PULSE_CONTEXT_V1
 bundle rehearsal unique search fixture phrase => GITCLAW_BUNDLE_REHEARSAL_CONTEXT_V1
 soul edit plan unique search fixture phrase => GITCLAW_SOUL_EDIT_PLAN_CONTEXT_V1
 soul propose unique search fixture phrase => GITCLAW_SOUL_PROPOSE_CONTEXT_V1

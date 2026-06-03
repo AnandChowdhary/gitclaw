@@ -5503,6 +5503,36 @@ mood update, validates metadata-only outbox discovery, verifies duplicate
 suppression, and then continues on the same GitHub issue with a real GitHub
 Models repo-reader/search follow-up.
 
+For channel-native thread awareness that should feel like a quick heartbeat
+rather than a report, GitClaw also supports:
+
+```text
+@gitclaw /channels room-pulse handoff --pulse-id <stable-pulse-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
+Note: Keep the room warm.
+```
+
+`/channels room-pulse`, `/channels roompulse`, `/channels thread-pulse`,
+`/channels threadpulse`, `/channels room-check`, `/channels thread-check`,
+`/channels room-state`, `/channels thread-state`, `/channels room-beat`, and
+`/channels thread-beat` queue one provider-facing room pulse back onto the
+current `gitclaw:channel-thread` issue or an explicit reviewed route. The
+action reads current issue comments only to classify GitClaw markers such as
+mirrored channel messages, assistant turns, outbound cards, status cards,
+activity signals, user commands, and error markers. It does not summarize or
+print raw issue/comment bodies. The provider-facing outbound comment may show
+the focus, marker counts, pulse state, optional note, and a suggested next
+command. The source receipt remains body-free and reports only hashes, note
+size, marker counts, duplicate status, outbox delivery instructions, and safety
+gates. It does not call a model, call provider APIs, create tasks or reminders,
+edit workflows, mutate repository files, print raw focus values, print raw
+notes, print suggested step text, print raw issue bodies, or print raw comment
+bodies. Duplicates are suppressed by `channel + notify_message_id`. Changes to
+this surface require a live E2E that ingests a real channel issue, queues the
+room pulse, validates metadata-only outbox discovery, verifies duplicate
+suppression, proves no raw body leakage or mutation side effects, and then
+continues on the same GitHub issue with a real GitHub Models repo-reader/search
+follow-up.
+
 For channel-native sticker signals that should feel like chat without becoming
 a media pipeline, GitClaw also supports:
 
@@ -9473,6 +9503,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels roll --dice 2d6+1 --message-id provider-msg-1 --notify-message-id provider-roll-ack-1
 @gitclaw /channels choose --message-id provider-msg-1 --notify-message-id provider-choice-ack-1
 @gitclaw /channels mood focused --message-id provider-msg-1 --notify-message-id provider-mood-ack-1 --intensity 4
+@gitclaw /channels room-pulse handoff --pulse-id channel-room-pulse-1 --message-id provider-msg-1 --notify-message-id provider-room-pulse-ack-1
 @gitclaw /channels sticker confetti --sticker-id channel-sticker-1 --message-id provider-msg-1 --notify-message-id provider-sticker-ack-1 --scale 4
 @gitclaw /channels toast launch-ready --toast-id channel-toast-1 --message-id provider-msg-1 --notify-message-id provider-toast-ack-1
 @gitclaw /channels haiku launch --haiku-id channel-haiku-1 --message-id provider-msg-1 --notify-message-id provider-haiku-ack-1
@@ -11975,6 +12006,15 @@ examples/workflows/gitclaw.yml
   The same channel issue then gets a normal GitHub Models issue-comment follow-up
   that must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-mood fixture token, and avoid hidden channel/message/mood sentinels.
+- A `gh`-driven channel-room-pulse-slash E2E harness ingests a real mirrored
+  channel issue, replies with `@gitclaw /channels room-pulse ...`, verifies the
+  provider-facing marker-count room pulse, body-free source receipt metadata,
+  duplicate room-pulse notification suppression from a later issue comment with
+  the same acknowledgement id, and metadata-only outbox discovery for the
+  acknowledgement. The same channel issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-room-pulse fixture token, and
+  avoid hidden channel/message/pulse/focus/note sentinels.
 - A `gh`-driven channel-sticker-slash E2E harness ingests a real mirrored
   channel issue, replies with `@gitclaw /channels sticker ...`, verifies the
   provider-facing sticker card, body-free source receipt metadata, duplicate

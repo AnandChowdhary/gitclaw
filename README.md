@@ -680,6 +680,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels choose --message-id <id> --notify-message-id <id>
 @gitclaw /channels oracle --choose-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels mood focused --message-id <id> --notify-message-id <id> --intensity 4
+@gitclaw /channels room-pulse handoff --pulse-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels sticker confetti --sticker-id <id> --message-id <id> --notify-message-id <id> --scale 4
 @gitclaw /channels toast launch-ready --toast-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels haiku launch --haiku-id <id> --message-id <id> --notify-message-id <id>
@@ -1017,6 +1018,12 @@ repository; the source receipt keeps the raw question and answer out of band.
 Slack/Telegram thread. Optional `Note: ...` trailing text is visible in the
 provider update, while the source receipt keeps raw mood text, notes, thread
 ids, message ids, and mood ids out of band.
+`@gitclaw /channels room-pulse <focus> --pulse-id <id> --message-id <id>
+--notify-message-id <id>` queues a provider-facing thread pulse back to the
+current Slack/Telegram thread. It counts safe GitClaw issue/comment markers,
+reports whether the room looks active, and suggests a next command while the
+source receipt keeps raw issue/comment bodies, focus values, notes, step text,
+thread ids, message ids, and pulse ids out of band.
 `@gitclaw /channels sticker <sticker> --sticker-id <id> --message-id <id>
 --notify-message-id <id> --scale 1..5` queues a provider-facing sticker card
 back to the current Slack/Telegram thread. Optional `Note: ...` trailing text
@@ -2121,6 +2128,7 @@ scripts/e2e/github-channel-rollcall-slash.sh
 scripts/e2e/github-channel-roll-slash.sh
 scripts/e2e/github-channel-choose-slash.sh
 scripts/e2e/github-channel-mood-slash.sh
+scripts/e2e/github-channel-room-pulse-slash.sh
 scripts/e2e/github-channel-sticker-slash.sh
 scripts/e2e/github-channel-toast-slash.sh
 scripts/e2e/github-channel-haiku-slash.sh
@@ -2459,6 +2467,13 @@ reports: a channel-ingested issue receives `@gitclaw /channels mood`, queues one
 provider-visible presence update with an optional note, exposes it through
 metadata-only outbox, suppresses duplicate mood notifications, and then runs a
 real GitHub Models repo-reader/search follow-up.
+The channel-room-pulse slash harness gives a Slack/Telegram thread a tiny
+heartbeat: a channel-ingested issue receives `@gitclaw /channels room-pulse`,
+queues one provider-visible marker-count pulse with a suggested next command,
+exposes it through metadata-only outbox, suppresses duplicate room-pulse
+notifications, proves no raw issue/comment body exposure, task/reminder
+creation, provider API call, model call, workflow edit, or repository mutation
+happened, and then runs a real GitHub Models repo-reader/search follow-up.
 The channel-sticker slash harness adds a provider-facing flourish lane without
 media side effects: a channel-ingested issue receives `@gitclaw /channels
 sticker`, queues one provider-visible sticker card with an optional note,
