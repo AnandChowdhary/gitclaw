@@ -5710,6 +5710,7 @@ accepts a structured reaction form:
 @gitclaw /channels ritual --ritual-id <stable-ritual-id> --message-id <provider-message-id>
 @gitclaw /channels pact --pact-id <stable-pact-id> --message-id <provider-message-id>
 @gitclaw /channels forecast --forecast-id <stable-forecast-id> --message-id <provider-message-id>
+@gitclaw /channels lore --lore-id <stable-lore-id> --message-id <provider-message-id>
 @gitclaw /channels retro --retro-id <stable-retro-id> --message-id <provider-message-id>
 @gitclaw /channels playbook --playbook-id <stable-playbook-id> --message-id <provider-message-id>
 @gitclaw /channels insight --insight-id <stable-insight-id> --message-id <provider-message-id>
@@ -6712,6 +6713,45 @@ validates the metadata-only forecast-link outbox, checks duplicate suppression,
 proves no schedule/reminder/betting-market/money-or-points/repository mutation
 occurred, and then continues on the forecast issue with a normal GitHub Models
 repo-reader/search follow-up.
+
+The same channel-thread issue can also preserve low-authority shared context
+without promoting it into soul, memory, policy, or skill state:
+
+```text
+@gitclaw /channels lore --lore-id <stable-lore-id> --message-id <provider-message-id>
+Title: short context title
+Lore:
+the useful bit of shared channel context
+Context:
+why this lore matters or where it applies
+Source:
+where the lore came from
+Review:
+when to revisit, retire, or promote it
+```
+
+`/channels lore`, `/channels context-note`, `/channels shared-context`,
+`/channels canon`, `/channels thread-lore`, and `/channels background` infer
+the current channel and thread id from the issue marker when no explicit
+route/channel/thread target is provided. They create or reuse one open GitHub
+issue carrying a hidden `gitclaw:channel-lore` marker for the stable lore id,
+label it with `gitclaw` so normal conversation can continue there, and queue a
+provider-facing lore link with the visible title and review timing back to the
+mirrored channel thread. The lore issue contains the human-readable title, lore
+body, context, source, and review note because it is a review surface for soft
+shared context, not a high-authority memory or soul write. The source receipt
+remains body-free, reporting only lore/thread/message/section hashes, duplicate
+status, notification queue metadata, and delivery gates. It does not call a
+model, call provider APIs, write SOUL.md, write `.gitclaw/MEMORY.md`, mutate
+policy, install skills, mutate the repository, print raw lore ids, print raw
+thread ids, print raw source or notification message ids, print channel message
+bodies, or print raw lore sections in the source receipt. Duplicates are
+suppressed first by `lore_id` for the GitHub lore issue and then by
+`channel + notify_message_id` for the provider-facing lore link. Changes to
+this surface require a live E2E that captures the lore, validates the
+metadata-only lore-link outbox, checks duplicate suppression, proves no
+soul/memory/policy/skill/repository mutation occurred, and then continues on
+the lore issue with a normal GitHub Models repo-reader/search follow-up.
 
 The same channel-thread issue can also capture a live brainstorm jam:
 
@@ -8485,7 +8525,7 @@ repo-reader/search follow-up.
 
 The channel-created task, watch, standing-order proposal, backup restore
 request, checkpoint rehearsal, clip, attachment, decision, digest, idea, quest,
-ritual, pact, forecast, incident, insight, voice, image, and reminder issues
+ritual, pact, forecast, lore, incident, insight, voice, image, and reminder issues
 also accept a completion form:
 
 ```text
@@ -8573,6 +8613,10 @@ Behavior:
   `channel + notify_message_id` without creating scheduled workflows,
   reminders, betting markets, money/points tracking, repository mutations,
   provider API calls, or model calls,
+- create or reuse one `gitclaw:channel-lore` issue per lore id and queue one
+  provider-facing lore-link outbound comment per `channel + notify_message_id`
+  without writing SOUL.md, writing memory, mutating policy, installing skills,
+  mutating repository files, provider API calls, or model calls,
 - create or reuse one `gitclaw:channel-kudos` issue per kudos id and queue
   one provider-facing acknowledgement outbound comment per
   `channel + notify_message_id`,
@@ -8674,7 +8718,7 @@ Behavior:
   `gitclaw:channel-decision`,
   `gitclaw:channel-digest`, `gitclaw:channel-idea`,
   `gitclaw:channel-jam`, `gitclaw:channel-pact`,
-  `gitclaw:channel-forecast`,
+  `gitclaw:channel-forecast`, `gitclaw:channel-lore`,
   `gitclaw:channel-kudos`, `gitclaw:channel-retro`,
   `gitclaw:channel-playbook`, `gitclaw:channel-insight`,
   `gitclaw:channel-board-card`, `gitclaw:channel-checklist`,
@@ -8878,6 +8922,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels ritual --ritual-id channel-ritual-1 --message-id provider-msg-1
 @gitclaw /channels pact --pact-id channel-pact-1 --message-id provider-msg-1
 @gitclaw /channels forecast --forecast-id channel-forecast-1 --message-id provider-msg-1
+@gitclaw /channels lore --lore-id channel-lore-1 --message-id provider-msg-1
 @gitclaw /channels whiteboard --jam-id channel-jam-1 --message-id provider-msg-1
 @gitclaw /channels kudos --kudos-id channel-kudos-1 --message-id provider-msg-1
 @gitclaw /channels retro --retro-id channel-retro-1 --message-id provider-msg-1
@@ -11825,6 +11870,17 @@ examples/workflows/gitclaw.yml
   expose `gitclaw.search_files`, recover the channel-forecast fixture token,
   and avoid hidden channel, account, provider, message, forecast, prediction,
   evidence, resolution, and due sentinels.
+- A `gh`-driven channel-lore-slash E2E harness creates a real channel-thread
+  issue through `gitclaw-channel-ingest.yml`, posts `@gitclaw /channels lore
+  --lore-id ... --message-id ...` on that mirrored thread, verifies GitHub lore
+  issue creation, body-free source receipt metadata, provider-facing lore-link
+  queueing with title and review timing, duplicate lore and notification
+  suppression, explicit no soul/memory/policy/skill/repository mutation gates,
+  and metadata-only outbox discovery. The lore issue then gets a normal GitHub
+  Models issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-lore fixture token, and avoid
+  hidden channel, account, provider, message, lore, context, source, and review
+  sentinels.
 - A `gh`-driven channel-jam-slash E2E harness creates a real channel-thread
   issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels whiteboard --jam-id ... --message-id ...` on that mirrored

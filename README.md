@@ -725,6 +725,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels ritual --ritual-id <id> --cadence <cadence> --message-id <id>
 @gitclaw /channels pact --pact-id <id> --message-id <id>
 @gitclaw /channels forecast --forecast-id <id> --message-id <id>
+@gitclaw /channels lore --lore-id <id> --message-id <id>
 @gitclaw /channels whiteboard --jam-id <id> --message-id <id>
 @gitclaw /channels kudos --kudos-id <id> --message-id <id>
 @gitclaw /channels retro --retro-id <id> --message-id <id>
@@ -1287,6 +1288,14 @@ market, money/points ledger, or repo mutation; the channel action queues a
 provider-facing forecast link with title and due timing and keeps the source
 receipt body-free with hashes, duplicate state, notification metadata, and
 delivery gates.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels lore
+--lore-id <id> --message-id <id>` preserves low-authority shared channel
+context as a durable GitHub lore issue. The lore issue holds the readable title,
+lore body, context, source, and review note so useful ambient context can be
+revisited without writing SOUL.md, memory, policy, skills, or repository files;
+the channel action queues a provider-facing lore link with title and review
+timing and keeps the source receipt body-free with hashes, duplicate state,
+notification metadata, and delivery gates.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels whiteboard
 --jam-id <id> --message-id <id>` captures a messy channel brainstorm as a
 durable GitHub jam issue. The jam issue holds the readable topic and seeds,
@@ -1671,7 +1680,7 @@ receipt body-free. Scheduled GitHub Actions can later use the reminder issue as
 the canonical wake-up lane without a socket or webhook.
 Inside a channel-created task, watch, standing-order proposal, backup restore
 request, checkpoint rehearsal, clip, attachment, decision, digest, idea, quest,
-ritual, pact, forecast, retro, playbook, insight, board card, checklist, agenda, toolset proposal, workspace
+ritual, pact, forecast, lore, retro, playbook, insight, board card, checklist, agenda, toolset proposal, workspace
 proposal, incident, voice, image, link, access request, contact, or reminder
 issue, `@gitclaw /channels done --message-id <id>`
 closes the GitHub artifact issue and queues a provider-facing acknowledgement
@@ -1972,6 +1981,7 @@ scripts/e2e/github-channel-quest-slash.sh
 scripts/e2e/github-channel-ritual-slash.sh
 scripts/e2e/github-channel-pact-slash.sh
 scripts/e2e/github-channel-forecast-slash.sh
+scripts/e2e/github-channel-lore-slash.sh
 scripts/e2e/github-channel-jam-slash.sh
 scripts/e2e/github-channel-kudos-slash.sh
 scripts/e2e/github-channel-retro-slash.sh
@@ -2512,6 +2522,15 @@ duplicate forecast and notification suppression, proves no reminder/schedule/
 betting-market/money-or-points/repository mutation was performed, exposes the
 forecast-link notification through metadata-only outbox, and then continues on
 the forecast issue with a real GitHub Models repo-reader/search follow-up.
+The channel-lore slash harness turns the operator console into a shared-context
+lane: a channel-ingested issue receives `@gitclaw /channels lore`, creates or
+reuses a durable GitHub lore issue with readable title, lore body, context,
+source, and review note, queues a provider-facing lore link with title and
+review timing back to the mirrored thread, checks duplicate lore and
+notification suppression, proves no soul/memory/policy/skill/repository
+mutation was performed, exposes the lore-link notification through
+metadata-only outbox, and then continues on the lore issue with a real GitHub
+Models repo-reader/search follow-up.
 The channel-jam slash harness turns the operator console into a brainstorm
 lane: a channel-ingested issue receives `@gitclaw /channels whiteboard`, creates or
 reuses a durable GitHub jam issue with the readable topic and seeds, queues a

@@ -274,6 +274,30 @@ func TestChannelDoneArtifactRefSupportsForecastIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsLoreIssues(t *testing.T) {
+	body := RenderChannelLoreIssueBody(ChannelLoreOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		LoreID:            "lore-done-1",
+		Title:             "Launch room context",
+		Lore:              "The channel treats small handoffs as durable context.",
+		Context:           "This came from a release week thread.",
+		Source:            "Saved by a channel action.",
+		Review:            "Review when the launch process changes.",
+		SourceIssueNumber: 42,
+		SourceCommentID:   4200,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "lore" || ref.ID != "lore-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 42 || ref.SourceCommentID != 4200 {
+		t.Fatalf("unexpected lore artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsSnippetIssues(t *testing.T) {
 	body := RenderChannelSnippetIssueBody(ChannelSnippetOptions{
 		Repo:              "owner/repo",

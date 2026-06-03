@@ -5211,6 +5211,34 @@ sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes cron
 Hermes messaging guide
 (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Lore Follow-Up
+
+OpenClaw's channels docs treat chat as a first-class working surface, while
+its sessions docs keep durable conversation records separate from transient
+channel state. Hermes' messaging guide shows provider-specific delivery as a
+wrapper around agent work, and its cron docs keep scheduled execution explicit.
+For GitClaw, that suggests a useful middle lane: preserve soft channel context
+without silently upgrading it into SOUL.md, `.gitclaw/MEMORY.md`, policy,
+skills, schedules, or repository changes.
+
+GitClaw's translation is `@gitclaw /channels lore --lore-id <id>
+--message-id <id>`. It opens or reuses a normal `gitclaw:channel-lore` issue
+with readable title, lore body, context, source, and review timing, queues one
+provider-facing lore link with title and review timing back to the source
+Slack/Telegram thread, and keeps the source receipt body-free with only hashes,
+duplicate state, notification metadata, and delivery gates. The key boundary is
+that this is not a soul write, not a memory write, not a policy mutation, not a
+skill install, not provider delivery, and not a repository mutation. Acceptance
+requires live E2E for lore issue creation, metadata-only lore-link outbox
+discovery, duplicate suppression, explicit no-soul/no-memory/no-policy/no-skill
+gates, and a real GitHub Models repo-reader/search follow-up on the lore issue.
+
+Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw
+sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes cron
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/cron/`),
+Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Glossary Follow-Up
 
 OpenClaw and Hermes both treat chat as a live working surface where concepts,
