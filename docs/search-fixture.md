@@ -271,3 +271,4 @@ channel vibe-check unique search fixture phrase => GITCLAW_CHANNEL_VIBE_CHECK_CO
 channel browser status unique search fixture phrase => GITCLAW_CHANNEL_BROWSER_STATUS_CONTEXT_V1
 channel toast unique search fixture phrase => GITCLAW_CHANNEL_TOAST_CONTEXT_V1
 channel haiku unique search fixture phrase => GITCLAW_CHANNEL_HAIKU_CONTEXT_V1
+channel coach unique search fixture phrase => GITCLAW_CHANNEL_COACH_CONTEXT_V1

@@ -5578,6 +5578,36 @@ duplicate suppression, proves no model/randomness/media/provider-API/workflow/
 repository mutation was performed, and then continues on the same GitHub issue
 with a real GitHub Models repo-reader/search follow-up.
 
+For repo-aware channel coaching that should suggest a useful next move without
+executing anything, GitClaw also supports:
+
+```text
+@gitclaw /channels coach skills --coach-id <stable-coach-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
+Note: Start with capability posture.
+```
+
+`/channels coach`, `/channels coach-me`, `/channels next`,
+`/channels next-step`, `/channels next-steps`, `/channels next-move`,
+`/channels advisor`, `/channels advise`, and `/channels mentor` queue one
+provider-facing next-move card back onto the current `gitclaw:channel-thread`
+issue or an explicit reviewed route. The lane is bounded by normalization to
+`all`, `skills`, `tools`, `soul`, `memory`, `backups`, `channels`, or `fun`.
+The card reads repo-local skill, tool, and soul metadata and renders compact
+signals plus channel-native follow-up commands for the chosen lane. Optional
+`Note: ...` trailing text is visible in the provider-facing update. The source
+receipt remains body-free and reports only hashes, counts, statuses, duplicate
+status, outbox delivery instructions, and safety gates. It does not execute
+commands, install skills, execute tools, read backup payloads, read soul
+bodies, call provider APIs, call a model, edit workflows, mutate repository
+files, print raw coach ids, print raw lanes, print raw notes, or print raw
+recommendation text. Duplicates are suppressed by `channel +
+notify_message_id`. Changes to this surface require a live E2E that ingests a
+real channel issue, queues the coach card, validates metadata-only outbox
+discovery, verifies duplicate suppression, proves no command-execution/
+skill-install/tool-execution/backup-payload-read/soul-body-read/provider-API/
+model/workflow/repository mutation was performed, and then continues on the
+same GitHub issue with a real GitHub Models repo-reader/search follow-up.
+
 For immediate channel-native nudges that should ask for attention without
 becoming task state, GitClaw also supports:
 
@@ -9335,6 +9365,8 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels mood focused --message-id provider-msg-1 --notify-message-id provider-mood-ack-1 --intensity 4
 @gitclaw /channels sticker confetti --sticker-id channel-sticker-1 --message-id provider-msg-1 --notify-message-id provider-sticker-ack-1 --scale 4
 @gitclaw /channels toast launch-ready --toast-id channel-toast-1 --message-id provider-msg-1 --notify-message-id provider-toast-ack-1
+@gitclaw /channels haiku launch --haiku-id channel-haiku-1 --message-id provider-msg-1 --notify-message-id provider-haiku-ack-1
+@gitclaw /channels coach skills --coach-id channel-coach-1 --message-id provider-msg-1 --notify-message-id provider-coach-ack-1
 @gitclaw /channels nudge release-captain --nudge-id channel-nudge-1 --message-id provider-msg-1 --notify-message-id provider-nudge-ack-1 --tone gentle
 @gitclaw /channels palette fun --palette-id channel-palette-1 --message-id provider-msg-1 --notify-message-id provider-palette-ack-1
 @gitclaw /channels compass all --compass-id channel-compass-1 --message-id provider-msg-1 --notify-message-id provider-compass-ack-1
@@ -11862,6 +11894,18 @@ examples/workflows/gitclaw.yml
   issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-haiku fixture token, and avoid
   hidden channel/message/haiku sentinels.
+- A `gh`-driven channel-coach-slash E2E harness ingests a real mirrored channel
+  issue, replies with `@gitclaw /channels coach ...`, verifies the
+  provider-facing skill/tool/soul signal card with suggested channel-native
+  next moves, body-free source receipt metadata, duplicate coach notification
+  suppression from a later issue comment with the same acknowledgement id,
+  explicit no command-execution/skill-install/tool-execution/backup-payload-
+  read/soul-body-read/provider-API/model/workflow/repository mutation gates,
+  and metadata-only outbox discovery for the acknowledgement. The same channel
+  issue then gets a normal GitHub Models issue-comment follow-up that must
+  select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-coach fixture token, and avoid hidden channel/message/coach
+  sentinels.
 - A `gh`-driven channel-nudge-slash E2E harness ingests a real mirrored channel
   issue, replies with `@gitclaw /channels nudge ...`, verifies the
   provider-facing target/tone/note card, body-free source receipt metadata,

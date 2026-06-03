@@ -115,6 +115,7 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"Queue provider-facing bounded oracle answer cards with the deterministic picker",
 		"Queue provider-facing celebration toast cards without opening durable kudos issues",
 		"Queue provider-facing deterministic haiku cards from bounded static line decks",
+		"Queue provider-facing repo-aware next-move coach cards from skill/tool/soul metadata",
 		"queue mirrored channel browser-readiness replies without opening browser sessions",
 		"`gitclaw bundles catalog` command=`/bundles`",
 		"`gitclaw bundles list` command=`/bundles`",

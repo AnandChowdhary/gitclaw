@@ -683,6 +683,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels sticker confetti --sticker-id <id> --message-id <id> --notify-message-id <id> --scale 4
 @gitclaw /channels toast launch-ready --toast-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels haiku launch --haiku-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels coach skills --coach-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels nudge release-captain --nudge-id <id> --message-id <id> --notify-message-id <id> --tone gentle
 @gitclaw /channels palette fun --palette-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels compass all --compass-id <id> --message-id <id> --notify-message-id <id>
@@ -1033,6 +1034,16 @@ provider update, while the source receipt keeps raw haiku ids, themes, notes,
 poem lines, thread ids, message ids, and channel bodies out of band. This does
 not call a model, use external randomness, generate media, call provider APIs,
 edit workflows, or mutate the repository.
+`@gitclaw /channels coach <all|skills|tools|soul|memory|backups|channels|fun>
+--coach-id <id> --message-id <id> --notify-message-id <id>` queues a
+provider-facing next-move card from repo-local skill, tool, and soul metadata.
+The card includes body-safe signals and suggested channel-native follow-up
+commands for the selected lane. Optional `Note: ...` trailing text is visible
+in the provider update, while the source receipt keeps raw coach ids, lanes,
+notes, recommendation text, thread ids, message ids, and channel bodies out of
+band. This does not execute commands, install skills, execute tools, read
+backup payloads, read soul bodies, call provider APIs, call a model, edit
+workflows, or mutate the repository.
 `@gitclaw /channels nudge <target> --nudge-id <id> --message-id <id>
 --notify-message-id <id> --tone gentle|normal|urgent` queues a provider-facing
 attention nudge back to the current Slack/Telegram thread. Optional `Note: ...`
@@ -2063,6 +2074,8 @@ scripts/e2e/github-channel-choose-slash.sh
 scripts/e2e/github-channel-mood-slash.sh
 scripts/e2e/github-channel-sticker-slash.sh
 scripts/e2e/github-channel-toast-slash.sh
+scripts/e2e/github-channel-haiku-slash.sh
+scripts/e2e/github-channel-coach-slash.sh
 scripts/e2e/github-channel-nudge-slash.sh
 scripts/e2e/github-channel-palette-slash.sh
 scripts/e2e/github-channel-compass-slash.sh
@@ -2410,6 +2423,14 @@ provider-visible toast with an optional reason, exposes it through
 metadata-only outbox, suppresses duplicate toast notifications, proves no
 kudos issue/model/provider-API/workflow/repository mutation was performed, and
 then runs a real GitHub Models repo-reader/search follow-up.
+The channel-coach slash harness adds repo-aware next-move cards to Slack and
+Telegram: a channel-ingested issue receives `@gitclaw /channels coach skills`,
+queues one provider-visible skill/tool/soul signal card with suggested
+channel-native follow-up commands, exposes it through metadata-only outbox,
+suppresses duplicate coach notifications, proves no command execution/skill
+install/tool execution/backup payload read/soul body read/provider-API/model/
+workflow/repository mutation happened, and then runs a real GitHub Models
+repo-reader/search follow-up.
 The channel-nudge slash harness adds a tiny attention lane that is more chat
 than report: a channel-ingested issue receives `@gitclaw /channels nudge`,
 queues one provider-visible target/tone/note card, exposes it through
