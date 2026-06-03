@@ -52,7 +52,6 @@ issue_url="$(gh issue create \
   --repo "$repo" \
   --title "$title" \
   --body "$body" \
-  --label gitclaw \
   --label gitclaw:channel)"
 issue_number="${issue_url##*/}"
 
@@ -72,6 +71,10 @@ gh issue comment "$issue_number" \
   --repo "$repo" \
   --body "<!-- gitclaw:channel-message channel=\"telegram\" thread_id=\"${thread_id}\" message_id=\"${message_id}\" author=\"telegram:e2e\" -->
 Hidden mirrored message token: ${message_token}" >/dev/null
+
+gh issue edit "$issue_number" \
+  --repo "$repo" \
+  --add-label gitclaw >/dev/null
 
 wait_for_run_id() {
   local run_id="$1"
