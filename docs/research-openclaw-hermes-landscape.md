@@ -5184,6 +5184,34 @@ Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw CLI
 sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes messaging guide
 (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Compass Follow-Up
+
+OpenClaw's channel/session split keeps provider chat as a flexible surface
+while recoverable session state stays outside the chat provider. Hermes'
+messaging guide has the same useful separation: chat commands can orient the
+user toward work, while actual agent execution, tool use, and durable state
+changes remain in the controlled session layer. A GitHub-native agent can use
+that separation to give a Slack or Telegram thread a compact compass: safe next
+steps across skills, tools, soul, memory, backups, and lightweight channel
+signals, queued through GitHub rather than a live server.
+
+GitClaw's version is `@gitclaw /channels compass <focus> --compass-id <id>
+--message-id <id> --notify-message-id <id>`. It queues one provider-facing
+orientation card for focuses such as `skills`, `tools`, `soul`, `memory`,
+`backups`, and `fun`, exposes only metadata through `channel-outbox`, and
+records eventual delivery through the existing `channel-delivery` receipt path.
+The source receipt keeps raw compass ids, focus values, notes, step text,
+thread ids, message ids, and channel bodies out of band. Acceptance requires
+live E2E for compass queueing, metadata-only outbox discovery, duplicate
+suppression, explicit no-command-execution/no-skill-install/no-tool-execution/
+no-backup-payload-read/no-soul-body-read/no-provider-API/no-model/no-repo
+mutation gates, and a real GitHub Models repo-reader/search follow-up on the
+same channel issue.
+
+Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw CLI
+sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Palette Follow-Up
 
 OpenClaw's channel docs keep chat providers as gateways, while its session

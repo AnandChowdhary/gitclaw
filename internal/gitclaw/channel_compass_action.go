@@ -6,22 +6,22 @@ import (
 	"strings"
 )
 
-type ChannelPaletteOptions struct {
+type ChannelCompassOptions struct {
 	Repo              string
 	Route             string
 	Channel           string
 	ThreadID          string
 	SourceMessageID   string
 	NotifyMessageID   string
-	PaletteID         string
-	Lane              string
+	CompassID         string
+	Focus             string
 	Note              string
 	Author            string
 	SourceIssueNumber int
 	SourceCommentID   int64
 }
 
-type ChannelPaletteResult struct {
+type ChannelCompassResult struct {
 	Notification  ChannelSendResult
 	RouteName     string
 	RouteHash     string
@@ -29,41 +29,41 @@ type ChannelPaletteResult struct {
 	ThreadHash    string
 	MessageHash   string
 	NotifyHash    string
-	PaletteIDHash string
-	LaneHash      string
+	CompassIDHash string
+	FocusHash     string
 	NoteHash      string
 	BodyHash      string
-	CommandCount  int
+	StepCount     int
 }
 
-type ChannelPaletteActionRequest struct {
-	Options             ChannelPaletteOptions
+type ChannelCompassActionRequest struct {
+	Options             ChannelCompassOptions
 	Command             string
 	Subcommand          string
 	AutoSourceMessageID bool
 	AutoNotifyMessageID bool
-	AutoPaletteID       bool
+	AutoCompassID       bool
 	TargetFromIssue     bool
 	NoteSource          string
 	RequestedRouteHash  string
 	RequestedThreadHash string
 	RequestedMsgHash    string
 	NotifyMessageHash   string
-	PaletteIDHash       string
-	LaneSHA             string
-	LaneBytes           int
+	CompassIDHash       string
+	FocusSHA            string
+	FocusBytes          int
 	NoteSHA             string
 	NoteBytes           int
 	NoteLines           int
-	CommandCount        int
+	StepCount           int
 	NotificationBodySHA string
 }
 
-func IsChannelPaletteActionRequest(ev Event, cfg Config) bool {
-	return isChannelPaletteActionFields(activeSlashCommandFields(ev, cfg))
+func IsChannelCompassActionRequest(ev Event, cfg Config) bool {
+	return isChannelCompassActionFields(activeSlashCommandFields(ev, cfg))
 }
 
-func isChannelPaletteActionFields(fields []string) bool {
+func isChannelCompassActionFields(fields []string) bool {
 	if len(fields) < 2 {
 		return false
 	}
@@ -71,23 +71,23 @@ func isChannelPaletteActionFields(fields []string) bool {
 		return false
 	}
 	switch strings.ToLower(strings.Trim(fields[1], " \t\r\n.,:;!?")) {
-	case "palette", "menu", "shortcuts", "shortcut", "command-palette", "launcher", "cheat-sheet", "cheatsheet", "help-card":
+	case "compass", "orient", "orientation", "navigator", "navigate", "whereami", "map", "wayfinder", "guide":
 		return true
 	default:
 		return false
 	}
 }
 
-func BuildChannelPaletteActionRequest(ev Event, cfg Config) (ChannelPaletteActionRequest, error) {
-	fields, trailing, ok := channelPaletteActionFieldsAndTrailingBody(ev, cfg)
+func BuildChannelCompassActionRequest(ev Event, cfg Config) (ChannelCompassActionRequest, error) {
+	fields, trailing, ok := channelCompassActionFieldsAndTrailingBody(ev, cfg)
 	if !ok {
-		return ChannelPaletteActionRequest{}, fmt.Errorf("missing channel palette command")
+		return ChannelCompassActionRequest{}, fmt.Errorf("missing channel compass command")
 	}
-	req := ChannelPaletteActionRequest{
-		Options: ChannelPaletteOptions{
+	req := ChannelCompassActionRequest{
+		Options: ChannelCompassOptions{
 			Repo:              ev.Repo,
 			SourceIssueNumber: ev.Issue.Number,
-			Lane:              "all",
+			Focus:             "all",
 		},
 		Command:    strings.ToLower(strings.Trim(fields[0], " \t\r\n.,:;!?")),
 		Subcommand: strings.ToLower(strings.Trim(fields[1], " \t\r\n.,:;!?")),
@@ -101,94 +101,94 @@ func BuildChannelPaletteActionRequest(ev Event, cfg Config) (ChannelPaletteActio
 		switch field {
 		case "--route", "-r":
 			if i+1 >= len(fields) {
-				return ChannelPaletteActionRequest{}, fmt.Errorf("--route requires a value")
+				return ChannelCompassActionRequest{}, fmt.Errorf("--route requires a value")
 			}
 			req.Options.Route = fields[i+1]
 			i++
 		case "--channel", "-c":
 			if i+1 >= len(fields) {
-				return ChannelPaletteActionRequest{}, fmt.Errorf("--channel requires a value")
+				return ChannelCompassActionRequest{}, fmt.Errorf("--channel requires a value")
 			}
 			req.Options.Channel = fields[i+1]
 			i++
 		case "--thread-id", "--thread":
 			if i+1 >= len(fields) {
-				return ChannelPaletteActionRequest{}, fmt.Errorf("--thread-id requires a value")
+				return ChannelCompassActionRequest{}, fmt.Errorf("--thread-id requires a value")
 			}
 			req.Options.ThreadID = fields[i+1]
 			i++
 		case "--message-id", "--source-message-id", "--target-message-id":
 			if i+1 >= len(fields) {
-				return ChannelPaletteActionRequest{}, fmt.Errorf("%s requires a value", field)
+				return ChannelCompassActionRequest{}, fmt.Errorf("%s requires a value", field)
 			}
 			req.Options.SourceMessageID = fields[i+1]
 			i++
 		case "--notify-message-id", "--notification-message-id":
 			if i+1 >= len(fields) {
-				return ChannelPaletteActionRequest{}, fmt.Errorf("%s requires a value", field)
+				return ChannelCompassActionRequest{}, fmt.Errorf("%s requires a value", field)
 			}
 			req.Options.NotifyMessageID = fields[i+1]
 			i++
-		case "--palette-id", "--menu-id", "--shortcut-id", "--id":
+		case "--compass-id", "--orient-id", "--navigator-id", "--map-id", "--id":
 			if i+1 >= len(fields) {
-				return ChannelPaletteActionRequest{}, fmt.Errorf("%s requires a value", field)
+				return ChannelCompassActionRequest{}, fmt.Errorf("%s requires a value", field)
 			}
-			req.Options.PaletteID = cleanChannelPaletteID(fields[i+1])
+			req.Options.CompassID = cleanChannelCompassID(fields[i+1])
 			i++
-		case "--lane", "--scope", "--section", "--for":
+		case "--focus", "--scope", "--section", "--for":
 			if i+1 >= len(fields) {
-				return ChannelPaletteActionRequest{}, fmt.Errorf("%s requires a value", field)
+				return ChannelCompassActionRequest{}, fmt.Errorf("%s requires a value", field)
 			}
-			req.Options.Lane = fields[i+1]
+			req.Options.Focus = fields[i+1]
 			i++
 		case "--note":
 			if i+1 >= len(fields) {
-				return ChannelPaletteActionRequest{}, fmt.Errorf("--note requires a value")
+				return ChannelCompassActionRequest{}, fmt.Errorf("--note requires a value")
 			}
 			req.Options.Note = fields[i+1]
 			req.NoteSource = "flag"
 			i++
 		case "--author":
 			if i+1 >= len(fields) {
-				return ChannelPaletteActionRequest{}, fmt.Errorf("--author requires a value")
+				return ChannelCompassActionRequest{}, fmt.Errorf("--author requires a value")
 			}
 			req.Options.Author = fields[i+1]
 			i++
 		default:
 			if strings.HasPrefix(field, "--") {
-				return ChannelPaletteActionRequest{}, fmt.Errorf("unknown channel palette argument %q", field)
+				return ChannelCompassActionRequest{}, fmt.Errorf("unknown channel compass argument %q", field)
 			}
 			positional = append(positional, field)
 		}
 	}
-	applyChannelPaletteIssueTargetIfPresent(ev, &req)
-	if err := applyChannelPalettePositionals(&req, positional); err != nil {
-		return ChannelPaletteActionRequest{}, err
+	applyChannelCompassIssueTargetIfPresent(ev, &req)
+	if err := applyChannelCompassPositionals(&req, positional); err != nil {
+		return ChannelCompassActionRequest{}, err
 	}
-	if err := applyChannelPaletteIssueTarget(ev, &req); err != nil {
-		return ChannelPaletteActionRequest{}, err
+	if err := applyChannelCompassIssueTarget(ev, &req); err != nil {
+		return ChannelCompassActionRequest{}, err
 	}
 	if req.Options.Note == "" {
-		req.Options.Note = parseChannelPaletteTrailingNote(trailing)
+		req.Options.Note = parseChannelCompassTrailingNote(trailing)
 		if req.Options.Note != "" {
 			req.NoteSource = "trailing-note"
 		}
 	}
 	if strings.TrimSpace(req.Options.SourceMessageID) == "" {
-		req.Options.SourceMessageID = autoChannelPaletteSourceMessageID(ev)
+		req.Options.SourceMessageID = autoChannelCompassSourceMessageID(ev)
 		req.AutoSourceMessageID = true
 	}
-	if strings.TrimSpace(req.Options.PaletteID) == "" {
-		req.Options.PaletteID = autoChannelPaletteID(ev, req.Options)
-		req.AutoPaletteID = true
+	if strings.TrimSpace(req.Options.CompassID) == "" {
+		req.Options.CompassID = autoChannelCompassID(ev, req.Options)
+		req.AutoCompassID = true
 	}
 	if strings.TrimSpace(req.Options.NotifyMessageID) == "" {
-		req.Options.NotifyMessageID = autoChannelPaletteNotifyMessageID(ev, req.Options.PaletteID)
+		req.Options.NotifyMessageID = autoChannelCompassNotifyMessageID(ev, req.Options.CompassID)
 		req.AutoNotifyMessageID = true
 	}
-	req.Options = normalizeChannelPaletteOptions(req.Options)
-	if err := validateChannelPaletteActionRequestOptions(req.Options); err != nil {
-		return ChannelPaletteActionRequest{}, err
+	req.Options = normalizeChannelCompassOptions(req.Options)
+	if err := validateChannelCompassActionRequestOptions(req.Options); err != nil {
+		return ChannelCompassActionRequest{}, err
 	}
 	req.RequestedRouteHash = channelRouteHash(req.Options.Route)
 	if req.Options.ThreadID != "" {
@@ -196,28 +196,28 @@ func BuildChannelPaletteActionRequest(ev Event, cfg Config) (ChannelPaletteActio
 	}
 	req.RequestedMsgHash = shortDocumentHash(req.Options.SourceMessageID)
 	req.NotifyMessageHash = shortDocumentHash(req.Options.NotifyMessageID)
-	req.PaletteIDHash = shortDocumentHash(req.Options.PaletteID)
-	req.LaneSHA = shortDocumentHash(req.Options.Lane)
-	req.LaneBytes = len(req.Options.Lane)
+	req.CompassIDHash = shortDocumentHash(req.Options.CompassID)
+	req.FocusSHA = shortDocumentHash(req.Options.Focus)
+	req.FocusBytes = len(req.Options.Focus)
 	req.NoteSHA = shortDocumentHash(req.Options.Note)
 	req.NoteBytes = len(req.Options.Note)
 	req.NoteLines = lineCount(req.Options.Note)
-	req.CommandCount = len(channelPaletteCommandsForLane(req.Options.Lane))
-	req.NotificationBodySHA = shortDocumentHash(renderChannelPaletteNotificationBody(req.Options))
+	req.StepCount = len(channelCompassStepsForFocus(req.Options.Focus))
+	req.NotificationBodySHA = shortDocumentHash(renderChannelCompassNotificationBody(req.Options))
 	return req, nil
 }
 
-func RunChannelPalette(ctx context.Context, cfg Config, github ChannelSendGitHubClient, opts ChannelPaletteOptions) (ChannelPaletteResult, error) {
-	opts = normalizeChannelPaletteOptions(opts)
+func RunChannelCompass(ctx context.Context, cfg Config, github ChannelSendGitHubClient, opts ChannelCompassOptions) (ChannelCompassResult, error) {
+	opts = normalizeChannelCompassOptions(opts)
 	var err error
-	opts, err = applyChannelPaletteRoute(cfg, opts)
+	opts, err = applyChannelCompassRoute(cfg, opts)
 	if err != nil {
-		return ChannelPaletteResult{}, err
+		return ChannelCompassResult{}, err
 	}
-	if err := validateChannelPaletteOptions(opts); err != nil {
-		return ChannelPaletteResult{}, err
+	if err := validateChannelCompassOptions(opts); err != nil {
+		return ChannelCompassResult{}, err
 	}
-	body := renderChannelPaletteNotificationBody(opts)
+	body := renderChannelCompassNotificationBody(opts)
 	notification, err := RunChannelSend(ctx, cfg, github, ChannelSendOptions{
 		Repo:      opts.Repo,
 		Channel:   opts.Channel,
@@ -227,9 +227,9 @@ func RunChannelPalette(ctx context.Context, cfg Config, github ChannelSendGitHub
 		Body:      body,
 	})
 	if err != nil {
-		return ChannelPaletteResult{}, fmt.Errorf("queue channel palette notification: %w", err)
+		return ChannelCompassResult{}, fmt.Errorf("queue channel compass notification: %w", err)
 	}
-	return ChannelPaletteResult{
+	return ChannelCompassResult{
 		Notification:  notification,
 		RouteName:     opts.Route,
 		RouteHash:     channelRouteHash(opts.Route),
@@ -237,15 +237,15 @@ func RunChannelPalette(ctx context.Context, cfg Config, github ChannelSendGitHub
 		ThreadHash:    shortDocumentHash(opts.ThreadID),
 		MessageHash:   shortDocumentHash(opts.SourceMessageID),
 		NotifyHash:    shortDocumentHash(opts.NotifyMessageID),
-		PaletteIDHash: shortDocumentHash(opts.PaletteID),
-		LaneHash:      shortDocumentHash(opts.Lane),
+		CompassIDHash: shortDocumentHash(opts.CompassID),
+		FocusHash:     shortDocumentHash(opts.Focus),
 		NoteHash:      shortDocumentHash(opts.Note),
 		BodyHash:      shortDocumentHash(body),
-		CommandCount:  len(channelPaletteCommandsForLane(opts.Lane)),
+		StepCount:     len(channelCompassStepsForFocus(opts.Focus)),
 	}, nil
 }
 
-func RenderChannelPaletteActionReport(ev Event, req ChannelPaletteActionRequest, result ChannelPaletteResult) string {
+func RenderChannelCompassActionReport(ev Event, req ChannelCompassActionRequest, result ChannelCompassResult) string {
 	status := "queued"
 	if result.Notification.Duplicate {
 		status = "duplicate"
@@ -267,13 +267,13 @@ func RenderChannelPaletteActionReport(ev Event, req ChannelPaletteActionRequest,
 	if notifyHash == "" {
 		notifyHash = req.NotifyMessageHash
 	}
-	paletteIDHash := result.PaletteIDHash
-	if paletteIDHash == "" {
-		paletteIDHash = req.PaletteIDHash
+	compassIDHash := result.CompassIDHash
+	if compassIDHash == "" {
+		compassIDHash = req.CompassIDHash
 	}
-	laneHash := result.LaneHash
-	if laneHash == "" {
-		laneHash = req.LaneSHA
+	focusHash := result.FocusHash
+	if focusHash == "" {
+		focusHash = req.FocusSHA
 	}
 	noteHash := result.NoteHash
 	if noteHash == "" {
@@ -283,18 +283,18 @@ func RenderChannelPaletteActionReport(ev Event, req ChannelPaletteActionRequest,
 	if bodyHash == "" {
 		bodyHash = req.NotificationBodySHA
 	}
-	commandCount := result.CommandCount
-	if commandCount == 0 {
-		commandCount = req.CommandCount
+	stepCount := result.StepCount
+	if stepCount == 0 {
+		stepCount = req.StepCount
 	}
 	var b strings.Builder
-	b.WriteString("## GitClaw Channel Palette Action\n\n")
+	b.WriteString("## GitClaw Channel Compass Action\n\n")
 	b.WriteString("Generated without a model call.\n\n")
 	fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
 	fmt.Fprintf(&b, "- source_issue: `#%d`\n", ev.Issue.Number)
 	fmt.Fprintf(&b, "- requested_channel_command: `%s %s`\n", req.Command, req.Subcommand)
-	fmt.Fprintf(&b, "- channel_palette_status: `%s`\n", status)
-	fmt.Fprintf(&b, "- palette_mode: `%s`\n", "structured-channel-command-palette")
+	fmt.Fprintf(&b, "- channel_compass_status: `%s`\n", status)
+	fmt.Fprintf(&b, "- compass_mode: `%s`\n", "structured-channel-compass")
 	fmt.Fprintf(&b, "- notification_target_issue: `#%d`\n", result.Notification.IssueNumber)
 	fmt.Fprintf(&b, "- notification_comment_id: `%d`\n", result.Notification.CommentID)
 	fmt.Fprintf(&b, "- notification_queued: `%t`\n", notificationQueued)
@@ -308,15 +308,15 @@ func RenderChannelPaletteActionReport(ev Event, req ChannelPaletteActionRequest,
 	fmt.Fprintf(&b, "- source_message_id_auto: `%t`\n", req.AutoSourceMessageID)
 	fmt.Fprintf(&b, "- notify_message_id_sha256_12: `%s`\n", noneIfEmpty(notifyHash))
 	fmt.Fprintf(&b, "- notify_message_id_auto: `%t`\n", req.AutoNotifyMessageID)
-	fmt.Fprintf(&b, "- palette_id_sha256_12: `%s`\n", noneIfEmpty(paletteIDHash))
-	fmt.Fprintf(&b, "- palette_id_auto: `%t`\n", req.AutoPaletteID)
-	fmt.Fprintf(&b, "- palette_lane_sha256_12: `%s`\n", noneIfEmpty(laneHash))
-	fmt.Fprintf(&b, "- palette_lane_bytes: `%d`\n", req.LaneBytes)
-	fmt.Fprintf(&b, "- palette_command_count: `%d`\n", commandCount)
-	fmt.Fprintf(&b, "- palette_note_sha256_12: `%s`\n", noneIfEmpty(noteHash))
-	fmt.Fprintf(&b, "- palette_note_bytes: `%d`\n", req.NoteBytes)
-	fmt.Fprintf(&b, "- palette_note_lines: `%d`\n", req.NoteLines)
-	fmt.Fprintf(&b, "- palette_note_source: `%s`\n", noneIfEmpty(req.NoteSource))
+	fmt.Fprintf(&b, "- compass_id_sha256_12: `%s`\n", noneIfEmpty(compassIDHash))
+	fmt.Fprintf(&b, "- compass_id_auto: `%t`\n", req.AutoCompassID)
+	fmt.Fprintf(&b, "- compass_focus_sha256_12: `%s`\n", noneIfEmpty(focusHash))
+	fmt.Fprintf(&b, "- compass_focus_bytes: `%d`\n", req.FocusBytes)
+	fmt.Fprintf(&b, "- compass_step_count: `%d`\n", stepCount)
+	fmt.Fprintf(&b, "- compass_note_sha256_12: `%s`\n", noneIfEmpty(noteHash))
+	fmt.Fprintf(&b, "- compass_note_bytes: `%d`\n", req.NoteBytes)
+	fmt.Fprintf(&b, "- compass_note_lines: `%d`\n", req.NoteLines)
+	fmt.Fprintf(&b, "- compass_note_source: `%s`\n", noneIfEmpty(req.NoteSource))
 	fmt.Fprintf(&b, "- notification_body_sha256_12: `%s`\n", noneIfEmpty(bodyHash))
 	fmt.Fprintf(&b, "- target_from_current_channel_issue: `%t`\n", req.TargetFromIssue)
 	fmt.Fprintf(&b, "- model_call_performed: `%t`\n", false)
@@ -332,27 +332,27 @@ func RenderChannelPaletteActionReport(ev Event, req ChannelPaletteActionRequest,
 	fmt.Fprintf(&b, "- raw_thread_id_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_source_message_id_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_notify_message_id_included: `%t`\n", false)
-	fmt.Fprintf(&b, "- raw_palette_id_included: `%t`\n", false)
-	fmt.Fprintf(&b, "- raw_palette_lane_included: `%t`\n", false)
-	fmt.Fprintf(&b, "- raw_palette_note_included: `%t`\n", false)
-	fmt.Fprintf(&b, "- raw_palette_commands_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_compass_id_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_compass_focus_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_compass_note_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_compass_steps_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_channel_message_body_included: `%t`\n", false)
-	fmt.Fprintf(&b, "- llm_e2e_required_after_channel_palette_action_change: `%t`\n", true)
+	fmt.Fprintf(&b, "- llm_e2e_required_after_channel_compass_action_change: `%t`\n", true)
 	fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
 	b.WriteByte('\n')
-	b.WriteString("GitClaw queued a provider-facing command palette on the canonical channel issue. This gives the chat thread a compact launcher for channel-native work while keeping command execution, skill installs, tool execution, backup payload reads, soul body reads, provider API calls, model calls, provider delivery, and repository mutations out of this action. The source receipt keeps thread ids, message ids, palette ids, palette lanes, notes, command bodies, and channel bodies out of band.\n\n")
+	b.WriteString("GitClaw queued a provider-facing channel compass on the canonical channel issue. This gives the chat thread a compact orientation card for safe next steps across skills, tools, soul, memory, backups, and lightweight channel signals while keeping command execution, skill installs, tool execution, backup payload reads, soul body reads, provider API calls, model calls, provider delivery, and repository mutations out of this action. The source receipt keeps thread ids, message ids, compass ids, focus values, notes, step text, and channel bodies out of band.\n\n")
 	b.WriteString("### Follow-Up Delivery\n")
-	b.WriteString("- provider gateways read palette updates with `gitclaw channel-outbox --channel <provider> --account-id <account> --issue-number <issue> --out <file>`\n")
-	b.WriteString("- provider gateways record sent palette updates with `gitclaw channel-delivery --channel <provider> --account-id <account> --issue-number <issue> --comment-id <comment> --external-message-id <message>`\n")
-	b.WriteString("- duplicate palette updates are suppressed by `channel + notify_message_id`\n")
+	b.WriteString("- provider gateways read compass updates with `gitclaw channel-outbox --channel <provider> --account-id <account> --issue-number <issue> --out <file>`\n")
+	b.WriteString("- provider gateways record sent compass updates with `gitclaw channel-delivery --channel <provider> --account-id <account> --issue-number <issue> --comment-id <comment> --external-message-id <message>`\n")
+	b.WriteString("- duplicate compass updates are suppressed by `channel + notify_message_id`\n")
 	return strings.TrimSpace(b.String())
 }
 
-func channelPaletteActionFieldsAndTrailingBody(ev Event, cfg Config) ([]string, string, bool) {
+func channelCompassActionFieldsAndTrailingBody(ev Event, cfg Config) ([]string, string, bool) {
 	lines := strings.Split(activeRequestText(ev), "\n")
 	for i, line := range lines {
 		fields := slashCommandFieldsFromLine(line, cfg.TriggerPrefix)
-		if !isChannelPaletteActionFields(fields) {
+		if !isChannelCompassActionFields(fields) {
 			continue
 		}
 		return fields, strings.Join(lines[i+1:], "\n"), true
@@ -360,7 +360,7 @@ func channelPaletteActionFieldsAndTrailingBody(ev Event, cfg Config) ([]string, 
 	return nil, "", false
 }
 
-func applyChannelPaletteIssueTarget(ev Event, req *ChannelPaletteActionRequest) error {
+func applyChannelCompassIssueTarget(ev Event, req *ChannelCompassActionRequest) error {
 	if req == nil {
 		return nil
 	}
@@ -369,7 +369,7 @@ func applyChannelPaletteIssueTarget(ev Event, req *ChannelPaletteActionRequest) 
 	}
 	channel, threadID := channelThreadMarkerFields(ev.Issue.Body)
 	if channel == "" || threadID == "" {
-		return fmt.Errorf("channel palette requires a gitclaw:channel-thread issue or an explicit route/channel/thread target")
+		return fmt.Errorf("channel compass requires a gitclaw:channel-thread issue or an explicit route/channel/thread target")
 	}
 	req.Options.Channel = channel
 	req.Options.ThreadID = threadID
@@ -377,7 +377,7 @@ func applyChannelPaletteIssueTarget(ev Event, req *ChannelPaletteActionRequest) 
 	return nil
 }
 
-func applyChannelPaletteIssueTargetIfPresent(ev Event, req *ChannelPaletteActionRequest) {
+func applyChannelCompassIssueTargetIfPresent(ev Event, req *ChannelCompassActionRequest) {
 	if req == nil {
 		return
 	}
@@ -393,7 +393,7 @@ func applyChannelPaletteIssueTargetIfPresent(ev Event, req *ChannelPaletteAction
 	req.TargetFromIssue = true
 }
 
-func applyChannelPalettePositionals(req *ChannelPaletteActionRequest, positional []string) error {
+func applyChannelCompassPositionals(req *ChannelCompassActionRequest, positional []string) error {
 	if req == nil {
 		return nil
 	}
@@ -402,40 +402,40 @@ func applyChannelPalettePositionals(req *ChannelPaletteActionRequest, positional
 			continue
 		}
 		if req.TargetFromIssue {
-			if req.Options.Lane == "" || req.Options.Lane == "all" {
-				req.Options.Lane = value
+			if req.Options.Focus == "" || req.Options.Focus == "all" {
+				req.Options.Focus = value
 				continue
 			}
-			return fmt.Errorf("unexpected channel palette argument %q", value)
+			return fmt.Errorf("unexpected channel compass argument %q", value)
 		}
 		if req.Options.Route == "" && req.Options.Channel == "" {
 			req.Options.Route = value
 			continue
 		}
-		if req.Options.Lane == "" || req.Options.Lane == "all" {
-			req.Options.Lane = value
+		if req.Options.Focus == "" || req.Options.Focus == "all" {
+			req.Options.Focus = value
 			continue
 		}
-		return fmt.Errorf("unexpected channel palette argument %q", value)
+		return fmt.Errorf("unexpected channel compass argument %q", value)
 	}
 	return nil
 }
 
-func normalizeChannelPaletteOptions(opts ChannelPaletteOptions) ChannelPaletteOptions {
+func normalizeChannelCompassOptions(opts ChannelCompassOptions) ChannelCompassOptions {
 	opts.Repo = strings.TrimSpace(opts.Repo)
 	opts.Route = cleanChannelRouteName(opts.Route)
 	opts.Channel = strings.ToLower(strings.TrimSpace(opts.Channel))
 	opts.ThreadID = strings.TrimSpace(opts.ThreadID)
 	opts.SourceMessageID = strings.TrimSpace(opts.SourceMessageID)
 	opts.NotifyMessageID = strings.TrimSpace(opts.NotifyMessageID)
-	opts.PaletteID = cleanChannelPaletteID(opts.PaletteID)
-	opts.Lane = cleanChannelPaletteLane(opts.Lane)
-	opts.Note = cleanChannelPaletteNote(opts.Note)
+	opts.CompassID = cleanChannelCompassID(opts.CompassID)
+	opts.Focus = cleanChannelCompassFocus(opts.Focus)
+	opts.Note = cleanChannelCompassNote(opts.Note)
 	opts.Author = strings.TrimSpace(opts.Author)
 	return opts
 }
 
-func applyChannelPaletteRoute(cfg Config, opts ChannelPaletteOptions) (ChannelPaletteOptions, error) {
+func applyChannelCompassRoute(cfg Config, opts ChannelCompassOptions) (ChannelCompassOptions, error) {
 	if opts.Route == "" {
 		return opts, nil
 	}
@@ -446,7 +446,7 @@ func applyChannelPaletteRoute(cfg Config, opts ChannelPaletteOptions) (ChannelPa
 		ThreadID:  opts.ThreadID,
 		MessageID: opts.NotifyMessageID,
 		Author:    opts.Author,
-		Body:      "GitClaw channel palette.",
+		Body:      "GitClaw channel compass.",
 	})
 	if err != nil {
 		return opts, err
@@ -458,7 +458,7 @@ func applyChannelPaletteRoute(cfg Config, opts ChannelPaletteOptions) (ChannelPa
 	return opts, nil
 }
 
-func validateChannelPaletteOptions(opts ChannelPaletteOptions) error {
+func validateChannelCompassOptions(opts ChannelCompassOptions) error {
 	if err := validateRepoName(opts.Repo); err != nil {
 		return err
 	}
@@ -474,19 +474,19 @@ func validateChannelPaletteOptions(opts ChannelPaletteOptions) error {
 	if opts.NotifyMessageID == "" {
 		return fmt.Errorf("missing notification message id")
 	}
-	if opts.PaletteID == "" {
-		return fmt.Errorf("missing palette id")
+	if opts.CompassID == "" {
+		return fmt.Errorf("missing compass id")
 	}
-	if opts.Lane == "" {
-		return fmt.Errorf("missing palette lane")
+	if opts.Focus == "" {
+		return fmt.Errorf("missing compass focus")
 	}
-	if len(channelPaletteCommandsForLane(opts.Lane)) == 0 {
-		return fmt.Errorf("unsupported palette lane %q", opts.Lane)
+	if len(channelCompassStepsForFocus(opts.Focus)) == 0 {
+		return fmt.Errorf("unsupported compass focus %q", opts.Focus)
 	}
 	return nil
 }
 
-func validateChannelPaletteActionRequestOptions(opts ChannelPaletteOptions) error {
+func validateChannelCompassActionRequestOptions(opts ChannelCompassOptions) error {
 	if err := validateRepoName(opts.Repo); err != nil {
 		return err
 	}
@@ -499,27 +499,27 @@ func validateChannelPaletteActionRequestOptions(opts ChannelPaletteOptions) erro
 	if opts.NotifyMessageID == "" {
 		return fmt.Errorf("missing notification message id")
 	}
-	if opts.PaletteID == "" {
-		return fmt.Errorf("missing palette id")
+	if opts.CompassID == "" {
+		return fmt.Errorf("missing compass id")
 	}
-	if opts.Lane == "" {
-		return fmt.Errorf("missing palette lane")
+	if opts.Focus == "" {
+		return fmt.Errorf("missing compass focus")
 	}
-	if len(channelPaletteCommandsForLane(opts.Lane)) == 0 {
-		return fmt.Errorf("unsupported palette lane %q", opts.Lane)
+	if len(channelCompassStepsForFocus(opts.Focus)) == 0 {
+		return fmt.Errorf("unsupported compass focus %q", opts.Focus)
 	}
 	return nil
 }
 
-func cleanChannelPaletteID(value string) string {
+func cleanChannelCompassID(value string) string {
 	return cleanChannelHuddleID(value)
 }
 
-func cleanChannelPaletteLane(value string) string {
+func cleanChannelCompassFocus(value string) string {
 	value = strings.ToLower(strings.Trim(strings.TrimSpace(value), " \t\r\n.,:;!?`\"'"))
 	value = strings.NewReplacer("_", "-", " ", "-").Replace(value)
 	switch value {
-	case "", "all", "default", "capabilities", "capability", "commands", "command":
+	case "", "all", "default", "capabilities", "capability", "steps", "command":
 		return "all"
 	case "core", "status", "ops", "basics", "basic":
 		return "core"
@@ -529,7 +529,9 @@ func cleanChannelPaletteLane(value string) string {
 		return "tools"
 	case "soul", "souls", "authority", "context":
 		return "soul"
-	case "backup", "backups", "recovery":
+	case "memory", "memories", "recall":
+		return "memory"
+	case "backup", "backups", "recovery", "restore":
 		return "backups"
 	case "fun", "play", "signals", "presence":
 		return "fun"
@@ -538,7 +540,7 @@ func cleanChannelPaletteLane(value string) string {
 	}
 }
 
-func cleanChannelPaletteNote(value string) string {
+func cleanChannelCompassNote(value string) string {
 	value = strings.TrimSpace(value)
 	value = strings.Trim(value, " \t\r\n`\"'")
 	value = strings.Join(strings.Fields(value), " ")
@@ -548,7 +550,7 @@ func cleanChannelPaletteNote(value string) string {
 	return value
 }
 
-func parseChannelPaletteTrailingNote(trailing string) string {
+func parseChannelCompassTrailingNote(trailing string) string {
 	for _, line := range strings.Split(strings.TrimSpace(trailing), "\n") {
 		trimmed := strings.TrimSpace(line)
 		if trimmed == "" {
@@ -557,44 +559,44 @@ func parseChannelPaletteTrailingNote(trailing string) string {
 		lower := strings.ToLower(trimmed)
 		if strings.HasPrefix(lower, "note:") || strings.HasPrefix(lower, "context:") {
 			if idx := strings.Index(trimmed, ":"); idx >= 0 {
-				return cleanChannelPaletteNote(trimmed[idx+1:])
+				return cleanChannelCompassNote(trimmed[idx+1:])
 			}
 		}
 	}
 	return ""
 }
 
-func autoChannelPaletteSourceMessageID(ev Event) string {
-	return fmt.Sprintf("gitclaw-channel-palette-source-%s", eventID(ev))
+func autoChannelCompassSourceMessageID(ev Event) string {
+	return fmt.Sprintf("gitclaw-channel-compass-source-%s", eventID(ev))
 }
 
-func autoChannelPaletteID(ev Event, opts ChannelPaletteOptions) string {
-	seed := strings.Join([]string{eventID(ev), opts.Route, opts.Channel, opts.ThreadID, opts.SourceMessageID, opts.Lane, opts.Note}, "|")
-	return fmt.Sprintf("palette-%s-%s", eventID(ev), shortDocumentHash(seed))
+func autoChannelCompassID(ev Event, opts ChannelCompassOptions) string {
+	seed := strings.Join([]string{eventID(ev), opts.Route, opts.Channel, opts.ThreadID, opts.SourceMessageID, opts.Focus, opts.Note}, "|")
+	return fmt.Sprintf("compass-%s-%s", eventID(ev), shortDocumentHash(seed))
 }
 
-func autoChannelPaletteNotifyMessageID(ev Event, paletteID string) string {
-	seed := strings.Join([]string{eventID(ev), paletteID}, "|")
-	return fmt.Sprintf("gitclaw-channel-palette-%s-%s", eventID(ev), shortDocumentHash(seed))
+func autoChannelCompassNotifyMessageID(ev Event, compassID string) string {
+	seed := strings.Join([]string{eventID(ev), compassID}, "|")
+	return fmt.Sprintf("gitclaw-channel-compass-%s-%s", eventID(ev), shortDocumentHash(seed))
 }
 
-func renderChannelPaletteNotificationBody(opts ChannelPaletteOptions) string {
-	commands := channelPaletteCommandsForLane(opts.Lane)
+func renderChannelCompassNotificationBody(opts ChannelCompassOptions) string {
+	steps := channelCompassStepsForFocus(opts.Focus)
 	var b strings.Builder
-	b.WriteString("GitClaw channel palette.\n\n")
-	fmt.Fprintf(&b, "Lane: %s\n", opts.Lane)
-	b.WriteString("Shortcuts:\n")
-	for _, command := range commands {
+	b.WriteString("GitClaw channel compass.\n\n")
+	fmt.Fprintf(&b, "Focus: %s\n", opts.Focus)
+	b.WriteString("Next safe steps:\n")
+	for _, command := range steps {
 		fmt.Fprintf(&b, "- %s\n", command)
 	}
 	if opts.Note != "" {
 		fmt.Fprintf(&b, "\nNote: %s\n", opts.Note)
 	}
-	fmt.Fprintf(&b, "\nPalette hash: %s\n", shortDocumentHash(opts.Lane+"|"+strings.Join(commands, "|")))
+	fmt.Fprintf(&b, "\nCompass hash: %s\n", shortDocumentHash(opts.Focus+"|"+strings.Join(steps, "|")))
 	if opts.Note != "" {
 		fmt.Fprintf(&b, "Note hash: %s\n", shortDocumentHash(opts.Note))
 	}
-	b.WriteString("\nPalette source: GitHub channel action.\n")
+	b.WriteString("\nCompass source: GitHub channel action.\n")
 	b.WriteString("Model call: not performed by this action.\n")
 	b.WriteString("Command execution: not performed by this action.\n")
 	b.WriteString("Skill install: not performed by this action.\n")
@@ -607,11 +609,10 @@ func renderChannelPaletteNotificationBody(opts ChannelPaletteOptions) string {
 	return strings.TrimSpace(b.String())
 }
 
-func channelPaletteCommandsForLane(lane string) []string {
-	switch cleanChannelPaletteLane(lane) {
+func channelCompassStepsForFocus(focus string) []string {
+	switch cleanChannelCompassFocus(focus) {
 	case "core":
 		return []string{
-			"/channels compass all --compass-id <id> --message-id <id> --notify-message-id <id>",
 			"/channels availability --message-id <id> --notify-message-id <id>",
 			"/channels topic --topic-id <id>",
 			"/channels activity typing --activity-id <id> --message-id <id>",
@@ -638,6 +639,13 @@ func channelPaletteCommandsForLane(lane string) []string {
 			"/channels soul-info <path> --message-id <id> --notify-message-id <id>",
 			"/channels soul-note --note-id <id> --area <area> --message-id <id>",
 		}
+	case "memory":
+		return []string{
+			"/channels memory-status --message-id <id>",
+			"/channels memory-search <query> --message-id <id> --notify-message-id <id>",
+			"/channels memory-note --note-id <id> --target <target> --message-id <id>",
+			"/channels propose-memory --target <target> --id <id> --message-id <id>",
+		}
 	case "backups":
 		return []string{
 			"/channels backup --message-id <id>",
@@ -655,13 +663,13 @@ func channelPaletteCommandsForLane(lane string) []string {
 		}
 	case "all":
 		return []string{
-			"/channels compass all --compass-id <id> --message-id <id> --notify-message-id <id>",
 			"/channels availability --message-id <id> --notify-message-id <id>",
 			"/channels skills --message-id <id>",
 			"/channels skill-search <query> --message-id <id> --notify-message-id <id>",
 			"/channels tools --message-id <id>",
 			"/channels tool-search <query> --message-id <id> --notify-message-id <id>",
 			"/channels soul-search <query> --message-id <id> --notify-message-id <id>",
+			"/channels memory-search <query> --message-id <id> --notify-message-id <id>",
 			"/channels backup-search <query> --message-id <id> --notify-message-id <id>",
 			"/channels roll --dice 2d6 --message-id <id> --notify-message-id <id>",
 			"/channels mood <mood> --message-id <id> --notify-message-id <id>",

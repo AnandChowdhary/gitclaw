@@ -124,6 +124,9 @@ func commandSummaryForReport(entry commandCatalogEntry) string {
 	if !strings.Contains(summary, "queue provider-facing command palettes") {
 		summary += " Queue provider-facing command palettes without executing commands, installing skills, executing tools, reading backup payloads, reading soul bodies, model calls, provider API calls, or repo mutation."
 	}
+	if !strings.Contains(summary, "queue provider-facing safe-next-step orientation cards") {
+		summary += " Queue provider-facing safe-next-step orientation cards without executing commands, installing skills, executing tools, reading backup payloads, reading soul bodies, model calls, provider API calls, or repo mutation."
+	}
 	return summary
 }
 

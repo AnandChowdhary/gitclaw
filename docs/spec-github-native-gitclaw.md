@@ -5576,6 +5576,37 @@ soul-body-read/provider-API/model/repository mutation was performed, and then
 continues on the same GitHub issue with a real GitHub Models
 repo-reader/search follow-up.
 
+For channel-native orientation that should guide safe next steps across
+repo-backed capabilities without executing anything, GitClaw also supports:
+
+```text
+@gitclaw /channels compass all --compass-id <stable-compass-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
+Note: Start with body-free recall, then propose reviewed writes.
+```
+
+`/channels compass`, `/channels orient`, `/channels orientation`,
+`/channels navigator`, `/channels navigate`, `/channels whereami`,
+`/channels map`, `/channels wayfinder`, and `/channels guide` queue one
+provider-facing safe-next-step orientation card back onto the current
+`gitclaw:channel-thread` issue or an explicit reviewed route. The focus is
+bounded to `all`, `core`, `skills`, `tools`, `soul`, `memory`, `backups`, or
+`fun`. Each focus renders a compact static list of safe channel-native next
+steps; it does not execute those commands. Optional `Note: ...` trailing text
+is included in the provider-facing update. The source receipt remains
+body-free and reports only hashes, sizes, step count, duplicate status, outbox
+delivery instructions, and safety gates. It does not execute commands, install
+skills, execute tools, read backup payloads, read soul bodies, call provider
+APIs, call a model, mutate repository files, or perform provider delivery. It
+does not print raw compass ids, focus values, notes, step text, thread ids,
+message ids, or channel bodies in the source receipt. Duplicates are
+suppressed by `channel + notify_message_id`. Changes to this surface require a
+live E2E that ingests a real channel issue, queues the compass, validates
+metadata-only outbox discovery, verifies duplicate suppression, proves no
+command-execution/skill-install/tool-execution/backup-payload-read/
+soul-body-read/provider-API/model/repository mutation was performed, and then
+continues on the same GitHub issue with a real GitHub Models
+repo-reader/search follow-up.
+
 For channel-native recall that should answer in the same Slack/Telegram thread
 without a full model turn, GitClaw also supports:
 
@@ -9115,6 +9146,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels sticker confetti --sticker-id channel-sticker-1 --message-id provider-msg-1 --notify-message-id provider-sticker-ack-1 --scale 4
 @gitclaw /channels nudge release-captain --nudge-id channel-nudge-1 --message-id provider-msg-1 --notify-message-id provider-nudge-ack-1 --tone gentle
 @gitclaw /channels palette fun --palette-id channel-palette-1 --message-id provider-msg-1 --notify-message-id provider-palette-ack-1
+@gitclaw /channels compass all --compass-id channel-compass-1 --message-id provider-msg-1 --notify-message-id provider-compass-ack-1
 @gitclaw /channels session-search deployment --message-id provider-msg-1 --notify-message-id provider-search-ack-1
 ```
 
@@ -11636,6 +11668,17 @@ examples/workflows/gitclaw.yml
   issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-palette fixture token, and avoid
   hidden channel/message/palette sentinels.
+- A `gh`-driven channel-compass-slash E2E harness ingests a real mirrored
+  channel issue, replies with `@gitclaw /channels compass ...`, verifies the
+  provider-facing focus/safe-step/note card, body-free source receipt metadata,
+  duplicate compass notification suppression from a later issue comment with
+  the same acknowledgement id, explicit no command-execution/skill-install/
+  tool-execution/backup-payload-read/soul-body-read/provider-API/model/
+  repository mutation gates, and metadata-only outbox discovery for the
+  acknowledgement. The same channel issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-compass fixture token, and avoid
+  hidden channel/message/compass sentinels.
 - A `gh`-driven channel-session-search-slash E2E harness ingests a real
   mirrored channel issue, replies with `@gitclaw /channels session-search ...`,
   verifies provider-facing body-free recall metadata from the current
