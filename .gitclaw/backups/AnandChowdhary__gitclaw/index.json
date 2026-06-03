@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T12:00:47Z",
+  "generated_at": "2026-06-03T12:02:45Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 716,
   "issues": [
@@ -9098,15 +9098,15 @@
       "number": 825,
       "title": "GitClaw telegram thread channel-warmup-e2e-20260603t115507z",
       "path": "issues/000825.json",
-      "backup_generated_at": "2026-06-03T12:00:46Z",
+      "backup_generated_at": "2026-06-03T12:02:44Z",
       "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 7,
-      "transcript_messages": 7
+      "comment_count": 9,
+      "transcript_messages": 9
     }
   ]
 }
