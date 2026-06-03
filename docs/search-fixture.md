@@ -259,6 +259,7 @@ channel backup status unique search fixture phrase => GITCLAW_CHANNEL_BACKUP_STA
 channel recovery map unique search fixture phrase => GITCLAW_CHANNEL_RECOVERY_MAP_CONTEXT_V1
 channel backup search unique search fixture phrase => GITCLAW_CHANNEL_BACKUP_SEARCH_CONTEXT_V1
 channel backup timeline unique search fixture phrase => GITCLAW_CHANNEL_BACKUP_TIMELINE_CONTEXT_V1
+channel backup freshness unique search fixture phrase => GITCLAW_CHANNEL_BACKUP_FRESHNESS_CONTEXT_V1
 channel profile status unique search fixture phrase => GITCLAW_CHANNEL_PROFILE_STATUS_CONTEXT_V1
 channel soul status unique search fixture phrase => GITCLAW_CHANNEL_SOUL_STATUS_CONTEXT_V1
 channel topic unique search fixture phrase => GITCLAW_CHANNEL_TOPIC_CONTEXT_V1

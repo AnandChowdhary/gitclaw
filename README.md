@@ -713,6 +713,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels recovery-map issue --map-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels backup-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels backup-timeline --timeline-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels backup-freshness --freshness-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels backup-info <issue> --message-id <id> --notify-message-id <id>
 @gitclaw /channels checkpoint-status --message-id <id> --notify-message-id <id>
 @gitclaw /channels availability --message-id <id> --notify-message-id <id>
@@ -1228,6 +1229,17 @@ receipt keeps route/thread/message ids, timeline ids, backup roots, paths,
 issue numbers, titles, bodies, comments, transcripts, prompts, and tool
 outputs out of band and confirms no restore, branch write, GitHub API replay,
 provider API call, model call, or repository mutation happened.
+`@gitclaw /channels backup-freshness --freshness-id <id> --message-id <id>
+--notify-message-id <id> --max-age-hours 24` fetches the same durable
+`gitclaw-backups` archive read-only when local backups are absent and queues a
+provider-facing freshness gate card back to Slack/Telegram. The provider card
+shows backup/freshness status, verify status, fetch status, max-age threshold,
+latest issue number, latest backup timestamp, age, payload hash, title hash,
+and pass/fail gate. The source receipt keeps route/thread/message ids,
+freshness ids, backup roots, paths, issue titles, issue bodies, comments,
+transcripts, prompts, and tool outputs out of band and confirms no restore,
+branch write, GitHub API replay, provider API call, model call, or repository
+mutation happened.
 `@gitclaw /channels backup-info <issue> --message-id <id>
 --notify-message-id <id>` fetches the same durable `gitclaw-backups` archive
 read-only when local backups are absent and queues one focused backup metadata
@@ -2053,6 +2065,7 @@ scripts/e2e/github-channel-recovery-map-slash.sh
 scripts/e2e/github-channel-tool-map-slash.sh
 scripts/e2e/github-channel-backup-search-slash.sh
 scripts/e2e/github-channel-backup-timeline-slash.sh
+scripts/e2e/github-channel-backup-freshness-slash.sh
 scripts/e2e/github-channel-backup-info-slash.sh
 scripts/e2e/github-channel-checkpoint-status-slash.sh
 scripts/e2e/github-channel-availability-slash.sh
@@ -2701,6 +2714,13 @@ the real `gitclaw-backups` branch, then receives `@gitclaw /channels
 backup-timeline`, queues provider-visible issue/timestamp/count/hash metadata,
 exposes it through metadata-only outbox, suppresses duplicate timeline
 notifications, and then runs a real GitHub Models repo-reader/search follow-up.
+The channel-backup-freshness slash harness turns the same archive into a
+channel-native freshness gate: a channel-ingested issue is first observed on
+the real `gitclaw-backups` branch, then receives `@gitclaw /channels
+backup-freshness`, queues provider-visible latest-backup age/gate/hash
+metadata, exposes it through metadata-only outbox, suppresses duplicate
+freshness notifications, and then runs a real GitHub Models repo-reader/search
+follow-up.
 The channel-backup-info slash harness adds the focused archive-card step: a
 channel-ingested issue is first observed on the real `gitclaw-backups` branch,
 then receives `@gitclaw /channels backup-info`, queues one provider-visible

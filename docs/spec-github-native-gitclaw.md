@@ -6083,6 +6083,45 @@ metadata-only outbox discovery, verifies duplicate suppression, and then
 continues on the same GitHub issue with a real GitHub Models
 repo-reader/search follow-up.
 
+For channel-native archive health checks that should answer "are backups fresh
+enough?" without restoring anything, GitClaw also supports:
+
+```text
+@gitclaw /channels backup-freshness --freshness-id <stable-freshness-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id> --max-age-hours 24
+```
+
+`/channels backup-freshness`, `/channels backups-freshness`,
+`/channels backup-fresh`, `/channels backups-fresh`, `/channels fresh-backup`,
+`/channels fresh-backups`, `/channels backup-staleness`,
+`/channels archive-freshness`, and `/channels archive-health` infer the current
+channel and thread id from the issue marker when no explicit route/channel
+thread target is provided. They inspect the repo's `gitclaw-backups` archive
+with the same body-free freshness gate as `gitclaw backup freshness`. In a
+GitHub Actions handler job, the local checkout normally does not contain
+`.gitclaw/backups`; the action must therefore fetch `gitclaw-backups`
+read-only into a temporary git worktree, build the freshness report from that
+fetched backup root, and clean it up before exit. If local backups are present,
+the action may use them without fetching. It must never write the backup
+branch, restore files, replay GitHub API calls, call provider APIs, mutate
+repository files, execute tools, or call a model.
+
+The provider-facing outbound comment reports only backup/freshness status,
+backup verify status, freshness gate, backup fetch status, backup branch,
+issue count, max-age threshold, latest issue number, latest backup timestamp,
+latest age seconds, payload size/hash, event hash, and title hash. The source
+receipt stays stricter: it records target issue/comment ids, route/thread/
+message hashes, freshness id hash, backup root/path hashes, latest issue and
+timestamp hashes, outbox delivery instructions, and safety gates. It does not
+print raw freshness ids, raw backup roots, raw backup paths, raw backup
+payloads, raw channel message bodies, raw issue titles, raw issue bodies, raw
+comment bodies, raw transcript bodies, prompts, or tool outputs. Duplicates
+are suppressed by `channel + notify_message_id`. Changes to this surface
+require a live E2E that ingests a real channel issue, waits until that issue is
+present on the real `gitclaw-backups` branch, queues a backup-freshness
+notification, validates metadata-only outbox discovery, verifies duplicate
+suppression, and then continues on the same GitHub issue with a real GitHub
+Models repo-reader/search follow-up.
+
 For channel-native recovery inspection that should describe one archived issue
 without restoring it, GitClaw also supports:
 
@@ -13977,6 +14016,12 @@ examples/workflows/gitclaw.yml
   chronological, body-free backup timeline with gap seconds, payload hashes,
   assistant-turn counts, and title hashes. It also posts a normal follow-up
   that must use GitHub Models and repo-reader search.
+- A `gh`-driven channel-backup-freshness-slash E2E harness verifies a real
+  channel-thread issue is present on the fetched `gitclaw-backups` branch,
+  then queues `@gitclaw /channels backup-freshness`, exposes one
+  provider-facing latest-backup freshness gate through metadata-only outbox,
+  suppresses duplicate freshness notifications, and posts a normal follow-up
+  that must use GitHub Models, `repo-reader`, and `gitclaw.search_files`.
 - A `gh`-driven backup-info E2E harness verifies
   `@gitclaw /backup info` records the deferred issue-side command intent, then
   verifies the fetched `gitclaw-backups` branch can produce a focused
