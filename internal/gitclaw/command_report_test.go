@@ -125,6 +125,7 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"Queue mirrored channel safe skill-bundle map cards without installing skills",
 		"Queue mirrored channel safe skill-source map cards without registry contact",
 		"Queue provider-facing backup recovery-map cards without fetching backup branches",
+		"Queue provider-facing backup timeline chronology cards from local or read-only fetched backup metadata",
 		"queue mirrored channel browser-readiness replies without opening browser sessions",
 		"`gitclaw bundles catalog` command=`/bundles`",
 		"`gitclaw bundles list` command=`/bundles`",

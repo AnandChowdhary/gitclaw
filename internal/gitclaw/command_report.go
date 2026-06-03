@@ -172,6 +172,9 @@ func commandSummaryForReport(entry commandCatalogEntry) string {
 	if !strings.Contains(summary, "backup recovery-map cards") {
 		summary += " Queue provider-facing backup recovery-map cards without fetching backup branches, reading backup payloads, restoring files, creating recovery issues, model calls, provider API calls, workflow edits, or repo mutation."
 	}
+	if !strings.Contains(summary, "backup timeline chronology cards") {
+		summary += " Queue provider-facing backup timeline chronology cards from local or read-only fetched backup metadata without branch writes, restores, GitHub API replay, model calls, provider API calls, or repo mutation."
+	}
 	if !strings.Contains(summary, "browser-readiness replies") {
 		summary += " Queue mirrored channel browser-readiness replies without opening browser sessions, navigating pages, taking screenshots, launching browser MCP servers, executing tools, model calls, provider API calls, workflow edits, or repo mutation."
 	}
