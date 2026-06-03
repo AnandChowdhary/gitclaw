@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T07:35:46Z",
+  "generated_at": "2026-06-03T07:37:22Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 807,
     "title": "GitClaw telegram thread channel-ritual-e2e-20260603t073334z",
@@ -51,6 +51,15 @@
       "CommentID": 4610096977,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Ritual Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#807`\n- requested_channel_command: `/channels ritual`\n- channel_ritual_status: `recorded`\n- ritual_issue: `#808`\n- ritual_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/808`\n- ritual_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#807`\n- notification_comment_id: `4610106861`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `41809cfbf4e3`\n- source_message_id_sha256_12: `98fd6c9422c8`\n- notify_message_id_sha256_12: `5e016edd69da`\n- notify_message_id_auto: `false`\n- ritual_id_sha256_12: `d68bbd7699e6`\n- ritual_id_auto: `false`\n- ritual_title_sha256_12: `45eace73766c`\n- ritual_title_bytes: `54`\n- ritual_title_lines: `1`\n- ritual_cadence_sha256_12: `44e55c097600`\n- ritual_cadence_bytes: `70`\n- ritual_cadence_lines: `1`\n- ritual_trigger_sha256_12: `d10fff7ce326`\n- ritual_trigger_bytes: `70`\n- ritual_trigger_lines: `1`\n- ritual_practice_sha256_12: `86ee75963b3e`\n- ritual_practice_bytes: `72`\n- ritual_practice_lines: `1`\n- ritual_review_sha256_12: `8fab59710929`\n- ritual_review_bytes: `68`\n- ritual_review_lines: `1`\n- notification_body_sha256_12: `243068f264c9`\n- target_from_current_channel_issue: `true`\n- raw_ritual_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_ritual_title_included: `false`\n- raw_ritual_cadence_included: `false`\n- raw_ritual_trigger_included: `false`\n- raw_ritual_practice_included: `false`\n- raw_ritual_review_included: `false`\n- raw_channel_message_body_included: `false`\n- scheduled_workflow_created: `false`\n- reminder_created: `false`\n- standing_order_created: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_ritual_action_change: `true`\n- issue_title_sha256_12: `67add3ecc291`\n\nGitClaw recorded a mirrored channel ritual as a durable GitHub issue, then queued a provider-facing link back to the original thread. The ritual issue contains the human-readable title, cadence, trigger, practice, and review notes; this source receipt keeps provider IDs, ritual IDs, section text, and channel message bodies out of band. No schedule, reminder, standing order, workflow edit, or repository mutation is created by this action.\n\n### Follow-Up Delivery\n- provider gateways read the ritual-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent ritual links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate ritual issues are suppressed by `ritual_id`; duplicate ritual-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the ritual issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4610106951,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-03T07:35:21Z",
       "updated_at": "2026-06-03T07:35:21Z"
+    },
+    {
+      "id": 4610106861,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-ritual-e2e-20260603t073334z\" message_id=\"ritual-notify-20260603t073334z\" author=\"gitclaw\" --\u003e\nGitClaw channel ritual recorded.\n\nRitual: #808\nURL: https://github.com/AnandChowdhary/gitclaw/issues/808\nTitle: Find the shortest useful channel loop 20260603t073334z\nCadence: Visible cadence token: VISIBLE_CHANNEL_RITUAL_CADENCE_20260603t073334z\n\nRecorded in the linked GitHub issue.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T07:36:52Z",
+      "updated_at": "2026-06-03T07:36:52Z"
+    },
+    {
+      "id": 4610106951,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26870536514\" event_id=\"comment-4610096977\" model=\"gitclaw/channels\" idempotency_key=\"b3e2dfd9597027a2ef12f897ddc876d4\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26870536514\" --\u003e\n## GitClaw Channel Ritual Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#807`\n- requested_channel_command: `/channels ritual`\n- channel_ritual_status: `recorded`\n- ritual_issue: `#808`\n- ritual_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/808`\n- ritual_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#807`\n- notification_comment_id: `4610106861`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `41809cfbf4e3`\n- source_message_id_sha256_12: `98fd6c9422c8`\n- notify_message_id_sha256_12: `5e016edd69da`\n- notify_message_id_auto: `false`\n- ritual_id_sha256_12: `d68bbd7699e6`\n- ritual_id_auto: `false`\n- ritual_title_sha256_12: `45eace73766c`\n- ritual_title_bytes: `54`\n- ritual_title_lines: `1`\n- ritual_cadence_sha256_12: `44e55c097600`\n- ritual_cadence_bytes: `70`\n- ritual_cadence_lines: `1`\n- ritual_trigger_sha256_12: `d10fff7ce326`\n- ritual_trigger_bytes: `70`\n- ritual_trigger_lines: `1`\n- ritual_practice_sha256_12: `86ee75963b3e`\n- ritual_practice_bytes: `72`\n- ritual_practice_lines: `1`\n- ritual_review_sha256_12: `8fab59710929`\n- ritual_review_bytes: `68`\n- ritual_review_lines: `1`\n- notification_body_sha256_12: `243068f264c9`\n- target_from_current_channel_issue: `true`\n- raw_ritual_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_ritual_title_included: `false`\n- raw_ritual_cadence_included: `false`\n- raw_ritual_trigger_included: `false`\n- raw_ritual_practice_included: `false`\n- raw_ritual_review_included: `false`\n- raw_channel_message_body_included: `false`\n- scheduled_workflow_created: `false`\n- reminder_created: `false`\n- standing_order_created: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_ritual_action_change: `true`\n- issue_title_sha256_12: `67add3ecc291`\n\nGitClaw recorded a mirrored channel ritual as a durable GitHub issue, then queued a provider-facing link back to the original thread. The ritual issue contains the human-readable title, cadence, trigger, practice, and review notes; this source receipt keeps provider IDs, ritual IDs, section text, and channel message bodies out of band. No schedule, reminder, standing order, workflow edit, or repository mutation is created by this action.\n\n### Follow-Up Delivery\n- provider gateways read the ritual-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent ritual links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate ritual issues are suppressed by `ritual_id`; duplicate ritual-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the ritual issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T07:36:53Z",
+      "updated_at": "2026-06-03T07:36:53Z"
     }
   ]
 }
