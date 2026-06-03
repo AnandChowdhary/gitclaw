@@ -5134,6 +5134,30 @@ on the glossary issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel FAQ Follow-Up
+
+OpenClaw and Hermes both point toward channel gateways as normalized, durable
+conversation surfaces rather than one-off provider webhooks. A FAQ entry is the
+knowledge-capture version of that idea: support answers, project conventions,
+and repeated operational questions often appear in Slack or Telegram before
+they deserve promotion into memory, documentation, or a skill.
+
+GitClaw's serverless version is `@gitclaw /channels faq --faq-id <id>
+--message-id <id>`. It opens or reuses a normal `gitclaw:channel-faq` issue
+with the readable question and answer, queues one provider-facing FAQ issue
+link back to the source Slack/Telegram thread, and keeps the source receipt
+body-free with only question/answer/id hashes, counts, duplicate status,
+notification metadata, and delivery gates. The provider-facing notification
+includes the link and visible question only, not the answer body. The action
+does not call a model, mutate memory, mutate the repository, call provider
+APIs, or print raw provider IDs, FAQ IDs, questions, answers, or channel bodies
+in the source receipt. Acceptance requires live E2E for FAQ issue creation,
+metadata-only outbox discovery, duplicate suppression, and a real GitHub Models
+repo-reader/search follow-up on the FAQ issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Quote Follow-Up
 
 OpenClaw frames channels as durable assistant surfaces, not disposable

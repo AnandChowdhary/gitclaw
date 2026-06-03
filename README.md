@@ -710,6 +710,10 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels attachment --attachment-id <id> --message-id <id> --filename <name>
 @gitclaw /channels decision --decision-id <id> --message-id <id>
 @gitclaw /channels digest --digest-id <id> --message-id <id>
+@gitclaw /channels journal --journal-id <id> --date <date> --message-id <id>
+@gitclaw /channels quote --quote-id <id> --message-id <id>
+@gitclaw /channels glossary --glossary-id <id> --message-id <id>
+@gitclaw /channels faq --faq-id <id> --message-id <id>
 @gitclaw /channels idea --idea-id <id> --message-id <id>
 @gitclaw /channels whiteboard --jam-id <id> --message-id <id>
 @gitclaw /channels kudos --kudos-id <id> --message-id <id>
@@ -1169,6 +1173,12 @@ definition as a durable GitHub glossary-entry issue. The glossary issue holds
 the readable term and definition, queues a provider-facing glossary link with
 the issue link and term only, and keeps the source receipt body-free with only
 hashes, counts, duplicate state, notification metadata, and delivery gates.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels faq
+--faq-id <id> --message-id <id>` preserves a channel question and answer as a
+durable GitHub FAQ issue. The FAQ issue holds the readable question and answer,
+queues a provider-facing FAQ link with the issue link and question only, and
+keeps the source receipt body-free with only hashes, counts, duplicate state,
+notification metadata, and delivery gates.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 tool-result --tool <tool> --result-id <id> --status <status> --message-id
 <id>` records an externally observed channel tool outcome as a durable GitHub
@@ -1858,6 +1868,7 @@ scripts/e2e/github-channel-digest-slash.sh
 scripts/e2e/github-channel-journal-slash.sh
 scripts/e2e/github-channel-quote-slash.sh
 scripts/e2e/github-channel-glossary-slash.sh
+scripts/e2e/github-channel-faq-slash.sh
 scripts/e2e/github-channel-tool-result-slash.sh
 scripts/e2e/github-channel-idea-slash.sh
 scripts/e2e/github-channel-jam-slash.sh
@@ -2290,6 +2301,27 @@ provider-facing journal link back to the mirrored thread, checks duplicate
 journal and notification suppression, exposes the journal-link notification
 through metadata-only outbox, and then continues on the journal issue with a
 real GitHub Models repo-reader/search follow-up.
+The channel-quote slash harness turns the operator console into a quote
+capture surface: a channel-ingested issue receives `@gitclaw /channels quote`,
+creates or reuses a durable GitHub quote issue, queues a provider-facing quote
+link back to the mirrored thread, checks duplicate quote and notification
+suppression, exposes the quote-link notification through metadata-only outbox,
+and then continues on the quote issue with a real GitHub Models
+repo-reader/search follow-up.
+The channel-glossary slash harness turns the operator console into a glossary
+capture surface: a channel-ingested issue receives `@gitclaw /channels
+glossary`, creates or reuses a durable GitHub glossary issue, queues a
+provider-facing glossary link with only the visible term back to the mirrored
+thread, checks duplicate glossary and notification suppression, exposes the
+glossary-link notification through metadata-only outbox, and then continues on
+the glossary issue with a real GitHub Models repo-reader/search follow-up.
+The channel-faq slash harness turns the operator console into a FAQ capture
+surface: a channel-ingested issue receives `@gitclaw /channels faq`, creates
+or reuses a durable GitHub FAQ issue, queues a provider-facing FAQ link with
+only the visible question back to the mirrored thread, checks duplicate FAQ and
+notification suppression, exposes the FAQ-link notification through
+metadata-only outbox, and then continues on the FAQ issue with a real GitHub
+Models repo-reader/search follow-up.
 The channel-idea slash harness turns the operator console into an idea intake
 surface: a channel-ingested issue receives `@gitclaw /channels idea`, creates
 or reuses a durable GitHub idea issue, queues a provider-facing idea link back

@@ -463,6 +463,27 @@ func TestChannelDoneArtifactRefSupportsGlossaryIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsFAQIssues(t *testing.T) {
+	body := RenderChannelFAQIssueBody(ChannelFAQOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		FAQID:             "faq-done-1",
+		Question:          "How should channel FAQs be reviewed?",
+		Answer:            "Close this after the answer has been reviewed.",
+		SourceIssueNumber: 43,
+		SourceCommentID:   4302,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "faq" || ref.ID != "faq-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 43 || ref.SourceCommentID != 4302 {
+		t.Fatalf("unexpected FAQ artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsIdeaIssues(t *testing.T) {
 	body := RenderChannelIdeaIssueBody(ChannelIdeaOptions{
 		Repo:              "owner/repo",

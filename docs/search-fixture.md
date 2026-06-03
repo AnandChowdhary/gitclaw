@@ -245,4 +245,5 @@ channel agenda unique search fixture phrase => GITCLAW_CHANNEL_AGENDA_CONTEXT_V1
 channel journal unique search fixture phrase => GITCLAW_CHANNEL_JOURNAL_CONTEXT_V1
 channel quote unique search fixture phrase => GITCLAW_CHANNEL_QUOTE_CONTEXT_V1
 channel glossary unique search fixture phrase => GITCLAW_CHANNEL_GLOSSARY_CONTEXT_V1
+channel faq unique search fixture phrase => GITCLAW_CHANNEL_FAQ_CONTEXT_V1
 channel tool result unique search fixture phrase => GITCLAW_CHANNEL_TOOL_RESULT_CONTEXT_V1

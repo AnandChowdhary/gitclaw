@@ -6255,6 +6255,37 @@ the metadata-only glossary-link outbox, checks duplicate suppression, and then
 continues on the glossary issue with a normal GitHub Models repo-reader/search
 follow-up that makes a real LLM call.
 
+The same channel-thread issue can also preserve a FAQ entry:
+
+```text
+@gitclaw /channels faq --faq-id <stable-faq-id> --message-id <provider-message-id>
+Question: channel-origin question
+Answer:
+optional human-readable answer/context/source notes
+```
+
+`/channels faq`, `/channels qna`, `/channels qa`, `/channels question`,
+`/channels answer`, `/channels faq-card`, and `/channels capture-faq` infer the
+current channel and thread id from the issue marker when no explicit
+route/channel/thread target is provided. They create or reuse one open GitHub
+issue carrying a hidden `gitclaw:channel-faq` marker for the stable FAQ id,
+label it with `gitclaw` so normal conversation can continue there, and queue a
+provider-facing FAQ link back to the mirrored channel thread. The FAQ issue
+contains the human-readable question and answer because it is the durable
+knowledge card; the source receipt remains body-free, reporting only
+FAQ/thread/message/question/answer hashes, counts, duplicate status,
+notification queue metadata, and delivery gates. It does not call a model, call
+provider APIs, mutate `.gitclaw/MEMORY.md`, mutate the repository, print raw
+FAQ ids, print raw thread ids, print raw source or notification message ids,
+print channel message bodies, or print raw questions or answers in the source
+receipt. Provider-facing notifications include the issue link and visible
+question only, never the answer body. Duplicates are suppressed first by
+`faq_id` for the GitHub FAQ issue and then by `channel + notify_message_id` for
+the provider-facing FAQ link. Changes to this surface require a live E2E that
+records the FAQ entry, validates the metadata-only FAQ-link outbox, checks
+duplicate suppression, and then continues on the FAQ issue with a normal GitHub
+Models repo-reader/search follow-up that makes a real LLM call.
+
 The same channel-thread issue can also record an externally observed tool
 result without executing the tool:
 
@@ -11259,6 +11290,17 @@ examples/workflows/gitclaw.yml
   recover the channel-glossary fixture token, and avoid hidden channel,
   account, provider, message, glossary id, term, definition, and notification
   sentinels.
+- A `gh`-driven channel-faq-slash E2E harness creates a real channel-thread
+  issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels faq --faq-id ... --message-id ...` on that mirrored
+  thread, verifies GitHub FAQ issue creation, body-free source receipt
+  metadata, provider-facing FAQ-link queueing, duplicate FAQ and notification
+  suppression, explicit no-memory-mutation/no-repository-mutation gates, and
+  metadata-only outbox discovery. The FAQ issue then gets a normal GitHub
+  Models issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-FAQ fixture token, and avoid
+  hidden channel, account, provider, message, FAQ id, question, answer, and
+  notification sentinels.
 - A `gh`-driven channel-tool-result-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels tool-result --result-id ... --tool ... --status ...
