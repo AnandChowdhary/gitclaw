@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-03T09:14:48Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 816,
+    "title": "GitClaw channel boundary: Keep channel boundaries reviewable 20260603t090652z",
+    "body": "\u003c!-- gitclaw:channel-boundary boundary_id=\"channel-boundary-20260603t090652z\" channel=\"telegram\" thread_id_sha256_12=\"72e0cc1253e0\" source_message_id_sha256_12=\"7e712c1f42f9\" source_issue=\"815\" source_comment_id=\"4610756092\" --\u003e\nGitClaw channel boundary.\n\n- boundary_id: channel-boundary-20260603t090652z\n- source_channel: telegram\n- source_issue: #815\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/815\n- source_comment_id: 4610756092\n- thread_id_sha256_12: 72e0cc1253e0\n- source_message_id_sha256_12: 7e712c1f42f9\n- boundary_mode: github-issue-boundary\n- model_call_performed: false\n- scheduled_workflow_created: false\n- reminder_created: false\n- allowlist_mutation_performed: false\n- pairing_code_issued: false\n- soul_write_performed: false\n- memory_write_performed: false\n- policy_mutation_performed: false\n- skill_install_performed: false\n- workflow_mutation_performed: false\n- provider_setting_mutation_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- enforcement_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Title\n\nKeep channel boundaries reviewable 20260603t090652z\n\n## Boundary\n\nVisible boundary token: VISIBLE_CHANNEL_BOUNDARY_BODY_20260603t090652z\n\n## Scope\n\nVisible scope token: VISIBLE_CHANNEL_BOUNDARY_SCOPE_20260603t090652z\n\n## Reason\n\nVisible reason token: VISIBLE_CHANNEL_BOUNDARY_REASON_20260603t090652z\n\n## Review\n\nVisible review token: VISIBLE_CHANNEL_BOUNDARY_REVIEW_20260603t090652z\n\nUse this issue as the durable GitHub home for a channel boundary. Close it when the boundary is stale, superseded, or promoted through normal reviewed GitHub issues.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel boundary: Keep channel boundaries reviewable 20260603t090652z\n\n\u003c!-- gitclaw:channel-boundary boundary_id=\"channel-boundary-20260603t090652z\" channel=\"telegram\" thread_id_sha256_12=\"72e0cc1253e0\" source_message_id_sha256_12=\"7e712c1f42f9\" source_issue=\"815\" source_comment_id=\"4610756092\" --\u003e\nGitClaw channel boundary.\n\n- boundary_id: channel-boundary-20260603t090652z\n- source_channel: telegram\n- source_issue: #815\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/815\n- source_comment_id: 4610756092\n- thread_id_sha256_12: 72e0cc1253e0\n- source_message_id_sha256_12: 7e712c1f42f9\n- boundary_mode: github-issue-boundary\n- model_call_performed: false\n- scheduled_workflow_created: false\n- reminder_created: false\n- allowlist_mutation_performed: false\n- pairing_code_issued: false\n- soul_write_performed: false\n- memory_write_performed: false\n- policy_mutation_performed: false\n- skill_install_performed: false\n- workflow_mutation_performed: false\n- provider_setting_mutation_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- enforcement_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Title\n\nKeep channel boundaries reviewable 20260603t090652z\n\n## Boundary\n\nVisible boundary token: VISIBLE_CHANNEL_BOUNDARY_BODY_20260603t090652z\n\n## Scope\n\nVisible scope token: VISIBLE_CHANNEL_BOUNDARY_SCOPE_20260603t090652z\n\n## Reason\n\nVisible reason token: VISIBLE_CHANNEL_BOUNDARY_REASON_20260603t090652z\n\n## Review\n\nVisible review token: VISIBLE_CHANNEL_BOUNDARY_REVIEW_20260603t090652z\n\nUse this issue as the durable GitHub home for a channel boundary. Close it when the boundary is stale, superseded, or promoted through normal reviewed GitHub issues.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created boundary and use the repo-reader skill.\n\nSearch the repository for `channel boundary unique search fixture phrase`.\nThe matching repository search result line has the form `channel boundary unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_BOUNDARY_`.\nCopy the complete right-hand side token exactly, including the final `CONTEXT_V1` suffix.\nThe answer must end with `CONTEXT_V1`; `GITCLAW_CHANNEL_BOUNDARY_` alone is incomplete and must not be used.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include boundary ids, message ids, thread ids, account hashes, issue numbers, boundary titles, boundary bodies, scope, reasons, or review notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_BOUNDARY_FOLLOWUP_20260603t090652z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4610790994,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_BOUNDARY_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4610800031,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4610790994,
+      "body": "@gitclaw Continue this channel-created boundary and use the repo-reader skill.\n\nSearch the repository for `channel boundary unique search fixture phrase`.\nThe matching repository search result line has the form `channel boundary unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_BOUNDARY_`.\nCopy the complete right-hand side token exactly, including the final `CONTEXT_V1` suffix.\nThe answer must end with `CONTEXT_V1`; `GITCLAW_CHANNEL_BOUNDARY_` alone is incomplete and must not be used.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include boundary ids, message ids, thread ids, account hashes, issue numbers, boundary titles, boundary bodies, scope, reasons, or review notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_BOUNDARY_FOLLOWUP_20260603t090652z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T09:13:03Z",
+      "updated_at": "2026-06-03T09:13:03Z"
+    },
+    {
+      "id": 4610800031,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26875216738\" event_id=\"comment-4610790994\" model=\"openai/gpt-5-nano\" idempotency_key=\"ef465ea8bf304c6c0eb1ccc4e375006c\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26875216738\" prompt_context_sha256_12=\"1fbc69a333ec\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"11022\" usage_completion_tokens=\"404\" usage_total_tokens=\"11426\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_BOUNDARY_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T09:14:15Z",
+      "updated_at": "2026-06-03T09:14:15Z"
+    }
+  ]
+}

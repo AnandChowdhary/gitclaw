@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-03T09:12:49Z`
-- issue_count: `706`
+- generated_at: `2026-06-03T09:14:49Z`
+- issue_count: `707`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -711,3 +711,4 @@
 | #813 | GitClaw telegram thread channel-lore-e2e-20260603t084259z | `2026-06-03T08:48:39Z` | 7 | 7 | `issues/000813.json` |
 | #814 | GitClaw channel lore: Save the quiet channel context 20260603t084259z | `2026-06-03T08:50:55Z` | 2 | 3 | `issues/000814.json` |
 | #815 | GitClaw telegram thread channel-boundary-e2e-20260603t090652z | `2026-06-03T09:12:48Z` | 7 | 7 | `issues/000815.json` |
+| #816 | GitClaw channel boundary: Keep channel boundaries reviewable 20260603t090652z | `2026-06-03T09:14:48Z` | 2 | 3 | `issues/000816.json` |

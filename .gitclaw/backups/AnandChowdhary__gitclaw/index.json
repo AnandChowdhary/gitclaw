@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T09:12:49Z",
+  "generated_at": "2026-06-03T09:14:49Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 706,
+  "count": 707,
   "issues": [
     {
       "number": 3,
@@ -8971,6 +8971,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 816,
+      "title": "GitClaw channel boundary: Keep channel boundaries reviewable 20260603t090652z",
+      "path": "issues/000816.json",
+      "backup_generated_at": "2026-06-03T09:14:48Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
