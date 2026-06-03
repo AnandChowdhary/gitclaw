@@ -55,7 +55,7 @@ thread_id="channel-warmup-e2e-${timestamp}"
 ingest_message_id="warmup-ingest-${timestamp}"
 notify_message_id="warmup-notify-${timestamp}"
 warmup_id="warmup-${timestamp}"
-warmup_theme="tools"
+warmup_theme="launch"
 warmup_note="Use this tiny launcher"
 account_id="telegram-warmup-account-NOECHO_CHANNEL_WARMUP_ACCOUNT_${timestamp}"
 ingest_hidden_token="NOECHO_CHANNEL_WARMUP_INGEST_${timestamp}"
@@ -270,7 +270,7 @@ for expected in \
   "target_from_current_channel_issue: \`true\`" \
   "warmup_id_sha256_12: \`" \
   "warmup_theme_sha256_12: \`" \
-  "warmup_theme_bytes: \`5\`" \
+  "warmup_theme_bytes: \`6\`" \
   "warmup_prompt_count: \`3\`" \
   "warmup_note_sha256_12: \`" \
   "warmup_note_bytes: \`" \
@@ -302,7 +302,7 @@ for expected in \
   "llm_e2e_required_after_channel_warmup_action_change: \`true\`"; do
   grep -Fq "$expected" <<<"$warmup_receipt" || die "channel warmup receipt missing ${expected}"
 done
-for leaked in "$ingest_hidden_token" "$command_hidden_token" "$thread_id" "$ingest_message_id" "$notify_message_id" "$warmup_id" "$warmup_theme" "$warmup_note" "$expected_token" "What decision needs"; do
+for leaked in "$ingest_hidden_token" "$command_hidden_token" "$thread_id" "$ingest_message_id" "$notify_message_id" "$warmup_id" "$warmup_theme" "$warmup_note" "$expected_token" "What has to be true"; do
   if grep -Fq "$leaked" <<<"$warmup_receipt"; then
     die "channel warmup receipt leaked ${leaked}"
   fi
@@ -315,11 +315,11 @@ notification_bodies="$(jq -r '[.comments[].body | select(contains("<!-- gitclaw:
 for expected in \
   "GitClaw channel warmup." \
   "Theme: ${warmup_theme}" \
-  "Frame: Turn tool energy into reviewed requests before execution." \
+  "Frame: Surface readiness, blockers, and owner clarity before a release moves." \
   "Conversation starters:" \
-  "What decision needs a reviewed tool run, and what evidence would make it safe?" \
-  "Which tool result would change the next step?" \
-  "What must stay human-reviewed before execution?" \
+  "What has to be true before this ships?" \
+  "What is the smallest rollback or recovery signal we need?" \
+  "Who owns the next visible status update?" \
   "Note: ${warmup_note}" \
   "Warmup hash: " \
   "Note hash: " \
@@ -354,7 +354,7 @@ grep -Fq "channel_outbox issue=${issue_number}" <<<"$outbox_output" || die "chan
 grep -Fq "outbound_comments=1" <<<"$outbox_output" || die "channel outbox output missing outbound count: ${outbox_output}"
 grep -Fq "body_included=false" <<<"$outbox_output" || die "channel outbox should be metadata-only: ${outbox_output}"
 jq -e --arg hash "$notify_message_hash" '.messages[] | select(.kind == "channel-outbound" and .outbound_message_sha256_12 == $hash)' "$outbox_file" >/dev/null || die "outbox file missing warmup notify hash ${notify_message_hash}"
-for leaked in "$account_id" "$ingest_hidden_token" "$command_hidden_token" "$warmup_id" "$expected_token" "$warmup_theme" "$warmup_note" "What decision needs"; do
+for leaked in "$account_id" "$ingest_hidden_token" "$command_hidden_token" "$warmup_id" "$expected_token" "$warmup_theme" "$warmup_note" "What has to be true"; do
   if grep -Fq "$leaked" <<<"$outbox_output" || grep -Fq "$leaked" "$outbox_file"; then
     die "metadata-only outbox leaked ${leaked}"
   fi
@@ -391,7 +391,7 @@ for expected in \
   grep -Fq "$expected" <<<"$duplicate_receipt" || die "duplicate channel warmup receipt missing ${expected}"
 done
 [[ "$(warmup_notification_count)" == "1" ]] || die "duplicate channel warmup queued another notification"
-for leaked in "$duplicate_hidden_token" "$thread_id" "$ingest_message_id" "$notify_message_id" "$warmup_id" "$warmup_theme" "$warmup_note" "$expected_token" "What decision needs"; do
+for leaked in "$duplicate_hidden_token" "$thread_id" "$ingest_message_id" "$notify_message_id" "$warmup_id" "$warmup_theme" "$warmup_note" "$expected_token" "What has to be true"; do
   if grep -Fq "$leaked" <<<"$duplicate_receipt"; then
     die "duplicate channel warmup receipt leaked ${leaked}"
   fi
