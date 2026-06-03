@@ -679,6 +679,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels roll --dice 2d6+1 --message-id <id> --notify-message-id <id>
 @gitclaw /channels choose --message-id <id> --notify-message-id <id>
 @gitclaw /channels mood focused --message-id <id> --notify-message-id <id> --intensity 4
+@gitclaw /channels sticker confetti --sticker-id <id> --message-id <id> --notify-message-id <id> --scale 4
 @gitclaw /channels session-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels memory-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels backup-search <query> --message-id <id> --notify-message-id <id>
@@ -994,6 +995,13 @@ choice out of band.
 Slack/Telegram thread. Optional `Note: ...` trailing text is visible in the
 provider update, while the source receipt keeps raw mood text, notes, thread
 ids, message ids, and mood ids out of band.
+`@gitclaw /channels sticker <sticker> --sticker-id <id> --message-id <id>
+--notify-message-id <id> --scale 1..5` queues a provider-facing sticker card
+back to the current Slack/Telegram thread. Optional `Note: ...` trailing text
+is visible in the provider update, while the source receipt keeps raw sticker
+ids, sticker names, notes, thread ids, message ids, and channel bodies out of
+band. This does not generate images, fetch media, upload files, call provider
+APIs, call a model, or mutate the repository.
 `@gitclaw /channels session-search <query> --message-id <id>
 --notify-message-id <id>` searches the current GitHub-backed channel transcript
 and queues provider-facing recall metadata back to Slack/Telegram. It reports
@@ -1958,6 +1966,7 @@ scripts/e2e/github-channel-rollcall-slash.sh
 scripts/e2e/github-channel-roll-slash.sh
 scripts/e2e/github-channel-choose-slash.sh
 scripts/e2e/github-channel-mood-slash.sh
+scripts/e2e/github-channel-sticker-slash.sh
 scripts/e2e/github-channel-session-search-slash.sh
 scripts/e2e/github-channel-status-slash.sh
 scripts/e2e/github-channel-edit-slash.sh
@@ -2284,6 +2293,13 @@ reports: a channel-ingested issue receives `@gitclaw /channels mood`, queues one
 provider-visible presence update with an optional note, exposes it through
 metadata-only outbox, suppresses duplicate mood notifications, and then runs a
 real GitHub Models repo-reader/search follow-up.
+The channel-sticker slash harness adds a provider-facing flourish lane without
+media side effects: a channel-ingested issue receives `@gitclaw /channels
+sticker`, queues one provider-visible sticker card with an optional note,
+exposes it through metadata-only outbox, suppresses duplicate sticker
+notifications, proves no model/image/media/upload/provider-API/repository
+mutation was performed, and then runs a real GitHub Models repo-reader/search
+follow-up.
 The channel-session-search slash harness makes recall a channel-native action:
 a channel-ingested issue receives `@gitclaw /channels session-search`, queues
 provider-visible body-free search metadata from the GitHub-backed transcript,

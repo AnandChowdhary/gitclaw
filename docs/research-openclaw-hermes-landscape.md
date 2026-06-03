@@ -5157,6 +5157,33 @@ sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes cron
 Hermes messaging guide
 (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Sticker Follow-Up
+
+OpenClaw's channel model treats the provider channel as the conversation
+surface, while session state stays recoverable outside the chat provider.
+Hermes' messaging gateway framing separates provider-specific affordances such
+as media/reactions from the agent session that decides what should happen.
+GitClaw's serverless translation is to make a lightweight sticker/card signal
+queueable through GitHub issue comments and the channel outbox, without turning
+the core handler into a media fetcher, sticker search service, image generator,
+or provider adapter.
+
+GitClaw's version is `@gitclaw /channels sticker <name> --sticker-id <id>
+--message-id <id> --notify-message-id <id>`. It queues one
+provider-facing sticker card with a compact sticker slug, scale, optional note,
+and body hashes on the canonical channel issue, exposes it through
+metadata-only `channel-outbox`, and records delivery through the existing
+`channel-delivery` receipt path. The action does not call a model, generate
+images, fetch media, upload files, call provider APIs, or mutate the
+repository. Acceptance requires live E2E for sticker queueing, metadata-only
+outbox discovery, duplicate suppression, explicit no-media/no-provider gates,
+and a real GitHub Models repo-reader/search follow-up on the same channel
+issue.
+
+Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw CLI
+sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Ritual Follow-Up
 
 OpenClaw's current channel docs frame chat apps as Gateway-connected surfaces:

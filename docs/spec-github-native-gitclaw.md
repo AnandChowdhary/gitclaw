@@ -5494,6 +5494,31 @@ mood update, validates metadata-only outbox discovery, verifies duplicate
 suppression, and then continues on the same GitHub issue with a real GitHub
 Models repo-reader/search follow-up.
 
+For channel-native sticker signals that should feel like chat without becoming
+a media pipeline, GitClaw also supports:
+
+```text
+@gitclaw /channels sticker confetti --sticker-id <stable-sticker-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id> --scale 4
+Note: Release handoff steady.
+```
+
+`/channels sticker`, `/channels stamp`, `/channels badge`, `/channels spark`,
+`/channels confetti`, and `/channels celebrate` queue one provider-facing
+sticker card back onto the current `gitclaw:channel-thread` issue or an
+explicit reviewed route. The sticker name is normalized to a compact slug,
+scale is bounded to `1..5`, and optional `Note: ...` trailing text is included
+in the provider-facing update. The source receipt remains body-free and reports
+only hashes, note size, duplicate status, outbox delivery instructions, and
+safety gates. It does not call a model, generate images, fetch media, upload
+files, call provider APIs, mutate repository files, print raw sticker ids,
+print raw sticker names, or print raw note text. Duplicates are suppressed by
+`channel + notify_message_id`. Changes to this surface require a live E2E that
+ingests a real channel issue, queues the sticker card, validates metadata-only
+outbox discovery, verifies duplicate suppression, proves no
+model/image/media/upload/provider-API/repository mutation was performed, and
+then continues on the same GitHub issue with a real GitHub Models
+repo-reader/search follow-up.
+
 For channel-native recall that should answer in the same Slack/Telegram thread
 without a full model turn, GitClaw also supports:
 
@@ -5695,6 +5720,7 @@ accepts a structured reaction form:
 @gitclaw /channels topic --topic-id <stable-topic-id>
 @gitclaw /channels react --message-id <provider-message-id> --reaction eyes
 @gitclaw /channels pin --message-id <provider-message-id>
+@gitclaw /channels sticker confetti --sticker-id <stable-sticker-id> --message-id <provider-message-id> --notify-message-id <provider-sticker-id> --scale 4
 @gitclaw /channels deliverable --deliverable-id <stable-deliverable-id> --message-id <provider-message-id> --filename <name> --media-type <mime> --url <download-url>
 @gitclaw /channels task --task-id <stable-task-id> --message-id <provider-message-id>
 @gitclaw /channels watch --watch-id <stable-watch-id> --cadence <cadence> --message-id <provider-message-id>
@@ -9029,6 +9055,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels roll --dice 2d6+1 --message-id provider-msg-1 --notify-message-id provider-roll-ack-1
 @gitclaw /channels choose --message-id provider-msg-1 --notify-message-id provider-choice-ack-1
 @gitclaw /channels mood focused --message-id provider-msg-1 --notify-message-id provider-mood-ack-1 --intensity 4
+@gitclaw /channels sticker confetti --sticker-id channel-sticker-1 --message-id provider-msg-1 --notify-message-id provider-sticker-ack-1 --scale 4
 @gitclaw /channels session-search deployment --message-id provider-msg-1 --notify-message-id provider-search-ack-1
 ```
 
@@ -11519,6 +11546,16 @@ examples/workflows/gitclaw.yml
   The same channel issue then gets a normal GitHub Models issue-comment follow-up
   that must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-mood fixture token, and avoid hidden channel/message/mood sentinels.
+- A `gh`-driven channel-sticker-slash E2E harness ingests a real mirrored
+  channel issue, replies with `@gitclaw /channels sticker ...`, verifies the
+  provider-facing sticker card, body-free source receipt metadata, duplicate
+  sticker notification suppression from a later issue comment with the same
+  acknowledgement id, explicit no model/image/media/upload/provider-API/
+  repository mutation gates, and metadata-only outbox discovery for the
+  acknowledgement. The same channel issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-sticker fixture token, and avoid
+  hidden channel/message/sticker sentinels.
 - A `gh`-driven channel-session-search-slash E2E harness ingests a real
   mirrored channel issue, replies with `@gitclaw /channels session-search ...`,
   verifies provider-facing body-free recall metadata from the current

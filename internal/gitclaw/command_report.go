@@ -111,10 +111,14 @@ func commandSummaryForReport(entry commandCatalogEntry) string {
 	if entry.Command != "/channels" {
 		return entry.Summary
 	}
-	if strings.Contains(entry.Summary, "capture channel-origin boundaries") {
-		return entry.Summary
+	summary := entry.Summary
+	if !strings.Contains(summary, "capture channel-origin boundaries") {
+		summary += " Capture channel-origin boundaries as reviewable GitHub issues without enforcement, allowlist changes, pairing codes, workflow/provider-setting mutations, soul writes, memory writes, policy mutations, skill installs, or repo files."
 	}
-	return entry.Summary + " Capture channel-origin boundaries as reviewable GitHub issues without enforcement, allowlist changes, pairing codes, workflow/provider-setting mutations, soul writes, memory writes, policy mutations, skill installs, or repo files."
+	if !strings.Contains(summary, "queue provider-facing sticker cards") {
+		summary += " Queue provider-facing sticker cards without model calls, image generation, media fetches, file uploads, provider API calls, or repo mutation."
+	}
+	return summary
 }
 
 func commandCatalogNames() []string {
