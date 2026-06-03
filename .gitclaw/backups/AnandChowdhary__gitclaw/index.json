@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T12:26:40Z",
+  "generated_at": "2026-06-03T12:28:38Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 717,
   "issues": [
@@ -9112,15 +9112,15 @@
       "number": 826,
       "title": "GitClaw telegram thread channel-browser-status-e2e-20260603t122029z",
       "path": "issues/000826.json",
-      "backup_generated_at": "2026-06-03T12:26:37Z",
+      "backup_generated_at": "2026-06-03T12:28:37Z",
       "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 7,
-      "transcript_messages": 7
+      "comment_count": 9,
+      "transcript_messages": 9
     }
   ]
 }
