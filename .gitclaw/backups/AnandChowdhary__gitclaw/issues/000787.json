@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T04:24:23Z",
+  "generated_at": "2026-06-03T04:26:12Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4609048290,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels glossary --glossary-id channel-glossary-20260603t042111z --message-id glossary-ingest-20260603t042111z --notify-message-id glossary-notify-20260603t042111z\nTerm: Channel-native glossary term 20260603t042111z\nDefinition:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_GLOSSARY_DUPLICATE_20260603t042111z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4609051010,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Glossary Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#787`\n- requested_channel_command: `/channels glossary`\n- channel_glossary_status: `duplicate`\n- glossary_issue: `#788`\n- glossary_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/788`\n- glossary_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#787`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `4632f172bc9a`\n- source_message_id_sha256_12: `fce8204db819`\n- notify_message_id_sha256_12: `51f98f4effc9`\n- notify_message_id_auto: `false`\n- glossary_id_sha256_12: `4014ae722f7e`\n- glossary_id_auto: `false`\n- glossary_term_sha256_12: `b8d4c99c8ed1`\n- glossary_term_bytes: `45`\n- glossary_term_lines: `1`\n- glossary_definition_sha256_12: `c09356ee7a1e`\n- glossary_definition_bytes: `86`\n- glossary_definition_lines: `1`\n- notification_body_sha256_12: `e39542dd8d32`\n- target_from_current_channel_issue: `true`\n- raw_glossary_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_glossary_term_included: `false`\n- raw_glossary_definition_included: `false`\n- raw_channel_message_body_included: `false`\n- memory_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_glossary_action_change: `true`\n- issue_title_sha256_12: `d2efab631a4e`\n\nGitClaw captured a channel-origin glossary term as a durable GitHub issue, then queued a provider-facing glossary link back to the mirrored thread. The glossary issue contains the human-readable term and definition; this source receipt keeps provider IDs, glossary IDs, terms, definitions, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the glossary-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent glossary links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate glossary issues are suppressed by `glossary_id`; duplicate glossary-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the glossary issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4609054915,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T04:23:56Z",
       "updated_at": "2026-06-03T04:23:56Z"
+    },
+    {
+      "id": 4609051010,
+      "body": "@gitclaw /channels glossary --glossary-id channel-glossary-20260603t042111z --message-id glossary-ingest-20260603t042111z --notify-message-id glossary-notify-20260603t042111z\nTerm: Channel-native glossary term 20260603t042111z\nDefinition:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_GLOSSARY_DUPLICATE_20260603t042111z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T04:24:38Z",
+      "updated_at": "2026-06-03T04:24:38Z"
+    },
+    {
+      "id": 4609054915,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26863598784\" event_id=\"comment-4609051010\" model=\"gitclaw/channels\" idempotency_key=\"0d539c5e92f8e8eef6c9746a8b6bba0c\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26863598784\" --\u003e\n## GitClaw Channel Glossary Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#787`\n- requested_channel_command: `/channels glossary`\n- channel_glossary_status: `duplicate`\n- glossary_issue: `#788`\n- glossary_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/788`\n- glossary_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#787`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `4632f172bc9a`\n- source_message_id_sha256_12: `fce8204db819`\n- notify_message_id_sha256_12: `51f98f4effc9`\n- notify_message_id_auto: `false`\n- glossary_id_sha256_12: `4014ae722f7e`\n- glossary_id_auto: `false`\n- glossary_term_sha256_12: `b8d4c99c8ed1`\n- glossary_term_bytes: `45`\n- glossary_term_lines: `1`\n- glossary_definition_sha256_12: `c09356ee7a1e`\n- glossary_definition_bytes: `86`\n- glossary_definition_lines: `1`\n- notification_body_sha256_12: `e39542dd8d32`\n- target_from_current_channel_issue: `true`\n- raw_glossary_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_glossary_term_included: `false`\n- raw_glossary_definition_included: `false`\n- raw_channel_message_body_included: `false`\n- memory_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_glossary_action_change: `true`\n- issue_title_sha256_12: `d2efab631a4e`\n\nGitClaw captured a channel-origin glossary term as a durable GitHub issue, then queued a provider-facing glossary link back to the mirrored thread. The glossary issue contains the human-readable term and definition; this source receipt keeps provider IDs, glossary IDs, terms, definitions, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the glossary-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent glossary links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate glossary issues are suppressed by `glossary_id`; duplicate glossary-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the glossary issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T04:25:39Z",
+      "updated_at": "2026-06-03T04:25:39Z"
     }
   ]
 }
