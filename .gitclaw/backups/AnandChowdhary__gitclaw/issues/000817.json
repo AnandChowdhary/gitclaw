@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T09:32:17Z",
+  "generated_at": "2026-06-03T09:34:10Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4610935089,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels stamp confetti --message-id sticker-ingest-20260603t092835z --notify-message-id sticker-notify-20260603t092835z --sticker-id sticker-20260603t092835z --scale 4\nNote: Release handoff steady\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_STICKER_DUPLICATE_20260603t092835z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4610940720,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Sticker Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#817`\n- requested_channel_command: `/channels stamp`\n- channel_sticker_status: `duplicate`\n- sticker_mode: `structured-channel-sticker`\n- notification_target_issue: `#817`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `1e56851f2b84`\n- source_message_id_sha256_12: `858d6eefeda3`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `b80cbaf0a7dc`\n- notify_message_id_auto: `false`\n- sticker_id_sha256_12: `54afa63b6ade`\n- sticker_id_auto: `false`\n- sticker_sha256_12: `5d7f126fc8da`\n- sticker_bytes: `8`\n- sticker_scale_level: `4`\n- sticker_note_sha256_12: `47c87819f5c5`\n- sticker_note_bytes: `22`\n- sticker_note_lines: `1`\n- sticker_note_source: `trailing-note`\n- notification_body_sha256_12: `262407ae2d69`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- image_generation_performed: `false`\n- media_fetch_performed: `false`\n- file_upload_performed: `false`\n- provider_api_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_sticker_id_included: `false`\n- raw_sticker_included: `false`\n- raw_sticker_note_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_sticker_action_change: `true`\n- issue_title_sha256_12: `bd9aa16efa56`\n\nGitClaw queued a provider-facing channel sticker on the canonical channel issue. This keeps channel conversations more alive than reports: people can add a compact sticker signal while the source receipt keeps thread ids, message ids, sticker ids, notes, and channel bodies out of band. The action does not call a model, generate images, fetch media, upload files, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read sticker updates with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent sticker updates with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate sticker updates are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4610949782,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T09:31:48Z",
       "updated_at": "2026-06-03T09:31:48Z"
+    },
+    {
+      "id": 4610940720,
+      "body": "@gitclaw /channels stamp confetti --message-id sticker-ingest-20260603t092835z --notify-message-id sticker-notify-20260603t092835z --sticker-id sticker-20260603t092835z --scale 4\nNote: Release handoff steady\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_STICKER_DUPLICATE_20260603t092835z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T09:32:34Z",
+      "updated_at": "2026-06-03T09:32:34Z"
+    },
+    {
+      "id": 4610949782,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26876191792\" event_id=\"comment-4610940720\" model=\"gitclaw/channels\" idempotency_key=\"a06e80e5a167a50597046af20251aaa6\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26876191792\" --\u003e\n## GitClaw Channel Sticker Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#817`\n- requested_channel_command: `/channels stamp`\n- channel_sticker_status: `duplicate`\n- sticker_mode: `structured-channel-sticker`\n- notification_target_issue: `#817`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `1e56851f2b84`\n- source_message_id_sha256_12: `858d6eefeda3`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `b80cbaf0a7dc`\n- notify_message_id_auto: `false`\n- sticker_id_sha256_12: `54afa63b6ade`\n- sticker_id_auto: `false`\n- sticker_sha256_12: `5d7f126fc8da`\n- sticker_bytes: `8`\n- sticker_scale_level: `4`\n- sticker_note_sha256_12: `47c87819f5c5`\n- sticker_note_bytes: `22`\n- sticker_note_lines: `1`\n- sticker_note_source: `trailing-note`\n- notification_body_sha256_12: `262407ae2d69`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- image_generation_performed: `false`\n- media_fetch_performed: `false`\n- file_upload_performed: `false`\n- provider_api_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_sticker_id_included: `false`\n- raw_sticker_included: `false`\n- raw_sticker_note_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_sticker_action_change: `true`\n- issue_title_sha256_12: `bd9aa16efa56`\n\nGitClaw queued a provider-facing channel sticker on the canonical channel issue. This keeps channel conversations more alive than reports: people can add a compact sticker signal while the source receipt keeps thread ids, message ids, sticker ids, notes, and channel bodies out of band. The action does not call a model, generate images, fetch media, upload files, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read sticker updates with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent sticker updates with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate sticker updates are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T09:33:40Z",
+      "updated_at": "2026-06-03T09:33:40Z"
     }
   ]
 }
