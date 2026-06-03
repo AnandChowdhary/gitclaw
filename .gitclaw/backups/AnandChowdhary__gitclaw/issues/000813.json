@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T08:45:08Z",
+  "generated_at": "2026-06-03T08:46:42Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 813,
     "title": "GitClaw telegram thread channel-lore-e2e-20260603t084259z",
@@ -51,6 +51,15 @@
       "CommentID": 4610580578,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Lore Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#813`\n- requested_channel_command: `/channels lore`\n- channel_lore_status: `recorded`\n- lore_issue: `#814`\n- lore_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/814`\n- lore_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#813`\n- notification_comment_id: `4610591398`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `48e7f6437354`\n- source_message_id_sha256_12: `756f986c9543`\n- notify_message_id_sha256_12: `a244aed78ce7`\n- notify_message_id_auto: `false`\n- lore_id_sha256_12: `195dd4689aec`\n- lore_id_auto: `false`\n- lore_title_sha256_12: `ad99b579018f`\n- lore_title_bytes: `47`\n- lore_title_lines: `1`\n- lore_body_sha256_12: `b23ffd262a12`\n- lore_body_bytes: `62`\n- lore_body_lines: `1`\n- lore_context_sha256_12: `7bc5e29183c7`\n- lore_context_bytes: `68`\n- lore_context_lines: `1`\n- lore_source_sha256_12: `f120f58042b2`\n- lore_source_bytes: `66`\n- lore_source_lines: `1`\n- lore_review_sha256_12: `3506c54128e4`\n- lore_review_bytes: `66`\n- lore_review_lines: `1`\n- notification_body_sha256_12: `9881a10a34ff`\n- target_from_current_channel_issue: `true`\n- raw_lore_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_lore_title_included: `false`\n- raw_lore_body_included: `false`\n- raw_lore_context_included: `false`\n- raw_lore_source_included: `false`\n- raw_lore_review_included: `false`\n- raw_channel_message_body_included: `false`\n- model_call_performed: `false`\n- scheduled_workflow_created: `false`\n- reminder_created: `false`\n- soul_write_performed: `false`\n- memory_write_performed: `false`\n- policy_mutation_performed: `false`\n- skill_install_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_lore_action_change: `true`\n- issue_title_sha256_12: `ca6f7a49945f`\n\nGitClaw recorded mirrored channel lore as a durable GitHub issue, then queued a provider-facing link back to the original thread. The lore issue contains the human-readable title, lore, context, source, and review timing; this source receipt keeps provider IDs, lore IDs, section text, and channel message bodies out of band. No model call, schedule, reminder, soul write, memory write, policy mutation, skill install, provider delivery, or repository mutation is created by this action.\n\n### Follow-Up Delivery\n- provider gateways read the lore-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent lore links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate lore issues are suppressed by `lore_id`; duplicate lore-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the lore issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4610591609,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-03T08:44:41Z",
       "updated_at": "2026-06-03T08:44:41Z"
+    },
+    {
+      "id": 4610591398,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-lore-e2e-20260603t084259z\" message_id=\"lore-notify-20260603t084259z\" author=\"gitclaw\" --\u003e\nGitClaw channel lore recorded.\n\nLore: #814\nURL: https://github.com/AnandChowdhary/gitclaw/issues/814\nTitle: Save the quiet channel context 20260603t084259z\nReview: Visible review token: VISIBLE_CHANNEL_LORE_REVIEW_20260603t084259z\n\nRecorded in the linked GitHub issue.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T08:46:08Z",
+      "updated_at": "2026-06-03T08:46:08Z"
+    },
+    {
+      "id": 4610591609,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26873812040\" event_id=\"comment-4610580578\" model=\"gitclaw/channels\" idempotency_key=\"68404ab928491847cd66b042e8386603\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26873812040\" --\u003e\n## GitClaw Channel Lore Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#813`\n- requested_channel_command: `/channels lore`\n- channel_lore_status: `recorded`\n- lore_issue: `#814`\n- lore_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/814`\n- lore_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#813`\n- notification_comment_id: `4610591398`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `48e7f6437354`\n- source_message_id_sha256_12: `756f986c9543`\n- notify_message_id_sha256_12: `a244aed78ce7`\n- notify_message_id_auto: `false`\n- lore_id_sha256_12: `195dd4689aec`\n- lore_id_auto: `false`\n- lore_title_sha256_12: `ad99b579018f`\n- lore_title_bytes: `47`\n- lore_title_lines: `1`\n- lore_body_sha256_12: `b23ffd262a12`\n- lore_body_bytes: `62`\n- lore_body_lines: `1`\n- lore_context_sha256_12: `7bc5e29183c7`\n- lore_context_bytes: `68`\n- lore_context_lines: `1`\n- lore_source_sha256_12: `f120f58042b2`\n- lore_source_bytes: `66`\n- lore_source_lines: `1`\n- lore_review_sha256_12: `3506c54128e4`\n- lore_review_bytes: `66`\n- lore_review_lines: `1`\n- notification_body_sha256_12: `9881a10a34ff`\n- target_from_current_channel_issue: `true`\n- raw_lore_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_lore_title_included: `false`\n- raw_lore_body_included: `false`\n- raw_lore_context_included: `false`\n- raw_lore_source_included: `false`\n- raw_lore_review_included: `false`\n- raw_channel_message_body_included: `false`\n- model_call_performed: `false`\n- scheduled_workflow_created: `false`\n- reminder_created: `false`\n- soul_write_performed: `false`\n- memory_write_performed: `false`\n- policy_mutation_performed: `false`\n- skill_install_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_lore_action_change: `true`\n- issue_title_sha256_12: `ca6f7a49945f`\n\nGitClaw recorded mirrored channel lore as a durable GitHub issue, then queued a provider-facing link back to the original thread. The lore issue contains the human-readable title, lore, context, source, and review timing; this source receipt keeps provider IDs, lore IDs, section text, and channel message bodies out of band. No model call, schedule, reminder, soul write, memory write, policy mutation, skill install, provider delivery, or repository mutation is created by this action.\n\n### Follow-Up Delivery\n- provider gateways read the lore-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent lore links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate lore issues are suppressed by `lore_id`; duplicate lore-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the lore issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T08:46:09Z",
+      "updated_at": "2026-06-03T08:46:09Z"
     }
   ]
 }
