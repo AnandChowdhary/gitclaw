@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T03:50:06Z",
+  "generated_at": "2026-06-03T03:51:56Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4608904044,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels tool-output gitclaw.search_files --result-id channel-tool-result-20260603t034626z --status success --exit-code 0 --recorded-at 2037-07-19T10:11:12Z --message-id tool-result-ingest-20260603t034626z --notify-message-id tool-result-notify-20260603t034626z\nSummary: Record GitHub-native channel tool result 20260603t034626z\nResult:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_TOOL_RESULT_DUPLICATE_20260603t034626z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4608907003,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Tool Result Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#783`\n- requested_channel_command: `/channels tool-output`\n- channel_tool_result_status: `duplicate`\n- tool_result_issue: `#784`\n- tool_result_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/784`\n- tool_result_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#783`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `6b494f394302`\n- source_message_id_sha256_12: `b0d430ebdedb`\n- notify_message_id_sha256_12: `9a5195116762`\n- notify_message_id_auto: `false`\n- tool_result_id_sha256_12: `4061c9d683db`\n- tool_result_id_auto: `false`\n- tool_name_sha256_12: `d04ad0c5d344`\n- tool_name_bytes: `20`\n- tool_status_sha256_12: `aee408847d35`\n- tool_status_bytes: `7`\n- tool_exit_code_sha256_12: `5feceb66ffc8`\n- recorded_at_sha256_12: `462488de3ef0`\n- recorded_at_bytes: `20`\n- recorded_at_lines: `1`\n- tool_result_summary_sha256_12: `6820896e0e32`\n- tool_result_summary_bytes: `57`\n- tool_result_summary_lines: `1`\n- tool_result_details_sha256_12: `78719e6af54a`\n- tool_result_details_bytes: `89`\n- tool_result_details_lines: `1`\n- notification_body_sha256_12: `ba1ef271dd06`\n- target_from_current_channel_issue: `true`\n- raw_tool_result_id_included: `false`\n- raw_tool_name_included: `false`\n- raw_tool_status_included: `false`\n- raw_tool_exit_code_included: `false`\n- raw_recorded_at_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_tool_result_summary_included: `false`\n- raw_tool_result_details_included: `false`\n- raw_channel_message_body_included: `false`\n- tool_execution_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_tool_result_action_change: `true`\n- issue_title_sha256_12: `4e9c10ca52e2`\n\nGitClaw recorded a channel-origin tool result as a durable GitHub issue, then queued a provider-facing link back to the original thread. This is a tool gateway receipt, not a tool executor: the source receipt keeps provider IDs, result IDs, tool names, statuses, output details, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the tool-result link with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent tool-result links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate tool-result issues are suppressed by `result_id`; duplicate tool-result notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the tool-result issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4608911633,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T03:49:38Z",
       "updated_at": "2026-06-03T03:49:38Z"
+    },
+    {
+      "id": 4608907003,
+      "body": "@gitclaw /channels tool-output gitclaw.search_files --result-id channel-tool-result-20260603t034626z --status success --exit-code 0 --recorded-at 2037-07-19T10:11:12Z --message-id tool-result-ingest-20260603t034626z --notify-message-id tool-result-notify-20260603t034626z\nSummary: Record GitHub-native channel tool result 20260603t034626z\nResult:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_TOOL_RESULT_DUPLICATE_20260603t034626z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T03:50:23Z",
+      "updated_at": "2026-06-03T03:50:23Z"
+    },
+    {
+      "id": 4608911633,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26862564700\" event_id=\"comment-4608907003\" model=\"gitclaw/channels\" idempotency_key=\"c40845568cd0d3f1635c46c9940c4999\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26862564700\" --\u003e\n## GitClaw Channel Tool Result Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#783`\n- requested_channel_command: `/channels tool-output`\n- channel_tool_result_status: `duplicate`\n- tool_result_issue: `#784`\n- tool_result_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/784`\n- tool_result_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#783`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `6b494f394302`\n- source_message_id_sha256_12: `b0d430ebdedb`\n- notify_message_id_sha256_12: `9a5195116762`\n- notify_message_id_auto: `false`\n- tool_result_id_sha256_12: `4061c9d683db`\n- tool_result_id_auto: `false`\n- tool_name_sha256_12: `d04ad0c5d344`\n- tool_name_bytes: `20`\n- tool_status_sha256_12: `aee408847d35`\n- tool_status_bytes: `7`\n- tool_exit_code_sha256_12: `5feceb66ffc8`\n- recorded_at_sha256_12: `462488de3ef0`\n- recorded_at_bytes: `20`\n- recorded_at_lines: `1`\n- tool_result_summary_sha256_12: `6820896e0e32`\n- tool_result_summary_bytes: `57`\n- tool_result_summary_lines: `1`\n- tool_result_details_sha256_12: `78719e6af54a`\n- tool_result_details_bytes: `89`\n- tool_result_details_lines: `1`\n- notification_body_sha256_12: `ba1ef271dd06`\n- target_from_current_channel_issue: `true`\n- raw_tool_result_id_included: `false`\n- raw_tool_name_included: `false`\n- raw_tool_status_included: `false`\n- raw_tool_exit_code_included: `false`\n- raw_recorded_at_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_tool_result_summary_included: `false`\n- raw_tool_result_details_included: `false`\n- raw_channel_message_body_included: `false`\n- tool_execution_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_tool_result_action_change: `true`\n- issue_title_sha256_12: `4e9c10ca52e2`\n\nGitClaw recorded a channel-origin tool result as a durable GitHub issue, then queued a provider-facing link back to the original thread. This is a tool gateway receipt, not a tool executor: the source receipt keeps provider IDs, result IDs, tool names, statuses, output details, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the tool-result link with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent tool-result links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate tool-result issues are suppressed by `result_id`; duplicate tool-result notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the tool-result issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T03:51:29Z",
+      "updated_at": "2026-06-03T03:51:29Z"
     }
   ]
 }
