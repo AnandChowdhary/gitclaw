@@ -6564,6 +6564,40 @@ verifies provider message ids and notes do not leak into source receipts, and
 then continues on the fork issue with a normal GitHub Models
 repo-reader/search follow-up.
 
+The same channel-thread issue can also record a fork/thread convergence:
+
+```text
+@gitclaw /channels merge --merge-id <stable-merge-id> --from-thread <source-provider-thread-id> --message-id <provider-message-id>
+Merge: short convergence title
+Notes:
+optional human-readable context for the merge
+```
+
+`/channels merge`, `/channels merge-thread`, `/channels thread-merge`,
+`/channels merge-back`, `/channels rejoin`, `/channels converge`, and
+`/channels join-thread` infer the target channel and target thread id from the
+current issue marker when no explicit channel/target-thread target is
+provided. They create or reuse one open GitHub issue carrying
+`gitclaw:channel-merge`, label it with `gitclaw` and `gitclaw:channel`, and
+queue a provider-facing merge acknowledgement back to the target mirrored
+channel thread. This is the convergence pair to `/channels fork`: fork creates
+a new channel-addressed lane; merge records that a source lane is now intended
+to converge back into a target lane without copying channel bodies or closing
+provider conversations. The merge issue contains readable title/notes because
+it is the reviewable convergence record; the source receipt remains body-free,
+reporting only merge/source-thread/target-thread/message/title/note hashes,
+duplicate status, notification queue metadata, and delivery gates. It does not
+call a model, call provider APIs, keep a server/socket open, print raw merge
+ids, print raw source or target thread ids, print raw source or notification
+message ids, print channel message bodies, or print raw titles/notes in the
+source receipt. Duplicates are suppressed first by `merge_id` for the GitHub
+merge issue and then by `channel + notify_message_id` for the provider-facing
+acknowledgement. Changes to this surface require a live E2E that records the
+merge from a real channel-ingested issue, validates the metadata-only merge
+acknowledgement outbox, checks duplicate suppression, verifies provider
+message ids and notes do not leak into source receipts, and then continues on
+the merge issue with a normal GitHub Models repo-reader/search follow-up.
+
 The same channel-thread issue can also open an access or pairing review:
 
 ```text
@@ -7898,6 +7932,12 @@ Behavior:
 - create or reuse one `gitclaw:channel-bookmark` issue per bookmark id and
   queue one provider-facing bookmark acknowledgement outbound comment per
   `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-fork`/`gitclaw:channel-thread` issue
+  per target thread id and queue one provider-facing fork acknowledgement
+  outbound comment per `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-merge` issue per merge id and queue one
+  provider-facing merge acknowledgement outbound comment per
+  `channel + notify_message_id`,
 - create or reuse one `gitclaw:channel-access-request` issue per access id and
   queue one provider-facing access-review outbound comment per
   `channel + notify_message_id` without granting access, mutating allowlists,
@@ -7943,7 +7983,8 @@ Behavior:
   `gitclaw:channel-prompt-proposal`,
   `gitclaw:channel-workspace-proposal`, `gitclaw:channel-incident`,
   `gitclaw:channel-voice`, `gitclaw:channel-image`, `gitclaw:channel-link`,
-  `gitclaw:channel-bookmark`, `gitclaw:channel-access-request`,
+  `gitclaw:channel-bookmark`, `gitclaw:channel-fork`,
+  `gitclaw:channel-merge`, `gitclaw:channel-access-request`,
   `gitclaw:channel-contact`, or `gitclaw:channel-reminder` issue and queue one
   provider-facing done acknowledgement per `channel + notify_message_id`,
 - suppress duplicate outbound message IDs,
@@ -8142,6 +8183,9 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels voice --voice-id channel-voice-1 --duration 47 --message-id provider-msg-1
 @gitclaw /channels image --image-id channel-image-1 --width 1280 --height 720 --message-id provider-msg-1
 @gitclaw /channels link --link-id channel-link-1 --url https://example.invalid/link --message-id provider-msg-1
+@gitclaw /channels bookmark-message --bookmark-id channel-bookmark-1 --message-id provider-msg-1
+@gitclaw /channels fork --fork-id channel-fork-1 --new-thread-id provider-fork-thread-1 --message-id provider-msg-1
+@gitclaw /channels merge --merge-id channel-merge-1 --from-thread provider-fork-thread-1 --message-id provider-msg-1
 @gitclaw /channels access-request --access-id channel-access-1 --scope team-demo --message-id provider-msg-1
 @gitclaw /channels contact --contact-id channel-contact-1 --role reviewer --message-id provider-msg-1
 @gitclaw /channels availability --message-id provider-msg-1 --notify-message-id provider-availability-ack-1
@@ -10998,6 +11042,26 @@ examples/workflows/gitclaw.yml
   follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
   recover the channel-bookmark fixture token, and avoid hidden channel,
   account, provider, message, note, and bookmark sentinels.
+- A `gh`-driven channel-fork-slash E2E harness creates a real channel-thread
+  issue through `gitclaw-channel-ingest.yml`, posts `@gitclaw /channels fork
+  --fork-id ... --new-thread-id ... --message-id ...` on that mirrored thread,
+  verifies forked channel-thread issue creation, body-free source receipt
+  metadata, provider-facing fork acknowledgement queueing, duplicate fork and
+  notification suppression, and metadata-only outbox discovery. The forked
+  channel issue then gets a normal GitHub Models issue-comment follow-up that
+  must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-fork fixture token, and avoid hidden channel, account, provider,
+  message, thread, note, and fork sentinels.
+- A `gh`-driven channel-merge-slash E2E harness creates a real channel-thread
+  issue through `gitclaw-channel-ingest.yml`, posts `@gitclaw /channels merge
+  --merge-id ... --from-thread ... --message-id ...` on that mirrored thread,
+  verifies GitHub merge issue creation, body-free source receipt metadata,
+  provider-facing merge acknowledgement queueing, duplicate merge and
+  notification suppression, and metadata-only outbox discovery. The merge issue
+  then gets a normal GitHub Models issue-comment follow-up that must select
+  `repo-reader`, expose `gitclaw.search_files`, recover the channel-merge
+  fixture token, and avoid hidden channel, account, provider, message, thread,
+  note, and merge sentinels.
 - A `gh`-driven channel-access-request-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels access-request --access-id ... --scope ... --message-id

@@ -704,6 +704,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels clip --clip-id <id> --message-id <id>
 @gitclaw /channels bookmark-message --bookmark-id <id> --message-id <id>
 @gitclaw /channels fork --fork-id <id> --new-thread-id <id> --message-id <id>
+@gitclaw /channels merge --merge-id <id> --from-thread <id> --message-id <id>
 @gitclaw /channels attachment --attachment-id <id> --message-id <id> --filename <name>
 @gitclaw /channels decision --decision-id <id> --message-id <id>
 @gitclaw /channels digest --digest-id <id> --message-id <id>
@@ -1314,6 +1315,13 @@ source Slack/Telegram thread. The source receipt stays body-free and hash-only
 for source/target thread ids, message ids, fork ids, titles, and notes; the new
 fork issue carries the readable fork title/notes and the raw target thread id
 because it is the new channel address.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels merge
+--merge-id <id> --from-thread <id> --message-id <id>` records that a fork or
+secondary provider thread should converge back into the current thread. It
+opens or reuses a durable `gitclaw:channel-merge` issue, queues a
+provider-facing merge acknowledgement to the target thread, and keeps the
+source receipt body-free and hash-only for merge ids, source/target thread
+ids, message ids, titles, and notes.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 request-run <tool> --id <id> --message-id <id>` opens or reuses a reviewed
 GitHub tool-run request issue and queues a provider-facing review link back to
@@ -1789,6 +1797,8 @@ scripts/e2e/github-channel-voice-slash.sh
 scripts/e2e/github-channel-image-slash.sh
 scripts/e2e/github-channel-link-slash.sh
 scripts/e2e/github-channel-bookmark-slash.sh
+scripts/e2e/github-channel-fork-slash.sh
+scripts/e2e/github-channel-merge-slash.sh
 scripts/e2e/github-channel-access-request-slash.sh
 scripts/e2e/github-channel-contact-slash.sh
 scripts/e2e/github-channel-session-handoff-slash.sh
@@ -2277,6 +2287,19 @@ provider-facing acknowledgement back to the mirrored thread, checks duplicate
 bookmark and notification suppression, exposes the bookmark notification
 through metadata-only outbox, and then continues on the bookmark issue with a
 real GitHub Models repo-reader/search follow-up.
+The channel-fork slash harness turns a mirrored provider thread into a new
+GitHub-backed channel lane: a channel-ingested issue receives
+`@gitclaw /channels fork`, creates or reuses a second channel-thread issue,
+queues a provider-facing fork acknowledgement back to the source thread, checks
+duplicate fork and notification suppression, exposes the fork acknowledgement
+through metadata-only outbox, and then continues on the forked channel issue
+with a real GitHub Models repo-reader/search follow-up.
+The channel-merge slash harness records convergence between channel lanes: a
+channel-ingested issue receives `@gitclaw /channels merge`, creates or reuses a
+durable merge issue, queues a provider-facing merge acknowledgement back to the
+target thread, checks duplicate merge and notification suppression, exposes the
+merge acknowledgement through metadata-only outbox, and then continues on the
+merge issue with a real GitHub Models repo-reader/search follow-up.
 The channel-access-request slash harness turns the operator console into an
 access review surface: a channel-ingested issue receives `@gitclaw /channels
 access-request`, creates or reuses a GitHub access-review issue, queues a

@@ -53,6 +53,7 @@ var channelImageMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-image
 var channelLinkMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-link\s+([^>]*)-->`)
 var channelBookmarkMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-bookmark\s+([^>]*)-->`)
 var channelForkMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-fork\s+([^>]*)-->`)
+var channelMergeMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-merge\s+([^>]*)-->`)
 var channelAccessRequestMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-access-request\s+([^>]*)-->`)
 var channelContactMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-contact\s+([^>]*)-->`)
 var channelReminderMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-reminder\s+([^>]*)-->`)
@@ -346,6 +347,10 @@ func HasChannelBookmarkMarker(body string) bool {
 
 func HasChannelForkMarker(body string) bool {
 	return channelForkMarkerPattern.MatchString(body)
+}
+
+func HasChannelMergeMarker(body string) bool {
+	return channelMergeMarkerPattern.MatchString(body)
 }
 
 func HasChannelAccessRequestMarker(body string) bool {

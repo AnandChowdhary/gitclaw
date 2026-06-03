@@ -5115,6 +5115,30 @@ forked channel issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Merge Follow-Up
+
+OpenClaw's channel model makes the conversation surface the operator's active
+workspace, and Hermes' messaging gateway keeps platform-specific chat sessions
+routable without making the agent depend on a server socket. After adding a
+GitHub-native fork lane, the complementary operation is an explicit
+convergence record: tell the system and the provider thread that a source lane
+should merge back into a target lane while preserving the GitHub issue as the
+durable audit surface.
+
+GitClaw's serverless version is `@gitclaw /channels merge --merge-id <id>
+--from-thread <id> --message-id <id>`. It opens or reuses a
+`gitclaw:channel-merge` issue with readable title/notes, stores only hashes
+for source/target provider thread IDs and source message IDs, and queues one
+provider-facing merge acknowledgement to the target Slack/Telegram thread. The
+action does not call a model, call provider APIs, keep a server/socket open,
+copy raw channel bodies, print raw provider IDs in the source receipt, or close
+provider conversations. Acceptance requires live E2E for merge issue creation,
+metadata-only merge acknowledgement outbox discovery, duplicate suppression,
+and a real GitHub Models repo-reader/search follow-up on the merge issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Bookmark Follow-Up
 
 OpenClaw's channel-first framing treats chat as the operator surface, while
