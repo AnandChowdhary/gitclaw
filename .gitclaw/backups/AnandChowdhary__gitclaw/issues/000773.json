@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T02:20:47Z",
+  "generated_at": "2026-06-03T02:22:26Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4608546123,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels snippet --snippet-id channel-snippet-20260603t021703z --language go-secret-20260603t021703z --message-id snippet-ingest-20260603t021703z --notify-message-id snippet-notify-20260603t021703z\nTitle: Save channel snippet 20260603t021703z\nSnippet:\n```go\nfunc duplicateChannelSnippetE2E() string {\n\treturn \"NOECHO_CHANNEL_SNIPPET_DUPLICATE_20260603t021703z\"\n}\n```\nNotes:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_SNIPPET_DUPLICATE_20260603t021703z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4608550684,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Snippet Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#773`\n- requested_channel_command: `/channels snippet`\n- channel_snippet_status: `duplicate`\n- snippet_issue: `#774`\n- snippet_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/774`\n- snippet_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#773`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `5658d12449e8`\n- source_message_id_sha256_12: `8c39388f944a`\n- notify_message_id_sha256_12: `3d4d0393d74f`\n- notify_message_id_auto: `false`\n- snippet_id_sha256_12: `a087d008a5b8`\n- snippet_id_auto: `false`\n- snippet_title_sha256_12: `5b60c3b8d8dd`\n- snippet_title_bytes: `37`\n- snippet_title_lines: `1`\n- snippet_language_sha256_12: `de185a5781a7`\n- snippet_body_sha256_12: `15aa8a3ddef7`\n- snippet_body_bytes: `104`\n- snippet_body_lines: `3`\n- snippet_notes_sha256_12: `85b1748d694c`\n- snippet_notes_bytes: `85`\n- snippet_notes_lines: `1`\n- notification_body_sha256_12: `1084cd3e3917`\n- target_from_current_channel_issue: `true`\n- raw_snippet_id_included: `false`\n- raw_snippet_language_included: `false`\n- raw_snippet_body_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_snippet_title_included: `false`\n- raw_snippet_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_snippet_action_change: `true`\n- issue_title_sha256_12: `fcaec38785ec`\n\nGitClaw saved an explicitly provided channel code/config snippet as a durable GitHub issue, then queued a provider-facing snippet link back to the mirrored thread. The snippet issue contains the readable code block; this source receipt keeps provider IDs, snippet IDs, language names, code bodies, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the snippet-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent snippet links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate snippet issues are suppressed by `snippet_id`; duplicate snippet-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the snippet issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4608554612,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T02:20:13Z",
       "updated_at": "2026-06-03T02:20:13Z"
+    },
+    {
+      "id": 4608550684,
+      "body": "@gitclaw /channels snippet --snippet-id channel-snippet-20260603t021703z --language go-secret-20260603t021703z --message-id snippet-ingest-20260603t021703z --notify-message-id snippet-notify-20260603t021703z\nTitle: Save channel snippet 20260603t021703z\nSnippet:\n```go\nfunc duplicateChannelSnippetE2E() string {\n\treturn \"NOECHO_CHANNEL_SNIPPET_DUPLICATE_20260603t021703z\"\n}\n```\nNotes:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_SNIPPET_DUPLICATE_20260603t021703z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T02:21:06Z",
+      "updated_at": "2026-06-03T02:21:06Z"
+    },
+    {
+      "id": 4608554612,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26859809700\" event_id=\"comment-4608550684\" model=\"gitclaw/channels\" idempotency_key=\"3c7555f8d8e43f4cfdc4783239ad839f\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26859809700\" --\u003e\n## GitClaw Channel Snippet Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#773`\n- requested_channel_command: `/channels snippet`\n- channel_snippet_status: `duplicate`\n- snippet_issue: `#774`\n- snippet_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/774`\n- snippet_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#773`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `5658d12449e8`\n- source_message_id_sha256_12: `8c39388f944a`\n- notify_message_id_sha256_12: `3d4d0393d74f`\n- notify_message_id_auto: `false`\n- snippet_id_sha256_12: `a087d008a5b8`\n- snippet_id_auto: `false`\n- snippet_title_sha256_12: `5b60c3b8d8dd`\n- snippet_title_bytes: `37`\n- snippet_title_lines: `1`\n- snippet_language_sha256_12: `de185a5781a7`\n- snippet_body_sha256_12: `15aa8a3ddef7`\n- snippet_body_bytes: `104`\n- snippet_body_lines: `3`\n- snippet_notes_sha256_12: `85b1748d694c`\n- snippet_notes_bytes: `85`\n- snippet_notes_lines: `1`\n- notification_body_sha256_12: `1084cd3e3917`\n- target_from_current_channel_issue: `true`\n- raw_snippet_id_included: `false`\n- raw_snippet_language_included: `false`\n- raw_snippet_body_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_snippet_title_included: `false`\n- raw_snippet_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_snippet_action_change: `true`\n- issue_title_sha256_12: `fcaec38785ec`\n\nGitClaw saved an explicitly provided channel code/config snippet as a durable GitHub issue, then queued a provider-facing snippet link back to the mirrored thread. The snippet issue contains the readable code block; this source receipt keeps provider IDs, snippet IDs, language names, code bodies, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the snippet-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent snippet links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate snippet issues are suppressed by `snippet_id`; duplicate snippet-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the snippet issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T02:21:57Z",
+      "updated_at": "2026-06-03T02:21:57Z"
     }
   ]
 }
