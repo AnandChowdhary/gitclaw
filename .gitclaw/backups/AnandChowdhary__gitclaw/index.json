@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T13:50:45Z",
+  "generated_at": "2026-06-03T13:52:26Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 721,
   "issues": [
@@ -9168,15 +9168,15 @@
       "number": 830,
       "title": "GitClaw telegram thread channel-haiku-e2e-20260603t134825z",
       "path": "issues/000830.json",
-      "backup_generated_at": "2026-06-03T13:50:43Z",
-      "event_name": "workflow_dispatch",
+      "backup_generated_at": "2026-06-03T13:52:25Z",
+      "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 3,
-      "transcript_messages": 4
+      "comment_count": 5,
+      "transcript_messages": 5
     }
   ]
 }

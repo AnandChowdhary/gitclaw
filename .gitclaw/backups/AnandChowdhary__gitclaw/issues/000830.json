@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T13:50:43Z",
+  "generated_at": "2026-06-03T13:52:25Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 830,
     "title": "GitClaw telegram thread channel-haiku-e2e-20260603t134825z",
@@ -51,6 +51,15 @@
       "CommentID": 4613036261,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Haiku Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#830`\n- requested_channel_command: `/channels haiku`\n- channel_haiku_status: `queued`\n- haiku_mode: `deterministic-channel-poem`\n- notification_target_issue: `#830`\n- notification_comment_id: `4613052540`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `a51facf199d1`\n- source_message_id_sha256_12: `b759840abe91`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `391a77bd2860`\n- notify_message_id_auto: `false`\n- haiku_id_sha256_12: `f50c0055c426`\n- haiku_id_auto: `false`\n- haiku_theme_sha256_12: `abfc412ce6e5`\n- haiku_theme_bytes: `6`\n- haiku_note_sha256_12: `16ffe31f1453`\n- haiku_note_bytes: `25`\n- haiku_note_lines: `1`\n- haiku_note_source: `trailing-note`\n- haiku_seed_sha256_12: `984f929b3182`\n- haiku_sha256_12: `7f953a436f3a`\n- haiku_lines: `3`\n- notification_body_sha256_12: `93be8efe6a83`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- external_randomness_used: `false`\n- media_generation_performed: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_haiku_id_included: `false`\n- raw_haiku_theme_included: `false`\n- raw_haiku_note_included: `false`\n- raw_haiku_lines_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_haiku_action_change: `true`\n- issue_title_sha256_12: `d4a45b36d651`\n\nGitClaw queued a provider-facing channel haiku on the canonical channel issue. This is a tiny chat-native signal: Slack or Telegram can get a bounded, deterministic poem card while the source receipt keeps thread ids, message ids, haiku ids, themes, notes, and poem lines out of band. The action does not call a model, use external randomness, generate media, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read haiku cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent haiku cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate haiku cards are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4613052781,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-03T13:50:16Z",
       "updated_at": "2026-06-03T13:50:16Z"
+    },
+    {
+      "id": 4613052540,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-haiku-e2e-20260603t134825z\" message_id=\"haiku-notify-20260603t134825z\" author=\"gitclaw\" --\u003e\nGitClaw channel haiku.\n\nTheme: launch\nHaiku:\ngreen checks in the branch\nrelease notes fold into light\nship with one clear path\nHaiku hash: 7f953a436f3a\nSeed hash: 984f929b3182\nNote: Release handoff is steady\nNote hash: 16ffe31f1453\n\nPoem source: deterministic GitHub channel action seed.\nHaiku deck: bounded static GitClaw line deck.\nModel call: not performed by this action.\nExternal randomness: not used.\nMedia generation: not performed by this action.\nProvider API call: not performed by this action.\nWorkflow mutation: not performed by this action.\nRepository mutation: not performed by this action.\nProvider delivery: queued through GitHub channel outbox.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T13:51:52Z",
+      "updated_at": "2026-06-03T13:51:52Z"
+    },
+    {
+      "id": 4613052781,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26889197114\" event_id=\"comment-4613036261\" model=\"gitclaw/channels\" idempotency_key=\"f2040cbac71175188130da286ab1cc13\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26889197114\" --\u003e\n## GitClaw Channel Haiku Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#830`\n- requested_channel_command: `/channels haiku`\n- channel_haiku_status: `queued`\n- haiku_mode: `deterministic-channel-poem`\n- notification_target_issue: `#830`\n- notification_comment_id: `4613052540`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `a51facf199d1`\n- source_message_id_sha256_12: `b759840abe91`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `391a77bd2860`\n- notify_message_id_auto: `false`\n- haiku_id_sha256_12: `f50c0055c426`\n- haiku_id_auto: `false`\n- haiku_theme_sha256_12: `abfc412ce6e5`\n- haiku_theme_bytes: `6`\n- haiku_note_sha256_12: `16ffe31f1453`\n- haiku_note_bytes: `25`\n- haiku_note_lines: `1`\n- haiku_note_source: `trailing-note`\n- haiku_seed_sha256_12: `984f929b3182`\n- haiku_sha256_12: `7f953a436f3a`\n- haiku_lines: `3`\n- notification_body_sha256_12: `93be8efe6a83`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- external_randomness_used: `false`\n- media_generation_performed: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_haiku_id_included: `false`\n- raw_haiku_theme_included: `false`\n- raw_haiku_note_included: `false`\n- raw_haiku_lines_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_haiku_action_change: `true`\n- issue_title_sha256_12: `d4a45b36d651`\n\nGitClaw queued a provider-facing channel haiku on the canonical channel issue. This is a tiny chat-native signal: Slack or Telegram can get a bounded, deterministic poem card while the source receipt keeps thread ids, message ids, haiku ids, themes, notes, and poem lines out of band. The action does not call a model, use external randomness, generate media, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read haiku cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent haiku cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate haiku cards are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T13:51:53Z",
+      "updated_at": "2026-06-03T13:51:53Z"
     }
   ]
 }
