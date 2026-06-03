@@ -236,7 +236,7 @@ for _ in {1..90}; do
     die "issue #${issue_number} posted ${errors} error marker comment(s)"
   fi
   candidate_report="$(latest_assistant_comment_for_issue "$issue_number")"
-  if grep -Fq "$ingest_hidden_token" <<<"$candidate_report"; then
+  if grep -Fq -- "$ingest_hidden_token" <<<"$candidate_report"; then
     die "initial channel report leaked ingest hidden token"
   fi
   if grep -Fq "GitClaw Channel Report" <<<"$candidate_report" && grep -Fq 'channel_thread_issue: `true`' <<<"$candidate_report"; then
@@ -312,10 +312,10 @@ for expected in \
   "raw_coach_recommendations_included: \`false\`" \
   "raw_channel_message_body_included: \`false\`" \
   "llm_e2e_required_after_channel_coach_action_change: \`true\`"; do
-  grep -Fq "$expected" <<<"$coach_receipt" || die "channel coach receipt missing ${expected}"
+  grep -Fq -- "$expected" <<<"$coach_receipt" || die "channel coach receipt missing ${expected}"
 done
 for leaked in "$ingest_hidden_token" "$command_hidden_token" "$thread_id" "$ingest_message_id" "$notify_message_id" "$coach_id" "$coach_note" "$expected_token"; do
-  if grep -Fq "$leaked" <<<"$coach_receipt"; then
+  if grep -Fq -- "$leaked" <<<"$coach_receipt"; then
     die "channel coach receipt leaked ${leaked}"
   fi
 done
@@ -351,10 +351,10 @@ for expected in \
   "Workflow mutation: not performed by this action." \
   "Repository mutation: not performed by this action." \
   "Provider delivery: queued through GitHub channel outbox."; do
-  grep -Fq "$expected" <<<"$notification_bodies" || die "coach notification missing ${expected}"
+  grep -Fq -- "$expected" <<<"$notification_bodies" || die "coach notification missing ${expected}"
 done
 for leaked in "$ingest_hidden_token" "$command_hidden_token" "$coach_id" "$expected_token"; do
-  if grep -Fq "$leaked" <<<"$notification_bodies"; then
+  if grep -Fq -- "$leaked" <<<"$notification_bodies"; then
     die "coach notification leaked ${leaked}"
   fi
 done
@@ -369,7 +369,7 @@ grep -Fq "outbound_comments=1" <<<"$outbox_output" || die "channel outbox output
 grep -Fq "body_included=false" <<<"$outbox_output" || die "channel outbox should be metadata-only: ${outbox_output}"
 jq -e --arg hash "$notify_message_hash" '.messages[] | select(.kind == "channel-outbound" and .outbound_message_sha256_12 == $hash)' "$outbox_file" >/dev/null || die "outbox file missing coach notify hash ${notify_message_hash}"
 for leaked in "$account_id" "$ingest_hidden_token" "$command_hidden_token" "$coach_id" "$expected_token" "$coach_lane" "$coach_note"; do
-  if grep -Fq "$leaked" <<<"$outbox_output" || grep -Fq "$leaked" "$outbox_file"; then
+  if grep -Fq -- "$leaked" <<<"$outbox_output" || grep -Fq -- "$leaked" "$outbox_file"; then
     die "metadata-only outbox leaked ${leaked}"
   fi
 done
@@ -399,11 +399,11 @@ for expected in \
   "provider_api_call_performed: \`false\`" \
   "workflow_mutation_performed: \`false\`" \
   "repository_mutation_performed: \`false\`"; do
-  grep -Fq "$expected" <<<"$duplicate_receipt" || die "duplicate channel coach receipt missing ${expected}"
+  grep -Fq -- "$expected" <<<"$duplicate_receipt" || die "duplicate channel coach receipt missing ${expected}"
 done
 [[ "$(coach_notification_count)" == "1" ]] || die "duplicate channel coach queued another notification"
 for leaked in "$duplicate_hidden_token" "$thread_id" "$ingest_message_id" "$notify_message_id" "$coach_id" "$coach_note" "$expected_token"; do
-  if grep -Fq "$leaked" <<<"$duplicate_receipt"; then
+  if grep -Fq -- "$leaked" <<<"$duplicate_receipt"; then
     die "duplicate channel coach receipt leaked ${leaked}"
   fi
 done
@@ -426,7 +426,7 @@ model_run_json="$(wait_for_issue_comment_run_for_title "$model_started_at" "$iss
 wait_for_assistant_count_for_issue "$issue_number" 4 || die "expected model-backed channel coach follow-up"
 model_comment="$(latest_assistant_comment_for_issue "$issue_number")"
 
-grep -Fq "$expected_token" <<<"$model_comment" || die "assistant did not include channel coach search_files token ${expected_token}"
+grep -Fq -- "$expected_token" <<<"$model_comment" || die "assistant did not include channel coach search_files token ${expected_token}"
 if ! grep -Fq 'model="openai/gpt-5-nano"' <<<"$model_comment" && ! grep -Fq 'model="openai/gpt-4.1-nano"' <<<"$model_comment"; then
   die "assistant channel coach follow-up marker did not use configured GitHub Models primary or fallback"
 fi
@@ -436,7 +436,7 @@ grep -Fq 'tools="' <<<"$model_comment" || die "assistant channel coach follow-up
 grep -Fq 'gitclaw.search_files' <<<"$model_comment" || die "assistant channel coach follow-up marker did not prove search_files was prompt-visible"
 grep -Fq 'usage_total_tokens="' <<<"$model_comment" || die "assistant channel coach follow-up marker missing usage token telemetry"
 for leaked in "$ingest_hidden_token" "$command_hidden_token" "$duplicate_hidden_token" "$followup_hidden_token" "$coach_id" "$coach_note" "$account_id"; do
-  if grep -Fq "$leaked" <<<"$model_comment"; then
+  if grep -Fq -- "$leaked" <<<"$model_comment"; then
     die "model channel coach follow-up leaked ${leaked}"
   fi
 done
