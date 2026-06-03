@@ -684,6 +684,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels palette fun --palette-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels compass all --compass-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels mode tool-review --mode-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels warmup tools --warmup-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels dock <target-route> --dock-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels session-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels memory-search <query> --message-id <id> --notify-message-id <id>
@@ -1039,6 +1040,15 @@ ids, message ids, and channel bodies out of band. This does not persist mode
 state, execute commands, install skills, execute tools, read backup payloads,
 read soul bodies, edit workflows, change policy, create schedules, call
 provider APIs, call a model, or mutate the repository.
+`@gitclaw /channels warmup <focus|pairing|triage|design|launch|retro|tools|soul|backups|fun>
+--warmup-id <id> --message-id <id> --notify-message-id <id>` queues a
+provider-facing conversation-starter card back to the current Slack/Telegram
+thread. The card includes three deterministic prompts for the selected theme
+and optional visible `Note: ...` trailing text. The source receipt keeps raw
+warmup ids, theme names, prompt text, notes, thread ids, message ids, and
+channel bodies out of band. This does not call a model, execute commands,
+install skills, execute tools, read backup payloads, read soul bodies, create
+schedules, call provider APIs, or mutate the repository.
 `@gitclaw /channels dock <target-route> --dock-id <id> --message-id <id>
 --notify-message-id <id>` captures a channel-origin route-continuity request
 as a durable GitHub dock issue and queues a provider-facing review link back
@@ -2017,6 +2027,7 @@ scripts/e2e/github-channel-nudge-slash.sh
 scripts/e2e/github-channel-palette-slash.sh
 scripts/e2e/github-channel-compass-slash.sh
 scripts/e2e/github-channel-mode-slash.sh
+scripts/e2e/github-channel-warmup-slash.sh
 scripts/e2e/github-channel-dock-slash.sh
 scripts/e2e/github-channel-session-search-slash.sh
 scripts/e2e/github-channel-status-slash.sh

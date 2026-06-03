@@ -110,6 +110,7 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"queue deterministic channel option picks without external randomness",
 		"Queue provider-facing advisory thread mode cards without executing commands",
 		"create reviewable channel dock requests without changing routebooks or provider routes",
+		"queue provider-facing channel warmup cards with deterministic conversation starters",
 		"`gitclaw bundles catalog` command=`/bundles`",
 		"`gitclaw bundles list` command=`/bundles`",
 		"`gitclaw bundles risk` command=`/bundles`",

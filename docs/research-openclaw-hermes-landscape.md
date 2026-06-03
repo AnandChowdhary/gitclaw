@@ -5155,6 +5155,35 @@ Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw
 sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes messaging guide
 (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Warmup Follow-Up
+
+OpenClaw's channel and session model suggests that a provider thread should
+feel like a live assistant surface, not only a place where reports appear.
+Hermes' messaging guide points in the same direction with user-facing chat
+commands that keep transport separate from agent authority. GitClaw's small,
+serverless translation is a deterministic warmup card: a Slack or Telegram
+thread can ask for conversation starters tailored to the current theme, while
+GitHub remains the durable event log and no resident socket or provider webhook
+is required.
+
+GitClaw's version is `@gitclaw /channels warmup <theme> --warmup-id <id>
+--message-id <id> --notify-message-id <id>`. It queues one provider-facing
+conversation-starter card with a theme, short frame, three deterministic
+starter prompts, optional note, and body hashes. The source receipt remains
+body-free with only hashes, prompt counts, duplicate status, delivery gates,
+and explicit no-model/no-command/no-skill-install/no-tool/no-backup-read/
+no-soul-read/no-schedule/no-workflow/no-policy/no-provider-API/no-repo-mutation
+flags. Duplicate warmup cards are suppressed by `channel + notify_message_id`;
+actual provider delivery stays in the existing channel-outbox and
+channel-delivery path. Acceptance requires live channel-ingest E2E, warmup card
+queueing, metadata-only outbox proof, duplicate suppression, and a real GitHub
+Models repo-reader/search follow-up that recovers a repository fixture token
+from the same channel issue.
+
+Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw
+sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Dock Follow-Up
 
 OpenClaw's channel/session split suggests an agent should be able to keep a
