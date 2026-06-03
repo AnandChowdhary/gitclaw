@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T20:29:11Z",
+  "generated_at": "2026-06-03T20:31:18Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 739,
   "issues": [
@@ -9419,15 +9419,15 @@
       "number": 848,
       "title": "GitClaw telegram thread channel-soundtrack-e2e-20260603t202259z",
       "path": "issues/000848.json",
-      "backup_generated_at": "2026-06-03T20:29:09Z",
+      "backup_generated_at": "2026-06-03T20:31:17Z",
       "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 7,
-      "transcript_messages": 7
+      "comment_count": 9,
+      "transcript_messages": 9
     }
   ]
 }
