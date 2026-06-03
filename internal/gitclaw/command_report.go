@@ -121,6 +121,9 @@ func commandSummaryForReport(entry commandCatalogEntry) string {
 	if !strings.Contains(summary, "queue provider-facing attention nudges") {
 		summary += " Queue provider-facing attention nudges without creating tasks, reminders, watches, scheduled workflows, model calls, provider API calls, or repo mutation."
 	}
+	if !strings.Contains(summary, "queue provider-facing command palettes") {
+		summary += " Queue provider-facing command palettes without executing commands, installing skills, executing tools, reading backup payloads, reading soul bodies, model calls, provider API calls, or repo mutation."
+	}
 	return summary
 }
 

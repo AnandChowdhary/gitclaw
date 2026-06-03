@@ -681,6 +681,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels mood focused --message-id <id> --notify-message-id <id> --intensity 4
 @gitclaw /channels sticker confetti --sticker-id <id> --message-id <id> --notify-message-id <id> --scale 4
 @gitclaw /channels nudge release-captain --nudge-id <id> --message-id <id> --notify-message-id <id> --tone gentle
+@gitclaw /channels palette fun --palette-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels session-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels memory-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels backup-search <query> --message-id <id> --notify-message-id <id>
@@ -1010,6 +1011,14 @@ trailing text is visible in the provider update, while the source receipt keeps
 raw nudge ids, targets, tones, notes, thread ids, message ids, and channel
 bodies out of band. This does not create a task, reminder, watch, scheduled
 workflow, provider API call, model call, or repository mutation.
+`@gitclaw /channels palette <all|core|skills|tools|soul|backups|fun>
+--palette-id <id> --message-id <id> --notify-message-id <id>` queues a
+provider-facing command palette back to the current Slack/Telegram thread.
+Optional `Note: ...` trailing text is visible in the provider update, while the
+source receipt keeps raw palette ids, lanes, notes, shortcut commands, thread
+ids, message ids, and channel bodies out of band. This does not execute
+commands, install skills, execute tools, read backup payloads, read soul
+bodies, call provider APIs, call a model, or mutate the repository.
 `@gitclaw /channels session-search <query> --message-id <id>
 --notify-message-id <id>` searches the current GitHub-backed channel transcript
 and queues provider-facing recall metadata back to Slack/Telegram. It reports
@@ -1976,6 +1985,7 @@ scripts/e2e/github-channel-choose-slash.sh
 scripts/e2e/github-channel-mood-slash.sh
 scripts/e2e/github-channel-sticker-slash.sh
 scripts/e2e/github-channel-nudge-slash.sh
+scripts/e2e/github-channel-palette-slash.sh
 scripts/e2e/github-channel-session-search-slash.sh
 scripts/e2e/github-channel-status-slash.sh
 scripts/e2e/github-channel-edit-slash.sh
@@ -2315,6 +2325,14 @@ queues one provider-visible target/tone/note card, exposes it through
 metadata-only outbox, suppresses duplicate nudge notifications, proves no
 task/reminder/watch/scheduled-workflow/provider-API/model/repository mutation
 was performed, and then runs a real GitHub Models repo-reader/search follow-up.
+The channel-palette slash harness makes channel affordances discoverable inside
+chat: a channel-ingested issue receives `@gitclaw /channels palette`, queues
+one provider-visible shortcut card for a lane such as skills, tools, soul,
+backups, or fun, exposes it through metadata-only outbox, suppresses duplicate
+palette notifications, proves no command execution/skill install/tool
+execution/backup payload read/soul body read/provider-API/model/repository
+mutation was performed, and then runs a real GitHub Models repo-reader/search
+follow-up.
 The channel-session-search slash harness makes recall a channel-native action:
 a channel-ingested issue receives `@gitclaw /channels session-search`, queues
 provider-visible body-free search metadata from the GitHub-backed transcript,

@@ -5184,6 +5184,33 @@ Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw CLI
 sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes messaging guide
 (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Palette Follow-Up
+
+OpenClaw's channel docs keep chat providers as gateways, while its session
+docs keep conversation continuity in recoverable state outside the provider.
+Hermes' messaging guide similarly treats chat commands and platform affordances
+as a provider-facing interface over a durable agent session. A GitHub-native
+translation can therefore make channel commands discoverable inside Slack or
+Telegram without running a model, executing a tool, or relying on a live server:
+queue a compact command palette as an ordinary channel outbound comment.
+
+GitClaw's version is `@gitclaw /channels palette <lane> --palette-id <id>
+--message-id <id> --notify-message-id <id>`. It queues one provider-facing
+shortcut card for lanes such as `skills`, `tools`, `soul`, `backups`, and
+`fun`, exposes only metadata through `channel-outbox`, and records eventual
+delivery through the existing `channel-delivery` receipt path. The source
+receipt keeps raw palette ids, lanes, notes, shortcut commands, thread ids,
+message ids, and channel bodies out of band. Acceptance requires live E2E for
+palette queueing, metadata-only outbox discovery, duplicate suppression,
+explicit no-command-execution/no-skill-install/no-tool-execution/
+no-backup-payload-read/no-soul-body-read/no-provider-API/no-model/no-repo
+mutation gates, and a real GitHub Models repo-reader/search follow-up on the
+same channel issue.
+
+Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw CLI
+sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Nudge Follow-Up
 
 OpenClaw's channel/session split suggests that chat-provider affordances should
