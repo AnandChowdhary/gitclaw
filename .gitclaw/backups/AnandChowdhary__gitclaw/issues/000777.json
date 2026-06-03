@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T02:59:39Z",
+  "generated_at": "2026-06-03T03:01:25Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4608703479,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels agenda --agenda-id channel-agenda-20260603t025618z --message-id agenda-ingest-20260603t025618z --notify-message-id agenda-notify-20260603t025618z\nTitle: Track GitHub-native channel agenda 20260603t025618z\nItems:\n- Do not leak duplicate hidden token: NOECHO_CHANNEL_AGENDA_DUPLICATE_20260603t025618z\nNotes:\nDuplicate replay note.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4608706663,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Agenda Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#777`\n- requested_channel_command: `/channels agenda`\n- channel_agenda_status: `duplicate`\n- agenda_issue: `#778`\n- agenda_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/778`\n- agenda_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#777`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `b16ae76edfa2`\n- source_message_id_sha256_12: `57d3a0796ed6`\n- notify_message_id_sha256_12: `efde9214e7fc`\n- notify_message_id_auto: `false`\n- agenda_id_sha256_12: `353187a1c100`\n- agenda_id_auto: `false`\n- agenda_item_count: `1`\n- agenda_title_sha256_12: `52ab5294de45`\n- agenda_title_bytes: `51`\n- agenda_title_lines: `1`\n- agenda_items_sha256_12: `a884511ab667`\n- agenda_items_bytes: `86`\n- agenda_items_lines: `1`\n- agenda_notes_sha256_12: `17ebede25f40`\n- agenda_notes_bytes: `22`\n- agenda_notes_lines: `1`\n- notification_body_sha256_12: `7a305a54941f`\n- target_from_current_channel_issue: `true`\n- agenda_mode: `github-issue-agenda`\n- repository_mutation_performed: `false`\n- raw_agenda_id_included: `false`\n- raw_agenda_title_included: `false`\n- raw_agenda_items_included: `false`\n- raw_agenda_notes_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_agenda_action_change: `true`\n- issue_title_sha256_12: `268f070ff990`\n\nGitClaw captured a channel-origin agenda as a durable GitHub issue, then queued a provider-facing agenda link back to the mirrored thread. The agenda issue contains the human-readable title, agenda items, and notes; this source receipt keeps provider IDs, agenda IDs, titles, items, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the agenda link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent agenda links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate agenda issues are suppressed by `agenda_id`; duplicate agenda link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the agenda issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4608710636,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T02:59:12Z",
       "updated_at": "2026-06-03T02:59:12Z"
+    },
+    {
+      "id": 4608706663,
+      "body": "@gitclaw /channels agenda --agenda-id channel-agenda-20260603t025618z --message-id agenda-ingest-20260603t025618z --notify-message-id agenda-notify-20260603t025618z\nTitle: Track GitHub-native channel agenda 20260603t025618z\nItems:\n- Do not leak duplicate hidden token: NOECHO_CHANNEL_AGENDA_DUPLICATE_20260603t025618z\nNotes:\nDuplicate replay note.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T02:59:59Z",
+      "updated_at": "2026-06-03T02:59:59Z"
+    },
+    {
+      "id": 4608710636,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26861016850\" event_id=\"comment-4608706663\" model=\"gitclaw/channels\" idempotency_key=\"e3f739fa2933ae21fa309a89e78bfc35\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26861016850\" --\u003e\n## GitClaw Channel Agenda Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#777`\n- requested_channel_command: `/channels agenda`\n- channel_agenda_status: `duplicate`\n- agenda_issue: `#778`\n- agenda_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/778`\n- agenda_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#777`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `b16ae76edfa2`\n- source_message_id_sha256_12: `57d3a0796ed6`\n- notify_message_id_sha256_12: `efde9214e7fc`\n- notify_message_id_auto: `false`\n- agenda_id_sha256_12: `353187a1c100`\n- agenda_id_auto: `false`\n- agenda_item_count: `1`\n- agenda_title_sha256_12: `52ab5294de45`\n- agenda_title_bytes: `51`\n- agenda_title_lines: `1`\n- agenda_items_sha256_12: `a884511ab667`\n- agenda_items_bytes: `86`\n- agenda_items_lines: `1`\n- agenda_notes_sha256_12: `17ebede25f40`\n- agenda_notes_bytes: `22`\n- agenda_notes_lines: `1`\n- notification_body_sha256_12: `7a305a54941f`\n- target_from_current_channel_issue: `true`\n- agenda_mode: `github-issue-agenda`\n- repository_mutation_performed: `false`\n- raw_agenda_id_included: `false`\n- raw_agenda_title_included: `false`\n- raw_agenda_items_included: `false`\n- raw_agenda_notes_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_agenda_action_change: `true`\n- issue_title_sha256_12: `268f070ff990`\n\nGitClaw captured a channel-origin agenda as a durable GitHub issue, then queued a provider-facing agenda link back to the mirrored thread. The agenda issue contains the human-readable title, agenda items, and notes; this source receipt keeps provider IDs, agenda IDs, titles, items, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the agenda link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent agenda links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate agenda issues are suppressed by `agenda_id`; duplicate agenda link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the agenda issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T03:00:57Z",
+      "updated_at": "2026-06-03T03:00:57Z"
     }
   ]
 }
