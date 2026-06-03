@@ -714,6 +714,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels quote --quote-id <id> --message-id <id>
 @gitclaw /channels glossary --glossary-id <id> --message-id <id>
 @gitclaw /channels faq --faq-id <id> --message-id <id>
+@gitclaw /channels skill-note --note-id <id> --skill <name> --message-id <id>
 @gitclaw /channels idea --idea-id <id> --message-id <id>
 @gitclaw /channels whiteboard --jam-id <id> --message-id <id>
 @gitclaw /channels kudos --kudos-id <id> --message-id <id>
@@ -1179,6 +1180,14 @@ durable GitHub FAQ issue. The FAQ issue holds the readable question and answer,
 queues a provider-facing FAQ link with the issue link and question only, and
 keeps the source receipt body-free with only hashes, counts, duplicate state,
 notification metadata, and delivery gates.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+skill-note --note-id <id> --skill <name> --message-id <id>` preserves a
+channel lesson about a skill as a durable GitHub skill-note issue. The note
+issue holds the readable skill, title, and lesson, queues a provider-facing
+skill-note link with the issue link, skill, and title only, and keeps the
+source receipt body-free. It does not install skills, mutate memory, or edit
+repository files; promotion to a skill change stays in the reviewed follow-up
+flow.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 tool-result --tool <tool> --result-id <id> --status <status> --message-id
 <id>` records an externally observed channel tool outcome as a durable GitHub
@@ -1869,6 +1878,7 @@ scripts/e2e/github-channel-journal-slash.sh
 scripts/e2e/github-channel-quote-slash.sh
 scripts/e2e/github-channel-glossary-slash.sh
 scripts/e2e/github-channel-faq-slash.sh
+scripts/e2e/github-channel-skill-note-slash.sh
 scripts/e2e/github-channel-tool-result-slash.sh
 scripts/e2e/github-channel-idea-slash.sh
 scripts/e2e/github-channel-jam-slash.sh
@@ -2322,6 +2332,14 @@ only the visible question back to the mirrored thread, checks duplicate FAQ and
 notification suppression, exposes the FAQ-link notification through
 metadata-only outbox, and then continues on the FAQ issue with a real GitHub
 Models repo-reader/search follow-up.
+The channel-skill-note slash harness turns the operator console into a skill
+lesson capture surface: a channel-ingested issue receives `@gitclaw /channels
+skill-note`, creates or reuses a durable GitHub skill-note issue, queues a
+provider-facing skill-note link with only the visible skill and title back to
+the mirrored thread, checks duplicate skill-note and notification suppression,
+exposes the skill-note notification through metadata-only outbox, and then
+continues on the skill-note issue with a real GitHub Models repo-reader/search
+follow-up.
 The channel-idea slash harness turns the operator console into an idea intake
 surface: a channel-ingested issue receives `@gitclaw /channels idea`, creates
 or reuses a durable GitHub idea issue, queues a provider-facing idea link back

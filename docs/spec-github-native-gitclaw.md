@@ -6286,6 +6286,38 @@ records the FAQ entry, validates the metadata-only FAQ-link outbox, checks
 duplicate suppression, and then continues on the FAQ issue with a normal GitHub
 Models repo-reader/search follow-up that makes a real LLM call.
 
+The same channel-thread issue can also preserve a skill note:
+
+```text
+@gitclaw /channels skill-note --note-id <stable-note-id> --skill <skill-name> --message-id <provider-message-id>
+Title: channel-origin skill lesson title
+Lesson:
+optional human-readable lesson/context/source notes
+```
+
+`/channels skill-note`, `/channels skill-lesson`, `/channels lesson`,
+`/channels skill-tip`, and `/channels capture-skill-note` infer the current
+channel and thread id from the issue marker when no explicit route/channel/thread
+target is provided. They create or reuse one open GitHub issue carrying a hidden
+`gitclaw:channel-skill-note` marker for the stable note id, label it with
+`gitclaw` so normal conversation can continue there, and queue a provider-facing
+skill-note link back to the mirrored channel thread. The skill-note issue
+contains the human-readable skill name, title, and lesson because it is the
+durable review card; the source receipt remains body-free, reporting only
+note/thread/message/skill/title/lesson hashes, counts, duplicate status,
+notification queue metadata, and delivery gates. It does not call a model, call
+provider APIs, install skills, mutate `.gitclaw/MEMORY.md`, mutate the
+repository, print raw note ids, print raw skill names, print raw thread ids,
+print raw source or notification message ids, print channel message bodies, or
+print raw titles or lessons in the source receipt. Provider-facing notifications
+include the issue link, visible skill name, and visible title only, never the
+lesson body. Duplicates are suppressed first by `note_id` for the GitHub
+skill-note issue and then by `channel + notify_message_id` for the
+provider-facing skill-note link. Changes to this surface require a live E2E
+that records the skill note, validates the metadata-only skill-note outbox,
+checks duplicate suppression, and then continues on the skill-note issue with a
+normal GitHub Models repo-reader/search follow-up that makes a real LLM call.
+
 The same channel-thread issue can also record an externally observed tool
 result without executing the tool:
 
@@ -11301,6 +11333,18 @@ examples/workflows/gitclaw.yml
   `gitclaw.search_files`, recover the channel-FAQ fixture token, and avoid
   hidden channel, account, provider, message, FAQ id, question, answer, and
   notification sentinels.
+- A `gh`-driven channel-skill-note-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels skill-note --note-id ... --skill ... --message-id ...`
+  on that mirrored thread, verifies GitHub skill-note issue creation,
+  body-free source receipt metadata, provider-facing skill-note-link queueing,
+  duplicate skill-note and notification suppression, explicit
+  no-skill-install/no-memory-mutation/no-repository-mutation gates, and
+  metadata-only outbox discovery. The skill-note issue then gets a normal
+  GitHub Models issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-skill-note fixture token, and
+  avoid hidden channel, account, provider, message, note id, skill name, title,
+  lesson, and notification sentinels.
 - A `gh`-driven channel-tool-result-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels tool-result --result-id ... --tool ... --status ...

@@ -484,6 +484,28 @@ func TestChannelDoneArtifactRefSupportsFAQIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsSkillNoteIssues(t *testing.T) {
+	body := RenderChannelSkillNoteIssueBody(ChannelSkillNoteOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		NoteID:            "skill-note-done-1",
+		SkillName:         "repo-reader",
+		Title:             "Prefer repo-scoped search for channel lessons",
+		Lesson:            "Close this after the lesson has been reviewed.",
+		SourceIssueNumber: 43,
+		SourceCommentID:   4302,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "skill-note" || ref.ID != "skill-note-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 43 || ref.SourceCommentID != 4302 {
+		t.Fatalf("unexpected skill-note artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsIdeaIssues(t *testing.T) {
 	body := RenderChannelIdeaIssueBody(ChannelIdeaOptions{
 		Repo:              "owner/repo",

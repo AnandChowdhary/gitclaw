@@ -5134,6 +5134,35 @@ on the glossary issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Skill Note Follow-Up
+
+OpenClaw's skill direction and Hermes' messaging direction both make ordinary
+chat a place where reusable agent behavior can be discovered, corrected, and
+rehearsed. GitClaw should support that capture loop without making the
+serverless GitHub Action self-install skills or mutate persistent memory from a
+provider message. A channel skill note is the smallest useful primitive: a
+Slack or Telegram thread can preserve a lesson about an existing or proposed
+skill, then GitHub becomes the durable review surface where a human can decide
+whether to turn it into a real skill change.
+
+GitClaw's serverless version is `@gitclaw /channels skill-note --note-id <id>
+--skill <name> --message-id <id>`. It opens or reuses a normal
+`gitclaw:channel-skill-note` issue with the readable skill name, title, and
+lesson, queues one provider-facing skill-note issue link back to the source
+Slack/Telegram thread, and keeps the source receipt body-free with only
+skill/title/lesson/id hashes, counts, duplicate status, notification metadata,
+and delivery gates. The provider-facing notification includes the link, visible
+skill name, and visible title only, not the lesson body. The action does not
+call a model, install skills, mutate memory, mutate the repository, call
+provider APIs, or print raw provider IDs, note IDs, skill names, titles,
+lessons, or channel bodies in the source receipt. Acceptance requires live E2E
+for skill-note issue creation, metadata-only outbox discovery, duplicate
+suppression, and a real GitHub Models repo-reader/search follow-up on the
+skill-note issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel FAQ Follow-Up
 
 OpenClaw and Hermes both point toward channel gateways as normalized, durable
