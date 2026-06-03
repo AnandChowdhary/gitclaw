@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T07:37:24Z",
+  "generated_at": "2026-06-03T07:39:17Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 698,
   "issues": [
@@ -8858,15 +8858,15 @@
       "number": 807,
       "title": "GitClaw telegram thread channel-ritual-e2e-20260603t073334z",
       "path": "issues/000807.json",
-      "backup_generated_at": "2026-06-03T07:37:22Z",
+      "backup_generated_at": "2026-06-03T07:39:16Z",
       "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 5,
-      "transcript_messages": 5
+      "comment_count": 7,
+      "transcript_messages": 7
     }
   ]
 }
