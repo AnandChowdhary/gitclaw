@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T05:00:30Z",
+  "generated_at": "2026-06-03T05:02:21Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4609221403,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels skill-note --note-id channel-skill-note-20260603t045654z --skill repo-reader --message-id skill-note-ingest-20260603t045654z --notify-message-id skill-note-notify-20260603t045654z\nTitle: Prefer GitHub review before skill installs 20260603t045654z\nLesson:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_SKILL_NOTE_DUPLICATE_20260603t045654z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4609226342,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Skill Note Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#791`\n- requested_channel_command: `/channels skill-note`\n- channel_skill_note_status: `duplicate`\n- skill_note_issue: `#792`\n- skill_note_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/792`\n- skill_note_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#791`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `a038ef112df2`\n- source_message_id_sha256_12: `8072c911e6a3`\n- notify_message_id_sha256_12: `e24b45ddbe37`\n- notify_message_id_auto: `false`\n- skill_note_id_sha256_12: `f56fd38df420`\n- skill_note_id_auto: `false`\n- skill_name_sha256_12: `ba915a2978d8`\n- skill_name_bytes: `11`\n- skill_name_lines: `1`\n- skill_name_auto: `false`\n- skill_note_title_sha256_12: `5398206b5268`\n- skill_note_title_bytes: `59`\n- skill_note_title_lines: `1`\n- skill_note_lesson_sha256_12: `08aa1b56b8b9`\n- skill_note_lesson_bytes: `88`\n- skill_note_lesson_lines: `1`\n- notification_body_sha256_12: `d8f11df283b8`\n- target_from_current_channel_issue: `true`\n- raw_skill_note_id_included: `false`\n- raw_skill_name_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_skill_note_title_included: `false`\n- raw_skill_note_lesson_included: `false`\n- raw_channel_message_body_included: `false`\n- skill_install_performed: `false`\n- memory_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_skill_note_action_change: `true`\n- issue_title_sha256_12: `abaa5a84c315`\n\nGitClaw captured a channel-origin skill note as a durable GitHub issue, then queued a provider-facing skill-note link back to the mirrored thread. The skill-note issue contains the human-readable skill, title, and lesson; this source receipt keeps provider IDs, note IDs, skill names, lessons, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the skill-note notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent skill-note links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate skill-note issues are suppressed by `note_id`; duplicate skill-note notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the skill-note issue with the `gitclaw` label; skill installation remains an explicit reviewed follow-up",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4609232308,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T04:59:57Z",
       "updated_at": "2026-06-03T04:59:57Z"
+    },
+    {
+      "id": 4609226342,
+      "body": "@gitclaw /channels skill-note --note-id channel-skill-note-20260603t045654z --skill repo-reader --message-id skill-note-ingest-20260603t045654z --notify-message-id skill-note-notify-20260603t045654z\nTitle: Prefer GitHub review before skill installs 20260603t045654z\nLesson:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_SKILL_NOTE_DUPLICATE_20260603t045654z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T05:00:51Z",
+      "updated_at": "2026-06-03T05:00:51Z"
+    },
+    {
+      "id": 4609232308,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26864751965\" event_id=\"comment-4609226342\" model=\"gitclaw/channels\" idempotency_key=\"dc7b6b94dbd3b6a768d7c6c7be49618e\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26864751965\" --\u003e\n## GitClaw Channel Skill Note Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#791`\n- requested_channel_command: `/channels skill-note`\n- channel_skill_note_status: `duplicate`\n- skill_note_issue: `#792`\n- skill_note_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/792`\n- skill_note_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#791`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `a038ef112df2`\n- source_message_id_sha256_12: `8072c911e6a3`\n- notify_message_id_sha256_12: `e24b45ddbe37`\n- notify_message_id_auto: `false`\n- skill_note_id_sha256_12: `f56fd38df420`\n- skill_note_id_auto: `false`\n- skill_name_sha256_12: `ba915a2978d8`\n- skill_name_bytes: `11`\n- skill_name_lines: `1`\n- skill_name_auto: `false`\n- skill_note_title_sha256_12: `5398206b5268`\n- skill_note_title_bytes: `59`\n- skill_note_title_lines: `1`\n- skill_note_lesson_sha256_12: `08aa1b56b8b9`\n- skill_note_lesson_bytes: `88`\n- skill_note_lesson_lines: `1`\n- notification_body_sha256_12: `d8f11df283b8`\n- target_from_current_channel_issue: `true`\n- raw_skill_note_id_included: `false`\n- raw_skill_name_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_skill_note_title_included: `false`\n- raw_skill_note_lesson_included: `false`\n- raw_channel_message_body_included: `false`\n- skill_install_performed: `false`\n- memory_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_skill_note_action_change: `true`\n- issue_title_sha256_12: `abaa5a84c315`\n\nGitClaw captured a channel-origin skill note as a durable GitHub issue, then queued a provider-facing skill-note link back to the mirrored thread. The skill-note issue contains the human-readable skill, title, and lesson; this source receipt keeps provider IDs, note IDs, skill names, lessons, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the skill-note notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent skill-note links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate skill-note issues are suppressed by `note_id`; duplicate skill-note notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the skill-note issue with the `gitclaw` label; skill installation remains an explicit reviewed follow-up",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T05:01:52Z",
+      "updated_at": "2026-06-03T05:01:52Z"
     }
   ]
 }
