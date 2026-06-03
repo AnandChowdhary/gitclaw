@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T02:41:07Z",
+  "generated_at": "2026-06-03T02:42:50Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 775,
     "title": "GitClaw telegram thread channel-open-loop-e2e-20260603t023907z",
@@ -42,6 +42,24 @@
       "CommentID": 4608629237,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels open-loop --loop-id channel-open-loop-20260603t023907z --message-id open-loop-ingest-20260603t023907z --notify-message-id open-loop-notify-20260603t023907z\nTitle: Resolve channel open loop 20260603t023907z\nContext:\nVisible open-loop context token: VISIBLE_CHANNEL_OPEN_LOOP_CONTEXT_20260603t023907z\nNext step:\nVisible open-loop next-step token: VISIBLE_CHANNEL_OPEN_LOOP_NEXT_20260603t023907z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4608632227,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Open Loop Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#775`\n- requested_channel_command: `/channels open-loop`\n- channel_open_loop_status: `saved`\n- open_loop_issue: `#776`\n- open_loop_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/776`\n- open_loop_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#775`\n- notification_comment_id: `4608636171`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `c421a6956741`\n- source_message_id_sha256_12: `8524cc65136f`\n- notify_message_id_sha256_12: `a204c9f730ca`\n- notify_message_id_auto: `false`\n- open_loop_id_sha256_12: `a7ae8d16cee6`\n- open_loop_id_auto: `false`\n- open_loop_title_sha256_12: `5705b48e0e03`\n- open_loop_title_bytes: `42`\n- open_loop_title_lines: `1`\n- open_loop_context_sha256_12: `0fd6822cf890`\n- open_loop_context_bytes: `83`\n- open_loop_context_lines: `1`\n- open_loop_next_step_sha256_12: `a2adad1cb187`\n- open_loop_next_step_bytes: `82`\n- open_loop_next_step_lines: `1`\n- notification_body_sha256_12: `0c98f6c76270`\n- target_from_current_channel_issue: `true`\n- raw_open_loop_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_open_loop_title_included: `false`\n- raw_open_loop_context_included: `false`\n- raw_open_loop_next_step_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_open_loop_action_change: `true`\n- issue_title_sha256_12: `64f3ce582405`\n\nGitClaw captured a channel open loop as a durable GitHub issue, then queued a provider-facing link back to the original thread. The open-loop issue contains the human-readable context and next step; this source receipt keeps provider IDs, loop IDs, titles, context, next steps, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the open-loop link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent open-loop links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate open-loop issues are suppressed by `loop_id`; duplicate open-loop link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the open-loop issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4608636242,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -60,6 +78,30 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T02:40:35Z",
       "updated_at": "2026-06-03T02:40:35Z"
+    },
+    {
+      "id": 4608632227,
+      "body": "@gitclaw /channels open-loop --loop-id channel-open-loop-20260603t023907z --message-id open-loop-ingest-20260603t023907z --notify-message-id open-loop-notify-20260603t023907z\nTitle: Resolve channel open loop 20260603t023907z\nContext:\nVisible open-loop context token: VISIBLE_CHANNEL_OPEN_LOOP_CONTEXT_20260603t023907z\nNext step:\nVisible open-loop next-step token: VISIBLE_CHANNEL_OPEN_LOOP_NEXT_20260603t023907z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T02:41:24Z",
+      "updated_at": "2026-06-03T02:41:24Z"
+    },
+    {
+      "id": 4608636171,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-open-loop-e2e-20260603t023907z\" message_id=\"open-loop-notify-20260603t023907z\" author=\"gitclaw\" --\u003e\nGitClaw channel open loop captured.\n\nOpen loop: #776\nURL: https://github.com/AnandChowdhary/gitclaw/issues/776\nTitle: Resolve channel open loop 20260603t023907z\n\nSaved in the linked GitHub issue.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T02:42:21Z",
+      "updated_at": "2026-06-03T02:42:21Z"
+    },
+    {
+      "id": 4608636242,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26860443093\" event_id=\"comment-4608632227\" model=\"gitclaw/channels\" idempotency_key=\"b0032ca2b16b76f23e555c2ae9a53be5\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26860443093\" --\u003e\n## GitClaw Channel Open Loop Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#775`\n- requested_channel_command: `/channels open-loop`\n- channel_open_loop_status: `saved`\n- open_loop_issue: `#776`\n- open_loop_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/776`\n- open_loop_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#775`\n- notification_comment_id: `4608636171`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `c421a6956741`\n- source_message_id_sha256_12: `8524cc65136f`\n- notify_message_id_sha256_12: `a204c9f730ca`\n- notify_message_id_auto: `false`\n- open_loop_id_sha256_12: `a7ae8d16cee6`\n- open_loop_id_auto: `false`\n- open_loop_title_sha256_12: `5705b48e0e03`\n- open_loop_title_bytes: `42`\n- open_loop_title_lines: `1`\n- open_loop_context_sha256_12: `0fd6822cf890`\n- open_loop_context_bytes: `83`\n- open_loop_context_lines: `1`\n- open_loop_next_step_sha256_12: `a2adad1cb187`\n- open_loop_next_step_bytes: `82`\n- open_loop_next_step_lines: `1`\n- notification_body_sha256_12: `0c98f6c76270`\n- target_from_current_channel_issue: `true`\n- raw_open_loop_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_open_loop_title_included: `false`\n- raw_open_loop_context_included: `false`\n- raw_open_loop_next_step_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_open_loop_action_change: `true`\n- issue_title_sha256_12: `64f3ce582405`\n\nGitClaw captured a channel open loop as a durable GitHub issue, then queued a provider-facing link back to the original thread. The open-loop issue contains the human-readable context and next step; this source receipt keeps provider IDs, loop IDs, titles, context, next steps, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the open-loop link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent open-loop links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate open-loop issues are suppressed by `loop_id`; duplicate open-loop link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the open-loop issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T02:42:22Z",
+      "updated_at": "2026-06-03T02:42:22Z"
     }
   ]
 }
