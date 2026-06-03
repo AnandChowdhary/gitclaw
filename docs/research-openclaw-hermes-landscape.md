@@ -5107,6 +5107,33 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Glossary Follow-Up
+
+OpenClaw and Hermes both treat chat as a live working surface where concepts,
+decisions, files, and follow-up work can emerge from ordinary conversation. The
+GitHub-native version should make that low-friction capture possible without a
+server, socket, provider API call, or hidden memory mutation. A glossary entry
+is a useful next channel primitive because teams often define shorthand,
+project names, customer terms, incident labels, or tool names in Slack and
+Telegram long before they become formal docs.
+
+GitClaw's serverless version is `@gitclaw /channels glossary --glossary-id
+<id> --message-id <id>`. It opens or reuses a normal
+`gitclaw:channel-glossary` issue with the readable term and definition, queues
+one provider-facing glossary issue link back to the source Slack/Telegram
+thread, and keeps the source receipt body-free with only term/definition/id
+hashes, counts, duplicate status, notification metadata, and delivery gates.
+The provider-facing notification includes the link and visible term only, not
+the definition body. The action does not call a model, mutate memory, mutate
+the repository, call provider APIs, or print raw provider IDs, glossary IDs,
+terms, definitions, or channel bodies in the source receipt. Acceptance
+requires live E2E for glossary issue creation, metadata-only outbox discovery,
+duplicate suppression, and a real GitHub Models repo-reader/search follow-up
+on the glossary issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Quote Follow-Up
 
 OpenClaw frames channels as durable assistant surfaces, not disposable

@@ -442,6 +442,27 @@ func TestChannelDoneArtifactRefSupportsQuoteIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsGlossaryIssues(t *testing.T) {
+	body := RenderChannelGlossaryIssueBody(ChannelGlossaryOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		GlossaryID:        "glossary-done-1",
+		Term:              "Channel glossary entry",
+		Definition:        "Close this after the definition has been reviewed.",
+		SourceIssueNumber: 43,
+		SourceCommentID:   4302,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "glossary" || ref.ID != "glossary-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 43 || ref.SourceCommentID != 4302 {
+		t.Fatalf("unexpected glossary artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsIdeaIssues(t *testing.T) {
 	body := RenderChannelIdeaIssueBody(ChannelIdeaOptions{
 		Repo:              "owner/repo",

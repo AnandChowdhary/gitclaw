@@ -6223,6 +6223,38 @@ validates the metadata-only quote-link outbox, checks duplicate suppression,
 and then continues on the quote issue with a normal GitHub Models
 repo-reader/search follow-up that makes a real LLM call.
 
+The same channel-thread issue can also preserve a glossary entry:
+
+```text
+@gitclaw /channels glossary --glossary-id <stable-glossary-id> --message-id <provider-message-id>
+Term: channel-native term
+Definition:
+optional human-readable definition/context/source notes
+```
+
+`/channels glossary`, `/channels term`, `/channels define`,
+`/channels definition`, `/channels term-card`, and `/channels capture-term`
+infer the current channel and thread id from the issue marker when no explicit
+route/channel/thread target is provided. They create or reuse one open GitHub
+issue carrying a hidden `gitclaw:channel-glossary` marker for the stable
+glossary id, label it with `gitclaw` so normal conversation can continue
+there, and queue a provider-facing glossary link back to the mirrored channel
+thread. The glossary issue contains the human-readable term and definition
+because it is the durable glossary card; the source receipt remains body-free,
+reporting only glossary/thread/message/term/definition hashes, counts,
+duplicate status, notification queue metadata, and delivery gates. It does not
+call a model, call provider APIs, mutate `.gitclaw/MEMORY.md`, mutate the
+repository, print raw glossary ids, print raw thread ids, print raw source or
+notification message ids, print channel message bodies, or print raw terms or
+definitions in the source receipt. Provider-facing notifications include the
+issue link and visible term only, never the definition body. Duplicates are
+suppressed first by `glossary_id` for the GitHub glossary issue and then by
+`channel + notify_message_id` for the provider-facing glossary link. Changes
+to this surface require a live E2E that records the glossary entry, validates
+the metadata-only glossary-link outbox, checks duplicate suppression, and then
+continues on the glossary issue with a normal GitHub Models repo-reader/search
+follow-up that makes a real LLM call.
+
 The same channel-thread issue can also record an externally observed tool
 result without executing the tool:
 
@@ -11215,6 +11247,18 @@ examples/workflows/gitclaw.yml
   `gitclaw.search_files`, recover the channel-quote fixture token, and avoid
   hidden channel, account, provider, message, quote id, quote text, context,
   and notification sentinels.
+- A `gh`-driven channel-glossary-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels glossary --glossary-id ... --message-id ...` on that
+  mirrored thread, verifies GitHub glossary-entry issue creation, body-free
+  source receipt metadata, provider-facing glossary-link queueing, duplicate
+  glossary and notification suppression, explicit
+  no-memory-mutation/no-repository-mutation gates, and metadata-only outbox
+  discovery. The glossary issue then gets a normal GitHub Models issue-comment
+  follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
+  recover the channel-glossary fixture token, and avoid hidden channel,
+  account, provider, message, glossary id, term, definition, and notification
+  sentinels.
 - A `gh`-driven channel-tool-result-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels tool-result --result-id ... --tool ... --status ...

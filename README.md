@@ -1164,6 +1164,12 @@ holds the readable quote text and context, queues a provider-facing quote link
 back to Slack/Telegram, and keeps the source receipt body-free with only
 hashes, counts, duplicate state, notification metadata, and delivery gates.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+glossary --glossary-id <id> --message-id <id>` preserves a channel term and
+definition as a durable GitHub glossary-entry issue. The glossary issue holds
+the readable term and definition, queues a provider-facing glossary link with
+the issue link and term only, and keeps the source receipt body-free with only
+hashes, counts, duplicate state, notification metadata, and delivery gates.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 tool-result --tool <tool> --result-id <id> --status <status> --message-id
 <id>` records an externally observed channel tool outcome as a durable GitHub
 issue. The tool-result issue holds the readable tool name, status, optional
@@ -1851,6 +1857,7 @@ scripts/e2e/github-channel-decision-slash.sh
 scripts/e2e/github-channel-digest-slash.sh
 scripts/e2e/github-channel-journal-slash.sh
 scripts/e2e/github-channel-quote-slash.sh
+scripts/e2e/github-channel-glossary-slash.sh
 scripts/e2e/github-channel-tool-result-slash.sh
 scripts/e2e/github-channel-idea-slash.sh
 scripts/e2e/github-channel-jam-slash.sh
