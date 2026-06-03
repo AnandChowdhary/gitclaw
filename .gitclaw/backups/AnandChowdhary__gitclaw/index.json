@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T01:39:38Z",
+  "generated_at": "2026-06-03T01:41:20Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 661,
+  "count": 662,
   "issues": [
     {
       "number": 3,
@@ -8384,6 +8384,19 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 770,
+      "title": "GitClaw channel merge: Shape GitHub-native channel merge 20260603t013424z",
+      "path": "issues/000770.json",
+      "backup_generated_at": "2026-06-03T01:41:19Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw",
+        "gitclaw:channel"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }

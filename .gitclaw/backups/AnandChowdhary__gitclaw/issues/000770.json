@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-03T01:41:19Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 770,
+    "title": "GitClaw channel merge: Shape GitHub-native channel merge 20260603t013424z",
+    "body": "\u003c!-- gitclaw:channel-merge merge_id=\"channel-merge-20260603t013424z\" channel=\"telegram\" source_thread_id_sha256_12=\"b378bb015e49\" target_thread_id_sha256_12=\"87f663a64a73\" source_message_id_sha256_12=\"72a0a4722f16\" source_issue=\"769\" source_comment_id=\"4608345750\" --\u003e\nGitClaw channel thread merge.\n\n- merge_id: channel-merge-20260603t013424z\n- channel: telegram\n- source_issue: #769\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/769\n- source_comment_id: 4608345750\n- source_thread_id_sha256_12: b378bb015e49\n- target_thread_id_sha256_12: 87f663a64a73\n- source_message_id_sha256_12: 72a0a4722f16\n- merge_mode: github-issue-channel-thread-merge\n- model_call_performed: false\n- provider_delivery_performed: false\n- raw_source_thread_id_included: false\n- raw_target_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Merge\n\nShape GitHub-native channel merge 20260603t013424z\n\n## Notes\n\nVisible merge notes token: VISIBLE_CHANNEL_MERGE_NOTES_20260603t013424z\n\nUse this issue as the durable GitHub convergence record for the channel-thread merge.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw",
+      "gitclaw:channel"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel merge: Shape GitHub-native channel merge 20260603t013424z\n\n\u003c!-- gitclaw:channel-merge merge_id=\"channel-merge-20260603t013424z\" channel=\"telegram\" source_thread_id_sha256_12=\"b378bb015e49\" target_thread_id_sha256_12=\"87f663a64a73\" source_message_id_sha256_12=\"72a0a4722f16\" source_issue=\"769\" source_comment_id=\"4608345750\" --\u003e\nGitClaw channel thread merge.\n\n- merge_id: channel-merge-20260603t013424z\n- channel: telegram\n- source_issue: #769\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/769\n- source_comment_id: 4608345750\n- source_thread_id_sha256_12: b378bb015e49\n- target_thread_id_sha256_12: 87f663a64a73\n- source_message_id_sha256_12: 72a0a4722f16\n- merge_mode: github-issue-channel-thread-merge\n- model_call_performed: false\n- provider_delivery_performed: false\n- raw_source_thread_id_included: false\n- raw_target_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Merge\n\nShape GitHub-native channel merge 20260603t013424z\n\n## Notes\n\nVisible merge notes token: VISIBLE_CHANNEL_MERGE_NOTES_20260603t013424z\n\nUse this issue as the durable GitHub convergence record for the channel-thread merge.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created merge issue and use the repo-reader skill.\n\nSearch the repository for `channel merge unique search fixture phrase`.\nThe matching repository search result line has the form `channel merge unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_MERGE_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include merge ids, message ids, thread ids, account hashes, issue numbers, merge titles, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_MERGE_FOLLOWUP_20260603t013424z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4608361730,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_MERGE_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4608365027,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4608361730,
+      "body": "@gitclaw Continue this channel-created merge issue and use the repo-reader skill.\n\nSearch the repository for `channel merge unique search fixture phrase`.\nThe matching repository search result line has the form `channel merge unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_MERGE_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include merge ids, message ids, thread ids, account hashes, issue numbers, merge titles, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_MERGE_FOLLOWUP_20260603t013424z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T01:39:54Z",
+      "updated_at": "2026-06-03T01:39:54Z"
+    },
+    {
+      "id": 4608365027,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26858527062\" event_id=\"comment-4608361730\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"0be9e8151e4dc91352aba6eef1e58a75\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26858527062\" prompt_context_sha256_12=\"a803979d9ccc\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10859\" usage_completion_tokens=\"12\" usage_total_tokens=\"10871\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_MERGE_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T01:40:50Z",
+      "updated_at": "2026-06-03T01:40:50Z"
+    }
+  ]
+}
