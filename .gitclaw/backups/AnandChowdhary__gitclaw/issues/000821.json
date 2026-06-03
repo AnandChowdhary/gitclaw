@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T10:55:33Z",
+  "generated_at": "2026-06-03T10:57:14Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 821,
     "title": "GitClaw telegram thread channel-mode-e2e-20260603t105317z",
@@ -51,6 +51,15 @@
       "CommentID": 4611592068,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Mode Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#821`\n- requested_channel_command: `/channels mode`\n- channel_mode_status: `queued`\n- mode_card_mode: `structured-channel-mode`\n- notification_target_issue: `#821`\n- notification_comment_id: `4611601903`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `30b6fdc22c8d`\n- source_message_id_sha256_12: `515ad2438d22`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `bb117e203997`\n- notify_message_id_auto: `false`\n- mode_id_sha256_12: `a0819e1b41b4`\n- mode_id_auto: `false`\n- mode_name_sha256_12: `7875b0e3d80d`\n- mode_name_bytes: `11`\n- mode_step_count: `4`\n- mode_note_sha256_12: `53aebc0cbb8c`\n- mode_note_bytes: `22`\n- mode_note_lines: `1`\n- mode_note_source: `trailing-note`\n- notification_body_sha256_12: `7ce39cdcf870`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- command_execution_performed: `false`\n- skill_install_performed: `false`\n- tool_execution_performed: `false`\n- backup_payload_read: `false`\n- soul_body_read: `false`\n- mode_persistence_performed: `false`\n- workflow_mutation_performed: `false`\n- policy_mutation_performed: `false`\n- schedule_created: `false`\n- provider_api_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_mode_id_included: `false`\n- raw_mode_name_included: `false`\n- raw_mode_note_included: `false`\n- raw_mode_steps_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_mode_action_change: `true`\n- issue_title_sha256_12: `53f6fa49bf26`\n\nGitClaw queued a provider-facing channel mode card on the canonical channel issue. This gives the chat thread an advisory posture selected by the caller while keeping command execution, skill installs, tool execution, backup payload reads, soul body reads, provider API calls, model calls, provider delivery, workflow edits, policy changes, schedules, durable mode persistence, and repository mutations out of this action. The source receipt keeps thread ids, message ids, mode ids, mode names, notes, step text, and channel bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read mode updates with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent mode updates with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate mode updates are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4611602048,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-03T10:55:10Z",
       "updated_at": "2026-06-03T10:55:10Z"
+    },
+    {
+      "id": 4611601903,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-mode-e2e-20260603t105317z\" message_id=\"mode-notify-20260603t105317z\" author=\"gitclaw\" --\u003e\nGitClaw channel mode.\n\nMode: tool-review\nPosture: Review tool context, approvals, and run plans before any tool execution.\nSuggested next steps:\n- /channels tools --message-id \u003cid\u003e\n- /channels tool-search \u003cquery\u003e --message-id \u003cid\u003e --notify-message-id \u003cid\u003e\n- /channels tool-info \u003ctool\u003e --message-id \u003cid\u003e --notify-message-id \u003cid\u003e\n- /channels approval-plan \u003ctool\u003e --id \u003cid\u003e --message-id \u003cid\u003e\n\nNote: Use this tiny launcher\n\nMode hash: 4b0918f7e4ac\nNote hash: 53aebc0cbb8c\nMode persistence: advisory only; no durable channel state changed.\n\nMode source: GitHub channel action.\nModel call: not performed by this action.\nCommand execution: not performed by this action.\nSkill install: not performed by this action.\nTool execution: not performed by this action.\nBackup payload read: not performed by this action.\nSoul body read: not performed by this action.\nWorkflow mutation: not performed by this action.\nPolicy mutation: not performed by this action.\nSchedule creation: not performed by this action.\nRepository mutation: not performed by this action.\nProvider API call: not performed by this action.\nProvider delivery: queued through GitHub channel outbox.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T10:56:38Z",
+      "updated_at": "2026-06-03T10:56:38Z"
+    },
+    {
+      "id": 4611602048,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26880202740\" event_id=\"comment-4611592068\" model=\"gitclaw/channels\" idempotency_key=\"e91e4dc0f8d522ff08511a032f98426d\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26880202740\" --\u003e\n## GitClaw Channel Mode Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#821`\n- requested_channel_command: `/channels mode`\n- channel_mode_status: `queued`\n- mode_card_mode: `structured-channel-mode`\n- notification_target_issue: `#821`\n- notification_comment_id: `4611601903`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `30b6fdc22c8d`\n- source_message_id_sha256_12: `515ad2438d22`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `bb117e203997`\n- notify_message_id_auto: `false`\n- mode_id_sha256_12: `a0819e1b41b4`\n- mode_id_auto: `false`\n- mode_name_sha256_12: `7875b0e3d80d`\n- mode_name_bytes: `11`\n- mode_step_count: `4`\n- mode_note_sha256_12: `53aebc0cbb8c`\n- mode_note_bytes: `22`\n- mode_note_lines: `1`\n- mode_note_source: `trailing-note`\n- notification_body_sha256_12: `7ce39cdcf870`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- command_execution_performed: `false`\n- skill_install_performed: `false`\n- tool_execution_performed: `false`\n- backup_payload_read: `false`\n- soul_body_read: `false`\n- mode_persistence_performed: `false`\n- workflow_mutation_performed: `false`\n- policy_mutation_performed: `false`\n- schedule_created: `false`\n- provider_api_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_mode_id_included: `false`\n- raw_mode_name_included: `false`\n- raw_mode_note_included: `false`\n- raw_mode_steps_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_mode_action_change: `true`\n- issue_title_sha256_12: `53f6fa49bf26`\n\nGitClaw queued a provider-facing channel mode card on the canonical channel issue. This gives the chat thread an advisory posture selected by the caller while keeping command execution, skill installs, tool execution, backup payload reads, soul body reads, provider API calls, model calls, provider delivery, workflow edits, policy changes, schedules, durable mode persistence, and repository mutations out of this action. The source receipt keeps thread ids, message ids, mode ids, mode names, notes, step text, and channel bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read mode updates with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent mode updates with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate mode updates are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T10:56:39Z",
+      "updated_at": "2026-06-03T10:56:39Z"
     }
   ]
 }
