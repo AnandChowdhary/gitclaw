@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T14:22:14Z",
+  "generated_at": "2026-06-03T14:24:02Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 723,
   "issues": [
@@ -9196,15 +9196,15 @@
       "number": 832,
       "title": "GitClaw telegram thread channel-coach-e2e-20260603t141944z",
       "path": "issues/000832.json",
-      "backup_generated_at": "2026-06-03T14:22:13Z",
-      "event_name": "workflow_dispatch",
+      "backup_generated_at": "2026-06-03T14:24:00Z",
+      "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 3,
-      "transcript_messages": 4
+      "comment_count": 5,
+      "transcript_messages": 5
     }
   ]
 }
