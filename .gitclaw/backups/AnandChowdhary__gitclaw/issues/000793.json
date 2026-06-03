@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T05:16:13Z",
+  "generated_at": "2026-06-03T05:17:59Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 793,
     "title": "GitClaw telegram thread channel-soul-note-e2e-20260603t051405z",
@@ -51,6 +51,15 @@
       "CommentID": 4609298557,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Soul Note Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#793`\n- requested_channel_command: `/channels soul-note`\n- channel_soul_note_status: `captured`\n- soul_note_issue: `#794`\n- soul_note_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/794`\n- soul_note_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#793`\n- notification_comment_id: `4609305554`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `c7f86197d6d5`\n- source_message_id_sha256_12: `94fec2aa22e5`\n- notify_message_id_sha256_12: `156147ca44f0`\n- notify_message_id_auto: `false`\n- soul_note_id_sha256_12: `c5ee8b7c0935`\n- soul_note_id_auto: `false`\n- soul_area_sha256_12: `d1c75fa89ed2`\n- soul_area_bytes: `20`\n- soul_area_lines: `1`\n- soul_area_auto: `false`\n- soul_note_title_sha256_12: `3c0348993540`\n- soul_note_title_bytes: `56`\n- soul_note_title_lines: `1`\n- soul_note_text_sha256_12: `b40edc04fce4`\n- soul_note_text_bytes: `72`\n- soul_note_text_lines: `1`\n- notification_body_sha256_12: `e8ad58b4a7ad`\n- target_from_current_channel_issue: `true`\n- raw_soul_note_id_included: `false`\n- raw_soul_area_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_soul_note_title_included: `false`\n- raw_soul_note_text_included: `false`\n- raw_channel_message_body_included: `false`\n- soul_mutation_performed: `false`\n- memory_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_soul_note_action_change: `true`\n- issue_title_sha256_12: `72d04372ad6c`\n\nGitClaw captured a channel-origin soul note as a durable GitHub issue, then queued a provider-facing soul-note link back to the mirrored thread. The soul-note issue contains the human-readable area, title, and note; this source receipt keeps provider IDs, note IDs, soul areas, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the soul-note notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent soul-note links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate soul-note issues are suppressed by `note_id`; duplicate soul-note notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the soul-note issue with the `gitclaw` label; soul mutation remains an explicit reviewed follow-up",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4609305603,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-03T05:15:46Z",
       "updated_at": "2026-06-03T05:15:46Z"
+    },
+    {
+      "id": 4609305554,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-soul-note-e2e-20260603t051405z\" message_id=\"soul-note-notify-20260603t051405z\" author=\"gitclaw\" --\u003e\nGitClaw channel soul note captured.\n\nSoul note: #794\nURL: https://github.com/AnandChowdhary/gitclaw/issues/794\nArea: operating-principles\nTitle: Prefer GitHub review before SOUL writes 20260603t051405z\n\nContinue reviewing it in the linked GitHub issue. Writing SOUL.md or changing high-authority context remains a separate reviewed step.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T05:17:20Z",
+      "updated_at": "2026-06-03T05:17:20Z"
+    },
+    {
+      "id": 4609305603,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26865220227\" event_id=\"comment-4609298557\" model=\"gitclaw/channels\" idempotency_key=\"ef7c8779753d2f1bc497f720ee3fad32\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26865220227\" --\u003e\n## GitClaw Channel Soul Note Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#793`\n- requested_channel_command: `/channels soul-note`\n- channel_soul_note_status: `captured`\n- soul_note_issue: `#794`\n- soul_note_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/794`\n- soul_note_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#793`\n- notification_comment_id: `4609305554`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `c7f86197d6d5`\n- source_message_id_sha256_12: `94fec2aa22e5`\n- notify_message_id_sha256_12: `156147ca44f0`\n- notify_message_id_auto: `false`\n- soul_note_id_sha256_12: `c5ee8b7c0935`\n- soul_note_id_auto: `false`\n- soul_area_sha256_12: `d1c75fa89ed2`\n- soul_area_bytes: `20`\n- soul_area_lines: `1`\n- soul_area_auto: `false`\n- soul_note_title_sha256_12: `3c0348993540`\n- soul_note_title_bytes: `56`\n- soul_note_title_lines: `1`\n- soul_note_text_sha256_12: `b40edc04fce4`\n- soul_note_text_bytes: `72`\n- soul_note_text_lines: `1`\n- notification_body_sha256_12: `e8ad58b4a7ad`\n- target_from_current_channel_issue: `true`\n- raw_soul_note_id_included: `false`\n- raw_soul_area_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_soul_note_title_included: `false`\n- raw_soul_note_text_included: `false`\n- raw_channel_message_body_included: `false`\n- soul_mutation_performed: `false`\n- memory_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_soul_note_action_change: `true`\n- issue_title_sha256_12: `72d04372ad6c`\n\nGitClaw captured a channel-origin soul note as a durable GitHub issue, then queued a provider-facing soul-note link back to the mirrored thread. The soul-note issue contains the human-readable area, title, and note; this source receipt keeps provider IDs, note IDs, soul areas, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the soul-note notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent soul-note links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate soul-note issues are suppressed by `note_id`; duplicate soul-note notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the soul-note issue with the `gitclaw` label; soul mutation remains an explicit reviewed follow-up",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T05:17:21Z",
+      "updated_at": "2026-06-03T05:17:21Z"
     }
   ]
 }
