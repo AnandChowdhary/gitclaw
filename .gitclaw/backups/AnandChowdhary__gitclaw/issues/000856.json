@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T22:53:50Z",
+  "generated_at": "2026-06-03T22:55:25Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 856,
     "title": "GitClaw telegram thread channel-story-dice-e2e-20260603t225138z",
@@ -51,6 +51,15 @@
       "CommentID": 4617372802,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Story Dice Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#856`\n- requested_channel_command: `/channels story-dice`\n- channel_story_dice_status: `queued`\n- story_dice_mode: `deterministic-channel-prompt-dice`\n- notification_target_issue: `#856`\n- notification_comment_id: `4617379866`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `5c7c3723583c`\n- source_message_id_sha256_12: `f8e81948fcf3`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `118c5a626c25`\n- notify_message_id_auto: `false`\n- story_dice_id_sha256_12: `54ede7d4c2de`\n- story_dice_id_auto: `false`\n- story_dice_theme_sha256_12: `00c4285274fc`\n- story_dice_theme_bytes: `3`\n- story_dice_note_sha256_12: `3512f6325032`\n- story_dice_note_bytes: `34`\n- story_dice_note_lines: `1`\n- story_dice_note_source: `trailing-note`\n- story_dice_seed_sha256_12: `97233f58add5`\n- story_dice_roll_sha256_12: `19985ff7c8b0`\n- story_dice_count: `4`\n- notification_body_sha256_12: `4851b0313e7b`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- external_randomness_used: `false`\n- media_generation_performed: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_story_dice_id_included: `false`\n- raw_story_dice_theme_included: `false`\n- raw_story_dice_note_included: `false`\n- raw_story_dice_roll_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_story_dice_action_change: `true`\n- issue_title_sha256_12: `84805f3a5ade`\n\nGitClaw queued a provider-facing channel story-dice card on the canonical channel issue. This is a tiny chat-native activity: Slack or Telegram can get a bounded, deterministic prompt-dice card while the source receipt keeps thread ids, message ids, story-dice ids, themes, notes, and rolled prompts out of band. The action does not call a model, use external randomness, generate media, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read story-dice cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent story-dice cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate story-dice cards are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4617379924,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-03T22:53:24Z",
       "updated_at": "2026-06-03T22:53:24Z"
+    },
+    {
+      "id": 4617379866,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-story-dice-e2e-20260603t225138z\" message_id=\"story-dice-notify-20260603t225138z\" author=\"gitclaw\" --\u003e\nGitClaw channel story dice.\n\nTheme: fun\nDice:\n1. Opening: the thread asks for a plot twist\n2. Constraint: the joke still needs a receipt\n3. Move: pick the surprising next command\n4. Button: fun is better when it is inspectable\nStory dice hash: 19985ff7c8b0\nSeed hash: 97233f58add5\nNote: Give us a tiny playful thread move\nNote hash: 3512f6325032\n\nStory dice source: deterministic GitHub channel action seed.\nStory dice deck: bounded static GitClaw prompt deck.\nModel call: not performed by this action.\nExternal randomness: not used.\nMedia generation: not performed by this action.\nProvider API call: not performed by this action.\nWorkflow mutation: not performed by this action.\nRepository mutation: not performed by this action.\nProvider delivery: queued through GitHub channel outbox.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T22:54:52Z",
+      "updated_at": "2026-06-03T22:54:52Z"
+    },
+    {
+      "id": 4617379924,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26918118596\" event_id=\"comment-4617372802\" model=\"gitclaw/channels\" idempotency_key=\"fb5c39fd52837bd9dbbad2f77a86f003\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26918118596\" --\u003e\n## GitClaw Channel Story Dice Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#856`\n- requested_channel_command: `/channels story-dice`\n- channel_story_dice_status: `queued`\n- story_dice_mode: `deterministic-channel-prompt-dice`\n- notification_target_issue: `#856`\n- notification_comment_id: `4617379866`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `5c7c3723583c`\n- source_message_id_sha256_12: `f8e81948fcf3`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `118c5a626c25`\n- notify_message_id_auto: `false`\n- story_dice_id_sha256_12: `54ede7d4c2de`\n- story_dice_id_auto: `false`\n- story_dice_theme_sha256_12: `00c4285274fc`\n- story_dice_theme_bytes: `3`\n- story_dice_note_sha256_12: `3512f6325032`\n- story_dice_note_bytes: `34`\n- story_dice_note_lines: `1`\n- story_dice_note_source: `trailing-note`\n- story_dice_seed_sha256_12: `97233f58add5`\n- story_dice_roll_sha256_12: `19985ff7c8b0`\n- story_dice_count: `4`\n- notification_body_sha256_12: `4851b0313e7b`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- external_randomness_used: `false`\n- media_generation_performed: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_story_dice_id_included: `false`\n- raw_story_dice_theme_included: `false`\n- raw_story_dice_note_included: `false`\n- raw_story_dice_roll_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_story_dice_action_change: `true`\n- issue_title_sha256_12: `84805f3a5ade`\n\nGitClaw queued a provider-facing channel story-dice card on the canonical channel issue. This is a tiny chat-native activity: Slack or Telegram can get a bounded, deterministic prompt-dice card while the source receipt keeps thread ids, message ids, story-dice ids, themes, notes, and rolled prompts out of band. The action does not call a model, use external randomness, generate media, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read story-dice cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent story-dice cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate story-dice cards are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T22:54:53Z",
+      "updated_at": "2026-06-03T22:54:53Z"
     }
   ]
 }
