@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T12:46:07Z",
+  "generated_at": "2026-06-03T12:48:01Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 827,
     "title": "GitClaw telegram thread channel-toast-e2e-20260603t124353z",
@@ -51,6 +51,15 @@
       "CommentID": 4612436818,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Toast Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#827`\n- requested_channel_command: `/channels toast`\n- channel_toast_status: `queued`\n- toast_mode: `provider-facing-celebration`\n- notification_target_issue: `#827`\n- notification_comment_id: `4612451127`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `4772065ca463`\n- source_message_id_sha256_12: `b9911231c819`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `275d29bf7576`\n- notify_message_id_auto: `false`\n- toast_id_sha256_12: `3680ed2d8f35`\n- toast_id_auto: `false`\n- toast_title_sha256_12: `d307c578f132`\n- toast_title_bytes: `12`\n- toast_title_lines: `1`\n- toast_title_source: `positional-title`\n- toast_reason_sha256_12: `16ffe31f1453`\n- toast_reason_bytes: `25`\n- toast_reason_lines: `1`\n- toast_reason_source: `trailing-reason`\n- toast_tone_sha256_12: `a87b3e348ccb`\n- toast_tone_bytes: `6`\n- notification_body_sha256_12: `b36c157a1618`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- kudos_issue_created: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_toast_id_included: `false`\n- raw_toast_title_included: `false`\n- raw_toast_reason_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_toast_action_change: `true`\n- issue_title_sha256_12: `31250b623ee0`\n\nGitClaw queued a provider-facing channel toast on the canonical channel issue. This is the lightweight celebration lane: it lets a Slack/Telegram thread acknowledge a tiny win without opening a durable kudos issue, while the source receipt keeps thread ids, message ids, toast ids, titles, reasons, and channel bodies out of band. The action does not call a model, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read toast cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent toast cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate toast cards are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4612451279,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-03T12:45:43Z",
       "updated_at": "2026-06-03T12:45:43Z"
+    },
+    {
+      "id": 4612451127,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-toast-e2e-20260603t124353z\" message_id=\"toast-notify-20260603t124353z\" author=\"gitclaw\" --\u003e\nGitClaw channel toast.\n\nToast: launch-ready\nTone: bright\nReason: Release handoff is steady\nToast hash: d307c578f132\nReason hash: 16ffe31f1453\n\nToast source: GitHub channel action.\nModel call: not performed by this action.\nKudos issue: not created by this action.\nProvider API call: not performed by this action.\nWorkflow mutation: not performed by this action.\nRepository mutation: not performed by this action.\nProvider delivery: queued through GitHub channel outbox.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T12:47:30Z",
+      "updated_at": "2026-06-03T12:47:30Z"
+    },
+    {
+      "id": 4612451279,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26885631874\" event_id=\"comment-4612436818\" model=\"gitclaw/channels\" idempotency_key=\"fc6160f18d958e3bf7cd62f5fef6075f\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26885631874\" --\u003e\n## GitClaw Channel Toast Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#827`\n- requested_channel_command: `/channels toast`\n- channel_toast_status: `queued`\n- toast_mode: `provider-facing-celebration`\n- notification_target_issue: `#827`\n- notification_comment_id: `4612451127`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `4772065ca463`\n- source_message_id_sha256_12: `b9911231c819`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `275d29bf7576`\n- notify_message_id_auto: `false`\n- toast_id_sha256_12: `3680ed2d8f35`\n- toast_id_auto: `false`\n- toast_title_sha256_12: `d307c578f132`\n- toast_title_bytes: `12`\n- toast_title_lines: `1`\n- toast_title_source: `positional-title`\n- toast_reason_sha256_12: `16ffe31f1453`\n- toast_reason_bytes: `25`\n- toast_reason_lines: `1`\n- toast_reason_source: `trailing-reason`\n- toast_tone_sha256_12: `a87b3e348ccb`\n- toast_tone_bytes: `6`\n- notification_body_sha256_12: `b36c157a1618`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- kudos_issue_created: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_toast_id_included: `false`\n- raw_toast_title_included: `false`\n- raw_toast_reason_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_toast_action_change: `true`\n- issue_title_sha256_12: `31250b623ee0`\n\nGitClaw queued a provider-facing channel toast on the canonical channel issue. This is the lightweight celebration lane: it lets a Slack/Telegram thread acknowledge a tiny win without opening a durable kudos issue, while the source receipt keeps thread ids, message ids, toast ids, titles, reasons, and channel bodies out of band. The action does not call a model, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read toast cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent toast cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate toast cards are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T12:47:31Z",
+      "updated_at": "2026-06-03T12:47:31Z"
     }
   ]
 }
