@@ -766,6 +766,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels skill-info <skill> --message-id <id> --notify-message-id <id>
 @gitclaw /channels skill-map <skill> --map-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels bundle-map <bundle> --map-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels source-map <source> --map-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels tool-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels tool-info <tool> --message-id <id> --notify-message-id <id>
 @gitclaw /channels tool-map <tool> --map-id <id> --message-id <id> --notify-message-id <id>
@@ -1651,6 +1652,16 @@ instructions, install skills, enable bundles, write bundle YAML, create
 proposal or rehearsal issues, call a model, mutate workflows, mutate the
 repository, or call provider APIs; source receipts keep bundle names, notes,
 step text, provider ids, and channel bodies out of band with hashes.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+source-map <source> --map-id <id> --message-id <id> --notify-message-id <id>`
+queues a provider-facing safe skill-source map back to the current channel
+thread. It shows compact source-pin provenance, trust, install-mode, approval,
+remote-fetch, hash, and risk metadata plus the reviewed path through source
+list/info/verify/lock/update-plan/proposal commands, but it does not contact
+registries, fetch remote sources, install or update skills, write source pins,
+create proposal issues, call a model, mutate workflows, mutate the repository,
+or call provider APIs; source receipts keep source names, refs, notes, step
+text, provider ids, and channel bodies out of band with hashes.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels tools
 --message-id <id>` queues a provider-facing tool-status snapshot back to the
 current channel thread. It reports compact deterministic tool availability,
@@ -2001,6 +2012,7 @@ scripts/e2e/github-channel-skill-search-slash.sh
 scripts/e2e/github-channel-skill-info-slash.sh
 scripts/e2e/github-channel-skill-map-slash.sh
 scripts/e2e/github-channel-bundle-map-slash.sh
+scripts/e2e/github-channel-source-map-slash.sh
 scripts/e2e/github-channel-tool-search-slash.sh
 scripts/e2e/github-channel-tool-info-slash.sh
 scripts/e2e/github-channel-backup-rehearsal-slash.sh
@@ -2071,6 +2083,7 @@ scripts/e2e/github-bundles-risk-report.sh
 scripts/e2e/github-bundles-rehearse-issue.sh
 scripts/e2e/github-channel-bundle-proposal-slash.sh
 scripts/e2e/github-channel-bundle-map-slash.sh
+scripts/e2e/github-channel-source-map-slash.sh
 scripts/e2e/github-orders-risk-report.sh
 scripts/e2e/github-policy-risk-report.sh
 scripts/e2e/github-approvals-catalog-report.sh
@@ -3052,6 +3065,15 @@ rehearsal, and proposal commands without installing skills, enabling bundles,
 writing bundle YAML, loading bundle bodies/instructions, creating those review
 issues, or calling a model, checks duplicate notification suppression, exposes
 the bundle-map notification through metadata-only outbox, and then continues
+on the channel thread itself with a real GitHub Models repo-reader/search
+follow-up.
+The channel-source-map slash harness adds the skill-source sequence card: a
+channel-ingested issue receives `@gitclaw /channels source-map`, queues a
+provider-facing path from reviewed source-pin provenance to verify, lock,
+update-plan, and proposal commands without contacting registries, fetching
+remote sources, installing skills, writing source pins, creating proposal
+issues, or calling a model, checks duplicate notification suppression, exposes
+the source-map notification through metadata-only outbox, and then continues
 on the channel thread itself with a real GitHub Models repo-reader/search
 follow-up.
 The channel-tool-search slash harness turns tool discovery into provider-visible

@@ -157,6 +157,9 @@ func commandSummaryForReport(entry commandCatalogEntry) string {
 	if !strings.Contains(summary, "safe skill-bundle map cards") {
 		summary += " Queue mirrored channel safe skill-bundle map cards without installing skills, enabling bundles, writing bundle YAML, creating proposal/rehearsal issues, model calls, provider API calls, workflow edits, or repo mutation."
 	}
+	if !strings.Contains(summary, "safe skill-source map cards") {
+		summary += " Queue mirrored channel safe skill-source map cards without registry contact, remote fetches, skill installs, source-pin writes, proposal issues, model calls, provider API calls, workflow edits, or repo mutation."
+	}
 	if !strings.Contains(summary, "backup recovery-map cards") {
 		summary += " Queue provider-facing backup recovery-map cards without fetching backup branches, reading backup payloads, restoring files, creating recovery issues, model calls, provider API calls, workflow edits, or repo mutation."
 	}
