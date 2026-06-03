@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T11:24:39Z",
+  "generated_at": "2026-06-03T11:26:17Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 822,
     "title": "GitClaw telegram thread channel-dock-e2e-20260603t112228z",
@@ -51,6 +51,15 @@
       "CommentID": 4611806564,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Dock Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#822`\n- requested_channel_command: `/channels dock`\n- channel_dock_status: `captured`\n- dock_issue: `#823`\n- dock_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/823`\n- dock_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#822`\n- notification_comment_id: `4611818074`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `ad584eb27dbc`\n- source_message_id_sha256_12: `0508eaab3c56`\n- notify_message_id_sha256_12: `f1c975652786`\n- notify_message_id_auto: `false`\n- dock_id_sha256_12: `af22d5c82661`\n- dock_id_auto: `false`\n- target_route_sha256_12: `24b53e552c9c`\n- target_route_bytes: `30`\n- reason_sha256_12: `43be3a31844c`\n- reason_bytes: `71`\n- reason_lines: `1`\n- notification_body_sha256_12: `fe1365aeb290`\n- target_from_current_channel_issue: `true`\n- provider_route_change_performed: `false`\n- session_route_persistence_performed: `false`\n- routebook_mutation_performed: `false`\n- workflow_mutation_performed: `false`\n- provider_api_call_performed: `false`\n- raw_dock_id_included: `false`\n- raw_target_route_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_reason_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_dock_action_change: `true`\n- issue_title_sha256_12: `4b6ddcff78e3`\n\nGitClaw captured a channel-origin dock request as a durable GitHub issue, then queued a provider-facing review link back to the mirrored thread. This action records a requested route-continuity change without moving provider sessions, editing routebooks, mutating workflows, calling provider APIs, persisting mode/session routes, or calling a model. The source receipt keeps provider IDs, dock IDs, target routes, reasons, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the dock-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent dock links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate dock issues are suppressed by `dock_id`; duplicate dock-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the dock issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4611818229,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-03T11:24:10Z",
       "updated_at": "2026-06-03T11:24:10Z"
+    },
+    {
+      "id": 4611818074,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-dock-e2e-20260603t112228z\" message_id=\"dock-notify-20260603t112228z\" author=\"gitclaw\" --\u003e\nGitClaw channel dock captured.\n\nDock: #823\nURL: https://github.com/AnandChowdhary/gitclaw/issues/823\nTarget route: design-review-20260603t112228z\n\nReview the requested route-continuity change in the linked GitHub issue. No provider route change has been performed.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T11:25:45Z",
+      "updated_at": "2026-06-03T11:25:45Z"
+    },
+    {
+      "id": 4611818229,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26881566863\" event_id=\"comment-4611806564\" model=\"gitclaw/channels\" idempotency_key=\"4384e7f65fdef8505e672c25b39b80e7\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26881566863\" --\u003e\n## GitClaw Channel Dock Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#822`\n- requested_channel_command: `/channels dock`\n- channel_dock_status: `captured`\n- dock_issue: `#823`\n- dock_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/823`\n- dock_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#822`\n- notification_comment_id: `4611818074`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `ad584eb27dbc`\n- source_message_id_sha256_12: `0508eaab3c56`\n- notify_message_id_sha256_12: `f1c975652786`\n- notify_message_id_auto: `false`\n- dock_id_sha256_12: `af22d5c82661`\n- dock_id_auto: `false`\n- target_route_sha256_12: `24b53e552c9c`\n- target_route_bytes: `30`\n- reason_sha256_12: `43be3a31844c`\n- reason_bytes: `71`\n- reason_lines: `1`\n- notification_body_sha256_12: `fe1365aeb290`\n- target_from_current_channel_issue: `true`\n- provider_route_change_performed: `false`\n- session_route_persistence_performed: `false`\n- routebook_mutation_performed: `false`\n- workflow_mutation_performed: `false`\n- provider_api_call_performed: `false`\n- raw_dock_id_included: `false`\n- raw_target_route_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_reason_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_dock_action_change: `true`\n- issue_title_sha256_12: `4b6ddcff78e3`\n\nGitClaw captured a channel-origin dock request as a durable GitHub issue, then queued a provider-facing review link back to the mirrored thread. This action records a requested route-continuity change without moving provider sessions, editing routebooks, mutating workflows, calling provider APIs, persisting mode/session routes, or calling a model. The source receipt keeps provider IDs, dock IDs, target routes, reasons, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the dock-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent dock links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate dock issues are suppressed by `dock_id`; duplicate dock-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the dock issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T11:25:46Z",
+      "updated_at": "2026-06-03T11:25:46Z"
     }
   ]
 }
