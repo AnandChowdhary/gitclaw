@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T09:53:25Z",
+  "generated_at": "2026-06-03T09:55:15Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4611098696,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels tap release-captain --message-id nudge-ingest-20260603t094937z --notify-message-id nudge-notify-20260603t094937z --nudge-id nudge-20260603t094937z --tone gentle\nNote: Please take a look when free\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_NUDGE_DUPLICATE_20260603t094937z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4611105362,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Nudge Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#818`\n- requested_channel_command: `/channels tap`\n- channel_nudge_status: `duplicate`\n- nudge_mode: `structured-channel-nudge`\n- notification_target_issue: `#818`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `ee1f53a681f9`\n- source_message_id_sha256_12: `9b24710a2e38`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `9808941dcf8d`\n- notify_message_id_auto: `false`\n- nudge_id_sha256_12: `1f688722ab29`\n- nudge_id_auto: `false`\n- nudge_target_sha256_12: `dc71ad3234dc`\n- nudge_target_bytes: `15`\n- nudge_tone_sha256_12: `dca13388cd38`\n- nudge_tone_bytes: `6`\n- nudge_note_sha256_12: `4716f840b39a`\n- nudge_note_bytes: `28`\n- nudge_note_lines: `1`\n- nudge_note_source: `trailing-note`\n- notification_body_sha256_12: `16aaa2d0b665`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- task_issue_created: `false`\n- reminder_created: `false`\n- watch_created: `false`\n- scheduled_workflow_created: `false`\n- provider_api_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_nudge_id_included: `false`\n- raw_nudge_target_included: `false`\n- raw_nudge_tone_included: `false`\n- raw_nudge_note_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_nudge_action_change: `true`\n- issue_title_sha256_12: `ce120d8abd3b`\n\nGitClaw queued a provider-facing channel nudge on the canonical channel issue. This keeps channel conversations useful in the small: a person can ask for attention without creating a task, reminder, watch, scheduled workflow, provider API call, model call, or repository mutation. The source receipt keeps thread ids, message ids, nudge ids, targets, tones, notes, and channel bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read nudge updates with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent nudge updates with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate nudge updates are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4611113834,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T09:52:53Z",
       "updated_at": "2026-06-03T09:52:53Z"
+    },
+    {
+      "id": 4611105362,
+      "body": "@gitclaw /channels tap release-captain --message-id nudge-ingest-20260603t094937z --notify-message-id nudge-notify-20260603t094937z --nudge-id nudge-20260603t094937z --tone gentle\nNote: Please take a look when free\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_NUDGE_DUPLICATE_20260603t094937z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T09:53:43Z",
+      "updated_at": "2026-06-03T09:53:43Z"
+    },
+    {
+      "id": 4611113834,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26877254752\" event_id=\"comment-4611105362\" model=\"gitclaw/channels\" idempotency_key=\"88b92ffe16b78acbe31058db227d6294\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26877254752\" --\u003e\n## GitClaw Channel Nudge Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#818`\n- requested_channel_command: `/channels tap`\n- channel_nudge_status: `duplicate`\n- nudge_mode: `structured-channel-nudge`\n- notification_target_issue: `#818`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `ee1f53a681f9`\n- source_message_id_sha256_12: `9b24710a2e38`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `9808941dcf8d`\n- notify_message_id_auto: `false`\n- nudge_id_sha256_12: `1f688722ab29`\n- nudge_id_auto: `false`\n- nudge_target_sha256_12: `dc71ad3234dc`\n- nudge_target_bytes: `15`\n- nudge_tone_sha256_12: `dca13388cd38`\n- nudge_tone_bytes: `6`\n- nudge_note_sha256_12: `4716f840b39a`\n- nudge_note_bytes: `28`\n- nudge_note_lines: `1`\n- nudge_note_source: `trailing-note`\n- notification_body_sha256_12: `16aaa2d0b665`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- task_issue_created: `false`\n- reminder_created: `false`\n- watch_created: `false`\n- scheduled_workflow_created: `false`\n- provider_api_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_nudge_id_included: `false`\n- raw_nudge_target_included: `false`\n- raw_nudge_tone_included: `false`\n- raw_nudge_note_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_nudge_action_change: `true`\n- issue_title_sha256_12: `ce120d8abd3b`\n\nGitClaw queued a provider-facing channel nudge on the canonical channel issue. This keeps channel conversations useful in the small: a person can ask for attention without creating a task, reminder, watch, scheduled workflow, provider API call, model call, or repository mutation. The source receipt keeps thread ids, message ids, nudge ids, targets, tones, notes, and channel bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read nudge updates with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent nudge updates with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate nudge updates are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T09:54:42Z",
+      "updated_at": "2026-06-03T09:54:42Z"
     }
   ]
 }
