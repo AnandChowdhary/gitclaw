@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T05:19:50Z",
+  "generated_at": "2026-06-03T05:21:32Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 684,
+  "count": 685,
   "issues": [
     {
       "number": 3,
@@ -8685,6 +8685,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 794,
+      "title": "GitClaw channel soul note: operating-principles: Prefer GitHub review before SOUL writes 20260603t051405z",
+      "path": "issues/000794.json",
+      "backup_generated_at": "2026-06-03T05:21:30Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }

@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-03T05:21:30Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 794,
+    "title": "GitClaw channel soul note: operating-principles: Prefer GitHub review before SOUL writes 20260603t051405z",
+    "body": "\u003c!-- gitclaw:channel-soul-note note_id=\"channel-soul-note-20260603t051405z\" channel=\"telegram\" soul_area_sha256_12=\"d1c75fa89ed2\" thread_id_sha256_12=\"c7f86197d6d5\" source_message_id_sha256_12=\"94fec2aa22e5\" source_issue=\"793\" source_comment_id=\"4609298557\" --\u003e\nGitClaw channel soul note.\n\n- note_id: channel-soul-note-20260603t051405z\n- source_channel: telegram\n- source_issue: #793\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/793\n- source_comment_id: 4609298557\n- thread_id_sha256_12: c7f86197d6d5\n- source_message_id_sha256_12: 94fec2aa22e5\n- soul_note_mode: github-issue-soul-note\n- soul_mutation_performed: false\n- memory_mutation_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Area\n\noperating-principles\n\n## Title\n\nPrefer GitHub review before SOUL writes 20260603t051405z\n\n## Note\n\nVisible soul note token: VISIBLE_CHANNEL_SOUL_NOTE_TEXT_20260603t051405z\n\nUse this issue as the reviewable GitHub home for preserving the channel soul note without writing SOUL.md, mutating memory, or changing repository files automatically.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel soul note: operating-principles: Prefer GitHub review before SOUL writes 20260603t051405z\n\n\u003c!-- gitclaw:channel-soul-note note_id=\"channel-soul-note-20260603t051405z\" channel=\"telegram\" soul_area_sha256_12=\"d1c75fa89ed2\" thread_id_sha256_12=\"c7f86197d6d5\" source_message_id_sha256_12=\"94fec2aa22e5\" source_issue=\"793\" source_comment_id=\"4609298557\" --\u003e\nGitClaw channel soul note.\n\n- note_id: channel-soul-note-20260603t051405z\n- source_channel: telegram\n- source_issue: #793\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/793\n- source_comment_id: 4609298557\n- thread_id_sha256_12: c7f86197d6d5\n- source_message_id_sha256_12: 94fec2aa22e5\n- soul_note_mode: github-issue-soul-note\n- soul_mutation_performed: false\n- memory_mutation_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Area\n\noperating-principles\n\n## Title\n\nPrefer GitHub review before SOUL writes 20260603t051405z\n\n## Note\n\nVisible soul note token: VISIBLE_CHANNEL_SOUL_NOTE_TEXT_20260603t051405z\n\nUse this issue as the reviewable GitHub home for preserving the channel soul note without writing SOUL.md, mutating memory, or changing repository files automatically.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created soul note and use the repo-reader skill.\n\nSearch the repository for `channel soul note unique search fixture phrase`.\nThe matching repository search result line has the form `channel soul note unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_SOUL_NOTE_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include note ids, message ids, thread ids, account hashes, issue numbers, soul areas, titles, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_SOUL_NOTE_FOLLOWUP_20260603t051405z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4609318121,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_SOUL_NOTE_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4609322367,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4609318121,
+      "body": "@gitclaw Continue this channel-created soul note and use the repo-reader skill.\n\nSearch the repository for `channel soul note unique search fixture phrase`.\nThe matching repository search result line has the form `channel soul note unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_SOUL_NOTE_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include note ids, message ids, thread ids, account hashes, issue numbers, soul areas, titles, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_SOUL_NOTE_FOLLOWUP_20260603t051405z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T05:20:03Z",
+      "updated_at": "2026-06-03T05:20:03Z"
+    },
+    {
+      "id": 4609322367,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26865352673\" event_id=\"comment-4609318121\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"017967b8cc032c6ade178f669e120285\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26865352673\" prompt_context_sha256_12=\"016360083658\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10886\" usage_completion_tokens=\"12\" usage_total_tokens=\"10898\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_SOUL_NOTE_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T05:20:58Z",
+      "updated_at": "2026-06-03T05:20:58Z"
+    }
+  ]
+}
