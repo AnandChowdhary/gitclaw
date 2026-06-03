@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T23:38:40Z",
+  "generated_at": "2026-06-03T23:40:31Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4617602072,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels archive-gaps --message-id backup-continuity-ingest-20260603t233446z --notify-message-id backup-continuity-notify-20260603t233446z --continuity-id channel-backup-continuity-20260603t233446z --max-gap-hours 87600\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_BACKUP_CONTINUITY_DUPLICATE_20260603t233446z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4617606217,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Backup Continuity Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#858`\n- requested_channel_command: `/channels archive-gaps`\n- channel_backup_continuity_status: `duplicate`\n- backup_continuity_status: `ok`\n- backup_verify_status: `ok`\n- continuity_gate: `pass`\n- backup_fetch_status: `fetched`\n- backup_branch: `gitclaw-backups`\n- continuity_mode: `gitclaw-backups-continuity-card`\n- notification_target_issue: `#858`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `c56746ac5a3a`\n- source_message_id_sha256_12: `53b7db3c0159`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `9040d77fd9b7`\n- notify_message_id_auto: `false`\n- continuity_id_sha256_12: `7b90920e0245`\n- continuity_id_auto: `false`\n- max_gap_hours: `87600`\n- max_gap_seconds: `315360000`\n- max_gap_source: `flag`\n- backup_root_sha256_12: `682211bdb157`\n- repo_backup_dir_sha256_12: `50920bf17420`\n- index_path_sha256_12: `a16c27b5e728`\n- readme_path_sha256_12: `c009e26ba0d3`\n- backup_schema_version: `1`\n- index_generated_at_sha256_12: `7a6a3e2a918d`\n- verification_failures: `0`\n- issue_count: `748`\n- points_scanned: `748`\n- timeline_order: `chronological`\n- gaps_over_max: `0`\n- gaps_reported: `0`\n- first_issue_sha256_12: `4e07408562be`\n- first_generated_at_sha256_12: `4b2fda42ded4`\n- latest_issue_sha256_12: `8e4676094378`\n- latest_generated_at_sha256_12: `e5c53735025b`\n- total_span_seconds: `473940`\n- longest_gap_seconds: `3530`\n- longest_gap_from_issue_sha256_12: `aea92132c4cb`\n- longest_gap_to_issue_sha256_12: `0b918943df09`\n- longest_gap_from_generated_at_sha256_12: `cf4b11c7069d`\n- longest_gap_to_generated_at_sha256_12: `5db40fc4a27a`\n- continuity_gaps_sha256_12: `none`\n- continuity_error_kind: `none`\n- continuity_error_sha256_12: `none`\n- notification_body_sha256_12: `9ac5c1c7e227`\n- notification_body_bytes: `1192`\n- notification_body_lines: `30`\n- target_from_current_channel_issue: `true`\n- backup_branch_fetch_performed: `true`\n- raw_backup_payloads_read: `true`\n- restore_performed: `false`\n- backup_branch_write_performed: `false`\n- github_api_replay_performed: `false`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_continuity_id_included: `false`\n- raw_backup_root_included: `false`\n- raw_backup_paths_included: `false`\n- raw_continuity_gaps_included: `false`\n- raw_backup_payloads_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_titles_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_transcript_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_channel_backup_continuity_change: `true`\n- source_issue_title_sha256_12: `01bf251e1ac9`\n\nGitClaw inspected the local or read-only fetched gitclaw-backups continuity gate and queued a provider-facing backup-gap card. It reports chronological coverage, longest gap, threshold breaches, counts, timestamps, and hashes while keeping raw paths, titles, bodies, comments, transcripts, prompts, tool outputs, provider IDs, and continuity IDs out of the source receipt. This action does not write the backup branch, restore files, replay GitHub APIs, call a model, call provider APIs, or mutate the repository.\n\n### Follow-Up Delivery\n- provider gateways read backup-continuity cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent backup-continuity cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate backup-continuity notifications are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4617611620,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T23:38:07Z",
       "updated_at": "2026-06-03T23:38:07Z"
+    },
+    {
+      "id": 4617606217,
+      "body": "@gitclaw /channels archive-gaps --message-id backup-continuity-ingest-20260603t233446z --notify-message-id backup-continuity-notify-20260603t233446z --continuity-id channel-backup-continuity-20260603t233446z --max-gap-hours 87600\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_BACKUP_CONTINUITY_DUPLICATE_20260603t233446z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T23:38:58Z",
+      "updated_at": "2026-06-03T23:38:58Z"
+    },
+    {
+      "id": 4617611620,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26919997012\" event_id=\"comment-4617606217\" model=\"gitclaw/channels\" idempotency_key=\"591dc9f143ef91dbd75b54282a911095\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26919997012\" --\u003e\n## GitClaw Channel Backup Continuity Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#858`\n- requested_channel_command: `/channels archive-gaps`\n- channel_backup_continuity_status: `duplicate`\n- backup_continuity_status: `ok`\n- backup_verify_status: `ok`\n- continuity_gate: `pass`\n- backup_fetch_status: `fetched`\n- backup_branch: `gitclaw-backups`\n- continuity_mode: `gitclaw-backups-continuity-card`\n- notification_target_issue: `#858`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `c56746ac5a3a`\n- source_message_id_sha256_12: `53b7db3c0159`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `9040d77fd9b7`\n- notify_message_id_auto: `false`\n- continuity_id_sha256_12: `7b90920e0245`\n- continuity_id_auto: `false`\n- max_gap_hours: `87600`\n- max_gap_seconds: `315360000`\n- max_gap_source: `flag`\n- backup_root_sha256_12: `682211bdb157`\n- repo_backup_dir_sha256_12: `50920bf17420`\n- index_path_sha256_12: `a16c27b5e728`\n- readme_path_sha256_12: `c009e26ba0d3`\n- backup_schema_version: `1`\n- index_generated_at_sha256_12: `7a6a3e2a918d`\n- verification_failures: `0`\n- issue_count: `748`\n- points_scanned: `748`\n- timeline_order: `chronological`\n- gaps_over_max: `0`\n- gaps_reported: `0`\n- first_issue_sha256_12: `4e07408562be`\n- first_generated_at_sha256_12: `4b2fda42ded4`\n- latest_issue_sha256_12: `8e4676094378`\n- latest_generated_at_sha256_12: `e5c53735025b`\n- total_span_seconds: `473940`\n- longest_gap_seconds: `3530`\n- longest_gap_from_issue_sha256_12: `aea92132c4cb`\n- longest_gap_to_issue_sha256_12: `0b918943df09`\n- longest_gap_from_generated_at_sha256_12: `cf4b11c7069d`\n- longest_gap_to_generated_at_sha256_12: `5db40fc4a27a`\n- continuity_gaps_sha256_12: `none`\n- continuity_error_kind: `none`\n- continuity_error_sha256_12: `none`\n- notification_body_sha256_12: `9ac5c1c7e227`\n- notification_body_bytes: `1192`\n- notification_body_lines: `30`\n- target_from_current_channel_issue: `true`\n- backup_branch_fetch_performed: `true`\n- raw_backup_payloads_read: `true`\n- restore_performed: `false`\n- backup_branch_write_performed: `false`\n- github_api_replay_performed: `false`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_continuity_id_included: `false`\n- raw_backup_root_included: `false`\n- raw_backup_paths_included: `false`\n- raw_continuity_gaps_included: `false`\n- raw_backup_payloads_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_titles_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_transcript_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_channel_backup_continuity_change: `true`\n- source_issue_title_sha256_12: `01bf251e1ac9`\n\nGitClaw inspected the local or read-only fetched gitclaw-backups continuity gate and queued a provider-facing backup-gap card. It reports chronological coverage, longest gap, threshold breaches, counts, timestamps, and hashes while keeping raw paths, titles, bodies, comments, transcripts, prompts, tool outputs, provider IDs, and continuity IDs out of the source receipt. This action does not write the backup branch, restore files, replay GitHub APIs, call a model, call provider APIs, or mutate the repository.\n\n### Follow-Up Delivery\n- provider gateways read backup-continuity cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent backup-continuity cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate backup-continuity notifications are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T23:40:00Z",
+      "updated_at": "2026-06-03T23:40:00Z"
     }
   ]
 }
