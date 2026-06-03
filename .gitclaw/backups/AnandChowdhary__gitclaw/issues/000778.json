@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-03T03:03:14Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 778,
+    "title": "GitClaw channel agenda: Track GitHub-native channel agenda 20260603t025618z",
+    "body": "\u003c!-- gitclaw:channel-agenda agenda_id=\"channel-agenda-20260603t025618z\" channel=\"telegram\" items_sha256_12=\"48a35af58e2d\" thread_id_sha256_12=\"b16ae76edfa2\" source_message_id_sha256_12=\"57d3a0796ed6\" source_issue=\"777\" source_comment_id=\"4608697219\" --\u003e\nGitClaw channel agenda.\n\n- agenda_id: channel-agenda-20260603t025618z\n- item_count: 2\n- source_channel: telegram\n- source_issue: #777\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/777\n- source_comment_id: 4608697219\n- thread_id_sha256_12: b16ae76edfa2\n- source_message_id_sha256_12: 57d3a0796ed6\n- agenda_mode: github-issue-agenda\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Agenda Items\n\n1. Confirm agenda item token: VISIBLE_CHANNEL_AGENDA_ITEM_20260603t025618z\n2. Notify agenda observer: VISIBLE_CHANNEL_AGENDA_SECOND_ITEM_20260603t025618z\n\n## Title\n\nTrack GitHub-native channel agenda 20260603t025618z\n\n## Notes\n\nVisible agenda notes token: VISIBLE_CHANNEL_AGENDA_NOTES_20260603t025618z\n\nUse this issue as the reviewable GitHub home for this channel-created agenda. Discussion, decisions, task conversion, skill work, or proactive follow-up should happen through normal GitHub conversation.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel agenda: Track GitHub-native channel agenda 20260603t025618z\n\n\u003c!-- gitclaw:channel-agenda agenda_id=\"channel-agenda-20260603t025618z\" channel=\"telegram\" items_sha256_12=\"48a35af58e2d\" thread_id_sha256_12=\"b16ae76edfa2\" source_message_id_sha256_12=\"57d3a0796ed6\" source_issue=\"777\" source_comment_id=\"4608697219\" --\u003e\nGitClaw channel agenda.\n\n- agenda_id: channel-agenda-20260603t025618z\n- item_count: 2\n- source_channel: telegram\n- source_issue: #777\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/777\n- source_comment_id: 4608697219\n- thread_id_sha256_12: b16ae76edfa2\n- source_message_id_sha256_12: 57d3a0796ed6\n- agenda_mode: github-issue-agenda\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Agenda Items\n\n1. Confirm agenda item token: VISIBLE_CHANNEL_AGENDA_ITEM_20260603t025618z\n2. Notify agenda observer: VISIBLE_CHANNEL_AGENDA_SECOND_ITEM_20260603t025618z\n\n## Title\n\nTrack GitHub-native channel agenda 20260603t025618z\n\n## Notes\n\nVisible agenda notes token: VISIBLE_CHANNEL_AGENDA_NOTES_20260603t025618z\n\nUse this issue as the reviewable GitHub home for this channel-created agenda. Discussion, decisions, task conversion, skill work, or proactive follow-up should happen through normal GitHub conversation.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created agenda and use the repo-reader skill.\n\nSearch the repository for `channel agenda unique search fixture phrase`.\nThe matching repository search result line has the form `channel agenda unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_AGENDA_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include agenda ids, message ids, thread ids, account hashes, issue numbers, agenda titles, items, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_AGENDA_FOLLOWUP_20260603t025618z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4608713657,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_AGENDA_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4608717762,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4608713657,
+      "body": "@gitclaw Continue this channel-created agenda and use the repo-reader skill.\n\nSearch the repository for `channel agenda unique search fixture phrase`.\nThe matching repository search result line has the form `channel agenda unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_AGENDA_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include agenda ids, message ids, thread ids, account hashes, issue numbers, agenda titles, items, or notes.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_AGENDA_FOLLOWUP_20260603t025618z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T03:01:43Z",
+      "updated_at": "2026-06-03T03:01:43Z"
+    },
+    {
+      "id": 4608717762,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26861077642\" event_id=\"comment-4608713657\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"852d2c7aef3a105955de36d5a97b0150\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26861077642\" prompt_context_sha256_12=\"7e068e4f3a42\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10908\" usage_completion_tokens=\"12\" usage_total_tokens=\"10920\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_AGENDA_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T03:02:47Z",
+      "updated_at": "2026-06-03T03:02:47Z"
+    }
+  ]
+}

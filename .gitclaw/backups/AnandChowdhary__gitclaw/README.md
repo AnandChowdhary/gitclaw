@@ -1,7 +1,7 @@
 # GitClaw Backups for `AnandChowdhary/gitclaw`
 
-- generated_at: `2026-06-03T03:01:26Z`
-- issue_count: `669`
+- generated_at: `2026-06-03T03:03:16Z`
+- issue_count: `670`
 
 | Issue | Title | Generated | Comments | Transcript | Path |
 | --- | --- | --- | ---: | ---: | --- |
@@ -674,3 +674,4 @@
 | #775 | GitClaw telegram thread channel-open-loop-e2e-20260603t023907z | `2026-06-03T02:44:41Z` | 7 | 7 | `issues/000775.json` |
 | #776 | GitClaw channel open loop: Resolve channel open loop 20260603t023907z | `2026-06-03T02:46:23Z` | 2 | 3 | `issues/000776.json` |
 | #777 | GitClaw telegram thread channel-agenda-e2e-20260603t025618z | `2026-06-03T03:01:25Z` | 7 | 7 | `issues/000777.json` |
+| #778 | GitClaw channel agenda: Track GitHub-native channel agenda 20260603t025618z | `2026-06-03T03:03:14Z` | 2 | 3 | `issues/000778.json` |

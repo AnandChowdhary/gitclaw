@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T03:01:26Z",
+  "generated_at": "2026-06-03T03:03:16Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 669,
+  "count": 670,
   "issues": [
     {
       "number": 3,
@@ -8489,6 +8489,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 778,
+      "title": "GitClaw channel agenda: Track GitHub-native channel agenda 20260603t025618z",
+      "path": "issues/000778.json",
+      "backup_generated_at": "2026-06-03T03:03:14Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }
