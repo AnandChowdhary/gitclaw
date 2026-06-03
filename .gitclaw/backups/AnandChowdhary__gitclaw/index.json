@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T06:52:50Z",
+  "generated_at": "2026-06-03T06:55:12Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 694,
+  "count": 695,
   "issues": [
     {
       "number": 3,
@@ -8815,6 +8815,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 804,
+      "title": "GitClaw channel time capsule: Open when the channel roadmap feels stale 20260603t064705z",
+      "path": "issues/000804.json",
+      "backup_generated_at": "2026-06-03T06:55:10Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }

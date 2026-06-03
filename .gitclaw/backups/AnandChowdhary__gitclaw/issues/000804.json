@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-03T06:55:10Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 804,
+    "title": "GitClaw channel time capsule: Open when the channel roadmap feels stale 20260603t064705z",
+    "body": "\u003c!-- gitclaw:channel-time-capsule capsule_id=\"channel-time-capsule-20260603t064705z\" channel=\"telegram\" open_after_sha256_12=\"61d815f58243\" thread_id_sha256_12=\"fbf8363a8079\" source_message_id_sha256_12=\"f0483a81602b\" source_issue=\"803\" source_comment_id=\"4609806188\" --\u003e\nGitClaw channel time capsule.\n\n- capsule_id: channel-time-capsule-20260603t064705z\n- open_after: 2030-01-01\n- source_channel: telegram\n- source_issue: #803\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/803\n- source_comment_id: 4609806188\n- thread_id_sha256_12: fbf8363a8079\n- source_message_id_sha256_12: f0483a81602b\n- time_capsule_mode: github-issue-time-capsule\n- scheduled_delivery_created: false\n- reminder_created: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Open After\n\n2030-01-01\n\n## Title\n\nOpen when the channel roadmap feels stale 20260603t064705z\n\n## Message\n\nVisible time capsule message token: VISIBLE_CHANNEL_TIME_CAPSULE_MESSAGE_20260603t064705z\n\nUse this issue as the durable GitHub home for the channel time capsule. Opening it later, turning it into a reminder, or promoting it into `.gitclaw/MEMORY.md` should happen only through normal reviewed GitHub conversation.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel time capsule: Open when the channel roadmap feels stale 20260603t064705z\n\n\u003c!-- gitclaw:channel-time-capsule capsule_id=\"channel-time-capsule-20260603t064705z\" channel=\"telegram\" open_after_sha256_12=\"61d815f58243\" thread_id_sha256_12=\"fbf8363a8079\" source_message_id_sha256_12=\"f0483a81602b\" source_issue=\"803\" source_comment_id=\"4609806188\" --\u003e\nGitClaw channel time capsule.\n\n- capsule_id: channel-time-capsule-20260603t064705z\n- open_after: 2030-01-01\n- source_channel: telegram\n- source_issue: #803\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/803\n- source_comment_id: 4609806188\n- thread_id_sha256_12: fbf8363a8079\n- source_message_id_sha256_12: f0483a81602b\n- time_capsule_mode: github-issue-time-capsule\n- scheduled_delivery_created: false\n- reminder_created: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Open After\n\n2030-01-01\n\n## Title\n\nOpen when the channel roadmap feels stale 20260603t064705z\n\n## Message\n\nVisible time capsule message token: VISIBLE_CHANNEL_TIME_CAPSULE_MESSAGE_20260603t064705z\n\nUse this issue as the durable GitHub home for the channel time capsule. Opening it later, turning it into a reminder, or promoting it into `.gitclaw/MEMORY.md` should happen only through normal reviewed GitHub conversation.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created time capsule and use the repo-reader skill.\n\nSearch the repository for `channel time capsule unique search fixture phrase`.\nThe matching repository search result line has the form `channel time capsule unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_TIME_CAPSULE_`.\nCopy the complete right-hand side token exactly, including the final `CONTEXT_V1` suffix.\nThe answer must end with `CONTEXT_V1`; `GITCLAW_CHANNEL_TIME_CAPSULE_` alone is incomplete and must not be used.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include capsule ids, open-after values, message ids, thread ids, account hashes, issue numbers, titles, or capsule messages.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_TIME_CAPSULE_FOLLOWUP_20260603t064705z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4609831357,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_TIME_CAPSULE_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4609839379,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4609831357,
+      "body": "@gitclaw Continue this channel-created time capsule and use the repo-reader skill.\n\nSearch the repository for `channel time capsule unique search fixture phrase`.\nThe matching repository search result line has the form `channel time capsule unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_TIME_CAPSULE_`.\nCopy the complete right-hand side token exactly, including the final `CONTEXT_V1` suffix.\nThe answer must end with `CONTEXT_V1`; `GITCLAW_CHANNEL_TIME_CAPSULE_` alone is incomplete and must not be used.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include capsule ids, open-after values, message ids, thread ids, account hashes, issue numbers, titles, or capsule messages.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_TIME_CAPSULE_FOLLOWUP_20260603t064705z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T06:53:07Z",
+      "updated_at": "2026-06-03T06:53:07Z"
+    },
+    {
+      "id": 4609839379,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26868714550\" event_id=\"comment-4609831357\" model=\"openai/gpt-5-nano\" idempotency_key=\"37a43d90362614d4805dd6f259c5bb2d\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26868714550\" prompt_context_sha256_12=\"db40ef8e3455\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"4\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files,gitclaw.read_file\" usage_prompt_tokens=\"12673\" usage_completion_tokens=\"2710\" usage_total_tokens=\"15383\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_TIME_CAPSULE_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T06:54:35Z",
+      "updated_at": "2026-06-03T06:54:35Z"
+    }
+  ]
+}
