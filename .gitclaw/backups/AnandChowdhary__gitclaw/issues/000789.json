@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T04:40:03Z",
+  "generated_at": "2026-06-03T04:41:47Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4609119404,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels faq --faq-id channel-faq-20260603t043639z --message-id faq-ingest-20260603t043639z --notify-message-id faq-notify-20260603t043639z\nQuestion: How should channel FAQs stay GitHub-native 20260603t043639z?\nAnswer:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_FAQ_DUPLICATE_20260603t043639z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4609124247,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel FAQ Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#789`\n- requested_channel_command: `/channels faq`\n- channel_faq_status: `duplicate`\n- faq_issue: `#790`\n- faq_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/790`\n- faq_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#789`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `d9652509f2d3`\n- source_message_id_sha256_12: `f42273df16e2`\n- notify_message_id_sha256_12: `919c3e111119`\n- notify_message_id_auto: `false`\n- faq_id_sha256_12: `cf85ae7ec0b1`\n- faq_id_auto: `false`\n- faq_question_sha256_12: `175a315fd4da`\n- faq_question_bytes: `60`\n- faq_question_lines: `1`\n- faq_answer_sha256_12: `cdac6ae9bea8`\n- faq_answer_bytes: `81`\n- faq_answer_lines: `1`\n- notification_body_sha256_12: `ceea5f3724cd`\n- target_from_current_channel_issue: `true`\n- raw_faq_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_faq_question_included: `false`\n- raw_faq_answer_included: `false`\n- raw_channel_message_body_included: `false`\n- memory_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_faq_action_change: `true`\n- issue_title_sha256_12: `99ccf0c6c49e`\n\nGitClaw captured a channel-origin FAQ question as a durable GitHub issue, then queued a provider-facing FAQ link back to the mirrored thread. The FAQ issue contains the human-readable question and answer; this source receipt keeps provider IDs, FAQ IDs, questions, answers, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the FAQ-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent FAQ links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate FAQ issues are suppressed by `faq_id`; duplicate FAQ-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the FAQ issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4609129300,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T04:39:35Z",
       "updated_at": "2026-06-03T04:39:35Z"
+    },
+    {
+      "id": 4609124247,
+      "body": "@gitclaw /channels faq --faq-id channel-faq-20260603t043639z --message-id faq-ingest-20260603t043639z --notify-message-id faq-notify-20260603t043639z\nQuestion: How should channel FAQs stay GitHub-native 20260603t043639z?\nAnswer:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_FAQ_DUPLICATE_20260603t043639z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T04:40:22Z",
+      "updated_at": "2026-06-03T04:40:22Z"
+    },
+    {
+      "id": 4609129300,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26864093687\" event_id=\"comment-4609124247\" model=\"gitclaw/channels\" idempotency_key=\"893d3db7f22f556f5195ffa4988bb201\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26864093687\" --\u003e\n## GitClaw Channel FAQ Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#789`\n- requested_channel_command: `/channels faq`\n- channel_faq_status: `duplicate`\n- faq_issue: `#790`\n- faq_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/790`\n- faq_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#789`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `d9652509f2d3`\n- source_message_id_sha256_12: `f42273df16e2`\n- notify_message_id_sha256_12: `919c3e111119`\n- notify_message_id_auto: `false`\n- faq_id_sha256_12: `cf85ae7ec0b1`\n- faq_id_auto: `false`\n- faq_question_sha256_12: `175a315fd4da`\n- faq_question_bytes: `60`\n- faq_question_lines: `1`\n- faq_answer_sha256_12: `cdac6ae9bea8`\n- faq_answer_bytes: `81`\n- faq_answer_lines: `1`\n- notification_body_sha256_12: `ceea5f3724cd`\n- target_from_current_channel_issue: `true`\n- raw_faq_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_faq_question_included: `false`\n- raw_faq_answer_included: `false`\n- raw_channel_message_body_included: `false`\n- memory_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_faq_action_change: `true`\n- issue_title_sha256_12: `99ccf0c6c49e`\n\nGitClaw captured a channel-origin FAQ question as a durable GitHub issue, then queued a provider-facing FAQ link back to the mirrored thread. The FAQ issue contains the human-readable question and answer; this source receipt keeps provider IDs, FAQ IDs, questions, answers, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the FAQ-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent FAQ links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate FAQ issues are suppressed by `faq_id`; duplicate FAQ-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the FAQ issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T04:41:21Z",
+      "updated_at": "2026-06-03T04:41:21Z"
     }
   ]
 }
