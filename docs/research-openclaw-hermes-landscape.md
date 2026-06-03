@@ -5089,6 +5089,31 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Tool Run Cancel Follow-Up
+
+OpenClaw's approval-mode framing treats denied async execution approval as a
+terminal outcome for that request rather than a hidden retry loop. Hermes'
+slash-command surface similarly keeps tools and approval-related controls as
+explicit user-visible commands. GitClaw should translate that into GitHub
+state: a reviewed tool-run request is an issue, and cancellation is a durable
+comment plus closed issue state.
+
+GitClaw's serverless version is `@gitclaw /tools cancel-run --id <id>`. It
+finds an open `gitclaw:tool-run-request-issue`, posts one
+`gitclaw:tool-run-cancel` marker on that request issue, and closes the issue.
+The source receipt reports request-id hash, target issue/comment ids,
+closed/not-found state, and no-execution gates only. The action does not call a
+model, approve a tool, execute a tool, run shell commands, call provider APIs,
+copy raw source text, print raw request ids, print raw tool inputs or outputs,
+or mutate repository files. Repeats after closure report `not_found_or_closed`
+instead of reopening the request. Acceptance requires live E2E for request
+creation, cancellation marker creation, closed GitHub issue state, repeat
+behavior, and a real GitHub Models repo-reader/search follow-up.
+
+Sources: OpenClaw approval mode (`https://docs.openclaw.ai/approval-mode/`),
+Hermes slash commands
+(`https://hermes-agent.nousresearch.com/docs/reference/slash-commands/`).
+
 ## 2026-06-03 Channel Activity Signal Follow-Up
 
 OpenClaw's channel/session framing keeps chat interaction visible while hiding

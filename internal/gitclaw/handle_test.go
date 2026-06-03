@@ -6442,6 +6442,9 @@ func (f *FakeGitHub) GetIssue(ctx context.Context, repo string, issueNumber int)
 func (f *FakeGitHub) ListOpenIssues(ctx context.Context, repo string, labels []string, limit int) ([]Issue, error) {
 	var issues []Issue
 	for _, issue := range f.Issues {
+		if f.ClosedIssues != nil && f.ClosedIssues[issue.Number] {
+			continue
+		}
 		if !issueHasAllLabels(issue, labels) {
 			continue
 		}

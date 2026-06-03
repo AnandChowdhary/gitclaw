@@ -366,6 +366,11 @@ text, include raw tool inputs/outputs, or mutate the repository.
 Add `--notify-route <route>` or `--notify-routes <a,b>` to queue a body-safe
 Slack/Telegram channel notification for the review issue through the existing
 routebook, outbox, and delivery receipt path.
+`@gitclaw /tools cancel-run --id <id>` closes an open reviewed tool-run request
+issue after posting a durable `gitclaw:tool-run-cancel` marker on that request.
+It does not approve or execute the tool, call a model, copy raw source text, or
+mutate repository files; the source receipt reports only the request hash,
+target issue/comment ids, closed state, and no-execution gates.
 `@gitclaw /tools rehearse <name> --id <id>` opens or reuses a labeled GitHub
 conversation issue for trying a tool contract without creating a run request.
 The source receipt is body-free and model-free; the rehearsal issue records the
@@ -1769,6 +1774,7 @@ scripts/e2e/github-channel-link-slash.sh
 scripts/e2e/github-channel-access-request-slash.sh
 scripts/e2e/github-channel-contact-slash.sh
 scripts/e2e/github-channel-session-handoff-slash.sh
+scripts/e2e/github-tools-run-cancel.sh
 scripts/e2e/github-channel-tool-run-request-slash.sh
 scripts/e2e/github-channel-tool-approval-plan-slash.sh
 scripts/e2e/github-channel-tool-rehearsal-slash.sh
@@ -1929,6 +1935,11 @@ execution requests: `@gitclaw /tools request-run <name> --id <id>` opens or
 reuses a dedicated GitHub request issue, keeps source/tool bodies out of
 receipts and request bodies, suppresses duplicate requests, and then continues
 with a real GitHub Models repo-reader/search follow-up.
+The tools-run-cancel harness covers the terminal review-decision path:
+`@gitclaw /tools cancel-run --id <id>` posts a durable cancellation marker on
+the reviewed request issue, closes it, keeps source/request ids out of the
+source receipt, treats repeats after close as not-found-or-closed, and then
+continues with a real GitHub Models repo-reader/search follow-up.
 The tools-rehearse harness covers the conversation side of tools:
 `@gitclaw /tools rehearse <name> --id <id>` opens or reuses a labeled GitHub
 rehearsal issue, keeps source/tool inputs and outputs out of receipts,

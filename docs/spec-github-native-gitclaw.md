@@ -3297,6 +3297,24 @@ suppressed by request id. Any implementation change to this action must pair
 the deterministic create/reuse E2E with a live GitHub Models follow-up using
 `repo-reader` and bounded repository search.
 
+When called as `@gitclaw /tools cancel-run --id <id>`, `/tools cancel-request`,
+`/tools close-run-request`, or `/tools reject-run`, the command finds the open
+review issue marked `gitclaw:tool-run-request-issue` for that request id,
+posts one durable `gitclaw:tool-run-cancel` marker comment on the request
+issue, and closes the request issue. When the command is run directly on a
+tool-run request issue, the request id can be inferred from the request issue
+marker. This is a terminal review decision for the request issue, not tool
+execution: it never calls a model, executes a tool, grants approval, calls
+provider APIs, runs shell commands, copies raw source text, or mutates
+repository files. The source receipt reports only the request id hash, target
+issue/comment ids, closed/not-found state, source hash/counts, and no-execution
+gates; it does not print raw request ids, raw source bodies, raw tool inputs,
+or raw tool outputs. Repeating the command after the issue is closed reports
+`not_found_or_closed` instead of reopening or modifying the closed request.
+Any implementation change to this action must prove request issue closure,
+durable cancellation marker creation, repeat-after-close behavior, and a real
+GitHub Models follow-up using `repo-reader` and bounded repository search.
+
 When the same command includes `--notify-route <route>` or
 `--notify-routes <route-a,route-b>`, GitClaw also queues a channel notification
 after the review issue is created or found. The notification body contains the
@@ -11131,6 +11149,14 @@ examples/workflows/gitclaw.yml
   `gitclaw.search_files`, recover the channel-tool-request fixture token, and
   avoid hidden channel, account, provider, message, request, and tool
   sentinels.
+- A `gh`-driven tools-run-cancel E2E harness creates a real reviewed tool-run
+  request issue, comments `@gitclaw /tools cancel-run --id ...` on the source
+  issue, verifies the request issue gets one `gitclaw:tool-run-cancel` marker
+  and closes, checks the source receipt is body-free and no-execution, repeats
+  the cancellation after close to verify `not_found_or_closed`, and then gets a
+  normal GitHub Models issue-comment follow-up that must select `repo-reader`,
+  expose `gitclaw.search_files`, recover the tool-run-cancel fixture token, and
+  avoid hidden source, request, and cancellation sentinels.
 - A `gh`-driven channel-tool-approval-plan-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels approval-plan search_files --id ... --message-id ...`
