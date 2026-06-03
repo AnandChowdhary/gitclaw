@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T23:36:54Z",
+  "generated_at": "2026-06-03T23:38:42Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 748,
   "issues": [
@@ -9544,15 +9544,15 @@
       "number": 858,
       "title": "GitClaw telegram thread channel-backup-continuity-e2e-20260603t233446z",
       "path": "issues/000858.json",
-      "backup_generated_at": "2026-06-03T23:36:53Z",
-      "event_name": "workflow_dispatch",
+      "backup_generated_at": "2026-06-03T23:38:40Z",
+      "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 2,
-      "transcript_messages": 3
+      "comment_count": 5,
+      "transcript_messages": 5
     }
   ]
 }
