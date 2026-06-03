@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T14:24:00Z",
+  "generated_at": "2026-06-03T14:26:11Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4613376994,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels advise skills --message-id coach-ingest-20260603t141944z --notify-message-id coach-notify-20260603t141944z --coach-id coach-20260603t141944z\nNote: Use live posture\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_COACH_DUPLICATE_20260603t141944z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4613385629,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Coach Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#832`\n- requested_channel_command: `/channels advise`\n- channel_coach_status: `duplicate`\n- coach_mode: `repo-aware-channel-coach`\n- notification_target_issue: `#832`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `4e567bb706f0`\n- source_message_id_sha256_12: `28a174a1eccb`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `212faf7c0fd6`\n- notify_message_id_auto: `false`\n- coach_id_sha256_12: `362266e42f7b`\n- coach_id_auto: `false`\n- coach_lane_sha256_12: `32c1cf49a2fe`\n- coach_lane_bytes: `6`\n- coach_note_sha256_12: `c1c93a269f3e`\n- coach_note_bytes: `16`\n- coach_note_lines: `1`\n- coach_note_source: `trailing-note`\n- coach_recommendation_count: `4`\n- coach_advice_sha256_12: `e7e2f2567a10`\n- coach_snapshot_sha256_12: `478f20ae9963`\n- available_skills: `1`\n- enabled_skills: `1`\n- selected_skills: `1`\n- skills_missing_requirements: `0`\n- enabled_tools: `5`\n- active_tool_outputs: `3`\n- tool_validation_status: `ok`\n- tool_risk_status: `ok`\n- soul_status: `ok`\n- soul_validation_status: `ok`\n- soul_validation_errors: `0`\n- soul_validation_warnings: `0`\n- soul_risk_status: `ok`\n- soul_risk_findings: `0`\n- required_soul_entries_loaded: `6`\n- required_soul_entries: `6`\n- prompt_visible_soul_entries: `16`\n- notification_body_sha256_12: `f9832f982820`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- command_execution_performed: `false`\n- skill_install_performed: `false`\n- tool_execution_performed: `false`\n- backup_payload_read: `false`\n- soul_body_read: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- repository_mutation_recommended: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_coach_id_included: `false`\n- raw_coach_lane_included: `false`\n- raw_coach_note_included: `false`\n- raw_coach_recommendations_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_coach_action_change: `true`\n- issue_title_sha256_12: `15781a978772`\n\nGitClaw queued a provider-facing channel coach card on the canonical channel issue. This gives Slack or Telegram a repo-aware next-move card from body-free skill, tool, and soul metadata while the source receipt keeps thread ids, message ids, coach ids, lanes, notes, recommendation text, and channel bodies out of band. The action does not call a model, execute commands, install skills, execute tools, read backup payloads, read soul bodies, mutate workflows, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read coach cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent coach cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate coach cards are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4613397868,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T14:23:29Z",
       "updated_at": "2026-06-03T14:23:29Z"
+    },
+    {
+      "id": 4613385629,
+      "body": "@gitclaw /channels advise skills --message-id coach-ingest-20260603t141944z --notify-message-id coach-notify-20260603t141944z --coach-id coach-20260603t141944z\nNote: Use live posture\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_COACH_DUPLICATE_20260603t141944z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T14:24:21Z",
+      "updated_at": "2026-06-03T14:24:21Z"
+    },
+    {
+      "id": 4613397868,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26891222739\" event_id=\"comment-4613385629\" model=\"gitclaw/channels\" idempotency_key=\"dbfb026d309a19ab0da446a51d06a850\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26891222739\" --\u003e\n## GitClaw Channel Coach Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#832`\n- requested_channel_command: `/channels advise`\n- channel_coach_status: `duplicate`\n- coach_mode: `repo-aware-channel-coach`\n- notification_target_issue: `#832`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `4e567bb706f0`\n- source_message_id_sha256_12: `28a174a1eccb`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `212faf7c0fd6`\n- notify_message_id_auto: `false`\n- coach_id_sha256_12: `362266e42f7b`\n- coach_id_auto: `false`\n- coach_lane_sha256_12: `32c1cf49a2fe`\n- coach_lane_bytes: `6`\n- coach_note_sha256_12: `c1c93a269f3e`\n- coach_note_bytes: `16`\n- coach_note_lines: `1`\n- coach_note_source: `trailing-note`\n- coach_recommendation_count: `4`\n- coach_advice_sha256_12: `e7e2f2567a10`\n- coach_snapshot_sha256_12: `478f20ae9963`\n- available_skills: `1`\n- enabled_skills: `1`\n- selected_skills: `1`\n- skills_missing_requirements: `0`\n- enabled_tools: `5`\n- active_tool_outputs: `3`\n- tool_validation_status: `ok`\n- tool_risk_status: `ok`\n- soul_status: `ok`\n- soul_validation_status: `ok`\n- soul_validation_errors: `0`\n- soul_validation_warnings: `0`\n- soul_risk_status: `ok`\n- soul_risk_findings: `0`\n- required_soul_entries_loaded: `6`\n- required_soul_entries: `6`\n- prompt_visible_soul_entries: `16`\n- notification_body_sha256_12: `f9832f982820`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- command_execution_performed: `false`\n- skill_install_performed: `false`\n- tool_execution_performed: `false`\n- backup_payload_read: `false`\n- soul_body_read: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- repository_mutation_recommended: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_coach_id_included: `false`\n- raw_coach_lane_included: `false`\n- raw_coach_note_included: `false`\n- raw_coach_recommendations_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_coach_action_change: `true`\n- issue_title_sha256_12: `15781a978772`\n\nGitClaw queued a provider-facing channel coach card on the canonical channel issue. This gives Slack or Telegram a repo-aware next-move card from body-free skill, tool, and soul metadata while the source receipt keeps thread ids, message ids, coach ids, lanes, notes, recommendation text, and channel bodies out of band. The action does not call a model, execute commands, install skills, execute tools, read backup payloads, read soul bodies, mutate workflows, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read coach cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent coach cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate coach cards are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T14:25:34Z",
+      "updated_at": "2026-06-03T14:25:34Z"
     }
   ]
 }
