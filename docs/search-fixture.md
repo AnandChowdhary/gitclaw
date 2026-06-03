@@ -255,6 +255,7 @@ channel tool search unique search fixture phrase => GITCLAW_CHANNEL_TOOL_SEARCH_
 channel tool info unique search fixture phrase => GITCLAW_CHANNEL_TOOL_INFO_CONTEXT_V1
 channel skill search unique search fixture phrase => GITCLAW_CHANNEL_SKILL_SEARCH_CONTEXT_V1
 channel skill info unique search fixture phrase => GITCLAW_CHANNEL_SKILL_INFO_CONTEXT_V1
+channel skill spotlight unique search fixture phrase => GITCLAW_CHANNEL_SKILL_SPOTLIGHT_CONTEXT_V1
 channel backup status unique search fixture phrase => GITCLAW_CHANNEL_BACKUP_STATUS_CONTEXT_V1
 channel recovery map unique search fixture phrase => GITCLAW_CHANNEL_RECOVERY_MAP_CONTEXT_V1
 channel backup search unique search fixture phrase => GITCLAW_CHANNEL_BACKUP_SEARCH_CONTEXT_V1

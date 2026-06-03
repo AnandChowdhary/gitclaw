@@ -701,6 +701,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels soundtrack launch --soundtrack-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels story-dice fun --story-dice-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels coach skills --coach-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels skill-spotlight repo-reader --spotlight-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels nudge release-captain --nudge-id <id> --message-id <id> --notify-message-id <id> --tone gentle
 @gitclaw /channels palette fun --palette-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels compass all --compass-id <id> --message-id <id> --notify-message-id <id>
@@ -1210,6 +1211,16 @@ create approval/rehearsal/run-request issues, call provider APIs, call a model,
 mutate workflows, or mutate the repository. The source receipt keeps raw map
 ids, requested tool names, notes, step text, provider ids, issue bodies,
 comments, raw schemas, raw inputs, and raw outputs out of band.
+`@gitclaw /channels skill-spotlight <focus> --spotlight-id <id> --message-id
+<id> --notify-message-id <id>` queues a deterministic provider-facing skill
+spotlight card back to Slack/Telegram. The card picks one enabled, requirement-
+complete repo-local skill from safe metadata, shows compact name/path/hash/
+requirement counts and follow-up commands, and keeps raw focus text, notes,
+spotlight ids, skill descriptions, skill bodies, channel bodies, issue bodies,
+comments, prompts, and tool outputs out of the source receipt. It does not
+install or update skills, contact registries, run installers, execute tools,
+call a model, call provider APIs, use external randomness, or mutate the
+repository.
 `@gitclaw /channels recovery-map <issue|repo|channel|incident> --map-id <id>
 --message-id <id> --notify-message-id <id>` queues a provider-facing backup
 recovery sequence back to Slack/Telegram. The card shows the safe order:
@@ -2099,6 +2110,7 @@ scripts/e2e/github-channel-memory-status-slash.sh
 scripts/e2e/github-channel-memory-search-slash.sh
 scripts/e2e/github-channel-skill-search-slash.sh
 scripts/e2e/github-channel-skill-info-slash.sh
+scripts/e2e/github-channel-skill-spotlight-slash.sh
 scripts/e2e/github-channel-skill-map-slash.sh
 scripts/e2e/github-channel-bundle-map-slash.sh
 scripts/e2e/github-channel-source-map-slash.sh
@@ -3190,6 +3202,13 @@ printing skill descriptions or `SKILL.md` bodies, checks duplicate notification
 suppression, exposes the skill-info notification through metadata-only outbox,
 and then continues on the channel thread itself with a real GitHub Models
 repo-reader/search follow-up.
+The channel-skill-spotlight slash harness adds a chat-native discovery card: a
+channel-ingested issue receives `@gitclaw /channels skill-spotlight`, queues one
+deterministically selected provider-facing skill card without installing skills,
+contacting registries, loading skill bodies, using randomness, or calling a
+model, checks duplicate notification suppression, exposes the spotlight through
+metadata-only outbox, and then continues on the channel thread itself with a
+real GitHub Models repo-reader/search follow-up.
 The channel-skill-map slash harness adds the safe sequence card: a
 channel-ingested issue receives `@gitclaw /channels skill-map`, queues a
 provider-facing path from skill status/search/info to reviewed proposal,
