@@ -697,6 +697,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels timer 25m --timer-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels bingo release --bingo-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels haiku launch --haiku-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels soundtrack launch --soundtrack-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels coach skills --coach-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels nudge release-captain --nudge-id <id> --message-id <id> --notify-message-id <id> --tone gentle
 @gitclaw /channels palette fun --palette-id <id> --message-id <id> --notify-message-id <id>
@@ -1089,6 +1090,13 @@ provider update, while the source receipt keeps raw haiku ids, themes, notes,
 poem lines, thread ids, message ids, and channel bodies out of band. This does
 not call a model, use external randomness, generate media, call provider APIs,
 edit workflows, or mutate the repository.
+`@gitclaw /channels soundtrack <theme> --soundtrack-id <id> --message-id <id>
+--notify-message-id <id>` queues a provider-facing three-track soundtrack card
+from bounded static decks. Optional `Note: ...` trailing text is visible in the
+provider update, while the source receipt keeps raw soundtrack ids, themes,
+notes, track text, thread ids, message ids, and channel bodies out of band.
+This does not call a model, use external randomness, generate media, fetch
+audio, call provider APIs, edit workflows, or mutate the repository.
 `@gitclaw /channels coach <all|skills|tools|soul|memory|backups|channels|fun>
 --coach-id <id> --message-id <id> --notify-message-id <id>` queues a
 provider-facing next-move card from repo-local skill, tool, and soul metadata.
@@ -2205,6 +2213,7 @@ scripts/e2e/github-channel-toast-slash.sh
 scripts/e2e/github-channel-timer-slash.sh
 scripts/e2e/github-channel-bingo-slash.sh
 scripts/e2e/github-channel-haiku-slash.sh
+scripts/e2e/github-channel-soundtrack-slash.sh
 scripts/e2e/github-channel-coach-slash.sh
 scripts/e2e/github-channel-nudge-slash.sh
 scripts/e2e/github-channel-palette-slash.sh
@@ -2583,6 +2592,12 @@ with an optional label/note, exposes it through metadata-only outbox,
 suppresses duplicate timer notifications, proves no reminder issue/scheduled
 workflow/provider-timer/model/provider-API/repository mutation was performed,
 and then runs a real GitHub Models repo-reader/search follow-up.
+The channel-soundtrack slash harness adds a tiny chat-native walkout-music lane:
+a channel-ingested issue receives `@gitclaw /channels soundtrack`, queues one
+provider-visible three-track card with an optional note, exposes it through
+metadata-only outbox, suppresses duplicate soundtrack notifications, proves no
+model/media/audio/provider-API/workflow/repository mutation was performed, and
+then runs a real GitHub Models repo-reader/search follow-up.
 The channel-coach slash harness adds repo-aware next-move cards to Slack and
 Telegram: a channel-ingested issue receives `@gitclaw /channels coach skills`,
 queues one provider-visible skill/tool/soul signal card with suggested
