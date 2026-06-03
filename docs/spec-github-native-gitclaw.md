@@ -5709,6 +5709,7 @@ accepts a structured reaction form:
 @gitclaw /channels quest --quest-id <stable-quest-id> --message-id <provider-message-id>
 @gitclaw /channels ritual --ritual-id <stable-ritual-id> --message-id <provider-message-id>
 @gitclaw /channels pact --pact-id <stable-pact-id> --message-id <provider-message-id>
+@gitclaw /channels forecast --forecast-id <stable-forecast-id> --message-id <provider-message-id>
 @gitclaw /channels retro --retro-id <stable-retro-id> --message-id <provider-message-id>
 @gitclaw /channels playbook --playbook-id <stable-playbook-id> --message-id <provider-message-id>
 @gitclaw /channels insight --insight-id <stable-insight-id> --message-id <provider-message-id>
@@ -6670,6 +6671,47 @@ the metadata-only pact-link outbox, checks duplicate suppression, proves no
 scheduled workflow/reminder/standing-order/SOUL/memory/policy/repository
 mutation occurred, and then continues on the pact issue with a normal GitHub
 Models repo-reader/search follow-up.
+
+The same channel-thread issue can also record a channel forecast without
+creating automation or a betting market:
+
+```text
+@gitclaw /channels forecast --forecast-id <stable-forecast-id> --message-id <provider-message-id>
+Title: short prediction title
+Prediction:
+what the channel thinks will happen
+Evidence:
+signals, reasoning, or assumptions
+Resolution:
+how to decide true, false, partial, or stale
+Due:
+when to review or resolve the forecast
+```
+
+`/channels forecast`, `/channels prediction`, `/channels predict`,
+`/channels bet`, `/channels call`, and `/channels hunch` infer the current
+channel and thread id from the issue marker when no explicit route/channel/
+thread target is provided. They create or reuse one open GitHub issue carrying
+a hidden `gitclaw:channel-forecast` marker for the stable forecast id, label it
+with `gitclaw` so normal conversation can continue there, and queue a
+provider-facing forecast link with the visible title and due/review timing back
+to the mirrored channel thread. The forecast issue contains the human-readable
+title, prediction, evidence, resolution criteria, and due/review timing because
+it is a review surface for learning from predictions, not an active reminder,
+cron job, wager, or scoring system. The source receipt remains body-free,
+reporting only forecast/thread/message/section hashes, duplicate status,
+notification queue metadata, and delivery gates. It does not call a model, call
+provider APIs, create scheduled workflows, create reminders, create betting
+markets, track money or points, mutate the repository, print raw forecast ids,
+print raw thread ids, print raw source or notification message ids, print
+channel message bodies, or print raw forecast sections in the source receipt.
+Duplicates are suppressed first by `forecast_id` for the GitHub forecast issue
+and then by `channel + notify_message_id` for the provider-facing forecast
+link. Changes to this surface require a live E2E that captures the forecast,
+validates the metadata-only forecast-link outbox, checks duplicate suppression,
+proves no schedule/reminder/betting-market/money-or-points/repository mutation
+occurred, and then continues on the forecast issue with a normal GitHub Models
+repo-reader/search follow-up.
 
 The same channel-thread issue can also capture a live brainstorm jam:
 
@@ -8443,8 +8485,8 @@ repo-reader/search follow-up.
 
 The channel-created task, watch, standing-order proposal, backup restore
 request, checkpoint rehearsal, clip, attachment, decision, digest, idea, quest,
-ritual, pact, incident, insight, voice, image, and reminder issues also accept
-a completion form:
+ritual, pact, forecast, incident, insight, voice, image, and reminder issues
+also accept a completion form:
 
 ```text
 @gitclaw /channels done --message-id <stable-outbound-id>
@@ -8526,6 +8568,11 @@ Behavior:
   without creating scheduled workflows, reminders, standing orders, SOUL
   writes, memory writes, policy mutations, repository mutations, provider API
   calls, or model calls,
+- create or reuse one `gitclaw:channel-forecast` issue per forecast id and
+  queue one provider-facing forecast-link outbound comment per
+  `channel + notify_message_id` without creating scheduled workflows,
+  reminders, betting markets, money/points tracking, repository mutations,
+  provider API calls, or model calls,
 - create or reuse one `gitclaw:channel-kudos` issue per kudos id and queue
   one provider-facing acknowledgement outbound comment per
   `channel + notify_message_id`,
@@ -8627,6 +8674,7 @@ Behavior:
   `gitclaw:channel-decision`,
   `gitclaw:channel-digest`, `gitclaw:channel-idea`,
   `gitclaw:channel-jam`, `gitclaw:channel-pact`,
+  `gitclaw:channel-forecast`,
   `gitclaw:channel-kudos`, `gitclaw:channel-retro`,
   `gitclaw:channel-playbook`, `gitclaw:channel-insight`,
   `gitclaw:channel-board-card`, `gitclaw:channel-checklist`,
@@ -8829,6 +8877,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels quest --quest-id channel-quest-1 --message-id provider-msg-1
 @gitclaw /channels ritual --ritual-id channel-ritual-1 --message-id provider-msg-1
 @gitclaw /channels pact --pact-id channel-pact-1 --message-id provider-msg-1
+@gitclaw /channels forecast --forecast-id channel-forecast-1 --message-id provider-msg-1
 @gitclaw /channels whiteboard --jam-id channel-jam-1 --message-id provider-msg-1
 @gitclaw /channels kudos --kudos-id channel-kudos-1 --message-id provider-msg-1
 @gitclaw /channels retro --retro-id channel-retro-1 --message-id provider-msg-1
@@ -11764,6 +11813,18 @@ examples/workflows/gitclaw.yml
   `gitclaw.search_files`, recover the channel-pact fixture token, and avoid
   hidden channel, account, provider, message, pact, participants, agreement,
   scope, and revisit sentinels.
+- A `gh`-driven channel-forecast-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels forecast --forecast-id ... --message-id ...` on that
+  mirrored thread, verifies GitHub forecast issue creation, body-free source
+  receipt metadata, provider-facing forecast-link queueing with title and
+  due/review timing, duplicate forecast and notification suppression, explicit
+  no schedule/reminder/betting-market/money-or-points/repository mutation
+  gates, and metadata-only outbox discovery. The forecast issue then gets a
+  normal GitHub Models issue-comment follow-up that must select `repo-reader`,
+  expose `gitclaw.search_files`, recover the channel-forecast fixture token,
+  and avoid hidden channel, account, provider, message, forecast, prediction,
+  evidence, resolution, and due sentinels.
 - A `gh`-driven channel-jam-slash E2E harness creates a real channel-thread
   issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels whiteboard --jam-id ... --message-id ...` on that mirrored

@@ -250,6 +250,30 @@ func TestChannelDoneArtifactRefSupportsPactIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsForecastIssues(t *testing.T) {
+	body := RenderChannelForecastIssueBody(ChannelForecastOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		ForecastID:        "forecast-done-1",
+		Title:             "Launch readiness forecast",
+		Prediction:        "The checklist will stabilize by Friday.",
+		Evidence:          "The unresolved items all have owners.",
+		Resolution:        "Resolve true if the final release checklist has no unowned items.",
+		Due:               "Review Friday afternoon.",
+		SourceIssueNumber: 42,
+		SourceCommentID:   4200,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "forecast" || ref.ID != "forecast-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 42 || ref.SourceCommentID != 4200 {
+		t.Fatalf("unexpected forecast artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsSnippetIssues(t *testing.T) {
 	body := RenderChannelSnippetIssueBody(ChannelSnippetOptions{
 		Repo:              "owner/repo",

@@ -5182,6 +5182,35 @@ sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes cron
 Hermes messaging guide
 (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Forecast Follow-Up
+
+OpenClaw's channel docs keep chat surfaces behind the Gateway boundary, while
+its sessions docs keep persisted conversation records distinct from live
+channel state. Hermes' messaging and cron docs make a similar split: chat can
+collect intent and deliver responses, but scheduled work and durable action
+definitions are separate systems. A useful GitClaw forecast should therefore
+capture a prediction for later review without quietly creating a reminder,
+cron job, betting market, scoring ledger, or memory write.
+
+GitClaw's translation is `@gitclaw /channels forecast --forecast-id <id>
+--message-id <id>`. It opens or reuses a normal `gitclaw:channel-forecast`
+issue with readable title, prediction, evidence, resolution criteria, and
+due/review timing, queues one provider-facing forecast link with title and due
+timing back to the source Slack/Telegram thread, and keeps the source receipt
+body-free with only hashes, duplicate state, notification metadata, and
+delivery gates. The key boundary is that this is not cron, not a reminder, not
+a betting market, not money/points tracking, not provider delivery, and not a
+repository mutation. Acceptance requires live E2E for forecast issue creation,
+metadata-only forecast-link outbox discovery, duplicate suppression, explicit
+no-automation/no-betting/no-ledger gates, and a real GitHub Models
+repo-reader/search follow-up on the forecast issue.
+
+Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw
+sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes cron
+(`https://hermes-agent.nousresearch.com/docs/user-guide/features/cron/`),
+Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Glossary Follow-Up
 
 OpenClaw and Hermes both treat chat as a live working surface where concepts,
