@@ -711,6 +711,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels decision --decision-id <id> --message-id <id>
 @gitclaw /channels digest --digest-id <id> --message-id <id>
 @gitclaw /channels journal --journal-id <id> --date <date> --message-id <id>
+@gitclaw /channels time-capsule --capsule-id <id> --open-after <hint> --message-id <id>
 @gitclaw /channels quote --quote-id <id> --message-id <id>
 @gitclaw /channels glossary --glossary-id <id> --message-id <id>
 @gitclaw /channels faq --faq-id <id> --message-id <id>
@@ -1215,6 +1216,14 @@ memory-note link with the issue link, target, and title only, and keeps the
 source receipt body-free. It does not write `.gitclaw/MEMORY.md`, promote
 memory, mutate memory, or edit repository files; memory changes stay in
 explicit reviewed follow-ups.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+time-capsule --capsule-id <id> --open-after <hint> --message-id <id>`
+preserves a channel future-note as a durable GitHub time-capsule issue. The
+capsule issue holds the readable open-after hint, title, and message, queues a
+provider-facing time-capsule link with the issue link, open-after hint, and
+title only, and keeps the source receipt body-free. It does not schedule
+future delivery, create reminders, call a model, or edit repository files;
+turning the capsule into a reminder stays an explicit reviewed follow-up.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 tool-lesson --note-id <id> --tool <tool> --message-id <id>` preserves a
 channel lesson about tool usage as a durable GitHub tool-lesson issue. The
@@ -1910,6 +1919,7 @@ scripts/e2e/github-channel-attachment-slash.sh
 scripts/e2e/github-channel-decision-slash.sh
 scripts/e2e/github-channel-digest-slash.sh
 scripts/e2e/github-channel-journal-slash.sh
+scripts/e2e/github-channel-time-capsule-slash.sh
 scripts/e2e/github-channel-quote-slash.sh
 scripts/e2e/github-channel-glossary-slash.sh
 scripts/e2e/github-channel-faq-slash.sh
@@ -2403,6 +2413,14 @@ visible target and title back to the mirrored thread, checks duplicate
 memory-note and notification suppression, exposes the memory-note notification
 through metadata-only outbox, and then continues on the memory-note issue with
 a real GitHub Models repo-reader/search follow-up.
+The channel-time-capsule slash harness turns the operator console into a
+future-note capture surface: a channel-ingested issue receives `@gitclaw
+/channels time-capsule`, creates or reuses a durable GitHub time-capsule
+issue, queues a provider-facing time-capsule link with only the visible
+open-after hint and title back to the mirrored thread, checks duplicate capsule
+and notification suppression, exposes the time-capsule notification through
+metadata-only outbox, and then continues on the time-capsule issue with a real
+GitHub Models repo-reader/search follow-up.
 The channel-tool-lesson slash harness turns the operator console into a tool
 guidance capture surface: a channel-ingested issue receives `@gitclaw
 /channels tool-lesson`, creates or reuses a durable GitHub tool-lesson issue,

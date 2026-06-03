@@ -6420,6 +6420,42 @@ validates the metadata-only memory-note outbox, checks duplicate suppression,
 and then continues on the memory-note issue with a normal GitHub Models
 repo-reader/search follow-up that makes a real LLM call.
 
+The same channel-thread issue can also preserve a future note without creating
+a scheduler:
+
+```text
+@gitclaw /channels time-capsule --capsule-id <stable-capsule-id> --open-after <human-readable-hint> --message-id <provider-message-id>
+Title: channel-origin future note
+Message:
+optional human-readable message/context/source text
+```
+
+`/channels time-capsule`, `/channels capsule`, `/channels future-note`,
+`/channels save-for-later`, and `/channels open-later` infer the current
+channel and thread id from the issue marker when no explicit route/channel/thread
+target is provided. They create or reuse one open GitHub issue carrying a hidden
+`gitclaw:channel-time-capsule` marker for the stable capsule id, label it with
+`gitclaw` so normal conversation can continue there, and queue a provider-facing
+time-capsule link back to the mirrored channel thread. The time-capsule issue
+contains the human-readable open-after hint, title, and message because it is
+the durable review card; the source receipt remains body-free, reporting only
+capsule/thread/message/open-after/title/message hashes, counts, duplicate
+status, notification queue metadata, and delivery gates. It does not call a
+model, call provider APIs, create scheduled delivery, create reminders, edit
+workflow files, mutate the repository, print raw capsule ids, print raw
+open-after hints, print raw thread ids, print raw source or notification message
+ids, print channel message bodies, or print raw titles or message text in the
+source receipt. Provider-facing notifications include the issue link, visible
+open-after hint, and visible title only, never the capsule message body.
+Duplicates are suppressed first by `capsule_id` for the GitHub time-capsule
+issue and then by `channel + notify_message_id` for the provider-facing
+time-capsule link. Turning the capsule into a real reminder remains a separate
+reviewed follow-up through the reminder/proactive surfaces. Changes to this
+surface require a live E2E that records the time capsule, validates the
+metadata-only time-capsule outbox, checks duplicate suppression, and then
+continues on the time-capsule issue with a normal GitHub Models
+repo-reader/search follow-up that makes a real LLM call.
+
 The same channel-thread issue can also preserve a tool lesson without executing
 or installing tools:
 
@@ -8359,6 +8395,10 @@ Behavior:
 - create or reuse one `gitclaw:channel-journal` issue per journal id and queue
   one provider-facing journal-link outbound comment per
   `channel + notify_message_id` without mutating `.gitclaw/MEMORY.md`,
+- create or reuse one `gitclaw:channel-time-capsule` issue per capsule id and
+  queue one provider-facing time-capsule-link outbound comment per
+  `channel + notify_message_id` without scheduling reminders, creating
+  workflows, or mutating the repository,
 - create or reuse one `gitclaw:channel-idea` issue per idea id and queue one
   provider-facing idea-link outbound comment per `channel + notify_message_id`,
 - create or reuse one `gitclaw:channel-jam` issue per jam id and queue one
@@ -11518,6 +11558,19 @@ examples/workflows/gitclaw.yml
   expose `gitclaw.search_files`, recover the channel-memory-note fixture token,
   and avoid hidden channel, account, provider, message, note id, memory target,
   title, note text, and notification sentinels.
+- A `gh`-driven channel-time-capsule-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels time-capsule --capsule-id ... --open-after ...
+  --message-id ...` on that mirrored thread, verifies GitHub time-capsule issue
+  creation, body-free source receipt metadata, provider-facing
+  time-capsule-link queueing, duplicate capsule and notification suppression,
+  explicit no-scheduled-delivery/no-reminder/no-workflow-creation/
+  no-repository-mutation gates, and metadata-only outbox discovery. The
+  time-capsule issue then gets a normal GitHub Models issue-comment follow-up
+  that must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-time-capsule fixture token, and avoid hidden channel, account,
+  provider, message, capsule id, open-after hint, title, capsule message, and
+  notification sentinels.
 - A `gh`-driven channel-tool-lesson-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels tool-lesson --note-id ... --tool ... --message-id ...`

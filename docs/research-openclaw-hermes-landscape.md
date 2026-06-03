@@ -5162,6 +5162,33 @@ on the memory-note issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Time Capsule Follow-Up
+
+OpenClaw's channel framing makes chat a first-class place to capture context,
+but Hermes' memory and messaging split suggests that "save this for later" is
+not the same thing as "schedule future delivery." GitClaw should preserve that
+distinction in the serverless GitHub design: a Slack or Telegram user can save
+a future note into GitHub without creating a cron workflow, long-running socket,
+or automatic reminder.
+
+GitClaw's serverless version is `@gitclaw /channels time-capsule --capsule-id
+<id> --open-after <hint> --message-id <id>`. It opens or reuses a normal
+`gitclaw:channel-time-capsule` issue with the readable open-after hint, title,
+and message, queues one provider-facing time-capsule issue link back to the
+source Slack/Telegram thread, and keeps the source receipt body-free with only
+open-after/title/message/id hashes, counts, duplicate status, notification
+metadata, and delivery gates. The provider-facing notification includes the
+link, visible open-after hint, and visible title only, not the capsule message.
+The action does not call a model, schedule delivery, create reminders, edit
+workflow files, mutate the repository, call provider APIs, or print raw provider
+IDs, capsule IDs, open-after hints, titles, message text, or channel bodies in
+the source receipt. Acceptance requires live E2E for time-capsule issue
+creation, metadata-only outbox discovery, duplicate suppression, and a real
+GitHub Models repo-reader/search follow-up on the time-capsule issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Tool Lesson Follow-Up
 
 OpenClaw's channel gateway framing and Hermes' messaging model both make

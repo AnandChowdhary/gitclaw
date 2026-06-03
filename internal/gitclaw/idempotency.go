@@ -39,6 +39,7 @@ var channelSnippetMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-sni
 var channelDecisionMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-decision\s+([^>]*)-->`)
 var channelDigestMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-digest\s+([^>]*)-->`)
 var channelJournalMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-journal\s+([^>]*)-->`)
+var channelTimeCapsuleMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-time-capsule\s+([^>]*)-->`)
 var channelQuoteMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-quote\s+([^>]*)-->`)
 var channelGlossaryMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-glossary\s+([^>]*)-->`)
 var channelFAQMarkerPattern = regexp.MustCompile(`<!--\s*gitclaw:channel-faq\s+([^>]*)-->`)
@@ -305,6 +306,10 @@ func HasChannelDigestMarker(body string) bool {
 
 func HasChannelJournalMarker(body string) bool {
 	return channelJournalMarkerPattern.MatchString(body)
+}
+
+func HasChannelTimeCapsuleMarker(body string) bool {
+	return channelTimeCapsuleMarkerPattern.MatchString(body)
 }
 
 func HasChannelQuoteMarker(body string) bool {

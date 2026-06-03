@@ -594,6 +594,28 @@ func TestChannelDoneArtifactRefSupportsMemoryNoteIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsTimeCapsuleIssues(t *testing.T) {
+	body := RenderChannelTimeCapsuleIssueBody(ChannelTimeCapsuleOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		CapsuleID:         "capsule-done-1",
+		OpenAfter:         "2030-01-01",
+		Title:             "Open when the roadmap feels stale",
+		Message:           "Revisit the channel-origin idea before turning it into a task.",
+		SourceIssueNumber: 44,
+		SourceCommentID:   4402,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "time-capsule" || ref.ID != "capsule-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 44 || ref.SourceCommentID != 4402 {
+		t.Fatalf("unexpected time-capsule artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsIdeaIssues(t *testing.T) {
 	body := RenderChannelIdeaIssueBody(ChannelIdeaOptions{
 		Repo:              "owner/repo",
