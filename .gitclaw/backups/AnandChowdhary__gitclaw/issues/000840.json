@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T17:00:44Z",
+  "generated_at": "2026-06-03T17:02:39Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4614827760,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels reply-chips handoff --message-id quick-replies-ingest-20260603t165647z --notify-message-id quick-replies-notify-20260603t165647z --reply-id quick-replies-20260603t165647z\nNote: Keep replies short.\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_QUICK_REPLIES_DUPLICATE_20260603t165647z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4614834432,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Quick Replies Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#840`\n- requested_channel_command: `/channels reply-chips`\n- channel_quick_replies_status: `duplicate`\n- quick_replies_mode: `provider-facing-reply-chips`\n- notification_target_issue: `#840`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `cce3f34701a7`\n- source_message_id_sha256_12: `ed9f06e19f20`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `245fbba16645`\n- notify_message_id_auto: `false`\n- quick_replies_id_sha256_12: `991150f1adaf`\n- quick_replies_id_auto: `false`\n- quick_replies_lane_sha256_12: `249215fed826`\n- quick_replies_lane_bytes: `7`\n- quick_replies_lane_terms: `1`\n- quick_replies_lane_source: `positional`\n- quick_replies_option_count: `4`\n- quick_replies_options_sha256_12: `c7de28600aa2`\n- quick_replies_note_sha256_12: `2e16dc048cbd`\n- quick_replies_note_bytes: `19`\n- quick_replies_note_lines: `1`\n- quick_replies_note_source: `trailing-note`\n- notification_body_sha256_12: `127497e62bc4`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- command_execution_performed: `false`\n- artifact_issue_created: `false`\n- task_issue_created: `false`\n- reminder_created: `false`\n- skill_install_performed: `false`\n- tool_execution_performed: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_quick_replies_id_included: `false`\n- raw_quick_replies_lane_included: `false`\n- raw_quick_replies_note_included: `false`\n- raw_quick_replies_options_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_quick_replies_action_change: `true`\n- issue_title_sha256_12: `d39889cb65eb`\n\nGitClaw queued provider-facing quick replies on the canonical channel issue. This turns a Slack or Telegram thread into a small next-action surface: users can copy a suggested command, while this action itself does not execute commands, create artifacts, create tasks or reminders, install skills, execute tools, call a model, call provider APIs, edit workflows, mutate the repository, or deliver through provider APIs. The source receipt keeps thread ids, message ids, quick-reply ids, lanes, notes, option text, and channel bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read quick replies with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent quick replies with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate quick replies are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4614843508,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T17:00:12Z",
       "updated_at": "2026-06-03T17:00:12Z"
+    },
+    {
+      "id": 4614834432,
+      "body": "@gitclaw /channels reply-chips handoff --message-id quick-replies-ingest-20260603t165647z --notify-message-id quick-replies-notify-20260603t165647z --reply-id quick-replies-20260603t165647z\nNote: Keep replies short.\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_QUICK_REPLIES_DUPLICATE_20260603t165647z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T17:01:00Z",
+      "updated_at": "2026-06-03T17:01:00Z"
+    },
+    {
+      "id": 4614843508,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26900204585\" event_id=\"comment-4614834432\" model=\"gitclaw/channels\" idempotency_key=\"f8009cee3b89a221821ee41e6fdce87a\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26900204585\" --\u003e\n## GitClaw Channel Quick Replies Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#840`\n- requested_channel_command: `/channels reply-chips`\n- channel_quick_replies_status: `duplicate`\n- quick_replies_mode: `provider-facing-reply-chips`\n- notification_target_issue: `#840`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `cce3f34701a7`\n- source_message_id_sha256_12: `ed9f06e19f20`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `245fbba16645`\n- notify_message_id_auto: `false`\n- quick_replies_id_sha256_12: `991150f1adaf`\n- quick_replies_id_auto: `false`\n- quick_replies_lane_sha256_12: `249215fed826`\n- quick_replies_lane_bytes: `7`\n- quick_replies_lane_terms: `1`\n- quick_replies_lane_source: `positional`\n- quick_replies_option_count: `4`\n- quick_replies_options_sha256_12: `c7de28600aa2`\n- quick_replies_note_sha256_12: `2e16dc048cbd`\n- quick_replies_note_bytes: `19`\n- quick_replies_note_lines: `1`\n- quick_replies_note_source: `trailing-note`\n- notification_body_sha256_12: `127497e62bc4`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- command_execution_performed: `false`\n- artifact_issue_created: `false`\n- task_issue_created: `false`\n- reminder_created: `false`\n- skill_install_performed: `false`\n- tool_execution_performed: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_quick_replies_id_included: `false`\n- raw_quick_replies_lane_included: `false`\n- raw_quick_replies_note_included: `false`\n- raw_quick_replies_options_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_quick_replies_action_change: `true`\n- issue_title_sha256_12: `d39889cb65eb`\n\nGitClaw queued provider-facing quick replies on the canonical channel issue. This turns a Slack or Telegram thread into a small next-action surface: users can copy a suggested command, while this action itself does not execute commands, create artifacts, create tasks or reminders, install skills, execute tools, call a model, call provider APIs, edit workflows, mutate the repository, or deliver through provider APIs. The source receipt keeps thread ids, message ids, quick-reply ids, lanes, notes, option text, and channel bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read quick replies with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent quick replies with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate quick replies are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T17:02:07Z",
+      "updated_at": "2026-06-03T17:02:07Z"
     }
   ]
 }
