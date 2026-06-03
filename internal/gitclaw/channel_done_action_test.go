@@ -553,6 +553,28 @@ func TestChannelDoneArtifactRefSupportsChecklistIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsAgendaIssues(t *testing.T) {
+	body := RenderChannelAgendaIssueBody(ChannelAgendaOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		AgendaID:          "agenda-done-1",
+		Title:             "Plan launch review",
+		Items:             "- Confirm scope\n- Decide owner",
+		Notes:             "Keep the agenda reviewable.",
+		SourceIssueNumber: 51,
+		SourceCommentID:   5101,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "agenda" || ref.ID != "agenda-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 51 || ref.SourceCommentID != 5101 {
+		t.Fatalf("unexpected agenda artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsToolsetProposalIssues(t *testing.T) {
 	body := RenderChannelToolsetProposalIssueBody(ChannelToolsetProposalOptions{
 		Repo:              "owner/repo",

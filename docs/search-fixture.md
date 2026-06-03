@@ -241,3 +241,4 @@ channel soul status unique search fixture phrase => GITCLAW_CHANNEL_SOUL_STATUS_
 channel topic unique search fixture phrase => GITCLAW_CHANNEL_TOPIC_CONTEXT_V1
 channel fork unique search fixture phrase => GITCLAW_CHANNEL_FORK_CONTEXT_V1
 channel merge unique search fixture phrase => GITCLAW_CHANNEL_MERGE_CONTEXT_V1
+channel agenda unique search fixture phrase => GITCLAW_CHANNEL_AGENDA_CONTEXT_V1

@@ -5763,6 +5763,31 @@ and a real GitHub Models repo-reader/search follow-up on the channel issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Agenda Follow-Up
+
+OpenClaw's durable workspace framing points toward turning fuzzy chat context
+into explicit review surfaces, while Hermes' messaging guide separates channel
+transport from normalized agent sessions. The agenda primitive keeps that split:
+Slack/Telegram only wake the serverless GitHub loop, and the actual meeting or
+discussion agenda becomes a normal GitHub issue where the assistant can later
+search repo context, convert outcomes into tasks or decisions, and preserve the
+thread without depending on a socket.
+
+GitClaw's version is `@gitclaw /channels agenda --agenda-id <id> --message-id
+<id>`. It opens or reuses a normal `gitclaw:channel-agenda` issue with a
+readable title, ordered agenda items, and notes, queues one provider-facing
+agenda link to the source Slack/Telegram thread, and keeps the source receipt
+body-free with only hashes, item counts, duplicate state, and delivery gates.
+The action does not call a model, call provider APIs, mutate `.gitclaw/`, mark
+agenda items complete, or expose raw provider IDs, agenda IDs, item text, notes,
+or mirrored channel bodies in the source receipt. Acceptance requires live E2E
+for agenda issue creation, metadata-only agenda outbox discovery, duplicate
+suppression, `/channels done` artifact recognition, and a real GitHub Models
+repo-reader/search follow-up on the agenda issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-02 Channel Access Review Follow-Up
 
 Hermes' messaging gateway model separates provider transport from agent

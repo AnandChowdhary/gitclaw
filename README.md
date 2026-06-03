@@ -718,6 +718,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels insight --insight-id <id> --message-id <id>
 @gitclaw /channels board-card --card-id <id> --lane <lane> --message-id <id>
 @gitclaw /channels checklist --checklist-id <id> --message-id <id>
+@gitclaw /channels agenda --agenda-id <id> --message-id <id>
 @gitclaw /channels propose-workspace --workspace-id <id> --target .gitclaw/workspaces/<name>.md --message-id <id>
 @gitclaw /channels incident --incident-id <id> --severity <severity> --message-id <id>
 @gitclaw /channels voice --voice-id <id> --duration <seconds> --message-id <id>
@@ -1208,6 +1209,14 @@ checklist link that shows only the title and item count, keeps the source
 receipt body-free with hashes/counts, and explicitly does not call a model,
 mutate the repository, call provider APIs, or change task state outside GitHub
 review.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels agenda
+--agenda-id <id> --message-id <id>` records a channel-origin meeting or
+discussion agenda as a durable GitHub issue. The agenda issue holds readable
+title, ordered agenda items, and notes; the channel action queues a
+provider-facing agenda link that shows only the title and item count, keeps the
+source receipt body-free with hashes/counts, and explicitly does not call a
+model, mutate the repository, call provider APIs, or treat agenda items as
+completed tasks outside GitHub review.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 propose-workspace --workspace-id <id> --target .gitclaw/workspaces/<name>.md
 --message-id <id>` records a channel-origin workspace/context proposal as a
@@ -1531,7 +1540,7 @@ receipt body-free. Scheduled GitHub Actions can later use the reminder issue as
 the canonical wake-up lane without a socket or webhook.
 Inside a channel-created task, watch, standing-order proposal, backup restore
 request, checkpoint rehearsal, clip, attachment, decision, digest, idea,
-retro, playbook, insight, board card, checklist, toolset proposal, workspace
+retro, playbook, insight, board card, checklist, agenda, toolset proposal, workspace
 proposal, incident, voice, image, link, access request, contact, or reminder
 issue, `@gitclaw /channels done --message-id <id>`
 closes the GitHub artifact issue and queues a provider-facing acknowledgement
@@ -1824,6 +1833,7 @@ scripts/e2e/github-channel-playbook-slash.sh
 scripts/e2e/github-channel-insight-slash.sh
 scripts/e2e/github-channel-board-card-slash.sh
 scripts/e2e/github-channel-checklist-slash.sh
+scripts/e2e/github-channel-agenda-slash.sh
 scripts/e2e/github-channel-workspace-proposal-slash.sh
 scripts/e2e/github-channel-incident-slash.sh
 scripts/e2e/github-channel-voice-slash.sh
@@ -2297,6 +2307,14 @@ link back to the mirrored thread, checks that no repository mutation happened,
 checks duplicate checklist and notification suppression, exposes the link
 through metadata-only outbox, and then continues on the checklist issue with a
 real GitHub Models repo-reader/search follow-up.
+The channel-agenda slash harness turns a mirrored Slack/Telegram thread into a
+durable GitHub agenda: a channel-ingested issue receives `@gitclaw /channels
+agenda`, creates or reuses a normal GitHub agenda issue with readable title,
+ordered agenda items, and notes, queues a provider-facing agenda link back to
+the mirrored thread, checks that no repository mutation happened, checks
+duplicate agenda and notification suppression, exposes the link through
+metadata-only outbox, and then continues on the agenda issue with a real GitHub
+Models repo-reader/search follow-up.
 The channel-workspace-proposal slash harness turns the operator console into a
 workspace-context intake lane: a channel-ingested issue receives `@gitclaw
 /channels propose-workspace`, creates or reuses a durable GitHub workspace

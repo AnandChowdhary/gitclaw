@@ -6433,6 +6433,43 @@ checks duplicate suppression, asserts that no repository mutation happened,
 and then continues on the checklist issue with a normal GitHub Models
 repo-reader/search follow-up.
 
+The same channel-thread issue can also record a meeting or discussion agenda:
+
+```text
+@gitclaw /channels agenda --agenda-id <stable-agenda-id> --message-id <provider-message-id>
+Title: short agenda title
+Topics:
+- first discussion point
+- second discussion point
+Notes:
+human-readable preparation context or desired outcome
+```
+
+`/channels agenda`, `/channels meeting`, `/channels meeting-agenda`,
+`/channels topics`, `/channels talking-points`, and `/channels discussion`
+infer the current channel and thread id from the issue marker when no explicit
+route/channel/thread target is provided. They create or reuse one open GitHub
+issue carrying a hidden `gitclaw:channel-agenda` marker for the stable agenda
+id, label it with `gitclaw` so normal conversation can continue there, and
+queue a provider-facing agenda link back to the mirrored channel thread. The
+agenda issue contains the human-readable title, ordered agenda items, and notes
+because it is the reviewable place to prepare a discussion and then convert
+outcomes into tasks, reminders, decisions, playbooks, or proactive jobs; the
+source receipt remains body-free, reporting only agenda/thread/message/title/
+item hashes, item count, duplicate status, notification queue metadata, and
+delivery gates. The provider-facing acknowledgement can show the title, item
+count, and GitHub issue link but not the items or notes. It does not call a
+model, call provider APIs, mutate the repository, write project-board state,
+mark agenda items done, print raw agenda ids, print raw thread ids, print raw
+source or notification message ids, print channel message bodies, or print raw
+section text in the source receipt. Duplicates are suppressed first by
+`agenda_id` for the GitHub agenda issue and then by `channel +
+notify_message_id` for the provider-facing agenda link. Changes to this surface
+require a live E2E that records the agenda, validates the metadata-only agenda
+outbox, checks duplicate suppression, asserts that no repository mutation
+happened, and then continues on the agenda issue with a normal GitHub Models
+repo-reader/search follow-up.
+
 The same channel-thread issue can also record a workspace/context proposal:
 
 ```text
@@ -8020,6 +8057,10 @@ Behavior:
   queue one provider-facing checklist outbound comment per
   `channel + notify_message_id` without marking checklist items done, mutating
   the repository, calling provider APIs, or calling a model,
+- create or reuse one `gitclaw:channel-agenda` issue per agenda id and queue
+  one provider-facing agenda outbound comment per `channel + notify_message_id`
+  without marking agenda items done, mutating the repository, calling provider
+  APIs, or calling a model,
 - create or reuse one `gitclaw:channel-toolset-proposal` issue per toolset id
   and queue one provider-facing proposal-link outbound comment per
   `channel + notify_message_id` without enabling toolsets, executing tools,
@@ -8096,6 +8137,7 @@ Behavior:
   `gitclaw:channel-kudos`, `gitclaw:channel-retro`,
   `gitclaw:channel-playbook`, `gitclaw:channel-insight`,
   `gitclaw:channel-board-card`, `gitclaw:channel-checklist`,
+  `gitclaw:channel-agenda`,
   `gitclaw:channel-toolset-proposal`,
   `gitclaw:channel-prompt-proposal`,
   `gitclaw:channel-workspace-proposal`, `gitclaw:channel-incident`,
@@ -8298,6 +8340,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels insight --insight-id channel-insight-1 --message-id provider-msg-1
 @gitclaw /channels board-card --card-id channel-board-card-1 --lane doing --message-id provider-msg-1
 @gitclaw /channels checklist --checklist-id channel-checklist-1 --message-id provider-msg-1
+@gitclaw /channels agenda --agenda-id channel-agenda-1 --message-id provider-msg-1
 @gitclaw /channels propose-workspace --workspace-id channel-workspace-proposal-1 --target .gitclaw/workspaces/channel-review.md --message-id provider-msg-1
 @gitclaw /channels incident --incident-id channel-incident-1 --severity sev2 --message-id provider-msg-1
 @gitclaw /channels voice --voice-id channel-voice-1 --duration 47 --message-id provider-msg-1
@@ -11132,6 +11175,16 @@ examples/workflows/gitclaw.yml
   expose `gitclaw.search_files`, recover the channel-checklist fixture token,
   and avoid hidden channel, account, provider, message, checklist, item, and
   note sentinels.
+- A `gh`-driven channel-agenda-slash E2E harness creates a real channel-thread
+  issue through `gitclaw-channel-ingest.yml`, posts `@gitclaw /channels agenda
+  --agenda-id ... --message-id ...` on that mirrored thread, verifies GitHub
+  agenda issue creation, body-free source receipt metadata, provider-facing
+  agenda link queueing, duplicate agenda and notification suppression,
+  explicit no-repository-mutation gates, and metadata-only outbox discovery.
+  The agenda issue then gets a normal GitHub Models issue-comment follow-up
+  that must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-agenda fixture token, and avoid hidden channel, account, provider,
+  message, agenda, item, and note sentinels.
 - A `gh`-driven channel-workspace-proposal-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels propose-workspace --workspace-id ... --target ... --message-id
