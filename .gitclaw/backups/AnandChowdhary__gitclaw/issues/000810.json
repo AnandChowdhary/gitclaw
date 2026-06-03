@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-03T08:05:06Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 810,
+    "title": "GitClaw channel pact: Find the shortest useful channel loop 20260603t075746z",
+    "body": "\u003c!-- gitclaw:channel-pact pact_id=\"channel-pact-20260603t075746z\" channel=\"telegram\" thread_id_sha256_12=\"56ce71141a59\" source_message_id_sha256_12=\"cefdcc597926\" source_issue=\"809\" source_comment_id=\"4610258943\" --\u003e\nGitClaw channel pact.\n\n- pact_id: channel-pact-20260603t075746z\n- source_channel: telegram\n- source_issue: #809\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/809\n- source_comment_id: 4610258943\n- thread_id_sha256_12: 56ce71141a59\n- source_message_id_sha256_12: cefdcc597926\n- pact_mode: github-issue-pact\n- scheduled_workflow_created: false\n- reminder_created: false\n- standing_order_created: false\n- soul_write_performed: false\n- memory_write_performed: false\n- policy_mutation_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Title\n\nFind the shortest useful channel loop 20260603t075746z\n\n## Participants\n\nVisible participants token: VISIBLE_CHANNEL_PACT_PARTICIPANTS_20260603t075746z\n\n## Agreement\n\nVisible agreement token: VISIBLE_CHANNEL_PACT_AGREEMENT_20260603t075746z\n\n## Scope\n\nVisible scope token: VISIBLE_CHANNEL_PACT_SCOPE_20260603t075746z\n\n## Revisit\n\nVisible revisit token: VISIBLE_CHANNEL_PACT_REVISIT_20260603t075746z\n\nUse this issue as the reviewable GitHub home for deciding whether the channel pact should become a standing order, soul proposal, memory proposal, policy change, skill, or be closed.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel pact: Find the shortest useful channel loop 20260603t075746z\n\n\u003c!-- gitclaw:channel-pact pact_id=\"channel-pact-20260603t075746z\" channel=\"telegram\" thread_id_sha256_12=\"56ce71141a59\" source_message_id_sha256_12=\"cefdcc597926\" source_issue=\"809\" source_comment_id=\"4610258943\" --\u003e\nGitClaw channel pact.\n\n- pact_id: channel-pact-20260603t075746z\n- source_channel: telegram\n- source_issue: #809\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/809\n- source_comment_id: 4610258943\n- thread_id_sha256_12: 56ce71141a59\n- source_message_id_sha256_12: cefdcc597926\n- pact_mode: github-issue-pact\n- scheduled_workflow_created: false\n- reminder_created: false\n- standing_order_created: false\n- soul_write_performed: false\n- memory_write_performed: false\n- policy_mutation_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Title\n\nFind the shortest useful channel loop 20260603t075746z\n\n## Participants\n\nVisible participants token: VISIBLE_CHANNEL_PACT_PARTICIPANTS_20260603t075746z\n\n## Agreement\n\nVisible agreement token: VISIBLE_CHANNEL_PACT_AGREEMENT_20260603t075746z\n\n## Scope\n\nVisible scope token: VISIBLE_CHANNEL_PACT_SCOPE_20260603t075746z\n\n## Revisit\n\nVisible revisit token: VISIBLE_CHANNEL_PACT_REVISIT_20260603t075746z\n\nUse this issue as the reviewable GitHub home for deciding whether the channel pact should become a standing order, soul proposal, memory proposal, policy change, skill, or be closed.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created pact and use the repo-reader skill.\n\nSearch the repository for `channel pact unique search fixture phrase`.\nThe matching repository search result line has the form `channel pact unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_PACT_`.\nCopy the complete right-hand side token exactly, including the final `CONTEXT_V1` suffix.\nThe answer must end with `CONTEXT_V1`; `GITCLAW_CHANNEL_PACT_` alone is incomplete and must not be used.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include pact ids, message ids, thread ids, account hashes, issue numbers, pact titles, participants, agreements, scopes, or revisits.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_PACT_FOLLOWUP_20260603t075746z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4610288320,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_PACT_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4610295250,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4610288320,
+      "body": "@gitclaw Continue this channel-created pact and use the repo-reader skill.\n\nSearch the repository for `channel pact unique search fixture phrase`.\nThe matching repository search result line has the form `channel pact unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_PACT_`.\nCopy the complete right-hand side token exactly, including the final `CONTEXT_V1` suffix.\nThe answer must end with `CONTEXT_V1`; `GITCLAW_CHANNEL_PACT_` alone is incomplete and must not be used.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include pact ids, message ids, thread ids, account hashes, issue numbers, pact titles, participants, agreements, scopes, or revisits.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_PACT_FOLLOWUP_20260603t075746z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T08:03:33Z",
+      "updated_at": "2026-06-03T08:03:33Z"
+    },
+    {
+      "id": 4610295250,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26871860424\" event_id=\"comment-4610288320\" model=\"openai/gpt-5-nano\" idempotency_key=\"6a1a8f6193fd2b47c1c7b74740db8952\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26871860424\" prompt_context_sha256_12=\"72b925e78e64\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10971\" usage_completion_tokens=\"404\" usage_total_tokens=\"11375\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_PACT_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T08:04:34Z",
+      "updated_at": "2026-06-03T08:04:34Z"
+    }
+  ]
+}
