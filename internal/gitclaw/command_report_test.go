@@ -119,6 +119,7 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"Queue provider-facing celebration toast cards without opening durable kudos issues",
 		"Queue provider-facing deterministic haiku cards from bounded static line decks",
 		"Queue provider-facing repo-aware next-move coach cards from skill/tool/soul metadata",
+		"Queue mirrored channel safe skill-bundle map cards without installing skills",
 		"Queue provider-facing backup recovery-map cards without fetching backup branches",
 		"queue mirrored channel browser-readiness replies without opening browser sessions",
 		"`gitclaw bundles catalog` command=`/bundles`",

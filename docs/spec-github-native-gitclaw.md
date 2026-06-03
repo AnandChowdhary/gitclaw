@@ -8023,6 +8023,44 @@ provider API/workflow mutation/repository mutation happened, and then
 continues on the same channel issue with a normal GitHub Models
 repo-reader/search follow-up.
 
+The same channel-thread issue can ask for a safe skill-bundle map before
+opening any reviewed bundle or skill issue:
+
+```text
+@gitclaw /channels bundle-map repo-context --map-id <stable-map-id> --message-id <provider-message-id> --notify-message-id <stable-outbound-id>
+Note: Keep bundle usage reviewed.
+```
+
+`/channels bundle-map`, `/channels bundles-map`, `/channels skill-bundle-map`,
+`/channels skill-bundles-map`, `/channels bundle-path`, `/channels
+bundle-flow`, `/channels bundle-runbook`, `/channels bundle-safety`, and
+`/channels safe-bundle` infer the current channel and thread id from the issue
+marker when no explicit route/channel/thread target is provided. They queue one
+provider-facing sequence card that shows compact repo-local bundle metadata,
+resolved and missing skill refs, and the safe path through bundle info, bundle
+risk, skill-map, bundle rehearsal, and bundle proposal commands. This is a
+map, not bundle activation or review creation: the action does not call a
+model, load full bundle bodies or instructions, load full `SKILL.md` bodies,
+install skills, update skills, enable bundles, write bundle YAML, run
+installers, create bundle proposal issues, create bundle rehearsal issues,
+create skill proposal issues, call provider APIs, mutate workflows, or mutate
+repository files. The provider card may show the requested bundle, matched
+skill refs, note, and step commands because it is the user-facing map. The
+source receipt remains body-free, reporting only hashes, sizes, counts,
+duplicate status, notification metadata, bundle snapshot metadata, and hard
+delivery gates. It does not print raw map ids, raw requested bundle names, raw
+notes, raw provider thread/message ids, raw step text, raw bundle names, raw
+bundle paths, raw bundle descriptions, raw bundle instructions, raw bundle
+bodies, raw skill names, raw skill paths, raw skill bodies, raw channel bodies,
+source bodies, issue bodies, comment bodies, prompts, or tool outputs.
+Duplicates are suppressed by `channel + notify_message_id`. Changes to this
+surface require a live E2E that records the bundle-map request, validates the
+metadata-only outbox, checks duplicate suppression, proves no skill install/
+update/bundle enablement/bundle YAML write/installer run/review issue
+creation/model/provider API/workflow mutation/repository mutation happened,
+and then continues on the same channel issue with a normal GitHub Models
+repo-reader/search follow-up.
+
 The same channel-thread issue can answer a tools/capabilities status request
 without executing tools or exposing raw schemas:
 
@@ -9533,6 +9571,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels skill-search repo-reader --message-id provider-msg-1 --notify-message-id provider-skill-search-ack-1
 @gitclaw /channels skill-info repo-reader --message-id provider-msg-1 --notify-message-id provider-skill-info-ack-1
 @gitclaw /channels skill-map repo-reader --map-id channel-skill-map-1 --message-id provider-msg-1 --notify-message-id provider-skill-map-ack-1
+@gitclaw /channels bundle-map repo-context --map-id channel-bundle-map-1 --message-id provider-msg-1 --notify-message-id provider-bundle-map-ack-1
 @gitclaw /channels tool-search read_file --message-id provider-msg-1 --notify-message-id provider-tool-search-ack-1
 @gitclaw /channels tool-info read_file --message-id provider-msg-1 --notify-message-id provider-tool-info-ack-1
 @gitclaw /channels tool-map search_files --map-id channel-tool-map-1 --message-id provider-msg-1 --notify-message-id provider-tool-map-ack-1
@@ -12913,6 +12952,21 @@ examples/workflows/gitclaw.yml
   `gitclaw.search_files`, recover the channel-skill-map fixture token, and
   avoid hidden channel, account, message, map, note, skill-body, and
   notification sentinels.
+- A `gh`-driven channel-bundle-map-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels bundle-map ...` on that mirrored thread, verifies one
+  provider-facing safe skill-bundle sequence card, source receipt metadata
+  without raw bundle-map ids, requested bundle names, notes, step text, bundle
+  names, paths, descriptions, instructions, bodies, skill names, skill paths,
+  or skill bodies, duplicate notification suppression, metadata-only outbox
+  discovery, and explicit no-skill-install/no-skill-update/no-bundle-
+  enablement/no-bundle-YAML-write/no-installer-run/no-bundle-proposal-issue/no-
+  bundle-rehearsal-issue/no-skill-proposal-issue/no-model-call/no-provider-
+  API/no-workflow-mutation/no-repository-mutation flags. The channel-thread
+  issue then gets a normal GitHub Models issue-comment follow-up that must
+  select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-bundle-map fixture token, and avoid hidden channel, account, message,
+  map, note, bundle-body, skill-body, and notification sentinels.
 - A `gh`-driven channel-tool-search-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels tool-search ...` on that mirrored thread, verifies

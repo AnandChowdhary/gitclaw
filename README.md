@@ -765,6 +765,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels skill-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels skill-info <skill> --message-id <id> --notify-message-id <id>
 @gitclaw /channels skill-map <skill> --map-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels bundle-map <bundle> --map-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels tool-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels tool-info <tool> --message-id <id> --notify-message-id <id>
 @gitclaw /channels tool-map <tool> --map-id <id> --message-id <id> --notify-message-id <id>
@@ -1640,6 +1641,16 @@ bodies, install or update skills, contact registries, create proposal,
 rehearsal, or note issues, call a model, mutate workflows, mutate the
 repository, or call provider APIs; source receipts keep skill names, notes,
 step text, provider ids, and channel bodies out of band with hashes.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+bundle-map <bundle> --map-id <id> --message-id <id> --notify-message-id <id>`
+queues a provider-facing safe skill-bundle map back to the current channel
+thread. It shows compact repo-local bundle metadata, resolved and missing
+skill refs, and the reviewed path through bundle info/risk, skill-map,
+rehearsal, and bundle proposal commands, but it does not load bundle bodies or
+instructions, install skills, enable bundles, write bundle YAML, create
+proposal or rehearsal issues, call a model, mutate workflows, mutate the
+repository, or call provider APIs; source receipts keep bundle names, notes,
+step text, provider ids, and channel bodies out of band with hashes.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels tools
 --message-id <id>` queues a provider-facing tool-status snapshot back to the
 current channel thread. It reports compact deterministic tool availability,
@@ -1989,6 +2000,7 @@ scripts/e2e/github-channel-memory-search-slash.sh
 scripts/e2e/github-channel-skill-search-slash.sh
 scripts/e2e/github-channel-skill-info-slash.sh
 scripts/e2e/github-channel-skill-map-slash.sh
+scripts/e2e/github-channel-bundle-map-slash.sh
 scripts/e2e/github-channel-tool-search-slash.sh
 scripts/e2e/github-channel-tool-info-slash.sh
 scripts/e2e/github-channel-backup-rehearsal-slash.sh
@@ -2058,6 +2070,7 @@ scripts/e2e/github-bundles-provenance-report.sh
 scripts/e2e/github-bundles-risk-report.sh
 scripts/e2e/github-bundles-rehearse-issue.sh
 scripts/e2e/github-channel-bundle-proposal-slash.sh
+scripts/e2e/github-channel-bundle-map-slash.sh
 scripts/e2e/github-orders-risk-report.sh
 scripts/e2e/github-policy-risk-report.sh
 scripts/e2e/github-approvals-catalog-report.sh
@@ -3032,6 +3045,15 @@ contacting registries, loading skill bodies, creating those review issues, or
 calling a model, checks duplicate notification suppression, exposes the
 skill-map notification through metadata-only outbox, and then continues on the
 channel thread itself with a real GitHub Models repo-reader/search follow-up.
+The channel-bundle-map slash harness adds the skill-bundle sequence card: a
+channel-ingested issue receives `@gitclaw /channels bundle-map`, queues a
+provider-facing path from bundle metadata and risk review to skill-map,
+rehearsal, and proposal commands without installing skills, enabling bundles,
+writing bundle YAML, loading bundle bodies/instructions, creating those review
+issues, or calling a model, checks duplicate notification suppression, exposes
+the bundle-map notification through metadata-only outbox, and then continues
+on the channel thread itself with a real GitHub Models repo-reader/search
+follow-up.
 The channel-tool-search slash harness turns tool discovery into provider-visible
 capability recall: a channel-ingested issue receives `@gitclaw /channels
 tool-search`, queues tool contract matches back to the mirrored thread without
