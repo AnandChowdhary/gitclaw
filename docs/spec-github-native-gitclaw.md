@@ -6495,6 +6495,39 @@ checks duplicate suppression, verifies raw URLs do not leak into receipts, and
 then continues on the link-card issue with a normal GitHub Models
 repo-reader/search follow-up.
 
+The same channel-thread issue can also save a message bookmark:
+
+```text
+@gitclaw /channels bookmark-message --bookmark-id <stable-bookmark-id> --message-id <provider-message-id>
+Bookmark: short saved-context title
+Reason:
+optional human-readable reason this message matters
+```
+
+`/channels bookmark-message`, `/channels save-message`, `/channels preserve`,
+`/channels keep`, and `/channels flag-message` infer the current channel and
+thread id from the issue marker when no explicit route/channel/thread target
+is provided. They create or reuse one open GitHub issue carrying a hidden
+`gitclaw:channel-bookmark` marker for the stable bookmark id, label it with
+`gitclaw` so normal conversation can continue there, and queue a
+provider-facing bookmark acknowledgement back to the mirrored channel thread.
+This is intentionally distinct from `/channels bookmark`, which remains a
+provider reaction alias. The bookmark issue contains the human-readable title
+and notes plus an optional reference URL hash because it is the reviewable,
+searchable follow-up surface; the source receipt remains body-free, reporting
+only bookmark/thread/message/title/note hashes, optional reference URL hash,
+duplicate status, notification queue metadata, and delivery gates. It does not
+call a model, call provider APIs, fetch URLs, print raw bookmark ids, print raw
+thread ids, print raw source or notification message ids, print raw reference
+URLs, print channel message bodies, or print raw titles/notes in the source
+receipt. Duplicates are suppressed first by `bookmark_id` for the GitHub
+bookmark issue and then by `channel + notify_message_id` for the
+provider-facing acknowledgement. Changes to this surface require a live E2E
+that captures the bookmark, validates the metadata-only bookmark outbox,
+checks duplicate suppression, verifies provider message ids and notes do not
+leak into receipts, and then continues on the bookmark issue with a normal
+GitHub Models repo-reader/search follow-up.
+
 The same channel-thread issue can also open an access or pairing review:
 
 ```text
@@ -7826,6 +7859,9 @@ Behavior:
   provider-facing image-note outbound comment per `channel + notify_message_id`,
 - create or reuse one `gitclaw:channel-link` issue per link id and queue one
   provider-facing link-card outbound comment per `channel + notify_message_id`,
+- create or reuse one `gitclaw:channel-bookmark` issue per bookmark id and
+  queue one provider-facing bookmark acknowledgement outbound comment per
+  `channel + notify_message_id`,
 - create or reuse one `gitclaw:channel-access-request` issue per access id and
   queue one provider-facing access-review outbound comment per
   `channel + notify_message_id` without granting access, mutating allowlists,
@@ -7871,8 +7907,8 @@ Behavior:
   `gitclaw:channel-prompt-proposal`,
   `gitclaw:channel-workspace-proposal`, `gitclaw:channel-incident`,
   `gitclaw:channel-voice`, `gitclaw:channel-image`, `gitclaw:channel-link`,
-  `gitclaw:channel-access-request`, `gitclaw:channel-contact`, or
-  `gitclaw:channel-reminder` issue and queue one
+  `gitclaw:channel-bookmark`, `gitclaw:channel-access-request`,
+  `gitclaw:channel-contact`, or `gitclaw:channel-reminder` issue and queue one
   provider-facing done acknowledgement per `channel + notify_message_id`,
 - suppress duplicate outbound message IDs,
 - for issue-native `/channels send`, post a `model="gitclaw/channels"`
@@ -10916,6 +10952,16 @@ examples/workflows/gitclaw.yml
   `repo-reader`, expose `gitclaw.search_files`, recover the channel-link
   fixture token, and avoid hidden channel, account, provider, message, URL,
   notes, and link sentinels.
+- A `gh`-driven channel-bookmark-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts `@gitclaw
+  /channels bookmark-message --bookmark-id ... --message-id ...` on that
+  mirrored thread, verifies GitHub bookmark issue creation, body-free source
+  receipt metadata, provider-facing bookmark acknowledgement queueing,
+  duplicate bookmark and notification suppression, and metadata-only outbox
+  discovery. The bookmark issue then gets a normal GitHub Models issue-comment
+  follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
+  recover the channel-bookmark fixture token, and avoid hidden channel,
+  account, provider, message, note, and bookmark sentinels.
 - A `gh`-driven channel-access-request-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels access-request --access-id ... --scope ... --message-id

@@ -702,6 +702,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels watch --watch-id <id> --cadence <cadence> --message-id <id>
 @gitclaw /channels propose-order --id <id> --cadence <cadence> --message-id <id>
 @gitclaw /channels clip --clip-id <id> --message-id <id>
+@gitclaw /channels bookmark-message --bookmark-id <id> --message-id <id>
 @gitclaw /channels attachment --attachment-id <id> --message-id <id> --filename <name>
 @gitclaw /channels decision --decision-id <id> --message-id <id>
 @gitclaw /channels digest --digest-id <id> --message-id <id>
@@ -1095,6 +1096,13 @@ clip issue without treating it as work. The clip issue holds the readable title
 and notes, a provider-facing clip link is queued back to the Slack/Telegram
 thread, and the source receipt stays body-free with only hashes, duplicate
 state, notification metadata, and delivery gates.
+Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
+bookmark-message --bookmark-id <id> --message-id <id>` saves a channel message
+pointer as a durable GitHub bookmark issue. This differs from `/channels
+bookmark`, which is still a provider reaction alias; the bookmark-message issue
+is a normal GitHub conversation surface with readable title/reason notes,
+optional reference URL hash, duplicate suppression, and a provider-facing
+acknowledgement queued back to Slack/Telegram.
 Inside a mirrored `gitclaw:channel-thread` issue, `@gitclaw /channels
 attachment --attachment-id <id> --message-id <id> --filename <name>` records
 channel-origin file/media metadata as a durable GitHub issue. The attachment
@@ -1771,6 +1779,7 @@ scripts/e2e/github-channel-incident-slash.sh
 scripts/e2e/github-channel-voice-slash.sh
 scripts/e2e/github-channel-image-slash.sh
 scripts/e2e/github-channel-link-slash.sh
+scripts/e2e/github-channel-bookmark-slash.sh
 scripts/e2e/github-channel-access-request-slash.sh
 scripts/e2e/github-channel-contact-slash.sh
 scripts/e2e/github-channel-session-handoff-slash.sh
@@ -2252,6 +2261,13 @@ issue link back to the mirrored thread, checks duplicate link and notification
 suppression, exposes the link-card notification through metadata-only outbox,
 and then continues on the link issue with a real GitHub Models
 repo-reader/search follow-up.
+The channel-bookmark slash harness turns a channel message into saved
+GitHub-native context: a channel-ingested issue receives `@gitclaw /channels
+bookmark-message`, creates or reuses a durable bookmark issue, queues a
+provider-facing acknowledgement back to the mirrored thread, checks duplicate
+bookmark and notification suppression, exposes the bookmark notification
+through metadata-only outbox, and then continues on the bookmark issue with a
+real GitHub Models repo-reader/search follow-up.
 The channel-access-request slash harness turns the operator console into an
 access review surface: a channel-ingested issue receives `@gitclaw /channels
 access-request`, creates or reuses a GitHub access-review issue, queues a

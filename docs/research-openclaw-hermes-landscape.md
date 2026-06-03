@@ -5089,6 +5089,31 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Bookmark Follow-Up
+
+OpenClaw's channel-first framing treats chat as the operator surface, while
+Hermes' messaging gateway keeps provider transport separate from the agent's
+durable session state. The useful GitHub-native translation is a lightweight
+"save this message for later" command that creates a normal GitHub issue for
+follow-up, without forcing the provider bridge to copy raw chat bodies or run a
+model.
+
+GitClaw's serverless version is `@gitclaw /channels bookmark-message
+--bookmark-id <id> --message-id <id>`. It opens or reuses a
+`gitclaw:channel-bookmark` issue with a readable title/reason, hashes provider
+thread and message IDs, optionally records only a reference URL hash, and
+queues one provider-facing acknowledgement back to the source Slack/Telegram
+thread. This deliberately does not override `/channels bookmark`, which remains
+a provider reaction alias. The action does not call a model, call provider
+APIs, fetch URLs, print raw provider message IDs in the source receipt, print
+raw bookmark notes in the source receipt, copy raw channel bodies, or mutate
+the repository. Acceptance requires live E2E for bookmark issue creation,
+metadata-only outbox discovery, duplicate suppression, body-free receipts, and
+a real GitHub Models repo-reader/search follow-up on the bookmark issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Tool Run Cancel Follow-Up
 
 OpenClaw's approval-mode framing treats denied async execution approval as a
