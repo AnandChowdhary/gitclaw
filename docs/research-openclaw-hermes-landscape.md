@@ -5155,6 +5155,34 @@ Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw
 sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes messaging guide
 (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-03 Channel Dock Follow-Up
+
+OpenClaw's channel/session split suggests an agent should be able to keep a
+conversation coherent while its route or working lane changes. Hermes'
+messaging separation points the same way from the adapter side: transport
+routes and internal session state should be related, but not conflated.
+GitClaw's serverless translation is a dock request, not an implicit route
+mutation. A Slack or Telegram thread can ask to dock into a target route, but
+the GitHub-native agent records that as a reviewable issue before any human or
+future workflow changes provider routing.
+
+GitClaw's version is `@gitclaw /channels dock <target-route> --dock-id <id>
+--message-id <id> --notify-message-id <id>`. It creates or reuses a
+`gitclaw:channel-dock` issue with the readable target route and reason,
+queues one provider-facing dock review link back to the source channel issue,
+and keeps the source receipt metadata-only with dock/thread/message/route/
+reason hashes plus explicit no-routebook/no-provider-route/no-workflow/
+no-session-persistence/no-provider-API/no-model/no-repo-mutation flags.
+Duplicate dock issues are suppressed by `dock_id`; duplicate provider-facing
+dock links are suppressed by `channel + notify_message_id`. Acceptance requires
+a live channel-ingest E2E, deterministic dock capture, duplicate suppression,
+metadata-only outbox proof, and then a real GitHub Models repo-reader/search
+follow-up on the dock issue.
+
+Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw
+sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Boundary Follow-Up
 
 OpenClaw's channel/session framing treats each external channel as a durable

@@ -264,3 +264,4 @@ channel soul note unique search fixture phrase => GITCLAW_CHANNEL_SOUL_NOTE_CONT
 channel backup note unique search fixture phrase => GITCLAW_CHANNEL_BACKUP_NOTE_CONTEXT_V1
 channel tool lesson unique search fixture phrase => GITCLAW_CHANNEL_TOOL_LESSON_CONTEXT_V1
 channel tool result unique search fixture phrase => GITCLAW_CHANNEL_TOOL_RESULT_CONTEXT_V1
+channel dock unique search fixture phrase => GITCLAW_CHANNEL_DOCK_CONTEXT_V1

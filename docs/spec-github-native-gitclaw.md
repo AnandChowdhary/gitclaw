@@ -5639,6 +5639,38 @@ model/workflow/policy/schedule/repository mutation or durable mode persistence
 was performed, and then continues on the same GitHub issue with a real GitHub
 Models repo-reader/search follow-up.
 
+For channel-native route continuity that should feel like docking a live chat
+thread into another reviewed lane without secretly moving provider state,
+GitClaw also supports:
+
+```text
+@gitclaw /channels dock design-review --dock-id <stable-dock-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
+Reason: route this thread toward design review before implementation starts.
+```
+
+`/channels dock`, `/channels redock`, `/channels route-request`,
+`/channels routing-request`, `/channels continue-in`, `/channels move-thread`,
+and `/channels switch-route` create or reuse one open GitHub issue carrying a
+hidden `gitclaw:channel-dock` marker for the stable dock id, label it with
+`gitclaw` so normal conversation can continue there, and queue one
+provider-facing dock review link back onto the current `gitclaw:channel-thread`
+issue or an explicit reviewed route. The dock issue may contain the readable
+target route and reason because it is the review artifact. The source receipt
+remains body-free and reports only hashes, sizes, duplicate status, outbox
+delivery instructions, and safety gates. It does not change provider routes,
+persist session routes, edit `.gitclaw/channels/routes.yaml`, mutate workflow
+files, call provider APIs, call a model, mutate repository files, or perform
+provider delivery. It does not print raw dock ids, target routes, thread ids,
+source or notification message ids, reasons, or channel bodies in the source
+receipt. Duplicates are suppressed first by `dock_id` for the GitHub dock issue
+and then by `channel + notify_message_id` for the provider-facing dock link.
+Changes to this surface require a live E2E that ingests a real channel issue,
+queues the dock request, validates metadata-only dock-link outbox discovery,
+verifies duplicate suppression, proves no provider-route/session-route/
+routebook/workflow/provider-API/model/repository mutation was performed, and
+then continues on the dock issue with a real GitHub Models repo-reader/search
+follow-up.
+
 For channel-native recall that should answer in the same Slack/Telegram thread
 without a full model turn, GitClaw also supports:
 
@@ -9180,6 +9212,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels palette fun --palette-id channel-palette-1 --message-id provider-msg-1 --notify-message-id provider-palette-ack-1
 @gitclaw /channels compass all --compass-id channel-compass-1 --message-id provider-msg-1 --notify-message-id provider-compass-ack-1
 @gitclaw /channels mode tool-review --mode-id channel-mode-1 --message-id provider-msg-1 --notify-message-id provider-mode-ack-1
+@gitclaw /channels dock design-review --dock-id channel-dock-1 --message-id provider-msg-1 --notify-message-id provider-dock-ack-1
 @gitclaw /channels session-search deployment --message-id provider-msg-1 --notify-message-id provider-search-ack-1
 ```
 
@@ -11724,6 +11757,17 @@ examples/workflows/gitclaw.yml
   follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
   recover the channel-mode fixture token, and avoid hidden channel/message/mode
   sentinels.
+- A `gh`-driven channel-dock-slash E2E harness ingests a real mirrored channel
+  issue, replies with `@gitclaw /channels dock ...`, verifies a labeled durable
+  GitHub dock request issue, provider-facing dock-link notification,
+  body-free source receipt metadata, duplicate dock and notification
+  suppression from a later issue comment with the same dock and notification
+  ids, explicit no provider-route/session-route/routebook/workflow/provider-API/
+  model/repository mutation gates, and metadata-only outbox discovery for the
+  dock-link notification. The dock issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-dock fixture token, and avoid
+  hidden channel/message/dock/target-route sentinels.
 - A `gh`-driven channel-session-search-slash E2E harness ingests a real
   mirrored channel issue, replies with `@gitclaw /channels session-search ...`,
   verifies provider-facing body-free recall metadata from the current

@@ -1102,6 +1102,27 @@ func TestChannelDoneArtifactRefSupportsLinkIssues(t *testing.T) {
 	}
 }
 
+func TestChannelDoneArtifactRefSupportsDockIssues(t *testing.T) {
+	body := RenderChannelDockIssueBody(ChannelDockOptions{
+		Repo:              "owner/repo",
+		Channel:           "slack",
+		ThreadID:          "team-thread-1",
+		SourceMessageID:   "source-message-1",
+		DockID:            "dock-done-1",
+		TargetRoute:       "design-review",
+		Reason:            "Review route-continuity before moving work.",
+		SourceIssueNumber: 50,
+		SourceCommentID:   5000,
+	})
+	ref, err := channelDoneArtifactRefFromBody(body)
+	if err != nil {
+		t.Fatalf("channelDoneArtifactRefFromBody returned error: %v", err)
+	}
+	if ref.Kind != "dock" || ref.ID != "dock-done-1" || ref.Channel != "slack" || ref.SourceIssueNumber != 50 || ref.SourceCommentID != 5000 {
+		t.Fatalf("unexpected dock artifact ref: %#v", ref)
+	}
+}
+
 func TestChannelDoneArtifactRefSupportsAccessRequestIssues(t *testing.T) {
 	body := RenderChannelAccessRequestIssueBody(ChannelAccessRequestOptions{
 		Repo:              "owner/repo",
