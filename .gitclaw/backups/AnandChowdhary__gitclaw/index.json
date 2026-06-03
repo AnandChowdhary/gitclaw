@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T05:58:01Z",
+  "generated_at": "2026-06-03T05:59:41Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 688,
+  "count": 689,
   "issues": [
     {
       "number": 3,
@@ -8737,6 +8737,18 @@
       ],
       "comment_count": 7,
       "transcript_messages": 7
+    },
+    {
+      "number": 798,
+      "title": "GitClaw channel tool lesson: gitclaw.search_files: Prefer GitHub review before tool installs 20260603t055247z",
+      "path": "issues/000798.json",
+      "backup_generated_at": "2026-06-03T05:59:40Z",
+      "event_name": "issue_comment",
+      "labels": [
+        "gitclaw"
+      ],
+      "comment_count": 2,
+      "transcript_messages": 3
     }
   ]
 }

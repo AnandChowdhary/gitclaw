@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-03T05:59:40Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 798,
+    "title": "GitClaw channel tool lesson: gitclaw.search_files: Prefer GitHub review before tool installs 20260603t055247z",
+    "body": "\u003c!-- gitclaw:channel-tool-lesson note_id=\"channel-tool-lesson-20260603t055247z\" channel=\"telegram\" tool_name_sha256_12=\"d04ad0c5d344\" thread_id_sha256_12=\"f4a150895778\" source_message_id_sha256_12=\"2dd93b0ac4e2\" source_issue=\"797\" source_comment_id=\"4609515014\" --\u003e\nGitClaw channel tool lesson.\n\n- note_id: channel-tool-lesson-20260603t055247z\n- source_channel: telegram\n- source_issue: #797\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/797\n- source_comment_id: 4609515014\n- thread_id_sha256_12: f4a150895778\n- source_message_id_sha256_12: 2dd93b0ac4e2\n- tool_lesson_mode: github-issue-tool-lesson\n- tool_execution_performed: false\n- tool_install_performed: false\n- tool_policy_mutation_performed: false\n- memory_mutation_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Tool\n\ngitclaw.search_files\n\n## Title\n\nPrefer GitHub review before tool installs 20260603t055247z\n\n## Lesson\n\nVisible tool lesson token: VISIBLE_CHANNEL_TOOL_LESSON_TEXT_20260603t055247z\n\nUse this issue as the reviewable GitHub home for preserving the channel tool lesson without executing tools, installing tools, mutating tool policy, mutating memory, or changing repository files automatically.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel tool lesson: gitclaw.search_files: Prefer GitHub review before tool installs 20260603t055247z\n\n\u003c!-- gitclaw:channel-tool-lesson note_id=\"channel-tool-lesson-20260603t055247z\" channel=\"telegram\" tool_name_sha256_12=\"d04ad0c5d344\" thread_id_sha256_12=\"f4a150895778\" source_message_id_sha256_12=\"2dd93b0ac4e2\" source_issue=\"797\" source_comment_id=\"4609515014\" --\u003e\nGitClaw channel tool lesson.\n\n- note_id: channel-tool-lesson-20260603t055247z\n- source_channel: telegram\n- source_issue: #797\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/797\n- source_comment_id: 4609515014\n- thread_id_sha256_12: f4a150895778\n- source_message_id_sha256_12: 2dd93b0ac4e2\n- tool_lesson_mode: github-issue-tool-lesson\n- tool_execution_performed: false\n- tool_install_performed: false\n- tool_policy_mutation_performed: false\n- memory_mutation_performed: false\n- repository_mutation_performed: false\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Tool\n\ngitclaw.search_files\n\n## Title\n\nPrefer GitHub review before tool installs 20260603t055247z\n\n## Lesson\n\nVisible tool lesson token: VISIBLE_CHANNEL_TOOL_LESSON_TEXT_20260603t055247z\n\nUse this issue as the reviewable GitHub home for preserving the channel tool lesson without executing tools, installing tools, mutating tool policy, mutating memory, or changing repository files automatically.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created tool lesson and use the repo-reader skill.\n\nSearch the repository for `channel tool lesson unique search fixture phrase`.\nThe matching repository search result line has the form `channel tool lesson unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_TOOL_LESSON_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include note ids, message ids, thread ids, account hashes, issue numbers, tool names, titles, or lessons.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_TOOL_LESSON_FOLLOWUP_20260603t055247z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4609532691,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_TOOL_LESSON_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4609537009,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4609532691,
+      "body": "@gitclaw Continue this channel-created tool lesson and use the repo-reader skill.\n\nSearch the repository for `channel tool lesson unique search fixture phrase`.\nThe matching repository search result line has the form `channel tool lesson unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_TOOL_LESSON_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include note ids, message ids, thread ids, account hashes, issue numbers, tool names, titles, or lessons.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_TOOL_LESSON_FOLLOWUP_20260603t055247z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T05:58:15Z",
+      "updated_at": "2026-06-03T05:58:15Z"
+    },
+    {
+      "id": 4609537009,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26866633811\" event_id=\"comment-4609532691\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"b3ccd7c034a4b1aefae0741b75deac5f\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26866633811\" prompt_context_sha256_12=\"22f052ed1e3d\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10913\" usage_completion_tokens=\"13\" usage_total_tokens=\"10926\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_TOOL_LESSON_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T05:59:13Z",
+      "updated_at": "2026-06-03T05:59:13Z"
+    }
+  ]
+}
