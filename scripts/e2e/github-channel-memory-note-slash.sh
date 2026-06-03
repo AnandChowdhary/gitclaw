@@ -391,6 +391,8 @@ gh issue comment "$memory_note_issue_number" \
 Search the repository for \`${search_phrase}\`.
 The matching repository search result line has the form \`${search_phrase} => <token>\`.
 The exact answer starts with \`GITCLAW_CHANNEL_MEMORY_NOTE_\`.
+Copy the complete right-hand side token exactly, including the final \`CONTEXT_V1\` suffix.
+The answer must end with \`CONTEXT_V1\`; \`GITCLAW_CHANNEL_MEMORY_NOTE_\` alone is incomplete and must not be used.
 Reply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.
 Do not reply with a placeholder like \`<token>\` or the word \`token\`.
 Do not include note ids, message ids, thread ids, account hashes, issue numbers, memory targets, titles, or notes.
