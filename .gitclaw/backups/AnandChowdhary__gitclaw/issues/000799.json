@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T06:16:36Z",
+  "generated_at": "2026-06-03T06:18:26Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4609623064,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels memory-note --note-id channel-memory-note-20260603t061306z --target durable-recall --message-id memory-note-ingest-20260603t061306z --notify-message-id memory-note-notify-20260603t061306z\nTitle: Prefer GitHub review before memory writes 20260603t061306z\nNote:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_MEMORY_NOTE_DUPLICATE_20260603t061306z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4609626943,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Memory Note Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#799`\n- requested_channel_command: `/channels memory-note`\n- channel_memory_note_status: `duplicate`\n- memory_note_issue: `#800`\n- memory_note_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/800`\n- memory_note_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#799`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `994458f2fa0c`\n- source_message_id_sha256_12: `aef125564daa`\n- notify_message_id_sha256_12: `b3ff09b126e2`\n- notify_message_id_auto: `false`\n- memory_note_id_sha256_12: `7a776b0b47e8`\n- memory_note_id_auto: `false`\n- memory_target_sha256_12: `dd37924f2cd9`\n- memory_target_bytes: `14`\n- memory_target_lines: `1`\n- memory_target_auto: `false`\n- memory_note_title_sha256_12: `0e2a16d522a2`\n- memory_note_title_bytes: `58`\n- memory_note_title_lines: `1`\n- memory_note_text_sha256_12: `5de42acacbef`\n- memory_note_text_bytes: `89`\n- memory_note_text_lines: `1`\n- notification_body_sha256_12: `78eb9754196b`\n- target_from_current_channel_issue: `true`\n- raw_memory_note_id_included: `false`\n- raw_memory_target_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_memory_note_title_included: `false`\n- raw_memory_note_text_included: `false`\n- raw_channel_message_body_included: `false`\n- memory_write_performed: `false`\n- memory_promotion_performed: `false`\n- memory_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_memory_note_action_change: `true`\n- issue_title_sha256_12: `07e7098fbc72`\n\nGitClaw captured a channel-origin memory note as a durable GitHub issue, then queued a provider-facing memory-note link back to the mirrored thread. The memory-note issue contains the human-readable target, title, and note; this source receipt keeps provider IDs, note IDs, memory targets, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the memory-note notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent memory-note links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate memory-note issues are suppressed by `note_id`; duplicate memory-note notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the memory-note issue with the `gitclaw` label; memory mutation remains an explicit reviewed follow-up",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4609632380,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T06:16:06Z",
       "updated_at": "2026-06-03T06:16:06Z"
+    },
+    {
+      "id": 4609626943,
+      "body": "@gitclaw /channels memory-note --note-id channel-memory-note-20260603t061306z --target durable-recall --message-id memory-note-ingest-20260603t061306z --notify-message-id memory-note-notify-20260603t061306z\nTitle: Prefer GitHub review before memory writes 20260603t061306z\nNote:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_MEMORY_NOTE_DUPLICATE_20260603t061306z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T06:16:54Z",
+      "updated_at": "2026-06-03T06:16:54Z"
+    },
+    {
+      "id": 4609632380,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26867304908\" event_id=\"comment-4609626943\" model=\"gitclaw/channels\" idempotency_key=\"27d78819c3b25db39f6dcf65b0fd4a6a\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26867304908\" --\u003e\n## GitClaw Channel Memory Note Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#799`\n- requested_channel_command: `/channels memory-note`\n- channel_memory_note_status: `duplicate`\n- memory_note_issue: `#800`\n- memory_note_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/800`\n- memory_note_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#799`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `994458f2fa0c`\n- source_message_id_sha256_12: `aef125564daa`\n- notify_message_id_sha256_12: `b3ff09b126e2`\n- notify_message_id_auto: `false`\n- memory_note_id_sha256_12: `7a776b0b47e8`\n- memory_note_id_auto: `false`\n- memory_target_sha256_12: `dd37924f2cd9`\n- memory_target_bytes: `14`\n- memory_target_lines: `1`\n- memory_target_auto: `false`\n- memory_note_title_sha256_12: `0e2a16d522a2`\n- memory_note_title_bytes: `58`\n- memory_note_title_lines: `1`\n- memory_note_text_sha256_12: `5de42acacbef`\n- memory_note_text_bytes: `89`\n- memory_note_text_lines: `1`\n- notification_body_sha256_12: `78eb9754196b`\n- target_from_current_channel_issue: `true`\n- raw_memory_note_id_included: `false`\n- raw_memory_target_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_memory_note_title_included: `false`\n- raw_memory_note_text_included: `false`\n- raw_channel_message_body_included: `false`\n- memory_write_performed: `false`\n- memory_promotion_performed: `false`\n- memory_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_memory_note_action_change: `true`\n- issue_title_sha256_12: `07e7098fbc72`\n\nGitClaw captured a channel-origin memory note as a durable GitHub issue, then queued a provider-facing memory-note link back to the mirrored thread. The memory-note issue contains the human-readable target, title, and note; this source receipt keeps provider IDs, note IDs, memory targets, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the memory-note notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent memory-note links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate memory-note issues are suppressed by `note_id`; duplicate memory-note notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the memory-note issue with the `gitclaw` label; memory mutation remains an explicit reviewed follow-up",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T06:17:55Z",
+      "updated_at": "2026-06-03T06:17:55Z"
     }
   ]
 }
