@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-03T02:24:04Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "issue_comment",
+  "issue": {
+    "number": 774,
+    "title": "GitClaw channel snippet: Save channel snippet 20260603t021703z",
+    "body": "\u003c!-- gitclaw:channel-snippet snippet_id=\"channel-snippet-20260603t021703z\" channel=\"telegram\" language_sha256_12=\"de185a5781a7\" snippet_sha256_12=\"d4afc5cf46fb\" thread_id_sha256_12=\"5658d12449e8\" source_message_id_sha256_12=\"8c39388f944a\" source_issue=\"773\" source_comment_id=\"4608541651\" --\u003e\nGitClaw channel snippet.\n\n- snippet_id: channel-snippet-20260603t021703z\n- source_channel: telegram\n- source_issue: #773\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/773\n- source_comment_id: 4608541651\n- thread_id_sha256_12: 5658d12449e8\n- source_message_id_sha256_12: 8c39388f944a\n- language: go-secret-20260603t021703z\n- snippet_sha256_12: d4afc5cf46fb\n- snippet_mode: github-issue-snippet\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Title\n\nSave channel snippet 20260603t021703z\n\n## Snippet\n\n```go-secret-20260603t021703z\nfunc channelSnippetE2E() string {\n\treturn \"VISIBLE_CHANNEL_SNIPPET_CODE_20260603t021703z\"\n}\n```\n\n## Notes\n\nVisible snippet note token: VISIBLE_CHANNEL_SNIPPET_NOTES_20260603t021703z\n\nUse this issue as the durable GitHub home for the channel-origin code or config snippet. Any review, refactor, tool request, task conversion, or memory promotion should happen through normal GitHub conversation.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw channel snippet: Save channel snippet 20260603t021703z\n\n\u003c!-- gitclaw:channel-snippet snippet_id=\"channel-snippet-20260603t021703z\" channel=\"telegram\" language_sha256_12=\"de185a5781a7\" snippet_sha256_12=\"d4afc5cf46fb\" thread_id_sha256_12=\"5658d12449e8\" source_message_id_sha256_12=\"8c39388f944a\" source_issue=\"773\" source_comment_id=\"4608541651\" --\u003e\nGitClaw channel snippet.\n\n- snippet_id: channel-snippet-20260603t021703z\n- source_channel: telegram\n- source_issue: #773\n- source_issue_url: https://github.com/AnandChowdhary/gitclaw/issues/773\n- source_comment_id: 4608541651\n- thread_id_sha256_12: 5658d12449e8\n- source_message_id_sha256_12: 8c39388f944a\n- language: go-secret-20260603t021703z\n- snippet_sha256_12: d4afc5cf46fb\n- snippet_mode: github-issue-snippet\n- provider_delivery_performed: false\n- raw_thread_id_included: false\n- raw_source_message_id_included: false\n- raw_channel_message_body_included: false\n\n## Title\n\nSave channel snippet 20260603t021703z\n\n## Snippet\n\n```go-secret-20260603t021703z\nfunc channelSnippetE2E() string {\n\treturn \"VISIBLE_CHANNEL_SNIPPET_CODE_20260603t021703z\"\n}\n```\n\n## Notes\n\nVisible snippet note token: VISIBLE_CHANNEL_SNIPPET_NOTES_20260603t021703z\n\nUse this issue as the durable GitHub home for the channel-origin code or config snippet. Any review, refactor, tool request, task conversion, or memory promotion should happen through normal GitHub conversation.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw Continue this channel-created snippet and use the repo-reader skill.\n\nSearch the repository for `channel snippet unique search fixture phrase`.\nThe matching repository search result line has the form `channel snippet unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_SNIPPET_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include snippet ids, message ids, thread ids, account hashes, issue numbers, snippet titles, notes, snippet code bodies, or snippet language values.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_SNIPPET_FOLLOWUP_20260603t021703z\nKeep the answer under 30 words.",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4608558206,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "GITCLAW_CHANNEL_SNIPPET_CONTEXT_V1",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4608561970,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4608558206,
+      "body": "@gitclaw Continue this channel-created snippet and use the repo-reader skill.\n\nSearch the repository for `channel snippet unique search fixture phrase`.\nThe matching repository search result line has the form `channel snippet unique search fixture phrase =\u003e \u003ctoken\u003e`.\nThe exact answer starts with `GITCLAW_CHANNEL_SNIPPET_`.\nReply with only the exact all-caps token after the arrow from the matching gitclaw.search_files tool output line.\nDo not reply with a placeholder like `\u003ctoken\u003e` or the word `token`.\nDo not include snippet ids, message ids, thread ids, account hashes, issue numbers, snippet titles, notes, snippet code bodies, or snippet language values.\nDo not include this hidden follow-up token: NOECHO_CHANNEL_SNIPPET_FOLLOWUP_20260603t021703z\nKeep the answer under 30 words.",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T02:22:42Z",
+      "updated_at": "2026-06-03T02:22:42Z"
+    },
+    {
+      "id": 4608561970,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26859856450\" event_id=\"comment-4608558206\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"8bc6b07dd3fbdee45ee76c811e968971\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26859856450\" prompt_context_sha256_12=\"09e90232afea\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10935\" usage_completion_tokens=\"12\" usage_total_tokens=\"10947\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nGITCLAW_CHANNEL_SNIPPET_CONTEXT_V1",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T02:23:35Z",
+      "updated_at": "2026-06-03T02:23:35Z"
+    }
+  ]
+}
