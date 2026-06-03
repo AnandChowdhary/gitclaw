@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T05:56:15Z",
+  "generated_at": "2026-06-03T05:58:00Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4609521592,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels tool-lesson --note-id channel-tool-lesson-20260603t055247z --tool gitclaw.search_files --message-id tool-lesson-ingest-20260603t055247z --notify-message-id tool-lesson-notify-20260603t055247z\nTitle: Prefer GitHub review before tool installs 20260603t055247z\nLesson:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_TOOL_LESSON_DUPLICATE_20260603t055247z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4609524962,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Tool Lesson Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#797`\n- requested_channel_command: `/channels tool-lesson`\n- channel_tool_lesson_status: `duplicate`\n- tool_lesson_issue: `#798`\n- tool_lesson_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/798`\n- tool_lesson_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#797`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `f4a150895778`\n- source_message_id_sha256_12: `2dd93b0ac4e2`\n- notify_message_id_sha256_12: `6a331426b749`\n- notify_message_id_auto: `false`\n- tool_lesson_id_sha256_12: `d4a948e3c000`\n- tool_lesson_id_auto: `false`\n- tool_name_sha256_12: `d04ad0c5d344`\n- tool_name_bytes: `20`\n- tool_name_lines: `1`\n- tool_name_auto: `false`\n- tool_lesson_title_sha256_12: `c9e4ae0510df`\n- tool_lesson_title_bytes: `58`\n- tool_lesson_title_lines: `1`\n- tool_lesson_text_sha256_12: `b3649e095689`\n- tool_lesson_text_bytes: `89`\n- tool_lesson_text_lines: `1`\n- notification_body_sha256_12: `8699490b32a4`\n- target_from_current_channel_issue: `true`\n- raw_tool_lesson_id_included: `false`\n- raw_tool_name_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_tool_lesson_title_included: `false`\n- raw_tool_lesson_text_included: `false`\n- raw_channel_message_body_included: `false`\n- tool_execution_performed: `false`\n- tool_install_performed: `false`\n- tool_policy_mutation_performed: `false`\n- memory_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_tool_lesson_action_change: `true`\n- issue_title_sha256_12: `b5a5f097f4c0`\n\nGitClaw captured a channel-origin tool lesson as a durable GitHub issue, then queued a provider-facing tool-lesson link back to the mirrored thread. The tool-lesson issue contains the human-readable tool, title, and lesson; this source receipt keeps provider IDs, note IDs, tool names, lessons, and channel message bodies out of band. It does not execute tools, install tools, update tool policy, or mutate repository state.\n\n### Follow-Up Delivery\n- provider gateways read the tool-lesson notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent tool-lesson links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate tool-lesson issues are suppressed by `note_id`; duplicate tool-lesson notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the tool-lesson issue with the `gitclaw` label; tool execution, tool installation, and tool policy changes remain explicit reviewed follow-ups",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4609529502,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T05:55:47Z",
       "updated_at": "2026-06-03T05:55:47Z"
+    },
+    {
+      "id": 4609524962,
+      "body": "@gitclaw /channels tool-lesson --note-id channel-tool-lesson-20260603t055247z --tool gitclaw.search_files --message-id tool-lesson-ingest-20260603t055247z --notify-message-id tool-lesson-notify-20260603t055247z\nTitle: Prefer GitHub review before tool installs 20260603t055247z\nLesson:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_TOOL_LESSON_DUPLICATE_20260603t055247z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T05:56:31Z",
+      "updated_at": "2026-06-03T05:56:31Z"
+    },
+    {
+      "id": 4609529502,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26866573830\" event_id=\"comment-4609524962\" model=\"gitclaw/channels\" idempotency_key=\"0d0a3b57a88b50305fe974aeb29d728b\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26866573830\" --\u003e\n## GitClaw Channel Tool Lesson Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#797`\n- requested_channel_command: `/channels tool-lesson`\n- channel_tool_lesson_status: `duplicate`\n- tool_lesson_issue: `#798`\n- tool_lesson_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/798`\n- tool_lesson_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#797`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `f4a150895778`\n- source_message_id_sha256_12: `2dd93b0ac4e2`\n- notify_message_id_sha256_12: `6a331426b749`\n- notify_message_id_auto: `false`\n- tool_lesson_id_sha256_12: `d4a948e3c000`\n- tool_lesson_id_auto: `false`\n- tool_name_sha256_12: `d04ad0c5d344`\n- tool_name_bytes: `20`\n- tool_name_lines: `1`\n- tool_name_auto: `false`\n- tool_lesson_title_sha256_12: `c9e4ae0510df`\n- tool_lesson_title_bytes: `58`\n- tool_lesson_title_lines: `1`\n- tool_lesson_text_sha256_12: `b3649e095689`\n- tool_lesson_text_bytes: `89`\n- tool_lesson_text_lines: `1`\n- notification_body_sha256_12: `8699490b32a4`\n- target_from_current_channel_issue: `true`\n- raw_tool_lesson_id_included: `false`\n- raw_tool_name_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_tool_lesson_title_included: `false`\n- raw_tool_lesson_text_included: `false`\n- raw_channel_message_body_included: `false`\n- tool_execution_performed: `false`\n- tool_install_performed: `false`\n- tool_policy_mutation_performed: `false`\n- memory_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_tool_lesson_action_change: `true`\n- issue_title_sha256_12: `b5a5f097f4c0`\n\nGitClaw captured a channel-origin tool lesson as a durable GitHub issue, then queued a provider-facing tool-lesson link back to the mirrored thread. The tool-lesson issue contains the human-readable tool, title, and lesson; this source receipt keeps provider IDs, note IDs, tool names, lessons, and channel message bodies out of band. It does not execute tools, install tools, update tool policy, or mutate repository state.\n\n### Follow-Up Delivery\n- provider gateways read the tool-lesson notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent tool-lesson links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate tool-lesson issues are suppressed by `note_id`; duplicate tool-lesson notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the tool-lesson issue with the `gitclaw` label; tool execution, tool installation, and tool policy changes remain explicit reviewed follow-ups",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T05:57:33Z",
+      "updated_at": "2026-06-03T05:57:33Z"
     }
   ]
 }
