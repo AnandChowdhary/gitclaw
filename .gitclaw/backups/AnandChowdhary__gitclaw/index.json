@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T16:20:06Z",
+  "generated_at": "2026-06-03T16:37:03Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 729,
+  "count": 730,
   "issues": [
     {
       "number": 3,
@@ -9289,6 +9289,20 @@
       ],
       "comment_count": 9,
       "transcript_messages": 9
+    },
+    {
+      "number": 839,
+      "title": "GitClaw telegram thread channel-room-pulse-e2e-20260603t163506z",
+      "path": "issues/000839.json",
+      "backup_generated_at": "2026-06-03T16:37:02Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:done",
+        "gitclaw:channel"
+      ],
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
