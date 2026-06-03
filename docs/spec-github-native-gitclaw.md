@@ -5640,6 +5640,33 @@ outbox discovery, verifies duplicate suppression, proves no kudos issue/model/
 provider-API/workflow/repository mutation was performed, and then continues on
 the same GitHub issue with a real GitHub Models repo-reader/search follow-up.
 
+For lightweight timeboxes that should stay in chat instead of becoming
+scheduled reminders, GitClaw also supports:
+
+```text
+@gitclaw /channels timer 25m --timer-id <stable-timer-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
+Label: Pairing sprint
+Note: Check in before handoff.
+```
+
+`/channels timer`, `/channels timebox`, `/channels countdown`,
+`/channels focus`, `/channels focus-timer`, `/channels pomodoro`, and
+`/channels break` queue one provider-facing timer/timebox cue back onto the
+current `gitclaw:channel-thread` issue or an explicit reviewed route. The
+duration, label, mode, and optional `Note: ...` trailing text are visible in
+the provider-facing update; the source receipt remains body-free and reports
+only hashes, duration seconds, sizes, duplicate status, outbox delivery
+instructions, and safety gates. It does not create reminder issues, schedule
+workflows, start provider timers, call a model, call provider APIs, edit
+workflows, mutate repository files, print raw timer ids, print raw labels, or
+print raw notes. Duplicates are suppressed by `channel + notify_message_id`.
+Changes to this surface require a live E2E that ingests a real channel issue,
+queues the timer card, validates metadata-only outbox discovery, verifies
+duplicate suppression, proves no reminder issue/scheduled workflow/provider
+timer/model/provider-API/workflow/repository mutation was performed, and then
+continues on the same GitHub issue with a real GitHub Models repo-reader/search
+follow-up.
+
 For tiny channel-native color that should feel alive without calling an LLM,
 GitClaw also supports:
 
@@ -6097,6 +6124,7 @@ accepts a structured reaction form:
 @gitclaw /channels pin --message-id <provider-message-id>
 @gitclaw /channels sticker confetti --sticker-id <stable-sticker-id> --message-id <provider-message-id> --notify-message-id <provider-sticker-id> --scale 4
 @gitclaw /channels toast launch-ready --toast-id <stable-toast-id> --message-id <provider-message-id> --notify-message-id <provider-toast-id>
+@gitclaw /channels timer 25m --timer-id <stable-timer-id> --message-id <provider-message-id> --notify-message-id <provider-timer-id>
 @gitclaw /channels deliverable --deliverable-id <stable-deliverable-id> --message-id <provider-message-id> --filename <name> --media-type <mime> --url <download-url>
 @gitclaw /channels task --task-id <stable-task-id> --message-id <provider-message-id>
 @gitclaw /channels watch --watch-id <stable-watch-id> --cadence <cadence> --message-id <provider-message-id>
@@ -9644,6 +9672,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels status-wheel release --wheel-id channel-status-wheel-1 --message-id provider-msg-1 --notify-message-id provider-status-wheel-ack-1
 @gitclaw /channels sticker confetti --sticker-id channel-sticker-1 --message-id provider-msg-1 --notify-message-id provider-sticker-ack-1 --scale 4
 @gitclaw /channels toast launch-ready --toast-id channel-toast-1 --message-id provider-msg-1 --notify-message-id provider-toast-ack-1
+@gitclaw /channels timer 25m --timer-id channel-timer-1 --message-id provider-msg-1 --notify-message-id provider-timer-ack-1
 @gitclaw /channels haiku launch --haiku-id channel-haiku-1 --message-id provider-msg-1 --notify-message-id provider-haiku-ack-1
 @gitclaw /channels coach skills --coach-id channel-coach-1 --message-id provider-msg-1 --notify-message-id provider-coach-ack-1
 @gitclaw /channels nudge release-captain --nudge-id channel-nudge-1 --message-id provider-msg-1 --notify-message-id provider-nudge-ack-1 --tone gentle
@@ -12194,6 +12223,17 @@ examples/workflows/gitclaw.yml
   issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-toast fixture token, and avoid
   hidden channel/message/toast sentinels.
+- A `gh`-driven channel-timer-slash E2E harness ingests a real mirrored channel
+  issue, replies with `@gitclaw /channels timer ...`, verifies the
+  provider-facing timebox card, body-free source receipt metadata, duplicate
+  timer notification suppression from a later issue comment with the same
+  acknowledgement id, explicit no reminder issue/scheduled workflow/provider
+  timer/model/provider-API/workflow/repository mutation gates, and
+  metadata-only outbox discovery for the acknowledgement. The same channel
+  issue then gets a normal GitHub Models issue-comment follow-up that must
+  select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-timer fixture token, and avoid hidden channel/message/timer
+  sentinels.
 - A `gh`-driven channel-haiku-slash E2E harness ingests a real mirrored channel
   issue, replies with `@gitclaw /channels haiku ...`, verifies the
   provider-facing deterministic poem card, body-free source receipt metadata,

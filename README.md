@@ -685,6 +685,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels status-wheel release --wheel-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels sticker confetti --sticker-id <id> --message-id <id> --notify-message-id <id> --scale 4
 @gitclaw /channels toast launch-ready --toast-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels timer 25m --timer-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels haiku launch --haiku-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels coach skills --coach-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels nudge release-captain --nudge-id <id> --message-id <id> --notify-message-id <id> --tone gentle
@@ -1055,6 +1056,14 @@ visible in the provider update, while the source receipt keeps raw toast ids,
 titles, reasons, tones, thread ids, message ids, and channel bodies out of
 band. This does not open durable kudos issues, call provider APIs, call a
 model, edit workflows, or mutate the repository.
+`@gitclaw /channels timer <duration> --timer-id <id> --message-id <id>
+--notify-message-id <id>` queues a provider-facing timebox cue back to the
+current Slack/Telegram thread. Optional `Label: ...` and `Note: ...` trailing
+text are visible in the provider update, while the source receipt keeps raw
+timer ids, durations, labels, notes, thread ids, message ids, and channel
+bodies out of band. This does not create reminder issues, schedule workflows,
+start provider timers, call provider APIs, call a model, edit workflows, or
+mutate the repository.
 `@gitclaw /channels haiku <theme> --haiku-id <id> --message-id <id>
 --notify-message-id <id>` queues a provider-facing three-line poem card from a
 bounded static line deck. Optional `Note: ...` trailing text is visible in the
@@ -2174,6 +2183,7 @@ scripts/e2e/github-channel-quick-replies-slash.sh
 scripts/e2e/github-channel-status-wheel-slash.sh
 scripts/e2e/github-channel-sticker-slash.sh
 scripts/e2e/github-channel-toast-slash.sh
+scripts/e2e/github-channel-timer-slash.sh
 scripts/e2e/github-channel-haiku-slash.sh
 scripts/e2e/github-channel-coach-slash.sh
 scripts/e2e/github-channel-nudge-slash.sh
@@ -2546,6 +2556,13 @@ provider-visible toast with an optional reason, exposes it through
 metadata-only outbox, suppresses duplicate toast notifications, proves no
 kudos issue/model/provider-API/workflow/repository mutation was performed, and
 then runs a real GitHub Models repo-reader/search follow-up.
+The channel-timer slash harness adds a lightweight timebox lane that stays in
+chat instead of becoming a scheduled reminder: a channel-ingested issue
+receives `@gitclaw /channels timer`, queues one provider-visible timer card
+with an optional label/note, exposes it through metadata-only outbox,
+suppresses duplicate timer notifications, proves no reminder issue/scheduled
+workflow/provider-timer/model/provider-API/repository mutation was performed,
+and then runs a real GitHub Models repo-reader/search follow-up.
 The channel-coach slash harness adds repo-aware next-move cards to Slack and
 Telegram: a channel-ingested issue receives `@gitclaw /channels coach skills`,
 queues one provider-visible skill/tool/soul signal card with suggested

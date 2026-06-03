@@ -247,6 +247,7 @@ channel prompt proposal unique search fixture phrase => GITCLAW_CHANNEL_PROMPT_P
 channel bundle proposal unique search fixture phrase => GITCLAW_CHANNEL_BUNDLE_PROPOSAL_CONTEXT_V1
 channel bundle map unique search fixture phrase => GITCLAW_CHANNEL_BUNDLE_MAP_CONTEXT_V1
 channel source map unique search fixture phrase => GITCLAW_CHANNEL_SOURCE_MAP_CONTEXT_V1
+channel timer unique search fixture phrase => GITCLAW_CHANNEL_TIMER_CONTEXT_V1
 channel tool status unique search fixture phrase => GITCLAW_CHANNEL_TOOL_STATUS_CONTEXT_V1
 channel tool search unique search fixture phrase => GITCLAW_CHANNEL_TOOL_SEARCH_CONTEXT_V1
 channel tool info unique search fixture phrase => GITCLAW_CHANNEL_TOOL_INFO_CONTEXT_V1

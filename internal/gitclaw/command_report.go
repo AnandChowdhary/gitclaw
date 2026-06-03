@@ -148,6 +148,9 @@ func commandSummaryForReport(entry commandCatalogEntry) string {
 	if !strings.Contains(summary, "celebration toast cards") {
 		summary += " Queue provider-facing celebration toast cards without opening durable kudos issues, model calls, provider API calls, workflow edits, or repo mutation."
 	}
+	if !strings.Contains(summary, "provider-facing timebox timer cards") {
+		summary += " Queue provider-facing timebox timer cards without creating reminder issues, scheduled workflows, provider timers, model calls, provider API calls, workflow edits, or repo mutation."
+	}
 	if !strings.Contains(summary, "deterministic haiku cards") {
 		summary += " Queue provider-facing deterministic haiku cards from bounded static line decks without model calls, external randomness, media generation, provider API calls, workflow edits, or repo mutation."
 	}
