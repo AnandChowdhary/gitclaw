@@ -682,6 +682,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels mood focused --message-id <id> --notify-message-id <id> --intensity 4
 @gitclaw /channels room-pulse handoff --pulse-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels quick-replies handoff --reply-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels status-wheel release --wheel-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels sticker confetti --sticker-id <id> --message-id <id> --notify-message-id <id> --scale 4
 @gitclaw /channels toast launch-ready --toast-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels haiku launch --haiku-id <id> --message-id <id> --notify-message-id <id>
@@ -1031,6 +1032,13 @@ Slack/Telegram thread. Lanes such as `general`, `handoff`, `skills`, `tools`,
 and `fun` expose a small copyable set of next commands, while the source
 receipt keeps raw option text, lane values, notes, thread ids, message ids, and
 reply ids out of band. The action does not execute any suggested command.
+`@gitclaw /channels status-wheel <lane> --wheel-id <id> --message-id <id>
+--notify-message-id <id>` queues a provider-facing deterministic status spin
+back to the current Slack/Telegram thread. Lanes such as `focus`, `release`,
+`triage`, `tools`, `soul`, and `fun` select a bounded status and micro-action
+without external randomness; the source receipt keeps raw lane values, notes,
+deck text, selected status text, selected action text, thread ids, message ids,
+and wheel ids out of band.
 `@gitclaw /channels sticker <sticker> --sticker-id <id> --message-id <id>
 --notify-message-id <id> --scale 1..5` queues a provider-facing sticker card
 back to the current Slack/Telegram thread. Optional `Note: ...` trailing text
@@ -2137,6 +2145,7 @@ scripts/e2e/github-channel-choose-slash.sh
 scripts/e2e/github-channel-mood-slash.sh
 scripts/e2e/github-channel-room-pulse-slash.sh
 scripts/e2e/github-channel-quick-replies-slash.sh
+scripts/e2e/github-channel-status-wheel-slash.sh
 scripts/e2e/github-channel-sticker-slash.sh
 scripts/e2e/github-channel-toast-slash.sh
 scripts/e2e/github-channel-haiku-slash.sh
@@ -2489,6 +2498,14 @@ metadata-only outbox, suppresses duplicate reply-chip notifications, proves no
 command execution, artifact/task/reminder creation, model call, provider API
 call, workflow edit, skill install, tool execution, or repository mutation
 happened, and then runs a real GitHub Models repo-reader/search follow-up.
+The channel-status-wheel slash harness adds a tiny deterministic spin for team
+posture: a channel-ingested issue receives `@gitclaw /channels status-wheel`,
+queues one provider-visible status and micro-action for a lane, exposes it
+through metadata-only outbox, suppresses duplicate status-wheel notifications,
+proves no model call, external randomness, command execution, artifact/task/
+reminder creation, provider API call, workflow edit, status persistence, skill
+install, tool execution, or repository mutation happened, and then runs a real
+GitHub Models repo-reader/search follow-up.
 The channel-sticker slash harness adds a provider-facing flourish lane without
 media side effects: a channel-ingested issue receives `@gitclaw /channels
 sticker`, queues one provider-visible sticker card with an optional note,
