@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T01:55:32Z",
+  "generated_at": "2026-06-03T01:57:02Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 771,
     "title": "GitClaw telegram thread channel-jam-e2e-20260603t015335z",
@@ -51,6 +51,15 @@
       "CommentID": 4608423591,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Jam Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#771`\n- requested_channel_command: `/channels whiteboard`\n- channel_jam_status: `captured`\n- jam_issue: `#772`\n- jam_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/772`\n- jam_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#771`\n- notification_comment_id: `4608429520`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `22ba5aae41a1`\n- source_message_id_sha256_12: `803bd8d58791`\n- notify_message_id_sha256_12: `da3bf1da8a44`\n- notify_message_id_auto: `false`\n- jam_id_sha256_12: `6acca6d8caa7`\n- jam_id_auto: `false`\n- jam_title_sha256_12: `e691e1a2fe11`\n- jam_title_bytes: `48`\n- jam_title_lines: `1`\n- jam_notes_sha256_12: `c96de1c747fa`\n- jam_notes_bytes: `67`\n- jam_notes_lines: `1`\n- notification_body_sha256_12: `308a61203e20`\n- target_from_current_channel_issue: `true`\n- raw_jam_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_jam_title_included: `false`\n- raw_jam_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_jam_action_change: `true`\n- issue_title_sha256_12: `069fd2e700e3`\n\nGitClaw captured a channel-origin jam as a durable GitHub issue, then queued a provider-facing jam link back to the mirrored thread. The jam issue contains the human-readable title and notes; this source receipt keeps provider IDs, jam IDs, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the jam-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent jam links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate jam issues are suppressed by `jam_id`; duplicate jam-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the jam issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4608429592,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-03T01:55:07Z",
       "updated_at": "2026-06-03T01:55:07Z"
+    },
+    {
+      "id": 4608429520,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-jam-e2e-20260603t015335z\" message_id=\"jam-notify-20260603t015335z\" author=\"gitclaw\" --\u003e\nGitClaw channel jam captured.\n\nJam: #772\nURL: https://github.com/AnandChowdhary/gitclaw/issues/772\nTitle: Shape GitHub-native channel jam 20260603t015335z\n\nContinue shaping it in the linked GitHub issue.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T01:56:34Z",
+      "updated_at": "2026-06-03T01:56:34Z"
+    },
+    {
+      "id": 4608429592,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26859008880\" event_id=\"comment-4608423591\" model=\"gitclaw/channels\" idempotency_key=\"f66fcd90d93ede8e3217e85b564c1a6c\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26859008880\" --\u003e\n## GitClaw Channel Jam Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#771`\n- requested_channel_command: `/channels whiteboard`\n- channel_jam_status: `captured`\n- jam_issue: `#772`\n- jam_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/772`\n- jam_issue_created: `true`\n- duplicate_suppressed: `false`\n- notification_target_issue: `#771`\n- notification_comment_id: `4608429520`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `22ba5aae41a1`\n- source_message_id_sha256_12: `803bd8d58791`\n- notify_message_id_sha256_12: `da3bf1da8a44`\n- notify_message_id_auto: `false`\n- jam_id_sha256_12: `6acca6d8caa7`\n- jam_id_auto: `false`\n- jam_title_sha256_12: `e691e1a2fe11`\n- jam_title_bytes: `48`\n- jam_title_lines: `1`\n- jam_notes_sha256_12: `c96de1c747fa`\n- jam_notes_bytes: `67`\n- jam_notes_lines: `1`\n- notification_body_sha256_12: `308a61203e20`\n- target_from_current_channel_issue: `true`\n- raw_jam_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_jam_title_included: `false`\n- raw_jam_notes_included: `false`\n- raw_channel_message_body_included: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_jam_action_change: `true`\n- issue_title_sha256_12: `069fd2e700e3`\n\nGitClaw captured a channel-origin jam as a durable GitHub issue, then queued a provider-facing jam link back to the mirrored thread. The jam issue contains the human-readable title and notes; this source receipt keeps provider IDs, jam IDs, titles, notes, and channel message bodies out of band.\n\n### Follow-Up Delivery\n- provider gateways read the jam-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent jam links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate jam issues are suppressed by `jam_id`; duplicate jam-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the jam issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T01:56:35Z",
+      "updated_at": "2026-06-03T01:56:35Z"
     }
   ]
 }
