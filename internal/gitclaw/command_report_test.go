@@ -117,6 +117,7 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"Queue provider-facing vibe-check warmup cards as playful channel check-ins",
 		"Queue provider-facing bounded oracle answer cards with the deterministic picker",
 		"Queue provider-facing celebration toast cards without opening durable kudos issues",
+		"Queue provider-facing place/caption postcard scene cards without model calls",
 		"Queue provider-facing timebox timer cards without creating reminder issues",
 		"Queue provider-facing deterministic mini-game bingo cards from bounded static decks",
 		"Queue provider-facing deterministic haiku cards from bounded static line decks",
