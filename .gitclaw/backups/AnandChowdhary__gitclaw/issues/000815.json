@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-03T09:10:45Z",
+  "generated_at": "2026-06-03T09:12:48Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4610769206,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels boundary --boundary-id channel-boundary-20260603t090652z --message-id boundary-ingest-20260603t090652z --notify-message-id boundary-notify-20260603t090652z\nTitle: Keep channel boundaries reviewable 20260603t090652z\nBoundary:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_BOUNDARY_DUPLICATE_20260603t090652z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4610775906,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Boundary Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#815`\n- requested_channel_command: `/channels boundary`\n- channel_boundary_status: `duplicate`\n- boundary_issue: `#816`\n- boundary_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/816`\n- boundary_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#815`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `72e0cc1253e0`\n- source_message_id_sha256_12: `7e712c1f42f9`\n- notify_message_id_sha256_12: `2b6d76b9ae7f`\n- notify_message_id_auto: `false`\n- boundary_id_sha256_12: `547d46833aea`\n- boundary_id_auto: `false`\n- boundary_title_sha256_12: `f27fc25bd281`\n- boundary_title_bytes: `51`\n- boundary_title_lines: `1`\n- boundary_body_sha256_12: `fe53868e22b3`\n- boundary_body_bytes: `86`\n- boundary_body_lines: `1`\n- boundary_scope_sha256_12: `e3b0c44298fc`\n- boundary_scope_bytes: `0`\n- boundary_scope_lines: `0`\n- boundary_reason_sha256_12: `e3b0c44298fc`\n- boundary_reason_bytes: `0`\n- boundary_reason_lines: `0`\n- boundary_review_sha256_12: `e3b0c44298fc`\n- boundary_review_bytes: `0`\n- boundary_review_lines: `0`\n- notification_body_sha256_12: `188d4eaa6a55`\n- target_from_current_channel_issue: `true`\n- raw_boundary_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_boundary_title_included: `false`\n- raw_boundary_body_included: `false`\n- raw_boundary_scope_included: `false`\n- raw_boundary_reason_included: `false`\n- raw_boundary_review_included: `false`\n- raw_channel_message_body_included: `false`\n- model_call_performed: `false`\n- scheduled_workflow_created: `false`\n- reminder_created: `false`\n- allowlist_mutation_performed: `false`\n- pairing_code_issued: `false`\n- soul_write_performed: `false`\n- memory_write_performed: `false`\n- policy_mutation_performed: `false`\n- skill_install_performed: `false`\n- workflow_mutation_performed: `false`\n- provider_setting_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- enforcement_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_boundary_action_change: `true`\n- issue_title_sha256_12: `81e6fab165a2`\n\nGitClaw recorded mirrored channel boundary as a durable GitHub issue, then queued a provider-facing link back to the original thread. The boundary issue contains the human-readable title, boundary, scope, reason, and review timing; this source receipt keeps provider IDs, boundary IDs, section text, and channel message bodies out of band. No model call, schedule, reminder, allowlist mutation, pairing code, soul write, memory write, policy mutation, skill install, workflow mutation, provider-setting mutation, provider delivery, enforcement, or repository mutation is created by this action.\n\n### Follow-Up Delivery\n- provider gateways read the boundary-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent boundary links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate boundary issues are suppressed by `boundary_id`; duplicate boundary-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the boundary issue with the `gitclaw` label",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4610784730,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-03T09:10:13Z",
       "updated_at": "2026-06-03T09:10:13Z"
+    },
+    {
+      "id": 4610775906,
+      "body": "@gitclaw /channels boundary --boundary-id channel-boundary-20260603t090652z --message-id boundary-ingest-20260603t090652z --notify-message-id boundary-notify-20260603t090652z\nTitle: Keep channel boundaries reviewable 20260603t090652z\nBoundary:\nDo not leak duplicate hidden token: NOECHO_CHANNEL_BOUNDARY_DUPLICATE_20260603t090652z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-03T09:11:05Z",
+      "updated_at": "2026-06-03T09:11:05Z"
+    },
+    {
+      "id": 4610784730,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26875122745\" event_id=\"comment-4610775906\" model=\"gitclaw/channels\" idempotency_key=\"d2b44ec8337459c272d18ab8d0603175\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26875122745\" --\u003e\n## GitClaw Channel Boundary Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#815`\n- requested_channel_command: `/channels boundary`\n- channel_boundary_status: `duplicate`\n- boundary_issue: `#816`\n- boundary_issue_url: `https://github.com/AnandChowdhary/gitclaw/issues/816`\n- boundary_issue_created: `false`\n- duplicate_suppressed: `true`\n- notification_target_issue: `#815`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `72e0cc1253e0`\n- source_message_id_sha256_12: `7e712c1f42f9`\n- notify_message_id_sha256_12: `2b6d76b9ae7f`\n- notify_message_id_auto: `false`\n- boundary_id_sha256_12: `547d46833aea`\n- boundary_id_auto: `false`\n- boundary_title_sha256_12: `f27fc25bd281`\n- boundary_title_bytes: `51`\n- boundary_title_lines: `1`\n- boundary_body_sha256_12: `fe53868e22b3`\n- boundary_body_bytes: `86`\n- boundary_body_lines: `1`\n- boundary_scope_sha256_12: `e3b0c44298fc`\n- boundary_scope_bytes: `0`\n- boundary_scope_lines: `0`\n- boundary_reason_sha256_12: `e3b0c44298fc`\n- boundary_reason_bytes: `0`\n- boundary_reason_lines: `0`\n- boundary_review_sha256_12: `e3b0c44298fc`\n- boundary_review_bytes: `0`\n- boundary_review_lines: `0`\n- notification_body_sha256_12: `188d4eaa6a55`\n- target_from_current_channel_issue: `true`\n- raw_boundary_id_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_boundary_title_included: `false`\n- raw_boundary_body_included: `false`\n- raw_boundary_scope_included: `false`\n- raw_boundary_reason_included: `false`\n- raw_boundary_review_included: `false`\n- raw_channel_message_body_included: `false`\n- model_call_performed: `false`\n- scheduled_workflow_created: `false`\n- reminder_created: `false`\n- allowlist_mutation_performed: `false`\n- pairing_code_issued: `false`\n- soul_write_performed: `false`\n- memory_write_performed: `false`\n- policy_mutation_performed: `false`\n- skill_install_performed: `false`\n- workflow_mutation_performed: `false`\n- provider_setting_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- enforcement_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- llm_e2e_required_after_channel_boundary_action_change: `true`\n- issue_title_sha256_12: `81e6fab165a2`\n\nGitClaw recorded mirrored channel boundary as a durable GitHub issue, then queued a provider-facing link back to the original thread. The boundary issue contains the human-readable title, boundary, scope, reason, and review timing; this source receipt keeps provider IDs, boundary IDs, section text, and channel message bodies out of band. No model call, schedule, reminder, allowlist mutation, pairing code, soul write, memory write, policy mutation, skill install, workflow mutation, provider-setting mutation, provider delivery, enforcement, or repository mutation is created by this action.\n\n### Follow-Up Delivery\n- provider gateways read the boundary-link notification with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent boundary links with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate boundary issues are suppressed by `boundary_id`; duplicate boundary-link notifications are suppressed by `channel + notify_message_id`\n- normal GitClaw conversation continues on the boundary issue with the `gitclaw` label",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-03T09:12:16Z",
+      "updated_at": "2026-06-03T09:12:16Z"
     }
   ]
 }
