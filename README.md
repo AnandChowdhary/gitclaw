@@ -810,6 +810,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels tool-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels tool-info <tool> --message-id <id> --notify-message-id <id>
 @gitclaw /channels tool-spotlight <focus> --spotlight-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels tool-drill <focus> --drill-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels tool-map <tool> --map-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels whoami --identity-id <id> --message-id <id>
 @gitclaw /channels contact --contact-id <id> --role <role> --message-id <id>
@@ -1317,6 +1318,13 @@ bodies, issue bodies, comments, and prompts out of the source receipt. It does
 not execute tools, run shells, launch MCP servers, activate toolsets, call a
 model, call provider APIs, use external randomness, mutate workflows, or mutate
 the repository.
+`@gitclaw /channels tool-drill <focus> --drill-id <id> --message-id <id>
+--notify-message-id <id>` uses the same deterministic safe tool selection path
+but frames the provider-facing card as a tiny inspect/practice/verify/next
+rehearsal. The source receipt records mode hashes, selected tool hashes, drill
+step count, duplicate state, and disabled side-effect gates without printing
+raw tool names, triggers, schemas, inputs, outputs, focus text, notes, ids,
+channel bodies, prompts, or issue/comment bodies.
 `@gitclaw /channels skill-spotlight <focus> --spotlight-id <id> --message-id
 <id> --notify-message-id <id>` queues a deterministic provider-facing skill
 spotlight card back to Slack/Telegram. The card picks one enabled, requirement-
@@ -2286,6 +2294,7 @@ scripts/e2e/github-channel-research-map-slash.sh
 scripts/e2e/github-channel-tool-search-slash.sh
 scripts/e2e/github-channel-tool-info-slash.sh
 scripts/e2e/github-channel-tool-spotlight-slash.sh
+scripts/e2e/github-channel-tool-drill-slash.sh
 scripts/e2e/github-channel-backup-rehearsal-slash.sh
 scripts/e2e/github-channel-backup-restore-request-slash.sh
 scripts/e2e/github-channel-checkpoint-rehearsal-slash.sh
@@ -3495,6 +3504,13 @@ triggers/schemas, checks duplicate notification suppression, exposes the
 tool-spotlight notification through metadata-only outbox, and then continues on
 the channel thread itself with a real GitHub Models repo-reader/search
 follow-up.
+The channel-tool-drill slash harness turns safe tool discovery into practice:
+a channel-ingested issue receives `@gitclaw /channels tool-drill`, queues one
+provider-facing inspect/practice/verify/next card from read-only/
+metadata-only built-in contracts, checks duplicate notification suppression,
+exposes the tool-drill notification through metadata-only outbox, and then
+continues on the channel thread itself with a real GitHub Models
+repo-reader/search follow-up.
 The channel-research-spotlight slash harness adds a chat-native research
 discovery card: a channel-ingested issue receives `@gitclaw /channels
 research-spotlight`, queues one deterministic provider-facing card from the

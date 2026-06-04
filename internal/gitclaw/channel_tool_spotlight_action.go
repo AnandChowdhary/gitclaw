@@ -17,6 +17,7 @@ type ChannelToolSpotlightOptions struct {
 	SourceMessageID   string
 	NotifyMessageID   string
 	SpotlightID       string
+	Mode              string
 	Focus             string
 	Note              string
 	Author            string
@@ -84,6 +85,8 @@ type ChannelToolSpotlightActionRequest struct {
 	RequestedMsgHash    string
 	NotifyMessageHash   string
 	SpotlightIDHash     string
+	ModeHash            string
+	ModeBytes           int
 	FocusSHA            string
 	FocusBytes          int
 	FocusTerms          int
@@ -112,7 +115,7 @@ func isChannelToolSpotlightActionFields(fields []string) bool {
 		return false
 	}
 	switch cleanChannelToolSpotlightSubcommand(fields[1]) {
-	case "tool-spotlight", "tools-spotlight", "spotlight-tool", "tool-pick", "tool-draw", "tool-capability-spotlight", "tool-capability-draw":
+	case "tool-spotlight", "tools-spotlight", "spotlight-tool", "tool-pick", "tool-draw", "tool-capability-spotlight", "tool-capability-draw", "tool-drill", "tools-drill", "drill-tool", "tool-warmup", "tool-contract-drill", "capability-drill":
 		return true
 	default:
 		return false
@@ -128,6 +131,7 @@ func BuildChannelToolSpotlightActionRequest(ev Event, cfg Config, repoContext Re
 		Options: ChannelToolSpotlightOptions{
 			Repo:              ev.Repo,
 			SourceIssueNumber: ev.Issue.Number,
+			Mode:              channelToolSpotlightModeForSubcommand(fields[1]),
 			Focus:             defaultChannelToolSpotlightFocus(fields[1]),
 		},
 		Command:    strings.ToLower(strings.Trim(fields[0], " \t\r\n.,:;!?")),
@@ -170,7 +174,7 @@ func BuildChannelToolSpotlightActionRequest(ev Event, cfg Config, repoContext Re
 			}
 			req.Options.NotifyMessageID = fields[i+1]
 			i++
-		case "--spotlight-id", "--tool-spotlight-id", "--tool-pick-id", "--tool-draw-id", "--id":
+		case "--spotlight-id", "--tool-spotlight-id", "--tool-pick-id", "--tool-draw-id", "--drill-id", "--tool-drill-id", "--warmup-id", "--id":
 			if i+1 >= len(fields) {
 				return ChannelToolSpotlightActionRequest{}, fmt.Errorf("%s requires a value", field)
 			}
@@ -240,6 +244,8 @@ func BuildChannelToolSpotlightActionRequest(ev Event, cfg Config, repoContext Re
 	req.RequestedMsgHash = shortDocumentHash(req.Options.SourceMessageID)
 	req.NotifyMessageHash = shortDocumentHash(req.Options.NotifyMessageID)
 	req.SpotlightIDHash = shortDocumentHash(req.Options.SpotlightID)
+	req.ModeHash = shortDocumentHash(req.Options.Mode)
+	req.ModeBytes = len(req.Options.Mode)
 	req.FocusSHA = req.Report.FocusHash
 	req.FocusBytes = len(req.Options.Focus)
 	req.FocusTerms = req.Report.FocusTerms
@@ -398,7 +404,11 @@ func RenderChannelToolSpotlightActionReport(ev Event, req ChannelToolSpotlightAc
 		report = req.Report
 	}
 	var b strings.Builder
-	b.WriteString("## GitClaw Channel Tool Spotlight Action\n\n")
+	if channelToolSpotlightMode(req.Options.Mode) == "drill" {
+		b.WriteString("## GitClaw Channel Tool Drill Action\n\n")
+	} else {
+		b.WriteString("## GitClaw Channel Tool Spotlight Action\n\n")
+	}
 	b.WriteString("Generated without a model call.\n\n")
 	fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
 	fmt.Fprintf(&b, "- source_issue: `#%d`\n", ev.Issue.Number)
@@ -406,6 +416,7 @@ func RenderChannelToolSpotlightActionReport(ev Event, req ChannelToolSpotlightAc
 	fmt.Fprintf(&b, "- channel_tool_spotlight_status: `%s`\n", status)
 	fmt.Fprintf(&b, "- tool_spotlight_status: `%s`\n", report.SpotlightStatus)
 	fmt.Fprintf(&b, "- spotlight_mode: `%s`\n", "deterministic-tool-contract-draw")
+	fmt.Fprintf(&b, "- tool_card_mode: `%s`\n", channelToolSpotlightReportMode(req.Options.Mode))
 	fmt.Fprintf(&b, "- notification_target_issue: `#%d`\n", result.Notification.IssueNumber)
 	fmt.Fprintf(&b, "- notification_comment_id: `%d`\n", result.Notification.CommentID)
 	fmt.Fprintf(&b, "- notification_queued: `%t`\n", notificationQueued)
@@ -421,6 +432,8 @@ func RenderChannelToolSpotlightActionReport(ev Event, req ChannelToolSpotlightAc
 	fmt.Fprintf(&b, "- notify_message_id_auto: `%t`\n", req.AutoNotifyMessageID)
 	fmt.Fprintf(&b, "- tool_spotlight_id_sha256_12: `%s`\n", noneIfEmpty(spotlightIDHash))
 	fmt.Fprintf(&b, "- tool_spotlight_id_auto: `%t`\n", req.AutoSpotlightID)
+	fmt.Fprintf(&b, "- tool_card_mode_sha256_12: `%s`\n", noneIfEmpty(req.ModeHash))
+	fmt.Fprintf(&b, "- tool_card_mode_bytes: `%d`\n", req.ModeBytes)
 	fmt.Fprintf(&b, "- spotlight_focus_sha256_12: `%s`\n", noneIfEmpty(focusHash))
 	fmt.Fprintf(&b, "- spotlight_focus_bytes: `%d`\n", req.FocusBytes)
 	fmt.Fprintf(&b, "- spotlight_focus_terms: `%d`\n", report.FocusTerms)
@@ -450,6 +463,7 @@ func RenderChannelToolSpotlightActionReport(ev Event, req ChannelToolSpotlightAc
 	fmt.Fprintf(&b, "- notification_body_sha256_12: `%s`\n", noneIfEmpty(notificationBodySHA))
 	fmt.Fprintf(&b, "- notification_body_bytes: `%d`\n", notificationBytes)
 	fmt.Fprintf(&b, "- notification_body_lines: `%d`\n", notificationLines)
+	fmt.Fprintf(&b, "- drill_step_count: `%d`\n", channelToolSpotlightDrillStepCount(req.Options.Mode, report))
 	fmt.Fprintf(&b, "- target_from_current_channel_issue: `%t`\n", req.TargetFromIssue)
 	fmt.Fprintf(&b, "- deterministic_selection: `%t`\n", true)
 	fmt.Fprintf(&b, "- external_randomness_used: `%t`\n", false)
@@ -468,6 +482,7 @@ func RenderChannelToolSpotlightActionReport(ev Event, req ChannelToolSpotlightAc
 	fmt.Fprintf(&b, "- raw_source_message_id_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_notify_message_id_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_tool_spotlight_id_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_tool_card_mode_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_selection_seed_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_tool_names_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_tool_triggers_included: `%t`\n", false)
@@ -479,17 +494,27 @@ func RenderChannelToolSpotlightActionReport(ev Event, req ChannelToolSpotlightAc
 	fmt.Fprintf(&b, "- raw_comment_bodies_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_prompts_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- llm_e2e_required_after_channel_tool_spotlight_change: `%t`\n", true)
+	if channelToolSpotlightMode(req.Options.Mode) == "drill" {
+		fmt.Fprintf(&b, "- llm_e2e_required_after_channel_tool_drill_change: `%t`\n", true)
+	}
 	fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
 	b.WriteByte('\n')
-	b.WriteString("GitClaw queued a provider-facing tool spotlight card from deterministic tool contract metadata. The provider card may name one safe tool so people can act on it, while the source receipt keeps raw tool names, triggers, schemas, inputs, outputs, ids, focus text, notes, and channel bodies out of band. The action does not call a model, execute tools, run shells, launch MCP servers, activate toolsets, mutate repository files, use external randomness, or call provider APIs.\n\n")
+	if channelToolSpotlightMode(req.Options.Mode) == "drill" {
+		b.WriteString("GitClaw queued a provider-facing tool drill card from deterministic tool contract metadata. The provider card may name one safe tool and show bounded practice prompts, while the source receipt keeps raw tool names, triggers, schemas, inputs, outputs, ids, focus text, notes, and channel bodies out of band. The action does not call a model, execute tools, run shells, launch MCP servers, activate toolsets, mutate repository files, use external randomness, or call provider APIs.\n\n")
+	} else {
+		b.WriteString("GitClaw queued a provider-facing tool spotlight card from deterministic tool contract metadata. The provider card may name one safe tool so people can act on it, while the source receipt keeps raw tool names, triggers, schemas, inputs, outputs, ids, focus text, notes, and channel bodies out of band. The action does not call a model, execute tools, run shells, launch MCP servers, activate toolsets, mutate repository files, use external randomness, or call provider APIs.\n\n")
+	}
 	b.WriteString("### Follow-Up Delivery\n")
-	b.WriteString("- provider gateways read tool-spotlight cards with `gitclaw channel-outbox --channel <provider> --account-id <account> --issue-number <issue> --out <file>`\n")
-	b.WriteString("- provider gateways record sent tool-spotlight cards with `gitclaw channel-delivery --channel <provider> --account-id <account> --issue-number <issue> --comment-id <comment> --external-message-id <message>`\n")
-	b.WriteString("- duplicate tool-spotlight notifications are suppressed by `channel + notify_message_id`\n")
+	b.WriteString("- provider gateways read tool cards with `gitclaw channel-outbox --channel <provider> --account-id <account> --issue-number <issue> --out <file>`\n")
+	b.WriteString("- provider gateways record sent tool cards with `gitclaw channel-delivery --channel <provider> --account-id <account> --issue-number <issue> --comment-id <comment> --external-message-id <message>`\n")
+	b.WriteString("- duplicate tool card notifications are suppressed by `channel + notify_message_id`\n")
 	return strings.TrimSpace(b.String())
 }
 
 func renderChannelToolSpotlightNotificationBody(opts ChannelToolSpotlightOptions, report ChannelToolSpotlightReport) string {
+	if channelToolSpotlightMode(opts.Mode) == "drill" {
+		return renderChannelToolDrillNotificationBody(opts, report)
+	}
 	var b strings.Builder
 	b.WriteString("GitClaw channel tool spotlight\n\n")
 	fmt.Fprintf(&b, "Spotlight status: %s\n", report.SpotlightStatus)
@@ -527,6 +552,46 @@ func renderChannelToolSpotlightNotificationBody(opts ChannelToolSpotlightOptions
 		fmt.Fprintf(&b, "- @gitclaw /channels tool-map %s --map-id <id> --message-id <message> --notify-message-id <message>\n", tool.Name)
 	}
 	b.WriteString("\nRaw tool inputs, tool output bodies, tool schemas, channel bodies, issue bodies, comment bodies, prompts, raw focus text, raw notes, raw tool triggers, and raw spotlight ids are not included in the source receipt. Tool execution: not performed by this action. Shell execution: not performed by this action. MCP server launch: not performed by this action. Toolset activation: not performed by this action. Model call: not performed by this action. Repository mutation: not performed by this action. Provider delivery: queued through GitHub channel outbox.")
+	return strings.TrimSpace(b.String())
+}
+
+func renderChannelToolDrillNotificationBody(opts ChannelToolSpotlightOptions, report ChannelToolSpotlightReport) string {
+	var b strings.Builder
+	b.WriteString("GitClaw channel tool drill\n\n")
+	fmt.Fprintf(&b, "Drill status: %s\n", report.SpotlightStatus)
+	fmt.Fprintf(&b, "Focus hash: %s\n", report.FocusHash)
+	fmt.Fprintf(&b, "Focus terms: %d\n", report.FocusTerms)
+	fmt.Fprintf(&b, "Available tools: %d\n", report.AvailableTools)
+	fmt.Fprintf(&b, "Enabled tools: %d\n", report.EnabledTools)
+	fmt.Fprintf(&b, "Candidate tools: %d\n", report.CandidateTools)
+	fmt.Fprintf(&b, "Active tool outputs: %d\n", report.ActiveOutputs)
+	fmt.Fprintf(&b, "Selected index: %d\n", report.SelectedIndex)
+	fmt.Fprintf(&b, "Selection hash: %s\n", report.SelectionSHA)
+	fmt.Fprintf(&b, "Validation status: %s\n", report.ValidationStatus)
+	fmt.Fprintf(&b, "Tool drill id hash: %s\n", shortDocumentHash(opts.SpotlightID))
+	b.WriteString("\nDrill:\n")
+	if report.SpotlightStatus == "no_eligible_tools" || strings.TrimSpace(report.SelectedTool.Name) == "" {
+		b.WriteString("- No eligible read-only tool contract was available for this drill.\n")
+	} else {
+		tool := report.SelectedTool
+		fmt.Fprintf(&b, "- tool_name=%s mode=%s enabled=%t disabled_by_config=%t blocked_by_allowlist=%t mutating=%t trigger_sha256_12=%s\n",
+			tool.Name,
+			tool.Mode,
+			report.SelectedEnabled,
+			report.SelectedDisabled,
+			report.SelectedBlocked,
+			isMutatingToolContract(tool),
+			shortDocumentHash(tool.Trigger),
+		)
+		b.WriteString("- inspect: name the safest question this tool can answer.\n")
+		b.WriteString("- practice: ask GitClaw a normal repo question that should use this tool.\n")
+		b.WriteString("- verify: check the assistant marker for prompt-visible tools and tool output count.\n")
+		b.WriteString("- next: open a tool rehearsal issue if the answer needs more than one turn.\n")
+		b.WriteString("\nTry next:\n")
+		fmt.Fprintf(&b, "- @gitclaw /channels tool-info %s --message-id <message> --notify-message-id <message>\n", tool.Name)
+		fmt.Fprintf(&b, "- @gitclaw /channels rehearse-tool %s --id <id> --message-id <message>\n", tool.Name)
+	}
+	b.WriteString("\nRaw tool inputs, tool output bodies, tool schemas, channel bodies, issue bodies, comment bodies, prompts, raw focus text, raw notes, raw tool triggers, and raw drill ids are not included in the source receipt. Tool execution: not performed by this action. Shell execution: not performed by this action. MCP server launch: not performed by this action. Toolset activation: not performed by this action. Model call: not performed by this action. Repository mutation: not performed by this action. Provider delivery: queued through GitHub channel outbox.")
 	return strings.TrimSpace(b.String())
 }
 
@@ -617,6 +682,7 @@ func normalizeChannelToolSpotlightOptions(opts ChannelToolSpotlightOptions) Chan
 	opts.SourceMessageID = strings.TrimSpace(opts.SourceMessageID)
 	opts.NotifyMessageID = strings.TrimSpace(opts.NotifyMessageID)
 	opts.SpotlightID = cleanChannelToolSpotlightID(opts.SpotlightID)
+	opts.Mode = channelToolSpotlightMode(opts.Mode)
 	opts.Focus = cleanChannelToolSpotlightFocus(opts.Focus)
 	opts.Note = cleanChannelToolSpotlightNote(opts.Note)
 	opts.Author = strings.TrimSpace(opts.Author)
@@ -698,6 +764,40 @@ func cleanChannelToolSpotlightSubcommand(value string) string {
 	return strings.ReplaceAll(value, "_", "-")
 }
 
+func channelToolSpotlightModeForSubcommand(subcommand string) string {
+	switch cleanChannelToolSpotlightSubcommand(subcommand) {
+	case "tool-drill", "tools-drill", "drill-tool", "tool-warmup", "tool-contract-drill", "capability-drill":
+		return "drill"
+	default:
+		return "spotlight"
+	}
+}
+
+func channelToolSpotlightMode(value string) string {
+	value = strings.ToLower(strings.Trim(strings.TrimSpace(value), " \t\r\n.,:;!?`\"'"))
+	value = strings.NewReplacer("_", "-", " ", "-").Replace(value)
+	switch value {
+	case "drill", "tool-drill", "tools-drill", "tool-warmup", "tool-contract-drill", "capability-drill":
+		return "drill"
+	default:
+		return "spotlight"
+	}
+}
+
+func channelToolSpotlightReportMode(value string) string {
+	if channelToolSpotlightMode(value) == "drill" {
+		return "deterministic-tool-contract-drill"
+	}
+	return "deterministic-tool-contract-spotlight"
+}
+
+func channelToolSpotlightDrillStepCount(mode string, report ChannelToolSpotlightReport) int {
+	if channelToolSpotlightMode(mode) != "drill" || report.SpotlightStatus == "no_eligible_tools" {
+		return 0
+	}
+	return 4
+}
+
 func cleanChannelToolSpotlightID(value string) string {
 	return cleanChannelHuddleID(value)
 }
@@ -754,7 +854,7 @@ func shouldSkipChannelToolSpotlightTrailingLine(line string) bool {
 
 func defaultChannelToolSpotlightFocus(subcommand string) string {
 	switch cleanChannelToolSpotlightSubcommand(subcommand) {
-	case "tool-capability-spotlight", "tool-capability-draw":
+	case "tool-capability-spotlight", "tool-capability-draw", "capability-drill":
 		return "capability"
 	default:
 		return "general"
@@ -766,8 +866,13 @@ func autoChannelToolSpotlightSourceMessageID(ev Event) string {
 }
 
 func autoChannelToolSpotlightID(ev Event, opts ChannelToolSpotlightOptions) string {
-	seed := strings.Join([]string{eventID(ev), opts.Route, opts.Channel, opts.ThreadID, opts.SourceMessageID, opts.Focus, opts.Note}, "|")
-	return fmt.Sprintf("tool-spotlight-%s-%s", eventID(ev), shortDocumentHash(seed))
+	mode := channelToolSpotlightMode(opts.Mode)
+	seed := strings.Join([]string{eventID(ev), opts.Route, opts.Channel, opts.ThreadID, opts.SourceMessageID, mode, opts.Focus, opts.Note}, "|")
+	prefix := "tool-spotlight"
+	if mode == "drill" {
+		prefix = "tool-drill"
+	}
+	return fmt.Sprintf("%s-%s-%s", prefix, eventID(ev), shortDocumentHash(seed))
 }
 
 func autoChannelToolSpotlightNotifyMessageID(ev Event, spotlightID string) string {
@@ -838,6 +943,7 @@ func channelToolSpotlightSeed(opts ChannelToolSpotlightOptions, focus string) st
 		opts.SourceMessageID,
 		opts.NotifyMessageID,
 		opts.SpotlightID,
+		channelToolSpotlightMode(opts.Mode),
 		focus,
 		opts.Note,
 	}, "|")

@@ -5176,6 +5176,30 @@ Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw
 sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes messaging guide
 (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-04 Channel Tool Drill Follow-Up
+
+OpenClaw's tool policy and channel model make capability discovery feel
+chat-native, but the useful serverless lesson is to rehearse tool use without
+actually running tools from the provider channel. Hermes' messaging split
+points the same way: channel adapters should wake a normalized session, while
+tool authority stays in the agent/workspace contract.
+
+GitClaw's version is `@gitclaw /channels tool-drill <focus> --drill-id <id>
+--message-id <id> --notify-message-id <id>`. It selects one enabled,
+non-mutating built-in tool contract from safe metadata and queues a
+provider-facing inspect/practice/verify/next card. The source receipt stays
+body-free: route/thread/message/drill/mode/focus/selection hashes, candidate
+counts, drill step count, duplicate status, and explicit no-model/no-tool-
+execution/no-shell/no-MCP-launch/no-toolset-activation/no-provider-API/
+no-repository-mutation gates. Acceptance requires a live channel-ingest issue,
+one tool-drill notification, duplicate `tool-warmup` suppression,
+metadata-only outbox proof, and a real GitHub Models repo-reader/search
+follow-up on the same channel issue.
+
+Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw
+tools overview (`https://docs.openclaw.ai/tools`), Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-04 Channel Soul Drill Follow-Up
 
 OpenClaw's SOUL/IDENTITY/TOOLS-style workspace files and Hermes' explicit

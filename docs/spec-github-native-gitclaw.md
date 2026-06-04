@@ -8853,35 +8853,42 @@ before choosing what to inspect next:
 
 ```text
 @gitclaw /channels tool-spotlight search_files --spotlight-id <stable-spotlight-id> --message-id <provider-message-id> --notify-message-id <stable-outbound-id>
+@gitclaw /channels tool-drill search_files --drill-id <stable-drill-id> --message-id <provider-message-id> --notify-message-id <stable-outbound-id>
 ```
 
 `/channels tool-spotlight`, `/channels tools-spotlight`,
 `/channels spotlight-tool`, `/channels tool-pick`,
 `/channels tool-draw`, `/channels tool-capability-spotlight`, and
-`/channels tool-capability-draw` infer the current channel and thread id from
-the issue marker when no explicit route/channel/thread target is provided.
-They filter deterministic built-in tool contracts by focus text, then make a
-stable hash-based draw from enabled, non-allowlist-blocked, read-only or
-metadata-only tools. If the focus has no eligible match, they fall back to the
-safe eligible pool and mark the spotlight as fallback. The provider-facing
-outbound comment reports spotlight status, focus hash/term count, tool counts,
-selected index, selected tool name, mode, enablement flags, mutation flag,
-trigger hash, validation summary, and follow-up `tool-info`/`tool-map`
-commands. The source receipt stays stricter: it records target issue/comment
-ids, route/thread/message hashes, tool-spotlight id hash, focus/note hashes,
-selected name/mode/trigger hashes, selection hash, outbox delivery
-instructions, deterministic/no-randomness markers, and safety gates. It does
-not call a model, execute tools, run shell commands, launch MCP servers,
-activate toolsets, call provider APIs, mutate repository files, print raw focus
-text, print raw notes, print raw provider thread/message ids, print raw
-spotlight ids, print raw tool names, print raw triggers, print raw tool inputs,
-print raw tool outputs, print raw tool schemas, print channel bodies, print
-issue/comment bodies, or print prompts. Duplicates are suppressed by
+`/channels tool-capability-draw`, `/channels tool-drill`,
+`/channels tools-drill`, `/channels drill-tool`, `/channels tool-warmup`,
+`/channels tool-contract-drill`, and `/channels capability-drill` infer the
+current channel and thread id from the issue marker when no explicit
+route/channel/thread target is provided. They filter deterministic built-in
+tool contracts by focus text, then make a stable hash-based draw from enabled,
+non-allowlist-blocked, read-only or metadata-only tools. If the focus has no
+eligible match, they fall back to the safe eligible pool and mark the card as
+fallback. The spotlight mode provider-facing outbound comment reports
+spotlight status, focus hash/term count, tool counts, selected index, selected
+tool name, mode, enablement flags, mutation flag, trigger hash, validation
+summary, and follow-up `tool-info`/`tool-map` commands. The drill mode uses
+the same safe selection boundary but frames the card as
+inspect/practice/verify/next prompts with `tool-info`/`rehearse-tool`
+follow-ups. The source receipt stays stricter: it records target
+issue/comment ids, route/thread/message hashes, tool-spotlight-or-drill id
+hash, mode/focus/note hashes, selected name/mode/trigger hashes, selection
+hash, drill step count, outbox delivery instructions,
+deterministic/no-randomness markers, and safety gates. It does not call a
+model, execute tools, run shell commands, launch MCP servers, activate
+toolsets, call provider APIs, mutate repository files, print raw focus text,
+print raw notes, print raw provider thread/message ids, print raw
+spotlight/drill ids, print raw tool names, print raw triggers, print raw tool
+inputs, print raw tool outputs, print raw tool schemas, print channel bodies,
+print issue/comment bodies, or print prompts. Duplicates are suppressed by
 `channel + notify_message_id`. Changes to this surface require a live E2E that
-ingests a real channel issue, queues a tool-spotlight notification, validates
+ingests a real channel issue, queues a tool-card notification, validates
 metadata-only outbox discovery, verifies duplicate suppression, and then
-continues on the same GitHub issue with a real GitHub Models repo-reader/search
-follow-up.
+continues on the same GitHub issue with a real GitHub Models
+repo-reader/search follow-up.
 
 The same channel-thread issue can ask for a safe tool-use map before opening
 any reviewed issue:
@@ -13967,6 +13974,20 @@ examples/workflows/gitclaw.yml
   that must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-tool-spotlight fixture token, and avoid hidden channel, account,
   message, spotlight, focus, tool-input/output, and notification sentinels.
+- A `gh`-driven channel-tool-drill-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels tool-drill ...` on that mirrored thread, verifies one
+  provider-facing deterministic safe tool drill card, source receipt metadata
+  without raw focus text, notes, drill ids, tool names, triggers, inputs,
+  outputs, or schemas, duplicate notification suppression, metadata-only
+  outbox discovery, deterministic/no-randomness markers, drill step count, and
+  explicit no-tool-execution/no-shell-execution/no-MCP-launch/no-toolset-
+  activation/no-model-call/no-repository-mutation/no-provider-API flags. The
+  channel-thread issue then gets a normal GitHub Models issue-comment
+  follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
+  recover the channel-tool-drill fixture token, and avoid hidden channel,
+  account, message, drill, focus, tool-input/output, and notification
+  sentinels.
 - A `gh`-driven channel-research-spotlight-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels research-spotlight ...` on that mirrored thread, verifies

@@ -132,6 +132,7 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"Queue provider-facing bounded status-board cockpit cards across skills, tools, soul, memory, backups, research, channels, launch, and fun",
 		"Queue deterministic provider-facing skill spotlight cards from repo-local metadata",
 		"Queue deterministic provider-facing tool spotlight cards from built-in read-only/metadata tool contracts",
+		"Queue deterministic provider-facing tool drill cards from built-in read-only/metadata tool contracts",
 		"Queue deterministic provider-facing soul spotlight cards from repo-local high-authority metadata",
 		"Queue deterministic provider-facing backup spotlight cards from local or read-only fetched backup metadata",
 		"Queue deterministic provider-facing research spotlight cards from reviewed static source, pattern, and rejection metadata",

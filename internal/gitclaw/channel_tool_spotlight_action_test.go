@@ -255,6 +255,223 @@ func TestHandleChannelToolSpotlightQueuesDeterministicCardWithoutLLM(t *testing.
 	}
 }
 
+func TestHandleChannelToolDrillQueuesPracticeCardWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeChannelToolSpotlightFixture(t, root)
+
+	threadBody := RenderChannelThreadBody(ChannelIngestOptions{
+		Channel:  "telegram",
+		ThreadID: "chat-tool-drill-123",
+	})
+	ev, err := ParseEvent("issue_comment", []byte(`{
+		"action": "created",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 912,
+			"title": "GitClaw telegram thread chat-tool-drill-123",
+			"body": "<!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"chat-tool-drill-123\" -->\nGitClaw channel bridge thread.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}, {"name": "gitclaw:channel"}]
+		},
+		"comment": {
+			"id": 91201,
+			"body": "@gitclaw /channels tool-drill search_files --message-id tool-drill-inbound-912 --notify-message-id tool-drill-notify-912 --drill-id Tool.Drill.Secret.912\nDo not include this command hidden token in the receipt: CHANNEL_TOOL_DRILL_COMMAND_MARKER.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"}
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	github := &FakeGitHub{
+		Issues: []Issue{{
+			Number: 912,
+			Title:  "GitClaw telegram thread chat-tool-drill-123",
+			Body:   threadBody,
+			Labels: []string{"gitclaw", "gitclaw:channel"},
+		}},
+		CommentsByIssue: map[int][]Comment{912: {{
+			ID: 91200,
+			Body: RenderChannelMessageComment(ChannelIngestOptions{
+				Channel:   "telegram",
+				ThreadID:  "chat-tool-drill-123",
+				MessageID: "tool-drill-inbound-912",
+				Author:    "telegram",
+				Body:      "Original mirrored tool drill command with CHANNEL_TOOL_DRILL_INGEST_MARKER.",
+			}),
+		}}},
+		IssueLabels: map[int][]string{912: []string{"gitclaw", "gitclaw:channel"}},
+	}
+	llm := &FakeLLM{Response: "should not be called"}
+
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for channel tool drill action", llm.Calls)
+	}
+	sourceComments := github.CommentsByIssue[912]
+	if len(sourceComments) != 3 {
+		t.Fatalf("source comments = %d, want message + outbound + receipt: %#v", len(sourceComments), sourceComments)
+	}
+	outbound := sourceComments[1].Body
+	for _, want := range []string{
+		"gitclaw:channel-outbound",
+		`message_id="tool-drill-notify-912"`,
+		"GitClaw channel tool drill",
+		"Drill status: ok",
+		"Focus terms: 1",
+		"Available tools: 5",
+		"Candidate tools: 1",
+		"Active tool outputs: ",
+		"Selection hash: ",
+		"Validation status: ok",
+		"Tool drill id hash: ",
+		"Drill:",
+		"tool_name=gitclaw.search_files",
+		"mode=read-only",
+		"enabled=true",
+		"disabled_by_config=false",
+		"blocked_by_allowlist=false",
+		"mutating=false",
+		"inspect: name the safest question this tool can answer.",
+		"practice: ask GitClaw a normal repo question that should use this tool.",
+		"verify: check the assistant marker for prompt-visible tools and tool output count.",
+		"next: open a tool rehearsal issue if the answer needs more than one turn.",
+		"@gitclaw /channels tool-info gitclaw.search_files",
+		"@gitclaw /channels rehearse-tool gitclaw.search_files",
+		"Raw tool inputs, tool output bodies, tool schemas, channel bodies, issue bodies, comment bodies, prompts, raw focus text, raw notes, raw tool triggers, and raw drill ids are not included in the source receipt.",
+		"Tool execution: not performed by this action.",
+		"Shell execution: not performed by this action.",
+		"MCP server launch: not performed by this action.",
+		"Toolset activation: not performed by this action.",
+		"Model call: not performed by this action.",
+		"Repository mutation: not performed by this action.",
+		"Provider delivery: queued through GitHub channel outbox.",
+	} {
+		if !strings.Contains(outbound, want) {
+			t.Fatalf("tool drill notification missing %q:\n%s", want, outbound)
+		}
+	}
+	for _, leaked := range []string{"CHANNEL_TOOL_DRILL_INGEST_MARKER", "CHANNEL_TOOL_DRILL_COMMAND_MARKER", "CHANNEL_TOOL_SPOTLIGHT_FILE_SECRET", "Tool.Drill.Secret.912", "explicit quoted phrase or identifier"} {
+		if strings.Contains(outbound, leaked) {
+			t.Fatalf("tool drill notification leaked %q:\n%s", leaked, outbound)
+		}
+	}
+
+	receipt := sourceComments[2].Body
+	for _, want := range []string{
+		"GitClaw Channel Tool Drill Action",
+		"Generated without a model call",
+		`model="gitclaw/channels"`,
+		"requested_channel_command: `/channels tool-drill`",
+		"channel_tool_spotlight_status: `queued`",
+		"tool_spotlight_status: `ok`",
+		"spotlight_mode: `deterministic-tool-contract-draw`",
+		"tool_card_mode: `deterministic-tool-contract-drill`",
+		"tool_spotlight_id_sha256_12: `",
+		"tool_spotlight_id_auto: `false`",
+		"tool_card_mode_sha256_12: `",
+		"tool_card_mode_bytes: `5`",
+		"spotlight_focus_sha256_12: `",
+		"spotlight_focus_bytes: `12`",
+		"spotlight_focus_terms: `1`",
+		"available_tools: `5`",
+		"matched_tools: `1`",
+		"candidate_tools: `1`",
+		"selected_index: `0`",
+		"selected_tool_name_sha256_12: `",
+		"selected_tool_enabled: `true`",
+		"selected_tool_disabled_by_config: `false`",
+		"selected_tool_blocked_by_allowlist: `false`",
+		"validation_status: `ok`",
+		"drill_step_count: `4`",
+		"target_from_current_channel_issue: `true`",
+		"deterministic_selection: `true`",
+		"external_randomness_used: `false`",
+		"tool_execution_allowed: `false`",
+		"tool_execution_performed: `false`",
+		"shell_execution_allowed: `false`",
+		"mcp_server_launch_allowed: `false`",
+		"toolset_activation_allowed: `false`",
+		"model_call_performed: `false`",
+		"repository_mutation_performed: `false`",
+		"raw_tool_spotlight_id_included: `false`",
+		"raw_tool_card_mode_included: `false`",
+		"raw_tool_names_included: `false`",
+		"raw_tool_triggers_included: `false`",
+		"raw_tool_inputs_included: `false`",
+		"raw_tool_outputs_included: `false`",
+		"raw_tool_schemas_included: `false`",
+		"llm_e2e_required_after_channel_tool_spotlight_change: `true`",
+		"llm_e2e_required_after_channel_tool_drill_change: `true`",
+	} {
+		if !strings.Contains(receipt, want) {
+			t.Fatalf("channel tool drill receipt missing %q:\n%s", want, receipt)
+		}
+	}
+	for _, leaked := range []string{"search_files", "gitclaw.search_files", "explicit quoted phrase or identifier", "CHANNEL_TOOL_DRILL_INGEST_MARKER", "CHANNEL_TOOL_DRILL_COMMAND_MARKER", "CHANNEL_TOOL_SPOTLIGHT_FILE_SECRET", "chat-tool-drill-123", "tool-drill-inbound-912", "tool-drill-notify-912", "Tool.Drill.Secret.912"} {
+		if strings.Contains(receipt, leaked) {
+			t.Fatalf("channel tool drill receipt leaked %q:\n%s", leaked, receipt)
+		}
+	}
+
+	duplicateEv, err := ParseEvent("issue_comment", []byte(`{
+		"action": "created",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 912,
+			"title": "GitClaw telegram thread chat-tool-drill-123",
+			"body": "<!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"chat-tool-drill-123\" -->\nGitClaw channel bridge thread.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}, {"name": "gitclaw:channel"}]
+		},
+		"comment": {
+			"id": 91202,
+			"body": "@gitclaw /channels tool-warmup search_files --message-id tool-drill-inbound-912 --notify-message-id tool-drill-notify-912 --warmup-id Tool.Drill.Secret.912\nDo not include duplicate hidden token CHANNEL_TOOL_DRILL_DUPLICATE_MARKER.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"}
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent duplicate returned error: %v", err)
+	}
+	if err := Handle(context.Background(), duplicateEv, cfg, github, llm); err != nil {
+		t.Fatalf("Handle duplicate returned error: %v", err)
+	}
+	if got := len(github.CommentsByIssue[912]); got != 4 {
+		t.Fatalf("duplicate tool drill posted another outbound comment: comments=%d %#v", got, github.CommentsByIssue[912])
+	}
+	duplicateReceipt := github.CommentsByIssue[912][3].Body
+	for _, want := range []string{
+		"GitClaw Channel Tool Drill Action",
+		"requested_channel_command: `/channels tool-warmup`",
+		"channel_tool_spotlight_status: `duplicate`",
+		"tool_card_mode: `deterministic-tool-contract-drill`",
+		"notification_queued: `false`",
+		"notification_duplicate_suppressed: `true`",
+		"model_call_performed: `false`",
+		"repository_mutation_performed: `false`",
+		"tool_execution_allowed: `false`",
+		"tool_execution_performed: `false`",
+	} {
+		if !strings.Contains(duplicateReceipt, want) {
+			t.Fatalf("duplicate tool drill receipt missing %q:\n%s", want, duplicateReceipt)
+		}
+	}
+	for _, leaked := range []string{"search_files", "gitclaw.search_files", "CHANNEL_TOOL_DRILL_DUPLICATE_MARKER", "chat-tool-drill-123", "tool-drill-inbound-912", "tool-drill-notify-912", "Tool.Drill.Secret.912"} {
+		if strings.Contains(duplicateReceipt, leaked) {
+			t.Fatalf("duplicate tool drill receipt leaked %q:\n%s", leaked, duplicateReceipt)
+		}
+	}
+}
+
 func TestBuildChannelToolSpotlightActionRequestParsesRouteAliasAndTrailingNote(t *testing.T) {
 	root := t.TempDir()
 	writeChannelToolSpotlightFixture(t, root)
