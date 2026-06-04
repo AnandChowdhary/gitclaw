@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-04T03:27:01Z",
+  "generated_at": "2026-06-04T03:28:51Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 757,
   "issues": [
@@ -9670,15 +9670,15 @@
       "number": 867,
       "title": "GitClaw telegram thread channel-mission-control-e2e-20260604t032116z",
       "path": "issues/000867.json",
-      "backup_generated_at": "2026-06-04T03:26:59Z",
+      "backup_generated_at": "2026-06-04T03:28:49Z",
       "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 7,
-      "transcript_messages": 7
+      "comment_count": 9,
+      "transcript_messages": 9
     }
   ]
 }
