@@ -6139,6 +6139,38 @@ soul-body-read/provider-API/model/schedule/workflow/repository mutation was
 performed, and then continues on the same GitHub issue with a real GitHub
 Models repo-reader/search follow-up.
 
+For a tiny channel-native ritual that is playful but still reviewable, GitClaw
+also supports:
+
+```text
+@gitclaw /channels fortune-cookie release --cookie-id <stable-cookie-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
+Note: make the launch card tiny.
+```
+
+`/channels fortune-cookie`, `/channels fortune-cookie-card`, `/channels cookie`,
+`/channels thread-cookie`, `/channels lucky-cookie`, `/channels tiny-fortune`,
+`/channels micro-fortune`, and `/channels luck` queue one provider-facing
+fortune cookie card back onto the current `gitclaw:channel-thread` issue or an
+explicit reviewed route. The theme is bounded to `focus`, `release`, `debug`,
+`care`, or `fun`; each theme uses a reviewed static deck of five fortune/prompt
+pairs. The action deterministically selects a fortune, next prompt, and lucky
+number from the repository, channel, thread, source message id, notification
+message id, cookie id, theme, note hash, and deck hash. The provider-facing
+outbound comment may show the fortune, next prompt, lucky number, theme, and
+optional note because that is the message being queued for Slack/Telegram. The
+source receipt remains body-free and reports only hashes, counts, selected
+index, lucky number, duplicate status, outbox delivery instructions, and safety
+gates. It does not call a model, use external randomness, execute commands,
+create artifacts, create tasks or reminders, install skills, execute tools,
+call provider APIs, edit workflows, mutate repository files, or perform provider
+delivery. It does not print raw cookie ids, theme names, notes, deck text,
+fortune text, prompt text, thread ids, message ids, or channel bodies in the
+source receipt. Duplicates are suppressed by `channel + notify_message_id`.
+Changes to this surface require a live E2E that ingests a real channel issue,
+queues the fortune cookie card, validates metadata-only outbox discovery,
+verifies duplicate suppression, and then continues on the same GitHub issue
+with a real GitHub Models repo-reader/search follow-up.
+
 For channel-native route continuity that should feel like docking a live chat
 thread into another reviewed lane without secretly moving provider state,
 GitClaw also supports:

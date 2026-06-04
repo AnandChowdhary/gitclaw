@@ -2763,6 +2763,14 @@ proves no model call, external randomness, command execution, artifact/task/
 reminder creation, provider API call, workflow edit, status persistence, skill
 install, tool execution, or repository mutation happened, and then runs a real
 GitHub Models repo-reader/search follow-up.
+The channel-fortune-cookie slash harness adds a chat-native tiny ritual:
+a channel-ingested issue receives `@gitclaw /channels fortune-cookie`, queues
+one provider-visible fortune, next prompt, and lucky number from a bounded
+static deck, exposes it through metadata-only outbox, suppresses duplicate
+cookie notifications, proves no model call, external randomness, command
+execution, artifact/task/reminder creation, provider API call, workflow edit,
+skill install, tool execution, or repository mutation happened, and then runs a
+real GitHub Models repo-reader/search follow-up.
 The channel-sticker slash harness adds a provider-facing flourish lane without
 media side effects: a channel-ingested issue receives `@gitclaw /channels
 sticker`, queues one provider-visible sticker card with an optional note,
