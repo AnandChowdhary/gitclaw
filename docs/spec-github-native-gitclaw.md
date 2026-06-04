@@ -9020,40 +9020,47 @@ before deciding what to inspect next:
 
 ```text
 @gitclaw /channels soul-spotlight SOUL --spotlight-id <stable-spotlight-id> --message-id <provider-message-id> --notify-message-id <stable-outbound-id>
+@gitclaw /channels soul-drill SOUL --drill-id <stable-drill-id> --message-id <provider-message-id> --notify-message-id <stable-outbound-id>
 ```
 
 `/channels soul-spotlight`, `/channels souls-spotlight`,
 `/channels spotlight-soul`, `/channels soul-pick`, `/channels soul-draw`,
 `/channels authority-spotlight`, `/channels authority-draw`,
-`/channels context-spotlight`, and `/channels context-draw` infer the current
-channel and thread id from the issue marker when no explicit
-route/channel/thread target is provided. They filter repo-local high-authority
-context metadata by focus text, then make a stable hash-based draw from
-present allowed context surfaces: required soul/identity/user/tool/memory/
-heartbeat files and loaded canonical memory-note metadata. If the focus has no
-eligible match, they fall back to the safe eligible pool and mark the spotlight
-as fallback. The provider-visible message can include spotlight status, focus
-hash/term count, context counts, selected index, selected normalized context
-path, category, source, present/required/canonical/latest flags,
-loaded-for-this-turn flag, byte/line counts, file hash, context-limit flag,
-validation summary, risk summary, and follow-up `soul-info`/`soul-search`
-commands. The source receipt is stricter: it records only
-thread/message/spotlight hashes, focus/note hashes, selected
-path/category/source hashes, selection hash, validation/risk counts, delivery
-metadata, deterministic/no-randomness markers, and hard disabled gates. It
-does not call a model, execute tools, contact registries, export profiles,
-write soul or memory, call provider APIs, mutate repository files, print raw
-focus text, print raw notes, print raw spotlight ids, print raw selected
-context paths, print raw thread/message ids, print raw soul bodies, print raw
-identity bodies, print raw user bodies, print raw memory bodies, print raw tool
-guidance, print raw heartbeat bodies, print prompts, print tool outputs, or
-print channel message bodies in the source receipt. Duplicates are suppressed
-by `channel + notify_message_id`. Changes to this surface require a live E2E
-that validates the metadata-only soul-spotlight outbox, checks duplicate
-suppression, verifies no registry/profile-export/soul-write/memory-write/
-tool-execution/model/repository/provider side effects occurred, and then
-continues on the channel issue with a normal GitHub Models repo-reader/search
-follow-up.
+`/channels context-spotlight`, `/channels context-draw`,
+`/channels soul-drill`, `/channels souls-drill`, `/channels drill-soul`,
+`/channels soul-practice`, `/channels context-drill`,
+`/channels authority-drill`, `/channels context-practice`, and
+`/channels authority-practice` infer the current channel and thread id from
+the issue marker when no explicit route/channel/thread target is provided.
+They filter repo-local high-authority context metadata by focus text, then
+make a stable hash-based draw from present allowed context surfaces: required
+soul/identity/user/tool/memory/heartbeat files and loaded canonical
+memory-note metadata. If the focus has no eligible match, they fall back to the
+safe eligible pool and mark the card as fallback. The spotlight mode provider
+message can include spotlight status, focus hash/term count, context counts,
+selected index, selected normalized context path, category, source,
+present/required/canonical/latest flags, loaded-for-this-turn flag,
+byte/line counts, file hash, context-limit flag, validation summary, risk
+summary, and follow-up `soul-info`/`soul-search` commands. The drill mode
+provider message uses the same selection boundary but frames the card as
+notice/practice/verify/next prompts with `soul-info`/`rehearse-soul`
+follow-ups. The source receipt is stricter: it records only
+thread/message/spotlight-or-drill hashes, mode/focus/note hashes, selected
+path/category/source hashes, selection hash, validation/risk counts, drill
+step count, delivery metadata, deterministic/no-randomness markers, and hard
+disabled gates. It does not call a model, execute tools, contact registries,
+export profiles, write soul or memory, call provider APIs, mutate repository
+files, print raw focus text, print raw notes, print raw spotlight/drill ids,
+print raw selected context paths, print raw thread/message ids, print raw soul
+bodies, print raw identity bodies, print raw user bodies, print raw memory
+bodies, print raw tool guidance, print raw heartbeat bodies, print prompts,
+print tool outputs, or print channel message bodies in the source receipt.
+Duplicates are suppressed by `channel + notify_message_id`. Changes to this
+surface require a live E2E that validates the metadata-only soul-card outbox,
+checks duplicate suppression, verifies no registry/profile-export/soul-write/
+memory-write/tool-execution/model/repository/provider side effects occurred,
+and then continues on the channel issue with a normal GitHub Models
+repo-reader/search follow-up.
 
 The same channel-thread issue can inspect high-authority persistent-state risk
 without dumping persona, identity, user, memory, tool, or heartbeat bodies into
@@ -14071,6 +14078,22 @@ examples/workflows/gitclaw.yml
   and avoid hidden channel, account, message, spotlight, focus, soul-body,
   identity-body, user-body, memory-body, tool-guidance, heartbeat-body, prompt,
   session, backup, and notification sentinels.
+- A `gh`-driven channel-soul-drill-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels soul-drill ...` on that mirrored thread, verifies one
+  provider-facing high-authority context drill card, source receipt metadata
+  without raw focus text, notes, drill ids, selected context paths, soul
+  bodies, identity bodies, user bodies, memory bodies, tool guidance, or
+  heartbeat bodies, duplicate notification suppression, metadata-only outbox
+  discovery, deterministic/no-randomness markers, and explicit no-registry-
+  contact/no-profile-export/no-soul-write/no-memory-write/no-tool-execution/
+  no-model-call/no-repository-mutation/no-provider-API flags. The
+  channel-thread issue then gets a normal GitHub Models issue-comment
+  follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
+  recover the channel-soul-drill fixture token, and avoid hidden channel,
+  account, message, drill, focus, soul-body, identity-body, user-body,
+  memory-body, tool-guidance, heartbeat-body, prompt, session, backup, and
+  notification sentinels.
 - A `gh`-driven channel-soul-risk-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels soul-risk ...` on that mirrored thread, verifies one

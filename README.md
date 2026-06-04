@@ -744,6 +744,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels activity typing --activity-id <id>
 @gitclaw /channels soul-info <path> --message-id <id> --notify-message-id <id>
 @gitclaw /channels soul-spotlight <focus> --spotlight-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels soul-drill <focus> --drill-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels soul-risk --message-id <id> --notify-message-id <id>
 @gitclaw /channels soul-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels rsvp e2e-slack-route,e2e-telegram-route --rsvp-id <id> --message-id <id>
@@ -2093,6 +2094,13 @@ prompts, and context bodies out of the source receipt. It does not call a
 model, execute tools, contact registries, export profiles, write soul or
 memory, call provider APIs, use external randomness, mutate workflows, or
 mutate the repository.
+`@gitclaw /channels soul-drill <focus> --drill-id <id> --message-id <id>
+--notify-message-id <id>` uses the same safe high-authority context selection
+path, but frames the provider-facing card as a tiny practice drill:
+notice/practice/verify/next. The source receipt records mode hashes, selected
+context hashes, drill step count, duplicate state, and disabled side-effect
+gates without printing raw context paths, focus text, notes, ids, channel
+bodies, prompts, tool outputs, or soul/memory/profile bodies.
 `@gitclaw /channels soul-risk --message-id <id> --notify-message-id <id>`
 queues a provider-facing high-authority persistent-state risk card back to
 Slack/Telegram. The provider card includes repo-local risk and validation
@@ -2261,6 +2269,7 @@ scripts/e2e/github-channel-profile-status-slash.sh
 scripts/e2e/github-channel-soul-status-slash.sh
 scripts/e2e/github-channel-soul-info-slash.sh
 scripts/e2e/github-channel-soul-spotlight-slash.sh
+scripts/e2e/github-channel-soul-drill-slash.sh
 scripts/e2e/github-channel-soul-risk-slash.sh
 scripts/e2e/github-channel-soul-search-slash.sh
 scripts/e2e/github-channel-memory-status-slash.sh
@@ -3656,6 +3665,13 @@ receipt paths, checks duplicate notification suppression, exposes the
 soul-spotlight notification through metadata-only outbox, and then continues
 on the same channel issue with a real GitHub Models repo-reader/search
 follow-up.
+The channel-soul-drill slash harness turns that discovery path into practice:
+a channel-ingested issue receives `@gitclaw /channels soul-drill`, queues one
+provider-facing notice/practice/verify/next card from repo-local
+high-authority context metadata, checks duplicate notification suppression,
+exposes the soul-drill notification through metadata-only outbox, and then
+continues on the same channel issue with a real GitHub Models
+repo-reader/search follow-up.
 The channel-soul-risk slash harness adds high-authority state risk cards: a
 channel-ingested issue receives `@gitclaw /channels soul-risk`, queues one
 provider-facing repo-local soul risk card back to the mirrored thread, checks

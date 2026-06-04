@@ -264,6 +264,191 @@ func TestHandleChannelSoulSpotlightQueuesDeterministicCardWithoutLLM(t *testing.
 	}
 }
 
+func TestHandleChannelSoulDrillQueuesPracticeCardWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeChannelSoulSpotlightFixture(t, root)
+
+	threadBody := RenderChannelThreadBody(ChannelIngestOptions{
+		Channel:  "telegram",
+		ThreadID: "chat-soul-drill-123",
+	})
+	ev, err := ParseEvent("issue_comment", []byte(`{
+		"action": "created",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 911,
+			"title": "GitClaw telegram thread chat-soul-drill-123",
+			"body": "<!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"chat-soul-drill-123\" -->\nGitClaw channel bridge thread.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}, {"name": "gitclaw:channel"}]
+		},
+		"comment": {
+			"id": 91101,
+			"body": "@gitclaw /channels soul-drill SOUL --message-id soul-drill-inbound-911 --notify-message-id soul-drill-notify-911 --drill-id Soul.Drill.Secret.911\nHidden command token CHANNEL_SOUL_DRILL_COMMAND_MARKER.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"}
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	github := &FakeGitHub{
+		Issues: []Issue{{
+			Number: 911,
+			Title:  "GitClaw telegram thread chat-soul-drill-123",
+			Body:   threadBody,
+			Labels: []string{"gitclaw", "gitclaw:channel"},
+		}},
+		CommentsByIssue: map[int][]Comment{911: {{
+			ID: 91100,
+			Body: RenderChannelMessageComment(ChannelIngestOptions{
+				Channel:   "telegram",
+				ThreadID:  "chat-soul-drill-123",
+				MessageID: "soul-drill-inbound-911",
+				Author:    "telegram",
+				Body:      "Original mirrored soul drill command with CHANNEL_SOUL_DRILL_INGEST_MARKER.",
+			}),
+		}}},
+		IssueLabels: map[int][]string{911: []string{"gitclaw", "gitclaw:channel"}},
+	}
+	llm := &FakeLLM{Response: "should not be called"}
+
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for channel soul drill action", llm.Calls)
+	}
+	sourceComments := github.CommentsByIssue[911]
+	if len(sourceComments) != 3 {
+		t.Fatalf("source comments = %d, want message + outbound + receipt: %#v", len(sourceComments), sourceComments)
+	}
+	outbound := sourceComments[1].Body
+	for _, want := range []string{
+		"gitclaw:channel-outbound",
+		`message_id="soul-drill-notify-911"`,
+		"GitClaw channel soul drill",
+		"Drill status: ok",
+		"Focus terms: 1",
+		"Candidate soul files: 1",
+		"Selection hash: ",
+		"Risk status: ok",
+		"Soul drill id hash: ",
+		"Drill:",
+		"path=.gitclaw/SOUL.md",
+		"category=soul",
+		"notice: name the operating boundary this file should protect.",
+		"practice: ask GitClaw a normal question that should use this context.",
+		"verify: check the assistant marker for context documents and prompt-visible tools.",
+		"next: open a soul rehearsal issue if the context needs more than one turn.",
+		"@gitclaw /channels soul-info .gitclaw/SOUL.md",
+		"@gitclaw /channels rehearse-soul .gitclaw/SOUL.md",
+		"Raw focus text, raw notes, raw drill ids, and raw selected paths are not included in the source receipt.",
+		"Model call: not performed by this action.",
+		"Tool execution: not performed by this action.",
+		"Soul write: not performed by this action.",
+		"Memory write: not performed by this action.",
+		"Provider delivery: queued through GitHub channel outbox.",
+	} {
+		if !strings.Contains(outbound, want) {
+			t.Fatalf("soul drill notification missing %q:\n%s", want, outbound)
+		}
+	}
+	for _, leaked := range []string{"CHANNEL_SOUL_DRILL_SOUL_SECRET", "CHANNEL_SOUL_DRILL_COMMAND_MARKER", "Soul.Drill.Secret.911"} {
+		if strings.Contains(outbound, leaked) {
+			t.Fatalf("soul drill notification leaked %q:\n%s", leaked, outbound)
+		}
+	}
+
+	receipt := sourceComments[2].Body
+	for _, want := range []string{
+		"GitClaw Channel Soul Drill Action",
+		"Generated without a model call",
+		`model="gitclaw/channels"`,
+		"requested_channel_command: `/channels soul-drill`",
+		"channel_soul_spotlight_status: `queued`",
+		"soul_spotlight_status: `ok`",
+		"soul_card_mode: `repo-local-soul-drill`",
+		"soul_card_mode_sha256_12: `",
+		"soul_card_mode_bytes: `5`",
+		"drill_step_count: `4`",
+		"target_from_current_channel_issue: `true`",
+		"model_call_performed: `false`",
+		"tool_execution_performed: `false`",
+		"repository_mutation_performed: `false`",
+		"soul_writes_performed: `false`",
+		"memory_writes_performed: `false`",
+		"raw_soul_card_mode_included: `false`",
+		"raw_soul_file_paths_included: `false`",
+		"raw_soul_bodies_included: `false`",
+		"raw_channel_message_body_included: `false`",
+		"llm_e2e_required_after_channel_soul_spotlight_change: `true`",
+		"llm_e2e_required_after_channel_soul_drill_change: `true`",
+	} {
+		if !strings.Contains(receipt, want) {
+			t.Fatalf("channel soul drill receipt missing %q:\n%s", want, receipt)
+		}
+	}
+	for _, leaked := range []string{".gitclaw/SOUL.md", "CHANNEL_SOUL_DRILL_SOUL_SECRET", "CHANNEL_SOUL_DRILL_INGEST_MARKER", "CHANNEL_SOUL_DRILL_COMMAND_MARKER", "chat-soul-drill-123", "soul-drill-inbound-911", "soul-drill-notify-911", "Soul.Drill.Secret.911"} {
+		if strings.Contains(receipt, leaked) {
+			t.Fatalf("channel soul drill receipt leaked %q:\n%s", leaked, receipt)
+		}
+	}
+
+	duplicateEv, err := ParseEvent("issue_comment", []byte(`{
+		"action": "created",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 911,
+			"title": "GitClaw telegram thread chat-soul-drill-123",
+			"body": "<!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"chat-soul-drill-123\" -->\nGitClaw channel bridge thread.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}, {"name": "gitclaw:channel"}]
+		},
+		"comment": {
+			"id": 91102,
+			"body": "@gitclaw /channels soul-practice SOUL --message-id soul-drill-inbound-911 --notify-message-id soul-drill-notify-911 --practice-id Soul.Drill.Secret.911\nDo not include duplicate hidden token CHANNEL_SOUL_DRILL_DUPLICATE_MARKER.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"}
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent duplicate returned error: %v", err)
+	}
+	if err := Handle(context.Background(), duplicateEv, cfg, github, llm); err != nil {
+		t.Fatalf("Handle duplicate returned error: %v", err)
+	}
+	if got := len(github.CommentsByIssue[911]); got != 4 {
+		t.Fatalf("duplicate soul drill posted another outbound comment: comments=%d %#v", got, github.CommentsByIssue[911])
+	}
+	duplicateReceipt := github.CommentsByIssue[911][3].Body
+	for _, want := range []string{
+		"requested_channel_command: `/channels soul-practice`",
+		"channel_soul_spotlight_status: `duplicate`",
+		"soul_card_mode: `repo-local-soul-drill`",
+		"notification_queued: `false`",
+		"notification_duplicate_suppressed: `true`",
+		"model_call_performed: `false`",
+		"repository_mutation_performed: `false`",
+		"soul_writes_performed: `false`",
+	} {
+		if !strings.Contains(duplicateReceipt, want) {
+			t.Fatalf("duplicate soul drill receipt missing %q:\n%s", want, duplicateReceipt)
+		}
+	}
+	for _, leaked := range []string{".gitclaw/SOUL.md", "CHANNEL_SOUL_DRILL_DUPLICATE_MARKER", "chat-soul-drill-123", "soul-drill-inbound-911", "soul-drill-notify-911", "Soul.Drill.Secret.911"} {
+		if strings.Contains(duplicateReceipt, leaked) {
+			t.Fatalf("duplicate soul drill receipt leaked %q:\n%s", leaked, duplicateReceipt)
+		}
+	}
+}
+
 func TestBuildChannelSoulSpotlightActionRequestParsesRouteAliasAndTrailingNote(t *testing.T) {
 	root := t.TempDir()
 	writeChannelSoulSpotlightFixture(t, root)

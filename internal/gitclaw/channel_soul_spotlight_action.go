@@ -17,6 +17,7 @@ type ChannelSoulSpotlightOptions struct {
 	SourceMessageID   string
 	NotifyMessageID   string
 	SpotlightID       string
+	Mode              string
 	Focus             string
 	Note              string
 	Author            string
@@ -90,6 +91,8 @@ type ChannelSoulSpotlightActionRequest struct {
 	RequestedMsgHash    string
 	NotifyMessageHash   string
 	SpotlightIDHash     string
+	ModeHash            string
+	ModeBytes           int
 	FocusSHA            string
 	FocusBytes          int
 	FocusTerms          int
@@ -118,7 +121,7 @@ func isChannelSoulSpotlightActionFields(fields []string) bool {
 		return false
 	}
 	switch cleanChannelSoulSpotlightSubcommand(fields[1]) {
-	case "soul-spotlight", "souls-spotlight", "spotlight-soul", "soul-pick", "soul-draw", "authority-spotlight", "authority-draw", "context-spotlight", "context-draw":
+	case "soul-spotlight", "souls-spotlight", "spotlight-soul", "soul-pick", "soul-draw", "authority-spotlight", "authority-draw", "context-spotlight", "context-draw", "soul-drill", "souls-drill", "drill-soul", "soul-practice", "context-drill", "authority-drill", "context-practice", "authority-practice":
 		return true
 	default:
 		return false
@@ -134,6 +137,7 @@ func BuildChannelSoulSpotlightActionRequest(ev Event, cfg Config, repoContext Re
 		Options: ChannelSoulSpotlightOptions{
 			Repo:              ev.Repo,
 			SourceIssueNumber: ev.Issue.Number,
+			Mode:              channelSoulSpotlightModeForSubcommand(fields[1]),
 			Focus:             defaultChannelSoulSpotlightFocus(fields[1]),
 		},
 		Command:    strings.ToLower(strings.Trim(fields[0], " \t\r\n.,:;!?")),
@@ -176,7 +180,7 @@ func BuildChannelSoulSpotlightActionRequest(ev Event, cfg Config, repoContext Re
 			}
 			req.Options.NotifyMessageID = fields[i+1]
 			i++
-		case "--spotlight-id", "--soul-spotlight-id", "--soul-pick-id", "--soul-draw-id", "--id":
+		case "--spotlight-id", "--soul-spotlight-id", "--soul-pick-id", "--soul-draw-id", "--drill-id", "--soul-drill-id", "--practice-id", "--id":
 			if i+1 >= len(fields) {
 				return ChannelSoulSpotlightActionRequest{}, fmt.Errorf("%s requires a value", field)
 			}
@@ -246,6 +250,8 @@ func BuildChannelSoulSpotlightActionRequest(ev Event, cfg Config, repoContext Re
 	req.RequestedMsgHash = shortDocumentHash(req.Options.SourceMessageID)
 	req.NotifyMessageHash = shortDocumentHash(req.Options.NotifyMessageID)
 	req.SpotlightIDHash = shortDocumentHash(req.Options.SpotlightID)
+	req.ModeHash = shortDocumentHash(req.Options.Mode)
+	req.ModeBytes = len(req.Options.Mode)
 	req.FocusSHA = req.Report.FocusHash
 	req.FocusBytes = len(req.Options.Focus)
 	req.FocusTerms = req.Report.FocusTerms
@@ -411,7 +417,11 @@ func RenderChannelSoulSpotlightActionReport(ev Event, req ChannelSoulSpotlightAc
 		report = req.Report
 	}
 	var b strings.Builder
-	b.WriteString("## GitClaw Channel Soul Spotlight Action\n\n")
+	if channelSoulSpotlightMode(req.Options.Mode) == "drill" {
+		b.WriteString("## GitClaw Channel Soul Drill Action\n\n")
+	} else {
+		b.WriteString("## GitClaw Channel Soul Spotlight Action\n\n")
+	}
 	b.WriteString("Generated without a model call.\n\n")
 	fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
 	fmt.Fprintf(&b, "- source_issue: `#%d`\n", ev.Issue.Number)
@@ -419,6 +429,7 @@ func RenderChannelSoulSpotlightActionReport(ev Event, req ChannelSoulSpotlightAc
 	fmt.Fprintf(&b, "- channel_soul_spotlight_status: `%s`\n", status)
 	fmt.Fprintf(&b, "- soul_spotlight_status: `%s`\n", report.SpotlightStatus)
 	fmt.Fprintf(&b, "- spotlight_mode: `%s`\n", "repo-local-high-authority-deterministic-draw")
+	fmt.Fprintf(&b, "- soul_card_mode: `%s`\n", channelSoulSpotlightReportMode(req.Options.Mode))
 	fmt.Fprintf(&b, "- notification_target_issue: `#%d`\n", result.Notification.IssueNumber)
 	fmt.Fprintf(&b, "- notification_comment_id: `%d`\n", result.Notification.CommentID)
 	fmt.Fprintf(&b, "- notification_queued: `%t`\n", notificationQueued)
@@ -434,6 +445,8 @@ func RenderChannelSoulSpotlightActionReport(ev Event, req ChannelSoulSpotlightAc
 	fmt.Fprintf(&b, "- notify_message_id_auto: `%t`\n", req.AutoNotifyMessageID)
 	fmt.Fprintf(&b, "- soul_spotlight_id_sha256_12: `%s`\n", noneIfEmpty(spotlightIDHash))
 	fmt.Fprintf(&b, "- soul_spotlight_id_auto: `%t`\n", req.AutoSpotlightID)
+	fmt.Fprintf(&b, "- soul_card_mode_sha256_12: `%s`\n", noneIfEmpty(req.ModeHash))
+	fmt.Fprintf(&b, "- soul_card_mode_bytes: `%d`\n", req.ModeBytes)
 	fmt.Fprintf(&b, "- spotlight_focus_sha256_12: `%s`\n", noneIfEmpty(focusHash))
 	fmt.Fprintf(&b, "- spotlight_focus_bytes: `%d`\n", req.FocusBytes)
 	fmt.Fprintf(&b, "- spotlight_focus_terms: `%d`\n", report.FocusTerms)
@@ -468,6 +481,7 @@ func RenderChannelSoulSpotlightActionReport(ev Event, req ChannelSoulSpotlightAc
 	fmt.Fprintf(&b, "- notification_body_sha256_12: `%s`\n", noneIfEmpty(notificationBodySHA))
 	fmt.Fprintf(&b, "- notification_body_bytes: `%d`\n", notificationBytes)
 	fmt.Fprintf(&b, "- notification_body_lines: `%d`\n", notificationLines)
+	fmt.Fprintf(&b, "- drill_step_count: `%d`\n", channelSoulSpotlightDrillStepCount(req.Options.Mode, report))
 	fmt.Fprintf(&b, "- target_from_current_channel_issue: `%t`\n", req.TargetFromIssue)
 	fmt.Fprintf(&b, "- progressive_disclosure_enabled: `%t`\n", true)
 	fmt.Fprintf(&b, "- deterministic_selection: `%t`\n", true)
@@ -487,6 +501,7 @@ func RenderChannelSoulSpotlightActionReport(ev Event, req ChannelSoulSpotlightAc
 	fmt.Fprintf(&b, "- raw_source_message_id_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_notify_message_id_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_soul_spotlight_id_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_soul_card_mode_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_selection_seed_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_soul_file_paths_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_soul_bodies_included: `%t`\n", false)
@@ -501,17 +516,27 @@ func RenderChannelSoulSpotlightActionReport(ev Event, req ChannelSoulSpotlightAc
 	fmt.Fprintf(&b, "- raw_prompts_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_tool_outputs_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- llm_e2e_required_after_channel_soul_spotlight_change: `%t`\n", true)
+	if channelSoulSpotlightMode(req.Options.Mode) == "drill" {
+		fmt.Fprintf(&b, "- llm_e2e_required_after_channel_soul_drill_change: `%t`\n", true)
+	}
 	fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
 	b.WriteByte('\n')
-	b.WriteString("GitClaw queued a provider-facing high-authority context spotlight card from repo-local soul metadata. The provider card may name one safe context path so people can act on it, while the source receipt keeps raw paths, bodies, ids, focus text, notes, and channel bodies out of band. The action does not call a model, execute tools, mutate repository files, write soul or memory, contact registries, export profiles, use external randomness, or call provider APIs.\n\n")
+	if channelSoulSpotlightMode(req.Options.Mode) == "drill" {
+		b.WriteString("GitClaw queued a provider-facing high-authority context drill card from repo-local soul metadata. The provider card may name one safe context path and show bounded practice prompts, while the source receipt keeps raw paths, bodies, ids, focus text, notes, and channel bodies out of band. The action does not call a model, execute tools, mutate repository files, write soul or memory, contact registries, export profiles, use external randomness, or call provider APIs.\n\n")
+	} else {
+		b.WriteString("GitClaw queued a provider-facing high-authority context spotlight card from repo-local soul metadata. The provider card may name one safe context path so people can act on it, while the source receipt keeps raw paths, bodies, ids, focus text, notes, and channel bodies out of band. The action does not call a model, execute tools, mutate repository files, write soul or memory, contact registries, export profiles, use external randomness, or call provider APIs.\n\n")
+	}
 	b.WriteString("### Follow-Up Delivery\n")
-	b.WriteString("- provider gateways read soul-spotlight cards with `gitclaw channel-outbox --channel <provider> --account-id <account> --issue-number <issue> --out <file>`\n")
-	b.WriteString("- provider gateways record sent soul-spotlight cards with `gitclaw channel-delivery --channel <provider> --account-id <account> --issue-number <issue> --comment-id <comment> --external-message-id <message>`\n")
-	b.WriteString("- duplicate soul-spotlight notifications are suppressed by `channel + notify_message_id`\n")
+	b.WriteString("- provider gateways read soul cards with `gitclaw channel-outbox --channel <provider> --account-id <account> --issue-number <issue> --out <file>`\n")
+	b.WriteString("- provider gateways record sent soul cards with `gitclaw channel-delivery --channel <provider> --account-id <account> --issue-number <issue> --comment-id <comment> --external-message-id <message>`\n")
+	b.WriteString("- duplicate soul card notifications are suppressed by `channel + notify_message_id`\n")
 	return strings.TrimSpace(b.String())
 }
 
 func renderChannelSoulSpotlightNotificationBody(opts ChannelSoulSpotlightOptions, report ChannelSoulSpotlightReport) string {
+	if channelSoulSpotlightMode(opts.Mode) == "drill" {
+		return renderChannelSoulDrillNotificationBody(opts, report)
+	}
 	var b strings.Builder
 	b.WriteString("GitClaw channel soul spotlight\n\n")
 	fmt.Fprintf(&b, "Spotlight status: %s\n", report.SpotlightStatus)
@@ -555,6 +580,45 @@ func renderChannelSoulSpotlightNotificationBody(opts ChannelSoulSpotlightOptions
 		fmt.Fprintf(&b, "- @gitclaw /channels soul-search %s --message-id <message> --notify-message-id <message>\n", match.Category)
 	}
 	b.WriteString("\nRaw soul, identity, user, memory, tool guidance, heartbeat, channel, issue, comment, prompt, and tool output bodies are not included in the source receipt. Raw focus text, raw notes, raw spotlight ids, and raw selected paths are not included in the source receipt. Model call: not performed by this action. Tool execution: not performed by this action. Soul write: not performed by this action. Memory write: not performed by this action. Registry contact: not performed by this action. Profile export: not performed by this action. Repository mutation: not performed by this action. Provider delivery: queued through GitHub channel outbox.")
+	return strings.TrimSpace(b.String())
+}
+
+func renderChannelSoulDrillNotificationBody(opts ChannelSoulSpotlightOptions, report ChannelSoulSpotlightReport) string {
+	var b strings.Builder
+	b.WriteString("GitClaw channel soul drill\n\n")
+	fmt.Fprintf(&b, "Drill status: %s\n", report.SpotlightStatus)
+	fmt.Fprintf(&b, "Focus hash: %s\n", report.FocusHash)
+	fmt.Fprintf(&b, "Focus terms: %d\n", report.FocusTerms)
+	fmt.Fprintf(&b, "Available soul files: %d\n", report.AvailableSoulFiles)
+	fmt.Fprintf(&b, "Present soul files: %d\n", report.PresentSoulFiles)
+	fmt.Fprintf(&b, "Candidate soul files: %d\n", report.CandidateSoulFiles)
+	fmt.Fprintf(&b, "Selected index: %d\n", report.SelectedIndex)
+	fmt.Fprintf(&b, "Selection hash: %s\n", report.SelectionSHA)
+	fmt.Fprintf(&b, "Risk status: %s\n", report.RiskStatus)
+	fmt.Fprintf(&b, "Soul drill id hash: %s\n", shortDocumentHash(opts.SpotlightID))
+	b.WriteString("\nDrill:\n")
+	if report.SpotlightStatus == "no_eligible_soul_files" || strings.TrimSpace(report.SelectedMatch.Path) == "" {
+		b.WriteString("- No eligible high-authority context file was available for this drill.\n")
+	} else {
+		match := report.SelectedMatch
+		fmt.Fprintf(&b, "- path=%s category=%s source=%s present=%t required=%t loaded_for_this_turn=%t sha256_12=%s\n",
+			match.Path,
+			match.Category,
+			match.Source,
+			match.Present,
+			match.Required,
+			match.LoadedForThisTurn,
+			match.SHA,
+		)
+		b.WriteString("- notice: name the operating boundary this file should protect.\n")
+		b.WriteString("- practice: ask GitClaw a normal question that should use this context.\n")
+		b.WriteString("- verify: check the assistant marker for context documents and prompt-visible tools.\n")
+		b.WriteString("- next: open a soul rehearsal issue if the context needs more than one turn.\n")
+		b.WriteString("\nTry next:\n")
+		fmt.Fprintf(&b, "- @gitclaw /channels soul-info %s --message-id <message> --notify-message-id <message>\n", match.Path)
+		fmt.Fprintf(&b, "- @gitclaw /channels rehearse-soul %s --id <id> --message-id <message>\n", match.Path)
+	}
+	b.WriteString("\nRaw soul, identity, user, memory, tool guidance, heartbeat, channel, issue, comment, prompt, and tool output bodies are not included in the source receipt. Raw focus text, raw notes, raw drill ids, and raw selected paths are not included in the source receipt. Model call: not performed by this action. Tool execution: not performed by this action. Soul write: not performed by this action. Memory write: not performed by this action. Registry contact: not performed by this action. Profile export: not performed by this action. Repository mutation: not performed by this action. Provider delivery: queued through GitHub channel outbox.")
 	return strings.TrimSpace(b.String())
 }
 
@@ -645,6 +709,7 @@ func normalizeChannelSoulSpotlightOptions(opts ChannelSoulSpotlightOptions) Chan
 	opts.SourceMessageID = strings.TrimSpace(opts.SourceMessageID)
 	opts.NotifyMessageID = strings.TrimSpace(opts.NotifyMessageID)
 	opts.SpotlightID = cleanChannelSoulSpotlightID(opts.SpotlightID)
+	opts.Mode = channelSoulSpotlightMode(opts.Mode)
 	opts.Focus = cleanChannelSoulSpotlightFocus(opts.Focus)
 	opts.Note = cleanChannelSoulSpotlightNote(opts.Note)
 	opts.Author = strings.TrimSpace(opts.Author)
@@ -726,6 +791,40 @@ func cleanChannelSoulSpotlightSubcommand(value string) string {
 	return strings.ReplaceAll(value, "_", "-")
 }
 
+func channelSoulSpotlightModeForSubcommand(subcommand string) string {
+	switch cleanChannelSoulSpotlightSubcommand(subcommand) {
+	case "soul-drill", "souls-drill", "drill-soul", "soul-practice", "context-drill", "authority-drill", "context-practice", "authority-practice":
+		return "drill"
+	default:
+		return "spotlight"
+	}
+}
+
+func channelSoulSpotlightMode(value string) string {
+	value = strings.ToLower(strings.Trim(strings.TrimSpace(value), " \t\r\n.,:;!?`\"'"))
+	value = strings.NewReplacer("_", "-", " ", "-").Replace(value)
+	switch value {
+	case "drill", "soul-drill", "practice", "soul-practice", "context-drill", "authority-drill":
+		return "drill"
+	default:
+		return "spotlight"
+	}
+}
+
+func channelSoulSpotlightReportMode(value string) string {
+	if channelSoulSpotlightMode(value) == "drill" {
+		return "repo-local-soul-drill"
+	}
+	return "repo-local-soul-spotlight"
+}
+
+func channelSoulSpotlightDrillStepCount(mode string, report ChannelSoulSpotlightReport) int {
+	if channelSoulSpotlightMode(mode) != "drill" || report.SpotlightStatus == "no_eligible_soul_files" {
+		return 0
+	}
+	return 4
+}
+
 func cleanChannelSoulSpotlightID(value string) string {
 	return cleanChannelHuddleID(value)
 }
@@ -784,6 +883,10 @@ func defaultChannelSoulSpotlightFocus(subcommand string) string {
 	switch cleanChannelSoulSpotlightSubcommand(subcommand) {
 	case "authority-spotlight", "authority-draw", "context-spotlight", "context-draw":
 		return "authority"
+	case "authority-drill", "authority-practice":
+		return "authority"
+	case "context-drill", "context-practice":
+		return "authority"
 	default:
 		return "general"
 	}
@@ -794,8 +897,13 @@ func autoChannelSoulSpotlightSourceMessageID(ev Event) string {
 }
 
 func autoChannelSoulSpotlightID(ev Event, opts ChannelSoulSpotlightOptions) string {
-	seed := strings.Join([]string{eventID(ev), opts.Route, opts.Channel, opts.ThreadID, opts.SourceMessageID, opts.Focus, opts.Note}, "|")
-	return fmt.Sprintf("soul-spotlight-%s-%s", eventID(ev), shortDocumentHash(seed))
+	mode := channelSoulSpotlightMode(opts.Mode)
+	seed := strings.Join([]string{eventID(ev), opts.Route, opts.Channel, opts.ThreadID, opts.SourceMessageID, mode, opts.Focus, opts.Note}, "|")
+	prefix := "soul-spotlight"
+	if mode == "drill" {
+		prefix = "soul-drill"
+	}
+	return fmt.Sprintf("%s-%s-%s", prefix, eventID(ev), shortDocumentHash(seed))
 }
 
 func autoChannelSoulSpotlightNotifyMessageID(ev Event, spotlightID string) string {
@@ -926,6 +1034,7 @@ func channelSoulSpotlightSeed(opts ChannelSoulSpotlightOptions, focus string) st
 		opts.SourceMessageID,
 		opts.NotifyMessageID,
 		opts.SpotlightID,
+		channelSoulSpotlightMode(opts.Mode),
 		focus,
 		opts.Note,
 	}, "|")

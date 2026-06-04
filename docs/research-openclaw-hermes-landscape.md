@@ -5176,6 +5176,33 @@ Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw
 sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes messaging guide
 (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-04 Channel Soul Drill Follow-Up
+
+OpenClaw's SOUL/IDENTITY/TOOLS-style workspace files and Hermes' explicit
+agent memory/context split both suggest that high-authority context should be
+usable in conversation, but not silently rewritten by conversation. GitClaw's
+channel translation is to make that context practiceable: a Slack/Telegram
+thread can ask for a bounded drill card that points at one safe repo-local
+authority surface, then a normal GitHub Models follow-up can prove the model
+actually saw the right repo context.
+
+GitClaw's version is `@gitclaw /channels soul-drill <focus> --drill-id <id>
+--message-id <id> --notify-message-id <id>`. It selects one present
+high-authority context file from metadata only and queues a provider-facing
+notice/practice/verify/next card. The source receipt stays body-free:
+route/thread/message/drill/mode/focus/selection hashes, context counts, drill
+step count, duplicate status, and explicit no-model/no-tool/no-registry/
+no-profile-export/no-soul-write/no-memory-write/no-provider-API/
+no-repository-mutation gates. Acceptance requires a live channel-ingest issue,
+one soul-drill notification, duplicate `soul-practice` suppression,
+metadata-only outbox proof, and a real GitHub Models repo-reader/search
+follow-up on the same channel issue.
+
+Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw
+getting started workspace files (`https://docs.openclaw.ai/start/getting-started`),
+Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-04 Channel Cockpit Follow-Up
 
 OpenClaw and Hermes both make chat feel like an operator surface, but their

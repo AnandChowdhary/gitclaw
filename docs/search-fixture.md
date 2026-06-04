@@ -265,6 +265,7 @@ channel research map unique search fixture phrase => GITCLAW_CHANNEL_RESEARCH_MA
 channel mission-control unique search fixture phrase => GITCLAW_CHANNEL_MISSION_CONTROL_CONTEXT_V1
 channel cockpit unique search fixture phrase => GITCLAW_CHANNEL_COCKPIT_CONTEXT_V1
 channel soul spotlight unique search fixture phrase => GITCLAW_CHANNEL_SOUL_SPOTLIGHT_CONTEXT_V1
+channel soul drill unique search fixture phrase => GITCLAW_CHANNEL_SOUL_DRILL_CONTEXT_V1
 channel backup status unique search fixture phrase => GITCLAW_CHANNEL_BACKUP_STATUS_CONTEXT_V1
 channel recovery map unique search fixture phrase => GITCLAW_CHANNEL_RECOVERY_MAP_CONTEXT_V1
 channel backup search unique search fixture phrase => GITCLAW_CHANNEL_BACKUP_SEARCH_CONTEXT_V1
