@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-04T03:00:29Z",
+  "generated_at": "2026-06-04T03:02:19Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4618560598,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels star-map research --message-id constellation-ingest-20260604t025643z --notify-message-id constellation-notify-20260604t025643z --constellation-id constellation-20260604t025643z\nNote: Keep the star map playful\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_CONSTELLATION_DUPLICATE_20260604t025643z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4618564048,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Constellation Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#866`\n- requested_channel_command: `/channels star-map`\n- channel_constellation_status: `duplicate`\n- constellation_card_mode: `bounded-capability-star-map`\n- notification_target_issue: `#866`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `d540240a290d`\n- source_message_id_sha256_12: `b377e5c7b1e7`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `c43f9521bae0`\n- notify_message_id_auto: `false`\n- constellation_id_sha256_12: `861ba2c18b5c`\n- constellation_id_auto: `false`\n- constellation_lane_sha256_12: `66f62d1807d3`\n- constellation_lane_bytes: `8`\n- constellation_star_count: `3`\n- constellation_command_count: `3`\n- constellation_star_sha256_12: `87bac5c3902b`\n- constellation_note_sha256_12: `7f8b7560e87b`\n- constellation_note_bytes: `25`\n- constellation_note_lines: `1`\n- constellation_note_source: `trailing-note`\n- notification_body_sha256_12: `84d4c6f5da43`\n- notification_body_bytes: `1685`\n- notification_body_lines: `36`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- dynamic_star_generation_performed: `false`\n- external_randomness_used: `false`\n- command_execution_performed: `false`\n- skill_install_performed: `false`\n- tool_execution_performed: `false`\n- backup_payload_read: `false`\n- soul_body_read: `false`\n- memory_write_performed: `false`\n- source_fetch_performed: `false`\n- live_source_browse_performed: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- policy_mutation_performed: `false`\n- schedule_created: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_constellation_id_included: `false`\n- raw_constellation_lane_included: `false`\n- raw_constellation_note_included: `false`\n- raw_constellation_stars_included: `false`\n- raw_constellation_commands_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_channel_constellation_action_change: `true`\n- issue_title_sha256_12: `5bb8086bb5c1`\n\nGitClaw queued a provider-facing capability star-map card on the canonical channel issue. The provider card can show bounded labels and copyable next commands, while this source receipt keeps raw ids, lane names, notes, star text, command text, channel bodies, issue bodies, comments, prompts, tool outputs, and provider message ids out of band. The action uses a static deck and does not call a model, execute commands, install skills, execute tools, read backup payloads, read soul bodies, write memory, fetch sources, browse live sources, call provider APIs, mutate workflows, change policy, create schedules, use external randomness, or mutate the repository.\n\n### Follow-Up Delivery\n- provider gateways read constellation cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent constellation cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate constellation cards are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4618568741,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-04T02:59:57Z",
       "updated_at": "2026-06-04T02:59:57Z"
+    },
+    {
+      "id": 4618564048,
+      "body": "@gitclaw /channels star-map research --message-id constellation-ingest-20260604t025643z --notify-message-id constellation-notify-20260604t025643z --constellation-id constellation-20260604t025643z\nNote: Keep the star map playful\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_CONSTELLATION_DUPLICATE_20260604t025643z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-04T03:00:45Z",
+      "updated_at": "2026-06-04T03:00:45Z"
+    },
+    {
+      "id": 4618568741,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26927577449\" event_id=\"comment-4618564048\" model=\"gitclaw/channels\" idempotency_key=\"7ae56df29e882b873cbb3c6d06f47d56\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26927577449\" --\u003e\n## GitClaw Channel Constellation Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#866`\n- requested_channel_command: `/channels star-map`\n- channel_constellation_status: `duplicate`\n- constellation_card_mode: `bounded-capability-star-map`\n- notification_target_issue: `#866`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `d540240a290d`\n- source_message_id_sha256_12: `b377e5c7b1e7`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `c43f9521bae0`\n- notify_message_id_auto: `false`\n- constellation_id_sha256_12: `861ba2c18b5c`\n- constellation_id_auto: `false`\n- constellation_lane_sha256_12: `66f62d1807d3`\n- constellation_lane_bytes: `8`\n- constellation_star_count: `3`\n- constellation_command_count: `3`\n- constellation_star_sha256_12: `87bac5c3902b`\n- constellation_note_sha256_12: `7f8b7560e87b`\n- constellation_note_bytes: `25`\n- constellation_note_lines: `1`\n- constellation_note_source: `trailing-note`\n- notification_body_sha256_12: `84d4c6f5da43`\n- notification_body_bytes: `1685`\n- notification_body_lines: `36`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- dynamic_star_generation_performed: `false`\n- external_randomness_used: `false`\n- command_execution_performed: `false`\n- skill_install_performed: `false`\n- tool_execution_performed: `false`\n- backup_payload_read: `false`\n- soul_body_read: `false`\n- memory_write_performed: `false`\n- source_fetch_performed: `false`\n- live_source_browse_performed: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- policy_mutation_performed: `false`\n- schedule_created: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_constellation_id_included: `false`\n- raw_constellation_lane_included: `false`\n- raw_constellation_note_included: `false`\n- raw_constellation_stars_included: `false`\n- raw_constellation_commands_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_channel_constellation_action_change: `true`\n- issue_title_sha256_12: `5bb8086bb5c1`\n\nGitClaw queued a provider-facing capability star-map card on the canonical channel issue. The provider card can show bounded labels and copyable next commands, while this source receipt keeps raw ids, lane names, notes, star text, command text, channel bodies, issue bodies, comments, prompts, tool outputs, and provider message ids out of band. The action uses a static deck and does not call a model, execute commands, install skills, execute tools, read backup payloads, read soul bodies, write memory, fetch sources, browse live sources, call provider APIs, mutate workflows, change policy, create schedules, use external randomness, or mutate the repository.\n\n### Follow-Up Delivery\n- provider gateways read constellation cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent constellation cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate constellation cards are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-04T03:01:48Z",
+      "updated_at": "2026-06-04T03:01:48Z"
     }
   ]
 }
