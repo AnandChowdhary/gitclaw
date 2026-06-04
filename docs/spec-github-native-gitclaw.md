@@ -5872,6 +5872,43 @@ suppression, proves no task/reminder/watch/schedule/provider-API/model/
 repository mutation was performed, and then continues on the same GitHub issue
 with a real GitHub Models repo-reader/search follow-up.
 
+For channel-native capability discovery that should feel more like a playful
+map than a report, GitClaw also supports:
+
+```text
+@gitclaw /channels constellation research --constellation-id <stable-constellation-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
+Note: Keep the star map playful.
+```
+
+`/channels constellation`, `/channels constellations`, `/channels star-map`,
+`/channels stars`, `/channels north-star`,
+`/channels capability-constellation`, `/channels capability-stars`,
+`/channels research-constellation`, `/channels openclaw-constellation`, and
+`/channels hermes-constellation` queue one provider-facing capability star-map
+back onto the current `gitclaw:channel-thread` issue or an explicit reviewed
+route. The lane is bounded to `all`, `skills`, `tools`, `soul`, `memory`,
+`backups`, `research`, `channels`, or `fun`. Each lane renders one north star,
+three bounded capability stars, and copyable next commands from a static deck;
+the `research` lane connects OpenClaw/Hermes research patterns to safe GitClaw
+follow-up commands. Optional `Note: ...` trailing text is included in the
+provider-facing update. The source receipt remains body-free and reports only
+hashes, sizes, star and command counts, duplicate status, outbox delivery
+instructions, and safety gates. It does not dynamically generate stars, use
+external randomness, execute commands, install skills, execute tools, read
+backup payloads, read soul bodies, write memory, fetch sources, browse live
+sources, call provider APIs, call a model, edit workflows, change policy,
+create schedules, mutate repository files, or perform provider delivery. It
+does not print raw constellation ids, lanes, notes, star text, command text,
+thread ids, message ids, prompts, tool outputs, or channel bodies in the source
+receipt. Duplicates are suppressed by `channel + notify_message_id`. Changes
+to this surface require a live E2E that ingests a real channel issue, queues
+the constellation, validates metadata-only outbox discovery, verifies duplicate
+suppression, proves no dynamic-generation/external-randomness/command-
+execution/skill-install/tool-execution/backup-payload-read/soul-body-read/
+memory-write/source-fetch/live-browse/provider-API/model/workflow/policy/
+schedule/repository mutation was performed, and then continues on the same
+GitHub issue with a real GitHub Models repo-reader/search follow-up.
+
 For channel-native command discovery that should make chat affordances visible
 without running anything, GitClaw also supports:
 
@@ -10103,6 +10140,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels source-map repo-reader --map-id channel-source-map-1 --message-id provider-msg-1 --notify-message-id provider-source-map-ack-1
 @gitclaw /channels research-spotlight openclaw --spotlight-id channel-research-spotlight-1 --message-id provider-msg-1 --notify-message-id provider-research-spotlight-ack-1
 @gitclaw /channels research-map openclaw --map-id channel-research-map-1 --message-id provider-msg-1 --notify-message-id provider-research-map-ack-1
+@gitclaw /channels constellation research --constellation-id channel-constellation-1 --message-id provider-msg-1 --notify-message-id provider-constellation-ack-1
 @gitclaw /channels tool-search read_file --message-id provider-msg-1 --notify-message-id provider-tool-search-ack-1
 @gitclaw /channels tool-info read_file --message-id provider-msg-1 --notify-message-id provider-tool-info-ack-1
 @gitclaw /channels tool-spotlight search_files --spotlight-id channel-tool-spotlight-1 --message-id provider-msg-1 --notify-message-id provider-tool-spotlight-ack-1
@@ -12770,6 +12808,19 @@ examples/workflows/gitclaw.yml
   GitHub Models issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-nudge fixture token, and avoid
   hidden channel/message/nudge sentinels.
+- A `gh`-driven channel-constellation-slash E2E harness ingests a real mirrored
+  channel issue, replies with `@gitclaw /channels constellation research ...`,
+  verifies the provider-facing bounded capability star-map card, body-free
+  source receipt metadata, duplicate constellation notification suppression
+  from a later issue comment with the same acknowledgement id, explicit no
+  dynamic-generation/external-randomness/command-execution/skill-install/tool-
+  execution/backup-payload-read/soul-body-read/memory-write/source-fetch/live-
+  browse/provider-API/model/workflow/policy/schedule/repository mutation gates,
+  and metadata-only outbox discovery for the acknowledgement. The same channel
+  issue then gets a normal GitHub Models issue-comment follow-up that must
+  select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-constellation fixture token, and avoid hidden channel/message/
+  constellation/lane/note/star/command sentinels.
 - A `gh`-driven channel-palette-slash E2E harness ingests a real mirrored
   channel issue, replies with `@gitclaw /channels palette ...`, verifies the
   provider-facing lane/shortcut/note card, body-free source receipt metadata,

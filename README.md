@@ -705,6 +705,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels research-spotlight openclaw --spotlight-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels research-map openclaw --map-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels nudge release-captain --nudge-id <id> --message-id <id> --notify-message-id <id> --tone gentle
+@gitclaw /channels constellation research --constellation-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels palette fun --palette-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels compass all --compass-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels mode tool-review --mode-id <id> --message-id <id> --notify-message-id <id>
@@ -1139,6 +1140,19 @@ trailing text is visible in the provider update, while the source receipt keeps
 raw nudge ids, targets, tones, notes, thread ids, message ids, and channel
 bodies out of band. This does not create a task, reminder, watch, scheduled
 workflow, provider API call, model call, or repository mutation.
+`@gitclaw /channels constellation <all|skills|tools|soul|memory|backups|research|channels|fun>
+--constellation-id <id> --message-id <id> --notify-message-id <id>` queues a
+provider-facing capability star-map card back to the current Slack/Telegram
+thread. The card shows a north star, three bounded capability stars, and
+copyable next commands for the selected lane. The `research` lane connects
+OpenClaw/Hermes research patterns to GitClaw follow-up commands. Optional
+`Note: ...` trailing text is visible in the provider update, while the source
+receipt keeps raw constellation ids, lanes, notes, star text, command text,
+thread ids, message ids, and channel bodies out of band. This does not
+dynamically generate stars, use external randomness, execute commands, install
+skills, execute tools, read backup payloads, read soul bodies, write memory,
+fetch sources, browse live sources, create schedules, call provider APIs, call
+a model, edit workflows, change policy, or mutate the repository.
 `@gitclaw /channels palette <all|core|skills|tools|soul|backups|fun>
 --palette-id <id> --message-id <id> --notify-message-id <id>` queues a
 provider-facing command palette back to the current Slack/Telegram thread.
@@ -2348,6 +2362,7 @@ scripts/e2e/github-channel-soundtrack-slash.sh
 scripts/e2e/github-channel-story-dice-slash.sh
 scripts/e2e/github-channel-coach-slash.sh
 scripts/e2e/github-channel-nudge-slash.sh
+scripts/e2e/github-channel-constellation-slash.sh
 scripts/e2e/github-channel-palette-slash.sh
 scripts/e2e/github-channel-compass-slash.sh
 scripts/e2e/github-channel-mode-slash.sh
@@ -2756,6 +2771,16 @@ queues one provider-visible target/tone/note card, exposes it through
 metadata-only outbox, suppresses duplicate nudge notifications, proves no
 task/reminder/watch/scheduled-workflow/provider-API/model/repository mutation
 was performed, and then runs a real GitHub Models repo-reader/search follow-up.
+The channel-constellation slash harness adds a playful capability star-map
+lane for Slack/Telegram: a channel-ingested issue receives `@gitclaw
+/channels constellation research`, queues one provider-visible bounded
+OpenClaw/Hermes-to-GitClaw research star map, exposes it through metadata-only
+outbox, suppresses duplicate constellation notifications from the `star-map`
+alias, proves no dynamic generation/external randomness/command execution/
+skill install/tool execution/backup payload read/soul body read/memory write/
+source fetch/live browse/provider-API/model/workflow/policy/schedule/
+repository mutation happened, and then runs a real GitHub Models
+repo-reader/search follow-up.
 The channel-palette slash harness makes channel affordances discoverable inside
 chat: a channel-ingested issue receives `@gitclaw /channels palette`, queues
 one provider-visible shortcut card for a lane such as skills, tools, soul,

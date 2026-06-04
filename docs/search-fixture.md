@@ -120,6 +120,7 @@ channel mood unique search fixture phrase => GITCLAW_CHANNEL_MOOD_CONTEXT_V1
 channel sticker unique search fixture phrase => GITCLAW_CHANNEL_STICKER_CONTEXT_V1
 channel bingo unique search fixture phrase => GITCLAW_CHANNEL_BINGO_CONTEXT_V1
 channel nudge unique search fixture phrase => GITCLAW_CHANNEL_NUDGE_CONTEXT_V1
+channel constellation unique search fixture phrase => GITCLAW_CHANNEL_CONSTELLATION_CONTEXT_V1
 channel palette unique search fixture phrase => GITCLAW_CHANNEL_PALETTE_CONTEXT_V1
 channel compass unique search fixture phrase => GITCLAW_CHANNEL_COMPASS_CONTEXT_V1
 channel mode unique search fixture phrase => GITCLAW_CHANNEL_MODE_CONTEXT_V1

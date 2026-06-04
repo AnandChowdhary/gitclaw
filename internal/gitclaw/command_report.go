@@ -166,6 +166,9 @@ func commandSummaryForReport(entry commandCatalogEntry) string {
 	if !strings.Contains(summary, "repo-aware next-move coach cards") {
 		summary += " Queue provider-facing repo-aware next-move coach cards from skill/tool/soul metadata without command execution, skill installs, tool execution, backup payload reads, soul body reads, model calls, provider API calls, workflow edits, or repo mutation."
 	}
+	if !strings.Contains(summary, "bounded capability star-map cards") {
+		summary += " Queue provider-facing bounded capability star-map cards across skills, tools, soul, memory, backups, research, channels, and fun without dynamic generation, execution, source fetches, model calls, provider API calls, workflow edits, or repo mutation."
+	}
 	if !strings.Contains(summary, "safe skill-bundle map cards") {
 		summary += " Queue mirrored channel safe skill-bundle map cards without installing skills, enabling bundles, writing bundle YAML, creating proposal/rehearsal issues, model calls, provider API calls, workflow edits, or repo mutation."
 	}
