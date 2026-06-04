@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-04T05:40:47Z",
+  "generated_at": "2026-06-04T05:42:38Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 763,
   "issues": [
@@ -9753,15 +9753,15 @@
       "number": 873,
       "title": "GitClaw telegram thread channel-riddle-e2e-20260604t053459z",
       "path": "issues/000873.json",
-      "backup_generated_at": "2026-06-04T05:40:45Z",
+      "backup_generated_at": "2026-06-04T05:42:37Z",
       "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 7,
-      "transcript_messages": 7
+      "comment_count": 9,
+      "transcript_messages": 9
     }
   ]
 }
