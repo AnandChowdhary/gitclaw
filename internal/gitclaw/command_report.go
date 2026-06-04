@@ -187,6 +187,9 @@ func commandSummaryForReport(entry commandCatalogEntry) string {
 	if !strings.Contains(summary, "research spotlight cards") {
 		summary += " Queue deterministic provider-facing research spotlight cards from reviewed static source, pattern, and rejection metadata without source fetches, live browsing, model calls, provider API calls, workflow edits, or repo mutation."
 	}
+	if !strings.Contains(summary, "research-to-GitClaw command sequence") {
+		summary += " Queue provider-facing research-to-GitClaw command sequence cards from reviewed static source, pattern, and rejection metadata without source fetches, live browsing, tool execution, model calls, provider API calls, workflow edits, or repo mutation."
+	}
 	if !strings.Contains(summary, "backup recovery-map cards") {
 		summary += " Queue provider-facing backup recovery-map cards without fetching backup branches, reading backup payloads, restoring files, creating recovery issues, model calls, provider API calls, workflow edits, or repo mutation."
 	}

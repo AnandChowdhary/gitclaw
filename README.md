@@ -703,6 +703,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels coach skills --coach-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels skill-spotlight repo-reader --spotlight-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels research-spotlight openclaw --spotlight-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels research-map openclaw --map-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels nudge release-captain --nudge-id <id> --message-id <id> --notify-message-id <id> --tone gentle
 @gitclaw /channels palette fun --palette-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels compass all --compass-id <id> --message-id <id> --notify-message-id <id>
@@ -1245,6 +1246,16 @@ channel bodies, issue bodies, comments, prompts, tool outputs, and research
 bodies out of the source receipt. It does not fetch sources, browse live docs,
 call a model, execute tools, call provider APIs, use external randomness,
 mutate workflows, or mutate the repository.
+`@gitclaw /channels research-map <focus> --map-id <id> --message-id <id>
+--notify-message-id <id>` queues a provider-facing research-to-GitClaw
+sequence card back to Slack/Telegram. The card draws one source, pattern, or
+rejected surface from the reviewed static catalog, then shows safe follow-up
+commands such as `/research catalog`, `research-spotlight`, and domain-specific
+channel cards. The source receipt keeps raw focus text, notes, map ids, source
+ids/URLs, pattern text, surfaces, step text, channel bodies, issue bodies,
+comments, prompts, tool outputs, and research bodies out of band. It does not
+fetch sources, browse live docs, call a model, execute tools, call provider
+APIs, use external randomness, mutate workflows, or mutate the repository.
 `@gitclaw /channels recovery-map <issue|repo|channel|incident> --map-id <id>
 --message-id <id> --notify-message-id <id>` queues a provider-facing backup
 recovery sequence back to Slack/Telegram. The card shows the safe order:
@@ -2165,6 +2176,7 @@ scripts/e2e/github-channel-skill-map-slash.sh
 scripts/e2e/github-channel-bundle-map-slash.sh
 scripts/e2e/github-channel-source-map-slash.sh
 scripts/e2e/github-channel-research-spotlight-slash.sh
+scripts/e2e/github-channel-research-map-slash.sh
 scripts/e2e/github-channel-tool-search-slash.sh
 scripts/e2e/github-channel-tool-info-slash.sh
 scripts/e2e/github-channel-tool-spotlight-slash.sh
@@ -3322,6 +3334,13 @@ fetches or live browsing, checks duplicate notification suppression, exposes
 the research-spotlight notification through metadata-only outbox, and then
 continues on the same channel issue with a real GitHub Models
 repo-reader/search follow-up.
+The channel-research-map slash harness adds a chat-native research sequence:
+a channel-ingested issue receives `@gitclaw /channels research-map`, queues one
+provider-facing research-to-GitClaw command path from the same reviewed static
+catalog without source fetches, live browsing, model calls, tool execution, or
+workflow mutation, checks duplicate notification suppression, exposes the
+research-map notification through metadata-only outbox, and then continues on
+the same channel issue with a real GitHub Models repo-reader/search follow-up.
 The channel-tool-map slash harness adds the safe sequence card: a
 channel-ingested issue receives `@gitclaw /channels tool-map`, queues a
 provider-facing path from tool status/search/info to reviewed approval-plan,
