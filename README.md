@@ -706,6 +706,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels research-map openclaw --map-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels nudge release-captain --nudge-id <id> --message-id <id> --notify-message-id <id> --tone gentle
 @gitclaw /channels constellation research --constellation-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels mission-control research --mission-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels palette fun --palette-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels compass all --compass-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels mode tool-review --mode-id <id> --message-id <id> --notify-message-id <id>
@@ -1153,6 +1154,19 @@ dynamically generate stars, use external randomness, execute commands, install
 skills, execute tools, read backup payloads, read soul bodies, write memory,
 fetch sources, browse live sources, create schedules, call provider APIs, call
 a model, edit workflows, change policy, or mutate the repository.
+`@gitclaw /channels mission-control <all|skills|tools|soul|memory|backups|research|channels|launch|fun>
+--mission-id <id> --message-id <id> --notify-message-id <id>` queues a
+provider-facing bounded operating-loop card back to the current Slack/Telegram
+thread. The card shows a lane, a control-loop sentence, four bounded loop
+steps, and copyable next commands. The `research` lane connects OpenClaw and
+Hermes research to one review-first GitClaw move. Optional `Note: ...`
+trailing text is visible in the provider update, while the source receipt keeps
+raw mission ids, lanes, notes, step text, command text, thread ids, message
+ids, and channel bodies out of band. This does not dynamically generate loops,
+use external randomness, execute commands, install skills, execute tools, read
+backup payloads, read soul bodies, write memory, fetch sources, browse live
+sources, create schedules, call provider APIs, call a model, edit workflows,
+change policy, or mutate the repository.
 `@gitclaw /channels palette <all|core|skills|tools|soul|backups|fun>
 --palette-id <id> --message-id <id> --notify-message-id <id>` queues a
 provider-facing command palette back to the current Slack/Telegram thread.
@@ -2363,6 +2377,7 @@ scripts/e2e/github-channel-story-dice-slash.sh
 scripts/e2e/github-channel-coach-slash.sh
 scripts/e2e/github-channel-nudge-slash.sh
 scripts/e2e/github-channel-constellation-slash.sh
+scripts/e2e/github-channel-mission-control-slash.sh
 scripts/e2e/github-channel-palette-slash.sh
 scripts/e2e/github-channel-compass-slash.sh
 scripts/e2e/github-channel-mode-slash.sh

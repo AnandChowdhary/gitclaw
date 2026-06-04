@@ -80,6 +80,7 @@ func TestRenderChannelListReportCarriesDedicatedE2EMarker(t *testing.T) {
 		"`/channels story-dice <theme> --story-dice-id <id> --message-id <message>`",
 		"`/channels coach <lane> --coach-id <id> --message-id <message>`",
 		"`/channels constellation <lane> --constellation-id <id> --message-id <message>`",
+		"`/channels mission-control <lane> --mission-id <id> --message-id <message>`",
 		"`/channels session-search <query> --message-id <message>`",
 		"issue_title_sha256_12:",
 	} {
