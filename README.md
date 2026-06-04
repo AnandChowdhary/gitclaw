@@ -700,6 +700,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels haiku launch --haiku-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels soundtrack launch --soundtrack-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels story-dice fun --story-dice-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels arcade fun --arcade-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels coach skills --coach-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels skill-spotlight repo-reader --spotlight-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels research-spotlight openclaw --spotlight-id <id> --message-id <id> --notify-message-id <id>
@@ -1125,6 +1126,19 @@ provider update, while the source receipt keeps raw story-dice ids, themes,
 notes, rolled prompts, thread ids, message ids, and channel bodies out of band.
 This does not call a model, use external randomness, generate media, call
 provider APIs, edit workflows, or mutate the repository.
+`@gitclaw /channels arcade <fun|warmup|story|launch|tools|research|soul|backups|channels>
+--arcade-id <id> --message-id <id> --notify-message-id <id>` queues a
+provider-facing bounded play-menu card back to the current Slack/Telegram
+thread. The card shows a mode, frame, four playful next moves, and copyable
+commands for existing channel surfaces such as story-dice, spark, postcard,
+cockpit, or tool/research/soul/backup actions. Optional `Note: ...` trailing
+text is visible in the provider update, while the source receipt keeps raw
+arcade ids, modes, notes, move text, command text, thread ids, message ids, and
+channel bodies out of band. This does not call a model, generate play text
+dynamically, use external randomness, persist game state, track scores, execute
+commands, install skills, execute tools, read backup payloads, read soul bodies,
+call provider APIs, mutate workflows, create schedules, or mutate the
+repository.
 `@gitclaw /channels coach <all|skills|tools|soul|memory|backups|channels|fun>
 --coach-id <id> --message-id <id> --notify-message-id <id>` queues a
 provider-facing next-move card from repo-local skill, tool, and soul metadata.
@@ -2388,6 +2402,7 @@ scripts/e2e/github-channel-bingo-slash.sh
 scripts/e2e/github-channel-haiku-slash.sh
 scripts/e2e/github-channel-soundtrack-slash.sh
 scripts/e2e/github-channel-story-dice-slash.sh
+scripts/e2e/github-channel-arcade-slash.sh
 scripts/e2e/github-channel-coach-slash.sh
 scripts/e2e/github-channel-nudge-slash.sh
 scripts/e2e/github-channel-constellation-slash.sh
@@ -2787,6 +2802,14 @@ one provider-visible four-die prompt card with an optional note, exposes it
 through metadata-only outbox, suppresses duplicate story-dice notifications,
 proves no model/randomness/media/provider-API/workflow/repository mutation was
 performed, and then runs a real GitHub Models repo-reader/search follow-up.
+The channel-arcade slash harness adds a tiny play-menu lane for Slack and
+Telegram: a channel-ingested issue receives `@gitclaw /channels arcade`, queues
+one provider-visible bounded move menu with an optional note, exposes it
+through metadata-only outbox, suppresses duplicate arcade notifications from
+the `play-menu` alias, proves no model/dynamic-play/randomness/game-state/
+score/provider-API/workflow/policy/schedule/repository mutation or command/
+skill/tool execution was performed, and then runs a real GitHub Models
+repo-reader/search follow-up.
 The channel-coach slash harness adds repo-aware next-move cards to Slack and
 Telegram: a channel-ingested issue receives `@gitclaw /channels coach skills`,
 queues one provider-visible skill/tool/soul signal card with suggested

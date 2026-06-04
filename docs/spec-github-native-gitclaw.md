@@ -5871,6 +5871,41 @@ suppression, proves no model/randomness/media/provider-API/workflow/repository
 mutation was performed, and then continues on the same GitHub issue with a
 real GitHub Models repo-reader/search follow-up.
 
+The same channel-thread issue can ask for a bounded play menu that points to
+existing channel surfaces without becoming durable game state:
+
+```text
+@gitclaw /channels arcade fun --arcade-id <stable-arcade-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
+Note: Pick one room move.
+```
+
+`/channels arcade`, `/channels channel-arcade`, `/channels play-menu`,
+`/channels play-card`, `/channels game-menu`, `/channels mini-game`,
+`/channels mini-arcade`, `/channels tiny-game`,
+`/channels prompt-arcade`, `/channels fun-menu`, and `/channels pick-a-move`
+queue one provider-facing play-menu card back onto the current
+`gitclaw:channel-thread` issue or an explicit reviewed route. The mode is
+bounded to `fun`, `warmup`, `story`, `launch`, `tools`, `research`, `soul`,
+`backups`, or `channels`. The provider card shows a mode, frame, four static
+moves, and copyable next commands that lead into existing channel actions such
+as story-dice, spark, postcard, cockpit, tool maps, research maps, soul review,
+backup posture, or channel outbox work. Optional `Note: ...` trailing text is
+visible in the provider-facing update. The source receipt remains body-free and
+reports only hashes, sizes, move count, duplicate status, outbox delivery
+instructions, and safety gates. It does not call a model, dynamically generate
+play text, use external randomness, persist game state, track scores, execute
+commands, install skills, execute tools, read backup payloads, read soul
+bodies, write memory, call provider APIs, edit workflows, change policy, create
+schedules, mutate repository files, print raw arcade ids, print raw modes,
+print raw notes, print raw moves, or print raw command text. Duplicates are
+suppressed by `channel + notify_message_id`. Changes to this surface require a
+live E2E that ingests a real channel issue, queues the arcade card, validates
+metadata-only outbox discovery, verifies duplicate suppression, proves no
+model/dynamic-play/randomness/game-state/score/provider-API/workflow/policy/
+schedule/repository mutation or command/skill/tool execution was performed, and
+then continues on the same GitHub issue with a real GitHub Models
+repo-reader/search follow-up.
+
 For repo-aware channel coaching that should suggest a useful next move without
 executing anything, GitClaw also supports:
 
@@ -10240,6 +10275,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels timer 25m --timer-id channel-timer-1 --message-id provider-msg-1 --notify-message-id provider-timer-ack-1
 @gitclaw /channels haiku launch --haiku-id channel-haiku-1 --message-id provider-msg-1 --notify-message-id provider-haiku-ack-1
 @gitclaw /channels story-dice fun --story-dice-id channel-story-dice-1 --message-id provider-msg-1 --notify-message-id provider-story-dice-ack-1
+@gitclaw /channels arcade fun --arcade-id channel-arcade-1 --message-id provider-msg-1 --notify-message-id provider-arcade-ack-1
 @gitclaw /channels coach skills --coach-id channel-coach-1 --message-id provider-msg-1 --notify-message-id provider-coach-ack-1
 @gitclaw /channels nudge release-captain --nudge-id channel-nudge-1 --message-id provider-msg-1 --notify-message-id provider-nudge-ack-1 --tone gentle
 @gitclaw /channels palette fun --palette-id channel-palette-1 --message-id provider-msg-1 --notify-message-id provider-palette-ack-1
@@ -12843,6 +12879,17 @@ examples/workflows/gitclaw.yml
   select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-story-dice fixture token, and avoid hidden channel/message/story-dice
   sentinels.
+- A `gh`-driven channel-arcade-slash E2E harness ingests a real mirrored
+  channel issue, replies with `@gitclaw /channels arcade fun ...`, verifies the
+  provider-facing bounded play-menu card, body-free source receipt metadata,
+  duplicate arcade notification suppression from a later `play-menu` alias
+  comment with the same acknowledgement id, explicit no model/dynamic-play/
+  randomness/game-state/score/provider-API/workflow/policy/schedule/repository
+  mutation and no command/skill/tool execution gates, and metadata-only outbox
+  discovery for the acknowledgement. The same channel issue then gets a normal
+  GitHub Models issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-arcade fixture token, and avoid
+  hidden channel/message/arcade/mode/note/move/command sentinels.
 - A `gh`-driven channel-coach-slash E2E harness ingests a real mirrored channel
   issue, replies with `@gitclaw /channels coach ...`, verifies the
   provider-facing skill/tool/soul signal card with suggested channel-native

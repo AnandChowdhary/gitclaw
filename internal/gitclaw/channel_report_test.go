@@ -78,6 +78,7 @@ func TestRenderChannelListReportCarriesDedicatedE2EMarker(t *testing.T) {
 		"`/channels haiku <theme> --haiku-id <id> --message-id <message>`",
 		"`/channels soundtrack <theme> --soundtrack-id <id> --message-id <message>`",
 		"`/channels story-dice <theme> --story-dice-id <id> --message-id <message>`",
+		"`/channels arcade <mode> --arcade-id <id> --message-id <message>`",
 		"`/channels coach <lane> --coach-id <id> --message-id <message>`",
 		"`/channels constellation <lane> --constellation-id <id> --message-id <message>`",
 		"`/channels mission-control <lane> --mission-id <id> --message-id <message>`",

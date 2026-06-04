@@ -5244,6 +5244,34 @@ Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw
 sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes messaging guide
 (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-04 Channel Arcade Follow-Up
+
+OpenClaw and Hermes both treat chat as more than a transcript: it is a live
+surface where a human can ask for the next kind of interaction. GitClaw can use
+that pattern without adopting a resident process, socket, or hidden game state
+by making the "fun" surface a bounded command menu. The assistant can make the
+thread feel playful and responsive, while GitHub remains the source of truth
+for receipts, dedupe, and follow-up work.
+
+GitClaw's version is `@gitclaw /channels arcade <mode> --arcade-id <id>
+--message-id <id> --notify-message-id <id>`. It queues one provider-facing
+play-menu card through `channel-outbox` with a mode, frame, four static moves,
+and copyable commands that lead into already-reviewed surfaces like
+story-dice, spark, postcard, cockpit, tool maps, research maps, soul review,
+backup posture, or channel outbox delivery. The source receipt remains
+metadata-only: hashes and counts for route/thread/message/arcade/mode/note/
+move/card fields, duplicate status, and explicit no-model/no-dynamic-play/
+no-randomness/no-game-state/no-score/no-command/no-skill-install/no-tool/
+no-backup-payload/no-soul-body/no-memory-write/no-provider-API/no-workflow/
+no-policy/no-schedule/no-repository-mutation gates. Acceptance requires a live
+channel-ingest issue, one arcade notification, duplicate notification
+suppression, metadata-only outbox proof, and a real GitHub Models
+repo-reader/search follow-up on the same channel issue.
+
+Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw
+sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Dock Follow-Up
 
 OpenClaw's channel/session split suggests an agent should be able to keep a
