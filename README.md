@@ -787,6 +787,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels source-map <source> --map-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels tool-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels tool-info <tool> --message-id <id> --notify-message-id <id>
+@gitclaw /channels tool-spotlight <focus> --spotlight-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels tool-map <tool> --map-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels whoami --identity-id <id> --message-id <id>
 @gitclaw /channels contact --contact-id <id> --role <role> --message-id <id>
@@ -1211,6 +1212,16 @@ create approval/rehearsal/run-request issues, call provider APIs, call a model,
 mutate workflows, or mutate the repository. The source receipt keeps raw map
 ids, requested tool names, notes, step text, provider ids, issue bodies,
 comments, raw schemas, raw inputs, and raw outputs out of band.
+`@gitclaw /channels tool-spotlight <focus> --spotlight-id <id> --message-id
+<id> --notify-message-id <id>` queues a deterministic provider-facing safe
+tool spotlight card back to Slack/Telegram. The card picks one enabled
+read-only or metadata-only built-in tool contract from safe metadata, shows the
+tool name, mode, trigger hash, and follow-up commands, and keeps raw focus
+text, notes, spotlight ids, tool triggers, schemas, inputs, outputs, channel
+bodies, issue bodies, comments, and prompts out of the source receipt. It does
+not execute tools, run shells, launch MCP servers, activate toolsets, call a
+model, call provider APIs, use external randomness, mutate workflows, or mutate
+the repository.
 `@gitclaw /channels skill-spotlight <focus> --spotlight-id <id> --message-id
 <id> --notify-message-id <id>` queues a deterministic provider-facing skill
 spotlight card back to Slack/Telegram. The card picks one enabled, requirement-
@@ -2116,6 +2127,7 @@ scripts/e2e/github-channel-bundle-map-slash.sh
 scripts/e2e/github-channel-source-map-slash.sh
 scripts/e2e/github-channel-tool-search-slash.sh
 scripts/e2e/github-channel-tool-info-slash.sh
+scripts/e2e/github-channel-tool-spotlight-slash.sh
 scripts/e2e/github-channel-backup-rehearsal-slash.sh
 scripts/e2e/github-channel-backup-restore-request-slash.sh
 scripts/e2e/github-channel-checkpoint-rehearsal-slash.sh
@@ -3248,6 +3260,14 @@ provider-facing tool card back to the mirrored thread without executing tools
 or exposing raw schemas, checks duplicate notification suppression, exposes the
 tool-info notification through metadata-only outbox, and then continues on the
 channel thread itself with a real GitHub Models repo-reader/search follow-up.
+The channel-tool-spotlight slash harness adds a chat-native safe discovery
+card: a channel-ingested issue receives `@gitclaw /channels tool-spotlight`,
+queues one deterministic provider-facing tool spotlight from read-only/
+metadata-only built-in contracts without executing tools or exposing raw
+triggers/schemas, checks duplicate notification suppression, exposes the
+tool-spotlight notification through metadata-only outbox, and then continues on
+the channel thread itself with a real GitHub Models repo-reader/search
+follow-up.
 The channel-tool-map slash harness adds the safe sequence card: a
 channel-ingested issue receives `@gitclaw /channels tool-map`, queues a
 provider-facing path from tool status/search/info to reviewed approval-plan,

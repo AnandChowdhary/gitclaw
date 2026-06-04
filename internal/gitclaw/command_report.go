@@ -175,6 +175,9 @@ func commandSummaryForReport(entry commandCatalogEntry) string {
 	if !strings.Contains(summary, "skill spotlight cards") {
 		summary += " Queue deterministic provider-facing skill spotlight cards from repo-local metadata without skill installs, registry contact, model calls, provider API calls, or repo mutation."
 	}
+	if !strings.Contains(summary, "tool spotlight cards") {
+		summary += " Queue deterministic provider-facing tool spotlight cards from built-in read-only/metadata tool contracts without tool execution, shell execution, MCP launch, toolset activation, model calls, provider API calls, workflow edits, or repo mutation."
+	}
 	if !strings.Contains(summary, "backup recovery-map cards") {
 		summary += " Queue provider-facing backup recovery-map cards without fetching backup branches, reading backup payloads, restoring files, creating recovery issues, model calls, provider API calls, workflow edits, or repo mutation."
 	}

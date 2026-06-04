@@ -253,6 +253,7 @@ channel timer unique search fixture phrase => GITCLAW_CHANNEL_TIMER_CONTEXT_V1
 channel tool status unique search fixture phrase => GITCLAW_CHANNEL_TOOL_STATUS_CONTEXT_V1
 channel tool search unique search fixture phrase => GITCLAW_CHANNEL_TOOL_SEARCH_CONTEXT_V1
 channel tool info unique search fixture phrase => GITCLAW_CHANNEL_TOOL_INFO_CONTEXT_V1
+channel tool spotlight unique search fixture phrase => GITCLAW_CHANNEL_TOOL_SPOTLIGHT_CONTEXT_V1
 channel skill search unique search fixture phrase => GITCLAW_CHANNEL_SKILL_SEARCH_CONTEXT_V1
 channel skill info unique search fixture phrase => GITCLAW_CHANNEL_SKILL_INFO_CONTEXT_V1
 channel skill spotlight unique search fixture phrase => GITCLAW_CHANNEL_SKILL_SPOTLIGHT_CONTEXT_V1
