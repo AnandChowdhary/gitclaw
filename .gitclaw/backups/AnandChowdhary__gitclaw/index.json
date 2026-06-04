@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-04T06:22:12Z",
+  "generated_at": "2026-06-04T06:24:15Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 765,
   "issues": [
@@ -9781,15 +9781,15 @@
       "number": 875,
       "title": "GitClaw telegram thread channel-skill-drill-e2e-20260604t061809z",
       "path": "issues/000875.json",
-      "backup_generated_at": "2026-06-04T06:22:10Z",
+      "backup_generated_at": "2026-06-04T06:24:13Z",
       "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 5,
-      "transcript_messages": 5
+      "comment_count": 7,
+      "transcript_messages": 7
     }
   ]
 }
