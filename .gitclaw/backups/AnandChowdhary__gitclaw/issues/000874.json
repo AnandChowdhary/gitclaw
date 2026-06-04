@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-04T06:01:54Z",
+  "generated_at": "2026-06-04T06:03:58Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4619435577,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels wyr --message-id wyr-ingest-20260604t055745z --notify-message-id wyr-notify-20260604t055745z --wyr-id wyr-20260604t055745z --left postcard-scene --right story-dice\nQuestion: Which tiny channel ritual should we try?\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_WYR_DUPLICATE_20260604t055745z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4619439785,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Choose Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#874`\n- requested_channel_command: `/channels wyr`\n- channel_choose_status: `duplicate`\n- choose_mode: `deterministic-channel-this-or-that`\n- notification_target_issue: `#874`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `1dee66bdda66`\n- source_message_id_sha256_12: `9504445dac01`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `2a96e6e578fb`\n- notify_message_id_auto: `false`\n- choose_id_sha256_12: `688668f85210`\n- choose_id_auto: `false`\n- question_sha256_12: `ce046d87ff9a`\n- question_bytes: `40`\n- oracle_default_deck_used: `false`\n- choices_count: `2`\n- choices_sha256_12: `048b11f1e905`\n- choices_bytes: `25`\n- selected_choice_index: `1`\n- selected_choice_sha256_12: `f15442618a11`\n- selection_sha256_12: `14735df84623`\n- choice_seed_sha256_12: `ca99e5b29bc3`\n- notification_body_sha256_12: `acba9db85a7d`\n- target_from_current_channel_issue: `true`\n- deterministic_picker_used: `true`\n- external_randomness_used: `false`\n- cryptographic_randomness_used: `false`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_choose_id_included: `false`\n- raw_question_included: `false`\n- raw_choices_included: `false`\n- raw_selected_choice_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_choose_action_change: `true`\n- issue_title_sha256_12: `111d4cad8674`\n\nGitClaw queued a provider-facing deterministic option, this-or-that, or oracle pick on the canonical channel issue. This is a small channel-native interaction: provider users get one selected answer or a two-option prompt, while the source receipt keeps thread ids, message ids, choose ids, questions, option text, selected answer text, and channel bodies out of band. The action does not call a model, use external randomness, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read choice notifications with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent choice notifications with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate choice notifications are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4619445263,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-04T06:01:22Z",
       "updated_at": "2026-06-04T06:01:22Z"
+    },
+    {
+      "id": 4619439785,
+      "body": "@gitclaw /channels wyr --message-id wyr-ingest-20260604t055745z --notify-message-id wyr-notify-20260604t055745z --wyr-id wyr-20260604t055745z --left postcard-scene --right story-dice\nQuestion: Which tiny channel ritual should we try?\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_WYR_DUPLICATE_20260604t055745z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-04T06:02:15Z",
+      "updated_at": "2026-06-04T06:02:15Z"
+    },
+    {
+      "id": 4619445263,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26933983009\" event_id=\"comment-4619439785\" model=\"gitclaw/channels\" idempotency_key=\"21a810a971ad4292e210eaa8808c0b7c\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26933983009\" --\u003e\n## GitClaw Channel Choose Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#874`\n- requested_channel_command: `/channels wyr`\n- channel_choose_status: `duplicate`\n- choose_mode: `deterministic-channel-this-or-that`\n- notification_target_issue: `#874`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `1dee66bdda66`\n- source_message_id_sha256_12: `9504445dac01`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `2a96e6e578fb`\n- notify_message_id_auto: `false`\n- choose_id_sha256_12: `688668f85210`\n- choose_id_auto: `false`\n- question_sha256_12: `ce046d87ff9a`\n- question_bytes: `40`\n- oracle_default_deck_used: `false`\n- choices_count: `2`\n- choices_sha256_12: `048b11f1e905`\n- choices_bytes: `25`\n- selected_choice_index: `1`\n- selected_choice_sha256_12: `f15442618a11`\n- selection_sha256_12: `14735df84623`\n- choice_seed_sha256_12: `ca99e5b29bc3`\n- notification_body_sha256_12: `acba9db85a7d`\n- target_from_current_channel_issue: `true`\n- deterministic_picker_used: `true`\n- external_randomness_used: `false`\n- cryptographic_randomness_used: `false`\n- model_call_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_choose_id_included: `false`\n- raw_question_included: `false`\n- raw_choices_included: `false`\n- raw_selected_choice_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_choose_action_change: `true`\n- issue_title_sha256_12: `111d4cad8674`\n\nGitClaw queued a provider-facing deterministic option, this-or-that, or oracle pick on the canonical channel issue. This is a small channel-native interaction: provider users get one selected answer or a two-option prompt, while the source receipt keeps thread ids, message ids, choose ids, questions, option text, selected answer text, and channel bodies out of band. The action does not call a model, use external randomness, mutate repository files, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read choice notifications with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent choice notifications with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate choice notifications are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-04T06:03:23Z",
+      "updated_at": "2026-06-04T06:03:23Z"
     }
   ]
 }
