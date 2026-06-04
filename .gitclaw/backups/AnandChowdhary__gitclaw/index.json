@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-04T04:41:33Z",
+  "generated_at": "2026-06-04T04:57:37Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 760,
+  "count": 761,
   "issues": [
     {
       "number": 3,
@@ -9721,6 +9721,20 @@
       ],
       "comment_count": 9,
       "transcript_messages": 9
+    },
+    {
+      "number": 871,
+      "title": "GitClaw telegram thread channel-icebreaker-e2e-20260604t045516z",
+      "path": "issues/000871.json",
+      "backup_generated_at": "2026-06-04T04:57:35Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:done",
+        "gitclaw:channel"
+      ],
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
