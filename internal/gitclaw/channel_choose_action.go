@@ -87,7 +87,7 @@ func isChannelChooseActionFields(fields []string) bool {
 		return false
 	}
 	switch strings.ToLower(strings.Trim(fields[1], " \t\r\n.,:;!?")) {
-	case "choose", "choice", "pick", "select", "decide", "picker", "random-choice", "oracle", "fortune", "8ball", "8-ball", "magic-8", "magic-8-ball", "fate":
+	case "choose", "choice", "pick", "select", "decide", "picker", "random-choice", "this-or-that", "thisorthat", "would-you-rather", "wouldyourather", "wyr", "either-or", "eitheror", "oracle", "fortune", "8ball", "8-ball", "magic-8", "magic-8-ball", "fate":
 		return true
 	default:
 		return false
@@ -144,7 +144,7 @@ func BuildChannelChooseActionRequest(ev Event, cfg Config) (ChannelChooseActionR
 			}
 			req.Options.NotifyMessageID = fields[i+1]
 			i++
-		case "--choose-id", "--choice-id", "--pick-id", "--id":
+		case "--choose-id", "--choice-id", "--pick-id", "--this-or-that-id", "--would-you-rather-id", "--wyr-id", "--id":
 			if i+1 >= len(fields) {
 				return ChannelChooseActionRequest{}, fmt.Errorf("%s requires a value", field)
 			}
@@ -156,7 +156,7 @@ func BuildChannelChooseActionRequest(ev Event, cfg Config) (ChannelChooseActionR
 			}
 			req.Options.Question = fields[i+1]
 			i++
-		case "--option", "--choice":
+		case "--option", "--choice", "--this", "--that", "--left", "--right":
 			if i+1 >= len(fields) {
 				return ChannelChooseActionRequest{}, fmt.Errorf("%s requires a value", field)
 			}
@@ -357,7 +357,7 @@ func RenderChannelChooseActionReport(ev Event, req ChannelChooseActionRequest, r
 	fmt.Fprintf(&b, "- llm_e2e_required_after_channel_choose_action_change: `%t`\n", true)
 	fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
 	b.WriteByte('\n')
-	b.WriteString("GitClaw queued a provider-facing deterministic option or oracle pick on the canonical channel issue. This is a small channel-native interaction: provider users get one selected answer, while the source receipt keeps thread ids, message ids, choose ids, questions, option text, selected answer text, and channel bodies out of band. The action does not call a model, use external randomness, mutate repository files, or call provider APIs.\n\n")
+	b.WriteString("GitClaw queued a provider-facing deterministic option, this-or-that, or oracle pick on the canonical channel issue. This is a small channel-native interaction: provider users get one selected answer or a two-option prompt, while the source receipt keeps thread ids, message ids, choose ids, questions, option text, selected answer text, and channel bodies out of band. The action does not call a model, use external randomness, mutate repository files, or call provider APIs.\n\n")
 	b.WriteString("### Follow-Up Delivery\n")
 	b.WriteString("- provider gateways read choice notifications with `gitclaw channel-outbox --channel <provider> --account-id <account> --issue-number <issue> --out <file>`\n")
 	b.WriteString("- provider gateways record sent choice notifications with `gitclaw channel-delivery --channel <provider> --account-id <account> --issue-number <issue> --comment-id <comment> --external-message-id <message>`\n")
@@ -459,6 +459,9 @@ func validateChannelChooseOptions(opts ChannelChooseOptions) error {
 	if len(choices) < 2 {
 		return fmt.Errorf("channel choose requires at least 2 choices")
 	}
+	if opts.Mode == "this-or-that" && len(choices) != 2 {
+		return fmt.Errorf("channel this-or-that requires exactly 2 choices")
+	}
 	if len(choices) > 20 {
 		return fmt.Errorf("channel choose supports at most 20 choices")
 	}
@@ -485,6 +488,9 @@ func validateChannelChooseActionRequestOptions(opts ChannelChooseOptions) error 
 	if len(choices) < 2 {
 		return fmt.Errorf("channel choose requires at least 2 choices")
 	}
+	if opts.Mode == "this-or-that" && len(choices) != 2 {
+		return fmt.Errorf("channel this-or-that requires exactly 2 choices")
+	}
 	if len(choices) > 20 {
 		return fmt.Errorf("channel choose supports at most 20 choices")
 	}
@@ -499,6 +505,8 @@ func channelChooseModeForSubcommand(subcommand string) string {
 	switch strings.ToLower(strings.Trim(subcommand, " \t\r\n.,:;!?")) {
 	case "oracle", "fortune", "8ball", "8-ball", "magic-8", "magic-8-ball", "fate":
 		return "oracle"
+	case "this-or-that", "thisorthat", "would-you-rather", "wouldyourather", "wyr", "either-or", "eitheror":
+		return "this-or-that"
 	default:
 		return "choice"
 	}
@@ -510,6 +518,8 @@ func cleanChannelChooseMode(value string) string {
 	switch value {
 	case "oracle", "fortune", "8ball", "8-ball", "magic-8", "magic-8-ball", "fate":
 		return "oracle"
+	case "this-or-that", "thisorthat", "would-you-rather", "wouldyourather", "wyr", "either-or", "eitheror":
+		return "this-or-that"
 	default:
 		return "choice"
 	}
@@ -631,6 +641,9 @@ func BuildChannelChooseOutcome(opts ChannelChooseOptions) (ChannelChooseOutcome,
 	if len(choices) < 2 {
 		return ChannelChooseOutcome{}, fmt.Errorf("channel choose requires at least 2 choices")
 	}
+	if opts.Mode == "this-or-that" && len(choices) != 2 {
+		return ChannelChooseOutcome{}, fmt.Errorf("channel this-or-that requires exactly 2 choices")
+	}
 	if len(choices) > 20 {
 		return ChannelChooseOutcome{}, fmt.Errorf("channel choose supports at most 20 choices")
 	}
@@ -672,6 +685,9 @@ func renderChannelChooseNotificationBody(outcome ChannelChooseOutcome) string {
 	if outcome.Mode == "oracle" {
 		return renderChannelOracleNotificationBody(outcome)
 	}
+	if outcome.Mode == "this-or-that" {
+		return renderChannelThisOrThatNotificationBody(outcome)
+	}
 	var b strings.Builder
 	b.WriteString("GitClaw channel choice.\n\n")
 	fmt.Fprintf(&b, "Choices: %d\n", len(outcome.Choices))
@@ -706,11 +722,38 @@ func renderChannelOracleNotificationBody(outcome ChannelChooseOutcome) string {
 	return strings.TrimSpace(b.String())
 }
 
-func channelChooseSelectionMode(mode string) string {
-	if cleanChannelChooseMode(mode) == "oracle" {
-		return "deterministic-channel-oracle"
+func renderChannelThisOrThatNotificationBody(outcome ChannelChooseOutcome) string {
+	var b strings.Builder
+	b.WriteString("GitClaw channel this-or-that.\n\n")
+	if outcome.Question != "" {
+		fmt.Fprintf(&b, "Question: %s\n", outcome.Question)
 	}
-	return "deterministic-channel-option-picker"
+	if len(outcome.Choices) >= 2 {
+		fmt.Fprintf(&b, "Option A: %s\n", outcome.Choices[0])
+		fmt.Fprintf(&b, "Option B: %s\n", outcome.Choices[1])
+	}
+	fmt.Fprintf(&b, "Nudge: Pick A or B and add one sentence why.\n")
+	fmt.Fprintf(&b, "Deterministic lean: #%d\n", outcome.ChoiceIndex)
+	fmt.Fprintf(&b, "Lean hash: %s\n", outcome.ChoiceSHA)
+	fmt.Fprintf(&b, "Pair hash: %s\n", outcome.ChoicesSHA)
+	fmt.Fprintf(&b, "Seed hash: %s\n", outcome.SeedSHA)
+	b.WriteString("\nSelection source: deterministic GitHub channel action seed.\n")
+	b.WriteString("Model call: not performed by this action.\n")
+	b.WriteString("External randomness: not used.\n")
+	b.WriteString("Repository mutation: not performed by this action.\n")
+	b.WriteString("Provider delivery: queued through GitHub channel outbox.")
+	return strings.TrimSpace(b.String())
+}
+
+func channelChooseSelectionMode(mode string) string {
+	switch cleanChannelChooseMode(mode) {
+	case "oracle":
+		return "deterministic-channel-oracle"
+	case "this-or-that":
+		return "deterministic-channel-this-or-that"
+	default:
+		return "deterministic-channel-option-picker"
+	}
 }
 
 func defaultChannelOracleChoices() []string {

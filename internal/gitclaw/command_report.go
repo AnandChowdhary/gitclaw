@@ -148,6 +148,9 @@ func commandSummaryForReport(entry commandCatalogEntry) string {
 	if !strings.Contains(summary, "bounded oracle answer cards") {
 		summary += " Queue provider-facing bounded oracle answer cards with the deterministic picker without model calls, external randomness, prediction services, provider API calls, or repo mutation."
 	}
+	if !strings.Contains(summary, "two-option this-or-that cards") {
+		summary += " Queue provider-facing two-option this-or-that cards with deterministic lean metadata without model calls, external randomness, provider API calls, or repo mutation."
+	}
 	if !strings.Contains(summary, "celebration toast cards") {
 		summary += " Queue provider-facing celebration toast cards without opening durable kudos issues, model calls, provider API calls, workflow edits, or repo mutation."
 	}

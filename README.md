@@ -696,6 +696,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels rollcall e2e-slack-route,e2e-telegram-route --rollcall-id <id> --message-id <id>
 @gitclaw /channels roll --dice 2d6+1 --message-id <id> --notify-message-id <id>
 @gitclaw /channels choose --message-id <id> --notify-message-id <id>
+@gitclaw /channels this-or-that --wyr-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels oracle --choose-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels mood focused --message-id <id> --notify-message-id <id> --intensity 4
 @gitclaw /channels room-pulse handoff --pulse-id <id> --message-id <id> --notify-message-id <id>
@@ -1049,6 +1050,13 @@ the same for option picking. Put choices in the following body as bullets or
 pass simple `--option <value>` flags; GitClaw queues one provider-visible
 selected choice while the source receipt keeps raw option text and the selected
 choice out of band.
+`@gitclaw /channels this-or-that --wyr-id <id> --message-id <id>
+--notify-message-id <id> --this <a> --that <b>` with a trailing
+`Question: ...`
+queues a provider-facing two-option prompt with a deterministic lean and a
+low-pressure "pick A or B" nudge. Aliases include `/channels would-you-rather`,
+`/channels wyr`, and `/channels either-or`; the receipt keeps raw prompts,
+option text, selected lean text, thread ids, and message ids out of band.
 `@gitclaw /channels oracle --choose-id <id> --message-id <id>
 --notify-message-id <id>` uses the same deterministic picker with a bounded
 static answer deck. Add a trailing `Question: ...` line for multi-word
@@ -2415,6 +2423,7 @@ scripts/e2e/github-channel-poll-slash.sh
 scripts/e2e/github-channel-rollcall-slash.sh
 scripts/e2e/github-channel-roll-slash.sh
 scripts/e2e/github-channel-choose-slash.sh
+scripts/e2e/github-channel-this-or-that-slash.sh
 scripts/e2e/github-channel-mood-slash.sh
 scripts/e2e/github-channel-room-pulse-slash.sh
 scripts/e2e/github-channel-quick-replies-slash.sh
@@ -2763,6 +2772,13 @@ oracle answers: a channel-ingested issue receives `@gitclaw /channels oracle`,
 queues one provider-visible deterministic answer from the static deck, exposes
 it through metadata-only outbox, suppresses duplicate `fortune` notifications,
 and then runs a real GitHub Models repo-reader/search follow-up.
+The channel-this-or-that slash harness adds a two-option conversation starter:
+a channel-ingested issue receives `@gitclaw /channels this-or-that`, queues one
+provider-visible A/B prompt with deterministic lean metadata, exposes it through
+metadata-only outbox, suppresses duplicate `wyr` notifications, proves no model
+call, external randomness, provider API call, workflow edit, or repository
+mutation happened, and then runs a real GitHub Models repo-reader/search
+follow-up.
 The channel-mood slash harness keeps mirrored channel threads more alive than
 reports: a channel-ingested issue receives `@gitclaw /channels mood`, queues one
 provider-visible presence update with an optional note, exposes it through

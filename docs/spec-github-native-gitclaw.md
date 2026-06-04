@@ -5603,32 +5603,41 @@ Options:
 
 @gitclaw /channels oracle --choose-id <stable-choose-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
 Question: Should we ship the tiny feature?
+
+@gitclaw /channels this-or-that --wyr-id <stable-wyr-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id> --this postcard-scene --that story-dice
+Question: Which tiny channel ritual should we try?
 ```
 
 `/channels choose`, `/channels choice`, `/channels pick`, `/channels select`,
-`/channels decide`, `/channels oracle`, `/channels fortune`, `/channels 8ball`,
-`/channels 8-ball`, `/channels magic-8`, `/channels magic-8-ball`, and
-`/channels fate` queue one provider-facing selected option or bounded oracle
+`/channels decide`, `/channels this-or-that`, `/channels would-you-rather`,
+`/channels wyr`, `/channels either-or`, `/channels oracle`, `/channels fortune`,
+`/channels 8ball`, `/channels 8-ball`, `/channels magic-8`,
+`/channels magic-8-ball`, and `/channels fate` queue one provider-facing
+selected option, two-option this-or-that prompt, or bounded oracle
 answer back onto the current `gitclaw:channel-thread` issue or an explicit
 reviewed route. Choices can come from repeated `--option <value>` flags, a
 compact `--options alpha|beta|gamma` field for simple one-word inputs, or
 bullet/numbered lines after an `Options:` or `Choices:` heading in the comment
 body. Oracle aliases may omit explicit options; in that case GitClaw uses a
-bounded static answer deck and an optional `--question`/`Question:` prompt. The
-selected choice or answer is derived from a deterministic seed containing the
-repository, channel, thread, source message id, notification message id, choose
-id, mode, question hash, and normalized choice-list/deck hash. The
-provider-facing outbound comment may show the selected choice, question, or
-oracle answer; the source receipt remains body-free and reports only hashes,
-counts, selected index, duplicate status, outbox delivery instructions, and
-safety gates. It does not call a model, use external randomness, call
-prediction services, call provider APIs, mutate the repository, print raw
-questions, print raw choices, or print the raw selected choice/answer.
+bounded static answer deck and an optional `--question`/`Question:` prompt.
+This-or-that aliases require exactly two normalized options and also accept
+`--this`, `--that`, `--left`, `--right`, `--wyr-id`, and
+`--this-or-that-id`. The selected choice, lean, or answer is derived from a
+deterministic seed containing the repository, channel, thread, source message
+id, notification message id, choose id, mode, question hash, and normalized
+choice-list/deck hash. The provider-facing outbound comment may show the
+selected choice, question, this-or-that options, deterministic lean, or oracle
+answer; the source receipt remains body-free and reports only hashes, counts,
+selected index, duplicate status, outbox delivery instructions, and safety
+gates. It does not call a model, use external randomness, call prediction
+services, call provider APIs, mutate the repository, print raw questions, print
+raw choices, or print the raw selected choice/answer/lean.
 Duplicates are suppressed by `channel + notify_message_id`. Changes to this
 surface require a live E2E that ingests a real channel issue, queues the
-deterministic choice or oracle answer, validates metadata-only outbox discovery,
-verifies duplicate suppression, and then continues on the same GitHub issue
-with a real GitHub Models repo-reader/search follow-up.
+deterministic choice, this-or-that prompt, or oracle answer, validates
+metadata-only outbox discovery, verifies duplicate suppression, and then
+continues on the same GitHub issue with a real GitHub Models repo-reader/search
+follow-up.
 
 For channel-native presence signals that should feel more like chat than a
 report, GitClaw also supports:
@@ -10358,6 +10367,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels rollcall team-alerts,ops-alerts --rollcall-id standup --message-id standup-1
 @gitclaw /channels roll --dice 2d6+1 --message-id provider-msg-1 --notify-message-id provider-roll-ack-1
 @gitclaw /channels choose --message-id provider-msg-1 --notify-message-id provider-choice-ack-1
+@gitclaw /channels this-or-that --wyr-id channel-wyr-1 --message-id provider-msg-1 --notify-message-id provider-wyr-ack-1 --this postcard-scene --that story-dice
 @gitclaw /channels mood focused --message-id provider-msg-1 --notify-message-id provider-mood-ack-1 --intensity 4
 @gitclaw /channels room-pulse handoff --pulse-id channel-room-pulse-1 --message-id provider-msg-1 --notify-message-id provider-room-pulse-ack-1
 @gitclaw /channels quick-replies handoff --reply-id channel-quick-replies-1 --message-id provider-msg-1 --notify-message-id provider-quick-replies-ack-1
@@ -12866,14 +12876,24 @@ examples/workflows/gitclaw.yml
   `gitclaw.search_files`, recover the channel-roll fixture token, and avoid
   hidden channel/message/roll sentinels.
 - A `gh`-driven channel-choose-slash E2E harness ingests a real mirrored
-  channel issue, replies with `@gitclaw /channels choose ...`, verifies the
-  provider-facing deterministic selected choice, body-free source receipt
-  metadata, duplicate choice notification suppression from a later issue comment
-  with the same acknowledgement id, and metadata-only outbox discovery for the
-  acknowledgement. The same channel issue then gets a normal GitHub Models
-  issue-comment follow-up that must select `repo-reader`, expose
-  `gitclaw.search_files`, recover the channel-choose fixture token, and avoid
-  hidden channel/message/choice sentinels.
+  channel issue, replies with `@gitclaw /channels oracle ...`, verifies the
+  provider-facing deterministic oracle answer, body-free source receipt
+  metadata, duplicate `fortune` notification suppression from a later issue
+  comment with the same acknowledgement id, and metadata-only outbox discovery
+  for the acknowledgement. The same channel issue then gets a normal GitHub
+  Models issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-oracle fixture token, and avoid
+  hidden channel/message/choose/oracle sentinels.
+- A `gh`-driven channel-this-or-that-slash E2E harness ingests a real mirrored
+  channel issue, replies with `@gitclaw /channels this-or-that ...`, verifies
+  the provider-facing A/B prompt, deterministic lean metadata, body-free source
+  receipt metadata, duplicate `wyr` notification suppression from a later issue
+  comment with the same acknowledgement id, explicit no model/randomness/
+  provider-API/workflow/repository mutation gates, and metadata-only outbox
+  discovery for the acknowledgement. The same channel issue then gets a normal
+  GitHub Models issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-this-or-that fixture token, and
+  avoid hidden channel/message/wyr/question/option sentinels.
 - A `gh`-driven channel-mood-slash E2E harness ingests a real mirrored channel
   issue, replies with `@gitclaw /channels mood ...`, verifies the
   provider-facing presence update, body-free source receipt metadata, duplicate

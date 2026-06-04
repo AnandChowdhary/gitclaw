@@ -5290,6 +5290,29 @@ Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw
 sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes messaging guide
 (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-04 Channel This-Or-That Follow-Up
+
+OpenClaw channels and Hermes messaging suggest a useful pattern beyond reports:
+small chat rituals should be easy to trigger from a provider thread, but the
+canonical state and delivery audit should still live in GitHub. GitClaw's
+`@gitclaw /channels this-or-that --wyr-id <id> --message-id <id>
+--notify-message-id <id> --this <a> --that <b>` plus a trailing `Question: ...`
+adds a two-option prompt for Slack/Telegram-style rooms without adding a socket,
+resident server, or dynamic model generation path.
+
+The provider-facing card may show the prompt, option A, option B, a
+deterministic lean, and the "pick A or B" nudge. The source receipt remains
+metadata-only: route/thread/message/choose/question/options/selected-lean
+hashes, duplicate status, selected index, and explicit no-model/no-randomness/
+no-provider-API/no-workflow/no-repository mutation gates. Acceptance requires a
+live channel-ingest issue, one this-or-that notification, duplicate `wyr`
+suppression, metadata-only outbox proof, and a real GitHub Models
+repo-reader/search follow-up on the same channel issue.
+
+Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw
+sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-04 Channel Riddle Follow-Up
 
 OpenClaw channels and Hermes messaging both support the idea that an assistant
