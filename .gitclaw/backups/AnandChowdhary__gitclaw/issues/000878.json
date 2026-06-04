@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-04T07:24:23Z",
+  "generated_at": "2026-06-04T07:26:09Z",
   "repo": "AnandChowdhary/gitclaw",
-  "event_name": "workflow_dispatch",
+  "event_name": "issue_comment",
   "issue": {
     "number": 878,
     "title": "GitClaw telegram thread channel-mad-libs-e2e-20260604t072208z",
@@ -51,6 +51,15 @@
       "CommentID": 4619940578,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Mad Libs Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#878`\n- requested_channel_command: `/channels mad-libs`\n- channel_mad_libs_status: `queued`\n- mad_libs_mode: `deterministic-channel-fill-in-card`\n- notification_target_issue: `#878`\n- notification_comment_id: `4619952153`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `b08993074642`\n- source_message_id_sha256_12: `3222b3af81e5`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `a45da0bc5ac8`\n- notify_message_id_auto: `false`\n- mad_libs_id_sha256_12: `09ae9a055e1b`\n- mad_libs_id_auto: `false`\n- mad_libs_theme_sha256_12: `00c4285274fc`\n- mad_libs_theme_bytes: `3`\n- mad_libs_theme_terms: `1`\n- mad_libs_note_sha256_12: `94c550612e33`\n- mad_libs_note_bytes: `34`\n- mad_libs_note_lines: `1`\n- mad_libs_note_source: `trailing-note`\n- mad_libs_template_sha256_12: `eecb8d1cfbba`\n- mad_libs_blank_bank_sha256_12: `cfb46c83e644`\n- mad_libs_prompt_sha256_12: `bc32d1c9876e`\n- mad_libs_seed_sha256_12: `466bd19113d5`\n- mad_libs_blank_count: `3`\n- mad_libs_deck_size: `3`\n- selected_card_index: `1`\n- notification_body_sha256_12: `d40486a0fe3b`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- dynamic_text_generation_performed: `false`\n- external_randomness_used: `false`\n- game_state_persisted: `false`\n- score_tracking_performed: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_mad_libs_id_included: `false`\n- raw_mad_libs_theme_included: `false`\n- raw_mad_libs_note_included: `false`\n- raw_mad_libs_template_included: `false`\n- raw_mad_libs_blank_bank_included: `false`\n- raw_mad_libs_prompt_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_mad_libs_action_change: `true`\n- issue_title_sha256_12: `51ce346de1b5`\n\nGitClaw queued a provider-facing channel mad-libs fill-in card on the canonical channel issue. This is a tiny chat-native word game: Slack or Telegram can get one bounded template and blank bank, while the source receipt keeps thread ids, message ids, mad-libs ids, themes, notes, templates, blanks, prompts, and channel bodies out of band. The action does not call a model, generate text dynamically, use external randomness, persist game state, track scores, mutate repository files, edit workflows, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read mad-libs cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent mad-libs cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate mad-libs cards are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4619952257,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -77,6 +86,22 @@
       "author_association": "OWNER",
       "created_at": "2026-06-04T07:23:50Z",
       "updated_at": "2026-06-04T07:23:50Z"
+    },
+    {
+      "id": 4619952153,
+      "body": "\u003c!-- gitclaw:channel-outbound channel=\"telegram\" thread_id=\"channel-mad-libs-e2e-20260604t072208z\" message_id=\"mad-libs-notify-20260604t072208z\" author=\"gitclaw\" --\u003e\nGitClaw channel mad libs.\n\nTheme: fun\nFill-in card:\nTemplate: A tiny [role] opened a [container] and discovered the next command was [command].\nBlanks:\n1. role - role or persona\n2. container - object\n3. command - GitClaw channel command\nPrompt: Reply with role, container, and command.\nMad libs hash: 6de5063eb2a9\nSeed hash: 466bd19113d5\nNote: Give us a tiny fill-in thread move\nNote hash: 94c550612e33\n\nMad libs source: deterministic GitHub channel action seed.\nMad libs deck: bounded static GitClaw fill-in deck.\nModel call: not performed by this action.\nDynamic text generation: not performed by this action.\nExternal randomness: not used.\nGame state: not persisted by this action.\nScore tracking: not performed by this action.\nProvider API call: not performed by this action.\nWorkflow mutation: not performed by this action.\nRepository mutation: not performed by this action.\nProvider delivery: queued through GitHub channel outbox.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-04T07:25:36Z",
+      "updated_at": "2026-06-04T07:25:36Z"
+    },
+    {
+      "id": 4619952257,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26937247611\" event_id=\"comment-4619940578\" model=\"gitclaw/channels\" idempotency_key=\"d3c605d611e37c47e9fab5c0855aa6cb\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26937247611\" --\u003e\n## GitClaw Channel Mad Libs Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#878`\n- requested_channel_command: `/channels mad-libs`\n- channel_mad_libs_status: `queued`\n- mad_libs_mode: `deterministic-channel-fill-in-card`\n- notification_target_issue: `#878`\n- notification_comment_id: `4619952153`\n- notification_queued: `true`\n- notification_duplicate_suppressed: `false`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `b08993074642`\n- source_message_id_sha256_12: `3222b3af81e5`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `a45da0bc5ac8`\n- notify_message_id_auto: `false`\n- mad_libs_id_sha256_12: `09ae9a055e1b`\n- mad_libs_id_auto: `false`\n- mad_libs_theme_sha256_12: `00c4285274fc`\n- mad_libs_theme_bytes: `3`\n- mad_libs_theme_terms: `1`\n- mad_libs_note_sha256_12: `94c550612e33`\n- mad_libs_note_bytes: `34`\n- mad_libs_note_lines: `1`\n- mad_libs_note_source: `trailing-note`\n- mad_libs_template_sha256_12: `eecb8d1cfbba`\n- mad_libs_blank_bank_sha256_12: `cfb46c83e644`\n- mad_libs_prompt_sha256_12: `bc32d1c9876e`\n- mad_libs_seed_sha256_12: `466bd19113d5`\n- mad_libs_blank_count: `3`\n- mad_libs_deck_size: `3`\n- selected_card_index: `1`\n- notification_body_sha256_12: `d40486a0fe3b`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- dynamic_text_generation_performed: `false`\n- external_randomness_used: `false`\n- game_state_persisted: `false`\n- score_tracking_performed: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_mad_libs_id_included: `false`\n- raw_mad_libs_theme_included: `false`\n- raw_mad_libs_note_included: `false`\n- raw_mad_libs_template_included: `false`\n- raw_mad_libs_blank_bank_included: `false`\n- raw_mad_libs_prompt_included: `false`\n- raw_channel_message_body_included: `false`\n- llm_e2e_required_after_channel_mad_libs_action_change: `true`\n- issue_title_sha256_12: `51ce346de1b5`\n\nGitClaw queued a provider-facing channel mad-libs fill-in card on the canonical channel issue. This is a tiny chat-native word game: Slack or Telegram can get one bounded template and blank bank, while the source receipt keeps thread ids, message ids, mad-libs ids, themes, notes, templates, blanks, prompts, and channel bodies out of band. The action does not call a model, generate text dynamically, use external randomness, persist game state, track scores, mutate repository files, edit workflows, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read mad-libs cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent mad-libs cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate mad-libs cards are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-04T07:25:37Z",
+      "updated_at": "2026-06-04T07:25:37Z"
     }
   ]
 }
