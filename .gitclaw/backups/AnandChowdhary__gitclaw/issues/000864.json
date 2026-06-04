@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-04T02:12:31Z",
+  "generated_at": "2026-06-04T02:14:22Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4618354641,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels research-draw openclaw --message-id research-spotlight-ingest-20260604t020827z --notify-message-id research-spotlight-notify-20260604t020827z --spotlight-id research-spotlight-20260604t020827z\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_RESEARCH_SPOTLIGHT_DUPLICATE_20260604t020827z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4618358015,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Research Spotlight Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#864`\n- requested_channel_command: `/channels research-draw`\n- channel_research_spotlight_status: `duplicate`\n- research_spotlight_status: `ok`\n- spotlight_mode: `static-research-catalog-deterministic-draw`\n- notification_target_issue: `#864`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `0490d9062643`\n- source_message_id_sha256_12: `ca6882b4401c`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `916cf249fd30`\n- notify_message_id_auto: `false`\n- research_spotlight_id_sha256_12: `deabe2b21e27`\n- research_spotlight_id_auto: `false`\n- spotlight_focus_sha256_12: `96a4bc260265`\n- spotlight_focus_bytes: `8`\n- spotlight_focus_terms: `1`\n- spotlight_focus_source: `positional`\n- spotlight_note_sha256_12: `e3b0c44298fc`\n- spotlight_note_bytes: `0`\n- spotlight_note_lines: `0`\n- spotlight_note_source: `none`\n- source_snapshot_date: `2026-06-01`\n- reviewed_sources: `10`\n- pattern_coverage: `11`\n- rejected_patterns: `5`\n- local_research_docs: `3`\n- local_research_docs_present: `3`\n- research_followups_indexed: `593`\n- matched_research_items: `12`\n- candidate_research_items: `12`\n- selected_index: `1`\n- selected_research_kind_sha256_12: `1fd38d5cbd2a`\n- selected_research_id_sha256_12: `96f27a6a0ac4`\n- selected_research_system_sha256_12: `e3b0c44298fc`\n- selected_research_url_sha256_12: `e3b0c44298fc`\n- selected_research_pattern_sha256_12: `96f27a6a0ac4`\n- selected_research_surface_sha256_12: `6ddf8066e3ee`\n- selected_research_gate_sha256_12: `3c39e803e304`\n- selection_seed_sha256_12: `62689e4f939b`\n- selection_sha256_12: `f90f06e68dab`\n- notification_body_sha256_12: `bb3a8af515f3`\n- notification_body_bytes: `1309`\n- notification_body_lines: `27`\n- target_from_current_channel_issue: `true`\n- deterministic_selection: `true`\n- external_randomness_used: `false`\n- model_call_performed: `false`\n- tool_execution_performed: `false`\n- source_fetch_performed: `false`\n- live_source_browse_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_focus_included: `false`\n- raw_note_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_research_spotlight_id_included: `false`\n- raw_selection_seed_included: `false`\n- raw_research_source_ids_included: `false`\n- raw_research_source_urls_included: `false`\n- raw_research_patterns_included: `false`\n- raw_research_surfaces_included: `false`\n- raw_research_bodies_included: `false`\n- raw_source_bodies_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_channel_research_spotlight_change: `true`\n- issue_title_sha256_12: `1d537a8aec77`\n\nGitClaw queued a provider-facing research spotlight card from reviewed static catalog metadata. The provider card may name one source, pattern, or rejected surface so people can follow up, while this source receipt keeps raw ids, URLs, surfaces, pattern text, focus text, notes, channel bodies, and research bodies out of band. The action does not call a model, execute tools, fetch sources, browse live sources, mutate repository files, use external randomness, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read research-spotlight cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent research-spotlight cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate research-spotlight notifications are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4618362359,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-04T02:11:56Z",
       "updated_at": "2026-06-04T02:11:56Z"
+    },
+    {
+      "id": 4618358015,
+      "body": "@gitclaw /channels research-draw openclaw --message-id research-spotlight-ingest-20260604t020827z --notify-message-id research-spotlight-notify-20260604t020827z --spotlight-id research-spotlight-20260604t020827z\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_RESEARCH_SPOTLIGHT_DUPLICATE_20260604t020827z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-04T02:12:47Z",
+      "updated_at": "2026-06-04T02:12:47Z"
+    },
+    {
+      "id": 4618362359,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26925831203\" event_id=\"comment-4618358015\" model=\"gitclaw/channels\" idempotency_key=\"707fbb2f599c6810b4806b0c1a140450\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26925831203\" --\u003e\n## GitClaw Channel Research Spotlight Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#864`\n- requested_channel_command: `/channels research-draw`\n- channel_research_spotlight_status: `duplicate`\n- research_spotlight_status: `ok`\n- spotlight_mode: `static-research-catalog-deterministic-draw`\n- notification_target_issue: `#864`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `0490d9062643`\n- source_message_id_sha256_12: `ca6882b4401c`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `916cf249fd30`\n- notify_message_id_auto: `false`\n- research_spotlight_id_sha256_12: `deabe2b21e27`\n- research_spotlight_id_auto: `false`\n- spotlight_focus_sha256_12: `96a4bc260265`\n- spotlight_focus_bytes: `8`\n- spotlight_focus_terms: `1`\n- spotlight_focus_source: `positional`\n- spotlight_note_sha256_12: `e3b0c44298fc`\n- spotlight_note_bytes: `0`\n- spotlight_note_lines: `0`\n- spotlight_note_source: `none`\n- source_snapshot_date: `2026-06-01`\n- reviewed_sources: `10`\n- pattern_coverage: `11`\n- rejected_patterns: `5`\n- local_research_docs: `3`\n- local_research_docs_present: `3`\n- research_followups_indexed: `593`\n- matched_research_items: `12`\n- candidate_research_items: `12`\n- selected_index: `1`\n- selected_research_kind_sha256_12: `1fd38d5cbd2a`\n- selected_research_id_sha256_12: `96f27a6a0ac4`\n- selected_research_system_sha256_12: `e3b0c44298fc`\n- selected_research_url_sha256_12: `e3b0c44298fc`\n- selected_research_pattern_sha256_12: `96f27a6a0ac4`\n- selected_research_surface_sha256_12: `6ddf8066e3ee`\n- selected_research_gate_sha256_12: `3c39e803e304`\n- selection_seed_sha256_12: `62689e4f939b`\n- selection_sha256_12: `f90f06e68dab`\n- notification_body_sha256_12: `bb3a8af515f3`\n- notification_body_bytes: `1309`\n- notification_body_lines: `27`\n- target_from_current_channel_issue: `true`\n- deterministic_selection: `true`\n- external_randomness_used: `false`\n- model_call_performed: `false`\n- tool_execution_performed: `false`\n- source_fetch_performed: `false`\n- live_source_browse_performed: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_focus_included: `false`\n- raw_note_included: `false`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_research_spotlight_id_included: `false`\n- raw_selection_seed_included: `false`\n- raw_research_source_ids_included: `false`\n- raw_research_source_urls_included: `false`\n- raw_research_patterns_included: `false`\n- raw_research_surfaces_included: `false`\n- raw_research_bodies_included: `false`\n- raw_source_bodies_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_channel_research_spotlight_change: `true`\n- issue_title_sha256_12: `1d537a8aec77`\n\nGitClaw queued a provider-facing research spotlight card from reviewed static catalog metadata. The provider card may name one source, pattern, or rejected surface so people can follow up, while this source receipt keeps raw ids, URLs, surfaces, pattern text, focus text, notes, channel bodies, and research bodies out of band. The action does not call a model, execute tools, fetch sources, browse live sources, mutate repository files, use external randomness, or call provider APIs.\n\n### Follow-Up Delivery\n- provider gateways read research-spotlight cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent research-spotlight cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate research-spotlight notifications are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-04T02:13:52Z",
+      "updated_at": "2026-06-04T02:13:52Z"
     }
   ]
 }
