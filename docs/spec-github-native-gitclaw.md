@@ -5903,6 +5903,34 @@ suppression, proves no model/randomness/media/provider-API/workflow/repository
 mutation was performed, and then continues on the same GitHub issue with a
 real GitHub Models repo-reader/search follow-up.
 
+The same channel-thread issue can ask for a bounded fill-in card that gives a
+room a quick word game without storing game state:
+
+```text
+@gitclaw /channels mad-libs fun --mad-libs-id <stable-mad-libs-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
+Note: Give us one tiny word-game prompt.
+```
+
+`/channels mad-libs`, `/channels mad-lib`, `/channels madlibs`,
+`/channels madlib`, `/channels fill-in`, `/channels fillin`,
+`/channels fill-blanks`, `/channels blanks`, and `/channels word-game` queue
+one provider-facing fill-in card back onto the current
+`gitclaw:channel-thread` issue or an explicit reviewed route. The provider
+card shows a bounded static template, blank bank, and reply prompt. Optional
+`Note: ...` trailing text is visible in the provider-facing update. The source
+receipt remains body-free and reports only hashes, sizes, blank count, deck
+size, selected-card index, duplicate status, outbox delivery instructions, and
+safety gates. It does not call a model, dynamically generate text, use external
+randomness, persist game state, track scores, call provider APIs, edit
+workflows, mutate repository files, print raw mad-libs ids, print raw themes,
+print raw notes, print raw templates, print raw blanks, or print raw prompts.
+Duplicates are suppressed by `channel + notify_message_id`. Changes to this
+surface require a live E2E that ingests a real channel issue, queues the
+mad-libs card, validates metadata-only outbox discovery, verifies duplicate
+suppression, proves no model/dynamic-text/randomness/game-state/score/provider-
+API/workflow/repository mutation was performed, and then continues on the same
+GitHub issue with a real GitHub Models repo-reader/search follow-up.
+
 The same channel-thread issue can ask for a bounded play menu that points to
 existing channel surfaces without becoming durable game state:
 
@@ -13030,6 +13058,17 @@ examples/workflows/gitclaw.yml
   issue then gets a normal GitHub Models issue-comment follow-up that must
   select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-story-dice fixture token, and avoid hidden channel/message/story-dice
+  sentinels.
+- A `gh`-driven channel-mad-libs-slash E2E harness ingests a real mirrored
+  channel issue, replies with `@gitclaw /channels mad-libs ...`, verifies the
+  provider-facing bounded fill-in card, body-free source receipt metadata,
+  duplicate fill-in notification suppression from a later `fill-in` alias
+  comment with the same acknowledgement id, explicit no model/dynamic-text/
+  randomness/game-state/score/provider-API/workflow/repository mutation gates,
+  and metadata-only outbox discovery for the acknowledgement. The same channel
+  issue then gets a normal GitHub Models issue-comment follow-up that must
+  select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-mad-libs fixture token, and avoid hidden channel/message/mad-libs
   sentinels.
 - A `gh`-driven channel-arcade-slash E2E harness ingests a real mirrored
   channel issue, replies with `@gitclaw /channels arcade fun ...`, verifies the

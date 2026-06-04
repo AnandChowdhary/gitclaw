@@ -711,6 +711,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels haiku launch --haiku-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels soundtrack launch --soundtrack-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels story-dice fun --story-dice-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels mad-libs fun --mad-libs-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels arcade fun --arcade-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels coach skills --coach-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels skill-spotlight repo-reader --spotlight-id <id> --message-id <id> --notify-message-id <id>
@@ -1156,6 +1157,14 @@ provider update, while the source receipt keeps raw story-dice ids, themes,
 notes, rolled prompts, thread ids, message ids, and channel bodies out of band.
 This does not call a model, use external randomness, generate media, call
 provider APIs, edit workflows, or mutate the repository.
+`@gitclaw /channels mad-libs <theme> --mad-libs-id <id> --message-id <id>
+--notify-message-id <id>` queues a provider-facing fill-in card from bounded
+static templates. Optional `Note: ...` trailing text is visible in the provider
+update, while the source receipt keeps raw mad-libs ids, themes, notes,
+templates, blanks, prompts, thread ids, message ids, and channel bodies out of
+band. This does not call a model, dynamically generate text, use external
+randomness, persist game state, track scores, call provider APIs, edit
+workflows, or mutate the repository.
 `@gitclaw /channels arcade <fun|warmup|story|launch|tools|research|soul|backups|channels>
 --arcade-id <id> --message-id <id> --notify-message-id <id>` queues a
 provider-facing bounded play-menu card back to the current Slack/Telegram
@@ -2463,6 +2472,7 @@ scripts/e2e/github-channel-riddle-slash.sh
 scripts/e2e/github-channel-haiku-slash.sh
 scripts/e2e/github-channel-soundtrack-slash.sh
 scripts/e2e/github-channel-story-dice-slash.sh
+scripts/e2e/github-channel-mad-libs-slash.sh
 scripts/e2e/github-channel-arcade-slash.sh
 scripts/e2e/github-channel-coach-slash.sh
 scripts/e2e/github-channel-nudge-slash.sh
@@ -2887,6 +2897,13 @@ one provider-visible four-die prompt card with an optional note, exposes it
 through metadata-only outbox, suppresses duplicate story-dice notifications,
 proves no model/randomness/media/provider-API/workflow/repository mutation was
 performed, and then runs a real GitHub Models repo-reader/search follow-up.
+The channel-mad-libs slash harness adds a tiny channel-native word-game lane:
+a channel-ingested issue receives `@gitclaw /channels mad-libs`, queues one
+provider-visible fill-in card with an optional note, exposes it through
+metadata-only outbox, suppresses duplicate fill-in notifications, proves no
+model/dynamic-text/randomness/game-state/score/provider-API/workflow/
+repository mutation was performed, and then runs a real GitHub Models
+repo-reader/search follow-up.
 The channel-arcade slash harness adds a tiny play-menu lane for Slack and
 Telegram: a channel-ingested issue receives `@gitclaw /channels arcade`, queues
 one provider-visible bounded move menu with an optional note, exposes it
