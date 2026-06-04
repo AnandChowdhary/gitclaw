@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-04T03:46:53Z",
+  "generated_at": "2026-06-04T03:48:48Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4618753891,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels dashboard research --message-id cockpit-ingest-20260604t034302z --notify-message-id cockpit-notify-20260604t034302z --cockpit-id cockpit-20260604t034302z\nNote: Keep the board skimmable\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_COCKPIT_DUPLICATE_20260604t034302z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4618757622,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Cockpit Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#868`\n- requested_channel_command: `/channels dashboard`\n- channel_cockpit_status: `duplicate`\n- cockpit_card_mode: `bounded-provider-status-board`\n- notification_target_issue: `#868`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `434f54d46176`\n- source_message_id_sha256_12: `9e37f1471aee`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `7996f5876eba`\n- notify_message_id_auto: `false`\n- cockpit_id_sha256_12: `64cf31c12222`\n- cockpit_id_auto: `false`\n- cockpit_lane_sha256_12: `66f62d1807d3`\n- cockpit_lane_bytes: `8`\n- cockpit_gauge_count: `4`\n- cockpit_command_count: `4`\n- cockpit_gauge_sha256_12: `576f999a57c0`\n- cockpit_note_sha256_12: `fddfe9794cbc`\n- cockpit_note_bytes: `24`\n- cockpit_note_lines: `1`\n- cockpit_note_source: `trailing-note`\n- notification_body_sha256_12: `88f07e1e1383`\n- notification_body_bytes: `1877`\n- notification_body_lines: `39`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- dynamic_cockpit_generation_performed: `false`\n- external_randomness_used: `false`\n- command_execution_performed: `false`\n- skill_install_performed: `false`\n- tool_execution_performed: `false`\n- backup_payload_read: `false`\n- soul_body_read: `false`\n- memory_write_performed: `false`\n- source_fetch_performed: `false`\n- live_source_browse_performed: `false`\n- artifact_issue_created: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- policy_mutation_performed: `false`\n- schedule_created: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_cockpit_id_included: `false`\n- raw_cockpit_lane_included: `false`\n- raw_cockpit_note_included: `false`\n- raw_cockpit_gauges_included: `false`\n- raw_cockpit_commands_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_channel_cockpit_action_change: `true`\n- issue_title_sha256_12: `e51f6c0de343`\n\nGitClaw queued a provider-facing status-board card on the canonical channel issue. The provider card can show bounded gauges and copyable next commands, while this source receipt keeps raw ids, lane names, notes, gauge text, command text, channel bodies, issue bodies, comments, prompts, tool outputs, and provider message ids out of band. The action uses a static deck and does not call a model, execute commands, install skills, execute tools, read backup payloads, read soul bodies, write memory, fetch sources, browse live sources, create artifact issues, call provider APIs, mutate workflows, change policy, create schedules, use external randomness, or mutate the repository.\n\n### Follow-Up Delivery\n- provider gateways read cockpit cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent cockpit cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate cockpit cards are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4618763108,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-04T03:46:20Z",
       "updated_at": "2026-06-04T03:46:20Z"
+    },
+    {
+      "id": 4618757622,
+      "body": "@gitclaw /channels dashboard research --message-id cockpit-ingest-20260604t034302z --notify-message-id cockpit-notify-20260604t034302z --cockpit-id cockpit-20260604t034302z\nNote: Keep the board skimmable\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_COCKPIT_DUPLICATE_20260604t034302z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-04T03:47:09Z",
+      "updated_at": "2026-06-04T03:47:09Z"
+    },
+    {
+      "id": 4618763108,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26929228489\" event_id=\"comment-4618757622\" model=\"gitclaw/channels\" idempotency_key=\"0d3a9aa2a55555dfb0080afdf9e1402a\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26929228489\" --\u003e\n## GitClaw Channel Cockpit Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#868`\n- requested_channel_command: `/channels dashboard`\n- channel_cockpit_status: `duplicate`\n- cockpit_card_mode: `bounded-provider-status-board`\n- notification_target_issue: `#868`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `434f54d46176`\n- source_message_id_sha256_12: `9e37f1471aee`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `7996f5876eba`\n- notify_message_id_auto: `false`\n- cockpit_id_sha256_12: `64cf31c12222`\n- cockpit_id_auto: `false`\n- cockpit_lane_sha256_12: `66f62d1807d3`\n- cockpit_lane_bytes: `8`\n- cockpit_gauge_count: `4`\n- cockpit_command_count: `4`\n- cockpit_gauge_sha256_12: `576f999a57c0`\n- cockpit_note_sha256_12: `fddfe9794cbc`\n- cockpit_note_bytes: `24`\n- cockpit_note_lines: `1`\n- cockpit_note_source: `trailing-note`\n- notification_body_sha256_12: `88f07e1e1383`\n- notification_body_bytes: `1877`\n- notification_body_lines: `39`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- dynamic_cockpit_generation_performed: `false`\n- external_randomness_used: `false`\n- command_execution_performed: `false`\n- skill_install_performed: `false`\n- tool_execution_performed: `false`\n- backup_payload_read: `false`\n- soul_body_read: `false`\n- memory_write_performed: `false`\n- source_fetch_performed: `false`\n- live_source_browse_performed: `false`\n- artifact_issue_created: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- policy_mutation_performed: `false`\n- schedule_created: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_cockpit_id_included: `false`\n- raw_cockpit_lane_included: `false`\n- raw_cockpit_note_included: `false`\n- raw_cockpit_gauges_included: `false`\n- raw_cockpit_commands_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_channel_cockpit_action_change: `true`\n- issue_title_sha256_12: `e51f6c0de343`\n\nGitClaw queued a provider-facing status-board card on the canonical channel issue. The provider card can show bounded gauges and copyable next commands, while this source receipt keeps raw ids, lane names, notes, gauge text, command text, channel bodies, issue bodies, comments, prompts, tool outputs, and provider message ids out of band. The action uses a static deck and does not call a model, execute commands, install skills, execute tools, read backup payloads, read soul bodies, write memory, fetch sources, browse live sources, create artifact issues, call provider APIs, mutate workflows, change policy, create schedules, use external randomness, or mutate the repository.\n\n### Follow-Up Delivery\n- provider gateways read cockpit cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent cockpit cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate cockpit cards are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-04T03:48:17Z",
+      "updated_at": "2026-06-04T03:48:17Z"
     }
   ]
 }
