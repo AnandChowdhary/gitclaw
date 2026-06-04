@@ -342,6 +342,7 @@ gitclaw tools toolsets risk
 gitclaw tools toolsets provenance
 gitclaw tools toolsets info <name>
 gitclaw tools approval-plan <name>
+gitclaw tools readiness <name>
 gitclaw tools map <name>
 gitclaw tools run-plan <name>
 gitclaw tools info <name>
@@ -375,6 +376,14 @@ steps; it does not execute tools, launch MCP servers, create approval,
 rehearsal, or run-request issues, call a model, mutate workflows, mutate the
 repository, or print raw issue bodies, comments, prompts, tool inputs, or tool
 outputs.
+`gitclaw tools readiness <name>` and `@gitclaw /tools readiness <name>` render
+a body-free prompt-visible readiness checklist for one deterministic tool
+contract. It reports config, allowlist, contract mode, validation, risk,
+active-output hash-only, model-context, and no-execution gates before the tool
+is treated as safe prompt context. It never executes tools, launches MCP
+servers, creates approval/rehearsal/run-request issues, calls a model, mutates
+workflows, mutates the repository, or prints raw issue bodies, comments,
+prompts, tool inputs, or tool outputs.
 `@gitclaw /tools cancel-run --id <id>` closes an open reviewed tool-run request
 issue after posting a durable `gitclaw:tool-run-cancel` marker on that request.
 It does not approve or execute the tool, call a model, copy raw source text, or

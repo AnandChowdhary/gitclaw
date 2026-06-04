@@ -3114,6 +3114,7 @@ gitclaw tools toolsets risk
 gitclaw tools toolsets provenance
 gitclaw tools toolsets info <name>
 gitclaw tools approval-plan <name>
+gitclaw tools readiness <name>
 gitclaw tools run-plan <name>
 gitclaw tools info <name>
 gitclaw tools search <query> --max-results 10
@@ -3145,6 +3146,7 @@ OpenClaw's tool policy visibility and Hermes' toolset inventory:
 @gitclaw /tools toolsets provenance
 @gitclaw /tools toolsets info repo-read
 @gitclaw /tools approval-plan search_files
+@gitclaw /tools readiness search_files
 @gitclaw /tools run-plan search_files
 @gitclaw /tools rehearse search_files --id search-contract-lab
 @gitclaw /tools request-run search_files --id reviewed-search-run
@@ -3383,6 +3385,27 @@ names from the issue, raw tool inputs, raw outputs, approval payloads,
 issue/comment bodies, prompts, credentials, or file bodies. Any implementation
 change to tool approval behavior must pair the deterministic approval-plan E2E
 with a live GitHub Models conversation E2E.
+
+When called as `@gitclaw /tools readiness <name>`, the command posts a
+body-free prompt-visible readiness checklist for one declared tool contract.
+It is the GitHub-native equivalent of checking OpenClaw tool policy exposure
+and Hermes tool/toolset availability before a model sees tool context: the
+report shows the normalized tool, match count, enabled/disabled/allowlist gate
+state, contract mode, trigger, mutation flag, active-output hashes, validation
+summary, risk summary, readiness gate manifest hash, and whether the tool is
+ready for prompt-visible model context. In v1, known enabled read-only or
+metadata-only tools can report `prompt_visible_ready=true` and
+`model_context_allowed=true`, but the readiness report itself always reports
+`execution_allowed_now=false`, `model_call_performed=false`,
+`tool_execution_performed=false`, `shell_execution_allowed=false`,
+`mcp_launch_allowed=false`, and `repository_mutation_allowed=false`. It never
+executes a tool, launches MCP servers, creates approval/rehearsal/run-request
+issues, calls a model, makes network calls, mutates workflows, mutates the
+repository, or emits raw tool names from the issue, raw inputs, raw outputs,
+issue/comment bodies, prompts, credentials, or file bodies. Any implementation
+change to prompt-visible readiness must pair the deterministic readiness E2E
+with a live GitHub Models conversation E2E so the real model path and
+`gitclaw.search_files` prompt-visible proof stay covered.
 
 When called as `@gitclaw /tools run-plan <name>`, the command posts a
 body-free dry-run plan for one declared tool contract. It reports the

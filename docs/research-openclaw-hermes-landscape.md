@@ -2890,6 +2890,21 @@ tool must be blocked behind a future write mode, `gitclaw:write-requested`,
 execute, mutate, call a model, or print raw tool inputs, outputs, approval
 payloads, issue/comment bodies, prompts, credentials, or secrets.
 
+2026-06-04 tools-readiness follow-up: OpenClaw's tool policy posture makes
+prompt-visible tools a deliberate exposure decision, not just a side effect of
+having a tool implementation. Hermes' gateway/toolset model similarly treats
+availability, schemas, and authorization as inspectable state before a
+conversation uses them. GitClaw should therefore add `@gitclaw /tools
+readiness <name>` and `gitclaw tools readiness <name>` as the issue-native
+checklist that sits between approval-plan and map/run-plan: normalize one tool,
+check config, allowlist, mode, validation, risk, active-output hashes, and
+prompt-visible/model-context gates, while keeping execution false. The report
+must never execute tools, launch MCP servers, call a model, mutate workflows,
+mutate the repository, or print raw tool inputs, outputs, issue/comment bodies,
+prompts, credentials, or secrets. Acceptance requires a deterministic GitHub
+issue E2E plus a real GitHub Models follow-up that proves `repo-reader` and
+`gitclaw.search_files` still reach inference.
+
 2026-06-01 tools-run-request follow-up: OpenClaw's exec approvals and Hermes'
 tool/toolset authorization both make the pre-execution review object more
 important than the raw command body. GitClaw should therefore add an

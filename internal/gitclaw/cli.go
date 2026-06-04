@@ -2349,7 +2349,7 @@ func runSessionSearchCommand(args []string) error {
 
 func runToolsCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gitclaw tools catalog|snapshot|verify|risk|validate|list|exposure [risk]|defer-plan|boundary [query]|provenance [query]|toolsets [risk|provenance|info <name>]|approval-plan <name>|map <name>|run-plan <name>|info <name>|search <query>")
+		return fmt.Errorf("usage: gitclaw tools catalog|snapshot|verify|risk|validate|list|exposure [risk]|defer-plan|boundary [query]|provenance [query]|toolsets [risk|provenance|info <name>]|approval-plan <name>|readiness <name>|map <name>|run-plan <name>|info <name>|search <query>")
 	}
 	switch args[0] {
 	case "catalog", "index", "tool-catalog", "discovery", "eligible":
@@ -2376,6 +2376,8 @@ func runToolsCommand(args []string) error {
 		return runToolsToolsetsCommand(args[1:])
 	case "approval-plan", "approval", "approve-plan", "approval-gate", "gate":
 		return runToolsApprovalPlanCommand(args[1:])
+	case "readiness", "ready", "readiness-check", "gate-check", "tool-readiness", "prompt-ready", "prompt-readiness":
+		return runToolsReadinessCommand(args[1:])
 	case "map", "tool-map", "path", "runbook", "safe-tool", "sequence":
 		return runToolsMapCommand(args[1:])
 	case "run-plan", "plan":
@@ -2696,6 +2698,22 @@ func runToolsMapCommand(args []string) error {
 		return err
 	}
 	fmt.Println(RenderToolMapCLIReport(repoContext, args[0]))
+	return nil
+}
+
+func runToolsReadinessCommand(args []string) error {
+	if len(args) != 1 {
+		return fmt.Errorf("usage: gitclaw tools readiness <name>")
+	}
+	cfg, err := LoadEffectiveConfig()
+	if err != nil {
+		return err
+	}
+	repoContext, err := LoadRepoContextWithConfig(cfg.Workdir, []TranscriptMessage{{Role: "user", Body: "tools readiness " + args[0]}}, cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Println(RenderToolReadinessCLIReport(repoContext, args[0]))
 	return nil
 }
 

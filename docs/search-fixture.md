@@ -75,6 +75,7 @@ tools report unique search fixture phrase => GITCLAW_TOOLS_REPORT_CONTEXT_V1
 tools list report unique search fixture phrase => GITCLAW_TOOLS_LIST_REPORT_CONTEXT_V1
 tools verify report unique search fixture phrase => GITCLAW_TOOLS_VERIFY_REPORT_CONTEXT_V1
 tools map unique search fixture phrase => GITCLAW_TOOLS_MAP_CONTEXT_V1
+tools readiness unique search fixture phrase => GITCLAW_TOOLS_READINESS_CONTEXT_V1
 toolset info unique search fixture phrase => GITCLAW_TOOLSET_INFO_CONTEXT_V1
 skill source info unique search fixture phrase => GITCLAW_SKILL_SOURCE_INFO_CONTEXT_V1
 skill source verify unique search fixture phrase => GITCLAW_SKILL_SOURCE_VERIFY_CONTEXT_V1
