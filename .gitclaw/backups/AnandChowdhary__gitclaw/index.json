@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-06-04T03:04:24Z",
+  "generated_at": "2026-06-04T03:23:28Z",
   "repo": "AnandChowdhary/gitclaw",
-  "count": 756,
+  "count": 757,
   "issues": [
     {
       "number": 3,
@@ -9665,6 +9665,20 @@
       ],
       "comment_count": 9,
       "transcript_messages": 9
+    },
+    {
+      "number": 867,
+      "title": "GitClaw telegram thread channel-mission-control-e2e-20260604t032116z",
+      "path": "issues/000867.json",
+      "backup_generated_at": "2026-06-04T03:23:27Z",
+      "event_name": "workflow_dispatch",
+      "labels": [
+        "gitclaw",
+        "gitclaw:done",
+        "gitclaw:channel"
+      ],
+      "comment_count": 3,
+      "transcript_messages": 4
     }
   ]
 }
