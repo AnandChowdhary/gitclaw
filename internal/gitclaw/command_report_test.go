@@ -125,6 +125,7 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"Queue provider-facing repo-aware next-move coach cards from skill/tool/soul metadata",
 		"Queue provider-facing bounded capability star-map cards across skills, tools, soul, memory, backups, research, channels, and fun",
 		"Queue provider-facing bounded operating-loop mission-control cards across skills, tools, soul, memory, backups, research, channels, launch, and fun",
+		"Queue provider-facing bounded status-board cockpit cards across skills, tools, soul, memory, backups, research, channels, launch, and fun",
 		"Queue deterministic provider-facing skill spotlight cards from repo-local metadata",
 		"Queue deterministic provider-facing tool spotlight cards from built-in read-only/metadata tool contracts",
 		"Queue deterministic provider-facing soul spotlight cards from repo-local high-authority metadata",

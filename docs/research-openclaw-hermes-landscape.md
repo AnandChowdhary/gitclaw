@@ -5136,6 +5136,31 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-04 Channel Cockpit Follow-Up
+
+OpenClaw and Hermes both make chat feel like an operator surface, but their
+useful lesson for GitClaw is not "do everything from chat." It is "show the
+operator what surface is safe to touch next." GitClaw's serverless version can
+make that practical with a provider-facing cockpit card: a bounded status board
+for one lane that gives the user a quick read on evidence, safety gates, and
+copyable next commands, while durable work still happens in GitHub.
+
+GitClaw's version is `@gitclaw /channels cockpit <lane> --cockpit-id <id>
+--message-id <id> --notify-message-id <id>`. It queues one provider-facing
+status-board card through `channel-outbox` with a board sentence, four gauges,
+and next commands for lanes like research, skills, tools, soul, memory,
+backups, channels, launch, and fun. The source receipt remains stricter:
+hashes and counts only for route/thread/message/cockpit/lane/note/card fields,
+duplicate status, and explicit no-model/no-command/no-tool/no-skill-install/
+no-backup-payload/no-soul-body/no-memory-write/no-source-fetch/no-live-browse/
+no-provider-API/no-workflow/no-policy/no-schedule/no-repository-mutation gates.
+Acceptance requires a live channel-ingest issue, one cockpit notification,
+duplicate notification suppression, metadata-only outbox discovery, and a real
+GitHub Models repo-reader/search follow-up on the same channel issue.
+
+Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
+guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-03 Channel Haiku Follow-Up
 
 OpenClaw's channel framing keeps the assistant present in normal conversation,

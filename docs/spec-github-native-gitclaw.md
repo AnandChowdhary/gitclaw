@@ -1049,6 +1049,33 @@ browse/model/tool/provider API/workflow/policy/schedule/repository mutation
 happened, and then continues on the same GitHub issue with a real GitHub
 Models repo-reader/search follow-up.
 
+The same channel-thread issue can ask for a compact cockpit/status board:
+
+```text
+@gitclaw /channels cockpit research --cockpit-id <stable-cockpit-id> --message-id <provider-message-id> --notify-message-id <stable-outbound-id>
+```
+
+`/channels cockpit`, `/channels control-room`, `/channels status-board`,
+`/channels dashboard`, `/channels ops-board`, `/channels channel-cockpit`,
+`/channels openclaw-cockpit`, and `/channels hermes-cockpit` infer the current
+channel and thread id from the issue marker when no explicit route/channel/
+thread target is provided. They normalize a lane across skills, tools, soul,
+memory, backups, research, channels, launch, or fun, then queue a
+provider-facing card with a board sentence, four bounded gauges, and copyable
+follow-up commands. The source receipt records only route/thread/message/
+cockpit/lane/note/card hashes, counts, duplicate status, delivery metadata,
+and hard no-model/no-execution/no-provider-API/no-workflow/no-policy/
+no-schedule/no-repository-mutation gates. It does not print raw cockpit ids,
+raw lane names, raw notes, raw gauge text, raw command text, raw provider ids,
+raw channel bodies, raw issue/comment bodies, prompts, or tool outputs.
+Duplicates are suppressed by `channel + notify_message_id`. Changes to this
+surface require a live E2E that ingests a real channel issue, queues a cockpit
+card, validates metadata-only outbox discovery, verifies duplicate suppression,
+verifies no dynamic cockpit generation/source fetch/live browse/model/tool/
+provider API/workflow/policy/schedule/repository mutation happened, and then
+continues on the same GitHub issue with a real GitHub Models repo-reader/search
+follow-up.
+
 ## Runtime Architecture
 
 ```text
@@ -10170,6 +10197,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels research-map openclaw --map-id channel-research-map-1 --message-id provider-msg-1 --notify-message-id provider-research-map-ack-1
 @gitclaw /channels constellation research --constellation-id channel-constellation-1 --message-id provider-msg-1 --notify-message-id provider-constellation-ack-1
 @gitclaw /channels mission-control research --mission-id channel-mission-control-1 --message-id provider-msg-1 --notify-message-id provider-mission-control-ack-1
+@gitclaw /channels cockpit research --cockpit-id channel-cockpit-1 --message-id provider-msg-1 --notify-message-id provider-cockpit-ack-1
 @gitclaw /channels tool-search read_file --message-id provider-msg-1 --notify-message-id provider-tool-search-ack-1
 @gitclaw /channels tool-info read_file --message-id provider-msg-1 --notify-message-id provider-tool-info-ack-1
 @gitclaw /channels tool-spotlight search_files --spotlight-id channel-tool-spotlight-1 --message-id provider-msg-1 --notify-message-id provider-tool-spotlight-ack-1
@@ -12864,6 +12892,19 @@ examples/workflows/gitclaw.yml
   select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-mission-control fixture token, and avoid hidden channel/message/
   mission/lane/note/step/command sentinels.
+- A `gh`-driven channel-cockpit-slash E2E harness ingests a real mirrored
+  channel issue, replies with `@gitclaw /channels cockpit research ...`,
+  verifies the provider-facing bounded status-board card, body-free source
+  receipt metadata, duplicate cockpit notification suppression from a later
+  issue comment with the same acknowledgement id, explicit no dynamic-cockpit-
+  generation/external-randomness/command-execution/skill-install/tool-
+  execution/backup-payload-read/soul-body-read/memory-write/source-fetch/live-
+  browse/provider-API/model/workflow/policy/schedule/repository mutation gates,
+  and metadata-only outbox discovery for the acknowledgement. The same channel
+  issue then gets a normal GitHub Models issue-comment follow-up that must
+  select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-cockpit fixture token, and avoid hidden channel/message/cockpit/lane/
+  note/gauge/command sentinels.
 - A `gh`-driven channel-palette-slash E2E harness ingests a real mirrored
   channel issue, replies with `@gitclaw /channels palette ...`, verifies the
   provider-facing lane/shortcut/note card, body-free source receipt metadata,
