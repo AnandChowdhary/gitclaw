@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-04T03:25:06Z",
+  "generated_at": "2026-06-04T03:26:59Z",
   "repo": "AnandChowdhary/gitclaw",
   "event_name": "issue_comment",
   "issue": {
@@ -60,6 +60,24 @@
       "CommentID": 4618663504,
       "Edited": false,
       "Trusted": true
+    },
+    {
+      "Role": "user",
+      "Body": "@gitclaw /channels control-loop research --message-id mission-control-ingest-20260604t032116z --notify-message-id mission-control-notify-20260604t032116z --mission-id mission-control-20260604t032116z\nNote: Keep the loop review-first\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_MISSION_CONTROL_DUPLICATE_20260604t032116z",
+      "Actor": "AnandChowdhary",
+      "AuthorAssociation": "OWNER",
+      "CommentID": 4618667212,
+      "Edited": false,
+      "Trusted": true
+    },
+    {
+      "Role": "assistant",
+      "Body": "## GitClaw Channel Mission Control Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#867`\n- requested_channel_command: `/channels control-loop`\n- channel_mission_control_status: `duplicate`\n- mission_control_card_mode: `bounded-operating-loop`\n- notification_target_issue: `#867`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `c996f8804ad5`\n- source_message_id_sha256_12: `0bd241e48a1b`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `64fe8a854fbf`\n- notify_message_id_auto: `false`\n- mission_id_sha256_12: `cf677c02f334`\n- mission_id_auto: `false`\n- mission_lane_sha256_12: `66f62d1807d3`\n- mission_lane_bytes: `8`\n- mission_step_count: `4`\n- mission_command_count: `4`\n- mission_step_sha256_12: `3d7812fa1291`\n- mission_note_sha256_12: `f18757257d8c`\n- mission_note_bytes: `26`\n- mission_note_lines: `1`\n- mission_note_source: `trailing-note`\n- notification_body_sha256_12: `da50c6f964dd`\n- notification_body_bytes: `1914`\n- notification_body_lines: `39`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- dynamic_loop_generation_performed: `false`\n- external_randomness_used: `false`\n- command_execution_performed: `false`\n- skill_install_performed: `false`\n- tool_execution_performed: `false`\n- backup_payload_read: `false`\n- soul_body_read: `false`\n- memory_write_performed: `false`\n- source_fetch_performed: `false`\n- live_source_browse_performed: `false`\n- artifact_issue_created: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- policy_mutation_performed: `false`\n- schedule_created: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_mission_id_included: `false`\n- raw_mission_lane_included: `false`\n- raw_mission_note_included: `false`\n- raw_mission_steps_included: `false`\n- raw_mission_commands_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_channel_mission_control_action_change: `true`\n- issue_title_sha256_12: `e4b25d021114`\n\nGitClaw queued a provider-facing operating-loop card on the canonical channel issue. The provider card can show bounded phases and copyable next commands, while this source receipt keeps raw ids, lane names, notes, loop text, command text, channel bodies, issue bodies, comments, prompts, tool outputs, and provider message ids out of band. The action uses a static deck and does not call a model, execute commands, install skills, execute tools, read backup payloads, read soul bodies, write memory, fetch sources, browse live sources, create artifact issues, call provider APIs, mutate workflows, change policy, create schedules, use external randomness, or mutate the repository.\n\n### Follow-Up Delivery\n- provider gateways read mission-control cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent mission-control cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate mission-control cards are suppressed by `channel + notify_message_id`",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4618671273,
+      "Edited": false,
+      "Trusted": true
     }
   ],
   "comments": [
@@ -102,6 +120,22 @@
       "author_association": "NONE",
       "created_at": "2026-06-04T03:24:30Z",
       "updated_at": "2026-06-04T03:24:30Z"
+    },
+    {
+      "id": 4618667212,
+      "body": "@gitclaw /channels control-loop research --message-id mission-control-ingest-20260604t032116z --notify-message-id mission-control-notify-20260604t032116z --mission-id mission-control-20260604t032116z\nNote: Keep the loop review-first\nDo not include this duplicate hidden token in any receipt: NOECHO_CHANNEL_MISSION_CONTROL_DUPLICATE_20260604t032116z",
+      "author": "AnandChowdhary",
+      "author_association": "OWNER",
+      "created_at": "2026-06-04T03:25:25Z",
+      "updated_at": "2026-06-04T03:25:25Z"
+    },
+    {
+      "id": 4618671273,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"26928452392\" event_id=\"comment-4618667212\" model=\"gitclaw/channels\" idempotency_key=\"11fcc7b092b142774529ba1d5fba6741\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/26928452392\" --\u003e\n## GitClaw Channel Mission Control Action\n\nGenerated without a model call.\n\n- repository: `AnandChowdhary/gitclaw`\n- source_issue: `#867`\n- requested_channel_command: `/channels control-loop`\n- channel_mission_control_status: `duplicate`\n- mission_control_card_mode: `bounded-operating-loop`\n- notification_target_issue: `#867`\n- notification_comment_id: `0`\n- notification_queued: `false`\n- notification_duplicate_suppressed: `true`\n- route_resolved: `false`\n- requested_route_sha256_12: `none`\n- resolved_route_sha256_12: `none`\n- channel: `telegram`\n- thread_id_sha256_12: `c996f8804ad5`\n- source_message_id_sha256_12: `0bd241e48a1b`\n- source_message_id_auto: `false`\n- notify_message_id_sha256_12: `64fe8a854fbf`\n- notify_message_id_auto: `false`\n- mission_id_sha256_12: `cf677c02f334`\n- mission_id_auto: `false`\n- mission_lane_sha256_12: `66f62d1807d3`\n- mission_lane_bytes: `8`\n- mission_step_count: `4`\n- mission_command_count: `4`\n- mission_step_sha256_12: `3d7812fa1291`\n- mission_note_sha256_12: `f18757257d8c`\n- mission_note_bytes: `26`\n- mission_note_lines: `1`\n- mission_note_source: `trailing-note`\n- notification_body_sha256_12: `da50c6f964dd`\n- notification_body_bytes: `1914`\n- notification_body_lines: `39`\n- target_from_current_channel_issue: `true`\n- model_call_performed: `false`\n- dynamic_loop_generation_performed: `false`\n- external_randomness_used: `false`\n- command_execution_performed: `false`\n- skill_install_performed: `false`\n- tool_execution_performed: `false`\n- backup_payload_read: `false`\n- soul_body_read: `false`\n- memory_write_performed: `false`\n- source_fetch_performed: `false`\n- live_source_browse_performed: `false`\n- artifact_issue_created: `false`\n- provider_api_call_performed: `false`\n- workflow_mutation_performed: `false`\n- policy_mutation_performed: `false`\n- schedule_created: `false`\n- repository_mutation_performed: `false`\n- provider_delivery_performed: `false`\n- provider_delivery_strategy: `channel-outbox + channel-delivery`\n- raw_thread_id_included: `false`\n- raw_source_message_id_included: `false`\n- raw_notify_message_id_included: `false`\n- raw_mission_id_included: `false`\n- raw_mission_lane_included: `false`\n- raw_mission_note_included: `false`\n- raw_mission_steps_included: `false`\n- raw_mission_commands_included: `false`\n- raw_channel_message_body_included: `false`\n- raw_issue_bodies_included: `false`\n- raw_comment_bodies_included: `false`\n- raw_prompts_included: `false`\n- raw_tool_outputs_included: `false`\n- llm_e2e_required_after_channel_mission_control_action_change: `true`\n- issue_title_sha256_12: `e4b25d021114`\n\nGitClaw queued a provider-facing operating-loop card on the canonical channel issue. The provider card can show bounded phases and copyable next commands, while this source receipt keeps raw ids, lane names, notes, loop text, command text, channel bodies, issue bodies, comments, prompts, tool outputs, and provider message ids out of band. The action uses a static deck and does not call a model, execute commands, install skills, execute tools, read backup payloads, read soul bodies, write memory, fetch sources, browse live sources, create artifact issues, call provider APIs, mutate workflows, change policy, create schedules, use external randomness, or mutate the repository.\n\n### Follow-Up Delivery\n- provider gateways read mission-control cards with `gitclaw channel-outbox --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --out \u003cfile\u003e`\n- provider gateways record sent mission-control cards with `gitclaw channel-delivery --channel \u003cprovider\u003e --account-id \u003caccount\u003e --issue-number \u003cissue\u003e --comment-id \u003ccomment\u003e --external-message-id \u003cmessage\u003e`\n- duplicate mission-control cards are suppressed by `channel + notify_message_id`",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-04T03:26:26Z",
+      "updated_at": "2026-06-04T03:26:26Z"
     }
   ]
 }
