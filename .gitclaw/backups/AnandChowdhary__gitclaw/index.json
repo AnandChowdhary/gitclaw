@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-04T06:43:30Z",
+  "generated_at": "2026-06-04T06:45:30Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 766,
   "issues": [
@@ -9795,15 +9795,15 @@
       "number": 876,
       "title": "GitClaw telegram thread channel-soul-drill-e2e-20260604t063934z",
       "path": "issues/000876.json",
-      "backup_generated_at": "2026-06-04T06:43:28Z",
+      "backup_generated_at": "2026-06-04T06:45:28Z",
       "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 5,
-      "transcript_messages": 5
+      "comment_count": 7,
+      "transcript_messages": 7
     }
   ]
 }
