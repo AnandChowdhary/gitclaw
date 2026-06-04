@@ -6200,6 +6200,38 @@ queues the fortune cookie card, validates metadata-only outbox discovery,
 verifies duplicate suppression, and then continues on the same GitHub issue
 with a real GitHub Models repo-reader/search follow-up.
 
+For channel-native puzzle moments that should feel playful but remain bounded,
+GitClaw also supports:
+
+```text
+@gitclaw /channels riddle release --riddle-id <stable-riddle-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
+Note: make the launch puzzle tiny.
+```
+
+`/channels riddle`, `/channels riddle-card`, `/channels thread-riddle`,
+`/channels tiny-riddle`, `/channels micro-riddle`, `/channels brain-teaser`,
+`/channels teaser`, and `/channels puzzle-card` queue one provider-facing
+riddle card back onto the current `gitclaw:channel-thread` issue or an
+explicit reviewed route. The theme is bounded to `focus`, `release`, `debug`,
+`care`, or `fun`; each theme uses a reviewed static deck of five question/hint/
+answer triples. The action deterministically selects one riddle from the
+repository, channel, thread, source message id, notification message id, riddle
+id, theme, note hash, and deck hash. The provider-facing outbound comment may
+show the riddle question, hint, answer, theme, and optional note because that is
+the message being queued for Slack/Telegram. The source receipt remains
+body-free and reports only hashes, counts, selected index, duplicate status,
+outbox delivery instructions, and safety gates. It does not call a model, use
+external randomness, execute commands, create artifacts, create tasks or
+reminders, install skills, execute tools, call provider APIs, edit workflows,
+mutate repository files, persist game state, track scores, or perform provider
+delivery. It does not print raw riddle ids, theme names, notes, deck text,
+question text, hint text, answer text, thread ids, message ids, or channel
+bodies in the source receipt. Duplicates are suppressed by
+`channel + notify_message_id`. Changes to this surface require a live E2E that
+ingests a real channel issue, queues the riddle card, validates metadata-only
+outbox discovery, verifies duplicate suppression, and then continues on the
+same GitHub issue with a real GitHub Models repo-reader/search follow-up.
+
 For channel-native route continuity that should feel like docking a live chat
 thread into another reviewed lane without secretly moving provider state,
 GitClaw also supports:
@@ -10330,6 +10362,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels room-pulse handoff --pulse-id channel-room-pulse-1 --message-id provider-msg-1 --notify-message-id provider-room-pulse-ack-1
 @gitclaw /channels quick-replies handoff --reply-id channel-quick-replies-1 --message-id provider-msg-1 --notify-message-id provider-quick-replies-ack-1
 @gitclaw /channels status-wheel release --wheel-id channel-status-wheel-1 --message-id provider-msg-1 --notify-message-id provider-status-wheel-ack-1
+@gitclaw /channels riddle release --riddle-id channel-riddle-1 --message-id provider-msg-1 --notify-message-id provider-riddle-ack-1
 @gitclaw /channels sticker confetti --sticker-id channel-sticker-1 --message-id provider-msg-1 --notify-message-id provider-sticker-ack-1 --scale 4
 @gitclaw /channels toast launch-ready --toast-id channel-toast-1 --message-id provider-msg-1 --notify-message-id provider-toast-ack-1
 @gitclaw /channels postcard launch-ready --postcard-id channel-postcard-1 --message-id provider-msg-1 --notify-message-id provider-postcard-ack-1
@@ -12879,6 +12912,17 @@ examples/workflows/gitclaw.yml
   issue-comment follow-up that must select `repo-reader`, expose
   `gitclaw.search_files`, recover the channel-status-wheel fixture token, and
   avoid hidden channel/message/wheel/lane/note sentinels.
+- A `gh`-driven channel-riddle-slash E2E harness ingests a real mirrored
+  channel issue, replies with `@gitclaw /channels riddle ...`, verifies the
+  provider-facing deterministic riddle, hint, and answer card, body-free source
+  receipt metadata, duplicate riddle notification suppression from a later
+  issue comment with the same acknowledgement id, explicit no model/randomness/
+  command/artifact/task/reminder/provider-API/workflow/game-state/score/skill/
+  tool/repository mutation gates, and metadata-only outbox discovery for the
+  acknowledgement. The same channel issue then gets a normal GitHub Models
+  issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-riddle fixture token, and avoid
+  hidden channel/message/riddle/theme/note sentinels.
 - A `gh`-driven channel-sticker-slash E2E harness ingests a real mirrored
   channel issue, replies with `@gitclaw /channels sticker ...`, verifies the
   provider-facing sticker card, body-free source receipt metadata, duplicate

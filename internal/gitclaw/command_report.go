@@ -160,6 +160,9 @@ func commandSummaryForReport(entry commandCatalogEntry) string {
 	if !strings.Contains(summary, "deterministic mini-game bingo cards") {
 		summary += " Queue provider-facing deterministic mini-game bingo cards from bounded static decks without model calls, external randomness, game-state persistence, score tracking, provider API calls, workflow edits, or repo mutation."
 	}
+	if !strings.Contains(summary, "deterministic riddle cards") {
+		summary += " Queue provider-facing deterministic riddle cards from bounded static decks without model calls, external randomness, game-state persistence, score tracking, provider API calls, workflow edits, or repo mutation."
+	}
 	if !strings.Contains(summary, "deterministic haiku cards") {
 		summary += " Queue provider-facing deterministic haiku cards from bounded static line decks without model calls, external randomness, media generation, provider API calls, workflow edits, or repo mutation."
 	}

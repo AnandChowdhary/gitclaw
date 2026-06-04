@@ -1555,6 +1555,32 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		status.SetDone()
 		return nil
 	}
+	if IsChannelRiddleActionRequest(ev, cfg) {
+		channelClient, ok := github.(ChannelSendGitHubClient)
+		if !ok {
+			return failStartedTurn(ctx, cfg, github, ev, status, "channel", fmt.Errorf("github client cannot queue channel riddles"))
+		}
+		req, err := BuildChannelRiddleActionRequest(ev, cfg)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "channel", fmt.Errorf("build channel riddle action: %w", err))
+		}
+		result, err := RunChannelRiddle(ctx, cfg, channelClient, req.Options)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "channel", fmt.Errorf("run channel riddle action: %w", err))
+		}
+		body := RenderAssistantComment(Marker{
+			RunID:          envFirst("GITHUB_RUN_ID", "local"),
+			EventID:        eventID(ev),
+			Model:          "gitclaw/channels",
+			IdempotencyKey: key,
+			RunURL:         actionRunURL(ev),
+		}, RenderChannelRiddleActionReport(ev, req, result))
+		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post channel riddle action comment: %w", err))
+		}
+		status.SetDone()
+		return nil
+	}
 	if IsChannelStickerActionRequest(ev, cfg) {
 		channelClient, ok := github.(ChannelSendGitHubClient)
 		if !ok {

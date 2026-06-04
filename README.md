@@ -706,6 +706,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels postcard launch-ready --postcard-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels timer 25m --timer-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels bingo release --bingo-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels riddle release --riddle-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels haiku launch --haiku-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels soundtrack launch --soundtrack-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels story-dice fun --story-dice-id <id> --message-id <id> --notify-message-id <id>
@@ -1115,6 +1116,14 @@ update, while the source receipt keeps raw bingo ids, themes, notes, card
 cells, thread ids, message ids, and channel bodies out of band. This does not
 call a model, use external randomness, persist game state, track scores, call
 provider APIs, edit workflows, or mutate the repository.
+`@gitclaw /channels riddle <theme> --riddle-id <id> --message-id <id>
+--notify-message-id <id>` queues a provider-facing deterministic riddle card
+from bounded static decks such as `focus`, `release`, `debug`, `care`, and
+`fun`. Optional `Note: ...` trailing text is visible in the provider update,
+while the source receipt keeps raw riddle ids, themes, notes, question text,
+hint text, answer text, thread ids, message ids, and channel bodies out of
+band. This does not call a model, use external randomness, persist game state,
+track scores, call provider APIs, edit workflows, or mutate the repository.
 `@gitclaw /channels haiku <theme> --haiku-id <id> --message-id <id>
 --notify-message-id <id>` queues a provider-facing three-line poem card from a
 bounded static line deck. Optional `Note: ...` trailing text is visible in the
@@ -2415,6 +2424,7 @@ scripts/e2e/github-channel-toast-slash.sh
 scripts/e2e/github-channel-postcard-slash.sh
 scripts/e2e/github-channel-timer-slash.sh
 scripts/e2e/github-channel-bingo-slash.sh
+scripts/e2e/github-channel-riddle-slash.sh
 scripts/e2e/github-channel-haiku-slash.sh
 scripts/e2e/github-channel-soundtrack-slash.sh
 scripts/e2e/github-channel-story-dice-slash.sh
@@ -2780,6 +2790,14 @@ proves no model call, external randomness, command execution, artifact/task/
 reminder creation, provider API call, workflow edit, status persistence, skill
 install, tool execution, or repository mutation happened, and then runs a real
 GitHub Models repo-reader/search follow-up.
+The channel-riddle slash harness adds a small channel-native puzzle lane:
+a channel-ingested issue receives `@gitclaw /channels riddle`, queues one
+provider-visible riddle, hint, and answer from a bounded static deck, exposes
+it through metadata-only outbox, suppresses duplicate riddle notifications,
+proves no model call, external randomness, game-state persistence, score
+tracking, provider API call, workflow edit, skill install, tool execution, or
+repository mutation happened, and then runs a real GitHub Models
+repo-reader/search follow-up.
 The channel-fortune-cookie slash harness adds a chat-native tiny ritual:
 a channel-ingested issue receives `@gitclaw /channels fortune-cookie`, queues
 one provider-visible fortune, next prompt, and lucky number from a bounded

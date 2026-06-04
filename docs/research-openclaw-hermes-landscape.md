@@ -5290,6 +5290,29 @@ Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw
 sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes messaging guide
 (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-04 Channel Riddle Follow-Up
+
+OpenClaw channels and Hermes messaging both support the idea that an assistant
+can be useful in a chat thread without turning every interaction into a large
+model-backed answer. GitClaw's channel riddle action makes that concrete as a
+bounded GitHub-native chat card: `@gitclaw /channels riddle <theme>
+--riddle-id <id> --message-id <id> --notify-message-id <id>` picks one
+question, hint, and answer from a reviewed static deck for `focus`, `release`,
+`debug`, `care`, or `fun` and queues it through the channel outbox.
+
+The source receipt remains metadata-only: route/thread/message/riddle/theme/
+note/deck/question/hint/answer hashes, duplicate status, selected index, and
+explicit no-model/no-external-randomness/no-command/no-artifact/no-task/
+no-reminder/no-skill-install/no-tool/no-provider-API/no-workflow/no-repository
+mutation gates. Acceptance requires a live channel-ingest issue, one riddle
+notification, duplicate notification suppression, metadata-only outbox proof,
+and a real GitHub Models repo-reader/search follow-up on the same channel
+issue.
+
+Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw
+sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-04 Channel Fortune Cookie Follow-Up
 
 OpenClaw-style channels and Hermes-style messaging both make room for lightweight

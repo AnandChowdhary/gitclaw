@@ -302,4 +302,5 @@ channel arcade unique search fixture phrase => GITCLAW_CHANNEL_ARCADE_CONTEXT_V1
 channel coach unique search fixture phrase => GITCLAW_CHANNEL_COACH_CONTEXT_V1
 channel quick replies unique search fixture phrase => GITCLAW_CHANNEL_QUICK_REPLIES_CONTEXT_V1
 channel status wheel unique search fixture phrase => GITCLAW_CHANNEL_STATUS_WHEEL_CONTEXT_V1
+channel riddle unique search fixture phrase => GITCLAW_CHANNEL_RIDDLE_CONTEXT_V1
 channel fortune cookie unique search fixture phrase => GITCLAW_CHANNEL_FORTUNE_COOKIE_CONTEXT_V1
