@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-04T04:35:51Z",
+  "generated_at": "2026-06-04T04:37:34Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 760,
   "issues": [
@@ -9712,15 +9712,15 @@
       "number": 870,
       "title": "GitClaw telegram thread channel-fortune-cookie-e2e-20260604t043343z",
       "path": "issues/000870.json",
-      "backup_generated_at": "2026-06-04T04:35:49Z",
-      "event_name": "workflow_dispatch",
+      "backup_generated_at": "2026-06-04T04:37:33Z",
+      "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 3,
-      "transcript_messages": 4
+      "comment_count": 5,
+      "transcript_messages": 5
     }
   ]
 }
