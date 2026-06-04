@@ -5151,6 +5151,31 @@ follow-up on the voice issue.
 Sources: OpenClaw overview (`https://docs.openclaw.ai/`), Hermes messaging
 guide (`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
 
+## 2026-06-04 Channel Skill Drill Follow-Up
+
+OpenClaw channels and Hermes messaging both point toward assistant interaction
+that can be useful inside a live chat thread without turning every channel
+message into an open-ended model answer. GitClaw's skill system adds another
+piece of that translation: repo-local skills are reviewed files, so a channel
+should be able to practice with a skill from metadata before asking the model to
+load full instructions.
+
+GitClaw's version is `@gitclaw /channels skill-drill <focus> --drill-id <id>
+--message-id <id> --notify-message-id <id>`. It selects one enabled,
+requirement-complete repo-local skill from safe metadata and queues a
+provider-facing warmup/practice/verify/next-step card. The source receipt stays
+metadata-only: route/thread/message/drill/focus/mode/selection hashes, candidate
+counts, drill step count, duplicate status, and explicit no-model/no-tool/
+no-skill-install/no-skill-update/no-registry/no-installer/no-provider-API/
+no-repository mutation gates. Acceptance requires a live channel-ingest issue,
+one skill-drill notification, duplicate `skill-practice` suppression,
+metadata-only outbox proof, and a real GitHub Models repo-reader/search
+follow-up on the same channel issue.
+
+Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw
+sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes messaging guide
+(`https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md`).
+
 ## 2026-06-04 Channel Cockpit Follow-Up
 
 OpenClaw and Hermes both make chat feel like an operator surface, but their

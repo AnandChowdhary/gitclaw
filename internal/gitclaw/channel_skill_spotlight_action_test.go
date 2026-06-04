@@ -286,6 +286,222 @@ Note: try a safe reader card.`,
 	}
 }
 
+func TestHandleChannelSkillDrillQueuesPracticeCardWithoutLLM(t *testing.T) {
+	root := t.TempDir()
+	writeChannelSkillSpotlightFixture(t, root)
+
+	threadBody := RenderChannelThreadBody(ChannelIngestOptions{
+		Channel:  "telegram",
+		ThreadID: "chat-skill-drill-123",
+	})
+	ev, err := ParseEvent("issue_comment", []byte(`{
+		"action": "created",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 909,
+			"title": "GitClaw telegram thread chat-skill-drill-123",
+			"body": "<!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"chat-skill-drill-123\" -->\nGitClaw channel bridge thread.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}, {"name": "gitclaw:channel"}]
+		},
+		"comment": {
+			"id": 90901,
+			"body": "@gitclaw /channels skill-drill repo-reader --message-id skill-drill-inbound-909 --notify-message-id skill-drill-notify-909 --drill-id Skill.Drill.Secret.909\nDo not include this command hidden token in the receipt: CHANNEL_SKILL_DRILL_COMMAND_MARKER.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"}
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent returned error: %v", err)
+	}
+	cfg := DefaultConfig()
+	cfg.Workdir = root
+	github := &FakeGitHub{
+		Issues: []Issue{{
+			Number: 909,
+			Title:  "GitClaw telegram thread chat-skill-drill-123",
+			Body:   threadBody,
+			Labels: []string{"gitclaw", "gitclaw:channel"},
+		}},
+		CommentsByIssue: map[int][]Comment{909: {{
+			ID: 90900,
+			Body: RenderChannelMessageComment(ChannelIngestOptions{
+				Channel:   "telegram",
+				ThreadID:  "chat-skill-drill-123",
+				MessageID: "skill-drill-inbound-909",
+				Author:    "telegram",
+				Body:      "Original mirrored skill drill command with CHANNEL_SKILL_DRILL_INGEST_MARKER.",
+			}),
+		}}},
+		IssueLabels: map[int][]string{909: []string{"gitclaw", "gitclaw:channel"}},
+	}
+	llm := &FakeLLM{Response: "should not be called"}
+
+	if err := Handle(context.Background(), ev, cfg, github, llm); err != nil {
+		t.Fatalf("Handle returned error: %v", err)
+	}
+	if llm.Calls != 0 {
+		t.Fatalf("LLM called %d times for channel skill drill action", llm.Calls)
+	}
+	if len(github.Issues) != 1 {
+		t.Fatalf("skill drill action should not create artifact issues: %#v", github.Issues)
+	}
+
+	sourceComments := github.CommentsByIssue[909]
+	if len(sourceComments) != 3 {
+		t.Fatalf("source comments = %d, want message + outbound + receipt: %#v", len(sourceComments), sourceComments)
+	}
+	outbound := sourceComments[1].Body
+	for _, want := range []string{
+		"gitclaw:channel-outbound",
+		`channel="telegram"`,
+		`message_id="skill-drill-notify-909"`,
+		"GitClaw channel skill drill",
+		"Drill status: ok",
+		"Focus hash: ",
+		"Focus terms: 1",
+		"Candidate skills: 1",
+		"Selection hash: ",
+		"Skill drill id hash: ",
+		"Drill:",
+		"skill_name=repo-reader",
+		"folder=repo-reader",
+		"enabled=true",
+		"warmup: ask for the smallest task where this skill should activate.",
+		"practice: run a normal GitClaw conversation that explicitly names the skill.",
+		"verify: check the assistant marker for selected skills and prompt-visible tools.",
+		"next: open a rehearsal issue if the answer needs more than one turn.",
+		"@gitclaw /channels skill-map repo-reader",
+		"@gitclaw /channels rehearse-skill repo-reader",
+		"Skill install: not performed by this action.",
+		"Skill update: not performed by this action.",
+		"Registry contact: not performed by this action.",
+		"Installer scripts: not run by this action.",
+		"Tool execution: not performed by this action.",
+		"Model call: not performed by this action.",
+		"Repository mutation: not performed by this action.",
+		"Provider delivery: queued through GitHub channel outbox.",
+	} {
+		if !strings.Contains(outbound, want) {
+			t.Fatalf("skill drill notification missing %q:\n%s", want, outbound)
+		}
+	}
+	for _, leaked := range []string{"CHANNEL_SKILL_DRILL_INGEST_MARKER", "CHANNEL_SKILL_DRILL_COMMAND_MARKER", "CHANNEL_SKILL_SPOTLIGHT_DESCRIPTION_SECRET", "CHANNEL_SKILL_SPOTLIGHT_BODY_SECRET", "Skill.Drill.Secret.909", "Use read-only repository context."} {
+		if strings.Contains(outbound, leaked) {
+			t.Fatalf("skill drill notification leaked %q:\n%s", leaked, outbound)
+		}
+	}
+
+	receipt := sourceComments[2].Body
+	for _, want := range []string{
+		"GitClaw Channel Skill Drill Action",
+		"Generated without a model call",
+		`model="gitclaw/channels"`,
+		"requested_channel_command: `/channels skill-drill`",
+		"channel_skill_spotlight_status: `queued`",
+		"skill_spotlight_status: `ok`",
+		"skill_card_mode: `repo-local-skill-drill`",
+		"notification_target_issue: `#909`",
+		"notification_comment_id: `9000`",
+		"notification_queued: `true`",
+		"notification_duplicate_suppressed: `false`",
+		"target_from_current_channel_issue: `true`",
+		"skill_spotlight_id_sha256_12: `",
+		"skill_card_mode_sha256_12: `",
+		"skill_card_mode_bytes: `5`",
+		"spotlight_focus_bytes: `11`",
+		"spotlight_focus_terms: `1`",
+		"spotlight_focus_source: `positional`",
+		"candidate_skills: `1`",
+		"selected_index: `0`",
+		"selected_skill_name_sha256_12: `",
+		"selection_sha256_12: `",
+		"validation_status: `ok`",
+		"notification_body_sha256_12: `",
+		"drill_step_count: `4`",
+		"progressive_disclosure_enabled: `true`",
+		"deterministic_selection: `true`",
+		"external_randomness_used: `false`",
+		"skill_install_allowed: `false`",
+		"skill_update_allowed: `false`",
+		"registry_contact_allowed: `false`",
+		"installer_scripts_run: `false`",
+		"model_call_performed: `false`",
+		"tool_execution_performed: `false`",
+		"repository_mutation_performed: `false`",
+		"provider_delivery_performed: `false`",
+		"raw_skill_card_mode_included: `false`",
+		"raw_skill_names_included: `false`",
+		"raw_skill_paths_included: `false`",
+		"raw_skill_descriptions_included: `false`",
+		"raw_skill_bodies_included: `false`",
+		"raw_channel_message_body_included: `false`",
+		"llm_e2e_required_after_channel_skill_drill_change: `true`",
+	} {
+		if !strings.Contains(receipt, want) {
+			t.Fatalf("channel skill drill receipt missing %q:\n%s", want, receipt)
+		}
+	}
+	for _, leaked := range []string{"repo-reader", ".gitclaw/SKILLS/repo-reader/SKILL.md", "CHANNEL_SKILL_DRILL_INGEST_MARKER", "CHANNEL_SKILL_DRILL_COMMAND_MARKER", "CHANNEL_SKILL_SPOTLIGHT_DESCRIPTION_SECRET", "CHANNEL_SKILL_SPOTLIGHT_BODY_SECRET", "Use read-only repository context.", "chat-skill-drill-123", "skill-drill-inbound-909", "skill-drill-notify-909", "Skill.Drill.Secret.909"} {
+		if strings.Contains(receipt, leaked) {
+			t.Fatalf("channel skill drill receipt leaked %q:\n%s", leaked, receipt)
+		}
+	}
+
+	duplicateEv, err := ParseEvent("issue_comment", []byte(`{
+		"action": "created",
+		"repository": {"full_name": "owner/repo", "default_branch": "main"},
+		"issue": {
+			"number": 909,
+			"title": "GitClaw telegram thread chat-skill-drill-123",
+			"body": "<!-- gitclaw:channel-thread channel=\"telegram\" thread_id=\"chat-skill-drill-123\" -->\nGitClaw channel bridge thread.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"},
+			"labels": [{"name": "gitclaw"}, {"name": "gitclaw:channel"}]
+		},
+		"comment": {
+			"id": 90902,
+			"body": "@gitclaw /channels skill-practice repo-reader --message-id skill-drill-inbound-909 --notify-message-id skill-drill-notify-909 --drill-id Skill.Drill.Secret.909\nDo not leak duplicate hidden token CHANNEL_SKILL_DRILL_DUPLICATE_MARKER.",
+			"author_association": "MEMBER",
+			"user": {"login": "alice", "type": "User"}
+		},
+		"sender": {"login": "alice", "type": "User"}
+	}`))
+	if err != nil {
+		t.Fatalf("ParseEvent duplicate returned error: %v", err)
+	}
+	if err := Handle(context.Background(), duplicateEv, cfg, github, llm); err != nil {
+		t.Fatalf("Handle duplicate returned error: %v", err)
+	}
+	if got := len(github.CommentsByIssue[909]); got != 4 {
+		t.Fatalf("duplicate skill drill posted another outbound comment: comments=%d %#v", got, github.CommentsByIssue[909])
+	}
+	duplicateReceipt := github.CommentsByIssue[909][3].Body
+	for _, want := range []string{
+		"GitClaw Channel Skill Drill Action",
+		"requested_channel_command: `/channels skill-practice`",
+		"channel_skill_spotlight_status: `duplicate`",
+		"skill_card_mode: `repo-local-skill-drill`",
+		"notification_queued: `false`",
+		"notification_duplicate_suppressed: `true`",
+		"model_call_performed: `false`",
+		"repository_mutation_performed: `false`",
+		"skill_install_allowed: `false`",
+		"skill_update_allowed: `false`",
+	} {
+		if !strings.Contains(duplicateReceipt, want) {
+			t.Fatalf("duplicate skill drill receipt missing %q:\n%s", want, duplicateReceipt)
+		}
+	}
+	for _, leaked := range []string{"repo-reader", "CHANNEL_SKILL_DRILL_DUPLICATE_MARKER", "chat-skill-drill-123", "skill-drill-inbound-909", "skill-drill-notify-909", "Skill.Drill.Secret.909"} {
+		if strings.Contains(duplicateReceipt, leaked) {
+			t.Fatalf("duplicate skill drill receipt leaked %q:\n%s", leaked, duplicateReceipt)
+		}
+	}
+}
+
 func writeChannelSkillSpotlightFixture(t *testing.T, root string) {
 	t.Helper()
 	writeTestFile(t, root, ".gitclaw/SKILLS/repo-reader/SKILL.md", `---

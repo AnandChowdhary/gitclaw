@@ -714,6 +714,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels arcade fun --arcade-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels coach skills --coach-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels skill-spotlight repo-reader --spotlight-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels skill-drill repo-reader --drill-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels research-spotlight openclaw --spotlight-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels research-map openclaw --map-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels nudge release-captain --nudge-id <id> --message-id <id> --notify-message-id <id> --tone gentle
@@ -1325,6 +1326,12 @@ comments, prompts, and tool outputs out of the source receipt. It does not
 install or update skills, contact registries, run installers, execute tools,
 call a model, call provider APIs, use external randomness, or mutate the
 repository.
+`@gitclaw /channels skill-drill <focus> --drill-id <id> --message-id <id>
+--notify-message-id <id>` uses the same safe skill metadata lane but queues a
+provider-facing practice card: warmup, practice, verify, and next-step prompts
+for one selected skill. Aliases include `/channels skill-practice` and
+`/channels skill-warmup`; the source receipt still keeps raw skill names, paths,
+descriptions, bodies, focus text, ids, and channel bodies out of band.
 `@gitclaw /channels research-spotlight <focus> --spotlight-id <id>
 --message-id <id> --notify-message-id <id>` queues a deterministic
 provider-facing research card back to Slack/Telegram. The card draws from the
@@ -2261,6 +2268,7 @@ scripts/e2e/github-channel-memory-search-slash.sh
 scripts/e2e/github-channel-skill-search-slash.sh
 scripts/e2e/github-channel-skill-info-slash.sh
 scripts/e2e/github-channel-skill-spotlight-slash.sh
+scripts/e2e/github-channel-skill-drill-slash.sh
 scripts/e2e/github-channel-skill-map-slash.sh
 scripts/e2e/github-channel-bundle-map-slash.sh
 scripts/e2e/github-channel-source-map-slash.sh
@@ -3423,6 +3431,14 @@ contacting registries, loading skill bodies, using randomness, or calling a
 model, checks duplicate notification suppression, exposes the spotlight through
 metadata-only outbox, and then continues on the channel thread itself with a
 real GitHub Models repo-reader/search follow-up.
+The channel-skill-drill slash harness adds a practice lane for repo-local
+skills: a channel-ingested issue receives `@gitclaw /channels skill-drill`,
+queues one provider-facing warmup/practice/verify/next-step card without loading
+skill bodies, installing skills, executing tools, calling a model, contacting
+registries, or mutating the repository, checks duplicate `skill-practice`
+suppression, exposes the drill through metadata-only outbox, and then continues
+on the channel thread itself with a real GitHub Models repo-reader/search
+follow-up.
 The channel-skill-map slash harness adds the safe sequence card: a
 channel-ingested issue receives `@gitclaw /channels skill-map`, queues a
 provider-facing path from skill status/search/info to reviewed proposal,

@@ -259,6 +259,7 @@ channel tool spotlight unique search fixture phrase => GITCLAW_CHANNEL_TOOL_SPOT
 channel skill search unique search fixture phrase => GITCLAW_CHANNEL_SKILL_SEARCH_CONTEXT_V1
 channel skill info unique search fixture phrase => GITCLAW_CHANNEL_SKILL_INFO_CONTEXT_V1
 channel skill spotlight unique search fixture phrase => GITCLAW_CHANNEL_SKILL_SPOTLIGHT_CONTEXT_V1
+channel skill drill unique search fixture phrase => GITCLAW_CHANNEL_SKILL_DRILL_CONTEXT_V1
 channel research spotlight unique search fixture phrase => GITCLAW_CHANNEL_RESEARCH_SPOTLIGHT_CONTEXT_V1
 channel research map unique search fixture phrase => GITCLAW_CHANNEL_RESEARCH_MAP_CONTEXT_V1
 channel mission-control unique search fixture phrase => GITCLAW_CHANNEL_MISSION_CONTROL_CONTEXT_V1

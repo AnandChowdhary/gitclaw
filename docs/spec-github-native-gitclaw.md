@@ -8546,37 +8546,48 @@ without installing skills or loading full skill bodies:
 ```text
 @gitclaw /channels skill-spotlight repo-reader --spotlight-id <stable-spotlight-id> --message-id <provider-message-id> --notify-message-id <stable-outbound-id>
 Note: Show us one safe capability to try next.
+
+@gitclaw /channels skill-drill repo-reader --drill-id <stable-drill-id> --message-id <provider-message-id> --notify-message-id <stable-outbound-id>
 ```
 
 `/channels skill-spotlight`, `/channels skills-spotlight`,
 `/channels spotlight-skill`, `/channels skill-pick`,
 `/channels skill-draw`, `/channels capability-spotlight`, and
-`/channels capability-draw` infer the current channel and thread id from the
-issue marker when no explicit route/channel/thread target is provided. They
-select one requirement-complete, enabled repo-local skill deterministically
+`/channels capability-draw` queue one provider-facing discovery card.
+`/channels skill-drill`, `/channels skills-drill`, `/channels drill-skill`,
+`/channels skill-practice`, `/channels skills-practice`,
+`/channels practice-skill`, and `/channels skill-warmup` queue the matching
+provider-facing practice card with warmup, practice, verify, and next-step
+prompts. Both modes infer the current channel and thread id from the issue
+marker when no explicit route/channel/thread target is provided. They select
+one requirement-complete, enabled repo-local skill deterministically
 from safe metadata. A focus term may narrow candidates by skill name, folder,
 path, or frontmatter description; when no focused eligible candidate exists,
 the card may fall back to the full eligible catalog and marks that fallback in
-metadata. The provider-facing outbound comment reports spotlight status, focus
-hash/term count, skill counts, candidate count, deterministic selected index,
-selection hashes, validation summary, selected skill name/path/folder,
-enablement flags, selected-for-turn flag, frontmatter/description presence,
-size, line count, file hash, requirement counts, and safe follow-up commands
-such as skill-info and skill-map. The source receipt stays stricter: it
+metadata. The provider-facing spotlight outbound comment reports spotlight
+status, focus hash/term count, skill counts, candidate count, deterministic
+selected index, selection hashes, validation summary, selected skill
+name/path/folder, enablement flags, selected-for-turn flag,
+frontmatter/description presence, size, line count, file hash, requirement
+counts, and safe follow-up commands such as skill-info and skill-map. The
+provider-facing drill outbound comment shows the selected skill name/folder,
+file hash, and four bounded practice prompts without loading or printing
+`SKILL.md` bodies. The source receipt stays stricter: it
 records target issue/comment ids, route/thread/message hashes,
-skill-spotlight id hash, focus/note hashes, selected-name/path/folder hashes,
-selection seed/hash, outbox delivery instructions, and safety gates. It does
-not call a model, execute tools, contact registries, install or update skills,
-run installers, use external randomness, call provider APIs, mutate repository
-files, print raw focus text, print raw notes, print raw skill spotlight ids,
-print raw provider thread/message ids, print raw skill names, print raw skill
-paths, print raw skill descriptions, print `SKILL.md` bodies, print channel
-bodies, print issue/comment bodies, print prompts, or print tool outputs.
+skill-spotlight/drill id hash, mode hash, focus/note hashes,
+selected-name/path/folder hashes, selection seed/hash, drill step count, outbox
+delivery instructions, and safety gates. It does not call a model, execute
+tools, contact registries, install or update skills, run installers, use
+external randomness, call provider APIs, mutate repository files, print raw
+focus text, print raw notes, print raw skill spotlight/drill ids, print raw
+provider thread/message ids, print raw skill names, print raw skill paths,
+print raw skill descriptions, print `SKILL.md` bodies, print channel bodies,
+print issue/comment bodies, print prompts, or print tool outputs.
 Duplicates are suppressed by `channel + notify_message_id`. Changes to this
 surface require a live E2E that ingests a real channel issue, queues a
-skill-spotlight notification, validates metadata-only outbox discovery,
-verifies duplicate suppression, proves deterministic/no-randomness and no
-model/tool/skill-install/registry/provider/repo side effects, and then
+skill-spotlight or skill-drill notification, validates metadata-only outbox
+discovery, verifies duplicate suppression, proves deterministic/no-randomness
+and no model/tool/skill-install/registry/provider/repo side effects, and then
 continues on the same GitHub issue with a real GitHub Models
 repo-reader/search follow-up.
 
@@ -10327,6 +10338,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels skill-search repo-reader --message-id provider-msg-1 --notify-message-id provider-skill-search-ack-1
 @gitclaw /channels skill-info repo-reader --message-id provider-msg-1 --notify-message-id provider-skill-info-ack-1
 @gitclaw /channels skill-spotlight repo-reader --spotlight-id channel-skill-spotlight-1 --message-id provider-msg-1 --notify-message-id provider-skill-spotlight-ack-1
+@gitclaw /channels skill-drill repo-reader --drill-id channel-skill-drill-1 --message-id provider-msg-1 --notify-message-id provider-skill-drill-ack-1
 @gitclaw /channels skill-map repo-reader --map-id channel-skill-map-1 --message-id provider-msg-1 --notify-message-id provider-skill-map-ack-1
 @gitclaw /channels bundle-map repo-context --map-id channel-bundle-map-1 --message-id provider-msg-1 --notify-message-id provider-bundle-map-ack-1
 @gitclaw /channels source-map repo-reader --map-id channel-source-map-1 --message-id provider-msg-1 --notify-message-id provider-source-map-ack-1
@@ -13854,6 +13866,19 @@ examples/workflows/gitclaw.yml
   `gitclaw.search_files`, recover the channel-skill-spotlight fixture token,
   and avoid hidden channel, account, message, spotlight, focus, skill-body, and
   notification sentinels.
+- A `gh`-driven channel-skill-drill-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels skill-drill ...` on that mirrored thread, verifies one
+  provider-facing bounded skill practice card, source receipt metadata without
+  raw focus text, drill ids, notes, skill names, paths, descriptions, or bodies,
+  duplicate `skill-practice` notification suppression, metadata-only outbox
+  discovery, deterministic/no-randomness markers, and explicit no-model-call/
+  no-tool-execution/no-skill-install/no-skill-update/no-registry-contact/
+  no-installer-run/no-repository-mutation/no-provider-API flags. The
+  channel-thread issue then gets a normal GitHub Models issue-comment follow-up
+  that must select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-skill-drill fixture token, and avoid hidden channel, account,
+  message, drill, focus, skill-body, and notification sentinels.
 - A `gh`-driven channel-skill-map-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels skill-map ...` on that mirrored thread, verifies one

@@ -17,6 +17,7 @@ type ChannelSkillSpotlightOptions struct {
 	SourceMessageID   string
 	NotifyMessageID   string
 	SpotlightID       string
+	Mode              string
 	Focus             string
 	Note              string
 	Author            string
@@ -52,6 +53,7 @@ type ChannelSkillSpotlightResult struct {
 	MessageHash         string
 	NotifyHash          string
 	SpotlightIDHash     string
+	ModeHash            string
 	FocusHash           string
 	NoteHash            string
 	SelectedNameHash    string
@@ -81,6 +83,8 @@ type ChannelSkillSpotlightActionRequest struct {
 	RequestedMsgHash    string
 	NotifyMessageHash   string
 	SpotlightIDHash     string
+	ModeHash            string
+	ModeBytes           int
 	FocusSHA            string
 	FocusBytes          int
 	FocusTerms          int
@@ -109,7 +113,7 @@ func isChannelSkillSpotlightActionFields(fields []string) bool {
 		return false
 	}
 	switch cleanChannelSkillSpotlightSubcommand(fields[1]) {
-	case "skill-spotlight", "skills-spotlight", "spotlight-skill", "skill-pick", "skill-draw", "capability-spotlight", "capability-draw":
+	case "skill-spotlight", "skills-spotlight", "spotlight-skill", "skill-pick", "skill-draw", "capability-spotlight", "capability-draw", "skill-drill", "skills-drill", "drill-skill", "skill-practice", "skills-practice", "practice-skill", "skill-warmup":
 		return true
 	default:
 		return false
@@ -125,6 +129,7 @@ func BuildChannelSkillSpotlightActionRequest(ev Event, cfg Config, repoContext R
 		Options: ChannelSkillSpotlightOptions{
 			Repo:              ev.Repo,
 			SourceIssueNumber: ev.Issue.Number,
+			Mode:              channelSkillSpotlightModeForSubcommand(fields[1]),
 			Focus:             defaultChannelSkillSpotlightFocus(fields[1]),
 		},
 		Command:    strings.ToLower(strings.Trim(fields[0], " \t\r\n.,:;!?")),
@@ -167,7 +172,7 @@ func BuildChannelSkillSpotlightActionRequest(ev Event, cfg Config, repoContext R
 			}
 			req.Options.NotifyMessageID = fields[i+1]
 			i++
-		case "--spotlight-id", "--skill-spotlight-id", "--skill-pick-id", "--skill-draw-id", "--id":
+		case "--spotlight-id", "--skill-spotlight-id", "--skill-pick-id", "--skill-draw-id", "--drill-id", "--skill-drill-id", "--practice-id", "--id":
 			if i+1 >= len(fields) {
 				return ChannelSkillSpotlightActionRequest{}, fmt.Errorf("%s requires a value", field)
 			}
@@ -237,6 +242,8 @@ func BuildChannelSkillSpotlightActionRequest(ev Event, cfg Config, repoContext R
 	req.RequestedMsgHash = shortDocumentHash(req.Options.SourceMessageID)
 	req.NotifyMessageHash = shortDocumentHash(req.Options.NotifyMessageID)
 	req.SpotlightIDHash = shortDocumentHash(req.Options.SpotlightID)
+	req.ModeHash = shortDocumentHash(req.Options.Mode)
+	req.ModeBytes = len(req.Options.Mode)
 	req.FocusSHA = req.Report.FocusHash
 	req.FocusBytes = len(req.Options.Focus)
 	req.FocusTerms = req.Report.FocusTerms
@@ -343,6 +350,7 @@ func RunChannelSkillSpotlight(ctx context.Context, cfg Config, github ChannelSen
 		MessageHash:         shortDocumentHash(opts.SourceMessageID),
 		NotifyHash:          shortDocumentHash(opts.NotifyMessageID),
 		SpotlightIDHash:     shortDocumentHash(opts.SpotlightID),
+		ModeHash:            shortDocumentHash(opts.Mode),
 		FocusHash:           report.FocusHash,
 		NoteHash:            shortDocumentHash(opts.Note),
 		SelectedNameHash:    shortDocumentHash(report.SelectedSkill.Name),
@@ -382,6 +390,10 @@ func RenderChannelSkillSpotlightActionReport(ev Event, req ChannelSkillSpotlight
 	spotlightIDHash := result.SpotlightIDHash
 	if spotlightIDHash == "" {
 		spotlightIDHash = req.SpotlightIDHash
+	}
+	modeHash := result.ModeHash
+	if modeHash == "" {
+		modeHash = req.ModeHash
 	}
 	focusHash := result.FocusHash
 	if focusHash == "" {
@@ -428,7 +440,11 @@ func RenderChannelSkillSpotlightActionReport(ev Event, req ChannelSkillSpotlight
 		report = req.Report
 	}
 	var b strings.Builder
-	b.WriteString("## GitClaw Channel Skill Spotlight Action\n\n")
+	if channelSkillSpotlightMode(req.Options.Mode) == "drill" {
+		b.WriteString("## GitClaw Channel Skill Drill Action\n\n")
+	} else {
+		b.WriteString("## GitClaw Channel Skill Spotlight Action\n\n")
+	}
 	b.WriteString("Generated without a model call.\n\n")
 	fmt.Fprintf(&b, "- repository: `%s`\n", ev.Repo)
 	fmt.Fprintf(&b, "- source_issue: `#%d`\n", ev.Issue.Number)
@@ -436,6 +452,7 @@ func RenderChannelSkillSpotlightActionReport(ev Event, req ChannelSkillSpotlight
 	fmt.Fprintf(&b, "- channel_skill_spotlight_status: `%s`\n", status)
 	fmt.Fprintf(&b, "- skill_spotlight_status: `%s`\n", report.SpotlightStatus)
 	fmt.Fprintf(&b, "- spotlight_mode: `%s`\n", "repo-local-skill-deterministic-draw")
+	fmt.Fprintf(&b, "- skill_card_mode: `%s`\n", channelSkillSpotlightReportMode(req.Options.Mode))
 	fmt.Fprintf(&b, "- notification_target_issue: `#%d`\n", result.Notification.IssueNumber)
 	fmt.Fprintf(&b, "- notification_comment_id: `%d`\n", result.Notification.CommentID)
 	fmt.Fprintf(&b, "- notification_queued: `%t`\n", notificationQueued)
@@ -451,6 +468,8 @@ func RenderChannelSkillSpotlightActionReport(ev Event, req ChannelSkillSpotlight
 	fmt.Fprintf(&b, "- notify_message_id_auto: `%t`\n", req.AutoNotifyMessageID)
 	fmt.Fprintf(&b, "- skill_spotlight_id_sha256_12: `%s`\n", noneIfEmpty(spotlightIDHash))
 	fmt.Fprintf(&b, "- skill_spotlight_id_auto: `%t`\n", req.AutoSpotlightID)
+	fmt.Fprintf(&b, "- skill_card_mode_sha256_12: `%s`\n", noneIfEmpty(modeHash))
+	fmt.Fprintf(&b, "- skill_card_mode_bytes: `%d`\n", req.ModeBytes)
 	fmt.Fprintf(&b, "- spotlight_focus_sha256_12: `%s`\n", noneIfEmpty(focusHash))
 	fmt.Fprintf(&b, "- spotlight_focus_bytes: `%d`\n", req.FocusBytes)
 	fmt.Fprintf(&b, "- spotlight_focus_terms: `%d`\n", report.FocusTerms)
@@ -476,6 +495,7 @@ func RenderChannelSkillSpotlightActionReport(ev Event, req ChannelSkillSpotlight
 	fmt.Fprintf(&b, "- notification_body_sha256_12: `%s`\n", noneIfEmpty(notificationBodySHA))
 	fmt.Fprintf(&b, "- notification_body_bytes: `%d`\n", notificationBytes)
 	fmt.Fprintf(&b, "- notification_body_lines: `%d`\n", notificationLines)
+	fmt.Fprintf(&b, "- drill_step_count: `%d`\n", channelSkillSpotlightDrillStepCount(req.Options.Mode, report))
 	fmt.Fprintf(&b, "- target_from_current_channel_issue: `%t`\n", req.TargetFromIssue)
 	fmt.Fprintf(&b, "- progressive_disclosure_enabled: `%t`\n", true)
 	fmt.Fprintf(&b, "- deterministic_selection: `%t`\n", true)
@@ -495,6 +515,7 @@ func RenderChannelSkillSpotlightActionReport(ev Event, req ChannelSkillSpotlight
 	fmt.Fprintf(&b, "- raw_source_message_id_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_notify_message_id_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_skill_spotlight_id_included: `%t`\n", false)
+	fmt.Fprintf(&b, "- raw_skill_card_mode_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_selection_seed_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_skill_names_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_skill_paths_included: `%t`\n", false)
@@ -506,17 +527,27 @@ func RenderChannelSkillSpotlightActionReport(ev Event, req ChannelSkillSpotlight
 	fmt.Fprintf(&b, "- raw_prompts_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- raw_tool_outputs_included: `%t`\n", false)
 	fmt.Fprintf(&b, "- llm_e2e_required_after_channel_skill_spotlight_change: `%t`\n", true)
+	if channelSkillSpotlightMode(req.Options.Mode) == "drill" {
+		fmt.Fprintf(&b, "- llm_e2e_required_after_channel_skill_drill_change: `%t`\n", true)
+	}
 	fmt.Fprintf(&b, "- issue_title_sha256_12: `%s`\n", shortDocumentHash(ev.Issue.Title))
 	b.WriteByte('\n')
-	b.WriteString("GitClaw queued a provider-facing skill spotlight card from repo-local skill metadata. The provider card may name one safe skill so people can act on it, while the source receipt keeps raw skill names, paths, descriptions, bodies, ids, focus text, notes, and channel bodies out of band. The action does not call a model, install or update skills, contact registries, run installers, execute tools, mutate repository files, use external randomness, or call provider APIs.\n\n")
+	if channelSkillSpotlightMode(req.Options.Mode) == "drill" {
+		b.WriteString("GitClaw queued a provider-facing skill drill card from repo-local skill metadata. The provider card may name one safe skill and show tiny practice prompts, while the source receipt keeps raw skill names, paths, descriptions, bodies, ids, focus text, notes, and channel bodies out of band. The action does not call a model, install or update skills, contact registries, run installers, execute tools, mutate repository files, use external randomness, or call provider APIs.\n\n")
+	} else {
+		b.WriteString("GitClaw queued a provider-facing skill spotlight card from repo-local skill metadata. The provider card may name one safe skill so people can act on it, while the source receipt keeps raw skill names, paths, descriptions, bodies, ids, focus text, notes, and channel bodies out of band. The action does not call a model, install or update skills, contact registries, run installers, execute tools, mutate repository files, use external randomness, or call provider APIs.\n\n")
+	}
 	b.WriteString("### Follow-Up Delivery\n")
-	b.WriteString("- provider gateways read skill-spotlight cards with `gitclaw channel-outbox --channel <provider> --account-id <account> --issue-number <issue> --out <file>`\n")
-	b.WriteString("- provider gateways record sent skill-spotlight cards with `gitclaw channel-delivery --channel <provider> --account-id <account> --issue-number <issue> --comment-id <comment> --external-message-id <message>`\n")
-	b.WriteString("- duplicate skill-spotlight notifications are suppressed by `channel + notify_message_id`\n")
+	b.WriteString("- provider gateways read skill cards with `gitclaw channel-outbox --channel <provider> --account-id <account> --issue-number <issue> --out <file>`\n")
+	b.WriteString("- provider gateways record sent skill cards with `gitclaw channel-delivery --channel <provider> --account-id <account> --issue-number <issue> --comment-id <comment> --external-message-id <message>`\n")
+	b.WriteString("- duplicate skill card notifications are suppressed by `channel + notify_message_id`\n")
 	return strings.TrimSpace(b.String())
 }
 
 func renderChannelSkillSpotlightNotificationBody(opts ChannelSkillSpotlightOptions, report ChannelSkillSpotlightReport, repoContext RepoContext) string {
+	if channelSkillSpotlightMode(opts.Mode) == "drill" {
+		return renderChannelSkillDrillNotificationBody(opts, report, repoContext)
+	}
 	var b strings.Builder
 	b.WriteString("GitClaw channel skill spotlight\n\n")
 	fmt.Fprintf(&b, "Spotlight status: %s\n", report.SpotlightStatus)
@@ -561,6 +592,42 @@ func renderChannelSkillSpotlightNotificationBody(opts ChannelSkillSpotlightOptio
 		fmt.Fprintf(&b, "- @gitclaw /channels skill-map %s --map-id <id> --message-id <message> --notify-message-id <message>\n", skill.Name)
 	}
 	b.WriteString("\nRaw skill bodies, skill descriptions, channel bodies, issue bodies, comment bodies, prompts, tool outputs, raw focus text, raw notes, and raw spotlight ids are not included in the source receipt. Skill install: not performed by this action. Skill update: not performed by this action. Registry contact: not performed by this action. Installer scripts: not run by this action. Tool execution: not performed by this action. Model call: not performed by this action. Repository mutation: not performed by this action. Provider delivery: queued through GitHub channel outbox.")
+	return strings.TrimSpace(b.String())
+}
+
+func renderChannelSkillDrillNotificationBody(opts ChannelSkillSpotlightOptions, report ChannelSkillSpotlightReport, repoContext RepoContext) string {
+	var b strings.Builder
+	b.WriteString("GitClaw channel skill drill\n\n")
+	fmt.Fprintf(&b, "Drill status: %s\n", report.SpotlightStatus)
+	fmt.Fprintf(&b, "Focus hash: %s\n", report.FocusHash)
+	fmt.Fprintf(&b, "Focus terms: %d\n", report.FocusTerms)
+	fmt.Fprintf(&b, "Available skills: %d\n", report.AvailableSkills)
+	fmt.Fprintf(&b, "Enabled skills: %d\n", report.EnabledSkills)
+	fmt.Fprintf(&b, "Candidate skills: %d\n", report.CandidateSkills)
+	fmt.Fprintf(&b, "Selected index: %d\n", report.SelectedIndex)
+	fmt.Fprintf(&b, "Selection hash: %s\n", report.SelectionSHA)
+	fmt.Fprintf(&b, "Skill drill id hash: %s\n", shortDocumentHash(opts.SpotlightID))
+	b.WriteString("\nDrill:\n")
+	if report.SpotlightStatus == "no_eligible_skills" || strings.TrimSpace(report.SelectedSkill.Path) == "" {
+		b.WriteString("- No eligible skill was available for this drill.\n")
+	} else {
+		skill := report.SelectedSkill
+		fmt.Fprintf(&b, "- skill_name=%s folder=%s enabled=%t selected_for_this_turn=%t sha256_12=%s\n",
+			skill.Name,
+			skillFolderName(skill.Path),
+			skillIsEnabled(skill),
+			skillSelectedForTurn(repoContext, skill),
+			skill.SHA,
+		)
+		b.WriteString("- warmup: ask for the smallest task where this skill should activate.\n")
+		b.WriteString("- practice: run a normal GitClaw conversation that explicitly names the skill.\n")
+		b.WriteString("- verify: check the assistant marker for selected skills and prompt-visible tools.\n")
+		b.WriteString("- next: open a rehearsal issue if the answer needs more than one turn.\n")
+		b.WriteString("\nTry next:\n")
+		fmt.Fprintf(&b, "- @gitclaw /channels skill-map %s --map-id <id> --message-id <message> --notify-message-id <message>\n", skill.Name)
+		fmt.Fprintf(&b, "- @gitclaw /channels rehearse-skill %s --id <id> --message-id <message>\n", skill.Name)
+	}
+	b.WriteString("\nRaw skill bodies, skill descriptions, channel bodies, issue bodies, comment bodies, prompts, tool outputs, raw focus text, raw notes, and raw drill ids are not included in the source receipt. Skill install: not performed by this action. Skill update: not performed by this action. Registry contact: not performed by this action. Installer scripts: not run by this action. Tool execution: not performed by this action. Model call: not performed by this action. Repository mutation: not performed by this action. Provider delivery: queued through GitHub channel outbox.")
 	return strings.TrimSpace(b.String())
 }
 
@@ -651,6 +718,7 @@ func normalizeChannelSkillSpotlightOptions(opts ChannelSkillSpotlightOptions) Ch
 	opts.SourceMessageID = strings.TrimSpace(opts.SourceMessageID)
 	opts.NotifyMessageID = strings.TrimSpace(opts.NotifyMessageID)
 	opts.SpotlightID = cleanChannelSkillSpotlightID(opts.SpotlightID)
+	opts.Mode = channelSkillSpotlightMode(opts.Mode)
 	opts.Focus = cleanChannelSkillSpotlightFocus(opts.Focus)
 	opts.Note = cleanChannelSkillSpotlightNote(opts.Note)
 	opts.Author = strings.TrimSpace(opts.Author)
@@ -668,7 +736,7 @@ func applyChannelSkillSpotlightRoute(cfg Config, opts ChannelSkillSpotlightOptio
 		ThreadID:  opts.ThreadID,
 		MessageID: opts.NotifyMessageID,
 		Author:    opts.Author,
-		Body:      "GitClaw channel skill spotlight.",
+		Body:      "GitClaw channel skill card.",
 	})
 	if err != nil {
 		return opts, err
@@ -730,6 +798,40 @@ func validateChannelSkillSpotlightActionRequestOptions(opts ChannelSkillSpotligh
 func cleanChannelSkillSpotlightSubcommand(value string) string {
 	value = strings.ToLower(strings.Trim(strings.TrimSpace(value), " \t\r\n.,:;!?`\"'"))
 	return strings.ReplaceAll(value, "_", "-")
+}
+
+func channelSkillSpotlightModeForSubcommand(subcommand string) string {
+	switch cleanChannelSkillSpotlightSubcommand(subcommand) {
+	case "skill-drill", "skills-drill", "drill-skill", "skill-practice", "skills-practice", "practice-skill", "skill-warmup":
+		return "drill"
+	default:
+		return "spotlight"
+	}
+}
+
+func channelSkillSpotlightMode(value string) string {
+	value = strings.ToLower(strings.Trim(strings.TrimSpace(value), " \t\r\n.,:;!?`\"'"))
+	value = strings.NewReplacer("_", "-", " ", "-").Replace(value)
+	switch value {
+	case "drill", "skill-drill", "practice", "skill-practice", "warmup", "skill-warmup":
+		return "drill"
+	default:
+		return "spotlight"
+	}
+}
+
+func channelSkillSpotlightReportMode(value string) string {
+	if channelSkillSpotlightMode(value) == "drill" {
+		return "repo-local-skill-drill"
+	}
+	return "repo-local-skill-spotlight"
+}
+
+func channelSkillSpotlightDrillStepCount(mode string, report ChannelSkillSpotlightReport) int {
+	if channelSkillSpotlightMode(mode) != "drill" || report.SpotlightStatus == "no_eligible_skills" {
+		return 0
+	}
+	return 4
 }
 
 func cleanChannelSkillSpotlightID(value string) string {
@@ -800,8 +902,13 @@ func autoChannelSkillSpotlightSourceMessageID(ev Event) string {
 }
 
 func autoChannelSkillSpotlightID(ev Event, opts ChannelSkillSpotlightOptions) string {
-	seed := strings.Join([]string{eventID(ev), opts.Route, opts.Channel, opts.ThreadID, opts.SourceMessageID, opts.Focus, opts.Note}, "|")
-	return fmt.Sprintf("skill-spotlight-%s-%s", eventID(ev), shortDocumentHash(seed))
+	mode := channelSkillSpotlightMode(opts.Mode)
+	seed := strings.Join([]string{eventID(ev), opts.Route, opts.Channel, opts.ThreadID, opts.SourceMessageID, mode, opts.Focus, opts.Note}, "|")
+	prefix := "skill-spotlight"
+	if mode == "drill" {
+		prefix = "skill-drill"
+	}
+	return fmt.Sprintf("%s-%s-%s", prefix, eventID(ev), shortDocumentHash(seed))
 }
 
 func autoChannelSkillSpotlightNotifyMessageID(ev Event, spotlightID string) string {
@@ -842,6 +949,7 @@ func channelSkillSpotlightSeed(opts ChannelSkillSpotlightOptions, focus string) 
 		opts.SourceMessageID,
 		opts.NotifyMessageID,
 		opts.SpotlightID,
+		channelSkillSpotlightMode(opts.Mode),
 		focus,
 		opts.Note,
 	}, "|")

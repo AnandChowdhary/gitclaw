@@ -126,6 +126,7 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"Queue provider-facing deterministic story-dice cards from bounded static prompt decks",
 		"Queue provider-facing bounded channel arcade play-menu cards",
 		"Queue provider-facing repo-aware next-move coach cards from skill/tool/soul metadata",
+		"Queue provider-facing skill drill practice cards from repo-local skill metadata",
 		"Queue provider-facing bounded capability star-map cards across skills, tools, soul, memory, backups, research, channels, and fun",
 		"Queue provider-facing bounded operating-loop mission-control cards across skills, tools, soul, memory, backups, research, channels, launch, and fun",
 		"Queue provider-facing bounded status-board cockpit cards across skills, tools, soul, memory, backups, research, channels, launch, and fun",
