@@ -113,6 +113,7 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"Queue provider-facing advisory thread mode cards without executing commands",
 		"create reviewable channel dock requests without changing routebooks or provider routes",
 		"queue provider-facing channel warmup cards with deterministic conversation starters",
+		"Queue provider-facing icebreaker warmup cards as low-pressure channel openers",
 		"Queue provider-facing idea-spark warmup cards as deterministic brainstorm starters",
 		"Queue provider-facing vibe-check warmup cards as playful channel check-ins",
 		"Queue provider-facing bounded oracle answer cards with the deterministic picker",

@@ -6100,6 +6100,9 @@ to enter without a model turn, GitClaw also supports:
 @gitclaw /channels warmup tools --warmup-id <stable-warmup-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
 Note: review tool safety before asking for execution.
 
+@gitclaw /channels icebreaker --icebreaker-id <stable-icebreaker-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
+Note: make the thread easy to enter.
+
 @gitclaw /channels spark --spark-id <stable-spark-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
 Note: find the smallest experiment.
 
@@ -6114,12 +6117,14 @@ Note: make the next reply easier to enter.
 `/channels vibe-check`, `/channels vibecheck`, `/channels pulse-check`,
 `/channels pulsecheck`, and `/channels thread-pulse`
 queue one provider-facing conversation-starter card back onto the current
-`gitclaw:channel-thread` issue or an explicit reviewed route. The spark
-aliases are intentionally brainstorm-native and default to the `spark` theme
-when no theme is supplied; the vibe-check aliases are intentionally chat-native
-and default to the `fun` theme when no theme is supplied. The theme is bounded
-to `focus`, `pairing`, `triage`, `design`, `launch`, `retro`, `spark`, `tools`,
-`soul`, `backups`, or `fun`. Each theme
+`gitclaw:channel-thread` issue or an explicit reviewed route. The icebreaker
+aliases are intentionally low-pressure and default to the `icebreaker` theme
+when no theme is supplied; the spark aliases are intentionally brainstorm-native
+and default to the `spark` theme when no theme is supplied; the vibe-check
+aliases are intentionally chat-native and default to the `fun` theme when no
+theme is supplied. The theme is bounded to `focus`, `pairing`, `triage`,
+`design`, `launch`, `retro`, `icebreaker`, `spark`, `tools`, `soul`, `backups`,
+or `fun`. Each theme
 renders three deterministic prompts; the action does not call a model or
 generate prompt text dynamically. Optional `Note: ...` trailing text is
 included in the provider-facing update. The source receipt remains body-free
@@ -6133,7 +6138,8 @@ message ids, or channel bodies in the source receipt. Duplicates are suppressed
 by `channel + notify_message_id`. Changes to this surface require a live E2E
 that ingests a real channel issue, queues the warmup/spark/vibe-check card,
 validates metadata-only outbox discovery, verifies duplicate suppression,
-proves no dynamic prompt generation, quest/task/proposal creation,
+proves no dynamic prompt generation, poll/rollcall/task/schedule creation,
+quest/task/proposal creation,
 command-execution/skill-install/tool-execution/backup-payload-read/
 soul-body-read/provider-API/model/schedule/workflow/repository mutation was
 performed, and then continues on the same GitHub issue with a real GitHub
@@ -10314,6 +10320,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels compass all --compass-id channel-compass-1 --message-id provider-msg-1 --notify-message-id provider-compass-ack-1
 @gitclaw /channels mode tool-review --mode-id channel-mode-1 --message-id provider-msg-1 --notify-message-id provider-mode-ack-1
 @gitclaw /channels warmup tools --warmup-id channel-warmup-1 --message-id provider-msg-1 --notify-message-id provider-warmup-ack-1
+@gitclaw /channels icebreaker --icebreaker-id channel-icebreaker-1 --message-id provider-msg-1 --notify-message-id provider-icebreaker-ack-1
 @gitclaw /channels spark --spark-id channel-spark-1 --message-id provider-msg-1 --notify-message-id provider-spark-ack-1
 @gitclaw /channels dock design-review --dock-id channel-dock-1 --message-id provider-msg-1 --notify-message-id provider-dock-ack-1
 @gitclaw /channels browser --message-id provider-msg-1 --notify-message-id provider-browser-ack-1
@@ -13030,6 +13037,17 @@ examples/workflows/gitclaw.yml
   must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-warmup fixture token, and avoid hidden channel/message/warmup/theme
   sentinels.
+- A `gh`-driven channel-icebreaker-slash E2E harness ingests a real mirrored
+  channel issue, replies with `@gitclaw /channels icebreaker ...`, verifies the
+  provider-facing deterministic low-pressure opener card, body-free source
+  receipt metadata, duplicate notification suppression from a later `kickoff`
+  alias comment with the same acknowledgement id, explicit no poll/rollcall/
+  task/provider-API/model/schedule/workflow/repository mutation gates, and
+  metadata-only outbox discovery for the acknowledgement. The same channel
+  issue then gets a normal GitHub Models issue-comment follow-up that must
+  select `repo-reader`, expose `gitclaw.search_files`, recover the
+  channel-icebreaker fixture token, and avoid hidden channel/message/warmup/
+  theme/note/prompt sentinels.
 - A `gh`-driven channel-spark-slash E2E harness ingests a real mirrored
   channel issue, replies with `@gitclaw /channels spark ...`, verifies the
   provider-facing deterministic idea-spark card, body-free source receipt

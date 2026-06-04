@@ -42,6 +42,7 @@ func TestRenderChannelListReportCarriesDedicatedE2EMarker(t *testing.T) {
 		"`/channels tool-map <tool> --map-id <id> --message-id <message>`",
 		"`/channels dock <target-route> --dock-id <id> --message-id <message>`",
 		"`/channels warmup <theme> --warmup-id <id> --message-id <message>`",
+		"`/channels icebreaker --icebreaker-id <id> --message-id <message>`",
 		"`/channels spark --spark-id <id> --message-id <message>`",
 		"`/channels vibe-check --vibe-id <id> --message-id <message>`",
 		"`/channels backup --message-id <message>`",

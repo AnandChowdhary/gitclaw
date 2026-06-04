@@ -141,6 +141,8 @@ func TestHandleChannelWarmupQueuesWarmupWithoutLLM(t *testing.T) {
 		"quest_created: `false`",
 		"task_created: `false`",
 		"proposal_created: `false`",
+		"poll_created: `false`",
+		"rollcall_created: `false`",
 		"command_execution_performed: `false`",
 		"skill_install_performed: `false`",
 		"tool_execution_performed: `false`",
@@ -216,6 +218,8 @@ func TestHandleChannelWarmupQueuesWarmupWithoutLLM(t *testing.T) {
 		"quest_created: `false`",
 		"task_created: `false`",
 		"proposal_created: `false`",
+		"poll_created: `false`",
+		"rollcall_created: `false`",
 		"command_execution_performed: `false`",
 		"skill_install_performed: `false`",
 		"tool_execution_performed: `false`",
@@ -332,6 +336,56 @@ Note: Find the smallest experiment.`,
 	}
 	if req.AutoNotifyMessageID || req.AutoSourceMessageID || req.AutoWarmupID || req.WarmupIDHash == "" || req.ThemeSHA == "" || req.NoteSHA == "" || req.NotificationBodySHA == "" {
 		t.Fatalf("expected explicit spark hashes: %#v", req)
+	}
+}
+
+func TestBuildChannelWarmupActionRequestParsesIcebreakerDefault(t *testing.T) {
+	ev := Event{
+		Kind:      EventIssueComment,
+		EventName: "issue_comment",
+		Repo:      "owner/repo",
+		Issue: Issue{
+			Number: 44,
+			Title:  "Channel icebreaker",
+			Body:   RenderChannelThreadBody(ChannelIngestOptions{Channel: "telegram", ThreadID: "chat-icebreaker-44"}),
+		},
+		Comment: &Comment{
+			ID: 4401,
+			Body: `@gitclaw /channels icebreaker --message-id source-3 --notify-message-id notify-3 --icebreaker-id Ice.One
+Note: Start softly.`,
+		},
+	}
+	if !IsChannelWarmupActionRequest(ev, DefaultConfig()) {
+		t.Fatal("/channels icebreaker should route to channel warmup")
+	}
+	req, err := BuildChannelWarmupActionRequest(ev, DefaultConfig())
+	if err != nil {
+		t.Fatalf("BuildChannelWarmupActionRequest returned error: %v", err)
+	}
+	if req.Command != "/channels" || req.Subcommand != "icebreaker" || req.Options.Theme != "icebreaker" || req.Options.WarmupID != "ice-one" || req.Options.SourceMessageID != "source-3" || req.Options.NotifyMessageID != "notify-3" || req.PromptCount != 3 || !req.TargetFromIssue {
+		t.Fatalf("unexpected icebreaker warmup parsing: %#v", req)
+	}
+	if req.Options.Note != "Start softly." || req.NoteSource != "trailing-note" {
+		t.Fatalf("unexpected icebreaker note parsing: %#v", req)
+	}
+	body := renderChannelWarmupNotificationBody(req.Options)
+	for _, want := range []string{
+		"GitClaw channel icebreaker.",
+		"Theme: icebreaker",
+		"Frame: Give a quiet thread one easy, low-stakes way to start talking.",
+		"What is one tiny thing worth sharing before we get practical?",
+		"What would make this thread easy for a new person to join?",
+		"What is the lowest-pressure next reply someone could send?",
+		"Icebreaker hash: ",
+		"Icebreaker persistence: advisory only; no durable channel state changed.",
+		"Icebreaker source: GitHub channel action.",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("icebreaker warmup body missing %q:\n%s", want, body)
+		}
+	}
+	if req.AutoNotifyMessageID || req.AutoSourceMessageID || req.AutoWarmupID || req.WarmupIDHash == "" || req.ThemeSHA == "" || req.NoteSHA == "" || req.NotificationBodySHA == "" {
+		t.Fatalf("expected explicit icebreaker hashes: %#v", req)
 	}
 }
 

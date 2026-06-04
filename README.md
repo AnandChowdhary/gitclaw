@@ -713,6 +713,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels compass all --compass-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels mode tool-review --mode-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels warmup tools --warmup-id <id> --message-id <id> --notify-message-id <id>
+@gitclaw /channels icebreaker --icebreaker-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels spark --spark-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels vibe-check --vibe-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels dock <target-route> --dock-id <id> --message-id <id> --notify-message-id <id>
@@ -1220,7 +1221,7 @@ ids, message ids, and channel bodies out of band. This does not persist mode
 state, execute commands, install skills, execute tools, read backup payloads,
 read soul bodies, edit workflows, change policy, create schedules, call
 provider APIs, call a model, or mutate the repository.
-`@gitclaw /channels warmup <focus|pairing|triage|design|launch|retro|spark|tools|soul|backups|fun>
+`@gitclaw /channels warmup <focus|pairing|triage|design|launch|retro|icebreaker|spark|tools|soul|backups|fun>
 --warmup-id <id> --message-id <id> --notify-message-id <id>` queues a
 provider-facing conversation-starter card back to the current Slack/Telegram
 thread. The card includes three deterministic prompts for the selected theme
@@ -1229,6 +1230,12 @@ warmup ids, theme names, prompt text, notes, thread ids, message ids, and
 channel bodies out of band. This does not call a model, execute commands,
 install skills, execute tools, read backup payloads, read soul bodies, create
 schedules, call provider APIs, or mutate the repository.
+`@gitclaw /channels icebreaker --icebreaker-id <id> --message-id <id>
+--notify-message-id <id>` is the low-pressure opener alias for the same
+provider-facing warmup card, defaulting to the `icebreaker` theme when no theme
+is supplied. It gives Slack/Telegram a simple way to start a quiet thread
+without creating polls, rollcalls, tasks, schedules, model calls, provider API
+calls, workflow edits, or repository mutation.
 `@gitclaw /channels spark --spark-id <id> --message-id <id>
 --notify-message-id <id>` is the brainstorming alias for the same
 provider-facing warmup card, defaulting to the `spark` theme when no theme is
@@ -2412,6 +2419,7 @@ scripts/e2e/github-channel-palette-slash.sh
 scripts/e2e/github-channel-compass-slash.sh
 scripts/e2e/github-channel-mode-slash.sh
 scripts/e2e/github-channel-warmup-slash.sh
+scripts/e2e/github-channel-icebreaker-slash.sh
 scripts/e2e/github-channel-spark-slash.sh
 scripts/e2e/github-channel-dock-slash.sh
 scripts/e2e/github-channel-browser-status-slash.sh
@@ -2874,6 +2882,13 @@ notification, proves no command execution/skill install/tool execution/backup
 payload read/soul body read/provider-API/model/workflow/policy/schedule/
 repository mutation happened, and then runs a real GitHub Models
 repo-reader/search follow-up.
+The channel-icebreaker slash harness exercises `@gitclaw /channels
+icebreaker` as the low-pressure opener into the same provider-facing
+conversation-starter card. It queues the bounded `icebreaker` theme, exposes
+the card through metadata-only outbox, suppresses a duplicate notification
+from the `kickoff` alias, proves no poll/rollcall/task/schedule/provider-API/
+model/workflow/repository mutation happened, and then runs a real GitHub
+Models repo-reader/search follow-up.
 The channel-spark slash harness exercises `@gitclaw /channels spark` as the
 brainstorming entry point into the same provider-facing conversation-starter
 card. It queues the bounded `spark` theme, exposes the card through

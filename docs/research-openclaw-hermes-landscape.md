@@ -5225,20 +5225,23 @@ GitHub remains the durable event log and no resident socket or provider webhook
 is required.
 
 GitClaw's version is `@gitclaw /channels warmup <theme> --warmup-id <id>
---message-id <id> --notify-message-id <id>`, plus the chat-native
-`@gitclaw /channels vibe-check --vibe-id <id> --message-id <id>
+--message-id <id> --notify-message-id <id>`, plus the low-pressure
+`@gitclaw /channels icebreaker --icebreaker-id <id> --message-id <id>
+--notify-message-id <id>` alias that defaults to the `icebreaker` theme and the
+chat-native `@gitclaw /channels vibe-check --vibe-id <id> --message-id <id>
 --notify-message-id <id>` alias that defaults to the `fun` theme. It queues one
 provider-facing conversation-starter card with a theme, short frame, three
 deterministic starter prompts, optional note, and body hashes. The source
 receipt remains body-free with only hashes, prompt counts, duplicate status,
 delivery gates, and explicit no-model/no-command/no-skill-install/no-tool/
-no-backup-read/no-soul-read/no-schedule/no-workflow/no-policy/no-provider-API/
-no-repo-mutation flags. Duplicate warmup/vibe-check cards are suppressed by
-`channel + notify_message_id`; actual provider delivery stays in the existing
-channel-outbox and channel-delivery path. Acceptance requires live
-channel-ingest E2E, warmup/vibe-check card queueing, metadata-only outbox proof,
-duplicate suppression, and a real GitHub Models repo-reader/search follow-up
-that recovers a repository fixture token from the same channel issue.
+no-backup-read/no-soul-read/no-poll/no-rollcall/no-schedule/no-workflow/
+no-policy/no-provider-API/no-repo-mutation flags. Duplicate warmup/icebreaker/
+vibe-check cards are suppressed by `channel + notify_message_id`; actual
+provider delivery stays in the existing channel-outbox and channel-delivery
+path. Acceptance requires live channel-ingest E2E, warmup/icebreaker/vibe-check
+card queueing, metadata-only outbox proof, duplicate suppression, and a real
+GitHub Models repo-reader/search follow-up that recovers a repository fixture
+token from the same channel issue.
 
 Sources: OpenClaw channels (`https://docs.openclaw.ai/channels`), OpenClaw
 sessions (`https://docs.openclaw.ai/cli/sessions`), Hermes messaging guide

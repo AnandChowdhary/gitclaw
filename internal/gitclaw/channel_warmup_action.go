@@ -324,6 +324,8 @@ func RenderChannelWarmupActionReport(ev Event, req ChannelWarmupActionRequest, r
 	fmt.Fprintf(&b, "- quest_created: `%t`\n", false)
 	fmt.Fprintf(&b, "- task_created: `%t`\n", false)
 	fmt.Fprintf(&b, "- proposal_created: `%t`\n", false)
+	fmt.Fprintf(&b, "- poll_created: `%t`\n", false)
+	fmt.Fprintf(&b, "- rollcall_created: `%t`\n", false)
 	fmt.Fprintf(&b, "- command_execution_performed: `%t`\n", false)
 	fmt.Fprintf(&b, "- skill_install_performed: `%t`\n", false)
 	fmt.Fprintf(&b, "- tool_execution_performed: `%t`\n", false)
@@ -540,6 +542,8 @@ func cleanChannelWarmupTheme(value string) string {
 		return "launch"
 	case "retro", "retrospective", "review", "after-action", "lessons":
 		return "retro"
+	case "icebreaker", "icebreakers", "ice-breaker", "ice-breakers", "break-the-ice", "kickoff", "intro", "intros", "conversation-starter", "question-card":
+		return "icebreaker"
 	case "spark", "sparks", "idea", "ideas", "idea-spark", "ideation", "brainstorm", "brainstorming":
 		return "spark"
 	case "tool", "tools", "tool-review", "review-tools", "approval", "approvals":
@@ -557,6 +561,8 @@ func cleanChannelWarmupTheme(value string) string {
 
 func defaultChannelWarmupThemeForSubcommand(subcommand string) string {
 	switch strings.ToLower(strings.Trim(subcommand, " \t\r\n.,:;!?")) {
+	case "starter", "starters", "icebreaker", "icebreakers", "kickoff", "prompt-card", "conversation-starter", "question-card":
+		return "icebreaker"
 	case "spark", "sparks", "idea-spark", "idea-sparks", "brainstorm", "brainstorm-card":
 		return "spark"
 	case "vibe-check", "vibecheck", "pulse-check", "pulsecheck", "thread-pulse":
@@ -643,8 +649,11 @@ func renderChannelWarmupNotificationBody(opts ChannelWarmupOptions) string {
 }
 
 func channelWarmupCardLabel(theme string) string {
-	if cleanChannelWarmupTheme(theme) == "spark" {
+	switch cleanChannelWarmupTheme(theme) {
+	case "spark":
 		return "spark"
+	case "icebreaker":
+		return "icebreaker"
 	}
 	return "warmup"
 }
@@ -663,6 +672,8 @@ func channelWarmupFrame(theme string) string {
 		return "Surface readiness, blockers, and owner clarity before a release moves."
 	case "retro":
 		return "Make reflection specific enough to preserve as issues or follow-up work."
+	case "icebreaker":
+		return "Give a quiet thread one easy, low-stakes way to start talking."
 	case "spark":
 		return "Turn a fuzzy idea into one concrete next experiment."
 	case "tools":
@@ -715,6 +726,12 @@ func channelWarmupPromptsForTheme(theme string) []string {
 			"What surprised us in this thread?",
 			"What should we repeat next time?",
 			"What should become a durable note, checklist, or playbook?",
+		}
+	case "icebreaker":
+		return []string{
+			"What is one tiny thing worth sharing before we get practical?",
+			"What would make this thread easy for a new person to join?",
+			"What is the lowest-pressure next reply someone could send?",
 		}
 	case "spark":
 		return []string{

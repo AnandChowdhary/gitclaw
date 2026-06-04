@@ -136,6 +136,9 @@ func commandSummaryForReport(entry commandCatalogEntry) string {
 	if !strings.Contains(summary, "channel warmup cards") {
 		summary += " Queue provider-facing channel warmup cards with deterministic conversation starters without executing commands, installing skills, executing tools, reading backup payloads, reading soul bodies, creating schedules, model calls, provider API calls, or repo mutation."
 	}
+	if !strings.Contains(summary, "icebreaker warmup cards") {
+		summary += " Queue provider-facing icebreaker warmup cards as low-pressure channel openers without polls, rollcalls, tasks, schedules, model calls, provider API calls, workflow edits, or repo mutation."
+	}
 	if !strings.Contains(summary, "idea-spark warmup cards") {
 		summary += " Queue provider-facing idea-spark warmup cards as deterministic brainstorm starters without generating prompt text dynamically, creating quests/tasks/proposals, schedules, model calls, provider API calls, workflow edits, or repo mutation."
 	}

@@ -288,6 +288,7 @@ channel tool result unique search fixture phrase => GITCLAW_CHANNEL_TOOL_RESULT_
 channel dock unique search fixture phrase => GITCLAW_CHANNEL_DOCK_CONTEXT_V1
 channel oracle unique search fixture phrase => GITCLAW_CHANNEL_ORACLE_CONTEXT_V1
 channel warmup unique search fixture phrase => GITCLAW_CHANNEL_WARMUP_CONTEXT_V1
+channel icebreaker unique search fixture phrase => GITCLAW_CHANNEL_ICEBREAKER_CONTEXT_V1
 channel spark unique search fixture phrase => GITCLAW_CHANNEL_SPARK_CONTEXT_V1
 channel vibe-check unique search fixture phrase => GITCLAW_CHANNEL_VIBE_CHECK_CONTEXT_V1
 channel browser status unique search fixture phrase => GITCLAW_CHANNEL_BROWSER_STATUS_CONTEXT_V1
