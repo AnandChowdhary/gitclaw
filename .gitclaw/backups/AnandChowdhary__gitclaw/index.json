@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-04T03:45:13Z",
+  "generated_at": "2026-06-04T03:46:55Z",
   "repo": "AnandChowdhary/gitclaw",
   "count": 758,
   "issues": [
@@ -9684,15 +9684,15 @@
       "number": 868,
       "title": "GitClaw telegram thread channel-cockpit-e2e-20260604t034302z",
       "path": "issues/000868.json",
-      "backup_generated_at": "2026-06-04T03:45:11Z",
-      "event_name": "workflow_dispatch",
+      "backup_generated_at": "2026-06-04T03:46:53Z",
+      "event_name": "issue_comment",
       "labels": [
         "gitclaw",
         "gitclaw:done",
         "gitclaw:channel"
       ],
-      "comment_count": 3,
-      "transcript_messages": 4
+      "comment_count": 5,
+      "transcript_messages": 5
     }
   ]
 }
