@@ -6067,6 +6067,52 @@ a backup-search notification, validates metadata-only outbox discovery,
 verifies duplicate suppression, and then continues on the same GitHub issue
 with a real GitHub Models repo-reader/search follow-up.
 
+For channel-native archive discovery that should surface one useful backup
+candidate without restoring anything, GitClaw also supports:
+
+```text
+@gitclaw /channels backup-spotlight deployment --spotlight-id <stable-spotlight-id> --message-id <stable-inbound-id> --notify-message-id <stable-outbound-id>
+```
+
+`/channels backup-spotlight`, `/channels backups-spotlight`,
+`/channels spotlight-backup`, `/channels backup-pick`,
+`/channels backup-draw`, `/channels recovery-spotlight`,
+`/channels recovery-draw`, `/channels archive-spotlight`, and
+`/channels archive-draw` infer the current channel and thread id from the
+issue marker when no explicit route/channel thread target is provided. They
+inspect the repo's `gitclaw-backups` archive with the same body-free backup
+search and timeline metadata used by `/backup search` and `/backup timeline`.
+If the focus matches backed-up archive lines, the action draws deterministically
+from those hash-only search results; otherwise it falls back to recent backup
+timeline metadata. In a GitHub Actions handler job, the local checkout normally
+does not contain `.gitclaw/backups`; the action must therefore fetch
+`gitclaw-backups` read-only into a temporary git worktree, build the spotlight
+from that fetched backup root, and clean it up before exit. If local backups
+are present, the action may use them without fetching. It must never write the
+backup branch, restore files, replay GitHub API calls, call provider APIs,
+mutate repository files, execute tools, or call a model.
+
+The provider-facing outbound comment reports only spotlight status, backup
+verify status, backup fetch status, backup branch, focus hash, focus term
+count, schema version, issue/search/candidate counts, selected index,
+selection hashes, and one selected backup card with issue number,
+backup-relative path, source, source kind, role, trust flag, line/score counts,
+body hashes, line hashes, payload size/hash, comment/transcript counts, title
+hash, timestamp, event, and safe follow-up commands. The source receipt is
+stricter: it records target issue/comment ids, route/thread/message hashes,
+spotlight id hash, focus/note hashes, backup root hash, selected issue/path/
+source/role/line/payload hashes, selection hashes, outbox delivery
+instructions, and safety gates. It does not print raw focus text, notes,
+spotlight ids, provider thread/message ids, backup roots, backup paths, issue
+titles, backup payloads, channel message bodies, issue bodies, comment bodies,
+transcript bodies, prompts, or tool outputs. Duplicates are suppressed by
+`channel + notify_message_id`. Changes to this surface require a live E2E that
+ingests a real channel issue, waits until that issue is present on the real
+`gitclaw-backups` branch, queues a backup-spotlight notification, validates
+metadata-only outbox discovery, verifies duplicate suppression, and then
+continues on the same GitHub issue with a real GitHub Models repo-reader/search
+follow-up.
+
 For channel-native archive orientation that should show chronology without
 restoring anything, GitClaw also supports:
 
@@ -9944,6 +9990,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels backup --message-id provider-msg-1
 @gitclaw /channels recovery-map incident --map-id channel-recovery-map-1 --message-id provider-msg-1 --notify-message-id provider-recovery-map-ack-1
 @gitclaw /channels backup-search deployment --message-id provider-msg-1 --notify-message-id provider-backup-search-ack-1
+@gitclaw /channels backup-spotlight deployment --spotlight-id channel-backup-spotlight-1 --message-id provider-msg-1 --notify-message-id provider-backup-spotlight-ack-1
 @gitclaw /channels backup-timeline --timeline-id channel-backup-timeline-1 --message-id provider-msg-1 --notify-message-id provider-backup-timeline-ack-1
 @gitclaw /channels backup-continuity --continuity-id channel-backup-continuity-1 --message-id provider-msg-1 --notify-message-id provider-backup-continuity-ack-1
 @gitclaw /channels backup-info #123 --message-id provider-msg-1 --notify-message-id provider-backup-info-ack-1
@@ -12178,6 +12225,12 @@ MVP is not complete until:
   `/channels backup-search` turn queues only body-free archive recall metadata
   through channel outbox, suppresses duplicate notifications, and proves a
   normal model-backed repo-reader/search follow-up on the same channel issue,
+- the channel backup-spotlight harness verifies a real channel-ingested issue
+  is first present on the fetched `gitclaw-backups` branch, then a
+  `/channels backup-spotlight` turn queues one deterministic body-free archive
+  candidate through channel outbox, suppresses duplicate notifications, keeps
+  raw backup payloads and paths out of the source receipt, and proves a normal
+  model-backed repo-reader/search follow-up on the same channel issue,
 - the channel backup-timeline harness verifies a real channel-ingested issue
   is first present on the fetched `gitclaw-backups` branch, then a
   `/channels backup-timeline` turn queues only body-free archive chronology
@@ -13752,6 +13805,20 @@ examples/workflows/gitclaw.yml
   `gitclaw.search_files`, recover the channel-recovery-map fixture token, and
   avoid hidden channel, account, provider, message, map, step, backup-doc,
   source-body, and backup sentinels.
+- A `gh`-driven channel-backup-spotlight-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, waits until that
+  issue exists on the real `gitclaw-backups` branch, posts
+  `@gitclaw /channels backup-spotlight ... --spotlight-id ... --message-id ...
+  --notify-message-id ...` on that mirrored thread, verifies one
+  provider-facing archive spotlight card, source receipt metadata without raw
+  backup paths, raw spotlight ids, focus text, titles, bodies, or transcript
+  text, duplicate notification suppression, metadata-only outbox discovery,
+  and explicit no-model-call/no-tool-execution/no-backup-branch-write/
+  no-restore/no-GitHub-API-replay/no-repository-mutation/no-provider-API flags.
+  The channel-thread issue then gets a normal GitHub Models issue-comment
+  follow-up that must select `repo-reader`, expose `gitclaw.search_files`,
+  recover the channel-backup-spotlight fixture token, and avoid hidden channel,
+  account, message, spotlight, backup path, source-body, and archive sentinels.
 - A `gh`-driven channel-backup-timeline-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, waits until that
   issue exists on the real `gitclaw-backups` branch, posts

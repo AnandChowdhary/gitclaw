@@ -714,6 +714,7 @@ gitclaw channel-react --channel slack --thread-id <thread> --message-id <id> --r
 @gitclaw /channels memory-search <query> --message-id <id> --notify-message-id <id>
 @gitclaw /channels recovery-map issue --map-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels backup-search <query> --message-id <id> --notify-message-id <id>
+@gitclaw /channels backup-spotlight <focus> --spotlight-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels backup-timeline --timeline-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels backup-freshness --freshness-id <id> --message-id <id> --notify-message-id <id>
 @gitclaw /channels backup-continuity --continuity-id <id> --message-id <id> --notify-message-id <id>
@@ -1251,6 +1252,19 @@ it reports backup/search status, query hashes, issue paths, sources, trust
 metadata, scores, body hashes, and line hashes without printing raw search
 queries, channel bodies, backup payloads, issue bodies, comment bodies,
 transcripts, prompts, or tool outputs.
+`@gitclaw /channels backup-spotlight <focus> --spotlight-id <id>
+--message-id <id> --notify-message-id <id>` fetches the same durable
+`gitclaw-backups` archive read-only when local backups are absent and queues
+one deterministic provider-facing backup spotlight card back to Slack/Telegram.
+The card draws from lexical matches when the focus finds archive lines and
+falls back to recent backup timeline metadata otherwise. It may show the
+selected issue number, backup-relative path, source, role, trust flag, hashes,
+payload size, comment/transcript counts, and safe follow-up commands; the
+source receipt keeps route/thread/message ids, spotlight ids, focus text,
+notes, backup roots, paths, issue titles, payload bodies, comments,
+transcripts, prompts, and tool outputs out of band and confirms no restore,
+branch write, GitHub API replay, provider API call, model call, tool execution,
+or repository mutation happened.
 `@gitclaw /channels backup-timeline --timeline-id <id> --message-id <id>
 --notify-message-id <id>` fetches the same durable `gitclaw-backups` archive
 read-only when local backups are absent and queues a provider-facing
@@ -2118,6 +2132,7 @@ scripts/e2e/github-channel-backup-status-slash.sh
 scripts/e2e/github-channel-recovery-map-slash.sh
 scripts/e2e/github-channel-tool-map-slash.sh
 scripts/e2e/github-channel-backup-search-slash.sh
+scripts/e2e/github-channel-backup-spotlight-slash.sh
 scripts/e2e/github-channel-backup-timeline-slash.sh
 scripts/e2e/github-channel-backup-freshness-slash.sh
 scripts/e2e/github-channel-backup-continuity-slash.sh
@@ -2773,6 +2788,12 @@ then receives `@gitclaw /channels backup-search`, queues provider-visible
 body-free search metadata from the fetched backup archive, exposes it through
 metadata-only outbox, suppresses duplicate recall notifications, and then runs
 a real GitHub Models repo-reader/search follow-up.
+The channel-backup-spotlight slash harness adds a small archive-discovery card:
+a channel-ingested issue is first observed on the real `gitclaw-backups` branch,
+then receives `@gitclaw /channels backup-spotlight`, queues one deterministic
+provider-visible backup candidate from fetched archive metadata, exposes it
+through metadata-only outbox, suppresses duplicate spotlight notifications, and
+then runs a real GitHub Models repo-reader/search follow-up.
 The channel-backup-timeline slash harness turns durable archives into a
 channel-native chronology card: a channel-ingested issue is first observed on
 the real `gitclaw-backups` branch, then receives `@gitclaw /channels

@@ -181,6 +181,9 @@ func commandSummaryForReport(entry commandCatalogEntry) string {
 	if !strings.Contains(summary, "soul spotlight cards") {
 		summary += " Queue deterministic provider-facing soul spotlight cards from repo-local high-authority metadata without registry contact, profile export, soul writes, memory writes, model calls, provider API calls, workflow edits, or repo mutation."
 	}
+	if !strings.Contains(summary, "backup spotlight cards") {
+		summary += " Queue deterministic provider-facing backup spotlight cards from local or read-only fetched backup metadata without branch writes, restores, raw payload exposure, GitHub API replay, model calls, provider API calls, or repo mutation."
+	}
 	if !strings.Contains(summary, "backup recovery-map cards") {
 		summary += " Queue provider-facing backup recovery-map cards without fetching backup branches, reading backup payloads, restoring files, creating recovery issues, model calls, provider API calls, workflow edits, or repo mutation."
 	}
