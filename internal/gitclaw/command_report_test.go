@@ -127,6 +127,7 @@ func TestRenderCommandReportListsCatalogWithoutBodies(t *testing.T) {
 		"Queue deterministic provider-facing tool spotlight cards from built-in read-only/metadata tool contracts",
 		"Queue deterministic provider-facing soul spotlight cards from repo-local high-authority metadata",
 		"Queue deterministic provider-facing backup spotlight cards from local or read-only fetched backup metadata",
+		"Queue deterministic provider-facing research spotlight cards from reviewed static source, pattern, and rejection metadata",
 		"Queue mirrored channel safe skill-bundle map cards without installing skills",
 		"Queue mirrored channel safe skill-source map cards without registry contact",
 		"Queue provider-facing backup recovery-map cards without fetching backup branches",

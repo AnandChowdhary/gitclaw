@@ -950,6 +950,43 @@ gitclaw research coverage
 gitclaw research verify
 ```
 
+The same channel-thread issue can ask for one chat-native research spotlight
+without opening the full catalog:
+
+```text
+@gitclaw /channels research-spotlight openclaw --spotlight-id <stable-spotlight-id> --message-id <provider-message-id> --notify-message-id <stable-outbound-id>
+```
+
+`/channels research-spotlight`, `/channels research-draw`,
+`/channels research-pick`, `/channels landscape-spotlight`,
+`/channels landscape-draw`, `/channels openclaw-spotlight`,
+`/channels hermes-spotlight`, `/channels pattern-spotlight`, and
+`/channels pattern-draw` infer the current channel and thread id from the issue
+marker when no explicit route/channel/thread target is provided. They filter
+the reviewed static source, pattern, and rejection catalog by focus text, then
+make a stable hash-based draw from matching metadata. If the focus has no
+match, they fall back to the full reviewed catalog and mark the spotlight as
+fallback. The provider-facing outbound comment reports spotlight status,
+snapshot date, focus hash/term count, source/pattern/rejection counts, local
+research doc presence, matched/candidate item counts, selected index, selected
+source or pattern metadata, and safe follow-up commands. The source receipt
+stays stricter: it records target issue/comment ids, route/thread/message
+hashes, research-spotlight id hash, focus/note hashes, selected kind/id/system/
+URL/pattern/surface/gate hashes, selection hash, outbox delivery instructions,
+deterministic/no-randomness markers, and safety gates. It does not call a
+model, execute tools, fetch source URLs, browse live docs, call provider APIs,
+mutate repository files, print raw focus text, print raw notes, print raw
+provider thread/message ids, print raw spotlight ids, print raw source ids,
+print raw source URLs, print raw patterns, print raw surfaces, print raw
+research bodies, print channel bodies, print issue/comment bodies, or print
+prompts. Duplicates are suppressed by `channel + notify_message_id`. Changes
+to this surface require a live E2E that ingests a real channel issue, queues a
+research-spotlight notification, validates metadata-only outbox discovery,
+verifies duplicate suppression, verifies no source fetch/live browse/model/
+tool/provider API/workflow mutation/repository mutation happened, and then
+continues on the same GitHub issue with a real GitHub Models repo-reader/search
+follow-up.
+
 ## Runtime Architecture
 
 ```text
@@ -8391,6 +8428,33 @@ issue/model/provider API/workflow mutation/repository mutation happened, and
 then continues on the same channel issue with a normal GitHub Models
 repo-reader/search follow-up.
 
+The same channel-thread issue can ask for a research spotlight card before
+opening the full OpenClaw/Hermes catalog:
+
+```text
+@gitclaw /channels research-spotlight openclaw --spotlight-id <stable-spotlight-id> --message-id <provider-message-id> --notify-message-id <stable-outbound-id>
+```
+
+`/channels research-spotlight`, `/channels research-draw`,
+`/channels research-pick`, `/channels landscape-spotlight`,
+`/channels landscape-draw`, `/channels openclaw-spotlight`,
+`/channels hermes-spotlight`, `/channels pattern-spotlight`, and
+`/channels pattern-draw` infer the current channel and thread id from the issue
+marker when no explicit route/channel/thread target is provided. They draw one
+deterministic provider-facing source, pattern, or rejected-surface card from
+the reviewed static catalog and never fetch or browse live sources during the
+action. The provider-facing outbound comment may include the selected source
+id, source URL, pattern name, surface, decision, gate, snapshot date, catalog
+counts, and follow-up commands. The source receipt records only hashes, counts,
+delivery metadata, duplicate status, deterministic/no-randomness markers, and
+hard gates: no model call, no tool execution, no source fetch, no live browse,
+no provider API call, no workflow mutation, and no repository mutation. It
+does not print raw focus text, notes, provider thread/message ids, spotlight
+ids, source ids, source URLs, pattern text, surfaces, research bodies, channel
+bodies, issue/comment bodies, prompts, or tool outputs. Changes to this
+surface require a live channel-ingest E2E, duplicate suppression, metadata-only
+outbox validation, and a real GitHub Models repo-reader/search follow-up.
+
 The same channel-thread issue can answer a tools/capabilities status request
 without executing tools or exposing raw schemas:
 
@@ -9979,6 +10043,7 @@ GitClaw supports a deterministic channel/control-plane audit command:
 @gitclaw /channels skill-map repo-reader --map-id channel-skill-map-1 --message-id provider-msg-1 --notify-message-id provider-skill-map-ack-1
 @gitclaw /channels bundle-map repo-context --map-id channel-bundle-map-1 --message-id provider-msg-1 --notify-message-id provider-bundle-map-ack-1
 @gitclaw /channels source-map repo-reader --map-id channel-source-map-1 --message-id provider-msg-1 --notify-message-id provider-source-map-ack-1
+@gitclaw /channels research-spotlight openclaw --spotlight-id channel-research-spotlight-1 --message-id provider-msg-1 --notify-message-id provider-research-spotlight-ack-1
 @gitclaw /channels tool-search read_file --message-id provider-msg-1 --notify-message-id provider-tool-search-ack-1
 @gitclaw /channels tool-info read_file --message-id provider-msg-1 --notify-message-id provider-tool-info-ack-1
 @gitclaw /channels tool-spotlight search_files --spotlight-id channel-tool-spotlight-1 --message-id provider-msg-1 --notify-message-id provider-tool-spotlight-ack-1
@@ -13492,6 +13557,20 @@ examples/workflows/gitclaw.yml
   that must select `repo-reader`, expose `gitclaw.search_files`, recover the
   channel-tool-spotlight fixture token, and avoid hidden channel, account,
   message, spotlight, focus, tool-input/output, and notification sentinels.
+- A `gh`-driven channel-research-spotlight-slash E2E harness creates a real
+  channel-thread issue through `gitclaw-channel-ingest.yml`, posts
+  `@gitclaw /channels research-spotlight ...` on that mirrored thread, verifies
+  one provider-facing deterministic research spotlight card from static
+  source, pattern, and rejection metadata, source receipt metadata without raw
+  focus text, notes, spotlight ids, source ids, URLs, patterns, surfaces, or
+  research bodies, duplicate notification suppression, metadata-only outbox
+  discovery, deterministic/no-randomness markers, and explicit no-source-fetch/
+  no-live-browse/no-tool-execution/no-model-call/no-repository-mutation/no-
+  provider-API flags. The channel-thread issue then gets a normal GitHub
+  Models issue-comment follow-up that must select `repo-reader`, expose
+  `gitclaw.search_files`, recover the channel-research-spotlight fixture
+  token, and avoid hidden channel, account, message, spotlight, focus, source,
+  and notification sentinels.
 - A `gh`-driven channel-tool-map-slash E2E harness creates a real
   channel-thread issue through `gitclaw-channel-ingest.yml`, posts
   `@gitclaw /channels tool-map ...` on that mirrored thread, verifies one

@@ -97,6 +97,32 @@ func Handle(ctx context.Context, ev Event, cfg Config, github GitHubClient, llm 
 		status.SetDone()
 		return nil
 	}
+	if IsChannelResearchSpotlightActionRequest(ev, cfg) {
+		channelClient, ok := github.(ChannelSendGitHubClient)
+		if !ok {
+			return failStartedTurn(ctx, cfg, github, ev, status, "channel", fmt.Errorf("github client cannot queue channel research spotlight"))
+		}
+		req, err := BuildChannelResearchSpotlightActionRequest(ev, cfg)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "channel", fmt.Errorf("build channel research spotlight action: %w", err))
+		}
+		result, err := RunChannelResearchSpotlight(ctx, cfg, channelClient, req)
+		if err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "channel", fmt.Errorf("run channel research spotlight action: %w", err))
+		}
+		body := RenderAssistantComment(Marker{
+			RunID:          envFirst("GITHUB_RUN_ID", "local"),
+			EventID:        eventID(ev),
+			Model:          "gitclaw/channels",
+			IdempotencyKey: key,
+			RunURL:         actionRunURL(ev),
+		}, RenderChannelResearchSpotlightActionReport(ev, req, result))
+		if _, err := github.PostIssueComment(ctx, ev.Repo, ev.Issue.Number, body); err != nil {
+			return failStartedTurn(ctx, cfg, github, ev, status, "comment", fmt.Errorf("post channel research spotlight action comment: %w", err))
+		}
+		status.SetDone()
+		return nil
+	}
 	if IsSoulRehearsalIssueRequest(ev, cfg) {
 		rehearsalClient, ok := github.(SoulRehearsalIssueGitHubClient)
 		if !ok {
