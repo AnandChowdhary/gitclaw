@@ -376,7 +376,7 @@ for expected in \
   "Try next:" \
   "@gitclaw /channels soul-info .gitclaw/SOUL.md" \
   "@gitclaw /channels soul-search soul" \
-  "Raw soul, identity, user, memory, tool guidance, heartbeat, channel, issue, comment, prompt, and tool output bodies are not included." \
+  "Raw soul, identity, user, memory, tool guidance, heartbeat, channel, issue, comment, prompt, and tool output bodies are not included in the source receipt." \
   "Raw focus text, raw notes, raw spotlight ids, and raw selected paths are not included in the source receipt." \
   "Model call: not performed by this action." \
   "Tool execution: not performed by this action." \
