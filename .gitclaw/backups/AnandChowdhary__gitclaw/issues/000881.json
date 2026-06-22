@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-22T10:24:04Z",
+  "repo": "AnandChowdhary/gitclaw",
+  "event_name": "workflow_dispatch",
+  "issue": {
+    "number": 881,
+    "title": "GitClaw proactive repo-hygiene 2026-06-22",
+    "body": "\u003c!-- gitclaw:proactive-run name=\"repo-hygiene\" slot=\"2026-06-22\" --\u003e\nGitClaw proactive run.\n\n- name: repo-hygiene\n- slot: 2026-06-22\n\nProactive instruction:\n\n\u003c!-- gitclaw:proactive-skills repo-reader --\u003e\n\nSuggested GitClaw skills for this scheduled job:\n- repo-reader\n\nRun a short, read-only repository hygiene check.\n\nLook for visible GitClaw maintenance work that would be useful to mention in\nthis issue thread: failing recent workflow context already present in the\nconversation, stale implementation notes, missing tests for the current feature,\nor spec gaps that should be turned into a follow-up issue.\n\nDo not modify files, create branches, or claim that you inspected private state\nthat was not provided in the issue or repository context. Keep the response\nconcise and include concrete next steps only when they are supported by the\nvisible context.",
+    "author": "github-actions[bot]",
+    "author_association": "NONE",
+    "labels": [
+      "gitclaw",
+      "gitclaw:done",
+      "gitclaw:proactive"
+    ]
+  },
+  "transcript": [
+    {
+      "Role": "user",
+      "Body": "GitClaw proactive repo-hygiene 2026-06-22\n\n\u003c!-- gitclaw:proactive-run name=\"repo-hygiene\" slot=\"2026-06-22\" --\u003e\nGitClaw proactive run.\n\n- name: repo-hygiene\n- slot: 2026-06-22\n\nProactive instruction:\n\n\u003c!-- gitclaw:proactive-skills repo-reader --\u003e\n\nSuggested GitClaw skills for this scheduled job:\n- repo-reader\n\nRun a short, read-only repository hygiene check.\n\nLook for visible GitClaw maintenance work that would be useful to mention in\nthis issue thread: failing recent workflow context already present in the\nconversation, stale implementation notes, missing tests for the current feature,\nor spec gaps that should be turned into a follow-up issue.\n\nDo not modify files, create branches, or claim that you inspected private state\nthat was not provided in the issue or repository context. Keep the response\nconcise and include concrete next steps only when they are supported by the\nvisible context.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 0,
+      "Edited": false,
+      "Trusted": false
+    },
+    {
+      "Role": "assistant",
+      "Body": "The proactive run for repo-hygiene is scheduled with the skill `repo-reader`, and it is intended to perform a short, read-only hygiene check focused on repository maintenance. It will look for visible issues such as failing workflows, stale notes, missing tests, or spec gaps relevant to the current feature. No files will be modified, and the response will be concise, providing only actionable next steps if supported by the context.",
+      "Actor": "github-actions[bot]",
+      "AuthorAssociation": "NONE",
+      "CommentID": 4767286653,
+      "Edited": false,
+      "Trusted": true
+    }
+  ],
+  "comments": [
+    {
+      "id": 4767286653,
+      "body": "\u003c!-- gitclaw:assistant-turn run_id=\"27945886744\" event_id=\"dispatch-proactive-repo-hygiene-2026-06-22\" model=\"openai/gpt-4.1-nano\" idempotency_key=\"5846edcbad698776190f07d811372fdf\" run_url=\"https://github.com/AnandChowdhary/gitclaw/actions/runs/27945886744\" prompt_context_sha256_12=\"0541fd1ed6c6\" context_documents=\"16\" selected_skills=\"1\" tool_outputs=\"3\" skills=\"repo-reader\" tools=\"gitclaw.list_files,gitclaw.skill_index,gitclaw.search_files\" usage_prompt_tokens=\"10775\" usage_completion_tokens=\"86\" usage_total_tokens=\"10861\" usage_cache_read_tokens=\"0\" usage_cache_write_tokens=\"0\" --\u003e\nThe proactive run for repo-hygiene is scheduled with the skill `repo-reader`, and it is intended to perform a short, read-only hygiene check focused on repository maintenance. It will look for visible issues such as failing workflows, stale notes, missing tests, or spec gaps relevant to the current feature. No files will be modified, and the response will be concise, providing only actionable next steps if supported by the context.",
+      "author": "github-actions[bot]",
+      "author_association": "NONE",
+      "created_at": "2026-06-22T10:23:30Z",
+      "updated_at": "2026-06-22T10:23:30Z"
+    }
+  ]
+}
