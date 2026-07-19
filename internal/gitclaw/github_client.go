@@ -8,7 +8,9 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
+	"time"
 )
 
 type RESTGitHubClient struct {
@@ -179,16 +181,6 @@ func (c *RESTGitHubClient) ListOpenIssues(ctx context.Context, repo string, labe
 		if len(labels) > 0 {
 			values.Set("labels", strings.Join(labels, ","))
 		}
-		endpoint := fmt.Sprintf("%s/repos/%s/issues?%s", strings.TrimRight(c.APIBaseURL, "/"), repo, values.Encode())
-		req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
-		if err != nil {
-			return nil, err
-		}
-		c.setHeaders(req)
-		res, err := c.httpClient().Do(req)
-		if err != nil {
-			return nil, err
-		}
 		var raw []struct {
 			Number            int    `json:"number"`
 			Title             string `json:"title"`
@@ -202,16 +194,35 @@ func (c *RESTGitHubClient) ListOpenIssues(ctx context.Context, repo string, labe
 				URL string `json:"url"`
 			} `json:"pull_request"`
 		}
-		if res.StatusCode < 200 || res.StatusCode >= 300 {
+		endpoint := fmt.Sprintf("%s/repos/%s/issues?%s", strings.TrimRight(c.APIBaseURL, "/"), repo, values.Encode())
+		for attempt := 1; attempt <= 3; attempt++ {
+			req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
+			if err != nil {
+				return nil, err
+			}
+			c.setHeaders(req)
+			res, err := c.httpClient().Do(req)
+			if err != nil {
+				return nil, err
+			}
+			if res.StatusCode >= 200 && res.StatusCode < 300 {
+				err = json.NewDecoder(res.Body).Decode(&raw)
+				res.Body.Close()
+				if err != nil {
+					return nil, err
+				}
+				break
+			}
 			body, _ := io.ReadAll(io.LimitReader(res.Body, 4096))
 			res.Body.Close()
-			return nil, fmt.Errorf("GitHub list issues failed: status=%d body=%s", res.StatusCode, strings.TrimSpace(string(body)))
+			err = fmt.Errorf("GitHub list issues failed: status=%d body=%s", res.StatusCode, strings.TrimSpace(string(body)))
+			if !retryableGitHubStatus(res.StatusCode) || attempt == 3 {
+				return nil, err
+			}
+			if err := sleepContext(ctx, githubRetryDelay(res, attempt)); err != nil {
+				return nil, err
+			}
 		}
-		if err := json.NewDecoder(res.Body).Decode(&raw); err != nil {
-			res.Body.Close()
-			return nil, err
-		}
-		res.Body.Close()
 		for _, item := range raw {
 			issues = append(issues, issueFromREST(item.Number, item.Title, item.Body, item.AuthorAssociation, item.User, item.Labels, item.PullRequest != nil))
 		}
@@ -221,6 +232,32 @@ func (c *RESTGitHubClient) ListOpenIssues(ctx context.Context, repo string, labe
 		page++
 	}
 	return issues, nil
+}
+
+func retryableGitHubStatus(status int) bool {
+	return status == http.StatusRequestTimeout || status == http.StatusTooManyRequests || status >= 500
+}
+
+func githubRetryDelay(res *http.Response, attempt int) time.Duration {
+	const maxDelay = 30 * time.Second
+	clamp := func(delay time.Duration) time.Duration {
+		if delay < 0 {
+			return 0
+		}
+		if delay > maxDelay {
+			return maxDelay
+		}
+		return delay
+	}
+	if value := strings.TrimSpace(res.Header.Get("Retry-After")); value != "" {
+		if seconds, err := strconv.Atoi(value); err == nil {
+			return clamp(time.Duration(seconds) * time.Second)
+		}
+		if at, err := http.ParseTime(value); err == nil {
+			return clamp(time.Until(at))
+		}
+	}
+	return time.Duration(attempt) * time.Second
 }
 
 func (c *RESTGitHubClient) PostIssueComment(ctx context.Context, repo string, issueNumber int, body string) (PostedComment, error) {
