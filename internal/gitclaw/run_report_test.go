@@ -6,6 +6,8 @@ import (
 )
 
 func TestRenderRunReportShowsCurrentTurnProvenanceWithoutBodies(t *testing.T) {
+	t.Setenv("GITHUB_RUN_ID", "")
+	t.Setenv("GITHUB_RUN_ATTEMPT", "")
 	ev, err := ParseEvent("issues", []byte(`{
 		"action": "opened",
 		"repository": {"full_name": "owner/repo", "default_branch": "main"},

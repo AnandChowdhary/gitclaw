@@ -21,11 +21,13 @@ func RenderRunCLIReport(cfg Config, repoContext RepoContext) string {
 
 func renderRunReport(ev Event, cfg Config, decision PreflightDecision, comments []Comment, transcript []TranscriptMessage, repoContext RepoContext, writeRequested bool, includeIssue bool) string {
 	counts := countSessionMarkers(comments)
-	runID := envFirst("GITHUB_RUN_ID", "local")
-	runAttempt := envFirst("GITHUB_RUN_ATTEMPT", "0")
-	runURL := actionRunURL(ev)
-	if !includeIssue {
-		runURL = ""
+	runID := "local"
+	runAttempt := "0"
+	runURL := ""
+	if includeIssue {
+		runID = envFirst("GITHUB_RUN_ID", runID)
+		runAttempt = envFirst("GITHUB_RUN_ATTEMPT", runAttempt)
+		runURL = actionRunURL(ev)
 	}
 
 	var b strings.Builder
