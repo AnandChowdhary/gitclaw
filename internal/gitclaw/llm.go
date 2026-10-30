@@ -219,7 +219,7 @@ func (c *OpenAICompatibleLLM) completeAttempt(ctx context.Context, body []byte, 
 		Usage map[string]any `json:"usage"`
 	}
 	if err := json.NewDecoder(res.Body).Decode(&raw); err != nil {
-		return "", LLMUsage{}, llmRetry{}, err
+		return "", LLMUsage{}, llmRetry{Retry: true, Delay: llmRetryDelay(res, attempt)}, fmt.Errorf("decode LLM response: %w", err)
 	}
 	if len(raw.Choices) == 0 || strings.TrimSpace(raw.Choices[0].Message.Content) == "" {
 		return "", LLMUsage{}, llmRetry{}, fmt.Errorf("LLM returned no content")

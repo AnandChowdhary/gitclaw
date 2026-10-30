@@ -251,6 +251,46 @@ func TestOpenAICompatibleLLMFallsBackAfterRetryablePrimaryFailure(t *testing.T) 
 	}
 }
 
+func TestOpenAICompatibleLLMFallsBackAfterMalformedSuccessResponse(t *testing.T) {
+	t.Setenv("GITCLAW_LLM_MAX_ATTEMPTS", "2")
+	t.Setenv("GITCLAW_LLM_PRIMARY_ATTEMPTS_BEFORE_FALLBACK", "1")
+	var models []string
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var payload struct {
+			Model string `json:"model"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+			t.Fatalf("decode request: %v", err)
+		}
+		models = append(models, payload.Model)
+		if payload.Model == "openai/gpt-5-nano" {
+			w.Header().Set("Content-Type", "text/plain")
+			_, _ = w.Write([]byte("Oops, upstream response unavailable"))
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"choices":[{"message":{"content":"fallback ok"}}]}`))
+	}))
+	defer server.Close()
+
+	llm := &OpenAICompatibleLLM{
+		APIKey: "test-token", BaseURL: server.URL, Model: "openai/gpt-5-nano",
+		FallbackModels: []string{"openai/gpt-4.1-nano"}, Client: server.Client(),
+	}
+	got, err := llm.Complete(context.Background(), LLMRequest{
+		Event: Event{Repo: "owner/repo", Issue: Issue{Number: 1, Title: "malformed response"}},
+	})
+	if err != nil || got != "fallback ok" {
+		t.Fatalf("Complete = %q, %v; want fallback ok", got, err)
+	}
+	if strings.Join(models, ",") != "openai/gpt-5-nano,openai/gpt-4.1-nano" {
+		t.Fatalf("models called = %#v, want primary then fallback", models)
+	}
+	if llm.SelectedModel() != "openai/gpt-4.1-nano" {
+		t.Fatalf("SelectedModel = %q, want fallback", llm.SelectedModel())
+	}
+}
+
 func TestOpenAICompatibleLLMDoesNotFallbackForNonRetryablePrimaryFailure(t *testing.T) {
 	calls := 0
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
